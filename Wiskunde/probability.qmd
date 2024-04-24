@@ -1,0 +1,147 @@
+{{< include _macros.tex >}}
+
+# Probability
+
+## Random trials, outcomes, events, and probabilities
+
+**Random trial**: Experiment with multiple possible outcomes. E.g., throwing a die.
+
+**Random variable**: Experiment with multiple possible outcomes. E.g., throwing a die.
+
+**Sample space**: Set of all possible outcomes of the random trial. E.g., $\{ 1 , 2, 3, 4, 5, 6\}$.
+
+**Event**: Subset of elementary outcomes. E.g., an \emph{even} result, $A = \{2, 4, 6\}$.
+
+**Probability of an event**: Proportion of experiments resulting in the event. E.g., $\pr{A} = 1/2$.
+
+The throw of a single die is a simple and intuitive example, where the probability for each outcome is equally likely. In general, the probability for each outcome does not have to be equal -- the dice can be "loaded".
+
+Even if the probability of each possible \textit{outcome} is the same,
+the probabilities of different \textit{events} may differ.
+An obvious example: if $A = \{2,4,6\}$ and $B = \{4,6\}$, then $\pr{A} = 1/2$, while $\pr{B} = 1/3$.
+
+## Conditional probabilities
+
+## Calculation rules: $A$ and $B$, $A$ or $B$
+
+Generally:
+$$\pr{A \cap B} = \pr{A} \pr{B | A}.$$
+Only if $A$ and $B$ are \emph{independent}, this simplifies to the multiplication rule:
+$$\pr{A \cap B} = \pr{A} \pr{B}.$$
+
+$$\pr{A \cup B} = \pr{A} + \pr{B} - \pr{A \cap B}.$$
+Only if $A$ and $B$ are \emph{mutually exclusive}, this simplifies to the addition rule:
+$$\pr{A \cup B} = \pr{A} + \pr{B}.$$
+
+Also show in Venn Diagram.
+
+## Bayes' rule
+
+## Probability distributions
+
+```{r}
+#| label: fig-distributions
+#| fig-cap: "Examples of probability distributions."
+#| fig-height: 1.67
+#| fig-width: 2.33
+#| warning: false
+#| code-fold: true
+#| code-summary: "Show the code"
+#| layout-ncol: 3
+#| fig-subcap:
+#|   - "A geometric distribution."
+#|   - "A standard normal distribution." 
+#|   - "An exponential distribution." 
+
+library(ggplot2)
+
+# geometric distribution
+p = 0.2
+xvec <- seq(0, 10)
+yvec <- dgeom(xvec, p = p)
+geomdf <- data.frame(x = xvec, pdf = yvec)
+
+ggplot(geomdf, aes(x = xvec, y = pdf)) +
+  labs(x = expression(italic(x)), y = "probability") + 
+  scale_x_continuous(breaks = seq(1, 10)) + 
+  geom_segment( aes(x=xvec, xend=xvec, y=0, yend=pdf), color="grey") +
+  geom_point(col = "firebrick")
+
+#  normal distribution
+xvec <- seq(-3, 3, .05)
+yvec <- dnorm(xvec)
+normdf <- data.frame(x = xvec, pdf = yvec)
+
+ggplot(normdf, aes(x = xvec, y = pdf)) + 
+  geom_line(col = "firebrick", size = 1) +
+  labs(x = expression(italic(Z)), y = "probability density")
+
+# exponential distribution
+xvec <- seq(0, 10, .2)
+yvec <- dexp(xvec, rate = -log(1 - p))
+expdf <- data.frame(x = xvec, pdf = yvec)
+
+ggplot(expdf, aes(x = xvec, y = pdf)) + 
+  geom_line(col = "firebrick", size = 1) +
+  labs(x = expression(italic(x)), y = "probability density") +
+  coord_cartesian(ylim = c(0, 0.2))
+
+```
+
+$\pr{X=x}$: the probability that random variable $X$ takes on value $x$.
+
+## Expectation value of a random variable
+
+$$
+\ev{X} = \sum_x  x\, \pr{X = x}.
+$$
+
+$$
+\ev{X} = \int_{-\infty}^\infty  x\, \pr{X = x}  \diff x.
+$$
+
+## Variance and standard deviation of a probability distribution
+
+$$
+\var{X}  = \sum_x  \left(x - \ev{X}\right)^2 \, \pr{X = x}
+$$
+$$
+\var{X} = \int_{-\infty}^\infty  \left(x - \ev{X}\right)^2 \, \pr{X = x} \diff x.
+$$
+
+$$
+\sd{X} = \sqrt{\var{X}}.
+$$
+
+
+## Sums of independent random variables
+
+Frequently, we are interested in a stochastic variable $X$ that is itself a sum of $n$ other stochastic variables, $Z_i$. A convenient example: imagine that you throw not one but $n$ dies, that each may or may not be loaded, and consider the sum of the eyes.
+
+It turns out that we can obtain the expectation value of $X$ by just adding up the expectation values of the $Z_i$. 
+
+More surprisingly, **if all of the $Z_i$ are independent**, we can obtain the variance of $X$
+by adding up the variances of the $Z_i$. The derivation goes as follows:
+
+$$\ev{X} = \ev{\sum_{i=1}^n Z_i} = \sum_{i=1}^n \ev{Z_i} =\sum_{i=1}^n\mu_i.$$
+$$\var{X} = \var{\sum_{i=1}^n Z_i} = \sum_{i=1}^n \var{Z_i} = \sum_{i=1}^n \sigma_i^2.$$
+
+## Sums of identically distributed random variables
+
+It will be particularly useful to consider the properties of sums of identically distributed variables.
+
+Suppose $X$ is the sum of $n$ independent **and identically distributed** variables $Z_i$, 
+$$
+X = \sum_{i=1}^n Z_i,
+$$
+with $\ev{Z_i} = \mu$ and $\var{Z_i} = \sigma^2$. Then the mean and variance of $X$ are:
+$$\ev{X} = n \mu.$$
+$$\var{X} = n\sigma^2.$$
+$$\sd{X} = \sqrt{n}\,\sigma.$$
+
+The expectation value of $X$ increases linearly with the number of experiments $n$. 
+The standard deviation of $X$, however, increases with the square root of $n$ --- much more slowly!
+It is hard to overstate the importance of this result. 
+
+The **Central Limit Theorem** states that when you sum an large number of stochastic variables, the distribution converges to a normal distribution. In practice however, the probability distribution of the sum already resembles a normal distribution even when summing a small number of stochastic variables (for example, 10 or 20). This makes the Central Limit Theorem such a powerful statement.
+
