@@ -21,7 +21,9 @@ peren <- "groen"
 appels + peren
 ```
 
-Als je de bovenstaande code probeert uit te voeren, geeft R een foutmelding: `Error in appels + peren : non-numeric argument to binary operator`^[Wat deze error precies betekent is niet belangrijk]. Het is erg prettig dat R deze foutmelding geeft. Hoewel dit een overduidelijk onzinnige som is, kan het ook zijn dat je met de beste intenties een foutje maakt!
+Als je de bovenstaande code probeert uit te voeren, geeft R een foutmelding: `Error in appels + peren : non-numeric argument to binary operator`[^intro_r_day2-1]. Het is erg prettig dat R deze foutmelding geeft. Hoewel dit een overduidelijk onzinnige som is, kan het ook zijn dat je met de beste intenties een foutje maakt!
+
+[^intro_r_day2-1]: Wat deze error precies betekent is niet belangrijk
 
 ## Data structuren
 
@@ -125,7 +127,7 @@ datatable(biologen, options = list(searching=F, pageLength = 3,lengthChange = FA
 ```
 :::
 
-<br>Als je deze dataset wil bekijken in Rstudio, kun je `View(biologen)` typen. Dit opent een tabblad waarin je de data kan verkennen en sorteren (voor grotere datasets is dit natuurlijk erg handig!). 
+<br>Als je deze dataset wil bekijken in Rstudio, kun je `View(biologen)` typen. Dit opent een tabblad waarin je de data kan verkennen en sorteren (voor grotere datasets is dit natuurlijk erg handig!).
 
 Het natuurlijk meestal niet handig om handmatig data frames in te typen in R. In plaats daarvan kun je grote datasets vaak opslaan of downloaden in een groot tekstbestand, bijvooreeld in *comma-seperated-value* (csv) bestanden. Als je een dergelijk tekstbestand hebt, kun je deze inlezen met de functie `read.table` of `read.csv`:
 
@@ -139,21 +141,23 @@ View(covid_data) # bekijk de hele tabel in Rstudio
 ::: {.content-visible when-format="html"}
 ```{r}
 #| echo: false
-library(here) # Package required 
-covid_data <- read.csv(here("Programmeren/COVID_testen_Utrecht.csv")) # waar het bestand staat
 library(DT)
 library(datasets)
+suppressMessages(library(here)) # Package required 
+covid_data <- read.csv(here("Programmeren/COVID_testen_Utrecht.csv")) # waar het bestand staat
 datatable(covid_data, options = list(searching=F, pageLength = 8))
 ```
 :::
 
 ## Files, paden, en de 'working directory'
 
-Om (zoals hierboven) een bestand in te kunnen lezen, moet Rstudio wel weten waar het bestand staat. Standaard zoekt Rstudio vaak in de home directory van je besturingsysteem (`/Users/Naam` in MacOs, `C:/Users/UserName/Documents` in Windows). De directory vanuit waar Rstudio naar het bestand zoekt, heet de *Working Directory*. Vaak is het handig om je Working Directory aan te passen naar dezelfde map waar je het script hebt opgeslagen, zodat je alle data, scripts, en grafieken een beetje bij elkaar kan houden. Dit kan je doen door te navigeren naar `Session > Set Working Directory > To Source File Location`.
+Om (zoals hierboven) een bestand in te kunnen lezen, moet Rstudio wel weten waar het bestand staat. Op computers staan alle bestanden in een hierachische structuur (zie bijvoorbeeld onderstaande Figuur). Hoewel je misschien gewend bent om door deze structuur van "mappen" te klikken met de muis, moet je in een script altijd precies vertellen waar het bestand staat. Standaard zoekt Rstudio vaak in de home directory van je besturingsysteem (`/Users/Naam` in MacOs, `C:/Users/UserName/Documents` in Windows). De directory vanuit waar Rstudio naar het bestand zoekt, heet de *Working Directory* (rood omlijnd in de figuur). Door de Working Directory goed in te stellen, hoef je niet elke keer het hele pad naar het bestand in te typen (dit heet het absolute pad), maar kun je korter omschrijven waar het bestand staat (dit heet het relatieve pad). Vaak is het dus handig om je Working Directory aan te passen naar dezelfde map waar je het script hebt opgeslagen, zodat je alle data, scripts, en grafieken een beetje bij elkaar kan houden. Dit kan je doen door, nadat je je script ergens hebt opgeslagen, te navigeren naar `Session > Set Working Directory > To Source File Location`.
+
+![](figuren/file_tree.png)
 
 ## Indexing
 
-Indexing is het selecteren van specifieke waarden uit een vector, matrix, of dataframe. Dit doe je door de positie (index) van deze elementen tussen vierkante haakjes aan te geven:
+Nu je weet hoe je tabellen in kan lezen, is het belangrijk om te leren over "indexing". Indexing is het selecteren van specifieke waarden uit een vector, matrix, of dataframe. Dit doe je door de positie (index) van deze elementen tussen vierkante haakjes aan te geven:
 
 ```{r}
 #| eval: false
@@ -249,7 +253,7 @@ som_kwadraten(3, 4)           # 25
 som_kwadraten(0.5, 0.1)       # 0.26
 ```
 
-Bij het definieren van de functie geven de gekrulde haken aan wat de zogeheten `scope` van de functie is: dit blokje code behoort alleen deze functie toe. Je ziet deze `scopes` ook terug wanneer je op bepaalde voorwaarden gaat toetsen, wat het volgende onderdeel zal uitleggen. 
+Bij het definieren van de functie geven de gekrulde haken aan wat de zogeheten `scope` van de functie is: dit blokje code behoort alleen deze functie toe. Je ziet deze `scopes` ook terug wanneer je op bepaalde voorwaarden gaat toetsen, wat het volgende onderdeel zal uitleggen.
 
 ##Condities
 
@@ -311,7 +315,7 @@ Let op: als je de bovenstaande code goed leest, zie je dat er helemaal **niets**
 
 Hoewel functies het makkelijker maken om dezelfde berekening meerdere keren uit te voeren, wat nu als je een functie 100 keer wil aanroepen? Hebben we dan 100 regels nodig? Het antwoord is nee, want elke programmeertaal (dus ook `R`) heeft manieren om stukken code gemakkelijk te herhalen. In R bestaan veel verschillende manieren om dit te doen (`repeat`, `apply`, `while`), maar in deze introductie maken we vooral kennis met de meest-gebruikte loop in de programmeer-wereld: de for-loop.
 
-Laten we bijvoorbeeld de exponentiele afname van paracetamol in het bloed beschrijven met een simpele ``simulatie''. Iemand neemt 400 milligram paracetamol in, wat ieder uur (ongeveer) met 70% afneemt:
+Laten we bijvoorbeeld de exponentiele afname van paracetamol in het bloed beschrijven met een simpele \`\`simulatie''. Iemand neemt 400 milligram paracetamol in, wat ieder uur (ongeveer) met 70% afneemt:
 
 ```{r}
 #| eval: false
@@ -324,14 +328,14 @@ for(i in 1:10){
 cat('Na 10 uur is er',p,'milligram paracetamol in het bloed') # 11.299 mg
 ```
 
-Aan het einde van deze `for-loop` kunnen we kijken wat de waarde van p is door in de console `p` te typen. 
+Aan het einde van deze `for-loop` kunnen we kijken wat de waarde van p is door in de console `p` te typen.
 
-```
+```         
 > p
 [1] 11.29901
 ```
 
-Zoals we eerder hadden besproken, staat de `[1]` voor het feit dat dit de eerste en enige waarde is die in de variable `p` is opgeslagen. We hebben nu dus alleen de **laatste* waarde bewaard. Wellicht willen we echter graag bijhouden hoeveel paracetamol er in elke stap aanwezig was, zodat we dat na onze loop kunnen plotten. Om dit te doen, kunnen we de `i` als index gebruiken om een vector te vullen:
+Zoals we eerder hadden besproken, staat de `[1]` voor het feit dat dit de eerste en enige waarde is die in de variable `p` is opgeslagen. We hebben nu dus alleen de \*\*laatste\* waarde bewaard. Wellicht willen we echter graag bijhouden hoeveel paracetamol er in elke stap aanwezig was, zodat we dat na onze loop kunnen plotten. Om dit te doen, kunnen we de `i` als index gebruiken om een vector te vullen:
 
 ```{r}
 p <- 400 # hoeveelheid paracetamol
@@ -407,4 +411,3 @@ legend(70, max(p), legend=c("Paracetamol"), col=c("purple"),lty=1,lwd=2)
 ```
 
 Er zijn binnen R nog veel meer manieren om data te plotten, zoals bijvoorbeeld de `boxplot` die je bij het onderdeel statistiek zeker nog tegen zal komen. Daarnaast zijn er in R veel packages beschikbaar kunnen helpen bij het maken van mooie grafieken, zoals [ggplot](https://ggplot2.tidyverse.org/), maar daar gaan we in deze cursus niet dieper op in.
-
