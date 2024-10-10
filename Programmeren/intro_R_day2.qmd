@@ -1,12 +1,12 @@
-# Dag 2: programmeren met R
+# Programmeren met R
 
 ## Typen variabelen
 
-We hebben in het eerste onderdeel al een beetje kennis gemaakt met variabelen. Maar je kan in variabelen niet alleen nummers opslaan, maar ook een heleboel andere type gegevens. De meest belangrijke variabelen zijn:
+We hebben in het eerste onderdeel al een beetje kennis gemaakt met variabelen, door letters bepaalde numerieke waarden te geven (`a <- 2`, `b <- 9.5`, *etc*). Maar je kan in variabelen niet alleen nummers opslaan, maar ook een heleboel andere type gegevens. De meest belangrijke variabelen zijn:
 
 -   *Numerics* (`1`, `2`, `3`, maar ook `2.158196` zijn *numeric*)
 
--   *Logicals* (`TRUE` en `FALSE`)
+-   *Logicals* (`TRUE` en `FALSE`, ook wel `T`/`F` of `1`/`0`)
 
 -   *Strings* (`"a"`, `"Hoi"`, of `"bananen zijn krom"`)
 
@@ -21,7 +21,9 @@ peren <- "groen"
 appels + peren
 ```
 
-Als je de bovenstaande code probeert uit te voeren, geeft R een foutmelding: `Error in appels + peren : non-numeric argument to binary operator`. Dat is maar goed ook, want hoewel dit een overduidelijk onzinnige som is, kan het ook zijn dat je met de beste intenties een foutje maakt!
+Als je de bovenstaande code probeert uit te voeren, geeft R een foutmelding: `Error in appels + peren : non-numeric argument to binary operator`[^intro_r_day2-1]. Het is erg prettig dat R deze foutmelding geeft. Hoewel dit een overduidelijk onzinnige som is, kan het ook zijn dat je met de beste intenties een foutje maakt!
+
+[^intro_r_day2-1]: Wat deze error precies betekent is niet belangrijk
 
 ## Data structuren
 
@@ -34,9 +36,7 @@ Het is vaak heel handig om je variabelen in lijsten of tabellen op te slaan. Der
 -   *Dataframes* (tabel waarin elke kolom een ander type data kan zijn)
 
 ::: {style="text-align:center"}
-![datastructs](figuren/data_structure.jpg){width="400"}
-
-*(figuur is niet van mij, misschien even namaken)*
+![Belangrijkste data structuren in R](figuren/datastructs.png){width="400"}
 :::
 
 ### Vectoren {#sec-vectoren}
@@ -46,9 +46,11 @@ Om een vector te maken, kunnen we deze handmatig intypen:
 ```{r}
 #| eval: false
 mijnvector <- c(1,2,0.1,-5)
+mijnvector[1] # geeft het eerste getal
+mijnvector[2] # geeft het tweede getal, etc
 ```
 
-Maar handmatig getallen invoeren is niet altijd handig. Gelukkig kun je met R een boel lijstjes maken op een snellere manier:
+Maar handmatig getallen invoeren is niet altijd handig. Gelukkig kun je met R een boel lijstjes maken op een snellere manier automatisch genereren:
 
 ```{r}
 #| eval: false
@@ -62,7 +64,7 @@ sample(letters,4)  # "f", "j", "o", "y" (iedere keer anders!)
 runif(2)           # 0.9965360 0.8978062 (iedere keer anders!)
 ```
 
-De laatste vijf regels van het bovenstaande script zijn voorbeelden van "functies". Een functie is een herhaalbaar blokje code die je aanroept met de naam (rep, seq, sample), gevolgd door haakjes met daartussen eventuele *argumenten*. De functie zet deze argumenten om in een zogeheete return-waarde, wat bijvoorbeeld een getal of een lijst getallen is. Je leert meer over functies in het onderdeel @sec-functies.
+De laatste vijf regels van het bovenstaande script zijn voorbeelden van "functies". Een functie is een herhaalbaar blokje code die je aanroept met de naam (rep, seq, sample), gevolgd door haakjes met daartussen eventuele *argumenten*. De functie zet deze argumenten om in een zogeheete *return*-waarde, wat bijvoorbeeld een getal of een lijst getallen is. Je leert meer over functies in het onderdeel @sec-functies.
 
 Je kan met vectoren ook rekenen. Zo kan je bijvoorbeeld twee vectoren bij elkaar optellen, of één en hetzelfde getal bij alle elementen van een vector optellen:
 
@@ -78,7 +80,7 @@ x + y / 100        # 1.01 2.10 3.04
 (x + y) / 100      # 0.02 0.12 0.07
 ```
 
-In de bovenstaande code zie je een subtiel verschil tussen de laatste twee regels. Net als bij wiskunde gaan delen en vermedigvuldigen altijd voor, dus moet je soms aangeven in welke volgorde je de berekeninng wil uitvoeren!
+In de bovenstaande code zie je een subtiel verschil tussen de laatste twee regels. Net als bij wiskunde gaan haakjes voor delen en vermedigvuldigen. Soms moet je dus goed aangeven in welke volgorde je de berekeninng wil uitvoeren!
 
 ### Matrices
 
@@ -101,36 +103,66 @@ letter_matrix <- matrix(sample(letters,9),nrow=3) # willekeurige letters
 
 ### Data frames
 
-De laatste (en misschien wel belangrijkste) data structuur in R is de data frame. In een dataframe bevat elke kolom een ander gegeven (naam, leeftijd, haarkleur), en is elke rij een apart observatie. Een dergelijke structuur is heel handig om wetenschappelijke data te verzamelen. Ook deze kun je weer handmatig invoeren:
+De laatste (en voor biologen meest belangrijke) data structuur in R is de data frame. In een dataframe bevat elke kolom een ander gegeven (naam, leeftijd, haarkleur), en is elke rij een apart observatie. Een dergelijke structuur is heel handig om wetenschappelijke data te verzamelen. Ook deze kun je weer handmatig invoeren:
 
 ```{r}
 #| eval: false
-biologen <- data.frame(naam=c("Lina","Omar","Bram"),
-                       leeftijd=c(19,18,20), 
+biologen <- data.frame(naam=c("Lina","Yassin","Bram"),
+                       leeftijd=c(19,18,80), 
                        haarkleur=c("Blauw","Groen", "Paars"))
+
 ```
 
-Echter is het natuurlijk onzinnig om handmatig data frames in te typen in R. In plaats daarvan kun je grote datasets vaak opslaan of downloaden in een groot tekstbestand, bijvooreeld in *comma-seperated-value* (csv) bestanden. Als je een dergelijk tekstbestand hebt, kun je deze inlezen met de functie `read.table` of `read.csv`:
+::: {.content-visible when-format="html"}
+```{r}
+#| echo: false
+
+biologen <- data.frame(naam=c("Lina","Yassin","Bram"),
+                       leeftijd=c(19,18,80), 
+                       haarkleur=c("Blauw","Groen", "Paars"))
+
+library(DT)
+library(datasets)
+datatable(biologen, options = list(searching=F, pageLength = 3,lengthChange = FALSE, info=FALSE,paging=FALSE))
+```
+:::
+
+<br>Als je deze dataset wil bekijken in Rstudio, kun je `View(biologen)` typen. Dit opent een tabblad waarin je de data kan verkennen en sorteren (voor grotere datasets is dit natuurlijk erg handig!).
+
+Het natuurlijk meestal niet handig om handmatig data frames in te typen in R. In plaats daarvan kun je grote datasets vaak opslaan of downloaden in een groot tekstbestand, bijvooreeld in *comma-seperated-value* (csv) bestanden. Als je een dergelijk tekstbestand hebt, kun je deze inlezen met de functie `read.table` of `read.csv`:
 
 ```{r}
 #| eval: false
-covid_data <- read.csv("COVID_testen_Utrecht.csv") #deze file moet wel in je working directory staan!
+covid_data <- read.csv("E:/Files/Covid.csv") # waar het bestand staat
 head(covid_data) # bekijk de eerste 6 rijen
 View(covid_data) # bekijk de hele tabel in Rstudio
 ```
 
+::: {.content-visible when-format="html"}
+```{r}
+#| echo: false
+library(DT)
+library(datasets)
+suppressMessages(library(here)) # Package required 
+covid_data <- read.csv(here("Programmeren/COVID_testen_Utrecht.csv")) # waar het bestand staat
+datatable(covid_data, options = list(searching=F, pageLength = 8))
+```
+:::
+
 ## Files, paden, en de 'working directory'
 
-Om (zoals hierboven) een bestand in te kunnen lezen, moet Rstudio wel weten waar het bestand staat. Standaard zoekt Rstudio vaak in de home directory van je besturingsysteem (`/Users/Naam` in MacOs, `C:/Users/UserName/Documents` in Windows). De directory vanuit waar Rstudio naar het bestand zoekt, heet de *Working Directory*. Vaak is het handig om je Working Directory aan te passen naar dezelfde map waar je het script hebt opgeslagen, zodat je alle data, scripts, en grafieken een beetje bij elkaar kan houden. Dit kan je doen door te navigeren naar `Session > Set Working Directory > To Source File Location`.
+Om (zoals hierboven) een bestand in te kunnen lezen, moet Rstudio wel weten waar het bestand staat. Op computers staan alle bestanden in een hierachische structuur (zie bijvoorbeeld onderstaande Figuur). Hoewel je misschien gewend bent om door deze structuur van "mappen" te klikken met de muis, moet je in een script altijd precies vertellen waar het bestand staat. Standaard zoekt Rstudio vaak in de home directory van je besturingsysteem (`/Users/Naam` in MacOs, `C:/Users/UserName/Documents` in Windows). De directory vanuit waar Rstudio naar het bestand zoekt, heet de *Working Directory* (rood omlijnd in de figuur). Door de Working Directory goed in te stellen, hoef je niet elke keer het hele pad naar het bestand in te typen (dit heet het absolute pad), maar kun je korter omschrijven waar het bestand staat (dit heet het relatieve pad). Vaak is het dus handig om je Working Directory aan te passen naar dezelfde map waar je het script hebt opgeslagen, zodat je alle data, scripts, en grafieken een beetje bij elkaar kan houden. Dit kan je doen door, nadat je je script ergens hebt opgeslagen, te navigeren naar `Session > Set Working Directory > To Source File Location`.
+
+![](figuren/file_tree.png)
 
 ## Indexing
 
-Indexing is het selecteren van specifieke waarden uit een vector, matrix, of dataframe. Dit doe je door de positie (index) van deze elementen tussen vierkante haakjes aan te geven:
+Nu je weet hoe je tabellen in kan lezen, is het belangrijk om te leren over "indexing". Indexing is het selecteren van specifieke waarden uit een vector, matrix, of dataframe. Dit doe je door de positie (index) van deze elementen tussen vierkante haakjes aan te geven:
 
 ```{r}
 #| eval: false
 jaartallen <- 2009:2024         # Jaren dat ik biologie "studeer"
-jaartallen[6:9]                 # 2014 (6e jaar), 2015 (7e jaar)
+jaartallen[6:9]                 # 2014 2015 2016 2017
 
 m <- matrix(runif(9),nrow=3)    # Willekeurige getallen in een matrix
 m[1,2]    # rij 1, kolom 2
@@ -138,13 +170,13 @@ m[1,]     # rij 1 volledig
 m[,2]     # kolom 2 volledig
 m[1:2,3]  # van rij 1 t/m 2, alleen de 3e kolom
 
-biologen <- data.frame(naam=c("Lina","Omar","Bram"),
-                       leeftijd=c(19,26,36), 
+biologen <- data.frame(naam=c("Lina","Yassin","Bram"),
+                       leeftijd=c(19,18,80), 
                        haarkleur=c("Blauw","Groen", "Paars"))
 biologen[1,2] # eerste rij, tweede kolom (leeftijd: 19)
 ```
 
-Omdat in data frame de kolommen namen hebben, kun je ook deze gebruiken om specifieke datapunten te selecteren:
+Omdat in data frames de kolommen namen hebben, kun je ook deze gebruiken om specifieke datapunten te selecteren:
 
 ```{r}
 #| eval: false
@@ -156,18 +188,33 @@ Je kunt met dataframes ook met het dollar-teken een gehele kolom opvragen, een k
 ```{r}
 #| eval: false
 biologen$leeftijd
-biologen$leeftijd <- biologen$leeftijd + 2  # Alle biolgen zijn 1 jaar ouder geworden
+biologen$leeftijd <- biologen$leeftijd + 1  # Alle biolgen zijn 1 jaar ouder geworden
 biologen$rol <- c("student","assistent","docent") # Een nieuwe kolom genaamd 'rol'
 ```
 
-# Functies, condities, en loops
+::: {.content-visible when-format="html"}
+```{r}
+#| echo: false
+biologen <- data.frame(naam=c("Lina","Yassin","Bram"),
+                       leeftijd=c(19,18,80), 
+                       haarkleur=c("Blauw","Groen", "Paars")) 
+library(DT)
+library(datasets)
+biologen$leeftijd <- biologen$leeftijd + 1  # Alle biolgen zijn 1 jaar ouder geworden
+biologen$rol <- c("student","assistent","docent") # Een nieuwe kolom genaamd 'rol'
 
-## Functies en help-functie {#sec-functies}
+datatable(biologen, options = list(searching=F, pageLength = 3,lengthChange = FALSE, info=FALSE,paging=FALSE))
+```
+:::
 
-In het onderdeel @sec-vectoren heb je al een aantal voorbeelden gezien van functies, herhaalbare blokjes code die je gemakkelijk kan aanroepen. Een functies geef je waarden door (deze waarden heten *argumenten*), en geeft één of meerdere waarden terug (deze waarde heet de *return*-waarde). Er bestaan standaard in R een heleboel functies, waarvan je een aantal in deze cursus nog veel zal tegenkomen:
+## Functies, condities, en loops
+
+### Functies en help-functie {#sec-functies}
+
+In het onderdeel @sec-vectoren heb je al een aantal voorbeelden gezien van functies, herhaalbare blokjes code die je gemakkelijk kan aanroepen. Functie hebben een `input` (waarde(n) die je meegeeft als zogeheten *argumenten*), en `output` (waarde(n) die het terug geeft, de *return*-waarde). Er bestaan standaard in R een heleboel functies, waarvan je een aantal in deze cursus nog veel zal tegenkomen:
 
 -   `read.csv`, leest comma-separated-values bestand in als dataframe
--   `print` of `cat`, geef iets (variabelen of tekst) weer in de console
+-   `print` of `cat`, geeft iets (variabelen of tekst) weer in de console
 -   `plot`, om data te plotten in een grafiek
 -   `length` geeft de lengte van een vector
 -   `mean`, gemiddelde van een vector
@@ -186,11 +233,11 @@ Er zijn nog veel meer standaard functies in R. Als je graag meer wil eten over h
 
 Dit geeft extra uitleg voor deze functie in het "Help" venster:
 
-![Elephant](figuren/Screenshot%202024-07-20%20at%2017.58.11.png)
+![](figuren/Screenshot%202024-07-20%20at%2017.58.11.png)
 
-## Zelf functies maken
+### Zelf functies maken
 
-Het handige aan functies is dat je ze ook zelf kan maken, als je bijvoorbeeld iets heel specifieks wil doen. Je moet hiervoor aangeven wat de argumenten zijn, welke berekening op basis van deze argumenten wordt uitgevoerd, en wat er door de functie wordt teruggegeven (de return-waarde). Hier is een voorbeeld:
+Je kan ook zelf functies maken, als je bijvoorbeeld iets heel specifieks wil doen. Je moet hiervoor aangeven wat de argumenten zijn, welke berekening op basis van deze argumenten wordt uitgevoerd, en wat er door de functie wordt teruggegeven (de return-waarde). Hier is een voorbeeld:
 
 ```{r}
 #| eval: false
@@ -206,15 +253,16 @@ som_kwadraten(3, 4)           # 25
 som_kwadraten(0.5, 0.1)       # 0.26
 ```
 
-## Condities
+Bij het definieren van de functie geven de gekrulde haken aan wat de zogeheten `scope` van de functie is: dit blokje code behoort alleen deze functie toe. Je ziet deze `scopes` ook terug wanneer je op bepaalde voorwaarden gaat toetsen, wat het volgende onderdeel zal uitleggen.
+
+##Condities
 
 Vaak is het handig om in een script te controleren of aan een bepaalde voorwaarde wordt voldaan. Hiervoor kun je `if`, `else`, en `else if` gebruiken:
 
 ```{r}
 #| eval: false
-leeftijd_student <- sample(16:19,1)
-volwassen_leeftijd <- 18
-if(leeftijd_student >= volwassen_leeftijd){
+leeftijd_student <- sample(16:19,1) # genereer willekeurige leeftijd tussen 16 en 19
+if(leeftijd_student >= 18){
   print("Student is volwassen")
 } else{
   print("Student is niet volwassen")
@@ -265,9 +313,9 @@ Let op: als je de bovenstaande code goed leest, zie je dat er helemaal **niets**
 
 ## Loops
 
-Hoewel functies het makkelijker maken om dezelfde berekening meerdere keren uit te voeren, wat nu als je een functie 100 keer wil aanroepen? Hebben we dan 100 regels nodig? Het antwoord is nee, want elke programmeertaal heeft manieren om stukken code te herhalen. In R bestaan veel verschillende manieren om dit te doen (`repeat`, `apply`, `while`), maar in deze introductie maken we vooral kennis met de meest-gebruikte loop: de for-loop.
+Hoewel functies het makkelijker maken om dezelfde berekening meerdere keren uit te voeren, wat nu als je een functie 100 keer wil aanroepen? Hebben we dan 100 regels nodig? Het antwoord is nee, want elke programmeertaal (dus ook `R`) heeft manieren om stukken code gemakkelijk te herhalen. In R bestaan veel verschillende manieren om dit te doen (`repeat`, `apply`, `while`), maar in deze introductie maken we vooral kennis met de meest-gebruikte loop in de programmeer-wereld: de for-loop.
 
-Laten we bijvoorbeeld de exponentiele afname van paracetamol in het bloed beschrijven met een simpele simulatie. Iemand neemt 400 milligram paracetamol in, wat ieder uur (ongeveer) met 70% afneemt:
+Laten we bijvoorbeeld de exponentiele afname van paracetamol in het bloed beschrijven met een simpele \`\`simulatie''. Iemand neemt 400 milligram paracetamol in, wat ieder uur (ongeveer) met 70% afneemt:
 
 ```{r}
 #| eval: false
@@ -280,7 +328,14 @@ for(i in 1:10){
 cat('Na 10 uur is er',p,'milligram paracetamol in het bloed') # 11.299 mg
 ```
 
-Wellicht willen we graag bijhouden hoeveel paracetamol er in elke stap aanwezig was, zodat we dat na onze loop kunnen plotten. Om dit te doen, kunnen we de `i` als index gebruiken om een vector te vullen:
+Aan het einde van deze `for-loop` kunnen we kijken wat de waarde van p is door in de console `p` te typen.
+
+```         
+> p
+[1] 11.29901
+```
+
+Zoals we eerder hadden besproken, staat de `[1]` voor het feit dat dit de eerste en enige waarde is die in de variable `p` is opgeslagen. We hebben nu dus alleen de \*\*laatste\* waarde bewaard. Wellicht willen we echter graag bijhouden hoeveel paracetamol er in elke stap aanwezig was, zodat we dat na onze loop kunnen plotten. Om dit te doen, kunnen we de `i` als index gebruiken om een vector te vullen:
 
 ```{r}
 p <- 400 # hoeveelheid paracetamol
@@ -292,13 +347,13 @@ for(i in 1:10){
 plot(p, type='o')
 ```
 
-Omdat dit voorbeeld om simpele exponentiele afname gaat, hadden we de bovenstaande berekening ook "in één keer" kunnen uitrekenen door \$$p \cdot d^{10}$\$ uit te rekenen. Laten we dat even controleren:
+Omdat dit voorbeeld om simpele exponentiele afname gaat, hadden we de bovenstaande berekening ook "in één keer" kunnen uitrekenen door $p \cdot d^{10}$ uit te rekenen. Laten we dat even controleren:
 
 ```{r}
 #| eval: false
 p <- 400 # hoeveelheid paracetamol
 d <- 0.7 # afname (d van decay)
-p*d^10 # 11.299 mg
+p*d^10 # 11.299 mg, dat klopt dus!
 ```
 
 Dit antwoord komt inderdaad overeen met onze berekening met de `for` loop. Hoewel deze loop dus misschien wat onnodig lijkt, hebben we niet altijd zo'n simpele formule beschikbaar. Bovendien willen we wellicht iets veel specifiekers simuleren, bijvoorbeeld dat de persoon elke 12 uur opnieuw paracetamol inneemt:
@@ -335,7 +390,7 @@ for(i in 1:100){
 plot(p, type='o')
 ```
 
-# Grafieken plotten met R
+## Grafieken plotten met R
 
 Om de bovenstaande plot van de paracetamol afname iets vollediger en mooier te maken, kunnen we meer argumenten aan de plotfunctie toevoegen:
 
@@ -355,10 +410,4 @@ plot(p, type='l', lwd=2, col="purple", xlab="Tijd (uren)", ylab="Paracetamol in 
 legend(70, max(p), legend=c("Paracetamol"), col=c("purple"),lty=1,lwd=2)
 ```
 
-Er zijn binnen R nog veel meer manieren om data te plotten, zoals bijvoorbeeld de `boxplot` die je bij het onderdeel statistiek zeker nog tegen zal komen. Daarnaast zijn er in R veel `packages` beschikbaar kunnen helpen bij het maken van mooie grafieken, zoals [ggplot](https://ggplot2.tidyverse.org/) maar daar gaan we in deze cursus niet dieper op in.
-
-### Opgaven deel 2: TODO
-
-1.  Neem bovenstaande script over in R (tip: je kan de hele code in 1 keer kopiëren met het knopje rechtsboven)
-2.  Voeg aan het einde van een script een extra regel toe, waar je de variabele `e` in `2` verandert.
-3.  Voer het script uit. De waarde van de uitkomst-variabele is niet verandert. Leg met de kook-analogie uit waarom niet.
+Er zijn binnen R nog veel meer manieren om data te plotten, zoals bijvoorbeeld de `boxplot` die je bij het onderdeel statistiek zeker nog tegen zal komen. Daarnaast zijn er in R veel packages beschikbaar kunnen helpen bij het maken van mooie grafieken, zoals [ggplot](https://ggplot2.tidyverse.org/), maar daar gaan we in deze cursus niet dieper op in.
