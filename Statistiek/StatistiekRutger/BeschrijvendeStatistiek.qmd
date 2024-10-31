@@ -1,0 +1,708 @@
+{{< include _macros.tex >}}
+
+# Beschrijvende statistiek
+
+## Wat is beschrijvende statistiek?
+
+Je hebt maandenlang hele dagen in het lab gestaan, en het resultaat van
+je werk is een enorme verzameling getallen, zorgvuldig gerangschikt in
+een Excelbestand. Wat nu? Je bent eigenlijk pas halverwege; je begrijpt
+dat het je taak is om in de cijferbrij patronen te ontdekken die iets
+vertellen over de onderliggende biologie. Maar met al die getallen voor
+je neus zie je door de bomen het bos niet meer.
+
+Het probleem is: ons brein is niet gemaakt voor het verwerken van lange
+lijsten getallen. **Beschrijvende statistiek** is het onderdeel van de
+statistiek dat zich bezighoudt met methoden en technieken voor het
+creëren van overzicht in gegevens. Daarover gaat dit hoofdstuk.
+
+In de praktijk kunnen de gebruikte technieken worden onderverdeeld in
+drie categorieën.
+
+Ten eerste kun je gegevens samenvatten in **tabellen**, zoals
+frequentietabellen of kruistabellen. Vaak zijn die tabellen een stuk
+beter te overzien dan de grote lijst met individuele gegevens.
+
+Ten tweede kun je **kengetallen** berekenen. Met kengetallen bedoelen we
+getallen die je iets vertellen over een hele reeks waarden. Een
+voorbeeld is het gemiddelde; dat vertelt je wat een typische waarde is.
+Kengetallen worden ook wel **statistieken** genoemd.
+
+Ten derde kun je je gegevens **visualiseren** met grafieken en
+diagrammen. Misschien heb je er nooit bij stilgestaan hoe slim het idee
+van een grafiek eigenlijk is. Onze visueel systeem is enorm goed in het
+analyseren van beelden van objecten in de ruimte. Het idee is om
+variabelen die eigenlijk helemaal geen ruimtelijke eigenschappen
+voorstellen weer te geven als de coördinaten, vormen, kleuren, of maten
+van inktpatronen op papier. Structuur in de gegevens kan zo met het oog
+worden ontdekt.
+
+Deze drie categorieën --- tabellen, kengetallen, visualisaties --- komen
+hieronder allemaal aan bod. Je zult zien dat ze sterk met elkaar
+samenhangen; daarom kunnen we ze niet los van elkaar bespreken.
+
+Maar, hoe je gegevens kunt beschrijven hangt sterk af van het soort
+gegevens waarmee je te maken hebt. Daarom moeten we eerst stilstaan bij
+de verschillende typen gegevens die je kunt tegenkomen.
+
+## Verschillende soorten variabelen
+
+Een dataset bestaat meestal uit een verzameling metingen of observaties
+van eigenschappen. Die eigenschappen worden **variabelen** genoemd.
+Bijvoorbeeld, mutanten van *Drosophila* (fruitvliegen) kunnen
+verschillende kleuren ogen hebben; oogkleur is dus een variabele. Andere
+voorbeelden van variabelen zijn het aantal eieren in een vogelnest, de
+dikte van een jaarring in een boomstam, of de beoordeling van een hotel
+(1 tot 5 sterren).
+
+Het is nuttig om variabelen in te delen in verschillende typen. Een
+veelgebruikte indeling is weergegeven in het volgende diagram:
+
+```{mermaid}
+%%| label: fig-variabelen
+%%| fig-cap: "Indeling van typen variabelen."
+flowchart TB
+  A(Variabelen) --> C("Categorisch (Kwalitatief)")
+  A --> B("Numeriek (Kwantitatief)")
+  B --> F(Discreet)
+  B --> G(Continu)
+  C --> E(Nominaal)
+  C --> D(Ordinaal)
+```
+
+Het diagram maakt eerst onderscheid tussen numerieke en categorische
+variabelen.
+
+**Numerieke variabelen** zijn variabelen waarvan de waarden getallen
+zijn. Voorbeelden zijn de het aantal dendrieten aan een neuron, of de
+concentratie van stresshormoon cortisol in het speeksel van een varken.
+Numerieke variabelen worden ook wel kwantitatieve variabelen genoemd.
+
+**Categorische variabelen** zijn variabelen waarvan de waarden een
+categorie of groep aanduiden. De waarden stellen geen meetbare
+hoeveelheden voor. Je kunt ze dus ook niet optellen of aftrekken.
+Voorbeelden zijn de genus (het geslacht) van bacteriën aangetroffen bij
+blaasontstekingen (*Escherichia*, *Klebsiella*, ...), of het stadium van
+kanker (Stadium 0, I, II, III, of IV). Dat kankerstadium in een
+(Romeins) getal wordt uitgedrukt wil niet zeggen dat het een numerieke
+variabele is. Het getal stelt namelijk geen meetbare hoeveelheid voor.
+We hadden de stadia net zo goed kunnen aanduiden met letters A, B, C, D,
+en E. Categorische variabelen worden ook wel kwalitatieve variabelen
+genoemd.
+
+Binnen de numerieke variabelen maken we vervolgens onderscheid tussen
+**discrete** en **continue** variabelen. Een numerieke variabele is
+**discreet** als deze alleen specifieke, afzonderlijke waarden kan
+aannemen. Dit is bijvoorbeeld het geval bij tellingen, zoals het aantal
+plantensoorten dat je op een vierkante meter heidegrond aantreft. Deze
+variabele kan alleen niet-negatieve gehele getallen aannemen (0, 1, 2,
+...). Een numerieke variabele is **continu** als deze in theorie elke
+waarde uit een interval van reële getallen kan aannemen. Een voorbeeld
+hiervan is lichaamsgewicht: een lichaamsgewicht kan in principe elk
+positief reëel getal zijn, zoals 86,143875 kg of zelfs een waarde als
+20$\pi$kg.
+
+Binnen de categorische variabelen onderscheiden we **ordinale** en
+**nominale** variabelen. Bij **ordinale** variabelen hebben de mogelijke
+waarden een natuurlijke volgorde. De kankerstadia (0, I, II, III, IV)
+die we hierboven al tegenkwamen zijn hiervan een goed voorbeeld. Bij
+**nominale** variabelen hebben de waarden géén natuurlijke rangorde;
+het zijn enkel namen of labels. Een voorbeeld hiervan is de
+voedingsstrategie van organismen, ingedeeld als herbivoor, carnivoor,
+omnivoor, of detrivoor.
+
+::: {#exr-typen-vars}
+## Typen variabelen
+
+Van welk type zijn de volgende variabelen?
+
+**a.** Bloedgroep bij mensen (A, B, AB, O).
+
+**b.** Aantal chromosomen in een cel.
+
+**c.** Opleidingsniveau. Het CBS hanteert 5 niveaus, waarbij niveau 1
+staat voor "Basisonderwijs", niveau 2 voor "Vmbo, mbo1, avo onderbouw"
+etc.
+
+**d.** Hartslagfrequentie.
+
+**e.** Verdubbelingstijd van een bacteriekolonie.
+
+**f.** Fitness, gemeten als het aantla nakomelingen van een organisme in
+de volgende generatie.
+:::
+
+::: {#exr-factoren}
+## Factoren: categorische variabelen in R.
+
+Schrijven
+:::
+
+Naast de indeling die hierboven gegeven is worden ook soms andere
+indelingen gebruikt. Je kunt hier meer over lezen in het artikel
+[Statistical data
+type](https://en.wikipedia.org/wiki/Statistical_data_type) op Wikipedia.
+
+## Gegevens samenvatten in tabellen
+
+Vaak kan een lange lijst waarnemingen worden samengevat met een tabel.
+Een veelvoorkomende tabel is de **frequentietabel**. Dat is een tabel
+die samenvat hoe vaak iedere waarde in de lijst waarnemingen voorkomt.
+De manier waarop je een frequentietabel opstelt, hangt af van het type
+variabele dat de tabel beschrijft.
+
+### Frequentietabellen voor categorische variabelen
+
+We beginnen met categorische variabelen.
+
+::: {#exm-NHANES}
+## De NHANES dataset
+
+Als voorbeeld nemen we de [NHANES
+dataset](https://cran.r-project.org/web/packages/NHANES/), die is
+samengesteld door het US National Center for Health Statistics (NCHS).
+Jaarlijks onderzoekt het NCHS de gezondheid van ongeveer 5000 Amerikanen
+van alle leeftijden. De deelnemers vullen ook een enquête in. Daarbij
+geven ze onder andere aan hoe ze zelf hun algemene gezondheid
+inschatten: *Slecht*, *Matig*, *Goed*, *Zeer Goed*, of *Uitstekend*.
+`Gezondheidsstatus` is in deze dataset dus een ordinale variabele. De
+dataset die we hier gebruiken bevat de gegevens van een groot aantal
+personen die tussen 2009 en 2012 zijn onderzocht.
+
+De frequentietabel van `Gezondheidsstatus` ziet er als volgt uit:
+
+```{r}
+#| echo: false
+#| label: tbl-taart
+#| caption: "Frequentietabel van de gezondheidsstatus in de NHANES-dataset."
+
+data <- data.frame(
+  "Gezondheidsstatus" = c("Slecht", "Matig", "Goed", "Zeer Goed", "Uitstekend"),
+  "Absolute frequentie" = c(187, 1010, 2956, 2508, 878),
+  "Relatieve frequentie" = c(0.02, 0.13, 0.39, 0.33, 0.12)
+)
+
+knitr::kable(data, col.names = c("Gezondheidsstatus", "Absolute frequentie", "Relatieve frequentie"), caption = "Frequentietabel van Gezondheidsstatus in de NCHS-gegevens")
+```
+:::
+
+Je ziet dat voor elke mogelijke waarde van de gezondheidsstatus de
+frequentie wordt weergegeven. In dit geval laat de tabel zowel de
+**absolute frequentie** als de **relatieve frequentie** zien. De
+absolute frequentie geeft aan hoe vaak een bepaalde waarde voorkomt in
+de dataset. De **relatieve frequentie** toont het aandeel van een
+bepaalde waarde in verhouding tot het totale aantal waarnemingen. Dit
+wordt uitgedrukt als een fractie of **proportie**: een getal tussen 0
+en 1. Soms wordt een relatieve frequentie ook als een percentage
+uitgedrukt.
+
+Het voordeel van de frequentietabel is duidelijk: een dataset met
+duizenden regels is samengevat in een frequentietabel met 5 regels,
+zonder dat daarbij informatie verloren ging. Bovendien zijn de gegevens
+nu veel beter te overzien. Zo laat de frequentietabel direct zien dat de
+meeste mensen hun eigen gezondheid positief beoordelen (Goed, Zeer Goed,
+of Uitstekend). In de duizenden regels van de ruwe data springt die
+conclusie niet direct in het oog.
+
+::: {#exr-freqtab}
+## Frequentietabellen voor een categoriale variabele met R
+
+Toepassen op een concrete dataset. Uitwerken.
+:::
+
+### Frequentietabel voor continue variabelen
+
+Het opstellen van een frequentietabel voor een numerieke variabele is
+net iets minder vanzelfsprekend.
+
+Voor een voorbeeld grijpen we weer naar de dataset met
+gezondheidsgegevens van de NCHS. Deze dataset bevat van alle deelnemers
+die in de steekproef zijn opgenomen ook hun gewicht. Dit gewicht is
+gegeven in kg, tot op één decimaal. Het gevolg is dat er erg veel
+verschillende waarden gemeten zijn. Tellen hoe vaak iedere waarde
+voorkomt levert dus geen nuttige samenvatting op. Dit is een algemeen
+probleem voor continue variabelen.
+
+Als we een frequentietabel willen maken voor een continue variabele
+moeten we de gegevens daarom indelen in verschillende klassen. Dat gaat
+zo:
+
+1.  Bepaal eerst de kleinste en de grootste waarde onder de
+    waarnemingen. Het interval van de kleinste tot en met de grootste
+    waarde noemen we het **bereik** van de waarnemingen.
+2.  Verdeel vervolgens de reële as in gelijke intervallen. Dat zijn de
+    **klassen**.
+3.  Tel daarna voor elke klasse het aantal waarnemingen dat binnen de
+    klasse valt. Dit aantal is de absolute frequentie van de klasse. (We
+    hoeven natuurlijk alleen de klassen mee te nemen die overlappen met
+    het bereik.)
+4.  Een lastig punt is: wat doe je als een waarneming precies op een
+    grens valt tussen klassen? In deze cursus tellen we de waarde dan
+    mee in de hogere klasse, maar dat is een willekeurige conventie.
+5.  Nu heb je alle gegevens om de absolute frequentietabel op te
+    stellen. Om ook de relatieve frequentie van iedere klasse te
+    berekenen, deel je de absolute frequenties door het totaal aantal
+    waarnemingen.
+
+Als we deze stappen toepassen op het voorbeeld, is dit het resultaat:
+
+```{r}
+#| echo: false
+#| label: tbl-gewicht
+
+gewicht_data <- data.frame(
+  "Lichaamsgewicht (kg)" = c("[0,10)", "[10,20)", "[20,30)", "[30,40)", "[40,50)", "[50,60)", "[60,70)", "[70,80)", 
+                             "[80,90)", "[90,100)", "[100,110)", "[110,120)", "[120,130)", "[130,140)", "[140,150)", 
+                             "[150,160)", "[160,170)", "[170,180)", "[180,190)", "[190,200)", "[200,210)", "[210,220)", 
+                             "[220,230)"),
+  "Absolute frequentie" = c(133, 618, 424, 288, 448, 1068, 1547, 1630, 1416, 939, 691, 355, 174, 86, 49, 11, 26, 6, 6, 2, 1, 0, 2)
+)
+
+knitr::kable(gewicht_data, col.names = c("Lichaamsgewicht (kg)", "Absolute frequentie"), caption = "Frequentietabel van de lichaamsgewichten in de NHANES dataset")
+```
+
+Deze tabel laat goed zien dat \[...\] .
+
+De lastigste stap is het kiezen van de klassen. Daarvoor moet je
+namelijk besluiten op welke plek je de klassen laat beginnen en hoe
+breed je de klassen maakt. Hiervoor zijn allerlei formele regels
+voorgesteld, maar met gezond verstand kom je een heel eind.
+
+-   Ronde getallen zijn overzichtelijk; in het voorbeeld gebruikten we
+    daarom intervallen die beginnen en eindigen op een geheel tiental.
+-   Als je heel brede intervallen gebruikt, veeg je veel gegevens op één
+    hoop. Het gevaar is dat je daarmee belangrijke patronen in je data
+    onzichtbaar maakt. (We komen hierop terug bij het hoofdstukje over
+    histogrammen.) Aan de andere kant, als je heel smalle intervallen
+    gebruikt, wordt de tabel heel lang, en dat levert geen
+    overzichtelijke samenvatting op. Bovendien wordt het aantal
+    waarnemingen per klasse dan klein en dus sterk afhankelijk van
+    toeval. Voor een geschikte klassenbreedte zoek je dus een compromis
+    tussen beide gevaren.
+-   Meestal is het verstandig om iedere klasse dezelfde breedte te
+    geven. Als sommige klassen breder zijn dan andere kunnen de
+    frequenties namelijk een misleidend beeld geven. Er zijn
+    uitzonderingen: het is bijvoorbeeld niet ongebruikelijk om een
+    restcategorie in een tabel op te nemen voor alle waarnemingen groter
+    dan een bepaalde grens. Gebruik altijd je gezond verstand: als je
+    keuze een misleidend beeld geeft, zul je iets anders moeten
+    verzinnen.
+
+### Frequentietabel voor discrete variabelen
+
+Als je een frequentietabel wilt maken voor een *discrete* numerieke
+variabele, dan kunnen we twee situaties onderscheiden.
+
+Soms zijn de waarnemingen verspreid over een klein aantal waarden.
+Bijvoorbeeld, stel dat in een dataset over Nederlandse gezinnen ook het
+aantal kinderen per gezin is bijgehouden. In dat geval zullen de waarden
+1 t/m 3 heel vaak voorkomen. Het ligt dan voor de hand om de frequentie
+van iedere mogelijke uitkomst te berekenen, net als bij categorische
+variabelen.
+
+In andere gevallen zijn de waarden verspreid over een veel groter bereik
+en zijn de meeste waarden uniek. Dit is bijvoorbeeld het geval als we
+het aantal inwoners bekijken van alle landen in de wereld. Strikt
+genomen is deze variabele discreet, want het aantal inwoners is altijd
+een geheel getal. Maar er zijn geen twee landen met exact hetzelfde
+aantal inwoners, en dus ligt het voor de hand om de waarden in te delen
+in klassen, net als bij continue variabelen.
+
+### Kruistabellen
+
+\[Schrijf!\]
+
+## Verdelingen visualiseren
+
+Frequentietabellen geven weer hoe de waarden van een variabele in een
+dataset over de mogelijke waarde zijn verspreid. We noemen dat vaak de
+**verdeling** van de variabele.
+
+Het is vaak nuttig om de verdeling van een variabele te visualiseren.
+Daar zijn verschillende technieken voor. Welke techniek gebruikt kan
+worden, hangt af van het type van de variabele. Hieronder zullen we kort
+een aantal standaardmethodes bespreken die je waarschijnlijk al kent.
+
+### Staafdiagrammen
+
+Als de variabele categorisch is, wordt vaak een **staafdiagram**
+gebruikt om de verdeling te laten zien. Het idee van een staafdiagram is
+om de frequenties van iedere categorie weer te geven als de oppervlakte
+van een rechthoek -- een "staaf". Zo is het op het oog direct duidelijk
+welke categorieën de hoogste frequentie hebben.
+
+::: {#exm-staaf}
+## Staafdiagram van `gezondheidsstatus`
+
+Als voorbeeld kijken we terug naar de frequentietabel in Tabel ??
+hierboven, over de `gezondheidsstatus` van de deelnemers aan de studie
+van de NCHS. Die frequentietabel ziet er als staafdiagram als volgt uit:
+
+```{r}
+#| output: false
+#| echo: false
+
+library(dplyr)
+
+```
+
+```{r}
+#| code-fold: true
+#| fig.cap: "Staafdiagram van de zelf-gerapporteerde gezondheidsstatus in de gegevensvan het NCHS-onderzoek."
+#| label: fig-staaf
+
+# De gegevens zijn gepubliceerd in dit package:
+library(NHANES)
+library(ggplot2)
+library(knitr)
+
+# Laad de dataset in:
+data(NHANES)
+
+# Eerst: de variabele Gezondheidsstatus (HealthGen)
+
+# Vertaal de levels en zet ze in een logische volgorde:
+NHANES$HealthGen <- factor(
+  NHANES$HealthGen,
+  levels = c("Poor", "Fair", "Good", "Vgood", "Excellent"),
+  labels = c("Slecht", "Matig", "Goed", "Zeer Goed", "Uitstekend"),
+  ordered = TRUE)
+
+# We filteren de regels met missende waarden voor Gezondheidsstatus:
+NHANES_filtered <- NHANES %>% filter(!is.na(HealthGen))
+
+# Maak een frequentietabel en laat die zien.
+
+freq_table <- table(NHANES$HealthGen)
+tot_table <- addmargins(freq_table)
+
+# Maak een staafdiagram:
+ggplot(
+  data = NHANES_filtered, 
+  aes(x = HealthGen)
+  ) +
+  geom_bar(
+    fill = "darkorange", 
+    color = "black"
+    ) +
+  labs(
+    title = "Gezondheidsstatus, zelf-gerapporteerd",
+    x = "Gezondheidsstatus",
+    y = "Frequentie"
+    ) +
+  theme_minimal()
+```
+
+Dit staafdiagram laat helder zien hoe de gegevens over de waarden zijn
+verdeeld. Je ziet gelijk dat de meeste mensen hun gezondheid beoordelen
+als *Goed* of *Zeer goed*.
+:::
+
+Let bij het maken van een staafdiagram op drie dingen. Ten eerste, de
+$y$-as. Laat de $y$-as altijd op 0 beginnen. Als je de $y$-as
+"afsnijdt", zijn de oppervlaktes van de staven niet meer representatief
+voor de frequenties die ze voorstellen. Op het oog lijken de verschillen
+tussen de frequenties dan veel groter dan ze daadwerkelijk zijn, wat een
+misleidend beeld geeft. Het volgende voorbeeld laat dat duidelijk zien.
+
+::: {#exm-times}
+## The times leaves the rest behind
+
+Het volgende krantenknipsel laat zien dat De Times beter verkoopt dan de
+Daily Telegraph:
+
+![](figuren/MisleidingStaafdiagram_Times.jpeg)
+
+Maar kijk eens goed naar het staafdiagram aan de rechterkant. Op het
+eerste gezicht lijkt het verschil tussen de verkoopcijfers enorm omdat
+de staaf van The Times een veel groter oppervlakte heeft dan die van de
+Telegraph. (Die indruk wordt nog versterkt door het verschil in de
+kleur!) Pas als je naar de $y$-as kijkt, blijkt het verschil wel mee te
+vallen:
+:::
+
+Ten tweede, de ruimte tussen de staven. Om zichtbaar te maken dat de
+categorieën van een categorische variabele niet geleidelijk in elkaar
+overlopen, wordt altijd wat ruimte gelaten tussen de staven.
+
+Ten derde, de volgorde van de staven. Als de variabele ordinaal is, ligt
+het voor de hand om de natuurlijke volgorde van de categorieën te laten
+terugkomen in de volgorde van de staven. In het staafdiagram hierboven
+van de `gezondheidsstatus` staan de staven in de volgorde "Slecht",
+"Matig", "Goed", "Zeer Goed", "Uitstekend". Een andere volgorde zou erg
+verwarrend zijn. Bij nominale variabelen bestaat zo'n natuurlijke
+volgorde niet, en hangt de beste volgorde af van de toepassing. Vaak is
+het handig om de staven op volgorde van grootte te soreren, zodat de
+belangrijkste categorieën vooraan staan. Maar in andere gevallen kan
+bijvoorbeeld een alfabetische volgorde gebruiksvriendelijker zijn.
+
+### Taart- en staafdiagrammen
+
+Een alternatief voor het staafdiagram is het **taartdiagram**. Een
+taartdiagram representeert de verdeling van een variabele als een cirkel
+-- de "taart" -- die verdeeld is in verschillende sectoren -- de
+taartpunten. De grootte van ieder taartpunt geeft de frequentie van een
+categorie aan.
+
+::: {#exm-taart}
+## Burgerlijke staat
+
+In de NHANES dataset van het NCHS is ook van de meeste deelnemers
+aangegeven wat hun burgerlijke staat is. Deze gegevens kunnen we goed
+laten zien in een taartdiagram:
+
+```{r}
+#| code-fold: true
+#| fig.cap: "Taartdiagram van de burgerlijke staat in de NHANES-dataset."
+#| label: fig-taart
+
+NHANES$MaritalStatus <- factor(
+  NHANES$MaritalStatus,
+  levels = c("Married", "LivePartner", "Divorced", "Separated", "Widowed", "NeverMarried"),
+  labels = c("Getrouwd", "Samenwonend", "Gescheiden", "Uit elkaar", "Weduwe/weduwnaar", "Nooit getrouwd"),
+  ordered = TRUE
+  )
+
+table_MaritalStatus <- table(NHANES$MaritalStatus)
+
+data <- data.frame(
+  table_MaritalStatus
+)
+colnames(data) <- c("BurgerlijkeStaat", "Frequentie")
+
+# Taartdiagram
+ggplot(
+  data, 
+  aes( 
+    x = "", 
+    y = Frequentie, 
+    fill = BurgerlijkeStaat
+    )
+  ) +
+  geom_bar(
+    stat="identity", 
+    width = 1, 
+    color = "white"
+  ) +
+  coord_polar( "y", start = 0 ) +
+  labs( fill = "Burgerlijke staat") +
+  theme_void()
+
+```
+
+Meer dan de helft van de personen in de steekproef blijkt getrouwd te
+zijn.
+:::
+
+Een taartdiagram maakt het vooral gemakkelijk om een beeld te krijgen
+van de *relatieve* frequenties van categorieën. Zo zien we hierboven
+gemakkelijk dat meer dan de helft van de deelnemers aan dit onderzoek
+getrouwd was. De *absolute* frequenties zijn niet af te lezen. Een
+taartdiagram gebruik je dus vooral als je relatieve frequenties wilt
+laten zien.
+
+Taartdiagrammen zijn alleen voor nominale variabelen aan te raden. Bij
+ordinale variabelen is er altijd van nature een eerste en een laatste
+categorie. Omdat een taartdiagram cirkelvormig is is er geen goede
+manier om dat te laten zien. In dat geval is een **stapeldiagram** een
+betere optie. Bij een stapeldiagram worden de relatieve frequenties
+weergegeven als opgestapelde staven. Dit geeft wél de mogelijkheid om
+dat in een specifieke volgorde te doen, zoals dat bij een ordinale
+variabele wenselijk is.
+
+::: {#exm-stapel}
+## Stapeldiagram van `Gezondheidsstatus`
+
+De variabele `Gezondheidsstatus`is ordinaal; een taartdiagram is dus
+niet erg geschikt om zijn verdeling weer te geven. In plaats daarvan kan
+wel een stapeldiagram worden gebruikt:
+
+```{r}
+#| code-fold: true
+#| label: fig-stapel
+#| fig.cap: "Stapeldiagram van de variabele Gezondheidsstatus in de NHANES-gegevens."
+
+freq_df <-data.frame(
+  freq_table
+)
+colnames(freq_df) <- c("Gezondheidsstatus", "Frequentie")
+
+ggplot(
+  freq_df, 
+  aes( 
+      x = "", 
+      y = Frequentie/nrow(NHANES_filtered), 
+      fill = Gezondheidsstatus
+      )
+  ) +
+  geom_bar(
+    position = "stack", 
+    stat="identity", 
+    width = 0.4, 
+    color="black"
+  ) + 
+  theme_classic() + 
+  labs( x = "", y = "Relatieve frequentie") +
+  theme(
+    axis.title.x = element_blank(),  # Remove x-axis title
+    axis.text.x = element_blank(),   # Remove x-axis text/labels
+    axis.ticks.x = element_blank(),   # Remove x-axis ticks
+    axis.line.x = element_blank()
+  ) +
+  scale_y_continuous(limits = c(0, 1), expand = c(0, 0))
+
+```
+:::
+
+### Histogrammen
+
+Om de verdeling van een numerieke variabelen te laten zien wordt vaak
+gebruik gemaakt van een **histogram**. Een histogram lijkt erg op een
+staafdiagram. Net als in een staafdiagram is een histogram een
+visualisatie van een frequentietabel waarbij frequenties worden
+gerepresenteerd door de oppervlakte van staven. Het grote verschil is
+dat bij numerieke gegevens de categorieën direct in elkaar overlopen.
+Daarom wordt er geen ruimte gelaten tussen de staven. Net als bij
+staafdiagrammen is het belangrijk dat je de $y$-as altijd bij 0 begint.
+
+::: {#exm-histogram}
+## Histogram van `Lichaamsgewicht` uit de dataset NHANES
+
+In Tabel ?? was de frequentietabel weergegeven van de variabele
+`Lichaamsgewicht` uit de NHANES dataset. Hieronder is de verdeling als
+histogram weergegeven:
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Histogram van de lichaamsgewichten uit de NHANES-dateset."
+#| label: fig-histogram
+
+ggplot(
+  data = NHANES, 
+  aes(x = Weight)
+  ) +
+  geom_histogram(
+    fill = "darkorange", 
+    color = "black", 
+    binwidth = 5,
+    boundary = 0,
+    closed = "left"
+    ) +
+  labs(title = "Lichaamsgewicht dataset NHANES",
+    x = "Lichaamsgewicht (kg)",
+    y = "Frequentie"
+  ) +
+  theme_minimal()
+
+```
+
+Het histogram laat twee pieken zien: één rond 20 kg, en één in de buurt
+van 75 kg. Dit komt doordat er zowel kinderen als volwassenen in de
+dataset voorkomen.
+:::
+
+## Het beschrijven van de verdeling van een variabele
+
+Klokvorm, symmetrisch, links-scheef, rechts-scheef, unimodaal, bimodaal.
+
+## Samenhang tussen categorische variabellen: mozaïekplot
+
+## Samenhang tussen continue variabelen: Sspreidingsdiagram
+
+## Samenhang tussen één continue variabele en een categorische variable
+
+## Samenhang tussen twee categorische variabelen
+
+## Samenvatten met kengetallen
+
+Numerical data.
+
+Suppose $n$ values, written as $x_1, x_2, \ldots, x_n$. Could be a based
+on a sample, could be based on multiple measurements.
+
+### Mode of the sample
+
+### Median of the sample
+
+### Sample mean
+
+$$
+\mean{x} = \frac{\sum_i^n x_i}{n}.
+$$
+
+Why the mean?
+
+-   Value closest to all points
+-   Minimizing sum of absolute distances does not work! Multiple
+    solutions. Should
+-   Minimizing squared distances does work: large distances avoided. Sum
+    of squares:
+
+$$
+\mathrm{SS} = \sum_i \left(x_i - c\right)^2.
+$$
+
+Minimizing:
+
+$$
+\deriv{\mathrm{SS}}{c} = 
+      -2 \sum_i \left( x_i - c\right) = 
+      2 \sum_i (c - x_i) = 0.
+$$
+
+$$
+n c - \sum_i x_i = 0.
+$$
+
+$$
+c  = \frac{\sum_i x_i}{n} = \bar{x}.
+$$
+
+This demonstrates that the value that minimizes the sum of squares is
+precisely the mean!
+
+Differences between median and mean
+
+## Maten van spreiding
+
+Interkwartielafstand
+
+Steekproefvariantie
+
+$$
+V = \frac{\sum_i^n \left(x_i - \overline{x}\right)^2}{n-1}.
+$$
+
+-   Kwadratensom in de teller.
+-   Why the $n - 1$ in the denominator?
+-   Alternative formula ("Shortcut formula"):
+
+$$
+V = \frac{\left(\sum_i^n x_i^2\right) - n \overline{x}^2}{n-1}.
+$$
+
+Standaarddeviatie van een steekproef
+
+$$
+s = \sqrt{V} = \sqrt{\frac{\sum_i^n \left(x_i - \overline{x}\right)^2}{n-1}}.
+$$
+
+Because the variance $V = s^2$, most books do not use the symbol $V$ but
+always write the variance as $s^2$.
+
+How to interpret the standard deviation?
+
+A typical distance between a number in the sample and the sample mean.
+
+In a roughly bell-shaped distribution, $s$ is about half the width of
+the peak, measure about halfway up the height.
+
+## Alles samen
+
+Boodschap: samenvatten met alle drie methoden. Altijd visualiseren!
+Samenhang, outliers, etc.
+
+## Samenvatting
+
+## Terminologie in het Engels
