@@ -31,3 +31,113 @@ Regressieopgave terugverwijzen naar Brams opgave over covid.
 
 ## Terminologie in het Engels
 
+## KLAD
+
+## Samenhang tussen continue variabelen: Spreidingsdiagram
+
+Om de samenhang tussen twee continue variabelen zichtbaar te maken
+  wordt vaak gebruik gemaakt van een spreidingsdiagram,
+  waarbij de twee variabelen tegen elkaar worden uitgezet.
+  
+::: {#exm-gewicht-lengte}
+
+## Samenhang tussen lichaamsgewicht en lengte in de NHANES-data
+
+In de NHANES-dataset is ook van de meeste deelnemers de lichaamslengte gegeven.
+Zou er een verband zijn tussen lichaamslengte en gewicht?
+We onderzoeken het met een spreidingsdiagram.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Lichaamsgewicht uitgezet tegen lengte in de NHANES-dataset."
+#| label: fig-gewicht-lengte
+#| fig.width: 4.5
+#| fig.height: 3.5
+
+library(NHANES)
+library(ggplot2)
+
+data(NHANES)
+
+
+ggplot(
+  data = NHANES, 
+  aes(x = Height, y = Weight)
+) +
+  geom_point(
+    fill = "darkorange", 
+    color = "black"
+  )+
+  labs( x = "Gewicht (kg)", y = "Lengte (cm)")
+
+```
+Er is duidelijk een trend te zien:
+  langere mensen zijn gemiddeld zwaarder.
+Maar er is grote variatie tussen mensen met hetzelfde gewicht,
+  vooral onder volwassenen.
+:::
+
+## Samenhang tussen categorische variabelen: mozaïekplot
+
+Hierboven hebben we het al gehad over kruistabellen. 
+Je hebt toen gezien dat kruistabellen worden gebruikt
+om verbanden te onderzoeken tussen categorische variabelen.
+
+Je kunt Kruistabellen visualiseren met behulp van 
+mosaiekplots. Hoe dit werkt, leggen we uit aan de hand van een voorbeeld.
+
+::: {#exm-mosaic}
+
+## Hangt woontoestand samen met gezondheidstoestand?
+
+In de NHANES dataset is 
+  van iedere onderzochte persoon
+  ook opgenomen wat de woontoestand is.
+De verschillende waarden van `woontoestand` zijn 
+  *Koopwoning*, *Huurwoning*, en *Overig*.
+We vragen ons af: is er een samenhang tussen die variabelen?
+Om dit te onderzoeken, maken we eerst een kruistabel.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| 
+# samenhang gezondheidstoestand en woontoestand
+
+NHANES$HomeOwn <- factor(
+  NHANES$HomeOwn,
+  levels = c("Other", "Rent", "Own"),
+  labels = c("Overig", "Huurwoning", "Koopwoning"),
+  ordered = TRUE
+)
+
+# Generate the contingency table for HealthGen and HomeOwn
+contingency_table <- table(NHANES$HealthGen, NHANES$HomeOwn)
+knitr::kable(t(contingency_table), caption = "Contingency Table of HealthGen and HomeOwn")
+```
+Deze getallen zijn lastig te overzien. Daarom maken we een mosaiekplot.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Mosaiekplot: Samenhang tussen woontoestand en gezondheidstoestand"
+#| label: fig-mozaiek
+#| fig.width: 7
+#| fig.height: 4.5
+
+custom_colors <- c("skyblue", "lightgreen", "lightcoral")
+
+# Create a mosaic plot using base R
+mosaicplot(
+  contingency_table, 
+  col = custom_colors, 
+  main = "Samenhang tussen woontoestand en gezondheidstoestand",
+  xlab = "Gezondheidstoestand",
+  ylab = "Woontoestand"
+  )
+
+```
+
+:::
+
