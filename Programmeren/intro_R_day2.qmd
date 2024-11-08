@@ -25,6 +25,62 @@ Als je de bovenstaande code probeert uit te voeren, geeft R een foutmelding: `Er
 
 [^intro_r_day2-1]: Wat deze error precies betekent is niet belangrijk
 
+##Condities
+
+Vaak is het handig om in een script te controleren of aan een bepaalde voorwaarde wordt voldaan. Hiervoor kun je `if`, `else`, en `else if` gebruiken:
+
+```{r}
+#| eval: false
+leeftijd_student <- sample(16:19,1) # genereer willekeurige leeftijd tussen 16 en 19
+if(leeftijd_student >= 18){
+  print("Student is volwassen")
+} else{
+  print("Student is niet volwassen")
+}
+```
+
+Om voorwaarden te controleren, gebruik je zoheten **conditionals**, die teruggeven of iets waar (`TRUE`) of niet waar (`FALSE`) is. Hierboven gebruiken we `>=` (groter dan of gelijk aan) om te controleren of de student minstens 18 jaar oud is. Veelgebruikte andere conditionals zijn:
+
+-   `a == b` : TRUE als a gelijk is aan b
+
+<!-- -->
+
+-   `a != b` : TRUE als a niet gelijk is aan b
+
+-   `a > b` : TRUE als a is groter is dan b
+
+-   `a < b` : TRUE als a is kleiner is dan b
+
+-   `a >= b` : TRUE als a is groter is dan of gelijk is aan b
+
+-   `a <= b` : TRUE als a is kleiner is dan of gelijk is aan b
+
+Daarnaast kun je eventueel meerdere condities combineren:
+
+-   `a==b & b!=c` : TRUE als a gelijk is aan b en b **niet** gelijk is aan c
+
+-   `a<b | b>c` : TRUE als a kleiner is dan b en b groter is dan c
+
+Als laatste kun je nog veel meer combinaties controleren door `if`-`else` elkaar op te laten volgen en te nesten. Als we bijvoorbeeld twee dobbelsteenworpen simuleren, kunnen we precies controleren welke dobbelsteen hoger is dan 4, en een voor ieder scenario een unieke uitkomst maken:
+
+```{r}
+#| eval: false
+d1 <- sample(1:6,1) # dobbelsteen 1
+d2 <- sample(1:6,1) # dobbelsteen 2
+
+if (d1 > 4) {
+  if (d2 > 4) {
+    print("d1 en d2 zijn hoger dan 4")
+  } else {
+    print("d1 is hoger dan 4, maar d2 niet")
+  }
+} else if(d2 > 4) {
+  print("d1 is niet hoger dan 4, maar d2 wel")
+} 
+```
+
+Let op: als je de bovenstaande code goed leest, zie je dat er helemaal **niets** gebeurt als geen van beide dobbelstenen groter dan 4 is.
+
 ## Data structuren
 
 Het is vaak heel handig om je variabelen in lijsten of tabellen op te slaan. Dergelijke lijsten of tabellen worden meestal *data structures* genoemd. De meest belangrijke data structures in R zijn:
@@ -147,12 +203,6 @@ datatable(covid_data, options = list(searching=F, pageLength = 8))
 ```
 :::
 
-## Files, paden, en de 'working directory'
-
-Om (zoals hierboven) een bestand in te kunnen lezen, moet Rstudio wel weten waar het bestand staat. Op computers staan alle bestanden in een hierachische structuur (zie bijvoorbeeld onderstaande Figuur). Hoewel je misschien gewend bent om door deze structuur van "mappen" te klikken met de muis, moet je in een script altijd precies vertellen waar het bestand staat. Standaard zoekt Rstudio vaak in de home directory van je besturingsysteem (`/Users/Naam` in MacOs, `C:/Users/UserName/Documents` in Windows). De directory vanuit waar Rstudio naar het bestand zoekt, heet de *Working Directory* (rood omlijnd in de figuur). Door de Working Directory goed in te stellen, hoef je niet elke keer het hele pad naar het bestand in te typen (dit heet het absolute pad), maar kun je korter omschrijven waar het bestand staat (dit heet het relatieve pad). Vaak is het dus handig om je Working Directory aan te passen naar dezelfde map waar je het script hebt opgeslagen, zodat je alle data, scripts, en grafieken een beetje bij elkaar kan houden. Dit kan je doen door, nadat je je script ergens hebt opgeslagen, te navigeren naar `Session > Set Working Directory > To Source File Location`.
-
-![Om te programmeren moet je weten waar bestanden (*files*) staan opgeslagen. Je kunt deze files vinden door het juiste pad (*paths*) te typens ](figuren/file_tree.png){#fig-filesandpaths}
-
 ## Indexing
 
 Nu je weet hoe je tabellen in kan lezen, is het belangrijk om te leren over "indexing". Indexing is het selecteren van specifieke waarden uit een vector, matrix, of dataframe. Dit doe je door de positie (index) van deze elementen tussen vierkante haakjes aan te geven:
@@ -205,6 +255,35 @@ datatable(biologen, options = list(searching=F, pageLength = 3,lengthChange = FA
 ```
 :::
 
+## Selecteren uit een dataframe
+
+Je kunt condities ook gebruiken op vectoren. Dit geeft dan een vector van dezelfde lengte, met voor elke positie of aan de conditie voldaan wordt. Als we bijvoorbeeld de zelf-gemaakte biologen-dataframe nog eens bekijken, dan kunnen we een vector maken die voor de leeftijd-kolom zegt wie er jonger is dan 20:
+
+```{r}
+#| eval: false
+biologen <- data.frame(naam=c("Lina","Yassin","Bram"),
+                       leeftijd=c(19,18,80), 
+                       haarkleur=c("Blauw","Groen", "Paars")) 
+
+jong <- biologen$leeftijd < 20 # geeft TRUE TRUE FALSE
+```
+
+Met deze vector kunnen we dan selectie maken uit een dataframe. Weet je nog dat we hierboven zeiden dat je uit dataframe kan selecteren door `[rijen,kolommen]` aan te geven? Met onze nieuwe `jong`-vector, kunnen we dus de juiste rijen pakken:
+
+```{r}
+#| eval: false
+biologen[jong,] # alleen biologen jonger dan 20
+```
+
+Dit is natuurlijk vooral handig als je een grotere dataset hebt, zoals de bovengenoemde covid-data. 
+
+## Files, paden, en de 'working directory'
+
+Om (zoals hierboven) een bestand in te kunnen lezen, moet Rstudio wel weten waar het bestand staat. Op computers staan alle bestanden in een hierachische structuur (zie bijvoorbeeld onderstaande Figuur). Hoewel je misschien gewend bent om door deze structuur van "mappen" te klikken met de muis, moet je in een script altijd precies vertellen waar het bestand staat. Standaard zoekt Rstudio vaak in de home directory van je besturingsysteem (`/Users/Naam` in MacOs, `C:/Users/UserName/Documents` in Windows). De directory vanuit waar Rstudio naar het bestand zoekt, heet de *Working Directory* (rood omlijnd in de figuur). Door de Working Directory goed in te stellen, hoef je niet elke keer het hele pad naar het bestand in te typen (dit heet het absolute pad), maar kun je korter omschrijven waar het bestand staat (dit heet het relatieve pad). Vaak is het dus handig om je Working Directory aan te passen naar dezelfde map waar je het script hebt opgeslagen, zodat je alle data, scripts, en grafieken een beetje bij elkaar kan houden. Dit kan je doen door, nadat je je script ergens hebt opgeslagen, te navigeren naar `Session > Set Working Directory > To Source File Location`.
+
+![Om te programmeren moet je weten waar bestanden (*files*) staan opgeslagen. Je kunt deze files vinden door het juiste pad (*paths*) te typens ](figuren/file_tree.png){#fig-filesandpaths}
+
+
 ## Functies, condities, en loops
 
 ### Functies en help-functie {#sec-functies}
@@ -253,61 +332,9 @@ som_kwadraten(0.5, 0.1)       # 0.26
 
 Bij het definieren van de functie geven de gekrulde haken aan wat de zogeheten `scope` van de functie is: dit blokje code behoort alleen deze functie toe. Je ziet deze `scopes` ook terug wanneer je op bepaalde voorwaarden gaat toetsen, wat het volgende onderdeel zal uitleggen.
 
-##Condities
 
-Vaak is het handig om in een script te controleren of aan een bepaalde voorwaarde wordt voldaan. Hiervoor kun je `if`, `else`, en `else if` gebruiken:
 
-```{r}
-#| eval: false
-leeftijd_student <- sample(16:19,1) # genereer willekeurige leeftijd tussen 16 en 19
-if(leeftijd_student >= 18){
-  print("Student is volwassen")
-} else{
-  print("Student is niet volwassen")
-}
-```
 
-Om voorwaarden te controleren, gebruik je zoheten **conditionals**, die teruggeven of iets waar (`TRUE`) of niet waar (`FALSE`) is. Hierboven gebruiken we `>=` (groter dan of gelijk aan) om te controleren of de student minstens 18 jaar oud is. Veelgebruikte andere conditionals zijn:
-
--   `a == b` : TRUE als a gelijk is aan b
-
-<!-- -->
-
--   `a != b` : TRUE als a niet gelijk is aan b
-
--   `a > b` : TRUE als a is groter is dan b
-
--   `a < b` : TRUE als a is kleiner is dan b
-
--   `a >= b` : TRUE als a is groter is dan of gelijk is aan b
-
--   `a <= b` : TRUE als a is kleiner is dan of gelijk is aan b
-
-Daarnaast kun je eventueel meerdere condities combineren:
-
--   `a==b & b!=c` : TRUE als a gelijk is aan b en b **niet** gelijk is aan c
-
--   `a<b | b>c` : TRUE als a kleiner is dan b en b groter is dan c
-
-Als laatste kun je nog veel meer combinaties controleren door `if`-`else` elkaar op te laten volgen en te nesten. Als we bijvoorbeeld twee dobbelsteenworpen simuleren, kunnen we precies controleren welke dobbelsteen hoger is dan 4, en een voor ieder scenario een unieke uitkomst maken:
-
-```{r}
-#| eval: false
-d1 <- sample(1:6,1) # dobbelsteen 1
-d2 <- sample(1:6,1) # dobbelsteen 2
-
-if (d1 > 4) {
-  if (d2 > 4) {
-    print("d1 en d2 zijn hoger dan 4")
-  } else {
-    print("d1 is hoger dan 4, maar d2 niet")
-  }
-} else if(d2 > 4) {
-  print("d1 is niet hoger dan 4, maar d2 wel")
-} 
-```
-
-Let op: als je de bovenstaande code goed leest, zie je dat er helemaal **niets** gebeurt als geen van beide dobbelstenen groter dan 4 is.
 
 ## Loops
 
