@@ -14,6 +14,20 @@ Functies worden vaak weergegeven door hun grafiek. Hierbij zetten we de waarden 
 
 De grafiek van een functie van de vorm $y=p$ is een *horizontale* lijn die de y-as snijdt op de waarde $p$. In plaats daarvan kunnen we ook vinden dat $x=q$, wat een *verticale* lijn is die de x-as snijdt op de waarde $q$. (NOTE FOR MADELON: ALLEBEI IN 1 PLAATJE?)
 
+```{r}
+library(ggplot2)
+ggplot() +
+  geom_vline(xintercept = 5, colour = "seagreen", linewidth = 1.2) +
+  annotate("text", x = 6, y = 8, colour = "seagreen", label = "x = 5") +
+  geom_hline(yintercept = 2, colour = "orange", linewidth = 1.2) +
+  annotate("text", x = -6, y = 3, colour = "orange", label = "y = 2") +
+  xlim(-10, 10) +
+  ylim(-10, 10) +
+  theme_minimal() +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) 
+```
+
 ### Grafieken van lineaire functies {.unnumbered}
 
 De grafiek van een lineaire functie $y=ax+b$ is een rechte lijn met helling $a$ en snijpunt $b$ op de y-as. Dat laatste kun je zien door $x=0$ in te vullen: op dit moment snijdt je de y-as! Als $a>0$, loopt de lijn stijgend; bij $a<0$ daalt de lijn. Hoe groter $|a|$, hoe steiler de lijn.
@@ -64,6 +78,32 @@ Niet elke functie heeft een snijpunt met de $x$- en/of $y$-as.
 ::: callout-tip
 Als je twijfelt of een functie stijgt of daalt voor bepaalde $x$-waarden kun je gebruikmaken van de afgeleide voor die $x$-waarden. Als $f'(x) > 0$ dan stijgt de functie rond die $x$-waarde. Als $f'(x) < 0$ dan daalt de functie rond die $x$-waarde.
 :::
+
+```{r}
+library(ggplot2)
+ggplot() +
+  stat_function(fun = function(x) -((2*x-1)*(x-10)*(4*x-6))/(x^3+6), n=1000, colour = "seagreen", linewidth = 1.2) +
+  geom_vline(xintercept = -2, colour = "darkblue", linetype = "dashed") +
+  annotate("text", x = -2.5, y = 8, colour = "darkblue", label = "verticale asymptoot", angle = 90) +
+  geom_hline(yintercept = -8, colour = "orange", linetype = "dashed") +
+  annotate("text", x = 7, y = -7, colour = "orange", label = "horizontale asymptoot") +
+  annotate("text", x = 3, y = 12, colour = "darkred", label = "toppen df/dx = 0") +
+  geom_segment(aes(x = 2, y = 11, xend = 1, yend = -1),
+               arrow = arrow(length = unit(0.2, "cm")), colour = "darkred") +  
+  geom_segment(aes(x = 3, y = 11, xend = 3.3, yend = 7),
+               arrow = arrow(length = unit(0.2, "cm")), colour = "darkred") +
+  annotate("text", x = 10, y = 5, colour = "darkred", label = "snijpunt x-as f(x) = 0") +
+  geom_segment(aes(x = 10, y = 4, xend = 10, yend = 0.5),
+               arrow = arrow(length = unit(0.2, "cm")), colour = "darkred") +
+  annotate("text", x = 1, y = 20, colour = "darkred", label = "snijpunt y-as y = f(0)") +
+  geom_segment(aes(x = 1, y = 19, xend = 0.1, yend = 11),
+               arrow = arrow(length = unit(0.2, "cm")), colour = "darkred") +
+  xlim(-5, 20) +
+  ylim(-10, 20) +
+  theme_minimal() +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) 
+```
 
 ## Opdrachten
 

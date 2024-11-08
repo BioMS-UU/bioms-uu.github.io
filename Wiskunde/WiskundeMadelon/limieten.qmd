@@ -22,6 +22,24 @@ Als de functie $a$ beandert voor hele **kleine** waarden van $x$. Zoals je uit d
 
 Een voorbeeld van een functie met een horizontale asymptoot is: $$f(x) = 5 + \frac{1}{x}$$ Als we hele grote waarden voor $x$ invullen in deze functie, dan komt de uitkomst steeds dichter in de buurt van 5. Dit geldt zowel voor grote positieve als negatieve waarden. Doordat $1\over x$ nooit gelijk aan 0 kan worden, zal $f(x)$ nooit precies 5 worden. Daarom heeft deze functie een horizontale asymptoot $y = 5$.
 
+```{r}
+library(ggplot2)
+x_values_left <- seq(-4, -0.01, by = 0.001)
+data_left <- data.frame(x = x_values_left, y = 5 + 1/x_values_left)
+
+x_values_right <- seq(-0.01, 4, by = 0.001)
+data_right <- data.frame(x = x_values_right, y = 5 + 1/x_values_right)
+
+ggplot() + 
+  geom_line(data = data_left, aes(x=x, y=y), colour = "seagreen", linewidth = 1.2) +
+  geom_line(data = data_right, aes(x=x, y=y), colour = "seagreen", linewidth = 1.2) +
+  ylim(-20, 20) +
+  theme_minimal() +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  ggtitle("y = 5 + 1/x")
+```
+
 ## Verticale asymptoten
 
 Een verticale asymptoot is een lijn met de vorm $x=a$. Dit betekent dat de waarde van $f(x)$ voor $x=a$ naar oneindig gaat. Dit kan zowel plus als min oneindig zijn. In wiskundige notatie betekent dat: $$\lim_{x \uparrow x_0}{f(x)} = \pm \infty$$ als de asymptoot bereikt wordt vanaf de "linkerkant" door x te verhogen tot $x=a$. Of, als de asymptoot vanaf de "rechterkant" bereikt wordt door x te verlagen tot $x=a$. $$\lim_{x \downarrow x_0}{f(x)} = \pm \infty$$
