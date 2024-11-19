@@ -1,21 +1,24 @@
 {{< include _macros.tex >}}
 
-# Kansen en statistische modellen
+# Kansen en statistische modellen {#sec-kans}
 
-In de inleiding hebben we benadrukt
+In de eerdere hoofdstukken hebben we benadrukt
     dat bijna alle biologische gegevens onzeker zijn.
 Soms komt dat door meetfouten,
     soms doordat de gegevens schattingen zijn op basis van een steekproef. 
-Om die gegevens te interpreteren 
-    moeten we daarom kunnen omgaan met kansen.
+Het is daarom heel belangrijk om
+  te begrijpen wat je wel of niet kunt concluderen 
+  uit zulke onzekere gegevens.
+Daarvoor zul je om moeten gaan met *kansen*.
 In dit hoofdstuk geven we een korte introductie in kansrekenen.
+
 We beginnen met een paar belangrijk begrippen.
 
 ## Basisbegrippen
 
 Wanneer je met een gewone dobbelsteen gooit
     weet je van tevoren niet wat de uitkomst zal zijn.
-Zo'n experiment, 
+Een dergelijk experiment, 
     gebeurtenis of proces met een onzekere uitkomst wordt een **kansexperiment** genoemd.
 Andere voorbeelden zijn het willekeurig trekken van een individu 
     uit een populatie,
@@ -660,9 +663,40 @@ De symmetrische vorm maakt het vanzelfsprekend
     dat alle uitkomsten even waarschijnlijk zijn.
 We kunnen de kansen als volgt in een grafiek weergeven:
 
-::: {#fig-uniform-die}
-Kansverdeling: kans op uitkomst 1 t/m 6 is 1/6.
-:::
+  
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Kansverdeling: de kansen bij het gooien van één dobbelsteen."
+#| label: fig-uniform-dobbelsteen
+#| width: 4
+
+uitkomsten <- seq(1, 6)
+kansen <- rep(1/6, 6)
+kansenDobbelsteen <- data.frame(
+  uitkomsten = factor(uitkomsten),
+  kansen
+  )
+library(ggplot2)
+ggplot(
+  kansenDobbelsteen, 
+  aes(x = uitkomsten, y = kansen)
+) +
+  geom_bar(
+    stat = "identity", 
+    width = 1, 
+    fill = "orange", 
+    color = "black") +
+  labs(
+    title = "Kansverdeling voor de uitkomst van een worp met één dobbelsteen",
+    x = "Aantal ogen",
+    y = "Kans"
+    )
+
+```
+
+In de figuur geven de oppervlaktes van de staafjes
+de kans weer van iedere uitkomst.
 
 Stel je nu voor dat het kansexperiment bestaat
     uit het werpen van niet één maar twee dobbelstenen,
@@ -679,12 +713,36 @@ $1 + 6$, $2 + 5$, $3 + 4$, $4 + 3$, $5 + 2$, $6 + 1$.
 Je zult met twee dobbelstenen dus veel vaker 7 gooien dan 2.
 De kunnen de kansen weer in een grafiek weergeven:
 
-::: {#fig-kansverdeling-twee-dobbelstenen}
-Kansverdeling: kansverdeling som ogen twee dobbelstenen.
-:::
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Kansverdeling: de som van twee dobbelstenen."
+#| label: fig-kansverdeling-twee-dobbelstenen
+#| width: 4
 
-In de figuur geven de oppervlaktes van de staafjes
-    de kans weer van iedere uitkomst.
+uitkomsten <- seq(2, 12)
+kansen <- pmin(uitkomsten - 1, 13 - uitkomsten)/36
+kansenDobbelsteen <- data.frame(
+  uitkomsten = factor(uitkomsten), 
+  kansen
+  )
+library(ggplot2)
+ggplot(
+  kansenDobbelsteen, 
+  aes(x = uitkomsten, y = kansen)
+) +
+  geom_bar(
+    stat = "identity", 
+    width = 1, 
+    fill = "orange", 
+    color = "black") +
+  labs(
+    title = "Kansverdeling voor het aantal ogen van twee dobbelstenen",
+    x = "Aantal ogen",
+    y = "Kans"
+  )
+
+```
 
 De manier waarop de kans 
     over de verschillende mogelijke uitkomsten verdeeld is,
@@ -710,8 +768,8 @@ We kijken nog even terug naar de kansverdeling
     voor het totaal aantal ogen bij twee dobbelstenen.
 
 Stel dat we nu willen weten wat de kans is
-    dat het aantal ogen groter is dan 8
-    maar kleiner dan 12:
+    dat het aantal ogen groter is dan 7
+    maar kleiner dan 11:
 $$7 < X < 11.$$
 Deze gebeurtenis 
     kunnen we ook anders uitdrukken,
@@ -729,31 +787,112 @@ De kans $\pr{7 < X < 11}$ is de som van de kansen op uitkomsten
     8, 9, en 10, 
     en komt dus overeen met de totale oppervlakte van de staven
     voor die uitkomsten.
-Hieronder is die oppervlakte in blauw weergegeven:
+Hieronder is die oppervlakte in paars weergegeven:
 
-\[Zelfde kansverdeling, maar dan met de drie staafjes blauw ingekleurd.\]
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Kansverdeling: de som van twee dobbelstenen."
+#| label: fig-kansverdeling-twee-dobbelstenen-bars
+#| width: 4
+
+uitkomsten <- seq(2, 12)
+kansen <- pmin(uitkomsten - 1, 13 - uitkomsten)/36
+kleur <- rep("orange", 11)
+kleur[7:9] <- "purple"
+kansenDobbelsteen <- data.frame(
+  uitkomsten = factor(uitkomsten), 
+  kansen,
+  kleur
+)
+ggplot(
+  kansenDobbelsteen,
+  aes(x = uitkomsten, y = kansen)
+) +
+  geom_bar(
+    stat = "identity", 
+    width = 1, 
+    fill = kleur, 
+    color = "black") +
+  labs(
+    title = "Cumulatieve kansverdeling voor het totaal aantal ogen van twee dobbelstenen",
+    x = "Aantal ogen",
+    y = "Kans"
+  )
+
+```
 
 In het algemeen geldt
     dat de kans dat de uitkomst $X$ binnen een bepaald interval valt, 
     $a < X < b$,
-    gelijk is aan de oppervlakte onder de grafiek
-    van de kansverdeling
-    dat tussen de grenzen $a$ en $b$ in ligt.
+    gelijk is aan de oppervlakte van de staven
+    van de uitkomsten die tussen die grenzen vallen
 In dit voorbeeld was de kansvariabele
     numeriek en discreet,
     maar we zullen zien dat ook bij continue variabelen 
     de kans dat $X$ in het interval $(a, b)$ valt
     gegeven wordt door de oppervlakte onder de grafiek
     van de kansverdeling tussen de grenzen $a$ en $b$.
+    
+## De cumulatieve kansverdeling
+    
+De **cumulatieve kansverdeling** $F_X(x)$ van kansvariabele $X$ 
+  is de functie die aangeeft wat de kans is dat de uitkomst kleiner of gelijk is 
+  aan de waarde $x$:
+$$ F_X(x) = \pr{X\le x}. $$
+Bij wijze van voorbeeld geeft de grafiek hieronder
+  de cumulatieve kansverderling weer die hoort bij
+  het totaal aantal ogen bij het werpen met twee dobbelstenen.
+  
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Kansverdeling: de som van twee dobbelstenen."
+#| label: fig-cumulverdeling-twee-dobbelstenen-bars
+#| width: 4
+    
+uitkomsten <- seq(2, 12)
+kansen <- cumsum(pmin(uitkomsten - 1, 13 - uitkomsten)/36)
+kleur <- rep("orange", 11)
+kleur[7:9] <- "orange"
+kansenDobbelsteen <- data.frame(
+uitkomsten = factor(uitkomsten), 
+kansen,
+kleur
+)
+ggplot(
+  kansenDobbelsteen,
+  aes(x = uitkomsten, y = kansen)
+  ) +
+  geom_bar(
+    stat = "identity", 
+    width = 1, 
+    fill = kleur, 
+    color = "black") +
+    labs(
+      title = "Cumulatieve verderling voor het aantal ogen van twee dobbelstenen",
+      x = "Aantal ogen",
+      y = "Cumulatieve kans"
+    )
+    
+```
+
+Hierboven lieten we zien dat je de kans $\pr{7<X<11}$ 
+  kunt aflezen als de totale oppervlakte van de staven 
+  voor $X=8$, $X =9$, en $X = 10$ in de kansverdeling.
+Merk op dat je dezelfde kans ook zo kunt schrijven:
+  $$\pr{7<X<11} = F_X(10) - F_X(7).$$
 
 
 ## Maten voor ligging en spreiding van kansverdelingen
 
 In hoofdstuk ?? 
-    heb je gezien dat een reeks getallen kan worden samengevat
-    door maten te geven voor de ligging (ook wel locatie) en spreiding van die getallen.
-Op dezelfde manier kunnen we ook de kansverdeling van een kansvariabele samenvatten
-    door maten van ligging en de spreiding te geven.
+    heb je gezien dat de verdeling van een variabele in een dataset 
+    kan worden samengevat
+    door maten te geven voor de ligging en spreiding van die verdeling.
+Op dezelfde manier kunnen we ook de *kansverdeling* van een kansvariabele 
+samenvatten
+    door maten van ligging en de spreiding van de kansverdeling te geven.
 
 ### Maten van ligging/locatie
 
@@ -768,27 +907,31 @@ Dat komt overeen met de positie van de piek
 Als een kansverdeling twee pieken heeft
     dan wordt die "bimodaal" genoemd.
 
-\[Plaatje van een scheve verdeling (bijv. gamma-verdeling) met modus aangegeven, en een plaatje van een bimodale verdeling\]
-
 Het **gemiddelde** van een kansverdeling van een kansvariabele $X$ 
-    wordt ook wel de **verwachtingswaarde** genoemd.
-Een nette notatie daarvoor is $\ev{X}$,
-    maar vaak wordt ook het Griekse symbool $\mu$ gebruikt,
-    of $\mu_X$ as we willen aangeven dat het om de verwachtingswaarde van de variabele $X$ gaat.
+  wordt ook wel de **verwachtingswaarde** genoemd.
+Een nette notatie daarvoor is $\ev{X}$;
+  die bijzondere $\mathbb{E}$ staat voor het Engelse *Expectation*.
+Vaak wordt ook het Griekse symbool $\mu$ gebruikt,
+  of $\mu_X$ as we willen aangeven dat het om de verwachtingswaarde 
+  van de variabele $X$ gaat.
 Als de variabele discreet is
-    of categoriaal,
     dan kan de verwachtingswaarde berekend worden als:
-$$    \ev{X} = \sum_x \pr{X = x} x. $$
+$$ \ev{X} = \sum_x \pr{X = x}\, x. $$
 Dat wil zeggen:
     we nemen het gemiddelde van alle mogelijke uitkomsten $x$,
     waarbij uitkomsten met een grotere kans
     zwaarder worden meegeteld.
 
-De **mediaan** van een kansvariabele $\mu_\textrm{\textonehalf}$
+::: {.todo-box}
+Formule van verwachtingswaarde beter uitleggen.
+:::
+    
+De **mediaan** van een kansvariabele $X$
     is de waarde zodanig
-    dat de kans op een uitkomst kleiner dan $\mu_\textrm{\textonehalf}$
+    dat de kans op een uitkomst kleiner dan die waarde
     precies gelijk is aan \textonehalf.
 
+    
 \[Scheve kansverdeling, mediaan aangegeven, kans links en rechts aangegeven.\]
 
 ### Maten van spreiding
@@ -799,7 +942,7 @@ De meest gebruikte maten van spreiding
     zijn de variantie
     en de standaardafwijking
     (ook vaak standaarddeviatie genoemd).
-De **variantie} van de kansverdeling
+De **variantie** van de kansverdeling
     van een kansvariabele $X$
     wordt vaak genoteerd als $\var{X}$.
 Het is het gemiddelde van de gekwadrateerde afwijking
@@ -819,6 +962,8 @@ De standaarddeviatie
 $$
     \sigma = \sqrt{\var{X}}.
 $$
+(Als het nuttig is om te benadrukken dat het gaat om de standaarddeviatie
+    van de variabele $X$ wordt ook wel $\sigma_X$ gebruikt.)
 Omgekeerd is de variantie van $X$ dus
     het kwadraat van de standaarddeviatie:
 $$
@@ -828,21 +973,222 @@ Daarom wordt de variantie van een kansvariabele
     ook vaak genoteerd
     als $\sigma^2$ in plaats van $\var{X}$.
 
-## Kansen voor continue variabelen
+## Kansenverdelingen voor continue variabelen
 
+::: {.todo-box}
+Schrijven:
+  
+Een continue kansvariabele $X$ heeft in principe 
+oneindig veel mogelijke uitkomsten.
+Tussen elke twee getallen die je kiest
+zitten namelijk altijd weer andere getallen.
+Typisch is de kans op een *specifieke* uitkomst daarom gelijk aan 0.
+Bij continue variabelen zijn we daarom niet geinteresseerd
+in de kans op een specifieke uitkomst,
+maar in de kans dat de uitkomst in een bepaald *interval* valt.
+Bijvoorbeeld, de kans dat de lichaamslengte van een willekeurig gekozen persoon
+precies $180{,}00(\ldots)$ cm is 
+(met oneindig veel nullen als decimalen!)
+is 0; 
+maar de kans dat de lichaamslengte tussen 178 en 182 cm inligt
+is wél een getal tussen 0 en 1. 
 
+In @fig-kansverdeling-twee-dobbelstenen-bars hebben we al gezien
+dat je je, bij discrete kansvariabelen, 
+de kans op een waarde in een bepaald interval 
+kunt voorstellen als een oppervlakte onder de kansverdeling.
+Dat beeld gaat ook op voor continue variabelen.
+Kijk maar eens naar Fig xx hieronder.
+
+[Plot van een kansverdeling met een interval gekleurd.]
+
+Die figuur geef de kansverdeling weer voor xx.
+De kans dat een willekeurige observatie tussen de grenzen
+xx en xx valt is gegeven door de oppervlakte van het paarse gedeelte
+onder de grafiek. 
+Merk op: de waarde op de $y$-as is bij kansverdelingen van continue variabelen
+dus niet de kans op een specifieke waarde. 
+In plaats daarvan spreken we bij continue variabelen over de **kansdichtheid**.
+
+In paragraaf xx merkten we op dat een kansverdeling 
+vergelijkbaar is met een histogram van een *enorm* aantal waarnemingen.
+Die vergelijking gaat nog steeds op bij continue variabelen;
+alleen moet je je voorstellen dat het aantal waarnemingen zo groot is
+dat we de klassen van het histogram enorm smal hebben kunnen maken --
+zo smal dat je de individuele rechthoekige staven niet meer ziet
+en het histogram dus een gladde vorm krijgt.
+:::
+  
+::: {.todo-box}
+Opgave: schat kansen op basis van een schets van de kansverdeling.
+:::
 
 ## De normale verdeling
+  
+::: {.todo-box}
+Kansverdelingen kunnen in principe allerlei vormen hebben.
+Maar bepaalde kansverdelingen komen in theorie en praktijk steeds weer terug
+en hebben daarom een naam gekregen.
+De meest beroemde is de **normale verdeling**, 
+ook wel de **normaalverdeling**, de **Gaussische verdeling** of de **Gausscurve** genoemd
+naar de grote Wiskundige Carl Friedrich Gauss (1777--1855).
+
+Eigenlijk gaat het niet om één specifieke kansverdeling
+maar om een "familie" van kansverdelingen.
+Leden van deze familie lijken precies op elkaar, 
+behalve dat ze verschillen in gemiddelde $\mu$ 
+en standaarddeviatie $\sigma$.
+We noemen $\mu$ en $\sigma$ de **parameters** van de normale verdeling.
 
 
+De verdelingen zien er als volgt uit: VERBETER PLAATJE
+  
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "De normale verdeling."
+#| label: fig-normale-verdeling
+#| width: 5
+
+#library(grid)
+
+# Create a data frame for the standard normal distribution
+x <- seq(-3.5, 3.5, length.out = 200)
+data <- data.frame(x = x, y = dnorm(x))
+
+h <- exp(-0.5)/sqrt(2*pi)
+
+  ggplot(data, aes(x, y)) +
+  geom_line(color = "black", linewidth = 1) + # Standard normal curve
+  geom_area(data = subset(data, x >= -1 & x <= 1), aes(x, y), fill = "orange", alpha = 0.4) + # Area between -1 and 1
+  geom_segment(
+    aes(x = 0, xend = -1, y = h, yend = h), 
+    arrow = arrow(length = unit(0.2, "cm")), 
+    color = "black", 
+    linewidth = 0.8) + # Arrow
+  #  annotate("text", x = -0.5, y = 0.03, label = "x == -1 %->% x == 0", 
+  #           parse = TRUE, hjust = 0.5, color = "red", size = 4) + # Annotation for the arrow
+  scale_x_continuous(
+    breaks = c(-2, -1, 0, 1, 2), 
+    labels = c(expression(-2 * sigma), expression(-sigma), expression(mu), expression(sigma), expression(2*sigma))
+  ) + # Label for x = 0 as µ
+  scale_y_continuous(labels = NULL, breaks = NULL) + # Remove y-axis numbers
+  theme_classic() +
+  labs(y = "Kansdichtheid", x = expression(x)) + # Add y-axis label
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 14),
+        axis.text.y = element_blank(), # Remove y-axis text
+        axis.ticks.y = element_blank(), # Remove y-axis ticks
+        axis.line.y = element_line(),
+        axis.line.x = element_line(),
+        axis.title.y = element_text(size = 12, angle = 90), # Style y-axis label
+        axis.title = element_text(size = 14),
+        panel.grid = element_blank())
+```
+Je ziet dat de verdeling een *klokvorm* heeft en volledig *symmetrisch* is.
+
+De precieze formule voor de normale verdeling zul je in deze cursus
+niet vaak nodig hebben,
+maar het is toch handig deze een keer te zien.
+$$ \pr{x} = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x - \mu)^2}{2\sigma^2}}.$$
+De normale verdeling heeft dus een precieze wiskundige definitie.
+Niet iedere verdeling die een klokvorm heeft is ook echt een normale verdeling
+(maar iedere normale verdeling heeft wel dezelfde klokvorm).
+
+Uitleggen waarom de normale verdeling zo belangrijk is:
+  
+- Veel variabelen in de biologie en daarbuiten ongeveer normaal verdeeld.
+- Laat voorbeelden zien.
+- We zullen later, en sectie [centrale limitestelling] uitleggen hoe dit komt.
+
+Vuistregels voor de normale verdeling:
+  
+- maak het volgende plaatje na, maar met $X$ op de $x$-as
+$$\pr{\mu - \sigma < X < \mu + \sigma} = 0.68,$$
+$$\pr{\mu - 1{,}96\sigma < X < \mu + 1{,}96\sigma} = 0{,}95.$$
+Je kunt dus als vuistregel onthouden dat 
+er bij een normale verdeling *grofweg* 2/3 kans is op een waarneming
+die minder dan 1 standaarddeviatie afwijkt van het gemiddelde,
+en 0.95 kans op een waarneming die minder dan 2 standaarddeviaties afwijkt. 
+
+![Vuistregels bij de normale verdeling](figuren/vuistregels.png){#fig-vuistregels}
+
+:::
+    
+::: {.todo-box}
+  
+Opgave
+
+Schatten van kansen op basis van vuistregels en geschetst plaatje.
+Bereken de kansen. Schets steeds eerst op papier een normale verdeling.
+Arceer de oppervlakte onder de curve die overeenkomt met de gevraagde kans.
+  
+- $\pr{X < \mu}$
+- $\pr{X > \mu + \sigma}$
+- $\pr{X < \mu - 2 \sigma}$
+- $\pr{X < \mu - 2 \sigma \text{ of } $\pr{X > \mu + 2 \sigma}$
+
+:::
+    
 ## De standaard-normale verdeling
+  
+::: {.todo-box}
+  
+Schrijven:
+Speciaal geval van de normale verdeling voor $\mu = 0$ en $\sigma = 1$
+wordt de **standaard-normale verdeling** genoemd.
 
-## Kritieke waarden van de standaard-normale verdeling
+Hierboven hebben we kansvariabelen vaak $X$ genoemd. 
+Dat is willekeurig; we hadden ook $Y$ kunnen gebruiken, of $W$
+Voor een variabele die standaard-normaal verdeeld is
+wordt vaak de letter $Z$ gebruikt. 
+Daar is geen fundamentele reden voor,
+maar formules zijn soms sneller te overzien
+als je de convenionele letters gebruikt.
+
+:::
 
 
-## Transformeren naar de standaard-normale verdeling}
+### Transformeren naar de standaard-normale verdeling
+  
+::: {.todo-box}
+
+Schrijven:
+  
+Alle normaalverdelingen hebben exact dezelfde vorm;
+het enige verschil is dat hun gemiddelde $\mu$ en hun standaarddeviatie $\sigma$
+verschillend kunnen zijn. 
+Dat betekent dat verschillende normaalverdelingen 
+ten opzichte van elkaar *verschoven* kunnen zijn (verschillende $\mu$)
+en/of horizontaal uitgerekt (verschillende $\sigma$).
+De totale oppervlakte onder de grafiek is altijd 1
+(omdat de kans op een uitkomst tussen $-\infty$ en $\infty$ altijd 1 is).
+Horizontaal uitrekken gaat dus altijd samen met vertikaal indrukken.
+
+Bekijk Fig xx hieronder eens.
+Deze laat twee normale verdelingen zien.
+De bovenste figuur is de verdeling van variabele $X$, 
+met gemiddelde $\mu_X = 170$ en standaarddeviatie $\sigma_X = 7$.
+Daarmee lijkt deze verdeling erg op de verdeling van de lichaamslengte 
+van Nederlandse volwassen vrouwen, gemeten in cm.
+Het onderste figuur is de verdeling van variabele $Z$, 
+dus met $\mu_Z=0$ en $\sigma_Z = 1$.
+Dat beide plaatjes er toch ondanks de verschillende parameters
+precies hetzelfde uitzien komt doordat het domein en de schaal 
+van de $x$- en $y$-as zijn aangepast.
+Zoals gezegd is de oppervlakte onder de grafiek in beide gevallen gelijk aan 1.
 
 
+
+  
+  
+  
+  
+  
+  
+:::
+    
+    
 ## De $t$-verdeling
 
 Alvast noemen, met df. 
@@ -987,6 +1333,12 @@ Zowel $X_1$ als $X_2$ zijn kansvariabelen,
 ## Samenvatting
 
 ## Terminologie in het Engels
+
+| Nederlands    | Engels             |
+|---------------|--------------------|
+|               |                    |
+
+: Woordenlijst @sec-kans {#tab-woorden-kans .striped .hover}
 
 ## Opgaven
 
