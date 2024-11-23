@@ -1,3 +1,7 @@
+::: {.content-visible when-format="html"}
+{{< include ../_macros.tex >}}
+:::
+
 # Ruimtelijke groei {#sec-ruimtelijk}
 
 Zoals je hebt gezien maken modellen vaak vele aannames. Hoewel we tot nu toe veel aannames expliciet hebben benoemd (goed gemengd systeem, parameters zijn constant, \textit{etc.}), zijn er soms ook aannames die je misschien niet onmiddellijk zijn opgevallen. Zo hebben we het bijvoorbeeld gehad over dichtheidsafhankelijke groei, maar daarbij altijd aangenomen dat alle individuen deze dichtheidseffecten op dezelfde manier ervaren. Maar een bos kan zich vooral aan de rand uitbreiden: daar hebben de individuen toegang tot lege plekjes met veel licht. Hetzelfde geldt voor bacteriën op een agarplaat (aan de rand zijn meer nutriënten beschikbaar) of een groeiende tumor (cellen in het midden schieten zuurstof en voedingsstoffen tekort).
@@ -372,11 +376,124 @@ Je begrijpt nu wellicht dat je met IBMs allerlei dingen simuleren: (*"the sky is
 
 [^groei_ruimte-1]: Eigenlijk is dit helemaal niet een werkelijke citaat van Einstein, maar wel de boodschap achter een vrij complex relaas over *irreducible basic elements* en *adequate representations*, wat toch iets minder catchy bleek te zijn.
 
+## Opgaven
+
+::: {#exr-samenwerkenallee}
+
+## Samenwerken en het Allee effect
+
+We bestuderen in deze opgave de simulatie van samenwerkende individuen nog wat verder. 
+
+```{=html}
+<iframe width="100%" height="480" src="https://tbb.bio.uu.nl/bvd/simulations/samenwerken/" title="Simulation"></iframe>
+```
+
+Zoals je kunt zien, laat deze populatie geen duidelijk logistische groei zien (er is geen duidelijke S-curve). Wellicht komt dit doordat we met een te hoge initiële dichtheid zijn begonnen.
+
+  a. Pas de begindichtheid aan zodat de beginpopulaties kleiner zijn. Laat de andere parameters op hun standaard waarde staan ($b=0.11$, $d=0.10$, en $c=0.3$). Herstart de simulatie een aantal keer. Wat valt je op bij hele lage begin-dichtheden ($<0.002$)? *de populaties kunnen uitsterven omdat ze elkaar niet weten te vinden*
+  b. Gebruik een begin-dichtheid van $0.002$,  en herhaal je experiment 20 keer. Houd voor iedere keer bij of het de populatie lukt om uit te groeien (ja/nee). *ongeveer 5/20 lukte het bij mij.. zit veel ruis op dit signaal*
+  c. Activeer "mengen", en herhaal je experiment uit **b** nogmaals 20 keer. Houd wederom bij of de populatie succesvol kan uitgroeien *een stuk vaker lukt dat nu*
+  d. Heb je een verschil gevonden? Zou dit verschil misschien toeval kunnen zijn? Bewaar al je resultaten in een tabel om deze later in het onderdeel "Statistiek" verder te analyseren. *ja er is een verschil, en ook is de sigmoide veel steiler. of het verschil betrouwbaar is dat weten we nog niet, gaan we later naar kijken* 
+  
+:::
+
+::: {#exr-desimpelstecoop}
+
+## De simpelste ODE met coöperatie
+
+In een eerder hoofdstuk hebben we geleerd dat we in ODEs de birth- of death-rates afhankelijk kunnen maken van de dichtheid. In dit hoofdstuk hebben we kennis gemaakt met coöperatie: groei die juist *bevorderd* wordt door een hogere dichtheid. Dit zouden we in een simpele ODE kunnen verwerken als een een birth rate die kwadratisch afhangt van de dichtheid:
+
+\begin{align}
+    \dt{N} &= bN^2 - dN
+\end{align}
+
+    
+a. Bereken bij welke dichtheden $N$ er sprake is van evenwicht. %N=0 en N=d/b
+a. Schets $\dt{N}$ als een functie van $N$. Bepaal met behulp van dit faseportret de stabiliteit van de evenwichten. *N=0 is stabiel, d/b is instabiel*
+a. Schets oplossingen voor de initiële conditie waar $N$ klein is, en de initiele conditie waar $N$ groot is. Wat valt je op? *uitsterven of oneindig groeien, maar geen interessant evenwicht*
+a. Waarom was het fenomeen uit vraag c. geen probleem in het individual-based model? *daar namen we aan dat er maar 1 individu in een hokje past, dus oneindige groei kan niet. als alle hokjes vol zitten is het vol. *
+
+:::
+
+::: {#exr-loggroeisex}
+
+## Logistische groei met sexuele reproductie
+
+Je hebt geleerd dat logistische groei in eerste instantie exponentiëel is, waarna het afvlakt tot een plateau. In de cooperatie-vragen heb je gezien dat hele lage dichtheden een probleem kunnen opleveren. Ditzelfde geldt voor sexuele reproductie: bij lage dichtheden is het moeilijk een paringspartner te vinden. Beschouw de volgende ODE vergelijking:
+
+\begin{align}
+    \dt{N} &= bN^c(1-\frac{N}{k}) - dN
+\end{align}
+
+Dit model lijkt erg op vergelijkingen die we al hebben gezien voor logistische groei: $b$ staat voor de (maximale) geboortesnelheid, $k$ schaalt de dichtheidsafhankelijke afname van de geboorte, en $d$ geeft een constante sterfte. Maar er staat ook een nieuwe parameter ($c$) in de vergelijking, die staat voor het coöperatie-effect (dit kan staan voor zowel sex als andere vormen van samenwerking). Hoe werkt deze parameter precies? Laten we eerst aannemen dat $c=1$. Omdat $N^1$ gewoon $N$ is, blijft de ODE dan gelijk aan de groeimodellen die we al kennen. 
+
+a. Schets de groeisnelheid $\dt{N}$ als een functie van $N$. Teken onder je schets een faseportret met pijltjes om aan te geven bij welke dichtheden de populatie kan groeien, en bij welke de populatie zal krimpen. *Standaard parabool zoals in de eerdere faseportretten *
+
+Nu nemen we aan dat $c=2$. De functie krijgt nu de vorm $bN^2 - \frac{bN^3}{k} - dN$, die wat lastiger schetsen is. We zouden de ABC-formule kunnen gebruiken om de nullpunten uit te rekenen, maar we kunnen ook een stukje R-code schrijven om de grafiek te maken, of de grafiek plotten in Desmos (beide opties staan hieronder weergegeven). 
+
+<iframe src="https://www.desmos.com/calculator/tvfr14fdgv" width="100%" height="350" style="border: 1px solid #ccc; zoom: 0.75; transform: scale(1.00);                transform-origin: 0 0;" frameborder=0></iframe>
+
+```{r}
+#| code-fold: true
+#| eval: false
+#| code-summary: "Code voor het tekenen van de functie met R"
+b=0.2
+k=10
+d=0.1
+c=2
+
+func <- function(C){
+ return(b*C^c*(1-C/k) - d*C)
+}
+
+curve(func,0,11,lwd=2,ylim=c(-0.1,3),
+       ylab="dC/dt",xlab="C",col="blue",
+       main="dC/dt als een functie van C")
+abline(h=0)
+```
+b. Neem de grafiek uit R of Desmos over op papier, en schets opnieuw een faseportret met pijltjes eronder. Geef met open of gesloten cirkel respectievelijk instabiele en stabiele evenwichten aan.
+c. Schets in 1 figuur hoe de populatie door de tijd zal groeien voor verschillende begin-waarden van $N$. Schets elke kwalitatief verschillende oplossing (er zijn drie mogelijkheden). *krimping, groei naar stabiel vanaf onder de parabool, en groei naar stabiel vanaf heel grote N*
+
+:::
+
+::: {#exr-kreislauf}
+
+## Het mengen van een kringloop
+
+![*Gestern, heute und morgen folgen nicht aufeinander. Sie sind in einem
+ewigen Kreis miteinander verbunden. Alles ist miteinander verbunden.*](figuren/kreislauf.png){width="80%" fig-align="center"}
+
+In dit hoofdstuk hebben we een voorbeeld gezien van een "cheater", die wanneer het systeem goed gemengd is kan leiden tot grote problemen voor de cooperators. Maar wat nu als de cooperators "terug cheaten"? Wat als er meer complexe afhankelijkheden ontstaan, zoals weergegeven in de cyclus in bovenstaande figuur? De geboortekansen volgens deze kringloop kunnen we definiëren als:
+
+\begin{align}
+{Geboortekans(\color{red}rood\color{black})} = b+c\cdot (\sum{\text{aantal \color{orange}oranje \color{black} buren}}) \\
+{Geboortekans(\color{blue}blauw\color{black})} = b+c\cdot (\sum{\text{aantal \color{red}rode \color{black} buren}}) \\
+{Geboortekans(\color{orange}oranje\color{black})} = b+c\cdot (\sum{\text{aantal \color{blue}blauwe \color{black} buren}})
+\end{align}
+
+
+Een simulatie met de bovenstaande interacties vind je hieronder.
+
+```{=html}
+<iframe width="100%" height="680" src="https://tbb.bio.uu.nl/bvd/simulations/kringloop/" title="Simulation"></iframe>
+```
+
+  a. Bestudeer (voor de standaardparameters $b=0.13, c=0.11, d=0.1$) in biologische begrippen op hoe dit systeem reageert op meer/minder mengen. Contrasteer je bevindingen met wat we gezien hebben voor het ``cheater-cooperator'' model. *Door te mengen, wordt de kans om de juiste interatie-partners te vinden nu groter. Omdat iedereen van iedereen afhankeijk is, hebben we geen last van de cheater die alles overneemt (dat kan niet, want dan neemt de volgende op hun beurt over). Dit systeem heeft dus juist heel veel baad van menging.*
+
+In de onderstaande simulatie zijn er niet 3, maar 6 soorten die elkaar in een vergelijkbare cyclus helpen met reproduceren. 
+  
+  c. Omschrijf het patroon wat er ontstaat. *spirals*
+  d. Heeft mengen altijd een positieve invloed op een cyclus?  *niet helemaal. te hard mengen in dit systeem leidt tot te sterker fluctuaties en uitsterven*
+  
+```{=html}
+<iframe width="100%" height="580" src="https://tbb.bio.uu.nl/bvd/simulations/kringloop2/" title="Simulation"></iframe>
+```
+
 ## Terminologie
 
 ::: todo-box
 | Nederlands              | Engels                    | Beschrijving|
-|------------------|--------------------|-----------------------------------|
+|----------------------|--------------------|-----------------------------------|
 | Individual-based modellen | Individual-based models | Modellen waarbij de eigenschappen en het gedrag van individuen wordt beschreven. |
 | Omschrijvingsniveau | Level of description | Het belangrijkste aspect dat een model omschrijft wordt vaak het omschrijvingsniveau genoemd. Voor modellen van groei (bijvoorbeeld ODEs) is vaak de populatiegrootte het omschrijvingsniveau, terwijl bij een individual-based model het individu het omschrijvingsniveau is. |
 | Modeluitkomsten | Model outcomes | Het omschrijvingsniveau bepaald sterk welke *uitkomsten* een model kan hebben: een model dat alleen populatiegroottes omschrijft, kan geen inzichten geven in individuele verschillen. |

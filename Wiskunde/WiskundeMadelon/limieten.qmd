@@ -22,7 +22,10 @@ Als de functie $a$ beandert voor hele **kleine** waarden van $x$. Zoals je uit d
 
 Een voorbeeld van een functie met een horizontale asymptoot is: $$f(x) = 5 + \frac{1}{x}$$ Als we hele grote waarden voor $x$ invullen in deze functie, dan komt de uitkomst steeds dichter in de buurt van 5. Dit geldt zowel voor grote positieve als negatieve waarden. Doordat $1\over x$ nooit gelijk aan 0 kan worden, zal $f(x)$ nooit precies 5 worden. Daarom heeft deze functie een horizontale asymptoot $y = 5$.
 
-```{r}
+```{r, echo=FALSE, warning=FALSE}
+#| label: fig-asymp
+#| fig-cap: "De grafiek voor de functie y = 5 + 1/x. Deze functie heeft zowel een horizontale als verticale asymptoot."
+
 library(ggplot2)
 x_values_left <- seq(-4, -0.01, by = 0.001)
 data_left <- data.frame(x = x_values_left, y = 5 + 1/x_values_left)
@@ -33,6 +36,12 @@ data_right <- data.frame(x = x_values_right, y = 5 + 1/x_values_right)
 ggplot() + 
   geom_line(data = data_left, aes(x=x, y=y), colour = "seagreen", linewidth = 1.2) +
   geom_line(data = data_right, aes(x=x, y=y), colour = "seagreen", linewidth = 1.2) +
+  # Verticale asymptoot
+  geom_vline(xintercept = 0, colour = "darkblue", linetype = "dashed", linewidth = 1.2) +
+  annotate("text", x = -0.15, y = 13, colour = "darkblue", label = "verticale asymptoot", angle = 90) +
+  # Horizontale asymptoot
+  geom_hline(yintercept = 5, colour = "orange", linetype = "dashed", linewidth = 1.2) +
+  annotate("text", x = -3, y = 6.5, colour = "orange", label = "horizontale asymptoot") +
   ylim(-20, 20) +
   theme_minimal() +
   geom_hline(yintercept = 0) +

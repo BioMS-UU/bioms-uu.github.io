@@ -49,13 +49,18 @@ In de biologie worden vaak grafieken gebruikt om de relaties tussen verschillend
 Het nut van de logaritmische schaal wordt snel duidelijk als we teruggaan naar het voorbeeld uit de introductie. We kunnen de groei van deze bacteriën over tijd weergeven in een grafiek. In dit geval gaat het om een bacterie die elk uur deelt. Stel je voor dat we beginnen met één bacterie en de groei van de kolonie 100 uur lang bijhouden. De grafiek hieronder geeft het aantal bacteriën over tijd weer. Het valt meteen op dat de laatste waarden van de grafiek zó groot zijn, dat de kleinere waarden niet goed meer af zijn te lezen. Dit is precies waarvoor een logaritmische schaal handig is: hierdoor zijn zowel kleine als grote waarden duidelijk af te lezen van de grafiek.
 
 ```{r, echo=FALSE}
+#| label: fig-logschaal
+#| fig-cap: "Bacteriële groei over tijd."
+#| fig-subcap: 
+#|   - "Op lineaire schaal."
+#|   - "Op logaritmische schaal."
+#| layout-ncol: 2
 library(ggplot2)
 bact <- data.frame(t = seq(0,100,1),
                    B = 2^(seq(0,100,1)))
 ggplot(data = bact, aes(x = t, y = B)) +
   geom_point(color = "seagreen") +
   theme_minimal() +
-  labs(title = "Bacteriële groei") +
   xlab("t (uren)") +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0)
@@ -63,7 +68,6 @@ ggplot(data = bact, aes(x = t, y = B)) +
 ggplot(data = bact, aes(x = t, y = log10(B))) +
   geom_point(color = "seagreen") +
   theme_minimal() +
-  labs(title = "Bacteriële groei (met logaritmische schaal y-as)") +
   xlab("t (uren)") +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0)

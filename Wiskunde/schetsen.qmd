@@ -1,2 +1,227 @@
-# Schetsen
+# Functies schetsen {#sec-schetsen}
 
+## Introductie
+
+Functies laten zien hoe variabelen met elkaar samenhangen. Bijvoorbeeld, $y=f(x)$ kan beschrijven hoe zwaar iemand gemiddeld is ($y$ is het gewicht) op basis van hun lengte ($x$ is de lengte). Of het kan laten zien hoeveel bacteriën er zijn ($y$) na verloop van tijd ($x$). Functies zijn dus een belangrijk middel om gegevens te beschrijven en samen te vatten.
+
+Om te begrijpen wat een functie $f(x)$ laat zien, is het nuttig om de grafiek ervan te kunnen tekenen. Hiervoor moeten we een aantal belangrijke punten van de functie bepalen: eigenschappen zoals snijpunten met de x- en y-as, asymptoten, en waar eventuele toppen of dalen liggen. Dit vereist technieken zoals het oplossen van vergelijkingen, het vinden van limieten en het berekenen van afgeleiden, zoals eerder besproken.
+
+## Veelvoorkomende functies
+
+Functies worden vaak weergegeven door hun grafiek. Hierbij zetten we de waarden van $x$ op de x-as en de waarde van de functie $f(x)$ op de y-as. Hieronder staan enkele veelvoorkomende grafieken.
+
+### Grafieken van een constante functie {.unnumbered}
+
+De grafiek van een functie van de vorm $y=p$ is een *horizontale* lijn die de y-as snijdt op de waarde $p$. In plaats daarvan kunnen we ook vinden dat $x=q$, wat een *verticale* lijn is die de x-as snijdt op de waarde $q$. (NOTE FOR MADELON: ALLEBEI IN 1 PLAATJE?)
+
+```{r, echo = FALSE, warning=FALSE}
+#| label: fig-draw-line
+#| fig-cap: "De grafiek voor de functie y = 2 is een rechte horizontale lijn. De grafiek voor de functie x = 5 is een rechte verticale lijn."
+library(ggplot2)
+ggplot() +
+  geom_vline(xintercept = 5, colour = "seagreen", linewidth = 1.2) +
+  annotate("text", x = 6, y = 8, colour = "seagreen", label = "x = 5") +
+  geom_hline(yintercept = 2, colour = "orange", linewidth = 1.2) +
+  annotate("text", x = -6, y = 3, colour = "orange", label = "y = 2") +
+  xlim(-10, 10) +
+  ylim(-10, 10) +
+  theme_minimal() +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) 
+```
+
+### Grafieken van lineaire functies {.unnumbered}
+
+De grafiek van een lineaire functie $y=ax+b$ is een rechte lijn met helling $a$ en snijpunt $b$ op de y-as. Dat laatste kun je zien door $x=0$ in te vullen: op dit moment snijdt je de y-as! Als $a>0$, loopt de lijn stijgend; bij $a<0$ daalt de lijn. Hoe groter $|a|$, hoe steiler de lijn.
+
+:::{.content-visible when-format="html"}
+
+::: {#fig-desmos-lineair .figure}
+<iframe src="https://www.desmos.com/calculator/qxycdqwsdq"          
+        width="133%" height="667" 
+        style="border: 1px solid #ccc; 
+               transform: scale(0.75); 
+               transform-origin: 0 0;" 
+        frameborder="0">
+</iframe>
+
+Interactieve Desmos-plot van een lineair verband.Verander zelf de waarden voor a en b!
+
+:::
+
+:::
+
+:::{.content-visible when-format="pdf"}
+```{r, echo=FALSE}
+#| label: fig-algebra-lineair
+#| fig-cap: "Voorbeeld lineair verband."
+library(ggplot2)
+a <- 0.5
+b <- 1
+x <- seq(-4, 4, 1)
+y <- a*x + b
+ggplot() + 
+  geom_line(aes(x = x, y = y), colour = "seagreen", linewidth = 1.2) +
+  theme_minimal() +
+  labs(title = paste0("Lineair verband: y = ", a, "x", 
+                      ifelse(b>0, " + ", " "), b))  +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0)
+```
+:::
+
+### Grafieken van kwadratische functies {.unnumbered}
+
+De grafiek van de kwadratische vergelijking $y=ax^2+bx+c$ is een parabool. Bij $a>0$ opent de parabool naar boven (dalparabool), bij $a<0$ naar beneden (bergparabool). De waarden van $a$, $b$ en $c$ bepalen hoe de parabool ligt. Met de abc-formule kun je vinden wanneer de functie $0$ is. Dit zijn de snijpunten met de x-as. Door $x=0$ in te vullen vindt je het snijpunt met de y-as (hier: $c$). Door de afgeleide te vinden en deze gelijk te stellen aan $0$ vind je waar de piek of het dal ligt.
+
+:::{.content-visible when-format="html"}
+::: {#fig-desmos-kwadratisch .figure}
+<iframe src="https://www.desmos.com/calculator/h1fevycv14"          
+        width="133%" height="667" 
+        style="border: 1px solid #ccc; 
+               transform: scale(0.75); 
+               transform-origin: 0 0;" 
+        frameborder="0">
+</iframe>
+
+Interactieve Desmos-plot van een kwadratisch verband. Verander de waarden van a, b en c en kijk wat er gebeurt met de vorm van de grafiek!
+:::
+
+:::
+
+:::{.content-visible when-format="pdf"}
+```{r, echo=FALSE}
+#| label: fig-algebra-kwadratisch
+#| fig-cap: "Voorbeeld kwadratisch verband."
+library(ggplot2)
+a <- 2
+b <- 0
+c <- - 5
+ggplot() + 
+  stat_function(fun = function(x) a*x^2 + b*x + c, colour = "seagreen", linewidth = 1.2) +
+  theme_minimal() +
+  labs(title = paste0("Kwadratisch verband: y = ", a, "x^2", 
+                      ifelse(b==0, "", c(ifelse(b>0, " + ", " "), b, "x")), 
+                      ifelse(c>0, " + ", " "), c)) +
+  xlim(c(-4, 4)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0)
+```
+:::
+
+### Grafieken van machtsfuncties {.unnumbered}
+
+Grafieken van functies zoals $x^a$ veranderen van hellingshoek naar mate $x$ groter of kleiner wordt. Als [ $a>1$ ]{style="color:seagreen,"}, dan neemt de helingshoek toe, en . Als [ $0<a<1$ ]{style="color:darkblue,"} (als $a$ tussen 0 en 1 ligt), neemt de helingshoek af. Als [ $a=1$ ]{style="color:orange,"}, dan blijft de hellingshoek gelijk, want dan is de functie precies gelijk aan $y=x$.
+
+```{r, echo=FALSE, warning=FALSE}
+#| label: fig-draw-machtsfuncties
+#| fig-cap: "De grafiek van de functie x^a is een rechte lijn voor a = 1, convex voor a > 1 en concaaf voor a < 1."
+
+library(ggplot2)
+a <- 2
+x_min <- 0
+x_max <- 1.5
+
+ggplot() + 
+  stat_function(fun = function(x) x^2 , n=1000, colour = "seagreen", linewidth = 1.2) +
+  stat_function(fun = function(x) x^0.5 ,n=1000,  colour = "darkblue", linewidth = 1.2) +
+  stat_function(fun = function(x) x^1 , n=10,  colour = "orange", linewidth = 1.2) +
+  xlim(x_min, x_max) +
+  theme_minimal() +
+  geom_text(aes(x=1.5, y=2.5),size=6,label="a>1", col="seagreen") +
+  geom_text(aes(x=1.5, y=1.1),size=6,label="a<1", col="darkblue") +
+  geom_text(aes(x=1.5, y=1.6),size=6,label="a=1", col="orange") +
+  xlab("x") +
+  ylab("y") +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  ggtitle("De functie x^a voor verschillende waarden van a")
+```
+
+## Stappenplan functies schetsen
+
+1.  Vind de **snijpunten met de** $x$-as door $y = f(x) = 0$ op te lossen.
+2.  Vind de **snijpunten met de** $y$-as door $x=0$ in te vullen in $y = f(x)$.
+
+::: callout-tip
+Niet elke functie heeft een snijpunt met de $x$- en/of $y$-as.
+:::
+
+3.  Vind **horizontale asymptoten** door de limieten $y = \lim x \to \pm \infty$ te berekenen.
+4.  Voor rationale functies, met de vorm $f(x) = {p(x) \over q(x)}$, vind **verticale asymptoten** door te bepalen of er waarden voor $x$ zijn waarvoor $q(x)=0$ (en dus $f(x) \to \pm \infty$). Deze $x$-waarden zijn verticale asymptoten van de functie.
+5.  Vind **minima en maxima** door te bepalen voor welke $x$-waarden geldt dat $f'(x)=0$. Bepaal vervolgens de $y$-waarde van deze minima en maxima door de gevonden $x$-waarden in te vullen in $f(x)$.
+
+::: callout-tip
+Als je twijfelt of een functie stijgt of daalt voor bepaalde $x$-waarden kun je gebruikmaken van de afgeleide voor die $x$-waarden. Als $f'(x) > 0$ dan stijgt de functie rond die $x$-waarde. Als $f'(x) < 0$ dan daalt de functie rond die $x$-waarde.
+:::
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+#| label: fig-draw-overzicht
+#| fig-cap: "Overzicht van alle hulpmiddelen die nuttig zijn bij het schetsen van een functie."
+#| fig-width: 8
+library(ggplot2)
+ggplot() +
+  stat_function(fun = function(x) -((2*x-1)*(x-10)*(4*x-6))/(x^3+6), n=1000, colour = "seagreen", linewidth = 1.2) +
+  # Verticale asymptoot
+  geom_vline(xintercept = -2, colour = "darkblue", linetype = "dashed") +
+  annotate("text", x = -2.5, y = 8, colour = "darkblue", label = "verticale asymptoot", angle = 90) +
+  # Horizontale asymptoot
+  geom_hline(yintercept = -8, colour = "orange", linetype = "dashed") +
+  annotate("text", x = 17, y = -7, colour = "orange", label = "horizontale asymptoot") +
+  # Toppen
+  annotate("text", x = 3, y = 12, colour = "darkred", label = "toppen df/dx = 0") +
+  geom_segment(aes(x = 1.5, y = 11, xend = 1, yend = -1.7),
+               arrow = arrow(length = unit(0.2, "cm")), colour = "darkred") +  
+  geom_segment(aes(x = 2, y = 11, xend = 3.3, yend = 7),
+               arrow = arrow(length = unit(0.2, "cm")), colour = "darkred") +
+  # Snijpunten x-ax
+  annotate("text", x = 3.2, y = -5, colour = "darkred", label = "snijpunten x-as f(x) = 0") +
+  geom_segment(aes(x = 0.5, y = -4.5, xend = 0.35, yend = -0.5),
+               arrow = arrow(length = unit(0.2, "cm")), colour = "darkred") +
+  geom_segment(aes(x = 2.25, y = -4.5, xend = 1.6, yend = -0.5),
+               arrow = arrow(length = unit(0.2, "cm")), colour = "darkred") +
+  geom_segment(aes(x = 4, y = -4.5, xend = 10, yend = -0.5),
+               arrow = arrow(length = unit(0.2, "cm")), colour = "darkred") +
+  # Snijpunt y-as
+  annotate("text", x = 3, y = 20, colour = "darkred", label = "snijpunt y-as y = f(0)") +
+  geom_segment(aes(x = 1, y = 19, xend = 0.1, yend = 11),
+               arrow = arrow(length = unit(0.2, "cm")), colour = "darkred") +
+  xlim(-5, 20) +
+  ylim(-10, 20) +
+  theme_minimal() +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  ggtitle("Overzicht functies schetsen")
+```
+
+## Opdrachten
+
+::: {#exr-draw-1}
+Gebruik het bovenstaande stappenplan om de volgende functies te schetsen:
+
+**a.** $y=3-6x$
+
+**b.** $y=px+q$, neem aan dat $p>0$ en $q>0$
+
+**c.** $y=x-3x^2$
+
+**d.** $y=(a-x) \cdot (b-x) \cdot (c-x)$, neem aan dat $a,b,c>0$ en $a<b<c$, namelijk $b=2 \cdot a$ en $c=3 \cdot a$
+
+**e.** $y=x^3-5x^2$
+
+**f.** $y=\frac{4x}{x+2}+4$
+:::
+
+::: {#exr-draw-2}
+We zijn vaak gewend dat x op de horizontale as staat, en y op de verticale as. Soms staat het echter helemaal niet vast wat we precies op welke as moeten schetsen (of heten de variabelen helemaal geen x- en y!).
+
+Stel we vinden een verband tussen het aantal konijnen ($K$) en het aantal vossen ($V$) omschreven door de functie $K = a - b \cdot V$.
+
+**a.** Hoeveel konijnen zijn er als er geen vossen zijn? Wat is effect van vossen op de hoeveelheid konijnen?
+
+**b.** Teken een assenstelsel met $K$ op de x-as, en $V$ op de y-as. Probeer de functie $K = a - b \cdot V$ te schetsen.
+
+**c.** Herschrijf $K = a - b \cdot V$ zodat het aantal vossen wordt uitgedrukt als een functie van het aantal konijnen. Schets nu ook deze functie in je assenstelsel. Wat valt je op?
+
+**d.** Als we meteen het aantal konijnen op de y-as hadden gezet, hadden we dan de functie hoeven herschrijven?
+:::
