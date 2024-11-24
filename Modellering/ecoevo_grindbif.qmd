@@ -53,7 +53,7 @@ func <- function(x){
 }
 
 curve(func,0,8,lwd=2,ylim=c(0,1.), xaxt="n", yaxt="n",
-      ylab="Predatie",xlab="Hoeveelheid prooi (R)",col="blue",
+      ylab="Predatie",xlab="Hoeveelheid prooi (R)",col="seagreen",
       main="Hill-functie (Type 2)")
 
 axis(1, labels = FALSE) # x-axis
@@ -70,7 +70,7 @@ func <- function(x){
 }
 
 curve(func,0,3,lwd=2,ylim=c(0,1.), xaxt="n", yaxt="n",
-      ylab="Predatie",xlab="Hoeveelheid prooi (R)",col="blue",
+      ylab="Predatie",xlab="Hoeveelheid prooi (R)",col="seagreen",
       main="Hill-functie (Type 3)")
 
 axis(1, labels = FALSE) # x-axis
@@ -83,7 +83,79 @@ mtext("0",side=2,line=0.5,at=0)
 text(-0.5,1,"a",xpd=NA)
 ```
 
-Nu we het Lotka-Volterra model hebben uitgebreid met een verzadigingsterm, zouden we opnieuw nullclines kunnen bepalen en deze schetsen. Maar zoals je je wellicht kan voorstellen worden de nullclines iets ingewikkelder door deze non-lineaire term in onze vergelijkingen. Naar mate we onze modellen meer en meer uitbreiden, wordt het natuurlijk steeds lastiger om alles met de hand te doen. Daarom gaan we in dit hoofdstuk de faseruimte en het vectorveld laten tekenen door Grind.R, een Rscript dat deze analyses een fluitje van een cent maakt!
+
+::: {#exr-hillfuncties}
+
+## Hill-functies
+
+De bovengenoemde Hill-functies zijn zeer veelzijdig, en met kleine aanpassingen kun je de vorm goed aanpassen. Vaak willen we kunnen wisselen tussen geen interactie (0) en volledige interactie (1), of geen genexpressie (0) en volledige genexpressie (1), *etc.*. Zodoende kunnen we de parameter $a$ op 1 veronderstellen, en deze dus weglaten. Neem de onderstaande code over in R: 
+
+```{r}
+#| eval: false
+
+h=1
+n=2
+
+func <- function(x){
+  return(x^n/(x^n+h^n))
+}
+
+curve(func,0,3,lwd=2.5,ylim=c(0,1.), 
+      ylab="f(x)",xlab="x",col="seagreen")
+```
+
+Stel dat we in de interacties tussen genen bestuderen die elkaars expressie beinvloeden. Hoewel de bovengenoemde Hill-functies een graduele overgang beschrijven, zien we in dit hypothetische scenario iets anders. We zien dat de expressie van gen 1 bij lage concentraties geen invloed heeft op gen 2. Bij een bepaalde kritische concentratie van gen 1, zien we plotseling volledige expressie van gen 2. Een nog hogere concentratie van gen 1 heeft geen invloed meer op de expressie van gen 2. 
+
+  a. Bestudeer hoe je de Hill-functie kan aanpassen om het bovengenoemde scenario te vinden. *De macht in de Hill-functie (die tot nu toe alleen 1 en 2 was) moet veel hoger. Dit geeft bij hoge waarden (bijv 30) een zeer plotselinge overgang van 0 (geen expressie) naar 1 (volledige expressie). Dus: de n-parameter moet hoog*
+We zien dat gen 2 ook een effect heeft op gen 1. Dit effect is wél gradueel, maar er vindt juist remming plaats. 
+  b. Hoe kun je de Hill-functie omkeren zodat deze niet van 0 naar 1 gaat, maar van 1 naar 0 gaat? Schrijf de vergelijking op, en test het met je R script. *door 1 min 'hillfunctie' te doen*
+  c. Kun je de vergelijking die je hebt opgeschreven in b nog versimpelen? (je kunt je algebra checken met R) *voor antwoordenmodel, zie onder... ik weet ook niet waarom het rechts uitgelijnd is :)*
+  d. Wat moet je doen als je toch wil dat de maximale genexpressie $a$ is, en niet 1? *je kunt al deze functies eenvoudig vermenigvuldigen met $a$. je had ook alle algebra kunnen doen met a er nog in, maar dit was makkelijker*
+  
+\begin{align}
+&\text{start:}\\
+&1-\frac{x^n}{x^n+h^n} \\
+&\text{1 herschrijven als breuk van zodat je gelijke noemers krijgt:} \\
+&\frac{x^n+h^n}{x^n+h^n} - \frac{x^n}{x^n+h^n} \\
+&\text{nu kun je de breuk aftrekken:} \\
+& \frac{x^n+h^n-x^n}{x^n+h^n} = \frac{h^n}{x^n+h^n} \\
+& \text{als laatste kunnen we alles delen door $h^n$:} \\
+& \frac{1}{x^n/h^n+1}
+& \end{align}
+:::
+
+Nu we kennis hebben gemaakt met Hill-functies (zie ook @tip-hillfuncties), gaan we terug naar het Lotka-Volterra model. Omdat het Lotka-Volterra model is uitgebreid met deze verzadigingsterm, moeten we opnieuw de nullclines uitrekenen en schetsen (ook die zijn veranderd!). Maar zoals je je wellicht kan voorstellen worden de nullclines iets ingewikkelder door deze non-lineaire term in onze vergelijkingen. Naar mate we onze modellen meer en meer uitbreiden, wordt het natuurlijk steeds lastiger om alles met de hand te doen. Daarom gaan we in dit hoofdstuk de faseruimte en het vectorveld laten tekenen door Grind.R, een Rscript dat deze analyses een fluitje van een cent maakt!
+
+::: {.callout-tip #tip-hillfuncties collapse="true"}
+
+## Veel gebruikte Hill-functies 
+
+
+| Naam  | Vergelijking | Grafiek | 
+|--|--------|---|
+| Type II | $$\frac{x}{x+h}$$ | ![](figuren/hill_small_t1.png){width="250"} |
+| Type III | $$\frac{x^2}{x^2+h^2}$$ | ![](figuren/hill_small_t2.png){width="250"} |
+| Type II (afnemend) | $$\frac{1}{\frac{x}{h}+1}$$ | ![](figuren/hill_small_inv_t1.png){width="250"} |
+| Type III (afnemend) | $$\frac{1}{\frac{x^2}{h^2}+1}$$ | ![](figuren/hill_small_inv_t2.png){width="250"} |
+
+```{r} 
+#| eval: false
+#| echo: false
+
+h=1
+n=2
+
+func <- function(x){
+  return(1-x^n/(x^n+h^n))
+}
+par(las=1, mar=c(1,1,1,1))
+curve(func,0,3,lwd=3.5,ylim=c(0,1.), xaxt="n", yaxt="n",
+      ylab="f(x)",xlab="x",col="seagreen")
+```
+|
+:::
+
+
 
 ## Grind tutorial
 
@@ -354,4 +426,7 @@ Omdat er bij hoge waarden van $K$ oscillaties zijn, geven de lijnen de minimale 
 
 ## Terminologie
 
-TODO
+
+| Nederlands                | Engels                | Beschrijving                                                                                                                                    |
+|------------------|--------------------|----------------------------------|
+| Hill-functies | Hill functions | Een set wiskundige functies die verzadigen bij grote waarden hoge waarden (ze hebben een horizontale assymptoot). |
