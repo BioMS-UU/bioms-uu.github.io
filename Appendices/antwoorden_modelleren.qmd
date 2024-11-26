@@ -1,0 +1,215 @@
+# Antwoorden modelleren {.unnumbered}
+**a.**
+
+**b.**
+
+**c.**
+
+**d.**
+
+**e.**
+
+**f.**
+
+**g.**
+
+**h.**
+
+## Antwoorden @sec-tbintro {.unnumbered}
+
+@exr-variabelen-en-parameters
+
+**a.**
+De dingen die veranderen (bijvoorbeeld over de tijd) noemen we variabelen. De dingen die veranderen zijn hier je bloedsuikerspiegel (a) en de hoeveelheid eiwit (c), dus dit zou je de variabelen kunnen noemen.
+
+**b.**
+De snelheden (b en d) waarmee de variabelen veranderen, staan volgens de omschrijving vast, en zijn daarom parameters.
+
+@exr-modeluitkomsten
+
+**a.**
+Eén van de aannames van een ODE-model is dat het systeem goed gemengd is (@fig-modeltypes B). Naast de groeisnelheid is de ruimtelijke structuur bij een biofilm ook relevant. Hierom is het beter om een ruimtelijk model te gebruiken voor het modelleren van een biofilm.
+
+**b.**
+Door goed te mengen zijn posities niet belangrijk, dus het modelleren van posities is niet inzichtelijk. Het is beter om dit systeem met bijvoorbeeld een ODE te beschrijven.
+
+**c.**
+De vorming van korstmossen is een proces waarbij posities/ruimte belangrijk is, dus een ruimtelijk model is het meest geschikt.
+
+## Antwoorden @sec-exp {.unnumbered}
+
+@exr-exponentiele-groei-langzaam
+
+**a.** 
+Ja, het percentage is klein maar is alsnog exponentieel!! Dit kun je ook zien doordat de hoeveelheid rijst per vakje met een rechte lijn toeneemt op een log-lineaire schaal.
+```{r}
+#| eval: true
+#| echo: true
+#| code-fold: false
+#| label: fig-exponential
+
+# beginaantal rijst
+R <- 1
+
+# herhaal iets 63 keer met een for-loop
+for (i in 1:63) {
+  R[i+1] <- R[i]*1.05 # R in volgende stap is 2*R in deze stap
+}
+
+plot(R , type='l', col="seagreen", log="y", lwd=2) 
+```
+
+**b.** 
+Door de rijstkorrels in elke vakje bij elkaar op te tellen kunnen we uitrekenen hoeveel rijstkorrels je in totaal hebt:
+```{r}
+sum(R)
+```
+
+@exr-rabbits-map
+
+**a.**
+```{r}
+# definieren van begin aantal konijnen
+konijnen <- 24
+# verdubbel het aantal konijnen 20 keer
+for (i in 1:20){ 
+konijnen <- konijnen * 2
+}
+# er zijn verschillende opties om "Het aantal konijnen na 20 tijdstappen is gelijk aan 25165824” te printen:
+# met cat:
+cat("Het aantal konijnen na 20 tijdstappen is gelijk aan ", konijnen)
+# met paste:
+paste("Het aantal konijnen na 20 tijdstappen is gelijk aan ", konijnen)
+```
+
+**b.**
+```{r}
+# Stap 1: Stel begin-aantal konijnen in
+konijnen <- 24
+
+# Stap 2: Verdubbel het aantal konijnen 30 keer
+for (t in 1:30){
+  konijnen[t+1] <- 2*konijnen[t]
+}
+
+# Stap 3: Plot het resultaat
+plot(konijnen, type='l', col="seagreen")
+```
+De toename van het aantal konijnen lijkt exponentieel te zijn. Door de y-as log-lineair te maken kunnen we dit zeker weten:
+
+```{r}
+# Stap 1: Stel begin -aantal konijnen in
+konijnen <- 24
+# Stap 2: Verdubbel het aantal konijnen 30 keer
+for (t in 1:30){
+konijnen [t+1] <- 2* konijnen [t]
+}
+# Stap 3: Plot het resultaat met een logaritmische y as, net zoals in de code van figuur 3
+plot(konijnen , type='l', col="seagreen", log="y")
+```
+Met een logaritmische schaal op de y-as krijgen we een rechte lijnen en weten we nu zeker dat we met exponentiële groei te maken hebben.
+
+**c.**
+:::{.todo}
+Yannick: LaTex code antwoorden invoegen.
+:::
+
+**d.**
+Het aantal konijnen stabiliseert wanneer de populatie 500 miljoen konijnen bevat.
+```{r}
+# Stap 1: Stel begin-aantal konijnen in
+konijnen <- 24
+
+# We maken een variabele voor K
+K <- 10^9
+
+# Stap 2: Verdubbel het aantal konijnen 30 keer
+for (t in 1:30){
+  # Reken eerst de waarde van f uit voor het aantal konijnen dat de populatie in de vorige tijdstap bevatte:
+  f <- 1 - konijnen[t]/K
+  # Gebruik dit vervolgens in de formule om het nieuwe aantal konijnen uit te rekenen
+  konijnen[t+1] <- 2*konijnen[t]*f
+}
+
+# Stap 3: Plot het resultaat
+plot(konijnen, type='l', col="seagreen", main = "Het aantal konijn per jaar")
+paste("Het uiteindelijke aantal konijnen is gelijk aan", 
+      konijnen[length(konijnen)]) # Dit is een manier om de laatste waarde van de vector konijnen te bekijken
+```
+:::{.callout-note, collapse="true", title="Extra: Waarom is de evenwichtswaarde niet gelijk aan K?"}
+Misschien is dit voor nu nog te lastig, kijk hier dan later in de cursus nog eens naar! (Als we ook ODE-modellen hebben behandeld).
+In het bovenstaande voorbeeld is de populatiegrootte in evenwichtstoestand niet gelijk aan K. Later in de cursus zal je voorbeelden voorkomen van ODE-modellen van logistische groei waarbij de populatiegrootte in evenwicht wél gelijk is aan K. Hoe kan het dat dit wel het geval is bij ODE-modellen en niet bij MAP-modellen?
+
+Dit komt door een verschil in de manier waarop deze modelformalismen het nieuwe aantal konijnen uitrekenen. Een ODE beschrijft de **verandering** van een variabele over tijd. Als de verandering over tijd ($N'(t)$) gelijk is aan nul, verandert de variabele niet meer. Bij logistische groei is dat wanneer de functionele response gelijk is aan nul ($f(N) = 0$). 
+$$N'(t) = r \cdot N \cdot f(N)$$
+Uit de bovenstaande vergelijking kunnen we zien dat de verandering van N over tijd gelijk wordt aan nul wanneer $f(N) = 0$ (vermenigvuldigen met 0 geeft altijd 0 als uitkomst). Zoals je in opdracht c hebt gezien, geldt dat $f(N) = 0$ wanneer $N = K$. Dit laat zien dat $N'(t) = r \cdot N \cdot f(N) = 0$ voor $N = K$. Dus, een ODE voor logistische groei is in evenwicht wanneer $N = K$.
+
+Dit is anders voor een MAP, omdat dit niet de verandering van de variabele $N$ beschrijft, maar de exacte waarde uitrekent aan de hand van de vorige waarde voor $N$:
+$$N(t+1) = r \cdot N(t) \cdot f(N)$$
+Zo'n vergelijking heeft een evenwicht bereikt wanneer $N(t+1) = N(t)$. Dit kan alleen op het moment dat $r \cdot f(N) = 1$. In het bovenstaande voorbeeld geldt $r = 2$. Dus $2 \cdot f(N) = 1 \Rightarrow f(N) = \frac{1}{2}$. Oftewel, als $f(N)$ gelijk is aan 0.5, zal de populatiegrootte al stabiliseren. Dit klopt: we zien hierboven dat de populatiegrootte stabiliseert wanneer deze 500 miljoen konijnen bevat (dit is de helft van $10^9$, of $f(0.5\cdot10^9) = 1 - \frac{0.5\cdot10^9}{10^9} = \frac{1}{2}$).
+:::
+
+**e.**
+```{r}
+plot(konijnen, type='l', col="seagreen", log="y", main = "Het aantal konijnen per jaar (logaritmische schaal y-as")
+```
+De eerste jaren lijken de konijnen exponentieel te groeien, want we zien dat de populatie een
+rechte lijn vormt in de grafiek met een logaritmische y-as.
+De laatste jaren groeit hij echter niet meer exponentieel, want de groei stopt bijna volledig. Dit
+kunnen we zien in de grafieken, omdat de grafiek na ~25 jaar af begint te vlakken.
+
+**f.**
+```{r}
+paste("Na 10 jaar zijn er", konijnen[11], "konijnen")
+```
+Deze hoeveelheid is vreemd omdat dit geen geheel getal is en er dus blijkbaar halve konijnen zijn.
+
+**g.**
+```{r}
+# Stap 1: Stel begin-aantal konijnen in
+konijnen <- 24
+
+# Stap 2: Bepaal waardes voor de parameters van het model
+K <- 10^9
+r <- 3
+
+# Stap 3: Verdubbel het aantal konijnen 30 keer
+for (t in 1:30){
+  konijnen[t+1] <- r*konijnen[t]*(1 - konijnen[t]/K)
+}
+
+# Stap 4: Plot het resultaat
+plot(konijnen, type='l', col="seagreen", main = "Het aantal konijn per jaar")
+# plot op logaritmische schaal
+plot(konijnen, type='l', col="seagreen", log="y", main = "Het aantal konijnen per jaar (logaritmische schaal y-as")
+paste("Het uiteindelijke aantal konijnen is gelijk aan", 
+      konijnen[length(konijnen)]) # Dit is een manier om de laatste waarde van de vector konijnen te bekijken
+paste("Het aantal konijnen na 10 jaar is gelijk aan", 
+      konijnen[11])
+```
+De populatie gaat niet naar een stabiel evenwicht, maar blijft schommelen rond de 700 miljoen. De populatie groeit nog steeds niet snel genoeg, want na 10 jaar hebben we zeker nog geen populatie van 100 miljoen konijnen.
+
+**h.**
+```{r}
+# Stap 1: Stel begin-aantal konijnen in
+konijnen <- 24
+
+# Stap 2: Bepaal waardes voor de parameters van het model
+K <- 10^9
+r <- 4
+
+# Stap 3: Verdubbel het aantal konijnen 30 keer
+for (t in 1:30){
+  konijnen[t+1] <- r*konijnen[t]*(1 - konijnen[t]/K)
+}
+
+# Stap 4: Plot het resultaat
+plot(konijnen, type='l', col="seagreen", main = "Het aantal konijn per jaar")
+# plot op logaritmische schaal
+plot(konijnen, type='l', col="seagreen", log="y", main = "Het aantal konijnen per jaar (logaritmische schaal y-as")
+paste("Het uiteindelijke aantal konijnen is gelijk aan", 
+      konijnen[length(konijnen)]) # Dit is een manier om de laatste waarde van de vector konijnen te bekijken
+paste("Het aantal konijnen na 10 jaar is gelijk aan", 
+      konijnen[11])
+```
+Het aantal konijnen fluctueert nu heel erg per jaar (chaos), maar blijft nog steeds schommelen rond de 500 miljoen. Nog steeds hebben we geen 100 miljoen konijnen in 10 jaar.
