@@ -1,0 +1,193 @@
+# Antwoorden introductie R {.unnumbered}
+
+@exr-R-1
+
+**a.**
+Een matrix is een tabel met allemaal dezelfde type waarden, terwijl een dataframe voor elke kolom een ander type data kan bevatten.
+
+**b.**
+De tweede waarde van de vector x is 1.5.
+```{r}
+#| echo: true
+x <- seq(1,10,by=0.5)
+x[2]
+```
+
+**c.**
+De vector x bevat nu alle gehele getallen van 10 tot en met 1. De eerste waarde van deze vector is 10.
+```{r}
+#| echo: true
+x <- 10:1
+x[1] 
+```
+
+**d.**
+x[1] weet je niet, want runif geeft willekeurig getallen. Je weet wél dat het getal tussen 0 en 1 zal liggen. x[11] bestaat niet, want er zijn maar 10 getallen gegenereerd R geeft in dit geval 'NA' (not available).
+
+**e.**
+```{r}
+#| echo: true
+df$score_per_minuut <- df$score/df$minuten
+```
+
+**f.**
+dieren[2,3:4] geeft rij 2, kolom 3 en 4 terug. 
+Let op: de eerste regel zijn de kolomnamen, dus de 2e rij is niet Joey, maar Roos! Daarom geeft dieren[2,3:4] de waarden "wit" en "energiek".
+
+**g.**
+De waarde begint op 1, en er wordt eerst 1, dan 2, en dan nog 3 bij opgeteld. Aan het einde is a dus 1+1+2+3 = 7.
+
+@exr-R-2
+
+**a.**
+```{r}
+#| eval: false
+#| echo: true
+
+# waarden instellen
+a <- 2.5
+b <- 11
+c <- 0.01
+
+# bereken de uitkomst
+uitkomst <- a/b+a*(c+a)
+
+a <- 5
+```
+
+**b.**
+Bij het berekenen van uitkomst worden de parameters a, b, en c  
+gebruikt om iets te berekenen. Dit komt neer op pasta, groente,
+en pesto combineren in een gerecht. Dat je daarna de pesto aanpast
+verandert niet je gerecht: die was al klaar.
+
+@exr-R-3
+
+**a.**
+Vijf kolommen. Dit is geen CSV (comma-separated-values) bestand, 
+want de kolommen zijn gescheiden door spaties, niet komma's.
+
+**b.**
+```{r}
+#| eval: false
+#| echo: true
+nrow(covid) # 52, dus dat klopt
+ncol(covid) # 1, dit is fout! Alle data wordt als 1 kolom ingelezen.
+``` 
+
+**c.**
+```{r}
+#| eval: false
+#| echo: true
+ncol(covid) # 5, precies goed!
+nrow(covid) # 53, dat is 1 te veel... 
+View(covid) # Aha... de kolomnamen worden als "eerste rij" ingelezen...
+```
+
+**d.**
+```{r}
+#| eval: false
+#| echo: true
+mean(covid$positieve_testen) # gemiddeld 1563.5 positieve testen per week
+```
+
+**e.**
+```{r}
+#| eval: false
+#| echo: true
+
+head(covid,n=12)
+```
+
+**f.**
+```{r}
+#| eval: false
+#| echo: true
+
+# Lees het bestand covid.txt op de website in met 'read.table'
+covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/covid.txt",header=T)
+str(covid) 
+# 5 rijen (observaties) en 
+# 5 kolommen (variables), 
+# allemaal van type 'int' (integer: gehele getallen)
+
+# deze zelfde informatie kan je ook op andere manieren verkrijgen
+nrow(covid) # 52
+ncol(covid) # 5
+typeof(covid$week) # integer (geheel getal)
+```
+
+**g.**
+```{r}
+#| eval: false
+#| echo: true
+
+# Lees het bestand covid.txt op de website in met 'read.table'
+covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/covid.txt",header=T)
+covid_subset <- covid[14:19,] # selecteer rij 14:19
+
+x <- covid_subset$datapunt # alle x-punten in een vector
+y <- covid_subset$positieve_testen # alle y-punten in een vector
+
+plot(x,y, type='b',lwd=2, log="y",
+     xlab="Datapunt", ylab="Aantal positieve testen (log-schaal)",
+     col="darkblue", main="Aantal positieve Covid-19 testen in Utrecht") 
+
+```
+
+**h.**
+```{r}
+#| eval: false
+#| echo: true
+
+covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/covid.txt",header=T)
+x <- covid$datapunt # alle x-punten in een vector
+y <- covid$positieve_testen # alle y-punten in een vector
+
+plot(x,y, type='b',lwd=2, log="y",
+     xlab="Datapunt", ylab="Aantal positieve testen (log-schaal)",
+     col="darkblue", main="Aantal positieve Covid-19 testen in Utrecht\nDikkere punten geven pieken weer") 
+
+
+covid_subset <- covid[covid$positieve_testen > 1000,]
+x <- covid_subset$datapunt # alle x-punten in een vector
+y <- covid_subset$positieve_testen # alle y-punten in een vector
+
+points(x,y, lwd=5, log="y", col="darkblue") 
+```
+
+@exr-R-4
+
+**a.**
+```{r}
+#| eval: false
+#| echo: true
+
+for(i in 1:12){
+  dobbelsteen <- sample(1:6,1) # getal van 1 t/m 6 (dobbelsteen worp)
+  if(dobbelsteen>=4) cat(paste("Worp nummer",i,"is",dobbelsteen,"\n"))
+}
+```
+
+**b.**
+```{r}
+#| eval: false
+#| echo: true
+
+aantal_keren_hoera <- 0
+for(e in 1:100){
+  aantal_keren_6 <- 0
+  for(i in 1:12){
+    dobbelsteen <- sample(1:6,1) # getal van 1 t/m 6 (dobbelsteen worp)
+    if(dobbelsteen ==6) aantal_keren_6 <- aantal_keren_6 + 1
+  }
+  if(aantal_keren_6==1) {
+    cat("Hoera!\n")
+    aantal_keren_hoera <- aantal_keren_hoera + 1
+  }
+  else{
+    cat("Niet hoera :(\n")
+  }
+}
+cat("Er is in totaal", aantal_keren_hoera, "keer 'Hoera!' geprint\n")
+```
