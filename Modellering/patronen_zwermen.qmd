@@ -1,12 +1,13 @@
 # Zwermen en foerageren
 
-In hoofdstuk @sec-ruimtelijk hebben jullie kennis gemaakt met individual-based models, en met name het belang van ruimtelijke structuur in biologische populaties. Voor het gemak namen we in dit eerdere hoofdstuk aan dat individuen posities innamen op een grid, maar in werkelijkheid is ruimte natuurlijk niet in hokjes opgedeeld. In dit hoofdstuk gaan we een aantal individual-based modellen bekijken waar individuen vrij kunnen bewegen in in een continue ruimte. Hiervoor zullen we eerst leren wat er eigenlijk wordt bedoeld met een "continue" ruimte. Daarna bekijken we eerst wat conceptuele voorbeelden, en gaan dan ook naar concrete biologische vraagstukken kijken. De leerdoelen zijn:
+In @sec-ruimtelijk hebben jullie kennis gemaakt met individual-based models, en met name het belang van ruimtelijke structuur in biologische populaties. Voor het gemak namen we in dit eerdere hoofdstuk aan dat individuen posities innamen op een grid, maar in werkelijkheid is ruimte natuurlijk niet in hokjes opgedeeld. In dit hoofdstuk gaan we een aantal individual-based modellen bekijken waar individuen vrij kunnen bewegen in in een continue ruimte. Hiervoor zullen we eerst leren wat er eigenlijk wordt bedoeld met een "continue" ruimte. Daarna bekijken we eerst wat conceptuele voorbeelden, en gaan dan ook naar concrete biologische vraagstukken kijken. De leerdoelen zijn:
 
 Aan het eind van dit hoofdstuk, word je geacht hetvolgende te kunnen:
 
 * Uitleggen wat het verschil is tussen discrete en continue variabelen, en modelaspecten kunnen benoemen waarbij deze keuze relevant is 
 * Begrijpen dat simpele regels complexe patronen en gedrag kunnen opleveren
 * Uitleggen wat de voordelen zijn van het virtueel bestuderen van gedrag
+* Uitleggen wat een *parameter-sweep* is, en hoe dit zich verhoud tot bifurcatie analyse van wiskundige modellen
 
 ## Modelkeuzes met continue en discrete variabelen 
 
@@ -115,8 +116,6 @@ for (t in 1:aantal_tijdstappen) {
 ```
 
 Zoals je ziet onstaat er een zeer specifiek patroon. Als je dit patroon nog niet erg spannend vindt, zouden we ook kunnen kijken wat er met meerdere deeltjes (kleuren) gebeurt, die naast de aantrekkingskracht op hunzelf ook elkaar aantrekken:
-
-{{< video https://youtu.be/MvK_tM87_oY >}}
 
 ```{r}
 #| eval: false
@@ -285,6 +284,36 @@ Nu je een paar keer pseudocode hebt gezien, begrijp je misschien waarom dit hand
 
 Zoals je in de bovenstaande omschrijving kan lezen, zal niet elk aapje hetzelfde doen. Aapje 1 t/m 5 hebben veel buur-aapjes en voelen zich veilig. Omdat ze ook geen honger hebben, blijven ze zitten. Aapje 6 heeft ook geen honger, maar voelt zich niet veilig, en rent terug naar de groep. Aapje 7 heeft echter veel honger, en zal dus (eventueel met gevaar voor eigen leven) naar eten blijven zoeken. Door deze gedragsregels een lange tijd te herhalen, kunnen we onderzoeken hoe onze virtuele aapjes naar eten zoeken, en hoe ze groepjes vormen. In het werkcollege gaan jullie [met deze simulatie](https://tbb.bio.uu.nl/bvd/bms/simulations/aapjes/) aan de slag, en bestuderen hoe emergente eigenschappen bepalen hoe veel fruit deze aapjes vinden. Natuurlijk kan je allerlei gedrag aan een dergelijk model toevoegen: vlooien, vechten, opvoeden, en ga zo maar door. Deze modellen kunnen dus een hele efficiënte (snel, goedkoop) en niet-verstorende manier zijn om gedrag mee te bestuderen. 
 
+## Parameter-sweeps
+
+In de hoofdstukken over het Lotka-Volterra predator-prooi model heb je kennis gemaakt een bifurcatie-diagram (@fig-lvbif). Door de parameter $K$ te varieren, zagen we twee belangrijke overgangen (bifurcaties): eerst een overgang van alleen prooi naar een stabiele samenleving van predator en prooi, en dan een tweede overgang naar oscillerende predator-prooi populaties (Hopf bifurcatie). Computermodellen zoals de IBM van de aapjes hierboven bevatten vaak erg veel parameters: hoe snel eten de aapjes, hoeveel aapjes moeten er in de buurt zijn zodat een aapje zich veilig voelt, hoeveel eten ligt er in de omgeving, *etc.*. Zodoende is het vaak belangrijk om een zogeheten *parameter-sweep* te doen, waarbij je vele parameters systematisch bestudeert en de uitkomst classificeert. Als je twee parameters varieert, kun je deze uitkomsten bijvoorbeeld opslaan in een grote tabel waarbij de rijen de ene parameter zijn, en de kolommen de andere (@fig-parsweep).
+
+![CAPTION TODO](figuren/parsweep.png){#fig-parsweep width="80%" fig-align="center"}
+
+<!-- ```{r} -->
+<!-- #| code-fold: true -->
+<!-- #| label: 'fig-parsweep' -->
+<!-- #| fig-width: 5 -->
+<!-- #| out-width: "50%" -->
+<!-- #| fig-height: 5 -->
+
+<!-- # Set up an empty plot with specified x and y limits -->
+<!-- plot(1, type="n", xlim=c(1,10), ylim=c(1,10), -->
+<!--      xlab="veilig aantal", ylab="eetsnelheid", -->
+<!--      xaxt="n", yaxt="n") -->
+
+<!-- # Add custom axes with ticks from 1 to 10 -->
+<!-- axis(1, at=1:10) -->
+<!-- axis(2, at=1:10) -->
+
+<!-- # Add grid lines to create a 10x10 grid -->
+<!-- grid(nx=10, ny=10) -->
+
+<!-- # Optionally, add a title to the plot -->
+<!-- title("10x10 sweep: eetsnelheid vs. veilig aantal") -->
+
+<!-- ``` -->
+
 ## Foeragerende mieren
 
 Als het gaat om foerageren, lijken mieren een stuk meer georganiseerd dan de aapjes uit de bovenstaande simulatie. Ze rennen niet maar zo een kant op, maar volgen elkaar netjes van/naar een voedselbron. Echter doen mieren dat niet altijd door elkaar te zien (sterker nog, sommige mieren zijn volledig blind!). In plaats daarvan ruiken ze elkaars feromonen, die bijvoorbeeld aangeven waar het voedsel ligt, waar het nest is, of waar er gevaar dreigt. Hoewel dit meestal heel goed werkt, kun je ook een zogeheten "mierenkringen" *ant mills* krijgen, waar mieren voor eeuwig in rondjes achter elkaar aan lopen (soms net zo lang tot ze van uitputting dood gaan!). 
@@ -292,13 +321,6 @@ Als het gaat om foerageren, lijken mieren een stuk meer georganiseerd dan de aap
 ![Todo: naast elkaar zetten. CAPTION + replace / find out where I found these images. I think they were creative commons but I didnt save the link...](figuren/ant_trail.png){width="49%"}
 
 ![Todo CAPTION + replace / find out where I found these images. I think they were creative commons but I didnt save the link...](figuren/mosh_ants.png){width="49%"}
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.4\linewidth]{figures/ant_trail.png}
-    \includegraphics[width=0.47\linewidth]{figures/mosh_ants.png}
-    \caption{Enter Caption: }
-    \label{fig:enter-label}
-\end{figure}
 
 Dus, een belangrijke verschil met de aapjes is dat de mieren niet direct *elkaar* zien, maar feromonen. Deze feromonen zijn bovendien stofjes die een beetje kunnen diffunderen, een concept waar we in het volgende hoofdstuk nog meer naar zullen kijken. Als we deze componenten samenbrengen in een simulatie, zien we inderdaad dat mieren niet alleen prachtige sporen vormen, maar ook de bovengenoemde mierenkringen kunnen vormen:
 

@@ -1,4 +1,430 @@
+::: {.content-visible when-format="html"}
+{{< include ../_macros.tex >}}
+:::
+
 # Reacties en diffusie
 
-Aan het eind van dit hoofdstuk, word je geacht hetvolgende te kunnen:
+De individual-based modellen uit het vorige hoofdstuk laten zien hoe complex gedrag kan worden gemodelleerd met verrassend eenvoudige modellen. We hebben hierbij gezien dat complex gedrag vaak kan zelf-organiseren, zonder dat dat we dit hebben voorgedefinieerd. Zo zagen we dat deeltjes die elkaar aantrekken en afstoten spontaan levensechte "beestjes" ging vormen, hoe aapjes op een verrassende manier meer eten kunnen vinden, en hoe mieren prachtige foerageerpatronen vormen. In dit hoofdstuk gaan we verder op het thema van patroonformatie, door te leren hoe een zebra haar strepen heeft gekregen. 
 
+* Reactie-vergelijkingen kunnen omzetten tot simpele ODEs
+* Uitleggen wat het omschrijvingsniveau van een PDE is, en hoe dit verschilt van ODEs en IBMs
+* Uitleggen wat Turing-patronen zijn, en wanneer deze ontstaan
+* Uitleggen wat meerderheids-patronen zijn, en waarom dit anders is dan Turing patronen
+* Uitleggen wat staande golven zijn, en voorbeelden geven van biologische systemen waar staande golven relevant zijn
+
+In vorige hoofdstukken hebben we al een paar **dynamische** patronen gezien van groeiende populaties in de ruimte. Zo zagen we predator en prooi prachtige staande golven vormen (deze worden *travelling waves* genoemd), of wat meer rommelige golven (deze worden *chaotic waves* genoemd). Misschien heb je tijdens het werkcollege zelfs wel spiralen (*spiral waves*) gezien. Dergelijke patronen vinden we nu ook terug in de biologie, bijvoorbeeld in de vorming van biofilms in bacteriële kolonies. Dus, al deze intrigerende dynamische patronen die we zien in onze computersimulaties (zie @fig-dynpat), kunnen belangrijk zijn voor ons begrip van de biologie. In dit hoofdstuk gaan we echter ook nadenken over het ontstaan van *niet-dynamische* patronen. De strepen op de vacht van een zebra worden bijvoorbeeld tijdens de groei aangelegd, en blijven vervolgens op hun plek. Om hier mee aan de slag te kunnen, gaan we eerst leren hoe we reactie-vergelijkingen kunnen omzetten naar ODEs. 
+
+![CAPTION TODO](figuren/waves.png){#fig-dynpat}
+
+## Van reactievergelijking naar ODEs
+
+Met ODEs hebben we ons tot nu toe vooral gericht op het modelleren van populaties. Echter zouden we ook interacties op moleculair niveau kunnen beschrijven met ODEs. Neem bijvoorbeeld het "centrale dogma" van de biologie:
+
+\begin{align*}
+    \mathrm{DNA} & \rightarrow \mathrm{mRNA} \rightarrow \mathrm{Eiwit}
+\end{align*}
+
+Laten we voor het gemak aannemen dat het DNA in de cel simpelweg aanwezig is, en dat er met een constante snelheid ($e$) mRNA wordt afgeschreven. Dit mRNA wordt met een bepaalde snelheid ($v$) vertaald naar eiwit, en het breekt langzaam af $d$. Ook het eiwit breekt langzaam af ($\delta$). Zo kunnen we het bovenstaande diagram dus in 2 eenvoudige ODEs uitdrukken: 
+
+\begin{align*}
+    \dt{M} &= e - dM \\
+    \dt{E} &= vM - \delta E
+\end{align*}
+
+Het eiwit zorgt er wellicht voor dat de cel meer glucose op kan nemen. Hiervoor kunnen we een derde vergelijking toevoegen:
+
+\begin{align*}
+    \dt{M} &= e - dM \\
+    \dt{E} &= vM - \delta E\\
+    \dt{G} &= pE - \kappa G\\
+\end{align*}
+
+Om de cirkel volledig rond te maken, kunnen we verder nog stellen dat glucose de expressie van het gen bepaalt. Om ervoor te zorgen dat de genexpressie desondanks gelimiteerd is, maken we gebruik van een een Hill-functie (zie ook het onderdeel over de verzadigde predator):
+
+\begin{align*}
+    \dt{M} &= \frac{eG}{G+h} - dM \\
+    \dt{E} &= vM - \delta E\\
+    \dt{G} &= pE - \kappa G\\
+\end{align*}
+
+De parameter $h$ is wederom de half-waarde constante: als er precies $h$ glucose in de cell aanwezig is, is de MRNA-transcriptie half-maximaal (de maximale transcriptie is $e$). Als er 0 glucose is, is er geen expressie. Als we de ODEs doorrekenen zonder glucose, dan blijven inderdaad alle concentraties 0  (@fig-glucose links). Als we echter een heel klein beetje glucose toevoegen, dan ontstaat er een evenwicht met veel glucose in de cel (@fig-glucose rechts). 
+
+```{r, results='hide'}
+#| code-fold: true
+#| eval: true
+#| fig-height: 3
+#| label: 'fig-glucose'
+
+source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
+
+par(mfrow=c(1,2),mar=c(3,3,3,3))
+model <- function(t, state, parms) {
+  with(as.list(c(state,parms)), { 
+    
+    dM <- e*G/(G+h) - d*M
+    dE <- v*M - delta*E
+    dG <- p*E - kappa*G
+    
+    return(list(c(dM, dE, dG)))  
+  }) 
+}
+
+p <- c(e=1,h=2,d=0.3,v=0.3,delta=0.05,p=0.4,kappa=0.2) #Parameters
+s <- c(M=0.0,E=0.0,G=0.00) #Starting population sizes
+run(tmax=200,ymin=0.0,ymax=1) 
+title("Begin-concentratie G: 0.00")
+s <- c(M=0.0,E=0.0,G=0.01) #Starting population sizes
+run(tmax=200) 
+title("Begin-concentratie G: 0.01")
+
+```
+
+Samengevat zien we dus dat, met de gegeven parameters, een stabiele hoeveelheid glucose (en mRNA/eiwit) kan ontstaat in de cel. Dit evenwicht wordt alleen bereikt als er een klein beetje glucose aanwezig is in de cel. Een cel die geen glucose detecteert zal dus geen genen tot expressie brengen. Maar wellicht diffundeert er een beetje glucose naar binnen vanuit de omgeving, of van een nabij gelegen cel. Om deze processen te modelleren, kunnen we gebruik maken van reactie-diffusiesystemen.
+
+Reactie-diffusiesystemen beschrijven niet alleen de reactiesnelheden van processen (zoals hierboven), maar ook hoe ze door de ruimte diffunderen. Zo kun je modelleren hoe een chemisch signaal door een weefsel verspreidt, of hoe het evenwicht tussen verspreiding door diffusie en de reactiesnelheden eventuele patronen oplevert. Deze modellen worden bijvoorbeeld gebruikt om de verspreidingspatronen van dieren en planten te modelleren, hoe "golven" van ziekteverwekkers zich door een populatie mensen verspreiden (denk aan Covid!), of hoe actiepotentialen zich over het hart bewegen. We zien reactie-diffusiesystemen dus overal terug in de biologie.
+
+## Diffusie tussen hokjes
+
+Nu we een beeld hebben gekregen van hoe we simpele reacties kunnen modelleren met ODEs, gaan we beginnen met het modelleren van een diffusie-proces. Laten we eerst alleen diffusie bekijken (m.a.w. zonder reacties). Stel je voor dat we midden op een gel een druppel verf laten vallen. Langzaam diffundeert de verf door de gel heen. De meest eenvoudige manier om dit te modelleren, is om wederom een grid voor te stellen, waarbij het middelste punt de initiële hoeveelheid verf bevat (zie @fig-diffhokjes, in stap 0 is de concentratie in het midden "4"). Alle andere hokjes bevatten geen verf, dus is de hoeveelheid verf 0. Om een diffusie-proces te simuleren, stellen we dat een bepaalde hoeveelheid (bijv. 10%) van de verf naar de vier directe buur-cellen diffundeert. Zodoende is er vier keer 0.4 (10% van 4) uit het middelste hokje verdwenen, en hebben de hokjes eromheen nu een hoeveelheid verf van 0.4 (@fig-diffhokjes, stap 1). Na 3 stappen diffusie is de vlek al wat meer uitgebreid (Figuur \ref{fig:diffusion_hokjes})^[Let op: de getallen worden hier afgerond om het process te visualiseren].
+
+```{r results='hide'}
+#| code-fold: true
+#| label: 'fig-diffhokjes'
+#| fig-height: 7
+#| fig-width: 7
+
+# Load the viridis package
+library(viridis)
+
+par(mfrow=c(2,2),mar=c(2,2,2,2))
+
+# Set up the grid size and diffusion parameters
+grid_size <- 8
+initial_value <- 4
+diffusion_rate <- 1/10
+iterations <- 4
+
+# Create an empty grid
+grid <- matrix(0, nrow = grid_size, ncol = grid_size)
+
+# Set the middle point
+mid <- ceiling(grid_size / 2) +1
+grid[mid, mid] <- initial_value
+
+# Function to diffuse the values
+diffuse <- function(grid, rate) {
+  new_grid <- grid
+  for (i in 2:(nrow(grid) - 1)) {
+    for (j in 2:(ncol(grid) - 1)) {
+      vec <- c(grid[i-1, j], grid[i+1, j], grid[i, j-1], grid[i, j+1])
+      sumvec <- sum(vec,na.rm=T)
+      new_grid[i, j] <- grid[i, j] + 
+        rate * (sumvec - 4 * grid[i, j])
+    }
+  }
+  return(new_grid)
+}
+
+# Function to plot the grid with numbers and viridis color mapping
+plot_grid <- function(grid, iteration) {
+  # Adjust plot to leave room for gridlines
+  plot(1:nrow(grid), 1:ncol(grid), type = "n", xlab = "", ylab = "", axes = FALSE, 
+       xlim = c(1, grid_size), ylim = c(1, grid_size))
+  
+  # Draw grey dashed gridlines, shifted to surround the numbers
+  abline(h = 0:grid_size, v = 0:grid_size, col = "grey", lty = 2) 
+  
+  # Normalize grid values between 0 and 1 for color scaling
+  norm_grid <- (grid - min(grid)) / (1 - min(grid))
+  
+  # Apply viridis color based on normalized values
+  colors <- viridis(120)[1:100]
+  colors[1] <- "#CCCCCC"
+  # Shift numbers to the center of the grid cells and color them
+  for (i in 2:(nrow(grid)-0)) {
+    for (j in 2:(ncol(grid)-0)) {
+      color_index <- 1+38*min(100,log10(floor(norm_grid[i, j] * 100) + 1))  # Map to color scale
+      text(i - 0.5, j - 0.5, round(grid[i, j], 2), col = colors[color_index], cex = 0.9, font=2)  # Adjust text size and positioning
+    
+    }
+  }
+  title(paste("Stap ", iteration-1))
+}
+
+# Iterate and plot the diffusion process
+for (iter in 1:iterations) {
+  plot_grid(grid, iter)
+  grid <- diffuse(grid, diffusion_rate)
+  
+  #Sys.sleep(1)  # Pause between iterations to see the changes
+}
+```
+
+En zo eenvoudig kan het zijn: door de ruimte in hokjes op te delen kunnen we heel eenvoudig een diffusie-proces simuleren. Hoe kleiner de hokjes zijn, hoe preciezer we de lokale concentraties van de stofjes kunnen simuleren. Echter wordt het dan ook steeds zwaarder voor de computer om alle hokjes door te rekenen. Om deze beperking te omzeilen, kunnen partiële differentiaalvergelijkingen (PDEs) worden gebruikt, waarbij ruimte niet discreet maar continu is ("oneindig kleine hokjes"). PDEs lijken op ODEs, maar waar ODEs alleen tijd als onafhankelijke variabele gebruiken, hebben PDEs zowel tijd als ruimte als onafhankelijke variabelen. Deze vergelijkingen zijn echter niet eenvoudig om te analyseren, dus geen zorgen: we houden het bij deze cursus gewoon bij hokjes. Wanneer je dit netjes doet geeft dit een prima benadering van een PDE (net zoals Grind een benadering van ODEs voor je doorrekend!). In deze cursus (en ook in de literatuur) worden deze numerieke varianten ook vaak PDEs genoemd, ookal is dat technisch gezien niet helemaal correct.
+
+De beste manier om het effect van diffusie weer te geven, is het toepassen op een afbeelding. In @fig-blurring zie je dat diffusie vooral het effect heeft dat de afbeelding minder en minder patroon bevat, totdat alle pixels dezelfde kleur hebben. Misschien verbaasd het je niet dat het vervagen of verscherpen van foto's met Photoshop vaak precies op deze manier werkt!
+
+![CAPTION TODO](figuren/blurring.png){#fig-blurring}
+
+We kunnen ook de ODEs van het eerder besproken mRNA-eiwit-glucose model in hokjes stoppen, en het effect van diffusie daarop bestuderen. We kunnen bijvoorbeeld 1 hokje (1 "cel") in het midden een boel glucose geven, en alle andere cellen 0 glucose. Door een beetje diffusie van glucose toe te passen, zien we dat het signaal zich over het weefsel verspreidt. Net als bij het plaatje van de hond, zien we dus dat diffusie het initiële patroon (een hele duidelijke stip in het midden) verzacht, totdat er geen patroon meer is.
+
+
+::: {.content-visible when-format="html"}
+```{=html}
+<iframe width="740" height="520" src="https://tbb.bio.uu.nl/bvd/bms/simulations/diffusie/" title="Simulation"></iframe>
+```
+:::
+  
+  
+::: {.content-visible when-format="pdf"}
+...
+:::
+
+## Activerende en remmende eiwitten
+
+We hebben nu een beeld gekregen van reactie-diffusiesystemen, maar tot nu toe lijken ze patronen alleen maar tegen te werken.  Maar reactie-diffusiesystemen kunnen weldegelijk prachtige patronen generen, zo ontdekte Alan Turing in 1952. Turing vroeg zich af of diffusie ook de *oorzaak* kon zijn van bepaalde patronen. Hij stelde zich voor dat in een weefsel twee eiwitten tot expressie komen: *activators* ($A$) en *inhibitors* ($I$). De activator ($A$) verhoogt de expressie van beide eiwitten, en de inhibitor verlaagd deze. Dit scenario kunnen we omschrijven in een simpel systeem van ODEs:
+
+\begin{align}
+    \dt{A} &= k_AA - k_II - dA^2 \\
+    \dt{I} &= k_AA - k_II - dI
+\end{align}
+
+Waarbij $A$ de activator is, $I$ de inhibitor, $k_A$ de activatie-constante, $k_I$ de inhibitie-constante, en $d$ de afbraak van de eiwitten. Omdat zelf-activatie oneindige exponentiële groei kan opleveren, nemen we aan dat de afbraak van de activator (per molecuul) toeneemt met de dichtheid. Voor de inhibitor nemen we normale (constante) afbraak aan. 
+
+Zoals jullie hebben geleerd kunnen we een dergelijk simpel ODE-systeem analyseren met nullcline analyse. Laten we ervoor kiezen om een faseruimte te tekenen met $I$ op de y-as, en $A$ op de x-as. Zodoende willen we dus nullclines vinden waarbij $I$ wordt uitgedrukt als functie van $A$. Laten we eerste de nullcline(s) voor $A$ bepalen:
+
+\begin{align*}
+    \dt{A} &= k_AA - k_II - dA^2 = 0 \\
+    k_II &= k_AA - dA^2 = A(k_A-dA) \\
+    I &= \color{blue} \frac{A(k_A-dA)}{k_I} \\
+\end{align*}
+
+$A$ heeft dus één enkele nullcline: een bergparabool met nullpunten $A=0$ en $A=\frac{k_a}{d}$. De nullcline(s) voor $I$ zijn:
+
+\begin{align}
+    \dt{I} &= k_AA - k_II - dI = 0 \\
+    k_II - dI &= k_AA \\
+    I(k_I - d) &= k_AA \\
+    I &= \color{red} \frac{k_AA}{k_I - d} \\ 
+\end{align}
+
+$I$ heeft dus ook één nullcline. $A$ verschijnt alleen in de teller van de breuk, dus deze nullcline neemt lineair toe met $A$ (met hellingshoek $\frac{k_A}{k_I - d}$). Naar verwachting vinden we dus een parabool en een lineaire functie in onze faseruimte. Als we de faseruimte tekenen met `Grind.R`, is dat inderdaad wat we zien (@fig-phaseturing). Aan dit vectorveld kunnen we ook aflezen dat er twee evenwichten zijn: een instabiel evenwicht wanneer er geen $A$ en $I$ is, en een stabiel evenwicht bij een bepaalde hoeveelheid $A$ en $I$. De eerste numerieke oplossing (Figuur \ref{fig:phaseport_turing}B) laat zien dat de eiwitten inderdaad snel een evenwicht kunnen bereiken. Als je echter met veel inhibitors begint, zien we beide concentraties juist hard afnemen. Hoewel het evenwicht bij $(0,0)$ instabiel is, zijn negatieve concentraties niet biologisch relevant, en kunnen we simpelweg aannemen dat deze concentraties $0$ zijn. 
+
+Afhankelijk van de initiële conditie, zien we dus dat we wel/niet expressie van de eiwitten zien. Dit wordt ook wel bistabiliteit genoemd. In een systeem met bistabiliteit heeft de geschiedenis van een systeem (waar het systeem voorheen was) invloed op de verdere verloop van het systeem. Dergelijke effecten zijn waargenomen voor de genexpressie van bacteriën, en zijn bovendien erg belangrijk voor natuurbehoud. Het kan namelijk erg moeilijk kan zijn om een eenmaal omgeslagen ecosysteem weer terug te krijgen in de "gezonde" toestand. (zie ook @tip-hysterese). 
+
+
+```{r, results='hide',warning=FALSE,echo=FALSE,message=FALSE}
+#| label: 'fig-phaseturing'
+   source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
+par(mfrow=c(1,1),mar=c(5, 4, 4, 2)) 
+model <- function(t, state, parms) {
+  with(as.list(c(state,parms)), {
+    dI <- ka*A - ki*I - d*I
+    dA <- ka*A - ki*I - d*A*A
+    return(list(c(dI,dA)))  
+  }) 
+}  
+
+#par(mfrow=c(2,1))
+p <- c(ka=1, ki=0.8,d=2.5)
+s <- c(I=0.001,A=0.01)
+plane(ymax=0.16,xmax=0.4,xmin=-0.1,ymin=-0.1,vector=T,portrait=F,grid=5,x=2,y=1,npixels=500)
+newton(state=c(I=0.10,A=0.3),plot=T)
+newton(state=c(I=0.0,A=0.0),plot=T)
+s <- c(I=0.00,A=0.03)
+f <- run(tmax=20,tstep=0.1,timeplot=T,traject=T)
+s <- c(I=0.03,A=0.00)
+f <- run(tmax=4,tstep=0.1,timeplot=T,traject=T)
+```
+
+
+
+:::{.callout-note #tip-hysterese collapse=true}
+## Hysterese in ecosystemen
+
+Als een systeem meerdere evenwichten heeft, en je verandert langzaam de condities, dan kan er een punt zijn dat het van het ene naar het andere evenwicht omklapt. Dergelijke "tipping points" op alle schalen gezien: van de expressie van het lac-operon in E. coli, tot hele ecosystemen. In de onderstaande foto zie je bijvoorbeel twee bijna identieke meren, maar één van de meren is door eutroficatie omgeslagen naar een ongezonde vertroebelde toestand. 
+Een dergelijke vertroebeling ongedaan maken blijkt erg lastig te zijn. Inderdaad weten we dankzij modellen dat deze systemen *bistabiel* zijn, zoals weergegeven met de twee kuilen waarin het balletje naar beneden kan rollen: als het balletje eenmaal in een ander minimum ligt, krijg je deze er niet zomaar meer uit! Dit fenomeen wordt *hysterese* genoemd. [Hier meer](https://passel2.unl.edu/view/lesson/bcbd3f35f2e0/2) kun je meer lezen over hysterese. 
+
+![CAPTION TODO: Bron foto: https://passel2.unl.edu/view/lesson/bcbd3f35f2e0/2](figuren/eutro_hyst.png){width="70%" fig-align="center"}
+:::
+
+## Turing-patronen 
+
+Oke, we weten nu dus naar welke evenwichten de activators en inhibitors kunnen gaan. Laten we de variabelen $A$ en $I$ in hokjes stoppen, en hetzelfde lokale diffusieproces toepassen als hierboven besproken. Elke tijdstap worden dus de ODEs zoals hierboven een klein stukje doorgerekend, dan een stapje diffusie, ODEs doorrekenen, diffusie, \textit{etc.} We beginnen met een willekeurige hoeveelheid $A$ per hokje, en zonder $I$:
+
+
+::: {.content-visible when-format="html"}
+```{=html}
+<iframe width="100%" height="630" src="https://tbb.bio.uu.nl/bvd/bms/simulations/turing/" title="Simulation"></iframe>
+```
+:::
+  
+  
+::: {.content-visible when-format="pdf"}
+
+...
+
+:::
+
+Als je de simulatie hierboven een tijdje laat lopen, zul je zien dat er iets interessants gebeurt: er ontstaat een stabiel patroon. Precies welk patroon je krijgt (groter/kleiner, strepen/vlekken), hangt af van de diffusie-snelheden en de activatie-/inhibitieconstanten (zie een paar voorbeelden in @fig-turingvoorbeelden).
+
+![CAPTION TODO](figuren/turing_voorbeelden.png){#fig-turingvoorbeelden}
+
+Een belangrijke voorwaarde voor stabiele Turing-patronen is dat de diffusie van de inhibitor sneller moet zijn dan die van de activator. Hoe het ook zij: Turing sloeg er in om een proces te vinden waarbij diffusie niet patronen uitvaagt, maar ze juist genereert! Als de diffusie niet in alle richtingen even snel is, kan je ook strepen krijgen die verdacht veel op de vacht van een zebra lijken:
+
+::: {.content-visible when-format="html"}
+```{=html}
+<iframe width="100%" height="500" src="https://tbb.bio.uu.nl/bvd/bms/simulations/stripes/" title="Simulation"></iframe>
+```
+:::
+  
+  
+::: {.content-visible when-format="pdf"}
+
+...
+
+:::
+
+Dit is dan ook waarom Alan Turing ooit stelde:
+
+"The stripes are easy, but what about the horse part?"<br>
+-- Alan Turing
+
+Vele decennia later is er ook veel gemodelleerd aan "the horse part": hoe krijg je van een enkele cel een complex organisme met de juiste verdeling van weefsels en vingers? Het blijkt dat niet alleen de vlekken op de vacht, maar ook de ontwikkeling van planten en dieren veel met Turing patronen verklaard kan worden. Zie bijvoorbeeld onderstaande afbeeldingen uit onderzoek van James Sharpe (ref: https://pubmed.ncbi.nlm.nih.gov/23276682/), wat onderzoekt hoe vergelijkbare activatie-en-inhibitie interacties vorm kan geven aan complexe organismen. 
+
+::: {#fig-sharpe layout-nrow=2}
+
+![Onderzoek van Sharpe et al. over hoe cellen differentiëren in een 1D weefsel van cellen](figuren/jamessharpe1.png){#fig-sharpe-1 width="80%"}
+
+![Onderzoek van Sharpe et al. over hoe de aanleg van vingers tijdens de ontwikkeling wordt bepaald door een Turing-mechanisme](figuren/jamessharpe2.png){#fig-sharpe-2 width="80%"}
+
+Caption
+:::
+
+
+## Niet alle biologische patronen zijn Turing patronen 
+
+
+::: {.img-float}
+![](figuren/notturing_3.png){style="float: right; margin: 15px; width: 20%"}
+:::
+::: {.img-float}
+![](figuren/turing_2.png){style="float: right; margin: 15px; width: 21%"}
+:::
+Zoals we hierboven hebben gezien, ontstaan Turing-patronen door een combinatie van lokale activatie en inhibitie op afstand, wat niet alleen betrokken is bij vachtpatronen, maar ook bij de aanleg van het lichaam zelf. Heel recent is zelfs gevonden dat Turing-mechanismen een rol spelen bij de [ontwikkeling van vingerafdrukken](https://www.sciencedirect.com/science/article/pii/S0092867423000454?via\%3Dihub). Ook veel andere biologische processen ondergaan vergelijkbare interacties. In droge gebieden houden planten samen lokaal water vast, maar onttrekken daardoor water uit de omgeving op afstand. Ook dit levert patronen op die lijken op Turing-patronen. Maar **let op**: hoewel Turing-mechanismen veel patronen in de natuur *kunnen* verklaren, betekent dit niet dat deze patronen ook door Turing-mechanismen zijn ontstaan. Zo is er bijvoorbeeld veel onderzoek gedaan naar mogelijke Turing-mechanismen in de ontwikkeling van fruitvliegjes, maar dit patroon bleek op een geheel andere manier te vormen. Kortom: hoewel Turing patronen een wederkerend principe lijken te zijn binnen de biologie, is niet ieder "vlekken-of-strepen-patroon" ontstaan door Turing mechanismen. Zo kan je bijvoorbeeld op een grid van struikgewas (groen) of droge aarde (lichtbruin) ook vergelijkbare patronen krijgen door een simpele "meerderheidsregel". Dat wil zeggen: als er meer planten in de buurt zijn dan verandert een grid-punt in een plant, en als er meer aarde in buurt is, dan verandert een grid-punt in aarde. Het resultaat zie je hier onder: 
+
+::: {.content-visible when-format="html"}
+```{=html}
+<iframe width="740" height="500" src="https://tbb.bio.uu.nl/bvd/bms/simulations/vote/" title="Simulation"></iframe>
+```
+:::
+  
+  
+::: {.content-visible when-format="pdf"}
+
+...
+
+:::
+
+## Opgaven 
+
+::: {#exr-reactievergelijkingen}
+## Reactievergelijkingen
+
+Bekijk de volgende reactievergelijking van een enzymatische reactie, waarbij een enzym ($E$) een complex vormt met een substraat ($S$). Dit complex ($C_{ES}$) catalyseert de reactie naar product ($P$), waarbij het enzym weer vrij komt. Echter kan het complex ook weer uit elkaar vallen zonder reactie, en weer $E$ + $S$ opleveren. 
+
+\begin{align}
+    E+S & \quad \underset{k_2}{\stackrel{k_1}{\rightleftharpoons}} \quad C_{ES} \quad \xrightarrow{k_{cat}} \quad E+P\\
+\end{align}
+
+a. Stel dat we een dynamisch model van dit systeem zouden willen maken. Wat zijn de variabelen die we zouden willen modelleren? En wat zijn de parameters? *vars E, S, C, en P*
+b. Aangenomen dat de reactiesnelheden direct proportioneel zijn aan de concentraties, is de snelheid waarmee het complex $C_{ES}$ onstaat gelijk aan $E \cdot S \cdot k_1$. Zijn er nog meer processen die de hoeveelheid complex verhogen of verlagen? Welke vergelijkingen beschrijven deze processen? *er wijst maar 1 pijltje naar Ces, maar er wijzen er ook twee van weg, de twee -termen zijn dus k2 maal Ces en kcat maal Ces*
+c. Alle processen uit vraag b. bij elkaar geven de totale snelheid waarmee complex ontstaat en/of vervalt. Met deze kennis kunnen we ODEs opstellen. Schrijf van $C_{ES}$ en de andere variabelen differentiaalvergelijkingen op. 
+d. Bekijk het onderstaande Grind-model van dit systeem. Het script print hoeveel product er is ontstaan aan het begin van het reactie-proces. Schets door het script te bestuderen hoe deze initiële reactie-snelheid afhangt van de initiële substraat-concentratie. Hint: bekijk hoeveel een verdubbeling van $S$ de reactiesnelheid verhoogd bij lage $S$ (bijv. 0.001), en ook bij hele hoge $S$ (bijv 1000). *dat geeft een verzadigde functie, zoals de MM curve*
+
+```{r results='hide'}
+#| eval: false
+source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
+
+model <- function(t, state, parms) {
+  with(as.list(c(state,parms)), { 
+    
+    dE <- k2*C - k1*E*S + kcat*C
+    dS <- k2*C - k1*E*S
+    dC <- k1*E*S - kcat*C
+    dP <- kcat*C
+    
+    return(list(c(dE, dS, dC, dP)))  
+  }) 
+}
+
+p <- c(k1=1,k2=0.2,kcat=1) #Parameters
+s <- c(E=1,S=1,C=0,P=0) #Starting population sizes
+run(tmax=10,tstep=0.1) 
+stapje <- run(tmax=1,ymax=3,tstep=1,timeplot=F) 
+cat(paste("Er is in 1 stap",stapje["P"],"product ontstaan"))
+```
+:::
+
+::: {#exr-diffusievraag}
+
+## Lokale diffusie simuleren
+
+Kijk nog eens naar @fig-diffhokjes. De diffusie-constante die in dit figuur werd aangenomen was 0.1, dat wil zeggen, van de totaal-concentratie 4.0 in het middelste punt, diffundeert 0.4 naar de buurhokjes. 
+
+Stel dat elke stap in @fig-diffhokjes één minuut voorstelt, en dat je experimenteel hebt waargenomen dat na 3 minuten de verf volledig over de plaat is verspreid. Kennelijk is de diffussie in @fig-diffhokjes te langzaam. 
+
+a. Teken de begin-conditie in @fig-diffhokjes na, en bepaal wat er gebeurt met een snellere diffusie-constante. Probeer een diffusie-constante van 0.2 en 0.3. Wat valt je op? *bij 0.3 gaat dit fout: er verdwijnt 120% uit het hokje!*
+b. Hoe kan je er voor zorgen dat de stof beter is verspreid na 3 minuten? *door meerdere diffusiestappen per minuut te doen!*
+
+Lokale diffusie op een grid heeft dus zijn beperkingen, vooral doordat tijdstapjes te groot kunnen zijn. 
+
+c. Leg uit waar we dit probleem eerder hebben gezien, en waarom partiële differentiaalvergelijkingen (met "oneindig kleine hokjes") dit probleem niet hebben. *partiele differentiaalvergelijkingen gebruiken oneindig kleine tijd/ruimte stapjes, dus hoe hoog de rate ook is je kunt niet voorbij een evenwicht schieten. ODEs zijn voor differentie-vergelijkingen wat PDEs zijn voor diffusie in hokjes* 
+:::
+
+::: {#exr-bijproducten}
+
+## Bijproducten
+
+Bacteriën produceren tijdens hun metabolisme vaak bijproducten, zoals melkzuur, alcohol, en waterstofperoxide. Hoewel lage concentraties van deze metabolieten vaak niet schadelijk zijn, kan het op ten duur opbouwen in de omgeving en zo de sterftekans van de bacteriën verhogen. We bestuderen in deze opgave de onderstaande simulatie hiervan.
+
+::: {.content-visible when-format="html"}
+```{=html}
+<iframe width="100%" height="650" src="https://tbb.bio.uu.nl/bvd/bms/simulations/toxic_byproducts/" title="Simulation"></iframe>
+```
+:::
+  
+  
+::: {.content-visible when-format="pdf"}
+
+...
+
+:::
+
+Bestudeer wat er gebeurt bij een gemiddelde toxiciteit en radius. Herstart de simulatie ook een paar keer opnieuw om goed te zien wat er gebeurt. 
+
+a. Omschrijf wat hier gebeurt in termen van concepten uit dit hoofdstuk. 
+b. Stel dat er ergens in de simulatie een virus uitbreekt. Kan het virus alle individuen besmetten?
+c. Tel hoeveel groepjes je ziet, en gebruik daarna je muis om een paar groepjes weg te halen (alsof er dus idd een ernstig virus is uitgebroken). Wat gebeurt er daarna? Waarom gebeurde dit niet voor de ziekteuitbraak?
+:::
+
+::: {#exr-modelkeuzes}
+
+## Modelkeuzes
+
+Je hebt in dit cursusonderdeel al over allerlei verschillende modellen geleerd. Zoals in het introductiehoofdtuk uitgelegd, is niet elk model geschikt voor elke situatie. Als je bijvoorbeeld een goed gemengde Erlenmeyer met miljoenen bacteriële cellen modelleert, is een *individual-based model* met de posities van elk individu misschien niet zo nuttig. Anderzijds kun je zwerm-patronen van slijmschimmels niet modelleren met ODEs, want met ODEs is "een ruimtelijk patroon" niet een van de mogelijke uitkomsten. 
+
+Om te oefenen met welk type model past bij welk vraagstuk, staan hieronder een aantal modelomschrijvingen. Omschrijf voor elke welk type model je zou gebruiken om deze te bestuderen, en motiveer je antwoord. Denk na over het type model (differen*tie*vergelijkingen, differen*tiaal*vergelijkingen (ODEs), individual-based models, reactie-diffusie vergelijkingen (PDEs)), maar ook over het type variabele waarmee je de toestand modelleert (discreet, continu, zie @fig-contdisc). 
+
+a. Twee soorten bacteriën ondervinden competitie in een goed gemengde Erlenmeyer. 
+b. Twee druppels met fluorescente eiwitten worden op een agar plaat gepipetteerd, waarbij interessante patronen ontstaan.
+c. In een pas afgebrand bos komen pionierssoorten op. De eerste die zich vestigt neemt de ruimte in, waardoor er geen ruimte meer is voor anderen.
+d. Een populatie zooplankton in een goed-gemengd deel van de oceaan ondervindt onderlinge competitie om algen en andere voedselbronnen.
+e. Op de huid van een hagedis vormen zich tijdens de ontwikkeling gevlekte patronen
+f. Een populatie divers gekleurde konijnen wordt door havikken bejaagd
+g. Bacteriële cellen die groeien op een agarplaat kunnen met een kleine kans muteren, en daarbij fluorescent worden
+h. Een morfogen diffundeert door een weefsel van cellen, en activeert daarbij verschillende genexpressiepatronen tijdens de ontwikkeling. 
+i. De hoeveelheid paracetamol in het bloed na inname wordt langzaam afgebroken
+j. Na bevruchting ontstaat een calcium-golf op het membraan van de eicel
+k. Een populatie van zeehonden wordt vanuit verschillende hoeken (richtingen) door orca's belaagd
+:::
