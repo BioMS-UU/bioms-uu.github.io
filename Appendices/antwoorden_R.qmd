@@ -77,7 +77,7 @@ Eerst voeren we `d <- 0.001` uit. Dan berekenen we de breuken:
 
 Eerst delen we door 0.001, waardoor $a$ 1000 keer zo groot wordt. Dan delen we door $0.001^2$, wat '1 miljoenste' is. Hierdoor wordt $a$ een miljoen keer zo groot. Om dergelijk grote getallen weer te geven wordt de wetenschappelijke notatie gebruik (`5e+06`). Het antwoord uit vraag b (delen door 0) kunnen we nu begrijpen. Als we door een steeds kleiner getal delen, wordt de uitkomst groter en groter. Dus als we door 0 delen (een oneindig klein getal!), krijgen we als resultaat oneindig. 
 
-@exr-package_scripts
+@exr-packages
 
 **a.** 
 
@@ -107,6 +107,151 @@ De boom ziet er elke keer anders uit. De 'r' in de functie zal dus wel voor *ran
 **d.**
 
 Deze past het aantal soorten in de willekeurige boom aan. 
+
+**e.** 
+
+In de tekst van dit hoofdstuk heb je geleerd dat dit kan met `?rtree`, wat een venster opent in Rstudio met uitleg over je functie. Zo kan je bijvoorbeeld alle tip-levels veranderen:
+
+```{r}
+#| eval: false
+labels <- paste("Soort ",1:5)
+plot(rtree(5,tip.label=labels))
+```
+
+@exr-penguins
+
+**a.** Er zijn drie soorten penguins. Er zijn veel manieren om dit te zien. Ten eerste, als je `View(penguins)` gebruikt, kun je de verschillende soorten zelf tellen in de eerste kolom. Een andere manier is om de species-kolom uit de dataframe te pakken:
+
+```{r}
+#| eval: false
+penguins$species
+```
+
+Deze code print de hele eerste kolom, en vat aan het einde samen hoevel verschillende 'levels' de data heeft:
+
+    Levels: Adelie Chinstrap Gentoo
+    
+Hier zie je dus ook dat er drie soorten zijn. Een derde manier is om de functie `summary` toe te passen op de kolom, zodat je een tabel te zien krijgt met het aantal soorten, en hoe vaak ze voor komen:
+
+    > summary(penguins$species)
+    Adelie Chinstrap    Gentoo 
+    152        68       124
+    
+**b.** Hieronder staat  hoe je deze functies kan gebruiken. Je kan ook de functie `summary` gebruiken, die geeft in 1 klap een heleboel van deze getallen:
+
+```{r}
+#| eval: false
+min(penguins$flipper_length_mm,na.rm=T) # T is kort voor TRUE
+max(penguins$flipper_length_mm,na.rm=T)
+mean(penguins$flipper_length_mm,na.rm=T)
+
+# Je kan ook summary gebruiken, die geeft vanalles:
+summary(penguins$flipper_length_mm) 
+```
+
+**c.**
+```{r}
+#| eval: false
+
+x <- summary(penguins$sex) # geeft 3 waarden: female, male, en NA
+fractie <- x[3]/(nrow(penguins)) # aantal NAs gedeeld door aantal rijen
+percentage <- 100*fractie # omzetten naar percentages
+print(percentage)
+```
+
+@exr-bacterienR
+
+**a.** Hiervoor kunnen we dezelfde structuur gebriuken als voor 'biologen' in het hoofdstuk:
+
+```{r}
+#| eval: false
+bacterien <- data.frame(temperatuur=c(20, 25, 30, 35, 40),
+                       groeisnelheid=c(2.0, 2.25, 2.65, 2.35, 2.2))
+```
+
+Alternatief kun je eerst twee vectoren definieren, als je dat overzichtelijker vindt:
+```{r}
+#| eval: false
+temperatuur <- c(20, 25, 30, 35, 40)
+groeisnelheid <- c(2.0, 2.25, 2.65, 2.35, 2.2)
+bacterien <- data.frame(temperatuur,groeisnelheid)
+```
+
+**b.** Hoewel je dit zelf ook nog wel kan lezen, zijn biologische datasets hier vaak te groot voor. Zoals de tip zegt, geeft `which.max()` de index met de hoogste waarde terug. Deze index kun je dan gebruiken om de corresponderende temperatuur te vinden:
+
+```{r}
+#| eval: false
+# Vind de index van de maximale groeisnelheid
+maxgroei_index <- which.max(bacterien$groeisnelheid) #  geeft index-waarde '3'
+# Toon de corresponderende temperatuur
+bacterien$temperatuur[maxgroei_index] # geeft '30', namelijk de temperatuur op positie 3
+```
+
+**c.** Om dit te doen moeten we de kolom 'groeisnelheid' tot de macht 10 verheffen:
+
+```{r}
+#| eval: false
+totaalgroei <- bacterien$groeisnelheid^10
+bacterien$totaalgroei <- totaalgroei
+bacterien$totaalgroei[1] == 1024 # TRUE, het is dus goed gegaan
+```
+
+**d.** 
+
+```{r}
+#| eval: false
+plot(bacterien$temperatuur, bacterien$groeisnelheid, 
+     type = "b", col='seagreen', lwd=2,
+     xlab = "Temperatuur (Celcius)", ylab = "Groeisnelheid (per uur)",
+     main = "Groeisnelheid vs Temperatuur")
+```
+
+@exr-vislengtes
+
+**a.** In R geeft `lengtes>=15` een vector van `TRUE` en `FALSE` terug. Deze kun
+je meteen doorgeven aan `sum`, en deze geeft dan het totaal aantal:
+
+```{r}
+#| eval: false
+lengtes <- c(12, 18, 7, 21, 15, 16, 14, 10, 20, 17)
+grootgenoeg <- sum(lengtes>=15) # groot genoeg
+print(paste("Aantal vissen groter of gelijk aan 15 cm:", grootgenoeg))
+```
+
+**b.** Vergelijkbaar met de vorige vraag, maar we moeten nog het percentage uitrekenen. 
+
+```{r}
+#| eval: false
+lengtes <- c(12, 18, 7, 21, 15, 16, 14, 10, 20, 17)
+totaal_vissen <- length(lengtes)  # Totaal aantal vissen
+vissen_te_klein <- sum(lengtes < 15)  # Aantal vissen kleiner dan 15 cm
+percentage_te_klein <- (vissen_te_klein / totaal_vissen) * 100
+print(paste("Percentage vissen kleiner dan 15 cm:", percentage_te_klein, "%"))
+```
+
+**c.** Indexing doen we met vriekante haken, maar in dit geval gebruiken we niet de 
+specifieke posities (1,2,5), maar de conditie (TRUE, FALSE, FALSE, etc.):
+
+```{r}
+#| eval: false
+lengtes_vissen_vrijlaten <- lengtes[lengtes >= 15]
+print(lengtes_vissen_vrijlaten)
+```
+
+**d.** Om dit te doen loopen we over de vector van lengtes, en testen of elke
+vis aan de voorwaarde voldoet:
+
+```{r}
+#| eval: false
+for (l in lengtes) {
+  if (l >= 15) {
+    print(paste("Vis van", l, "cm is groot genoeg om vrij te laten."))
+  } else {
+    print(paste("Vis van", l, "cm is te klein."))
+  }
+}
+```
+
 
 @exr-R-1
 
