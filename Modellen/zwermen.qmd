@@ -38,6 +38,8 @@ Hoewel biologie zeer complex is, bestaat het fundamenteel niet uit andere deeltj
 1. (elke 10e tijdstap, geef de punten weer in een plot)
 1. Ga terug naar stap 2
 
+
+::: {.content-visible when-format="html"}
 Zoals gezegd, de R code hoeven jullie niet te begrijpen, maar voor de geïnteresserde student staat deze hier: 
 
 ```{r}
@@ -114,9 +116,89 @@ for (t in 1:aantal_tijdstappen) {
   
 }
 ```
+:::
+  
+::: {.content-visible when-format="pdf"}
+Zoals gezegd, de R code hoeven jullie niet te begrijpen, maar voor de geïnteresserde student staat die op de website. 
+
+```{r}
+#| echo: false
+#| eval: true
+
+set.seed(8)
+# Aantal tijdstappen
+par(mar = rep(2, 4), bg = "black")
+aantal_tijdstappen <- 150
+
+# Aantal punten
+aantal_punten <- 100
+
+# Startcoördinaten
+alle_posities <- data.frame(
+  x = runif(aantal_punten),
+  y = runif(aantal_punten)
+)
+
+# Parameters voor gedrag van punten
+minimale_afstand <- 0.4
+aantrekkingsfactor <- 0.001  # Factor voor de (globale) aantrekkingskracht
+botsingsfactor <- 0.003   # Factor voor de (lokale) afstotingskracht
+
+# Functie om, per punt, de aantrekkingskracht en botsingsdetectie te berekenen
+update_positie <- function(alle_posities, i) {
+  dx <- 0 #verandering in x voor dit punt
+  dy <- 0 #verandering in y voor dit punt
+  
+  for (j in 1:aantal_punten) {
+    if (i != j) { #niet met jezelf botsen / naar je zelf toe bewegen
+      afstand_x <- alle_posities$x[j] - alle_posities$x[i]
+      afstand_y <- alle_posities$y[j] - alle_posities$y[i]
+      afstand <- sqrt(afstand_x^2 + afstand_y^2) #stelling van pythagoras
+      
+      # Aantrekkingskracht
+      dx <- dx + aantrekkingsfactor * afstand_x / afstand
+      dy <- dy + aantrekkingsfactor * afstand_y / afstand
+      
+      # Afstotingskracht voor botsingsdetectie
+      if (afstand < minimale_afstand) {
+        dx <- dx - botsingsfactor * afstand_x / afstand
+        dy <- dy - botsingsfactor * afstand_y / afstand
+      }
+    }
+  }
+  
+  return(c(dx, dy))
+}
+par(mfrow=c(3,5))
+# Simuleer de diffusie en toon de resultaten stap voor stap
+for (t in 1:aantal_tijdstappen) {
+  # Maak (leeg) dataframe voor posities in volgende tijdstap
+  nieuwe_positie <- data.frame(x = numeric(aantal_punten), y = numeric(aantal_punten))
+  
+  # Bereken de verplaatsingen op basis van huidige posities
+  for (i in 1:aantal_punten) {
+    verplaatsing <- update_positie(alle_posities, i)
+    nieuwe_positie$x[i] <- alle_posities$x[i] + verplaatsing[1]
+    nieuwe_positie$y[i] <- alle_posities$y[i] + verplaatsing[2]
+  }
+  
+  # Update alle posities 
+  alle_posities <- nieuwe_positie
+  
+  # Plot de huidige posities van de punten
+  if(t%%10==1){
+    plot(alle_posities$x, alle_posities$y, xlim = c(0, 1), ylim = c(0, 1), col = "orange", pch = 19, cex = 0.5,
+       xlab = "X", ylab = "Y")
+    title(sprintf("Tijdstip: %d", t-1),col.main="white")
+  }
+  
+}
+```
+:::
 
 Zoals je ziet onstaat er een zeer specifiek patroon. Als je dit patroon nog niet erg spannend vindt, zouden we ook kunnen kijken wat er met meerdere deeltjes (kleuren) gebeurt, die naast de aantrekkingskracht op hunzelf ook elkaar aantrekken:
 
+::: {.content-visible when-format="html"}
 ```{r}
 #| eval: false
 #| code-fold: true
@@ -225,11 +307,17 @@ for (i in 1:1000) {
 }
 ```
 
-{{< video https://youtu.be/zd7yYVtMI6A >}}
+<iframe width="100%" height="315" src="http://www.youtube.com/embed/zd7yYVtMI6A?autoplay=1&loop=1&playlist=zd7yYVtMI6A&showinfo=0&controls=0&mute=1&rel=0" frameborder="0" allowfullscreen></iframe>
 
-Zoals je ziet zijn de deeltjes in de draaimolen zijn beland. Als we één van deze 5 kleuren (paars) juist geen aantrekking geven tot een andere kleur, gebeurt er dit: 
+Zoals je ziet zijn de deeltjes in de draaimolen zijn beland. Als we één van deze 5 kleuren (paars) juist geen aantrekking geven tot een andere kleur, gebeurt er dit:
 
-{{< video https://youtu.be/XMojfXKuamk >}}
+<iframe width="100%" height="315" src="http://www.youtube.com/embed/XMojfXKuamk?autoplay=1&loop=1&playlist=XMojfXKuamk&showinfo=0&controls=0&mute=1&rel=0" frameborder="0" allowfullscreen></iframe>
+
+:::
+
+::: {.content-visible when-format="pdf"}
+ TODO HIER NOG SCREENSHOTS VAN DE YOUTUBE VIDEOS?
+:::
 
 Zoals je je kan voorstellen, kan dit allerlei patronen opleveren. Het systeem wat je hier bekijkt is *particle life* genoemd, omdat het erg levensachtige patronen op kan leveren. Als je hier meer over wil weten, vind je [hier](https://www.youtube.com/watch?v=p4YirERTVF0) een uitgebreide video, en [hier](https://webgl-particle-life.netlify.app/) een app die je zelf kan downloaden om met deze systemen te spelen.
 
@@ -250,7 +338,7 @@ Als je deze drie regels samenvoegt, zul je zien dat je onmiddelijk prachtige mur
 
 ::: {.content-visible when-format="html"}
 ```{=html}
-<iframe width="740" height="550" src="https://tbb.bio.uu.nl/bvd/bms/simulations/murmuraties/" title="Simulation"></iframe>
+<iframe width="100%" height="550" src="https://tbb.bio.uu.nl/bvd/bms/simulations/murmuraties/" title="Simulation"></iframe>
 ```
 :::
   
@@ -327,7 +415,7 @@ Dus, een belangrijke verschil met de aapjes is dat de mieren niet direct *elkaar
 
 ::: {.content-visible when-format="html"}
 ```{=html}
-<iframe width="740" height="650" src="https://tbb.bio.uu.nl/bvd/bms/simulations/ants/" title="Simulation"></iframe>
+<iframe width="100%" height="650" src="https://tbb.bio.uu.nl/bvd/bms/simulations/ants/" title="Simulation"></iframe>
 ```
 :::
   
