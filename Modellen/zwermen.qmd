@@ -44,6 +44,7 @@ Zoals gezegd, de R code hoeven jullie niet te begrijpen, maar voor de geïnteres
 
 ```{r}
 #| code-fold: true
+#| freeze: false
 #| eval: true 
 #| code-summary: "Code voor geïnteresseerde student"
 
@@ -120,80 +121,6 @@ for (t in 1:aantal_tijdstappen) {
   
 ::: {.content-visible when-format="pdf"}
 Zoals gezegd, de R code hoeven jullie niet te begrijpen, maar voor de geïnteresserde student staat die op de website. 
-
-```{r}
-#| echo: false
-#| eval: true
-
-set.seed(8)
-# Aantal tijdstappen
-par(mar = rep(2, 4), bg = "black")
-aantal_tijdstappen <- 150
-
-# Aantal punten
-aantal_punten <- 100
-
-# Startcoördinaten
-alle_posities <- data.frame(
-  x = runif(aantal_punten),
-  y = runif(aantal_punten)
-)
-
-# Parameters voor gedrag van punten
-minimale_afstand <- 0.4
-aantrekkingsfactor <- 0.001  # Factor voor de (globale) aantrekkingskracht
-botsingsfactor <- 0.003   # Factor voor de (lokale) afstotingskracht
-
-# Functie om, per punt, de aantrekkingskracht en botsingsdetectie te berekenen
-update_positie <- function(alle_posities, i) {
-  dx <- 0 #verandering in x voor dit punt
-  dy <- 0 #verandering in y voor dit punt
-  
-  for (j in 1:aantal_punten) {
-    if (i != j) { #niet met jezelf botsen / naar je zelf toe bewegen
-      afstand_x <- alle_posities$x[j] - alle_posities$x[i]
-      afstand_y <- alle_posities$y[j] - alle_posities$y[i]
-      afstand <- sqrt(afstand_x^2 + afstand_y^2) #stelling van pythagoras
-      
-      # Aantrekkingskracht
-      dx <- dx + aantrekkingsfactor * afstand_x / afstand
-      dy <- dy + aantrekkingsfactor * afstand_y / afstand
-      
-      # Afstotingskracht voor botsingsdetectie
-      if (afstand < minimale_afstand) {
-        dx <- dx - botsingsfactor * afstand_x / afstand
-        dy <- dy - botsingsfactor * afstand_y / afstand
-      }
-    }
-  }
-  
-  return(c(dx, dy))
-}
-par(mfrow=c(3,5))
-# Simuleer de diffusie en toon de resultaten stap voor stap
-for (t in 1:aantal_tijdstappen) {
-  # Maak (leeg) dataframe voor posities in volgende tijdstap
-  nieuwe_positie <- data.frame(x = numeric(aantal_punten), y = numeric(aantal_punten))
-  
-  # Bereken de verplaatsingen op basis van huidige posities
-  for (i in 1:aantal_punten) {
-    verplaatsing <- update_positie(alle_posities, i)
-    nieuwe_positie$x[i] <- alle_posities$x[i] + verplaatsing[1]
-    nieuwe_positie$y[i] <- alle_posities$y[i] + verplaatsing[2]
-  }
-  
-  # Update alle posities 
-  alle_posities <- nieuwe_positie
-  
-  # Plot de huidige posities van de punten
-  if(t%%10==1){
-    plot(alle_posities$x, alle_posities$y, xlim = c(0, 1), ylim = c(0, 1), col = "orange", pch = 19, cex = 0.5,
-       xlab = "X", ylab = "Y")
-    title(sprintf("Tijdstip: %d", t-1),col.main="white")
-  }
-  
-}
-```
 :::
 
 Zoals je ziet onstaat er een zeer specifiek patroon. Als je dit patroon nog niet erg spannend vindt, zouden we ook kunnen kijken wat er met meerdere deeltjes (kleuren) gebeurt, die naast de aantrekkingskracht op hunzelf ook elkaar aantrekken:
