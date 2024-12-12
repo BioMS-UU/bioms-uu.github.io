@@ -1,42 +1,393 @@
 {{< include _macros.tex >}}
 
-# Het schatten van parameters
+# Het schatten van parameters en betrouwbaarheidsintervallen
 
+Korte intro
 
-## Het doel van veel onderzoeken is het schatten van parameters
+Recap:
 
-Bijna alle getallen die je leest zijn schattingen.
+Het doel van veel onderzoeken is het schatten van parameters.
+Bijna alle getallen die je leest zijn zulke schattingen.
 
-## Schattingen op basis van steekproeven zijn onzeker als gevolg van steekproeffouten en bias
+Schattingen op basis van steekproeven zijn onzeker als gevolg van steekproeffouten en bias.
 
-Box veelgemaakte fouten:
-Verschillende soorten bias:
-Sampling biases, including: vol-
-unteer bias (self-selection bias), non-response /
-extreme response bias, survivorship bias, ob-
-server bias (vs. blinding), recall bias, question or-
-der bias, acquiescence bias
-self-reports
+Volledig onwillekeurige steekproeven elimineren bias 
+en geven de mogelijkheid om .
 
-Confirmation bias 
-
-## Volledig onwillekeurige steekproeven elimineren bias
-
-## Schattingen op basis van metingen zijn onzeker door meetfouten
+Schattingen op basis van metingen zijn onzeker door meetfouten.
+Bias in experimenten: systematische afwijkingen calibreren. 
 
 Veelgemaakte fouten: schattingen zonder maat van precisie.
 
-## Het is essentieel om onzekerheid in meetfouten te kwantificeren
+Een getal zonder indicatie van de precisie is nutteloos.
+
+Oplossing: Betrouwbaarheidsintervallen.
+In het volgende hoofdstukje leggen we uit wat die zijn.
 
 ## Betrouwbaarheidsintervallen
 
-## Berekeningen over onzekere gegevens vereisen een kansmodel
+Concept betrouwbaarheidsinterval (BHI): 
+niet alleen een punt (puntschatting) maar een interval
+dat aangeeft hoe precies je schatting is.
 
-## Het statistische model: Volledig willekeurige steekproeven uit een normaal-verdeelde variabele
+In deze cursus en daarbuiten wordt vaak een 95%-betrouwbaarheidsinterval gebruikt.
+Je berekent dat interval volgens een formule
+die ervoor zorgt dat de ware parameter in 95% van de gevallen
+binnen dat interval ligt.
 
-$X$ normaal verdeeld
+Stel je voor dat verschillende onderzoekers geïnteresseerd zijn
+in dezelfde parameter,
+namelijk de gemiddelde chlorofylconcentratie in de bladeren 
+van tarweplanten.
+Iedere onderzoeker neemt een steekproef van 10 planten
+en meet daarin de chlorofylconcentratie.
+
+Laten we even aannemen dat in werkelijkheid het gemiddelde voor deze planten, onder deze omstandigheden, gelijk is
+aan 2,0 mg per g vers bladgewicht.
+De onderzoekers weten dat alleen niet;
+die hebben alleen toegang tot hun eigen steekproef.
+Het gemiddelde van die steekproef zal over het algemeen afwijken 
+van het werkelijke gemiddelde voor deze planten.
+Iedere onderzoeker krijgt door toevallige fouten een andere schatting uit zijn experiment.
+
+Op basis van ieders eigen steekproef berekent iedere onderzoeker
+zowel de gemiddelde chlorofylconcentratie van zijn steekproef
+als een 95%-BHI.
+@fig-bhi laat zien wat het resultaat zou kunnen zijn.
+De gemiddelden van alle 20 steekproeven zijn als paarse punten weergegeven,
+het ware gemiddelde als een oranje horizontale lijn.
+Ieder BHI bevat met 95% zekerheid het ware gemiddelde.
+Dat betekent ook dat, bij een groot aantal herhalingen,
+5% van de intervallen het gemiddelde *niet* bevatten.
+Bij 20 herhalingen komt dat dus typisch één keer voor,
+al kan het bij toeval ook net wat vaker zijn.
+In dit geval heeft onderzoeker 9 pech:
+hoewel deze zijn onderzoek net zo zorgvuldig heeft uitgevoerd
+als de andere onderzoekers,
+geeft zijn puntschatting en betrouwbaarheidsinterval
+een verkeerde indruk.
+
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Illustratie van het concept van een betrouwbaarheidsinterval Getoond worden de 95%-betrouwbaarheidsintervallen van twintig onderzoekers die hetzelfde onderzoek hebben uitgevoerd om de gemiddelde chlorofylconcentratie te bepalen in de bladeren van tarweplanten. De ruwe datapunten zijn in lichtgrijs weergegeven, en de oranje lijn geeft het ware gemiddelde aan -- de populatieparameter."
+#| label: fig-bhi
+
+# Load ggplot if necessary
+if (!("ggplot2" %in% loadedNamespaces())) {
+  library(ggplot2)
+}
+
+# Parameters for the population distribution
+true_mean <- 2.0
+true_sd <- 0.4
+n_samples <- 20
+sample_size <- 10  # Number of data points in each sample
+
+# Generate 20 random samples
+set.seed(125)  # For reproducibility
+samples <- replicate(n_samples, rnorm(sample_size, mean = true_mean, sd = true_sd), simplify = FALSE)
+
+# Create a data frame for the individual data points
+data_points <- data.frame(
+  sample_id = rep(1:n_samples, each = sample_size),
+  value = unlist(samples)
+)
+
+# Calculate means and 95% confidence intervals
+ci_data <- data.frame(
+  sample_id = 1:n_samples,
+  mean = sapply(samples, mean),
+  lower = sapply(samples, function(x) mean(x) - qt(0.975, df = sample_size - 1) * sd(x) / sqrt(sample_size)),
+  upper = sapply(samples, function(x) mean(x) + qt(0.975, df = sample_size - 1) * sd(x) / sqrt(sample_size))
+)
+
+# Plot the data
+ggplot() +
+  # Jitter plot for the individual data points
+  geom_jitter(
+    data = data_points,
+    aes(x = factor(sample_id), y = value),
+    color = "gray",
+    size = 1,
+    width = 0.2,
+    alpha = 0.5
+  ) +
+  # Error bars for the confidence intervals
+  geom_errorbar(
+    data = ci_data,
+    aes(x = factor(sample_id), ymin = lower, ymax = upper),
+    width = 0.2
+  ) +
+  # Points for the sample means
+  geom_point(
+    data = ci_data,
+    aes(x = factor(sample_id), y = mean),
+    color = "purple",
+    size = 3
+  ) +
+  # Horizontal line for the true population mean
+  geom_hline(
+    yintercept = true_mean,
+    color = "orange",
+    linetype = "solid",
+    size = 1
+  ) +
+  labs(
+    x = "",
+    y = "Chlorofylconcentratie (mg/g)",
+    title = "Twinting 95%-betrouwbaarheidsintervallen voor het gemiddelde.",
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+
+In dit hoofdstuk zullen we zien hoe je een betrouwbaarheidsinterval kunt
+berekenen voor het gemiddelde van een continue variabele.
+Je zult uiteindelijk zien dat de formule daarvoor helemaal niet moeilijk is.
+Maar, we willen graag dat je ook begrijpt *waarom* de formule werkt,
+en onder welke aannames.
+Om dat voor elkaar te krijgen zullen we wat dieper de theorie in moeten.
+
+## Het interpreteren van onzekere gegevens vereist een statistisch model
+
+Wanneer we conclusies proberen te trekken uit onzekere gegevens
+maken we, bewust of onbewust, vaak gebruik van bepaalde kennis 
+of veronderstellingen.
+Dat kan ook haast niet anders,
+want de conclusies die je kunt trekken hangen af van de manier waarop
+de gegevens tot stand zijn gekomen.
+Bijvoorbeeld,
+het is onmogelijk om conclusies te trekken uit
+de chlorofylmetingen hierboven
+zonder iets te veronderstellen over de nauwkeurigheid van de meetmethode,
+of over de eigenschappen van de steekproef.
+
+Daarom is iedere statistische analyse gebaseerd op een 
+*model*.
+In het onderdeel Theoretische Biologie heb je geleerd dat een model
+een vereenvoudigde beschrijving is van een onderdeel van de werkelijkheid,
+en dat een model gebaseerd is op **aannames**.
+Die aannames zijn een weerslag van kennis die we hebben
+of van veronderstellingen die we bereid zijn te maken.
+In de statistiek is dat niet anders,
+al vragen statistische problemen om een ander type modellen
+dan je bij Theoretisch Biologie gezien hebt.
+Bij Theoretische Biologie gaan de aannames vaak over de manier
+waarop variabelen elkaars dynamiek (verandering in de tijd) beïnvloeden;
+in de statistiek over de kansen die gemoeid zijn met onzekere gegevens.
+Men heeft het daarom in deze context vaak over **statistische modellen**.
+
+Dit klinkt allemaal erg abstract,
+maar we gaan het nu gelijk concreet maken.
+
+## Een statistisch model voor volledig willekeurige steekproeven uit grote populaties
+
+Binnen de biologie en daarbuiten komt het heel vaak voor
+dat we geïnteresseed zijn in een variabele $X$
+die een eigenschap is van de eenheden in een bepaalde populatie.
+Specifiek zijn we vaak geinteresseerd in het gemiddelde van $X$ 
+in de volledige populatie.
+We noemen die populatieparameter $\mu_X$.
+
+Als we in staat zouden zijn om de waarde van $X$ te meten
+  voor *alle* eenheden in de populatie,
+  dan zouden we $\mu_X$ precies kunnen berekenen en zou toeval geen rol spelen.
+In de praktijk is dat helaas zelden mogelijk
+  en kunnen we enkel een steekproef van $n$ eenheden bestuderen.
+In veruit de meeste situaties is de populatie véél groter
+dan de steekproef.
+Iedere schatting op basis van een dergelijke eindige steekproef
+  wordt nu geplaagd door steekproefvariabiliteit.
+
+Om nu iets te concluderen over de populatie
+op basis van de steekproef hebben we een statistisch model nodig.
+Een veelgebruikt model gebruikt de volgende aannames.
+
+**Statistisch model voor eenvoudige willekeurige steekproeven uit een normaal-verdeelde populatie:**
+
+1. **De variabele is normaal verdeeld in de populatie.** We zagen eerder
+dat veel variabelen een klokvormige verdeling hebben. 
+Dit model gaat ervan uit dat de verdeling benaderd kan worden 
+met een normale verdeling. 
+
+2. **Iedere waarde van onze steekproef is onafhankelijk uit deze normale verdeling getrokken.** Dit is het geval als we een eenvoudige willekeurige steekproef uitvoeren en bovendien de populatie veel groter is dan de steekproef, zodat de populatie niet wezenlijk verandert als we al een deel van onze steekproef hebben gekozen.
+
+Hoewel de twee aannames hierboven in de meeste toepassingen niet *precies* waar zijn,
+zijn ze vaak een goede benadering.
+Er zijn echter ook situaties waarbij dit model niet van toepassing is.
+Methoden die op dit statistisch model gebaseerd zijn
+kun je in die situaties niet toepassen.
+We komen hier later op terug.
+
+## Een statistisch model voor herhaalde experimenten met meetfouten
+
+Een andere situatie die binnen de biologie veel voorkomt
+is dat we geinteresseed zijn in een bepaalde grootheid
+en die door middel van een experiment proberen te meten.
+Je kunt bijvoorbeeld denken aan de groeisnelheid van een bepaalde bacterie in een specifiek medium,
+of de activiteit van een bepaald enzym.
+
+Zulke metingen woorden vaak geplaagd door meetfouten.
+Wanneer je dezelfde meting herhaalt,
+krijg je dus steeds een iets andere uitkomst.
+Als de meetmethode goed gecalibreerd is,
+is de toevallige fout het grootste probleem.
+Daarom wordt dezelfde meting meerdere keren **gerepliceerd** (herhaald)
+en de uitkomsten gemiddeld.
+Het idee is dat bij een zeer groot (oneindig!) aantal replicaties
+de toevallige fout uitmiddelt
+en het gemiddelde van de meetwaarden dus de échte waarde van grootheid
+aangeeft.
+Maar in de praktijk zijn we natuurlijk niet in staat 
+om een oneindig aantalmetingen uit te voeren 
+en zullen we het moeten doen met een bepekt aantal van $n$ replicaties.
+
+In andere woorden, 
+de uitkomst van iedere meting is een kansvariabele 
+die we $Y$ kunnen noemen.
+We zijn dus geinteresseerd in de verwachtingswaarde (het gemiddelde)
+van die kansvariabele, $\mu_Y$.
+Ons doel is om die parameter te schatten op basis van een eindig aantal experimenten.
+
+In dat geval wordt vaak het volgende statistisch model gebruikt.
+
+**Statistisch model voor herhaalde metingen met meetfouten.**
+
+1. **Als gevolg van meetfouten zijn de uitkomsten van de metingen normaal verdeeld.** Omdat de metingen vaak een unimodale, klokvormige verdeling vormen,
+is dit vaak een redelijke benadering.
+
+2. **Iedere meting is onafhankelijk uit die normale verdeling getrokken.** 
+Dit is het geval als de verschillende replicaties
+daadwerkelijk onafhankelijk van elkaar zijn uitgevoerd.
+Dat is niet altijd het geval.
+We gaan het hier uitgebreid over hebben in paragraaf ??, over **pseudoreplicatie**.
+
+Als je het statistisch model hierboven vergelijkt
+met die voor eenvoudige willekeurige steekproeven
+(paragraaf ?? hierboven)
+dan valt je misschien op dat die twee modellen precies overeenkomen.
+In beide gevallen behandelen we de verkregen data
+als uitkomsten van een kansexperiment.
+In het ene geval bestaat dat kansexperiment uit het trekken van een willekeurig individu uit een populatie,
+in het andere geval uit het uitvoeren van een meting
+met toevallige fout.
+Maar in beide gevallen veronderstelt het model 
+dat de uitkomsten onafhankelijk getrokken zijn uit een normale verdeling,
+en in beide gevallen zijn we geïnteresseed in een schatting
+van de verwachtingswaarde van die normale verdeling.
+*In de praktijk zijn daarom dezelfde statistische technieken van toepassing
+op beide situaties.*
+
+Hieronder zullen we uitgebreid ingaan op de eigenschappen van steekproeven.
+Maar precies dezelfde resultaten gelden dus
+ook voor gegevens die afkomstig zijn van herhaald uitgevoerde metingen.
 
 ## De kansverdeling van het steekproefgemiddelde
+
+Goed -- laten we het model eens nader bestuderen.
+We hebben dus een steekproef van $n$ individuen genomen
+uit een grote populatie
+en nemen aan dat de uitkomsten $X_1$, $X_2$, $\ldots$ $X_n$
+allemaal onafhankelijk getrokken zijn uit een normale verdeling.
+We willen graag een schatting maken van het gemiddelde van deze normale verdeling, $\mu_X$.
+
+Daarom berekenen we het gemiddelde van de steekproef,
+$$
+\overline{X} = \frac{\sum_{i=1}^n X_i}{n}.
+$$
+
+Het is belangrijk te beseffen dat het gemiddelde van de steekproef
+$\overline{X}$ zelf ook een kansvariabele is.
+Als je meedere keren op dezelfde manier een steekproef zou uitvoeren 
+en steeds het steekproefgemiddelde zou uitrekenen,
+dan zou je steeds een ander gemiddelde vinden.
+
+Het steekproefgemiddelde is een nauwkeurige schatter van $\mu_X$,
+want *gemiddeld* is $\overline{X}$ precies $\mu_X$. 
+Je kunt dit zelf nagaan met wat je in geleerd hebt in hoofdstuk
+?? (Optellen van meerdere kansvariabelen). Ga maar na:
+$$
+\mathbb{E}\left(\overline{X}\right) = \frac{\sum_{i=1}^n \mathbb{E}(X_i)}{n} = \frac{n \mu_X}{n} = \mu_X.
+$$
+De schatter $\overline{X}$ heeft dus geen *systematische* fout,
+maar wel een *toevallige* fout. 
+Kunnen we iets zeggen over hoe groot die toevallige fout is?
+
+Om dit te verhelderen zullen we het proces eens simuleren.
+Stel dat het gemiddelde van $X$ in de populatie gelijk is aan $\mu_X = 100$,
+met een standaarddeviatie $\sigma_X = 10$.
+Dan ziet de verdeling van de populatie er dus zo uit:
+
+::: {.todo-box}
+Plot van een normale verdeling met gemiddelde 100 en standaarddeviatie 10. 
+Label van de x-as: $X$. Label van de y-as: kansdichtheid $Pr(X)$.
+::: 
+
+In de praktijk weten we $\mu_X$ en $\sigma$ niet,
+maar zien we alleen één steekproef uit de populatie.
+Laten we als voorbeeld $n = 20$ individuen uit de populatie trekken
+en een histogram opstellen van de meetwaarden.
+In figuur ??(a) is zo'n histogram weergegeven. 
+In de figuur is ook het gemiddelde van de steekproef aangegeven
+met een vertikale lijn.
+
+::: {.todo-box}
+Creeer drie keer een random sample met $n = 20$ uit de kansverdeling hierboven. 
+Maak er steeds een histogram van.
+Geef steeds het gemiddelde aan met een vertikale lijn.
+Dit figuur krijgt dus 3 panels: (a), (b), en (c).
+
+Label van de x-as: $X$. Label van de y-as: absolute frequentie.
+Gebruik dezelfde schaal op de x-as als bij de andere figuur hierboven.
+
+::: 
+
+Het is duidelijk dat de waarde van het steekproefgemiddelde
+dat we vinden
+afhangt van de toevallige steekproef die we getrokken hebben.
+Als we opnieuw een steekproef uitvoeren uit dezelfde population
+vinden we net andere waarden
+en dus ook een ander gemiddelde.
+Figuur ??(b) en (c) laten twee willekeurige andere steekproeven zien, 
+ieder met hun eigen gemiddelde $\overline{X}$.
+
+Als iedere steekproef een andere waarde van $\overline{X}$ geeft
+en dus ook een andere schatting voor $\mu_X$,
+dan is de belangrijkste vraag:
+Hoe ver ligt $\overline{X}$ typisch van $\mu_X$ af?
+Als $\overline{X}$ bij een steekproef van $n = 20$
+typisch heel ver van $\mu_X$ afligt,
+dan is een schatting op basis van zo'n steekproef blijkbaar erg onzeker.
+Als $\overline{X}$ typisch heel dicht bij $\mu_X$ ligt,
+dan is die schatting blijkbaar juist heel precies.
+
+Om daar meer van te begrijpen
+stellen we ons nu voor dat we keer op keer een steekproef trekken
+met steekproefgrootte $n = 20$
+en elke keer opnieuw het gemiddelde $\overline{X}$ uitrekenen.
+Vervolgens tekenen we een histogram van alle steekproefgemiddelden die we gevonden hebben.
+We kunnen dit weer simuleren in de computer;
+het resultaat staat in figuur ??.
+
+::: {.todo-box}
+Genereer 10^4 steekproeven met $n = 20$. 
+Bereken de gemiddelden en maak er een histogram van.
+
+Label $x$-as: "steekproefgemiddelde $\overline{X}$".
+
+Label $y$-as: frequentie.
+
+Gebruik dezelfde schaal op de x-as als bij de andere figuren hierboven.
+:::
+
+Het figuur geeft de verdeling weer van steekproefgemiddelden.
+We noemen dit daarom de **steekproevenverdeling van het gemiddelde**.
+
+
 
 ## De variantie van het steekproefgemiddelde
 
