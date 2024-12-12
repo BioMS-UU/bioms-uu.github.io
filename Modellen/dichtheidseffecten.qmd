@@ -10,8 +10,8 @@ In het vorige onderdeel heb je geleerd dat een populatie in evenwicht is als hun
 
 Na dit hoofdstuk, moet je het volgende kunnen:
 
--   Uitleggen wat een functionele response is, en veelgebruikte (zoals dichtheidsafhankelijke geboorte, *density dependent birth*) kunnen herkennen
--   Een faseportret kunnen lezen, en corresponderende oplossing schetsen
+-   Uitleggen wat een functionele response is, en veelgebruikte (zoals dichtheidsafhankelijke geboorte, *density dependent birth*) kunnen herkennen.
+-   Een faseportret kunnen lezen, en corresponderende oplossing schetsen.
 -   Uitleggen waarom het afschieten van dieren positieve effecten kan hebben op dierwelzijn.
 
 ![Afbeelding gegenereerd met ChatGPT4-o](figuren/heck_ai.png){fig-align="center" width="80%"}
@@ -21,10 +21,10 @@ Na dit hoofdstuk, moet je het volgende kunnen:
 In het vorige onderdeel hebben we dichtheidsafhankelijkheid ingebouwd zodat de populatie langzamer gaat groeien bij grote dichtheden:
 
 $$
-\frac{\dd N}{\dd t} = rN(1-\frac{N}{K})
+\frac{\dd N}{\dd t} = rN\left(1-\frac{N}{K}\right)
 $$
 
-De parameter $r$ in deze vergelijking staat bekend als de **intrinsieke groeisnelheid** (*intrinsic growth rate*) van de populatie. Als $r$ positief is, is er groei (ook als $r=0.1$!). Als $r$ negatief is de groei negatief. Maar biologisch gezien is "negatieve groei" natuurlijk een beetje vreemd. Bedoelen we niet eigenlijk dat de hoeveelheid sterfte (hierna: *death*) hoger is dan geboorte (hierna: *birth*)? Een gebrek aan voedsel kan bijvoorbeeld een verhoogde death rate opleveren, terwijl birth rate gelijk blijft. Het zou ook zo kunnen dat individuen met minder voedsel minder reproduceren (dus een verlaagde birth rate krijgen). Om deze verbale begrippen in onze ODE te verwerken, moeten we afstappen van de parameter $r$, en deze uitsplitsen in birth ($b$) en death ($d$). Bijvoorbeeld, neem ons model van exponentiële groei:
+De parameter $r$ in deze vergelijking staat bekend als de **intrinsieke groeisnelheid** (*intrinsic growth rate*) van de populatie. Als $r$ positief is, is er groei (ook als $r=0.1$!). Als $r$ negatief is, is de groei negatief. Maar biologisch gezien is "negatieve groei" natuurlijk een beetje vreemd. Bedoelen we niet eigenlijk dat de hoeveelheid sterfte (hierna: *death*) hoger is dan geboorte (hierna: *birth*)? Een gebrek aan voedsel kan bijvoorbeeld een verhoogde death rate opleveren, terwijl birth rate gelijk blijft. Het zou ook zo kunnen zijn dat individuen met minder voedsel minder reproduceren (dus een verlaagde birth rate krijgen). Om deze verbale begrippen in onze ODE te verwerken, moeten we afstappen van de parameter $r$, en deze uitsplitsen in birth ($b$) en death ($d$). Bijvoorbeeld, neem ons model van exponentiële groei:
 
 $$
     \frac{\dd N}{\dd t} = rN 
@@ -66,13 +66,13 @@ Nu kunnen we ervoor kiezen om voor de geboorteterm met een **functionele respons
 Bijvoorbeeld dezelfde functionele response die we eerder hebben gebruikt: 
 
 \begin{align}
-    \color{blue}b\color{black} & \rightarrow \color{blue}b\color{black}(1-\frac{N}{K}) 
+    \color{blue}b\color{black} & \rightarrow \color{blue}b\color{black}\left(1-\frac{N}{K}\right) 
 \end{align}
 
 Dat wil zeggen, de constante parameter $b$ wordt vervangen door een term die afneemt met $N$. De parameter $b$ staat nu niet meer voor de birth rate, maar voor de *maximale birth rate* die alleen bereikt wordt bij kleine populatiegroottes. Als we dit in de gehele ODE invullen, krijgen we nu: 
 
 \begin{align}
-    \frac{\dd N}{\dd t} &= \color{blue}b\color{black}(1-\frac{N}{K})N - \color{red}d\color{black}N
+    \frac{\dd N}{\dd t} &= \color{blue}b\color{black}\left(1-\frac{N}{K})N - \color{red}d\color{black}N
 \end{align}
 
 ::: {#exr-functioneleresponses}
@@ -85,16 +85,15 @@ a. $f(N)=\frac{N}{K} + 1$
 a. $f(N)= 1 - cN$
 a. $f(N)= 1 - cN^2$
 
-*ANTWOORD: a. Niet, want geboorte neemt toe met N, b. Wel, gegeven dat c = 1/K is het dezelfde. c. Niet, want deze neemt kwadratisch af met dichtheid. Maar het neemt iig wel af!*
 :::
 
 ## Het faseportret
 
-Zoals je in het vorige hoofdstuk geleerd hebt, kunnen we ODEs eenvoudig analyseren door ons af te vragen: wanneer is er geen groei meer? Wanneer is $\dt{N}$ gelijk aan $0$? Deze relatief eenvoudige berekening word weergegeven in de linkerzijde van @fig-faseportret. De rechterzijde geeft visueel weer wat deze berekening nou eigenlijk heeft bepaald, door de groeisnelheid (dus: de ODE) als functie van de dichtheid van de populatie te schetsen. Als we de ODE uitvermenigvuldigen zien we een negatieve tweede-orde term ($-bN^2/k$) en twee eerste-orde termen ($bN$ en $dN$ zijn niet gekwadrateerd). Dit vormt een bergparabool^[Als je functies schetsen lastig vindt, kijk dan nog even naar hoofdstuk @section-schetsen. Je kan het ook altijd even controleren met de website <Desmos.com>], een functie die op twee punten gelijk is aan $0$. Op deze punten is de populatie in evenwicht: deze kan niet groeien of krimpen. 
+Zoals je in het vorige hoofdstuk geleerd hebt, kunnen we ODEs eenvoudig analyseren door ons af te vragen: wanneer is er geen groei meer? Wanneer is $\dt{N}$ gelijk aan $0$? Deze relatief eenvoudige berekening word weergegeven in de linkerzijde van @fig-faseportret. De rechterzijde geeft visueel weer wat deze berekening nou eigenlijk heeft bepaald, door de groeisnelheid (dus: de ODE) als functie van de dichtheid van de populatie te schetsen. Als we de ODE uitvermenigvuldigen zien we een negatieve tweede-orde term ($-bN^2/k$) en twee eerste-orde termen ($bN$ en $dN$ zijn niet gekwadrateerd). Dit vormt een bergparabool^[Als je functies schetsen lastig vindt, kijk dan nog even naar [hoofdstuk 10](#section-schetsen). Je kan het ook altijd even controleren met de website [Desmos.com](https://www.desmos.com)], een functie die op twee punten gelijk is aan $0$. Op deze punten is de populatie in evenwicht: deze kan niet groeien of krimpen. 
 
 ![Rekenen aan evenwichten, of deze visualiseren in een faseportret](figuren/faseportret_logistische_groei.png){#fig-faseportret width="80%"}
 
-Er is nog iets wat je heel snel aan een faseportret af kan lezen. We weten dat er groei is als $\dt{N}$ groter is dan $0$, dat de populatie afneemt als $\dt{N}$ kleiner is dan $0$ (en zoals gezegd: dat er een evenwicht is als $\dt{N}$ gelijk is aan $0$). In het figuur staan deze punten aangegeven op de x-as. Pijltjes naar rechts geven aan dat er groei is (pijltje wijst naar "meer N"), pijltjes naar links geven aan dat er afname is, en cirkels geven aan dat er een evenwicht is. Als de pijltjes naar dit evenwicht toewijzen, dan zal het systeem daar op ten duur naartoe gaan. Zo'n **stabiel evenwicht** wordt ook wel een **attractor** genoemd, en wordt vaak aangegeven met een ingevulde cirkel. Het evenwicht bij $N=0$ heeft alleen pijltjes die ervan wegwijzen, en is dus een **instabiel evenwicht** (en is geen attractor). Deze worden vaak aangegeven met een open cirkel. Dankzij deze visualisatie is het relatief eenvoudig om te bedenken hoe het systeem zich over de tijd zal ontwikkelen. Voor specifieke begin-waarden, kunnen we dus *specifieke oplossingen* schetsen!
+Er is nog iets wat je heel snel aan een faseportret af kan lezen. We weten dat er groei is als $\dt{N}$ groter is dan $0$ en dat de populatie afneemt als $\dt{N}$ kleiner is dan $0$ (en zoals gezegd: dat er een evenwicht is als $\dt{N}$ gelijk is aan $0$). In het figuur staan deze punten aangegeven op de x-as. Pijltjes naar rechts geven aan dat er groei is (pijltje wijst naar "meer N"), pijltjes naar links geven aan dat er afname is, en cirkels geven aan dat er een evenwicht is. Als de pijltjes naar dit evenwicht toewijzen, dan zal het systeem daar op ten duur naartoe gaan. Zo'n **stabiel evenwicht** wordt ook wel een **attractor** genoemd, en wordt vaak aangegeven met een ingevulde cirkel. Het evenwicht bij $N=0$ heeft alleen pijltjes die ervan wegwijzen, en is dus een **instabiel evenwicht** (en is geen attractor). Deze worden vaak aangegeven met een open cirkel. Dankzij deze visualisatie is het relatief eenvoudig om te bedenken hoe het systeem zich over de tijd zal ontwikkelen. Voor specifieke begin-waarden, kunnen we dus *specifieke oplossingen* schetsen!
 
 ## Dichtheidsafhankelijke sterfte     
 
@@ -102,7 +101,7 @@ Op een vergelijkbare manier als hierboven, zouden we ook een populatie kunnen mo
 
 \begin{align}
     \color{red}d\color{black} & \rightarrow \color{red}d\color{black}(1+\frac{N}{K}) \\
-    \frac{\dd N}{\dd t} &= \color{blue}b\color{black} - \color{red}d\color{black}(1+\frac{N}{K})
+    \frac{\dd N}{\dd t} &= \color{blue}b\color{black}N - \color{red}d\color{black}(1+\frac{N}{K})N
 \end{align}
 
 Let op dat we hier de sterfte laten *toenemen* met de dichtheid (er staat een $+$ in plaats van een $-$). 
@@ -113,7 +112,7 @@ Let op dat we hier de sterfte laten *toenemen* met de dichtheid (er staat een $+
 
 Hierboven hebben we een ODE opgesteld voor dichtheidsafhankelijke sterfte, namelijk:
 $$
-\frac{\dd N}{\dd t} = \color{blue}b\color{black} - \color{red}d\color{black}(1+\frac{N}{K})
+\frac{\dd N}{\dd t} = \color{blue}b\color{black}N - \color{red}d\color{black} \left( 1+\frac{N}{K}\right)N
 $$
 Bekijk nog eens @fig-faseportret. 
 
@@ -137,7 +136,7 @@ Er zijn vele andere mogelijke dichtheidseffecten mogelijk (teveel om te benoemen
     \frac{\dd N}{\dd t} &= \color{blue}b\color{black}(1-\frac{N}{K_b})N - \color{red}d\color{black}(1+\frac{N}{K_d})N - cNV\\
 \end{align}
 
-Deze vergelijking begint er aardig ingewikkeld uit te zien, maar doordat we het stapje voor stapje hebben opgebouwd, zie je wellicht goed in wat elke term betekent. In de laatste (nieuwe term), staat  $c$ voor de predatiesnelheid is en $V$ de hoeveelheid vossen. Maar vossen zouden zelf dan toch ook van populatiegrootte moeten veranderen? In hoofdstuk @sec-meerdere ga je zien hoe we ons model kunnen uitbreiden om zowel konijnen (prooi) als vossen (predator) te kunnen beschrijven.
+Deze vergelijking begint er aardig ingewikkeld uit te zien, maar doordat we het stapje voor stapje hebben opgebouwd, zie je wellicht goed in wat elke term betekent. In de laatste (nieuwe term), staat  $c$ voor de predatiesnelheid is en $V$ de hoeveelheid vossen. Maar vossen zouden zelf dan toch ook van populatiegrootte moeten veranderen? In @sec-meerdere ga je zien hoe we ons model kunnen uitbreiden om zowel konijnen (prooi) als vossen (predator) te kunnen beschrijven.
 
 ## Opgaven
 
@@ -154,17 +153,25 @@ $$\dt{B}=rB-kNB $$
 
 Hier is B de hoeveelheid bacterien in je bloed is, N de hoeveelheid neutrofielen in je bloed, $r$ de groeisnelheid van de bacteriën (per uur), en k de snelheid waarmee neutrofielen bacteriën opruimen. 
 
-a. Leg uit waar je denkt dat iedere term in de ODE voor staat, en welke eenheden deze termen hebben. *eerste term is exp groei van bacterien, tweede term is killing door neutrofielen. De eenheden zijn allemaal in bacterien per uur* 
-a. Wat zijn de eenheden voor $r$ en $k$? *r is per uur, k is per neutrofiel per uur. Als ze dit niet snappen, moet het ze het stukje over het hertenfeest nog een keer lezen: uitrekenen door de termen gelijk te zetten aan B/t en op te lossen voor de parameter.*
-a. Als er geen bacteriën zijn ($B=0$) is er geen groei. Dit wordt een triviaal (irrelevant) evenwicht genoemd, omdat we voor dit inzicht het hele model niet hadden hoeven maken. Neem aan dat er een constante hoeveelheid neutrofielen in je bloed zijn ($N$ is constant). Is er een niet-triviaal evenwicht van bacteriën? *nee, de enige andere optie is exponentiele groei, wanneer er niet genoeg neutrofielen zijn om is de eerste term groter dan de tweede term*
-a. Chemotherapie kan een groot effect hebben op het aantal neutrofielen in het bloed, waardoor de tweede term steeds kleiner wordt. Schets de termen $rB$ en $kNB$ als een functie van $N$ (dat wil zeggen, met $N$ op de x-as, en deze termen op de y-as. *horizontale lijn en lineair toenemende lijn.*
-a. Bepaal hoeveel neutrofielen je minimaal nodig hebt om de groei van de bacteriën te stoppen. *dit is het snijpunt wat ze net geschetst hebben. N>=r/k*
-a. De $kNB$ term heet een *mass-action* term omdat de snelheid direct proportioneel is aan de dichtheden van $N$ en $B$. Wat moeten we doen als we willen weten hoeveel bacteriën er "per neutrofiel" opgeruimd worden? *deze term telen door N, want ze hebben geleerd dat 'per' altijd vertaald in 'gedeeld door'*
-a. Hoeveel bacteriën worden er per neutrofiel opgeruimd als er 0 bacteriën zijn? En als er 1000 bacteriën zijn? En als er oneindig bacteriën zijn? Is dit een redelijke aanname? *0, 1000, oneindig. Nee, 1 neutrofiel kan niet oneindig veel bacterien aan (kost bijvoorbeeld tijd)*
-a. Bekijk devolgende uitbreiding van ons model $$\dt{B}=rB-\frac{kNB}{h+B}  $$
-De vernieuwde (tweede) term ziet er misschien wat ingewikkeld uit. Om te begrijpen wat er gebeurt is het wederom handig om even na tegaan wat er gebeurt met 0 of heel veel bacterien. Als er 0 bacterien zijn is deze term 0, omdat boven de breuk een $B$ staat. Als $B$ heel groot is, hoe belangrijk is $h$ dan nog in deze vergelijking? *niet heel belangrijk meer, uiteindelijk 'verwaarloosbaar'*
-a. Als er dus heel veel bacterien zijn, hoeveel bacterien kunnen er dan per neutrofiel opgeruimd worden in dit nieuwe model? *Gaat naar maximaal k per neutrofiel, h+B dus h valt weg, kan je B wegdelen, daat er kN. Dus per neutrofiel k.*
-a. Bepaal opnieuw hoeveel neutrofielen je minimaal nodig hebt om de groei van bacteriën te stoppen. *nu moet deze tweede term groter zijn dan de eerste: kNB/(B+h) >= rB geeft N >= r(B+h)/k*
+a. Leg uit waar je denkt dat iedere term in de ODE voor staat ($rB$ en $=kNB$), en welke eenheden deze termen hebben. 
+a. Wat zijn de eenheden voor $r$ en $k$? 
+
+Als er geen bacteriën zijn ($B=0$) is er geen groei. Dit wordt een triviaal (irrelevant) evenwicht genoemd, omdat we voor dit inzicht het hele model niet hadden hoeven maken.
+
+  c. Neem aan dat er een constante hoeveelheid neutrofielen in je bloed zijn ($N$ is constant). Is er een niet-triviaal evenwicht van bacteriën? 
+
+a.  Chemotherapie kan een groot effect hebben op het aantal neutrofielen in het bloed, waardoor de tweede term steeds kleiner wordt. Schets de termen $rB$ en $kNB$ als een functie van $N$ (dat wil zeggen, met $N$ op de x-as, en deze termen op de y-as. 
+a. Bepaal hoeveel neutrofielen je minimaal nodig hebt om de groei van de bacteriën te stoppen. 
+a. De $kNB$ term heet een *mass-action* term omdat de snelheid direct proportioneel is aan de dichtheden van $N$ en $B$. Wat moeten we doen als we willen weten hoeveel bacteriën er "per neutrofiel" opgeruimd worden? 
+a. Hoeveel bacteriën worden er per neutrofiel opgeruimd als er 0 bacteriën zijn? En als er oneindig bacteriën zijn? Is dit een redelijke aanname? 
+
+Bekijk devolgende uitbreiding van ons model $$\dt{B}=rB-\frac{kNB}{h+B}  $$
+De vernieuwde (tweede) term ziet er misschien wat ingewikkeld uit. Om te begrijpen wat er gebeurt is het wederom handig om even na te gaan wat er gebeurt met 0 of heel veel bacterien. Als er 0 bacterien zijn is deze term 0, omdat boven de breuk een $B$ staat. 
+
+  h. Als $B$ heel groot is, hoe belangrijk is $h$ dan nog in deze vergelijking? 
+
+a. Als er dus heel veel bacterien zijn, hoeveel bacterien kunnen er dan per neutrofiel opgeruimd worden in dit nieuwe model? 
+a. Bepaal opnieuw hoeveel neutrofielen je minimaal nodig hebt om de groei van bacteriën te stoppen. 
 :::
 
 ::: {#exr-heck}
@@ -174,24 +181,25 @@ a. Bepaal opnieuw hoeveel neutrofielen je minimaal nodig hebt om de groei van ba
 
 Heckrunderen zijn in de Oostvaardersplassen geintroduceerd als "semi-natuurlijke" grazers. Ze voorkomen dat het hele gebied begroeid raakt met bomen en struikgewas, wat belangrijk is voor het broeden van vogels in dit gebied. In 1983 zijn een kleine populatie heckrunderen vrijgelaten, en de populatie is na 20 jaar gestabiliseerd op 300-400 runderen. 
 
-![Heckrunderen op de Oostvaardersplassen](figuren/heck.png)
+![Heckrunderen op de Oostvaardersplassen](figuren/heck.png){#fig-heck}
 
 Omdat er veel dieren van de honger doodgaan, zijn er veel debatten geweest over dierenwelzijn. Een mogelijke oplossen is het afschieten van dieren. Dit zou hun populatiegrootte kunnen verkleinen en daardoor de overgebleven individuen een prettiger leven geven. 
 
-a. Bekijk bovenstaande metingen van de geboorte- en sterfte van heckrunderen. Hoeveel heckrunderen zou je op basis van deze data verwachten in evenwicht? *350 ofzo, waar b en d kruisen, dus dat klopt met de aantallen*
+a. Bekijk bovenstaande metingen van de geboorte- en sterfte van heckrunderen. Hoeveel heckrunderen zou je op basis van deze data verwachten in evenwicht? 
 
 De data laat zien dat zowel geboorte als sterfte dichtheidsafhankelijk zijn. In het hoofdstuk hebben we hier al een model voor besproken:
   $$
-      \frac{\dd N}{\dd t} = \color{blue}b\color{black}(1-\frac{N}{K_b})N - \color{red}d\color{black}(1+\frac{N}{K_d})N
+      \frac{\dd N}{\dd t} = \color{blue}b\color{black}\left(1-\frac{N}{K_b}\right)N - \color{red}d\color{black}\left(1+\frac{N}{K_d}\right)N
   $$
 
-Uit het figuur kunnen we zien dat geboorte hoogstens 0.4 per jaar is, en dat deze bij 400 gehalveerd is. 
+Uit het figuur kunnen we zien dat geboorte per rund hoogstens 0.4 per jaar is, en dat deze bij 400 runderen gehalveerd is. 
   
-  b. Wat zijn dan de parameters $b$ en $K_b$? *b is simpelweg 0.4. Kb bepaal je door de vergelijking 0.4(1-400/Kb)=1/2 x0.4 op te lossen (die laatste kunnen mensen vaak intuitief wel, maar snappen niet wat de formele manier is om dat te doen :'])*
-a.  In de figuur zien we ook dat sterfte minimaal 0.03 is, en dat deze 0.33 is bij een populatiegrootte van 500. Wat zijn dan de parameters $d$ en $K_d$? *d is weer simpelweg 0.03, Kd vind je door 0.03(1+500/Kd)=0.33 op te lossen.*
-a.  Vul de parameterwaarden die hebt gevonden in, en bepaal bij welke populatiegrootte er een evenwicht is. *parameters invullen en dN/dt=0 oplossen (uit mijn hoofd: 330, SAs please check even :)) *
-a.  Hoeveel dieren gaan er in dit evenwicht per jaar dood? *uit mijn hoofd iets van 78, zoiets iig*
-a.  Om het afschieten van runderen in dit model te betrekken, kunnen we een extra term aan de ODE toevoegen:
+  b. Wat zijn dan de parameters $b$ en $K_b$? 
+a.  In de figuur zien we ook dat sterfte minimaal 0.03 is, en dat deze 0.33 is bij een populatiegrootte van 500. Wat zijn dan de parameters $d$ en $K_d$? 
+a.  Vul de parameterwaarden die hebt gevonden in, en bepaal bij welke populatiegrootte er een evenwicht is. 
+a.  Hoeveel dieren gaan er in dit evenwicht per jaar dood?
+
+Om het afschieten van runderen in dit model te betrekken, kunnen we een extra term aan de ODE toevoegen:
   $$
       \frac{\dd N}{\dd t} = \color{blue}b\color{black}(1-\frac{N}{K_b})N - \color{red}d\color{black}(1+\frac{N}{K_b})N - kN
   $$
@@ -232,16 +240,20 @@ lines(tijdserie$t, tijdserie$sterfte, col="red", lty=2)
 # Voeg legenda toe
 legend(40, 270, legend=c("Totaal", "Sterfte"), col=c("brown", "red"), lty=1:2)
     ```
-a. Na hoeveel jaar wordt er begonnen met schieten? Welk percentage van de heckrunderen wordt afgeschoten? *Beetje in eenstinker. Er staat t>300, maar de tijdstap is 0.1, dus pas na 30 jaar wordt geschoten!. Er wordt 5% afgeschoten*
-a. Met `tijdserie$runderen/tijdserie$sterfte` kunnen we de sterfte-kolom delen door de kolom met het totaal aantal runderen om uit te rekenen welk percentage van de populatie op elk tijdstap sterft (let op: sterfte is inclusief afschieten!). Deze zouden we ook kunnen toevoegen aan ons dataframe, en apart kunnen plotten:
+  f. Na hoeveel jaar wordt er begonnen met schieten? Welk percentage van de heckrunderen wordt afgeschoten? 
+
+Met `tijdserie$runderen/tijdserie$sterfte` kunnen we de sterfte-kolom delen door de kolom met het totaal aantal runderen om uit te rekenen welk percentage van de populatie op elk tijdstap sterft (let op: sterfte is inclusief afschieten!). Deze zouden we ook kunnen toevoegen aan ons dataframe, en apart kunnen plotten:
     ```{r}
 #| eval: false
+#| code-fold: false
 tijdserie$percentage_sterfte = tijdserie$sterfte/tijdserie$runderen
 plot(tijdserie$t, tijdserie$percentage_sterfte, type="l")
     ```
-    Bekijk het nieuwe dataframe met `View(tijdserie)`, en vergelijk het percentage sterfte in jaar 30 en 50. Wat valt je op? *als ze goed kijken zien ze dat sterfte slechts 2.28 procent is toegenomen terwijl 5% gekilled wordt. Kennelijk compenseert de verminderde density-dependence death dus inderdaad voor het killen!*
-a. Met het percentage stervende dieren kunnen we inschatten hoe lang de dieren gemiddeld leven. Als 10% van de dieren jaarlijks overlijdt, dan leeft een dier gemiddeld 10 jaar. Als je dit combineert met je antwoord op de vorige vraag, zou je het afschieten van dieren dan aanmoedigen of afraden? *aanmoedigen, ze leven wellicht nog steeds IETS korter, maar ze sterven minder vaak van de honger!*
-a. Als je de verwachte levensduur zo min mogelijk wil beinvloeden, wat voor beleid zou je dan nog meer kunnen bedenken? *alleen oude individuen afschieten. Als je dit goed doet beinvloed je death rates nauwelijk of kun je de levensduur verlengen omdat de zeer oude koeien "geen eten verspillen"*
+
+  g. Bekijk het nieuwe dataframe met `View(tijdserie)`, en vergelijk het percentage sterfte in jaar 30 en 50. Wat valt je op? 
+  
+a. Met het percentage stervende dieren kunnen we inschatten hoe lang de dieren gemiddeld leven. Als 10% van de dieren jaarlijks overlijdt, dan leeft een dier gemiddeld 10 jaar. Als je dit combineert met je antwoord op de vorige vraag, zou je het afschieten van dieren dan aanmoedigen of afraden?
+a. Als je de verwachte levensduur zo min mogelijk wil beinvloeden, wat voor beleid zou je dan nog meer kunnen bedenken? 
 :::
 
 

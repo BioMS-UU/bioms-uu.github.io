@@ -13,9 +13,9 @@ In @sec-meerdere hebben we een heel beroemd model uit de biologie geanalyseerd: 
 
 De leerdoelen voor dit hoofdstuk zijn: 
 
-  * Begrijpen hoe een simpel model (zoals het Lotka-Volterra model) kan worden uitgebreid door extra details in te voegen (bijvoorbeeld een predator die verzadigd)
-  * Een Hill-functie herkennen, en de kenmerken kunnen benoemen (initiële helling, half-waarde, maximum)
-  * R kunnen gebruiken om faseruimtes met nullclines en trajectories te tekenen, en de daarbij horende oplossingen
+  * Begrijpen hoe een simpel model (zoals het Lotka-Volterra model) kan worden uitgebreid door extra details in te voegen (bijvoorbeeld een predator die verzadigd).
+  * Een Hill-functie herkennen, en de kenmerken kunnen benoemen (initiële helling, half-waarde, maximum).
+  * R kunnen gebruiken om faseruimtes met nullclines en trajectories te tekenen, en de daarbij horende oplossingen.
   
 ## De verzadigde predator
 
@@ -32,7 +32,7 @@ Wat is met deze nieuwe predator-term de *per capita* predatie? Dat wil zeggen: h
 
 Laten we eerst even naar de noemer te kijken, en vooral naarde balans tussen $h$ en $R$. Als $R$ heel klein is, heeft $h$ de overhand in de noemer, waardoor $R$ verwaarloosbaar is. Dus voor kleine $R$ nadert de functie $\frac{aR}{h}$, wat een lineaire toename is. Dus voor kleine prooi-dichtheden, neemt predatie lineair toe met de prooi-dichtheid, net zoals in het eerdere model. Maar als $R$ alsmaar groter wordt, wordt $h$ juist verwaarloosbaar ten opzichte van $R$. Daarom nadert deze functie bij hoge $R$ de waarde $\frac{aR}{R} = a$. Dus: zelfs bij hele hoge prooidichtheiden kan een enkele predator per tijdseenheid (bijv. per dag) hoogstens $a$ prooi eten. Tussen deze twee extreme waarden zit nog een laatste bijzondere punt: het punt waar $R$ precies gelijk is aan $h$. Op dit punt is de functie gelijk aan $\frac{aR}{R+R}=\frac{aR}{2R}=\frac{a}{2}$. De parameter $h$ geeft dus de prooi-dichtheid waar de predatieterm half-maximaal is. Nu kunnen we de functie schetsen, zoals weergegeven in @fig-predatieterm-1. 
 
-Functies van deze vorm worden "Hill-functies" genoemd (vernoemd naar Archibald Hill, niet naar het feit dat het een soort heuveltje is). Met een kleine aanpassing aan deze Hill-functie ($\frac{aR^2}{h^2+R^2}$), kun je deze response ook sigmoide laten verlopen (@fig-predatieterm-2). 
+Functies van deze vorm worden "Hill-functies" genoemd (vernoemd naar Archibald Hill, niet naar het feit dat het een soort heuveltje is). Met een kleine aanpassing aan deze Hill-functie ($\frac{aR^2}{h^2+R^2}$), kun je deze response ook sigmoide (S-vormig) laten verlopen (@fig-predatieterm-2). 
 
 ```{r}
 #| fig-cap: ""
@@ -106,22 +106,11 @@ curve(func,0,3,lwd=2.5,ylim=c(0,1.),
 
 Stel dat we in de interacties tussen genen bestuderen die elkaars expressie beinvloeden. Hoewel de bovengenoemde Hill-functies een graduele overgang beschrijven, zien we in dit hypothetische scenario iets anders. We zien dat de expressie van gen 1 bij lage concentraties geen invloed heeft op gen 2. Bij een bepaalde kritische concentratie van gen 1, zien we plotseling volledige expressie van gen 2. Een nog hogere concentratie van gen 1 heeft geen invloed meer op de expressie van gen 2. 
 
-  a. Bestudeer hoe je de Hill-functie kan aanpassen om het bovengenoemde scenario te vinden. *De macht in de Hill-functie (die tot nu toe alleen 1 en 2 was) moet veel hoger. Dit geeft bij hoge waarden (bijv 30) een zeer plotselinge overgang van 0 (geen expressie) naar 1 (volledige expressie). Dus: de n-parameter moet hoog*
+  a. Bestudeer hoe je de Hill-functie kan aanpassen om het bovengenoemde scenario te vinden. In ons geval is f(x) de hoeveelheid invloed van gen 1 ($x$) op de expressie van gen 2 ($f(x)$)  
 We zien dat gen 2 ook een effect heeft op gen 1. Dit effect is wél gradueel, maar er vindt juist remming plaats. 
-  b. Hoe kun je de Hill-functie omkeren zodat deze niet van 0 naar 1 gaat, maar van 1 naar 0 gaat? Schrijf de vergelijking op, en test het met je R script. *door 1 min 'hillfunctie' te doen*
-  c. Kun je de vergelijking die je hebt opgeschreven in b nog versimpelen? (je kunt je algebra checken met R) *voor antwoordenmodel, zie onder... ik weet ook niet waarom het rechts uitgelijnd is :)*
-  d. Wat moet je doen als je toch wil dat de maximale genexpressie $a$ is, en niet 1? *je kunt al deze functies eenvoudig vermenigvuldigen met $a$. je had ook alle algebra kunnen doen met a er nog in, maar dit was makkelijker*
-  
-\begin{align}
-&\text{start:}\\
-&1-\frac{x^n}{x^n+h^n} \\
-&\text{1 herschrijven als breuk van zodat je gelijke noemers krijgt:} \\
-&\frac{x^n+h^n}{x^n+h^n} - \frac{x^n}{x^n+h^n} \\
-&\text{nu kun je de breuk aftrekken:} \\
-& \frac{x^n+h^n-x^n}{x^n+h^n} = \frac{h^n}{x^n+h^n} \\
-& \text{als laatste kunnen we alles delen door $h^n$:} \\
-& \frac{1}{x^n/h^n+1}
-& \end{align}
+  b. Hoe kun je de Hill-functie omkeren zodat deze niet van 0 naar 1 gaat, maar van 1 naar 0 gaat? Schrijf de vergelijking op, en test het met je R script. 
+  c. Kun je de vergelijking die je hebt opgeschreven in b nog versimpelen? (je kunt je algebra checken met R) 
+  d. Wat moet je doen als je toch wil dat de maximale genexpressie $a$ is, en niet 1? 
 :::
 
 Nu we kennis hebben gemaakt met Hill-functies (zie ook @tip-hillfuncties), gaan we terug naar het Lotka-Volterra model. Omdat het Lotka-Volterra model is uitgebreid met deze verzadigingsterm, moeten we opnieuw de nullclines uitrekenen en schetsen (ook die zijn veranderd!). Maar zoals je je wellicht kan voorstellen worden de nullclines iets ingewikkelder door deze non-lineaire term in onze vergelijkingen. Naar mate we onze modellen meer en meer uitbreiden, wordt het natuurlijk steeds lastiger om alles met de hand te doen. Daarom gaan we in dit hoofdstuk de faseruimte en het vectorveld laten tekenen door Grind.R, een Rscript dat deze analyses een fluitje van een cent maakt!
@@ -305,7 +294,7 @@ Hierboven hebben we nullclines gegenereerd van het vernieuwde Lotka-Volterra mod
 
 ## Bifurcaties van evenwichten
 
-Het bovenstaande Lotka-Volterra model heeft een interessant eigenschap: afhankelijk van de parameters kan het type evenwicht veranderen. Iets dergelijks zagen we ook al eerder terug: de predator kon alleen samenleven met de prooi als de parameters dat toelieten. Deze transitie zien we ook terug in dit vernieuwde model (van @fig-lvvoort-1 naar @fig-lvvoort-2). Deze bifurcatie (van geen samenleving naar wél samenleving) wordt een **critische transitie** genoemd. Echter is er met dit vernieuwde model een tweede bifurcatie mogelijk: de predator-nullcline kan de prooi-nulllcine links of rechts van de top van de parabool snijden (van @fig-lvvoort-2 naar @fig-lvvoort-3). Als het snijpunt links van de parabool ligt, zien we voortdurende oscillaties van predator en prooi. Deze specifieke bifurcatie staat bekend als de **Hopf-bifurcatie**.
+Het bovenstaande Lotka-Volterra model heeft een interessant eigenschap: afhankelijk van de parameters kan het type evenwicht veranderen. Iets dergelijks zagen we ook al eerder terug: de predator kon alleen samenleven met de prooi als de parameters dat toelieten. Deze transitie zien we ook terug in dit vernieuwde model (van @fig-lvvoort-1 naar @fig-lvvoort-2). Deze bifurcatie (van geen samenleving naar wél samenleving) wordt een **critische transitie** genoemd. Echter is er met dit vernieuwde model een tweede bifurcatie mogelijk: de predator-nullcline kan de prooi-nulllcine links of rechts van de top van de parabool snijden (van @fig-lvvoort-2 naar @fig-lvvoort-3). Als het snijpunt links van de top van de parabool ligt, zien we voortdurende oscillaties van predator en prooi. Deze specifieke bifurcatie staat bekend als de **Hopf-bifurcatie**.
 
 ```{r results='hide'}
 #| code-fold: true
@@ -430,3 +419,5 @@ Omdat er bij hoge waarden van $K$ oscillaties zijn, geven de lijnen de minimale 
 | Nederlands                | Engels                | Beschrijving                                                                                                                                    |
 |------------------|--------------------|----------------------------------|
 | Hill-functies | Hill functions | Een set wiskundige functies die verzadigen bij grote waarden hoge waarden (ze hebben een horizontale assymptoot). |
+| Critische-transitie | Critical Transition | Het punt waarna twee populaties samen kunnen leven zonder dat een of beide volledig uitsterft. Hier is meestal een minimale "prooi" populatie aan verbonden met een bepaalde carrying capacity. |
+| Hopf-bifurcatie | Hopf-bifurcation | Het punt waarna twee populaties niet meer met constante populaties in evenwicht zijn, maar blijven schommelen. |
