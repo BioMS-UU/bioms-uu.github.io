@@ -1,0 +1,100 @@
+---
+title: "Antwoorden odes_grind"
+author: "Yannick"
+editor: visual
+---
+
+@exr-hillfuncties **a.** De macht in de Hill-functie `n` (die tot nu toe alleen 1 en 2 was) kunnen we veel hoger maken. Dit geeft bij hoge waarden (van bijvoorbeeld 30) een zeer plotselinge overgang van 0 (geen expressie) naar 1 (volledige expressie):
+
+```{r}
+#| eval: true
+
+h=1
+n=30
+
+func <- function(x){
+  return(x^n/(x^n+h^n))
+}
+
+curve(func,0,3,lwd=2.5,ylim=c(0,1.), 
+      ylab="f(x)",xlab="x",col="seagreen")
+```
+
+**b.** We kunnen de Hill functie omkeren door 1-de Hill functie te doen: $$f(x)=1-\frac{x^n}{x^n+h^n}$$
+
+```{r}
+#| eval: true
+h=1
+n=30
+
+func <- function(x){
+  return(1-x^n/(x^n+h^n))
+}
+
+curve(func,0,3,lwd=2.5,ylim=c(0,1.), 
+      ylab="f(x)",xlab="x",col="seagreen")
+
+```
+
+**c.**
+
+```{=tex}
+\begin{align}
+&\text{start:}\\
+&f(x)=1-\frac{x^n}{x^n+h^n} \\
+&\text{1 herschrijven als breuk van zodat je gelijke noemers krijgt:} \\
+&=\frac{x^n+h^n}{x^n+h^n} - \frac{x^n}{x^n+h^n} \\
+&\text{nu kun je de breuk aftrekken:} \\
+&=\frac{x^n+h^n-x^n}{x^n+h^n} = \frac{h^n}{x^n+h^n} \\
+& \text{als laatste kunnen we alles delen door $h^n$:} \\
+&=\frac{1}{x^n/h^n+1}
+& \end{align}
+```
+**d.** Om toch de maximale expressie gelijk te stellen aan *a* in plaats van 1 kan je de volledige functie vermedigvuldigen met *a*. Dit werkt voor de normale Hill-functie en voor de omgekeerde Hill functie.
+
+@exr-paraboollv
+
+**a.** We hebben nu deze functie die de verandering in de prooi populatie beschrijft:
+
+$$\frac{\mathrm{d}\color{blue}R}{\mathrm{d}t} = b\left(1-\frac{\color{blue}R}{K}\right)\color{blue}R\color{black} - d\color{blue}R\color{black} - \frac{\color{black}a\color{blue}R\color{orange}N}{h+\color{blue}R\color{black}}$$ Deze gaan we gelijk stellen aan 0 om de nullclines te bepalen:
+
+$$0=b\left(1-\frac RK \right) R - dR - \frac{aRN}{h+R}$$
+
+$$R=0 \text{oplossing 1}$$
+
+$$b\left(1-\frac RK \right) - d - \frac{aN}{h+R}=0$$ Alles vermedigvuldigen met $h+R$: $$b(h+R)\left(1-\frac RK \right) - d(h+R) - aN=0$$
+
+We schrijven het op als $N=f(R)$, omdat we $N$ meestal op de y-as zetten en het hierdoor makkelijker te visualiseren is.
+
+$$(h+R)\left(b\left(1-\frac{R}{K}\right)-d\right)=aN$$ We kunnen nu al zien dat het een bergparabool zal vormen, omdat we een negatieve $R^2$ term hebben. We delen nu nog door a en dan krijgen we:\
+$$\frac 1a(h+R)\left(b\left(1-\frac{R}{K}\right)-d\right)=N$$
+
+**b.** K beinvloed de breedte van de parabool. De breedte van de parabool hangt af met de snijpunten met de R-as waar $N=0$. Dit snijpunt komt overeen met de stabiele populatie prooidieren zonder roofdieren. Het eerste snijpunt heeft een negatieve R ($h+R=0\Rightarrow R=-h$) dus daar kunnen we geen nuttige biologische informatie uit halen. Het andere snijpunt is: $$b\left(1-\frac RK \right) -d = 0$$ $$1-\frac RK = \frac db$$ $$1-\frac db = \frac RK$$ $$K \left(1-\frac db\right)=R$$ Zoals je kan zien heeft $K$ een directe invloed op het snijpunt en dus op de stabiele populatie prooidieren, wat ook logisch is want K wordt meestal gebruikt als de carrying capacity.
+
+**c.**
+
+```{r}
+#| eval: true
+model <- function(t, state, parms) {
+  with(as.list(c(state,parms)), {
+    dR <- r*R*(1 - R/K) - a*R*N/(R+h)
+    dN <- c*a*R*N/(R+h) - delta*N
+    return(list(c(dR, dN)))  
+  }) 
+}  
+
+#Pas in de regel hieronder K aan: 
+p <- c(r=1,K=4,a=1,c=1,delta=0.3,c=1,h=1)  #parameters
+s <- c(R=1,N=0.01) #begin-dichtheden van R en N  
+
+colors[1] = "blue" #optioneel, default = 'red'
+colors[2] = "#FF7F50" #optioneel, default = 'blue'
+par(mfrow=c(1,2)) # optioneel, maakt 2 plotjes naast elkaar
+
+plane(xmax=3,ymax=2)
+run(tstep=0.5, legend=F)
+```
+
+Zoals verwacht verschuift het snijpunt met de x as. Hiermee verschuift natuurlijk ook de top van de parabool.
+
+Ook bereikt de populatie geen stabiele stand meer en blijft deze enorme schommelingen maken! De volgende paragraaf gaat hier dieper op in.
