@@ -79,9 +79,9 @@ title("Begin-concentratie G: 0.01")
 
 ```
 
-Samengevat zien we dus dat, met de gegeven parameters, een stabiele hoeveelheid glucose (en mRNA/eiwit) kan ontstaat in de cel. Dit evenwicht wordt alleen bereikt als er een klein beetje glucose aanwezig is in de cel. Een cel die geen glucose detecteert zal dus geen genen tot expressie brengen. Maar wellicht diffundeert er een beetje glucose naar binnen vanuit de omgeving, of van een nabij gelegen cel. Om deze processen te modelleren, kunnen we gebruik maken van reactie-diffusiesystemen.
+Samengevat zien we dus dat, met de gegeven parameters, een stabiele hoeveelheid glucose (en mRNA/eiwit) kan ontstaan in de cel. Dit evenwicht wordt alleen bereikt als er een klein beetje glucose aanwezig is in de cel. Een cel die geen glucose detecteert zal dus geen genen tot expressie brengen. Maar wellicht diffundeert er een beetje glucose naar binnen vanuit de omgeving, of van een nabij gelegen cel. Om deze processen te modelleren, kunnen we gebruik maken van reactie-diffusiesystemen.
 
-Reactie-diffusiesystemen beschrijven niet alleen de reactiesnelheden van processen (zoals hierboven), maar ook hoe ze door de ruimte diffunderen. Zo kun je modelleren hoe een chemisch signaal door een weefsel verspreidt, of hoe het evenwicht tussen verspreiding door diffusie en de reactiesnelheden eventuele patronen oplevert. Deze modellen worden bijvoorbeeld gebruikt om de verspreidingspatronen van dieren en planten te modelleren, hoe "golven" van ziekteverwekkers zich door een populatie mensen verspreiden (denk aan Covid!), of hoe actiepotentialen zich over het hart bewegen. We zien reactie-diffusiesystemen dus overal terug in de biologie.
+Reactie-diffusiesystemen beschrijven niet alleen de reactiesnelheden van processen (zoals hierboven), maar ook hoe ze door de ruimte diffunderen. Zo kun je modelleren hoe een chemisch signaal door een weefsel verspreidt, of hoe het evenwicht tussen verspreiding door diffusie en de reactiesnelheden eventuele patronen oplevert. Deze modellen worden bijvoorbeeld gebruikt om de verspreidingspatronen van dieren en planten te modelleren, hoe "golven" van ziekteverwekkers zich door een populatie mensen verspreiden (denk aan Covid!), of hoe actiepotentialen zich door het hart bewegen. We zien reactie-diffusiesystemen dus overal terug in de biologie.
 
 ## Diffusie tussen hokjes
 
@@ -162,7 +162,7 @@ for (iter in 1:iterations) {
 
 En zo eenvoudig kan het zijn: door de ruimte in hokjes op te delen kunnen we heel eenvoudig een diffusie-proces simuleren. Hoe kleiner de hokjes zijn, hoe preciezer we de lokale concentraties van de stofjes kunnen simuleren. Echter wordt het dan ook steeds zwaarder voor de computer om alle hokjes door te rekenen. Om deze beperking te omzeilen, kunnen partiële differentiaalvergelijkingen (PDEs) worden gebruikt, waarbij ruimte niet discreet maar continu is ("oneindig kleine hokjes"). PDEs lijken op ODEs, maar waar ODEs alleen tijd als onafhankelijke variabele gebruiken, hebben PDEs zowel tijd als ruimte als onafhankelijke variabelen. Deze vergelijkingen zijn echter niet eenvoudig om te analyseren, dus geen zorgen: we houden het bij deze cursus gewoon bij hokjes. Wanneer je dit netjes doet geeft dit een prima benadering van een PDE (net zoals Grind een benadering van ODEs voor je doorrekend!). In deze cursus (en ook in de literatuur) worden deze numerieke varianten ook vaak PDEs genoemd, ookal is dat technisch gezien niet helemaal correct.
 
-De beste manier om het effect van diffusie weer te geven, is het toepassen op een afbeelding. In @fig-blurring zie je dat diffusie vooral het effect heeft dat de afbeelding minder en minder patroon bevat, totdat alle pixels dezelfde kleur hebben. Misschien verbaasd het je niet dat het vervagen of verscherpen van foto's met Photoshop vaak precies op deze manier werkt!
+De beste manier om het effect van diffusie weer te geven, is het toepassen op een afbeelding. In @fig-blurring zie je dat diffusie vooral het effect heeft dat de afbeelding minder en minder patroon bevat, totdat alle pixels dezelfde kleur hebben. Misschien verbaast het je niet dat het vervagen of verscherpen van foto's met Photoshop vaak precies op deze manier werkt!
 
 ![CAPTION TODO](figuren/blurring.png){#fig-blurring}
 
@@ -182,7 +182,7 @@ We kunnen ook de ODEs van het eerder besproken mRNA-eiwit-glucose model in hokje
 
 ## Activerende en remmende eiwitten
 
-We hebben nu een beeld gekregen van reactie-diffusiesystemen, maar tot nu toe lijken ze patronen alleen maar tegen te werken.  Maar reactie-diffusiesystemen kunnen weldegelijk prachtige patronen generen, zo ontdekte Alan Turing in 1952. Turing vroeg zich af of diffusie ook de *oorzaak* kon zijn van bepaalde patronen. Hij stelde zich voor dat in een weefsel twee eiwitten tot expressie komen: *activators* ($A$) en *inhibitors* ($I$). De activator ($A$) verhoogt de expressie van beide eiwitten, en de inhibitor verlaagd deze. Dit scenario kunnen we omschrijven in een simpel systeem van ODEs:
+We hebben nu een beeld gekregen van reactie-diffusiesystemen, maar tot nu toe lijken ze patronen alleen maar tegen te werken.  Maar reactie-diffusiesystemen kunnen weldegelijk prachtige patronen generen, zo ontdekte Alan Turing in 1952. Turing vroeg zich af of diffusie ook de *oorzaak* kon zijn van bepaalde patronen. Hij stelde zich voor dat in een weefsel twee eiwitten tot expressie komen: *activators* ($A$) en *inhibitors* ($I$). De activator ($A$) verhoogt de expressie van beide eiwitten, en de inhibitor verlaagt deze. Dit scenario kunnen we omschrijven in een simpel systeem van ODEs:
 
 \begin{align}
     \dt{A} &= k_AA - k_II - dA^2 \\
@@ -208,7 +208,7 @@ $A$ heeft dus één enkele nullcline: een bergparabool met nullpunten $A=0$ en $
     I &= \color{red} \frac{k_AA}{k_I - d} \\ 
 \end{align}
 
-$I$ heeft dus ook één nullcline. $A$ verschijnt alleen in de teller van de breuk, dus deze nullcline neemt lineair toe met $A$ (met hellingshoek $\frac{k_A}{k_I - d}$). Naar verwachting vinden we dus een parabool en een lineaire functie in onze faseruimte. Als we de faseruimte tekenen met `Grind.R`, is dat inderdaad wat we zien (@fig-phaseturing). Aan dit vectorveld kunnen we ook aflezen dat er twee evenwichten zijn: een instabiel evenwicht wanneer er geen $A$ en $I$ is, en een stabiel evenwicht bij een bepaalde hoeveelheid $A$ en $I$. De eerste numerieke oplossing (Figuur \ref{fig:phaseport_turing}B) laat zien dat de eiwitten inderdaad snel een evenwicht kunnen bereiken. Als je echter met veel inhibitors begint, zien we beide concentraties juist hard afnemen. Hoewel het evenwicht bij $(0,0)$ instabiel is, zijn negatieve concentraties niet biologisch relevant, en kunnen we simpelweg aannemen dat deze concentraties $0$ zijn. 
+$I$ heeft dus ook één nullcline. $A$ verschijnt alleen in de teller van de breuk, dus deze nullcline neemt lineair toe met $A$ (met hellingshoek $\frac{k_A}{k_I - d}$). Naar verwachting vinden we dus een parabool en een lineaire functie in onze faseruimte. Als we de faseruimte tekenen met `Grind.R`, is dat inderdaad wat we zien (@fig-phaseturing). Aan dit vectorveld kunnen we ook aflezen dat er twee evenwichten zijn: een instabiel evenwicht wanneer er geen $A$ en $I$ is, en een stabiel evenwicht bij een bepaalde hoeveelheid $A$ en $I$. De eerste numerieke oplossing (@fig-phaseturing B) laat zien dat de eiwitten inderdaad snel een evenwicht kunnen bereiken. Als je echter met veel inhibitors begint, zien we beide concentraties juist hard afnemen. Hoewel het evenwicht bij $(0,0)$ instabiel is, zijn negatieve concentraties niet biologisch relevant, en kunnen we simpelweg aannemen dat deze concentraties $0$ zijn. 
 
 Afhankelijk van de initiële conditie, zien we dus dat we wel/niet expressie van de eiwitten zien. Dit wordt ook wel bistabiliteit genoemd. In een systeem met bistabiliteit heeft de geschiedenis van een systeem (waar het systeem voorheen was) invloed op de verdere verloop van het systeem. Dergelijke effecten zijn waargenomen voor de genexpressie van bacteriën, en zijn bovendien erg belangrijk voor natuurbehoud. Het kan namelijk erg moeilijk kan zijn om een eenmaal omgeslagen ecosysteem weer terug te krijgen in de "gezonde" toestand. (zie ook @tip-hysterese). 
 
@@ -243,7 +243,7 @@ f <- run(tmax=4,tstep=0.1,timeplot=T,traject=T)
 ## Hysterese in ecosystemen
 
 Als een systeem meerdere evenwichten heeft, en je verandert langzaam de condities, dan kan er een punt zijn dat het van het ene naar het andere evenwicht omklapt. Dergelijke "tipping points" op alle schalen gezien: van de expressie van het lac-operon in E. coli, tot hele ecosystemen. In de onderstaande foto zie je bijvoorbeel twee bijna identieke meren, maar één van de meren is door eutroficatie omgeslagen naar een ongezonde vertroebelde toestand. 
-Een dergelijke vertroebeling ongedaan maken blijkt erg lastig te zijn. Inderdaad weten we dankzij modellen dat deze systemen *bistabiel* zijn, zoals weergegeven met de twee kuilen waarin het balletje naar beneden kan rollen: als het balletje eenmaal in een ander minimum ligt, krijg je deze er niet zomaar meer uit! Dit fenomeen wordt *hysterese* genoemd. [Hier meer](https://passel2.unl.edu/view/lesson/bcbd3f35f2e0/2) kun je meer lezen over hysterese. 
+Een dergelijke vertroebeling ongedaan maken blijkt erg lastig te zijn. Inderdaad weten we dankzij modellen dat deze systemen *bistabiel* zijn, zoals weergegeven met de twee kuilen waarin het balletje naar beneden kan rollen: als het balletje eenmaal in een ander minimum ligt, krijg je deze er niet zomaar meer uit! Dit fenomeen wordt *hysterese* genoemd. [Hier](https://passel2.unl.edu/view/lesson/bcbd3f35f2e0/2) kun je meer lezen over hysterese. 
 
 ![CAPTION TODO: Bron foto: https://passel2.unl.edu/view/lesson/bcbd3f35f2e0/2](figuren/eutro_hyst.png){width="70%" fig-align="center"}
 :::
@@ -270,7 +270,7 @@ Als je de simulatie hierboven een tijdje laat lopen, zul je zien dat er iets int
 
 ![CAPTION TODO](figuren/turing_voorbeelden.png){#fig-turingvoorbeelden}
 
-Een belangrijke voorwaarde voor stabiele Turing-patronen is dat de diffusie van de inhibitor sneller moet zijn dan die van de activator. Hoe het ook zij: Turing sloeg er in om een proces te vinden waarbij diffusie niet patronen uitvaagt, maar ze juist genereert! Als de diffusie niet in alle richtingen even snel is, kan je ook strepen krijgen die verdacht veel op de vacht van een zebra lijken:
+Een belangrijke voorwaarde voor stabiele Turing-patronen is dat de diffusie van de inhibitor sneller moet zijn dan die van de activator. Hoe het ook zij: Turing slaagde er in om een proces te vinden waarbij diffusie niet patronen uitvaagt, maar ze juist genereert! Als de diffusie niet in alle richtingen even snel is, kan je ook strepen krijgen die verdacht veel op de vacht van een zebra lijken:
 
 ::: {.content-visible when-format="html"}
 ```{=html}
@@ -287,10 +287,10 @@ Een belangrijke voorwaarde voor stabiele Turing-patronen is dat de diffusie van 
 
 Dit is dan ook waarom Alan Turing ooit stelde:
 
-"The stripes are easy, but what about the horse part?"<br>
+> "The stripes are easy, but what about the horse part?"<br>
 -- Alan Turing
 
-Vele decennia later is er ook veel gemodelleerd aan "the horse part": hoe krijg je van een enkele cel een complex organisme met de juiste verdeling van weefsels en vingers? Het blijkt dat niet alleen de vlekken op de vacht, maar ook de ontwikkeling van planten en dieren veel met Turing patronen verklaard kan worden. Zie bijvoorbeeld onderstaande afbeeldingen uit onderzoek van James Sharpe (ref: https://pubmed.ncbi.nlm.nih.gov/23276682/), wat onderzoekt hoe vergelijkbare activatie-en-inhibitie interacties vorm kan geven aan complexe organismen. 
+Vele decennia later is er ook veel gemodelleerd aan "the horse part": hoe krijg je van een enkele cel een complex organisme met de juiste verdeling van weefsels en vingers? Het blijkt dat niet alleen de vlekken op de vacht, maar ook de ontwikkeling van planten en dieren veelal met Turing patronen verklaard kan worden. Zie bijvoorbeeld onderstaande afbeeldingen uit [onderzoek van James Sharpe](https://pubmed.ncbi.nlm.nih.gov/23276682/), wat onderzoekt hoe vergelijkbare activatie-en-inhibitie interacties vorm kan geven aan complexe organismen. 
 
 ::: {#fig-sharpe layout-nrow=2}
 
@@ -339,10 +339,10 @@ Bekijk de volgende reactievergelijking van een enzymatische reactie, waarbij een
     E+S & \quad \underset{k_2}{\stackrel{k_1}{\rightleftharpoons}} \quad C_{ES} \quad \xrightarrow{k_{cat}} \quad E+P\\
 \end{align}
 
-a. Stel dat we een dynamisch model van dit systeem zouden willen maken. Wat zijn de variabelen die we zouden willen modelleren? En wat zijn de parameters? *vars E, S, C, en P*
-b. Aangenomen dat de reactiesnelheden direct proportioneel zijn aan de concentraties, is de snelheid waarmee het complex $C_{ES}$ onstaat gelijk aan $E \cdot S \cdot k_1$. Zijn er nog meer processen die de hoeveelheid complex verhogen of verlagen? Welke vergelijkingen beschrijven deze processen? *er wijst maar 1 pijltje naar Ces, maar er wijzen er ook twee van weg, de twee -termen zijn dus k2 maal Ces en kcat maal Ces*
+a. Stel dat we een dynamisch model van dit systeem zouden willen maken. Wat zijn de variabelen die we zouden willen modelleren? En wat zijn de parameters? 
+b. Aangenomen dat de reactiesnelheden direct proportioneel zijn aan de concentraties, is de snelheid waarmee het complex $C_{ES}$ onstaat gelijk aan $E \cdot S \cdot k_1$. Zijn er nog meer processen die de hoeveelheid complex verhogen of verlagen? Welke vergelijkingen beschrijven deze processen? 
 c. Alle processen uit vraag b bij elkaar geven de totale snelheid waarmee complex ontstaat en/of vervalt. Met deze kennis kunnen we ODEs opstellen. Schrijf van $C_{ES}$ en de andere variabelen differentiaalvergelijkingen op. 
-d. Bekijk het onderstaande Grind-model van dit systeem. Het script print hoeveel product er is ontstaan aan het begin van het reactie-proces. Schets door het script te bestuderen hoe deze initiële reactie-snelheid afhangt van de initiële substraat-concentratie. Hint: bekijk hoeveel een verdubbeling van $S$ de reactiesnelheid verhoogd bij lage $S$ (bijv. 0.001), en ook bij hele hoge $S$ (bijv 1000). *dat geeft een verzadigde functie, zoals de MM curve*
+d. Bekijk het onderstaande Grind-model van dit systeem. Het script print hoeveel product er is ontstaan aan het begin van het reactie-proces. Schets door het script te bestuderen hoe deze initiële reactie-snelheid afhangt van de initiële substraat-concentratie. Hint: bekijk hoeveel een verdubbeling van $S$ de reactiesnelheid verhoogd bij lage $S$ (bijv. 0.001), en ook bij hele hoge $S$ (bijv 1000). 
 
 ```{r results='hide'}
 #| eval: false
@@ -374,16 +374,16 @@ cat(paste("Er is in 1 stap",stapje["P"],"product ontstaan"))
 
 <br>
 
-Kijk nog eens naar @fig-diffhokjes. De diffusie-constante die in dit figuur werd aangenomen was 0.1, dat wil zeggen, van de totaal-concentratie 4.0 in het middelste punt, diffundeert 0.4 naar de buurhokjes. 
+Kijk nog eens naar @fig-diffhokjes. De diffusie-constante die in dit figuur werd aangenomen was 0.1, dat wil zeggen, van de totaal-concentratie 4.0 in het middelste punt, diffundeert 0.4 naar elk van de buurhokjes. 
 
 Stel dat elke stap in @fig-diffhokjes één minuut voorstelt, en dat je experimenteel hebt waargenomen dat na 3 minuten de verf volledig over de plaat is verspreid. Kennelijk is de diffussie in @fig-diffhokjes te langzaam. 
 
-a. Teken de begin-conditie in @fig-diffhokjes na, en bepaal wat er gebeurt met een snellere diffusie-constante. Probeer een diffusie-constante van 0.2 en 0.3. Wat valt je op? *bij 0.3 gaat dit fout: er verdwijnt 120% uit het hokje!*
-b. Hoe kan je er voor zorgen dat de stof beter is verspreid na 3 minuten? *door meerdere diffusiestappen per minuut te doen!*
+a. Teken de begin-conditie in @fig-diffhokjes na, en bepaal wat er gebeurt met een snellere diffusie-constante. Probeer een diffusie-constante van 0.2 en 0.3. Wat valt je op? 
+b. Hoe kan je er voor zorgen dat de stof beter is verspreid na 3 minuten?
 
 Lokale diffusie op een grid heeft dus zijn beperkingen, vooral doordat tijdstapjes te groot kunnen zijn. 
 
-c. Leg uit waar we dit probleem eerder hebben gezien, en waarom partiële differentiaalvergelijkingen (met "oneindig kleine hokjes") dit probleem niet hebben. *partiele differentiaalvergelijkingen gebruiken oneindig kleine tijd/ruimte stapjes, dus hoe hoog de rate ook is je kunt niet voorbij een evenwicht schieten. ODEs zijn voor differentie-vergelijkingen wat PDEs zijn voor diffusie in hokjes* 
+c. Leg uit waar we dit probleem eerder hebben gezien, en waarom partiële differentiaalvergelijkingen (met "oneindig kleine hokjes") dit probleem niet hebben. 
 :::
 
 ::: {.Rexr #exr-bijproducten}
@@ -392,7 +392,7 @@ c. Leg uit waar we dit probleem eerder hebben gezien, en waarom partiële differ
 
 <br>
 
-Bacteriën produceren tijdens hun metabolisme vaak bijproducten, zoals melkzuur, alcohol, en waterstofperoxide. Hoewel lage concentraties van deze metabolieten vaak niet schadelijk zijn, kan het op ten duur opbouwen in de omgeving en zo de sterftekans van de bacteriën verhogen. We bestuderen in deze opgave de onderstaande simulatie hiervan.
+Bacteriën produceren tijdens hun metabolisme vaak bijproducten, zoals melkzuur, alcohol, en waterstofperoxide. Hoewel lage concentraties van deze metabolieten vaak niet schadelijk zijn, kan het op den duur opbouwen in de omgeving en zo de sterftekans van de bacteriën verhogen. We bestuderen in deze opgave de onderstaande simulatie hiervan.
 
 ::: {.content-visible when-format="html"}
 ```{=html}
