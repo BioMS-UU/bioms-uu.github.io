@@ -813,11 +813,6 @@ Er zijn twee kwalitatief verschillende situaties: één waarbij de twee nullclin
 #| fig.height: 4
 #| code-fold: true
 
-vectorfield <- function(x,y,dx,dy){
-  arrows(x, y, x+0, y+dy, length = 0.07, angle = 20, col="#f2790f",lwd=2)
-  arrows(x, y, x+dx, y+0, length = 0.07, angle = 20, col="blue",lwd=2)
-}
-
 I <- 1:100
 Z <- 1:100
 
@@ -838,7 +833,9 @@ abline(v=0, lwd=2, col="blue",)
 abline(a=80,b=-1, lwd=2,col="blue")
 
 par(pty="s",mfrow=c(1,1),mar=c(4,4,1,1.5))
+
 plot(I,Z,  col.axis="#f2790f",type='n',xaxt='n',xlab="",ylab="",axes=FALSE, frame.plot=TRUE)
+
 
 mtext("Z", side=1, line=2, col="blue", cex=1.5, at=90)
 mtext("I", side=2, line=2, col="#f2790f", cex=1.5,adj=1,las=2, at=90)
@@ -894,7 +891,9 @@ I <- 1:100
 Z <- 1:100
 
 par(pty="s",mfrow=c(1,1),mar=c(4,4,1,1.5))
+
 plot(I,Z,  col.axis="#f2790f",type='n',xaxt='n',xlab="",ylab="",axes=FALSE, frame.plot=TRUE)
+
 
 mtext("Z", side=1, line=2, col="blue", cex=1.5, at=90)
 mtext("I", side=2, line=2, col="#f2790f", cex=1.5,adj=1,las=2, at=90)
@@ -922,7 +921,9 @@ points(80,0,cex=1.3)
 text(90,5,"Evenwicht 2", cex=0.7)
 
 par(pty="s",mfrow=c(1,1),mar=c(4,4,1,1.5))
+
 plot(I,Z,  col.axis="#f2790f",type='n',xaxt='n',xlab="",ylab="",axes=FALSE, frame.plot=TRUE)
+
 
 mtext("Z", side=1, line=2, col="blue", cex=1.5, at=90)
 mtext("I", side=2, line=2, col="#f2790f", cex=1.5,adj=1,las=2, at=90)
@@ -977,6 +978,7 @@ I <- 1:100
 Z <- 1:100
 
 par(pty="s",mfrow=c(1,1),mar=c(4,4,1,1.5))
+
 plot(I,Z,  col.axis="#f2790f",type='n',xaxt='n',xlab="",ylab="",axes=FALSE, frame.plot=TRUE)
 
 mtext("Z", side=1, line=2, col="blue", cex=1.5, at=90)
@@ -1138,6 +1140,7 @@ source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
 
 ```{r}
 #| eval: true
+source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
 model <- function(t, state, parms) {
   with(as.list(c(state,parms)), {
     dR <- r*R*(1 - R/K) - a*R*N/(R+h)
@@ -1200,7 +1203,7 @@ Nee dat kan niet, want voor elke waarde van X en Y krijg je een specifieke hoeve
 **c.**
 Als twee lijnen elkaar snijden zou dit betekenen dat ze op het snijpunt daarna twee verschillende kanten op gaan. Maar in **b** zeiden we dat op elk punt maar 1 mogelijke richting is waarin de populatie zich kan bewegen. 
 
-*LET OP: je kan wel een aantal snijdende vectoren zien, maar dit zijn niet snijpunten van de trajectories. De vectoren geven alleen aan hoe "snel" de populatie veranderd in dat punt.*
+*LET OP: je kan wel een aantal snijdende vectoren zien, maar dit zijn niet snijpunten van de trajectories. De vectoren geven alleen aan hoe "snel" de populatie verandert in dat punt.*
 
 **d.**
 Mogelijkheid 1: Er is geen ruis in het model, maar in werkelijkheid wel. 
@@ -1224,24 +1227,263 @@ Ze gaan altijd horizontaal door de nullcline van de verticale as en verticaal do
 
 @exr-pseudo
 
+**a.**
+Er zijn verschillende antwoorden mogelijk.
+Bijvoorbeeld: <br>
+1. Kijk voor elke predator met coördinaten (x = i, y = j) of er een prooi in de omgeving is. 
+2. Ga langs alle mogelijke coördinaten rondom de predator op (i, j) door telkens i$\pm 1$ en/of j$\pm 1$ te doen en kijk in elk vakje of er een prooi aanwezig is.
+<br>
+Of iets technischer:
+1. Voor elke predator neem de coördinaten (x = i, y = j)
+2. Voor dx in c(-1, 0, 1):
+    - Voor dy in c(-1, 0, 1):
+      - Check status van hokje met coördinaten (i + dx, j + dy), behalve als dx = dy = 0 (want dan heb je het vakje van de predator te pakken)
+<br>
+Of een oplossing waarbij je niet diagonaal kijkt kan ook:
+1. Voor elke predator neem de coördinaten (x = i, y = j)
+2. Check de status van de hokjes met coördinaten (i, j $\pm 1$)
+3. Check de status van de hokjes met coördinaten (i $\pm 1$, j)
+
+**b.**
+Welke vakjes check jij allemaal? Welke vakjes bekijken je medestudenten?
+
+![Er zijn verschillende manieren om een buurt (*neighbourhood*) te definiëren.](figuren/grid-types.png){width="70%" fig-align="center"}
+
+Het is belangrijk om na te denken welke hokjes je als buren beschouwt. Zijn bij jou de diagonale vakjes ook buren? 
+
+**c.**
+1. Voor elke predator neem de coördinaten (x = i, y = j).
+2. Reken de afstand tot elke prooi (x, y) uit door:
+  - eerst de afstanden op de x- en y-as apart uit te rekenen: $dx = \abs{i - x}$ en $dy = \abs{j - y}$
+  - vervolgens met behulp van de stelling van Pythogaros de totale afstand uit te rekenen.
+3. Als de afstand kleiner is dan 1, kan de predator de prooi aanvallen.
+  
+![Schematische weergave van het berekenen van afstand tussen twee punten.](figuren/grid-distance-continu.png){width="90%" fig-align="center"}
+
+**d.**
+De grid is sneller, omdat je dan alleen maar de punten rondom de predator hoeft te bekijken om te zien of er een prooi dichtbij genoeg is. Bij continue ruimte (in de bovenstaande pseudocode in ieder geval) rekenen we voor elke prooi uit of deze dichtbij genoeg is. Daarnaast gaat het uitrekenen in meerdere stappen, waardoor het ook langzamer is.
+
 @exr-gol
+
+**a.**
+Het gaat hierbij om een verwachting dus er zijn meerdere goede antwoorden mogelijk.
+
+**b.**
+Dan zou je voor elk hokje apart moeten bepalen of het dood gaat of blijft leven, of dat er een geboorte plaatsvindt. Dit moet je dan herhalen voor elke tijdstap (heel veel werk dus, vooral voor een grotere grid).
+
+**c.**
+Hierbij gaat het om een verwachting dus er zijn meerdere goede antwoorden.
+
+**d.**
+Kun je nog steeds niet altijd precies voorspellen wat er gaat gebeuren. 
+De game of life is gebaseerd op drie eenvoudige regels en nog steeds is de enige manier om erachter te komen wat er gaat gebeuren het uitspelen van de simulatie. Het is dus niet altijd makkelijk om één oplossing te maken voor een systeem, ook als je de regels kent.
 
 @exr-aapjes
 
+**a.**
+Na een tijdje is al het eten dichtbij de groep op en dan rennen de aapjes telkens terug naar het midden van de groep, waar geen eten meer is. Het wordt dan steeds moeilijker voor de appjes om eten te vinden. Als je lang genoeg wacht zie je vaak dat de aapjes toch wel weer nieuw eten vinden doordat de groep soms toevallig in de richting van het eten beweegt.
+
+**b.**
+-
+
+**c.**
+-
+
+**d.**
+Bij een maximale eetsnelheid maakt de groep een soort pulserende bewegingen. 
+Het lijkt erop dat ze minder fruit vinden dan de aapjes uit de eerste simulatie.
+Bij een minimale eetsnelheid lijkt het erop dat de aapjes meer fruit vinden. 
+Doordat de aapjes langer aan het eten zijn beweegt de groep zich meer in één richting (de kant waar de meeste aapjes aan het eten zijn). Hierdoor kan de groep verder bewegen over het veld en meer fruit vinden.
+
+**e.**
+-
+
 ## Antwoorden @sec-diffusie {.unnumbered}
+
+@exr-reactievergelijkingen
+
+**a.**
+De reactieproducten zijn de variabelen, dat zijn dus $E$, $S$, $C_{ES}$ en $P$. Deze veranderen over de tijd.
+De parameters zijn de evenwichtsconstantes $k_1$, $k_2$ en $k_{cat}$. Deze zijn constant.
+
+**b.**
+Er wijst maar één pijltje naar $c_{ES}$, dus dit wordt alleen gemaakt door de combinatie van $E$ en $S$. 
+Er zijn echter ook twee pijltjes die van $c_{ES}$ afwijzen:
+1. Het complex valt uit elkaar en het substraat is omgezet naar product: $- c_{ES} \cdot k_{cat}$
+2. Het complex valt uit elkaar zonder dat er product is gevormd: $- c_{ES} \cdot k_2$
+
+**c.**
+\begin{align*}
+  \dt{C_{ES}} &= E \cdot S \cdot k_1 - c_{ES} \cdot k_2 - c_{ES} \cdot k_{cat}
+  \dt{E} &= c_{ES} \cdot k_2 + c_{ES} \cdot k_{cat} - E \cdot S \cdot k_1
+  \dt{S} &= c_{ES} \cdot k_2 - E \cdot S \cdot k_1
+  \dt{P} &= c_{ES} \cdot k_{cat}
+\end{align*}
+
+**d.**
+Als er meer substraat ($S$) is, kan er meer complex ($C_{ES}$) ontstaan, waardoor er uiteindelijk meer product gevormd wordt. Toch zijn er ook grenzen aan de hoeveelheid product die in één tijdstap gevormd kan worden. De hoeveelheid enzym verandert namelijk niet, en die is ook nodig om de vorming van het product te katalyseren. Als alle enzymen al "bezet" zijn, heeft het geen zin dat er meer substraat beschikbaar is.
+
+```{r}
+#| fig-cap: "De hoeveelheid product die in één tijdstap gevormd wordt, verzadigd met substraatconcentratie."
+
+source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
+
+model <- function(t, state, parms) {
+  with(as.list(c(state,parms)), { 
+    
+    dE <- k2*C - k1*E*S + kcat*C
+    dS <- k2*C - k1*E*S
+    dC <- k1*E*S - kcat*C
+    dP <- kcat*C
+    
+    return(list(c(dE, dS, dC, dP)))  
+  }) 
+}
+prod <- c()
+
+for(conc in seq(100)){
+  p <- c(k1=1,k2=0.2,kcat=1) #Parameters
+  s <- c(E=1,S=conc,C=0,P=0) #Starting population sizes
+  stapje <- run(tmax=1,ymax=3,tstep=1,timeplot=F) 
+  prod[conc] <- stapje["P"]
+}
+
+plot(y = prod, x = seq(100), col = colors[4], xlab = "Beginconcentratie substraat", ylab = "Product na 1 stap")
+```
 
 @exr-diffusievraag
 
+**a.**
+![Een diffusieconstante van 0.2. Hierbij bevatten alle vakjes rondom het midden na één tijdstap een gelijke concentratie.](figuren/dif_ant_exr_diffusie_a1.png)
+
+[Een diffusieconstante van 0.3. Hierbij gaat het mis: er diffundeert meer dan 100% uit het midden, waardoor er een negatieve concentratie overblijft. Oftewel: er komt op magische wijze iets van de stof bij. Dit kan natuurlijk niet!](figuren/dif_ant_exr_diffusie_a2.png)
+
+**b.**
+Per stap kan de stof maximaal één hokje opschuiven. 
+Daarnaast is er een maximum op het percentage dat in één stap kan diffunderen, zoals we in vraag a hebben gezien.
+De beste oplossing zou daarom zijn om meerdere diffusiestappen in één minuut te doen.
+
+**c.**
+Dit probleem hebben we eerder gezien in het begin van het onderdeel Modelleren, bij differentievergelijkingen.
+Destijds zagen we dat de discrete tijdstappen van differentievergelijkingen soms voor problemen kunnen zorgen.
+Dit kon worden opgelost door het gebruiken van ODEs, met continue tijd (=oneindig kleine tijdstapjes).
+Nu zien we eenzelfde soort probleem, maar dan in de ruimte in plaats van met tijd. Doordat we de de ruimte opdelen in hokjes kunnen we voorbij een evenwicht schieten, zoals je in vraag a hebt gezien.
+Dit probleem kan opgelost worden met behulp van PDEs. PDEs hebben niet alleen continue tijd, maar ook continue ruimte. Dit betekent dat ze de ruimte opdelen in oneindig kleine hokjes. Hierdoor kunnen ze nooit voorbij een evenwicht schieten, ook als we de diffusieconstante heel hoog maken. 
+PDEs zijn dus voor diffusie in hokjes wat ODEs zijn voor differentievergelijkingen.
+
 @exr-bijproducten
 
+::: todo
+Misschien moet hier iets meer informatie over het model bij komen? En hoe de begrippen van het hoofdstuk terug moeten komen?
+:::
+
+**a.**
+De bacteriën bevinden zich eerst in één enkele kolonie, waarna ze zich opsplitsen in kleinere groepen. De schadelijke metabolieten diffunderen rondom de bacteriën (afhankelijk van de gekozen radius). Het is ongunstig voor de bacteriën om in hele grote groepen te leven, omdat er dan heel veel bacteriën in de groep last hebben van de toxiciteit. 
+Dit lijkt erg op het systeem van Turing-patronen. Er is één stof die zichzelf activeert: bacteriën kunnen zorgen voor meer bacteriën door zich te delen. En er is één stof die de andere stof inhibeert: de toxinen zorgen ervoor dat er minder bacteriën zijn. Met gemiddelde parameters (toxiciteit = 0,002 en radius = 40) zorgt dit ervoor dat er patronen ontstaan (verschillende groepjes bacteriën).
+
+**b.**
+Doordat er meerdere groepjes bacteriën zijn ontstaan, kan een virus niet gemakkelijk overspringen naar de andere groepen. Hierdoor is het onwaarschijnlijk dat alle individuen besmet worden.
+
+**c.**
+De andere groepjes kunnen zich uitbreiden in de richting van het weggehaalde groepje. Soms splitsen ze zich weer op. Voor de virusuitbraak kon dit niet, omdat er giftige stoffen op de plekken van de andere groepen zaten.
+
 @exr-modelkeuzes
+
+**a.**
+ODE:
+De bacteriepopulaties kunnen praktisch gezien als continu worden beschouwd, omdat er zo
+veel individuen zijn. Er is ook geen ruimtelijk patroon omdat de erlenmeyer gemixt is.
+
+**b.**
+PDE:
+Er zijn ruimtelijke patronen, dus we moeten zeker voor een ruimtelijk model gaan.
+Een PDE zorgt er ook voor (in tegenstelling tot een model met discrete hokjes) dat we nooit voorbij een evenwicht kunnen schieten (zie @exr-diffusievraag d) door te hoge diffusiesnelheden.
+
+**c.**
+Individual based model:
+Er is een ruimtelijk patroon met individuen (planten).
+
+**d.**
+ODE:
+De populatie is goed gemengd, dus we hoeven geen ruimtelijk model te gebruiken. Zoöplankton deelt zich snel, dus het is belangrijk om continue tijd te gebruiken.
+
+**e.**
+PDE:
+We willen hier een ruimtelijk patroon bestuderen. Als het gaat om individuele cellen zouden we ook een grid kunnen gebruiken. Als de stoffen echter door de celmembranen kunnen diffunderen zou een PDE wellicht meer geschikt zijn.
+
+**f.**
+ODE of individual based model:
+We zouden een ODE kunnen gebruiken met verschillende vergelijkingen voor elke kleur konijnen. Er kan echter een probleem ontstaan op het moment dat de konijnen- en/of havikkenpopulatie(s) erg klein worden (zie @nte-atto). Een individual based model is computationeel waarschijnlijk langzamer, maar kan wel voorkomen dat we hele gekke (en onwaarschijnlijke) resultaten krijgen als er hele kleine populaties zijn.
+
+**g.**
+Individual based model:
+De bacteriën groeien op een agarplaat, dus om het systeem goed weer te geven zou een ruimtelijk model het meest geschikt zijn. Gemuteerde bacteriën delen dan lokaal en kunnen zo zorgen voor een lokaal groepje gemuteerde bacteriën. Daarnaast hebben we te maken met discrete individuen, wat een PDE minder geschikt maakt.
+
+**h.**
+PDE:
+Het morfogen diffundeert, dus die zou het best met continue ruimte gemodelleerd kunnen worden. De individuele cellen zouden eventueel wel discreet gemodelleerd kunnen worden.
+
+**i.**
+ODE:
+De paracetamol bevindt zich in het bloed, dus we kunnen aannemen dat het goed gemengd is. Hierom gebruiken we continue tijd en ruimte.
+
+**j.**
+PDE:
+We hebben een ruimtelijk model nodig, en we hebben te maken met concentraties, dus een PDE is het meest geschikt.
+
+**k.**
+Individual based model:
+Het is belangrijk om de zeehonden en orca's als individuen weer te geven, omdat ze elk een andere kant op zullen bewegen. Daarnaast is er een ruimtelijk patroon, doordat de zeehonden vanuit verschillende hoeken worden belaagd.
+
 
 ## Antwoorden @sec-excit {.unnumbered}
 
 @exr-drempelwaardefh
 
+**a.**
+
+**b.**
+
+**c.**
+
+**d.**
+
+**e.**
+
+**f.**
+
+**g.**
+
 @exr-clear
+
+**a.**
+
+**b.**
+
+**c.**
+
+**d.**
 
 @exr-epidemievraag
 
+**a.**
+
+**b.**
+
+**c.**
+
+**d.**
+
 @exr-bosbranden
+
+**a.**
+
+**b.**
+
+**c.**
+
+**d.**
+
+**e.**
+
+**f.**

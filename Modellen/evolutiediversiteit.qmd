@@ -4,9 +4,9 @@
 
 # Evolutie en biodiversiteit {#sec-evolutie}
 
-Tot nu toe heb je veel geleerd over essentiële ecologische processen zoals groei, interacties tussen individuen, concurrentie en co-existentie. De individuen waar het in deze modellen om gaat, kunnen niet alleen konijnen en vossen zijn, maar ook bacteriën, immuun-cellen of tumorcellen. Met deze modellen kunnen we dus niet alleen fundamenteel onderzoek uitvoeren, maar ook een belangrijke bijdrage leveren aan het verbeteren van de menselijke gezondheid. Waarom is antimicrobiële resistentie zo sterk toegenomen? Waarom reageert de ene tumor beter op behandeling dan de andere? Waarom beginnen nieuwe virusen (zoals Covid-19) zeer schadelijk, maar worden ze uiteindelijk vaak milder? Om deze vragen te beantwoorden gaan we in dit hoofdstuk leren hoe 2D ODEs zich vertalen naar evolutionaire vraagstukken.
+Tot nu toe heb je veel geleerd over essentiële ecologische processen zoals groei, interacties tussen individuen, concurrentie en co-existentie. De individuen waar het in deze modellen om gaat, kunnen niet alleen konijnen en vossen zijn, maar ook bacteriën, immuuncellen of tumorcellen. Met deze modellen kunnen we dus niet alleen fundamenteel onderzoek uitvoeren, maar ook een belangrijke bijdrage leveren aan het verbeteren van de menselijke gezondheid. Waarom is antimicrobiële resistentie zo sterk toegenomen? Waarom reageert de ene tumor beter op behandeling dan de andere? Waarom beginnen nieuwe virusen (zoals Covid-19) zeer schadelijk, maar worden ze uiteindelijk vaak milder? Om deze vragen te beantwoorden gaan we in dit hoofdstuk leren hoe 2D ODEs zich vertalen naar evolutionaire vraagstukken.
 
-Naast het ontstaan van diversiteit, kunnen we ook vragen stellen over het behoud van biodiversiteit. Het behoud van biodiversiteit is natuurlijk erg belangrijk: niet alleen is de natuur erg mooi, maar ook zijn we als maatschappij zeer afhankelijk van gezonde en veerkrachtige ecosystemen. Zo beschermen deze ons tegen overstromingen en zandstormen, en bevorderd diversiteit het de nutrientenkringloop (en dus vruchtbaarheid) in de landbouw. Maar welke factoren spelen hier eigenlijk een belangrijke rol? Is een ecosysteem robust als er veel cooperatie is, of juist als er veel competitie is? Om deze vragen te kunnen beantwoorden moeten we naar systemen van meer dan twee soorten gaan kijken.
+Naast het ontstaan van diversiteit, kunnen we ook vragen stellen over het behoud van biodiversiteit. Het behoud van biodiversiteit is natuurlijk erg belangrijk: niet alleen is de natuur erg mooi, maar ook zijn we als maatschappij zeer afhankelijk van gezonde en veerkrachtige ecosystemen. Zo beschermen deze ons tegen overstromingen en zandstormen, en bevordert diversiteit de nutriëntenkringloop (en dus vruchtbaarheid) in de landbouw. Maar welke factoren spelen hierbij eigenlijk een belangrijke rol? Is een ecosysteem robuust als er veel coöperatie is, of juist als er veel competitie is? Om deze vragen te kunnen beantwoorden moeten we naar systemen van meer dan twee soorten gaan kijken.
 
 ![](figuren/evolution_intro_AI.png){width="70%" fig-align="center"}
 
@@ -15,27 +15,27 @@ Naast het ontstaan van diversiteit, kunnen we ook vragen stellen over het behoud
 De leerdoelen van dit hoofdstuk zijn:
 
 * Begrijpen hoe je met ODEs evolutionaire vragen kan stellen
-* Kunnen omschrijven hoe niche-overlap vertaalt in specifieke competitie-parameters
+* Kunnen omschrijven hoe niche-overlap zich vertaalt in specifieke competitie-parameters
 * Omschrijven hoe een ecosysteem zich vertaalt in vele ODEs, en hoe interactie-matrices gebruikt kunnen worden om deze te modelleren
 * Aan een faseruimte kunnen herkennen of er sprake is van *founder control*
 * Begrijpen hoe *founder control* in ruimtelijke modellen overwonnen kan worden
 
 ## Invasie bestuderen met ODEs
 
-Laten we beginnen met het intussen welbekende model van logistisch groei met dichtheidsafhankelijke geboorte:
+Laten we beginnen met het intussen welbekende model van logistische groei met dichtheidsafhankelijke geboorte:
 
 \begin{align*}
 \dt{N} &= bN(1-\frac{N}{K}) - dN
 \end{align*}
 
-Waarbij $b$ de maximale birth rate is, $d$ de vaste death rate, en $K$ de schalingsfactor voor dichtheidsafhankelijke afname van reproductie. Hoewel $K$ vooral bepaald wordt door eigenschappen in de omgeving (de hoeveelheid eten bijvoorbeeld), kan je misschien wel jezelf wel voorstellen dat $b$ en $d$ eigenschappen die uniek zijn voor elke soort, of misschien zelfs voor elk individu binnen deze soort. In een evolutionaire context kunnen we deze parameters "evolueerbaar" noemen: er kunnen op elk moment mutanten ontstaan met een andere birth/death rate. Maar zullen deze mutanten zich dan verspreiden? Hiervoor kunnen we ons 1D ODE model weer uitbreiden naar een 2D ODE systeem:
+Waarbij $b$ de maximale birth rate is, $d$ de vaste death rate, en $K$ de schalingsfactor voor dichtheidsafhankelijke afname van reproductie. Hoewel $K$ vooral bepaald wordt door eigenschappen in de omgeving (de hoeveelheid eten bijvoorbeeld), kan je misschien wel jezelf wel voorstellen dat $b$ en $d$ eigenschappen zijn die uniek zijn voor elke soort, of misschien zelfs voor elk individu binnen deze soort. In een evolutionaire context kunnen we deze parameters "evolueerbaar" (*evolvable*) noemen: er kunnen op elk moment mutanten ontstaan met een andere birth/death rate. Maar zullen deze mutanten zich dan verspreiden? Hiervoor kunnen we ons 1D ODE model weer uitbreiden naar een 2D ODE systeem:
 
 \begin{align*}
 \dt{N} &= b_NN(1-\frac{N+M}{K}) - d_NN\\
 \dt{M} &= b_MM(1-\frac{N+M}{K}) - d_MM
 \end{align*}
 
-Hier is $N$ de oorspronkelijke soort (het zogeheten wildtype), en is $M$ de mutant met andere birth en/of death rates. Laten we bestuderen wat er gebeurt als er een mutant ontstaat met een verlaagde death rate, door de faseruimte te bestuderen. Hiervoor kunnen we de nullclines bepalen door beide vergelijkinen gelijk te stellen aan $0$, of we plotten de nullclines met Grind (@fig-wildtypeandmutant)
+Hier is $N$ de oorspronkelijke soort (het zogeheten wildtype), en is $M$ de mutant met andere birth en/of death rates. Laten we bestuderen wat er gebeurt als er een mutant ontstaat met een verlaagde death rate, door de faseruimte te bestuderen. Hiervoor kunnen we de nullclines bepalen door beide vergelijkinen gelijk te stellen aan $0$, of we plotten de nullclines met Grind (@fig-wildtypeandmutant).
 
 ```{r results="hide"}
 #| eval: true
