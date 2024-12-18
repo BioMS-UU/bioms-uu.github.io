@@ -1,3 +1,7 @@
+::: {.content-visible when-format="html"}
+{{< include ../_macros.tex >}}
+:::
+
 # Antwoorden modelleren {.unnumbered}
 
 ## Antwoorden @sec-tbintro {.unnumbered}
@@ -93,7 +97,24 @@ plot(konijnen , type='l', col="seagreen", log="y")
 
 Met een logaritmische schaal op de y-as krijgen we een rechte lijnen en weten we nu zeker dat we met exponentiële groei te maken hebben.
 
-**c.** :::{.todo} Yannick: LaTex code antwoorden invoegen. :::
+**c.**
+```{r}
+#| eval: true
+# Stap 1: Stel begin-aantal konijnen in
+K <- 24
+b <- 2
+d <- 0.1
+
+# Stap 2: Verdubbel het aantal konijnen 30 keer
+for (t in 1:30){
+  K[t+1] <- b*K[t] - d*K[t]
+}
+
+# Stap 3: Plot het resultaat
+plot(K, type='l', log="y")
+```
+
+We zien dat er nog steeds sprake is van exponentiële groei, omdat we met een logaritmische y-as een rechte lijn krijgen.  
 
 **d.** Het aantal konijnen stabiliseert wanneer de populatie 500 miljoen konijnen bevat.
 
@@ -118,11 +139,14 @@ paste("Het uiteindelijke aantal konijnen is gelijk aan",
       konijnen[length(konijnen)]) # Dit is een manier om de laatste waarde van de vector konijnen te bekijken
 ```
 
-:::{.callout-note, collapse="true", title="Extra: Waarom is de evenwichtswaarde niet gelijk aan K?"} Misschien is dit voor nu nog te lastig, kijk hier dan later in de cursus nog eens naar! (Als we ook ODE-modellen hebben behandeld). In het bovenstaande voorbeeld is de populatiegrootte in evenwichtstoestand niet gelijk aan K. Later in de cursus zal je voorbeelden voorkomen van ODE-modellen van logistische groei waarbij de populatiegrootte in evenwicht wél gelijk is aan K. Hoe kan het dat dit wel het geval is bij ODE-modellen en niet bij MAP-modellen?
+::: {.callout-important}
+### Extra: Waarom is de evenwichtswaarde niet gelijk aan K?
+Misschien is dit voor nu nog te lastig, kijk hier dan later in de cursus nog eens naar! (Als we ook ODE-modellen hebben behandeld). In het bovenstaande voorbeeld is de populatiegrootte in evenwichtstoestand niet gelijk aan K. Later in de cursus zal je voorbeelden voorkomen van ODE-modellen van logistische groei waarbij de populatiegrootte in evenwicht wél gelijk is aan K. Hoe kan het dat dit wel het geval is bij ODE-modellen en niet bij MAP-modellen?
 
 Dit komt door een verschil in de manier waarop deze modelformalismen het nieuwe aantal konijnen uitrekenen. Een ODE beschrijft de **verandering** van een variabele over tijd. Als de verandering over tijd ($N'(t)$) gelijk is aan nul, verandert de variabele niet meer. Bij logistische groei is dat wanneer de functionele response gelijk is aan nul ($f(N) = 0$). $$N'(t) = r \cdot N \cdot f(N)$$ Uit de bovenstaande vergelijking kunnen we zien dat de verandering van N over tijd gelijk wordt aan nul wanneer $f(N) = 0$ (vermenigvuldigen met 0 geeft altijd 0 als uitkomst). Zoals je in opdracht c hebt gezien, geldt dat $f(N) = 0$ wanneer $N = K$. Dit laat zien dat $N'(t) = r \cdot N \cdot f(N) = 0$ voor $N = K$. Dus, een ODE voor logistische groei is in evenwicht wanneer $N = K$.
 
-Dit is anders voor een MAP, omdat dit niet de verandering van de variabele $N$ beschrijft, maar de exacte waarde uitrekent aan de hand van de vorige waarde voor $N$: $$N(t+1) = r \cdot N(t) \cdot f(N)$$ Zo'n vergelijking heeft een evenwicht bereikt wanneer $N(t+1) = N(t)$. Dit kan alleen op het moment dat $r \cdot f(N) = 1$. In het bovenstaande voorbeeld geldt $r = 2$. Dus $2 \cdot f(N) = 1 \Rightarrow f(N) = \frac{1}{2}$. Oftewel, als $f(N)$ gelijk is aan 0.5, zal de populatiegrootte al stabiliseren. Dit klopt: we zien hierboven dat de populatiegrootte stabiliseert wanneer deze 500 miljoen konijnen bevat (dit is de helft van $10^9$, of $f(0.5\cdot10^9) = 1 - \frac{0.5\cdot10^9}{10^9} = \frac{1}{2}$). :::
+Dit is anders voor een MAP, omdat dit niet de verandering van de variabele $N$ beschrijft, maar de exacte waarde uitrekent aan de hand van de vorige waarde voor $N$: $$N(t+1) = r \cdot N(t) \cdot f(N)$$ Zo'n vergelijking heeft een evenwicht bereikt wanneer $N(t+1) = N(t)$. Dit kan alleen op het moment dat $r \cdot f(N) = 1$. In het bovenstaande voorbeeld geldt $r = 2$. Dus $2 \cdot f(N) = 1 \Rightarrow f(N) = \frac{1}{2}$. Oftewel, als $f(N)$ gelijk is aan 0.5, zal de populatiegrootte al stabiliseren. Dit klopt: we zien hierboven dat de populatiegrootte stabiliseert wanneer deze 500 miljoen konijnen bevat (dit is de helft van $10^9$, of $f(0.5\cdot10^9) = 1 - \frac{0.5\cdot10^9}{10^9} = \frac{1}{2}$). 
+:::
 
 **e.**
 
@@ -422,7 +446,11 @@ De snelheid van het herstel verandert niet als we $p$ veranderen. Deze verandert
 
 @exr-diffvsdiffinR
 
-**a.** Met $r < 1$ gaat de populatie uiteindelijk altijd naar nul. Vanaf $r > 3$ ontstaan er fluctuaties rondom het evenwicht. Met $r > 3.7$ ontstaat er chaos.
+**a.** Met $r < 1$ gaat de populatie uiteindelijk altijd naar nul. 
+
+Vanaf $r > 3$ ontstaan er fluctuaties rondom het evenwicht. 
+
+Met $r > 3.7$ ontstaat er chaos.
 
 ```{r}
 #| fig-cap: "Differentievergelijking"
@@ -432,6 +460,7 @@ De snelheid van het herstel verandert niet als we $p$ veranderen. Deze verandert
 #|   - "r = 3"
 #|   - "r = 4"
 #| layout-ncol: 2
+#| code-fold: true
 
 # R = 0.8
 # Stap 1, definieer beginaantal konijnen en parameters
@@ -501,6 +530,8 @@ plot(N,type="o",xlab="Tijd (jaren)", ylab="Aantal konijnen")
 #|   - "r = 4"
 #|   - "r = 250"
 #| layout-ncol: 2
+#| code-fold: true
+
 
 # r = 0.8
 # SIMPEL SCRIPT VOOR DIFFERENTIAALVERGELIJKING
@@ -630,17 +661,23 @@ plot(tijdserie$t, tijdserie$konijnen, type="l",xlab="Tijd (jaren)", ylab="Aantal
 
 @exr-dddportrait
 
-**a.** Er is een evenwicht als: $\frac{dN}{dt}=0$. $$\Rightarrow \frac{dN}{dt}=0=bN-d\left(1+\frac NK \right)N$$ $$ \Rightarrow N = 0 \vee b-d\left(1+\frac NK \right) =0$$ $$\Rightarrow N=0 \vee b=d\left(1+\frac NK \right)$$ $$\Rightarrow N=0 \vee \frac bd = 1+\frac NK$$ $$\Rightarrow N=0 \vee \frac bd - 1 = \frac NK$$ $$\Rightarrow N=0 \vee K\left( \frac bd - 1 \right) = N$$
+**a.** Er is een evenwicht als: $\frac{dN}{dt}=0$. $$\Rightarrow \frac{dN}{dt}=0=bN-d\left(1+\frac NK \right)N$$ 
+$$ \Rightarrow N = 0 \quad \text{(oplossing 1)}$$ 
+$$b-d\left(1+\frac NK \right) =0$$ 
+$$\Rightarrow b=d\left(1+\frac NK \right)$$ 
+$$\Rightarrow\frac bd = 1+\frac NK$$ 
+$$\Rightarrow \frac bd - 1 = \frac NK$$ 
+$$\Rightarrow  K\left( \frac bd - 1 \right) = N \quad \text{(oplossing 2)}$$
 
 **b.** Net zoals in @fig-faseportret hebben we weer een bergparabool vanwege de term $-d\left(1+\frac NK \right)N = -dN - \frac{d}{K} N^2$
 
 We hebben de twee evenwichten berekend in *a*: $N=0$ en $N=K\left( \frac bd - 1 \right)$. Het triviale evenwicht N=0 is geen attractor, het andere evenwicht wel.
 
 ::: todo
-Bram: juiste tekening maken en dichtheid_ant_exr_draw_14.2b.png vervangen
+Bram: juiste tekening maken en dichtheid_ant_exr_draw_14.2b.jpg vervangen
 :::
 
-![Faseportret dichtheidsafhankelijke sterfte](figuren/dichtheid_ant_exr_draw_14.2b.png)
+![Faseportret dichtheidsafhankelijke sterfte](figuren/dichtheid_ant_exr_draw_14.2b.jpg)
 
 @exr-bacterienbloed
 
@@ -656,15 +693,26 @@ Als je dit nog lastig vindt kan je @sec-odes-eenheden nog een keer doorlezen!
 
 **c.**
 
-$$\frac{dB}{dt}=0=rB-kNB$$ $$B=0 \vee r-kN=0$$ $$B=0\vee N=\frac{k}{r}$$
+$$\frac{dB}{dt}=0=rB-kNB$$ 
+$$B = 0 \quad \text{(oplossing 1)}$$
+$$r-kN=0$$ 
+$$N=\frac{k}{r}  \quad \text{(oplossing 2)}$$
 
 Maar hier is geen populatie B aan verbonden, dus nee.
 
-**d.** :::{.todo} Bram: Juiste tekening maken en dichtheid_ant_exr_draw_14.3d.png vervangen ::: ![De \$rB\$ term is een horizontale lijn en de \$kNB\$ term is neemt linear toe](figuren/dichtheid_ant_exr_draw_14.3d.png){#fig-14.3d}
+**d.** :::{.todo} Bram: Juiste tekening maken en dichtheid_ant_exr_draw_14.3d.png vervangen ::: ![De \$rB\$ term is een horizontale lijn en de \$kNB\$ term is neemt linear toe](figuren/dichtheid_ant_exr_draw_14.3d.png){#fig-143d}
 
 **e.**
 
-$$\frac{dB}{dt}=0=rB-kNB$$ $$B=0 \vee r-kN=0$$ $$B=0\vee N=\frac{k}{r}$$ Je hebbt dus $k/r$ neutrofielen nodig om de groei van de bacteriën te stoppen. Dit punt is ook het snijpunt tussen de lijnen van @fig-14.3d.
+$$\frac{dB}{dt}=0=rB-kNB$$ 
+
+$$B = 0 \quad \text{(oplossing 1)}$$
+
+$$r-kN=0$$ 
+
+$$ N=\frac{k}{r} \quad \text{(oplossing 2)}$$
+
+Je hebt dus $k/r$ neutrofielen nodig om de groei van de bacteriën te stoppen. Dit punt is ook het snijpunt tussen de lijnen van @fig-143d.
 
 **f.** We moeten het aantal dode bacteriën delen door het aantal neutrofielen. Dus $kNB/N = kB$
 
@@ -674,9 +722,6 @@ Als er oneindig veel bacteriën zijn worden er oneindig veel bacteriën per neut
 
 Dit is niet een logische aanname, want elke neutrofiel kan maar een gelimiteerd aantal bacteriën doodmaken.
 
-::: todo
-Je kan niet weten hoeveel er met 1000 worden dood gemaakt als je k niet weet
-:::
 
 **h.** Als $B$ heel groot is, dan maakt de kleine toevoeging van $h$ onderin de breuk niet heel veel meer uit. $h$ wordt dus voor grote $B$ "verwaarloosbaar".
 
@@ -684,13 +729,19 @@ Je kan niet weten hoeveel er met 1000 worden dood gemaakt als je k niet weet
 
 **j.**
 
-$$\frac{dB}{dt}=0=rB-\frac{kNB}{h+B}$$ $$ B\left(r-\frac{kN}{h+B}\right)=0$$ $$B=0 \vee r-\frac{kN}{h+B}=0$$ $$B=0 \vee r=\frac{kN}{h+B}$$ $$B=0\vee rh+rB=kN$$ $$B=0\vee N=\frac{r(h+B)}{k}$$
+$$\frac{dB}{dt}=0=rB-\frac{kNB}{h+B}$$ 
+$$ B\left(r-\frac{kN}{h+B}\right)=0$$
+$$B=0 \quad \text{(oplossing 1)}$$
+$$r-\frac{kN}{h+B}=0$$
+$$r=\frac{kN}{h+B}$$
+$$rh+rB=kN$$ 
+$$N=\frac{r(h+B)}{k} \quad \text{(oplossing 2)}$$
 
 @exr-heck
 
-**a.** Ik verwacht een aantal heckrunderen waar de death en birth rate even groot zijn in @fig-heck, want dan veranderd de populatie niet meer. Dit zijn ongeveer 340/350 runderen.
+**a.** Ik verwacht een aantal heckrunderen waar de death en birth rate even groot zijn in @fig-heck, want dan veranderd de populatie niet meer. Dit zijn ongeveer 340 tot 350 runderen.
 
-**b.** Als N heel klein is, is de term $1-\frac{N}{K_b} \approx 1$. b is dus 0.4.
+**b.** Als N heel klein is, is de term $1-\frac{N}{K_b}$ ongeveer gelijk aan 1. b is dus 0.4.
 
 Ook weten we dat we met 400 runderen maar de helft van de deze maximale geboorte hebben. Dus: $$\frac{1}{2}*0.4 = 0.4*\left(1-\frac{400}{K_b}\right)$$ $$\frac12= 1-\frac{400}{K_b}$$ $$-\frac{1}{2} = -\frac{400}{K_b}$$ $$\frac{2}{1}=\frac{K_b}{400}$$ $$K_b = 400\cdot 2 = 800$$
 
@@ -698,11 +749,22 @@ Ook weten we dat we met 400 runderen maar de helft van de deze maximale geboorte
 
 Daarna kunnen we $K_d$ uitrekenen: $$0.33 = 0.03\left(1+\frac{500}{K_d}\right)$$ $$\frac{0.33}{0.03} = 11 = 1+\frac{500}{K_d}$$ $$ 10 = \frac{500}{K_d}$$ $$\frac{10}{500} = \frac 1{K_d}$$ $$\frac{500}{10} = 50 = K_d$$
 
-**d.** Als we al onze gevonden parameters invullen krijgen we de volgende ODE: $$\frac{dN}{dt} = 0.4\left(1-\frac{N}{800} \right) N - 0.03 \left(1+\frac{N}{50}\right)N$$ Deze stellen we gelijk aan 0 om het evenwicht te bepalen: $$0= 0.4\left(1-\frac{N}{800} \right) N - 0.03 \left(1+\frac{N}{50}\right)N$$ $$N=0 \vee 0.4\left(1-\frac{N}{800} \right)  = 0.03 \left(1+\frac{N}{50}\right)$$ We negeren de triviale oplossing: $$0.4-\frac{0.4N}{800} = 0.03+\frac{0.03N}{50}$$ $$0.4-0.03 = \left(\frac{0.4}{800}+\frac{0.03}{50} \right)N$$ $$0.37 = 0.0011N$$ $$N\approx 336$$
+**d.** Als we al onze gevonden parameters invullen krijgen we de volgende ODE: $$\frac{dN}{dt} = 0.4\left(1-\frac{N}{800} \right) N - 0.03 \left(1+\frac{N}{50}\right)N$$ 
+Deze stellen we gelijk aan 0 om het evenwicht te bepalen: 
+$$0= 0.4\left(1-\frac{N}{800} \right) N - 0.03 \left(1+\frac{N}{50}\right)N$$
+$$N=0 \vee 0.4\left(1-\frac{N}{800} \right)  = 0.03 \left(1+\frac{N}{50}\right)$$ 
+We negeren de triviale oplossing: 
+$$0.4-\frac{0.4N}{800} = 0.03+\frac{0.03N}{50}$$ 
+$$0.4-0.03 = \left(\frac{0.4}{800}+\frac{0.03}{50} \right)N$$ 
+$$0.37 = 0.0011N$$ 
+$$N\approx 336$$
 
-**e.** Het aantal dieren die elk jaar dood gaan is gelijk aan $d\left(1-\frac N{K_d}\right)N$ waarin we onze waardes in kunnen vullen: $$0.03*\left(1+\frac{336}{50}\right)*336\approx 78$$
+**e.** Het aantal dieren die elk jaar dood gaan is gelijk aan $d\left(1-\frac N{K_d}\right)N$ waarin we onze waardes in kunnen vullen: 
+$$0.03*\left(1+\frac{336}{50}\right)*336\approx 78$$
 
-**f.** Na 300 tijdstappen wordt er begonnen met afschieten (`if(t>300) k <- 0.05`), dit komt overeen met 30 jaar omdat de tijdstap 0.1 jaar is (`delta_t <- 0.1 # grootte van de tijdstap`). Er wordt telkens 5% van de populatie afgeschoten omdat k gelijk gesteld wordt aan 0.05.
+**f.** Na 300 tijdstappen wordt er begonnen met afschieten (`if(t>300) k <- 0.05`), dit komt overeen met 30 jaar omdat de tijdstap 0.1 jaar is (`delta_t <- 0.1 # grootte van de tijdstap`). 
+
+Er wordt telkens 5% van de populatie afgeschoten omdat k gelijk gesteld wordt aan 0.05.
 
 **g.** De sterfte neemt met minder dan 5% toe (ongeveer 2.3 procent), terwijl er wel 5% extra wordt afgeschoten. Er gaan dus \~2.7% van de populatie minder dood van de honger.
 
@@ -710,7 +772,9 @@ Daarna kunnen we $K_d$ uitrekenen: $$0.33 = 0.03\left(1+\frac{500}{K_d}\right)$$
 
 **i.** Vooral oude dieren afschieten. Hierdoor veranderd de deathrate nouwelijks, en gaan er ook minder jonge dieren dood omdat de oude dieren minder "voedsel verspillen".
 
-@exr-samenwerkenallee **a.** Soms sterft iedereen uit omdat ze van elkaar gescheiden zijn en elkaar niet kunnen helpen.
+@exr-samenwerkenallee 
+
+**a.** Soms sterft iedereen uit omdat ze van elkaar gescheiden zijn en elkaar niet kunnen helpen.
 
 **b.** Het lukte de populaties ongeveer 5 keer om uit te groeien.
 
@@ -724,17 +788,19 @@ Daarna kunnen we $K_d$ uitrekenen: $$0.33 = 0.03\left(1+\frac{500}{K_d}\right)$$
 
 **b.**
 
-![Faseportret simpele ODE](figuren/ruimtelijkegroei_ant_exr_17.2b.jpg)
+![Faseportret simpele ODE](figuren/ruimtelijkegroei_ant_exr_draw_17.2b.png)
 
 $N=0$ is stabiel, $\frac db$ is instabiel.
 
 ::: todo
-Bram: juiste tekening maken en dichtheid_ant_exr_draw_17.2b.jpg vervangen
+Bram: juiste tekening maken en dichtheid_ant_exr_draw_17.2b.png vervangen
 :::
 
 **c.**
 
-![Oplossingen simpele ODE](figuren/ruimtelijkegroei_ant_exr_17.2c.jpg) Er ontstaat geen evenwicht. Of de populatie sterft uit, of hij blijft exponentieel groeien.
+![Oplossingen simpele ODE](figuren/ruimtelijkegroei_ant_exr_draw_17.2c.png) 
+
+Er ontstaat geen evenwicht. Of de populatie sterft uit, of hij blijft exponentieel groeien.
 
 ::: todo
 Bram: juiste tekening maken en dichtheid_ant_exr_draw_17.2c.jpg vervangen
@@ -742,11 +808,15 @@ Bram: juiste tekening maken en dichtheid_ant_exr_draw_17.2c.jpg vervangen
 
 **d.** In het individual-based model gingen we er van uit dat er maar 1 individu in een hokje past. Hierdoor kan de populatie niet exponentieel toe blijven nemen, want na een tijdje zitten alle hokjes vol en kunnen er pas weer nieuwe indviduen komen als er eerst weer een paar dood zijn gegaan.
 
-@exr-loggroeisex **a.** ![Oplossingen simpele ODE](figuren/dichtheid_ant_exr_draw_14.2b.jpg)
+@exr-loggroeisex 
+
+**a.** 
+
+![Oplossingen simpele ODE](figuren/dichtheid_ant_exr_draw_14.2b.jpg)
 
 **b.**
 
-![Faseportret simpele ODE](figuren/ruimtelijkegroei_ant_exr_17.3b.png)
+![Faseportret simpele ODE](figuren/ruimtelijkegroei_ant_exr_draw_17.3b.png)
 
 ::: todo
 Bram: juiste tekening maken en dichtheid_ant_exr_draw_17.3b.png vervangen
@@ -754,7 +824,7 @@ Bram: juiste tekening maken en dichtheid_ant_exr_draw_17.3b.png vervangen
 
 **c.**
 
-![Faseportret simpele ODE](figuren/ruimtelijkegroei_ant_exr_17.3c.png)
+![Faseportret simpele ODE](figuren/ruimtelijkegroei_ant_exr_draw_17.3c.png)
 
 Er zijn drie mogelijke opties: 1: We beginnen met een hele grote N, die exponentieel afneemt tot aan de stabliele evenwichtsstand 2: We beginnen met een N die boven het instabiele evenwicht ligt, maar onder het stabiele evenwicht. Deze gaat ook naar de evenwichtsstand. 3: We beginnen met een waarde van N onder het instabiele evenwicht. Deze populatie neemt af naar 0.
 
@@ -762,7 +832,8 @@ Er zijn drie mogelijke opties: 1: We beginnen met een hele grote N, die exponent
 Bram: juiste tekening maken en dichtheid_ant_exr_draw_17.3c.png vervangen
 :::
 
-@exr-kreislauf **a.** In dit systeem hebben alle drie de soorten er wat aan als er meer gemengd wordt. Ze hebben namelijk allemaal iemand anders nodig om zich voort te planten. Er is hier ook geen mogelijkheid voor 1 soort om de anderen uit te roeien, omdat er altijd een andere is die deze groei weer tegen kan gaan.
+@exr-kreislauf 
+**a.** In dit systeem hebben alle drie de soorten er wat aan als er meer gemengd wordt. Ze hebben namelijk allemaal iemand anders nodig om zich voort te planten. Er is hier ook geen mogelijkheid voor 1 soort om de anderen uit te roeien, omdat er altijd een andere is die deze groei weer tegen kan gaan.
 
 **b.** Spiralen/Golven
 
@@ -776,7 +847,7 @@ Bram: juiste tekening maken en dichtheid_ant_exr_draw_17.3c.png vervangen
 
 **b.** Ja, wel gegeven de modelomschrijving, want daar staat dat de zeehonden die ziek zijn snel dood gaan.
 
-**c.** Het is dan een 1D systeem: $$\dt{Z} = bZ(1-Z/k)-dZ$$ Deze vergelijking gelijkstellen aan 0 geeft $Z = k(1-d/b)$. Dit is het evenwicht van de gezonde populatie in afwezigheid van de infectieziekte.
+**c.** Het is dan een 1D systeem: $$\dt{Z} = bZ\left(1-\frac{Z}{k}\right)-dZ$$ Deze vergelijking gelijkstellen aan 0 geeft $Z = k\left(1-\frac{d}{b}\right)$. Dit is het evenwicht van de gezonde populatie in afwezigheid van de infectieziekte.
 
 **d.** Ja, de populatiegrootte zonder infectieziekte wordt bepaald door $k(1-d/b)$ met kleinere b, dus grotere d/b, dus kleiner totaal. Dus de populatie zal afnamen als b kleiner wordt. Tip: als je het moeilijk vindt om dit voor te stellen vul dan waarden in voor d en b.
 
@@ -784,12 +855,12 @@ Bram: juiste tekening maken en dichtheid_ant_exr_draw_17.3c.png vervangen
 
 Nullcline van Z: 
 \begin{align*}
-    bZ(1-Z/k) - dZ - \beta ZI &= 0 \\
-    Z(b(1-Z/k) - d - \beta I) &= 0 \\
+    bZ\left(1-\frac Zk\right) - dZ - \beta ZI &= 0 \\
+    Z\left(b\left(1-\frac Zk\right) - d - \beta I\right) &= 0 \\
     Z &= 0 \quad \text{(oplossing 1)} \\
-    b(1-Z/k) - d - \beta I &= 0 \\
-    \beta I &= b(1-Z/k) - d \\
-    I &= \frac{b(1-Z/k) - d}{\beta} \\
+    b\left(1-\frac Zk\right) - d - \beta I &= 0 \\
+    \beta I &= b\left(1-\frac Zk \right) - d \\
+    I &= \frac{b\left(1-\frac Zk \right) - d}{\beta} \\
     I &= -Z\frac{b}{k\beta} + \frac{b - d}{\beta} \quad \text{(oplossing 2)}
 \end{align*}
 
@@ -800,7 +871,7 @@ Nullcline van I:
     I &= 0 \quad \text{(oplossing 1)} \\
     \beta Z - \delta &= 0 \\
     \beta Z &= \delta \\
-    Z &= \delta / \beta  \quad \text{(oplossing 2)}
+    Z &= \frac \delta\beta  \quad \text{(oplossing 2)}
 \end{align*}
 
 Er zijn twee kwalitatief verschillende situaties: één waarbij de twee nullclines elkaar snijden, en één waarbij er geen snijpunt is.
@@ -858,8 +929,8 @@ Z\frac{b}{k\beta} &= \frac{b - d}{\beta} \\
 Z &= \frac{b - d}{\beta} \cdot \frac{k\beta}{b} \\
 Z &= \frac{k\beta(b - d)}{\beta b} \\
 Z &= \frac{k(b - d)}{b} \\
-Z &= \frac{kb - kd)}{b} \\
-Z &= k - \frac{kd)}{b} 
+Z &= \frac{kb - kd}{b} \\
+Z &= k - \frac{kd}{b} 
 \end{align*}
 Dus hier is een evenwicht voor $I=0$ en $Z = k - \frac{kd}{b}$. \br
 Evenwicht 3: \br
@@ -989,11 +1060,11 @@ abline(a=50,b=-1.6, lwd=2,col="blue", lty=2)
 Het aantal gezonde zeehonden is helemaal niet kleiner geworden! De hoeveelheid gezonde zeehonden is onafhankelijk van hun geboortekans geworden. Er zijn kennelijk vooral minder zieke zeehonden (dit is hetzelfde als konijnen die minder eten krijgen, en dat je vooral minder predatoren krijgt). Dit geldt dus alleen als er een infectieziekte (of predator zoals bij de konijnen) aanwezig is, de mogelijke populatiegrootte (draagkracht) zonder ziekte is wel lager als we $b$ halveren.
 
 @exr-virusuitbraak
-**a.**
-Alleen susceptible individuen planten zich voort. Zoals je ziet bevat alleen $\dt[S}$ een birth rate.
+
+**a.** Alleen susceptible individuen planten zich voort. Zoals je ziet bevat alleen $\dt{S}$ een birth rate.
 
 **b.**
-De eenheid van $\dt{I}$ is $I$ per tijdseenheid. Dus: $\delta I = {I}\over{t}$ en $\delta = {I}\over{t \cdot I} = \over{t}$.
+De eenheid van $\dt{I}$ is $I$ per tijdseenheid. Dus: $\delta I = \frac It$ en $\delta = \frac {1}{It} \cdot I = \frac 1t$.
 Dit kunnen we interpreteren als 'per tijdseenheid'. Dus het geeft een verhoogde kans aan om dood te gaan als je bent geïnfecteerd met het virus.
 
 **c.**
@@ -1010,9 +1081,14 @@ Het is meer vergelijkbaar met *contactbeperkingen*, want de pixels houden dezelf
 In het ongemengde systeem zie je dat het virus uitsterft, omdat het zich te snel verspreidt en daardoor alle vatbare individuen op consumeert. Kleine populaties vatbare individuen blijven echter achter en groeien uiteindelijk weer terug; maar het virus is al weg! In het gemengde systeem daarentegen sterft de gehele populatie uit: het agressieve virus kan altijd een nieuw slachtoffer vinden, waardoor er geen overlevenden zijn.
 
 @exr-lvinspace
+
 **a.**
 De parameter $c$ (zoals genoemd in @eq-vossen-konijnen) is gelijk aan 1. Dit betekent dat we aannemen dat de biomassaconversie perfect is. 
 Als er één prooihokje wordt opgegeten leidt dit tot de geboorte van één predatorhokje.
+
+::: todo 
+eq-vossen-konijnen referentie doet het niet 
+:::
 
 **b.**
 Ja, de resultaten van de simulatie lijken heel erg op @fig-faseruimteoplossingenlv. Eerst schommelen de populaties een beetje, maar de schommelingen worden steeds kleiner. Echter blijven hier de fluctuaties wel meer aanwezig dan in het ODE-model.
@@ -1032,12 +1108,17 @@ Het aantal predatoren neemt niet per se toe, maar er zijn wel sterkere schommeli
 
 **g.**
 Met een hele lage death rate hebben de predatoren een hele kleine kans om dood te gaan. Je ziet eerst dat er daardoor bijna geen ruimte meer over is voor de prooi om zich te voort te planten. Hierdoor sterft de prooi na een tijdje uit. Als alle prooi dood is, sterven ook de predatoren langzaam uit (omdat ze geen eten meer hebben). 
-Dit zou niet voorkomen in een ODE, omdat daar niet met losse individuen gewerkt wordt. Er zou altijd nog 0.00001 prooi in leven kunnen zijn die daarna weer voort kan planten. 
-*dit is een aardig advanced vraag voor eerstejaars, dus het antwoord moet goed zijn want weinig zullen het meteen helemaal doorzien. de prooi kan helemaal uitsterven door de predator, waarna de predator ook dood gaat. dit zou in de ODEs niet gebeuren, want je kan de assen alleen maar langzaam naderen (het zijn nullclines, dus hoe dichter bij je bent, hoe langzamer je er op af gaat)*
+Dit zou niet voor komen in een ODE, omdat daar niet met losse individuen gewerkt wordt. Er zou altijd nog 0.00001 prooi in leven kunnen zijn die daarna weer voort kan planten. 
+
 
 @exr-3dsysteem
+
 **a.**
-Dat de biomassaconversie perfect is: elke 1 A die opgegeten wordt levert 1 B op. Dit geldt overigens ook voor conversie van B naar C. Dit is een modelaanname, een mogelijk alternatief zou zijn om een extra term toe te voegen. Het eten van 1 A zou dan bijvoorbeeld kunnen zorgen voor een toename van 0.5 B. Met zo'n term nemen we dus aan dat conversie niet perfect is.
+Dit betekent dat de biomassaconversie perfect is: elke A die opgegeten wordt levert 1 B op. 
+
+Dit geldt overigens ook voor conversie van B naar C. 
+
+Dit is een modelaanname, een mogelijk alternatief zou zijn om een extra term toe te voegen. Het eten van 1 A zou dan bijvoorbeeld kunnen zorgen voor een toename van 0.5 B. Met zo'n term nemen we dus aan dat conversie niet perfect is.
 
 **b.**
 Alle drie de populaties zijn in evenwicht, dus $\dt{A} = \dt{B} = \dt{C} = 0$.
@@ -1046,7 +1127,7 @@ Als we kijken naar de vergelijkingen zien we dat het gelijkstellen van $\dt{C}$ 
 eBC - fC &= 0 \quad \text{We weten dat $C \neq 0$, dus mogen delen door $C$} \\
 eB - f &= 0 \\
 eB &= f \\
-B &= f/e
+B &= \frac fe
 \end{align*}
 We zien dus dat we of een triviale oplossing hebben waarbij we niet meer 3 populaties hebben (C=0), die in dit geval niet van toepassing is, of een oplossing voor een populatie van $B$ waarbij er een evenwicht is. De populatie van $B$ moet dus $\frac fe$ zijn als de populaties in evenwicht zijn. 
 
@@ -1105,11 +1186,13 @@ curve(func,0,3,lwd=2.5,ylim=c(0,1.),
 @exr-paraboollv
 **a.** We hebben nu deze functie die de verandering in de prooi populatie beschrijft:
 
-$$\frac{\mathrm{d}\color{blue}R}{\mathrm{d}t} = b\left(1-\frac{\color{blue}R}{K}\right)\color{blue}R\color{black} - d\color{blue}R\color{black} - \frac{\color{black}a\color{blue}R\color{orange}N}{h+\color{blue}R\color{black}}$$ Deze gaan we gelijk stellen aan 0 om de nullclines te bepalen:
+$$\dt{\textcolor{blue}{R}} = b\left(1-\frac{\textcolor{blue}{R}}{K}\right)\textcolor{blue}{R} - d\textcolor{blue}{R} - \frac{a\textcolor{blue}{R}\textcolor{orange}{N}}{h+\textcolor{blue}{R}}$$ 
+
+Deze gaan we gelijk stellen aan 0 om de nullclines te bepalen:
 
 $$0=b\left(1-\frac RK \right) R - dR - \frac{aRN}{h+R}$$
 
-$$R=0 \text{oplossing 1}$$
+$$R=0 \quad \text{oplossing 1}$$
 
 $$b\left(1-\frac RK \right) - d - \frac{aN}{h+R}=0$$ Alles vermedigvuldigen met $h+R$: $$b(h+R)\left(1-\frac RK \right) - d(h+R) - aN=0$$
 
@@ -1154,12 +1237,16 @@ Ook bereikt de populatie geen stabiele stand meer en blijft deze enorme schommel
 
 @exr-compofexcl
 
-**a,\.**
+**a.**
 $c_{21}$ zal groter worden. Dit kan je hier terugzien: 
-$$ \dt{\color{blue}N_\color{blue}1} = r\color{blue}N_{\color{blue}1}\left(1 - c_{11}\color{blue}N_{\color{blue}1} - c_{12}\color{orange}N_{\color{orange}2}\right)$$
-$$\dt{\color{orange}N_\color{orange}2} = r\color{orange}N_\color{orange}2\left(1 - c_{22}\color{orange}N_\color{orange}2 - c_{21}\color{blue}N_\color{blue}1\right)$$ 
 
-Als er meer competitie is tussen $N_2$ steeds meer "last krijgt" van $N_1$, dan neemt de populatie van $N_2$ sterker af als de populatie van $N_1$ toeneemt. $c_{21}$ bepaalt dit. 
+\begin{align*}
+  \dt{\textcolor{blue}{N_1}} = r\textcolor{blue}{N_1} (1 - c_{11}\textcolor{blue}{N_1} - c_{12}\textcolor{orange}{N_2})
+\end{align*}
+
+$$\dt{\textcolor{orange}{N_2}} = r\textcolor{orange}{N_2}\left(1 - c_{22}\textcolor{N_2} - c_{21}\textcolor{blue}{N_1}\right)$$ 
+
+Als er meer competitie is, dan zal $N_2$ steeds meer "last krijgen" van $N_1$, dus dan neemt de populatie van $N_2$ sterker af als de populatie van $N_1$ toeneemt. $c_{21}$ bepaalt hoeveel de populatiegroei van $N_2$ verminderd, en deze zal dus groter worden. 
 
 **b.**
 De oranje lijn gaat verschuiven, omdat dit de nullcline van $N_2$ is. De formule van deze nullcline is: 
@@ -1199,11 +1286,105 @@ Mogelijkheid 3: De tijdstap is niet continu. Zoals we in @sec-exp zagen zorgt ee
 **e.**
 Ze gaan altijd horizontaal door de nullcline van de verticale as en verticaal door de nullcline van de verticale as. Dit is zo omdat de verandering in de populatie op de verticale as 0 is als deze door de nullcline heen gaat. Hierdoor veranderd alleen de horizontale waarde en is de beweging dus horizontaal. En andersom natuurlijk voor de andere as. 
 
+
+@exr-vectorveld
+**a.**
+Je kan zien dat er een evenwicht is in het midden, waar er geen pijltjes zijn (de populaties veranderen niet meer). Als er een evenwicht ontstaat met beide populaties hebben we sterkere intraspecifieke competie.
+
+**b.**
+Nee dat kan niet, want voor elke waarde van X en Y krijg je een specifieke hoeveelheid groei van X en Y. Je gaat dus altijd dezelfde kant op. Dit zou in het vectorveld eruit zien als 1 punt waar 2 pijltjes uit komen, maar deze zijn er natuurlijk dus niet. 
+
+
+
+**c.**
+Als twee lijnen elkaar snijden zou dit betekenen dat ze op het snijpunt daarna twee verschillende kanten op gaan. Maar in **b** zeiden we dat op elk punt maar 1 mogelijke richting is waarin de populatie zich kan bewegen. 
+
+*LET OP: je kan wel een aantal snijdende vectoren zien, maar dit zijn niet snijpunten van de trajectories. De vectoren geven alleen aan hoe "snel" de populatie veranderd in dat punt.*
+
+**d.**
+Mogelijkheid 1: Er is geen ruis in het model, maar in werkelijkheid wel. 
+
+Mogelijkheid 2: Er zijn mogelijk nog meer processen die een rol spelen in de verandering van de populaties. Hierdoor kan het lijken alsof de populaties weer op hetzelfde punt zijn beland, maar eigenlijk is de situatie toch anders waardoor ze anders kunnen reageren. Twee populaties met allebei te weinig eten zullen waarschijnlijk afnemen, maar als er meer eten wordt toegevoegd kunnen ze met dezelfde populatiegroottes mogelijk toenemen. Hier kunnen we in ons 2D systeem nog geen rekening mee houden. 
+
+Mogelijkheid 3: De tijdstap is niet continu. Zoals we in @sec-exp zagen zorgt een te grote tijdstap er voor dat er chaotisch gedrag kan ontstaan. Mogelijk schiet de populatie te verder over een nullcline heen dan verwacht. Dit kan bijvoorbeeld gebeuren in een populatie die niet continu voortplanten, maar bijvoorbeeld maar 1 keer per jaar. 
+
+
+**e.**
+Ze gaan altijd horizontaal door de nullcline van de verticale as en verticaal door de nullcline van de verticale as. Dit is zo omdat de verandering in de populatie op de verticale as 0 is als deze door de nullcline heen gaat. Hierdoor veranderd alleen de horizontale waarde en is de beweging dus horizontaal. En andersom natuurlijk voor de andere as. 
+
 @exr-evenwichtentraj
+**a.**
+![](figuren/competitie_ant_exr_draw_20.3a.png)
+
+Het eerste evenwicht is stabiel, het tweede evenwicht is instabiel en het derde punt is een zadelpunt. 
+
+**b.**
+![](figuren/competitie_ant_exr_draw_20.3b.png)
+
+Omdat het eerste punt stabiel is gaat de trajectorie direct righting het evenwicht. Punt 2 is instabiel en de trajectorie gaat naar de oorsprong. Punt 3 is een zadelpunt, dus de trajectorie gaat eerst richting het zadelpunt en daarna Y=2 en X=0, zoals getekend, of naar Y=0 en X=2. 
+
+**c.**
+![](figuren/competitie_ant_exr_draw_20.3c.png)
 
 @exr-cheatandcoop
+**a.**
+$C_2$ is de cheater, omdat zijn populatie toeneemt als de populatie van $C_1$ toeneemt. $C_2$ heeft dus iets aan $C_1$ terwijl $C_1$ niks aan $C_2$ heeft. 
+
+**b.**
+Dit is de dichtheidsafhankelijkheid, hoe meer individuen hoe minder ze kunnen groeien. Dit is eigenlijk hoeveel individuen van beide populaites samen de omgeving kan ondersteunen. Omdat ze allebei even veel ruimte in beslag nemen hebben ze allebei even veel invloed op deze factor. 
+
+Deze term zorgt dus voor competitie tussen de twee soorten. Door ze een gedeelde carrying capacity te geven kunnen we onderzoeken wanneer ze kunnen samenleven.
+
+**c.*** 
+Als we een grid van 100x100 hokjes hebben, dan zijn er in totaal 10,000 hokjes. Als deze allemaal gevuld zijn en $C_1+C_2$ dus 10,000 is, dan moet $1-\frac{C_1+C_2}{K}$ gelijk zijn aan 0. Want op het moment dat alle hokjes gevuld zijn moet de populatiegroei volledig gestopt zijn: 
+$$1-\frac{C_1+C_2}{K}=0$$
+$$1=\frac{C_1+C_2}{K}$$
+$$K=C_1+C_2=10000$$
+K is dus gelijk aan 10,000. (Dit is niet helemaal exact omdat we de death rate $d$ nu niet hebben meegenomen) 
+
+**d.**
+Het evenwicht bij (0,0) is stabiel, omdat de "pijltjes" naar dit punt wijzen. Een kleine verandering in de populaties zal er dus voor zorgen dat ze weer terugkeren naar (0,0). 
+
+**e.**
+Als je met heel veel van beide soorten begint zullen beide soorten eerst afnemen en daarna zal weer alleen C1 overleven. 
+
+
+**f.**
+Als je met heel weinig van beide soorten begint zullen beide sterven.
+
+(De oranje nullcline moet namelijk verticaal omhoog doorkruist worden en dit is niet mogelijk als het vectorveld naar rechtsonder wijst.)
+
+**g.**
+Het evenwicht is nu instabiel. 
+
+**h.**
+In alle gevallen zullen beide populaties uitsterven. De cheaters groeien namelijk sneller dan de cooperators, waardoor ze de cooperators tot uitsterven drijven. Echter hebben ze de cooperators wel nodig en zullen ze daarna dus ook zelf uitsterven. 
+
+**i.** 
+De enige mogelijkheid waarin beide populaties overleven is als hun groeisnelheden even groot zijn. Dan blijft de populatie ergens op de nullcline hangen. Dit is echter niet heel aannemelijk en een kleine verandering in de groeisnelheid zal dit evenwicht al verbreken. 
+
+**j.**
+Omdat in het individual-based  model er een limiterende factor van ruimte was. Hier kunnen de populaties zo groot worden dat ze de andere verdringen, maar in het individual-based model zijn er altijd gaten van gestorven individuals die gevuld kunnen worden. 
+
+We zagen dat bij gemengde condities geen coexistentie was, dit komt meer overeen met de ODE, want 1 van de aannames van een ODE is dat de populaties goed gemengd zijn. 
 
 @exr-parfitting
+**a.** 
+Het experiment duurde maar 18 dagen zoals te zien is in @fig-gause
+
+**b.**
+De waardes die Gause (r=0.794 en K=64) had gevonden werken erg goed. 
+
+**c.**
+Ook met weinig decimalen kom je al erg ver, maar je weet dan niet per se hoe goed de fit is. 
+
+
+**d.**
+Dit zijn de parameters waarop R "trial and error" op uit gaat proberen, de *vrije parameters*. Deze zullen dus aangepast worden totdat de beste fit is gevonden. 
+
+**e.**
+De resultaten zijn nagenoeg hetzelfde met slechts kleine verschillen als je in **b.** een beetje goede waardes had gevonden. Dit hoeft echter niet altijd zo te zijn, omdat het regelmatig voor komt dat meerdere zeer verschillende fits mogelijk zijn op dezelfde dataset. 
+
 
 ## Antwoorden @sec-evolutie {.unnumbered}
 
