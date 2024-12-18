@@ -8,11 +8,11 @@ We hebben in het eerste onderdeel al een beetje kennis gemaakt met variabelen, d
 
 -   *Logicals* (`TRUE` en `FALSE`, ook wel `T`/`F` of `1`/`0`)
 
--   *Strings* (`"a"`, `"Hoi"`, of `"bananen zijn krom"`)
+-   *Strings* (`"a"`, `"Hoi"`, `"ATGCTAT"`, of `"Dit is een zin"`)
 
 ## Geen appels en peren vergelijken
 
-In R kun je berekeningen uitvoeren, maar je kan natuurlijk geen appels en peren vergelijken. Bekijk bijvoorbeeld devolgende code:
+In R kun je berekeningen uitvoeren, maar je kan natuurlijk geen appels en peren vergelijken. Bekijk bijvoorbeeld de volgende code:
 
 ```{r}
 #| eval: false
@@ -39,29 +39,21 @@ if(leeftijd_student >= 18){
 }
 ```
 
-Om voorwaarden te controleren, gebruik je zoheten **conditionals**, die teruggeven of iets waar (`TRUE`) of niet waar (`FALSE`) is. Hierboven gebruiken we `>=` (groter dan of gelijk aan) om te controleren of de student minstens 18 jaar oud is. Veelgebruikte andere conditionals zijn:
+Om voorwaarden te controleren, gebruik je zogeheten **conditionals**, die teruggeven of iets waar (`TRUE`) of niet waar (`FALSE`) is. Hierboven gebruiken we `>=` (groter dan of gelijk aan) om te controleren of de student minstens 18 jaar oud is. Veelgebruikte conditionals zijn:
 
 -   `a == b` : TRUE als a gelijk is aan b
-
-<!-- -->
-
 -   `a != b` : TRUE als a niet gelijk is aan b
-
 -   `a > b` : TRUE als a is groter is dan b
-
 -   `a < b` : TRUE als a is kleiner is dan b
-
 -   `a >= b` : TRUE als a is groter is dan of gelijk is aan b
-
 -   `a <= b` : TRUE als a is kleiner is dan of gelijk is aan b
 
 Daarnaast kun je eventueel meerdere condities combineren:
 
 -   `a==b & b!=c` : TRUE als a gelijk is aan b en b **niet** gelijk is aan c
-
 -   `a<b | b>c` : TRUE als a kleiner is dan b en b groter is dan c
 
-Als laatste kun je nog veel meer combinaties controleren door `if`-`else` elkaar op te laten volgen en te nesten. Als we bijvoorbeeld twee dobbelsteenworpen simuleren, kunnen we precies controleren welke dobbelsteen hoger is dan 4, en een voor ieder scenario een unieke uitkomst maken:
+Als laatste kun je nog veel meer combinaties controleren door `if`-`else` elkaar op te laten volgen en te nesten. Als we bijvoorbeeld twee dobbelsteenworpen simuleren, kunnen we precies controleren welke dobbelsteen hoger is dan 4:
 
 ```{r}
 #| eval: false
@@ -87,7 +79,7 @@ Het is vaak heel handig om je variabelen in lijsten of tabellen op te slaan. Der
 
 -   *Vectors* (lijst van elementen van hetzelfde type)
 
--   *Macrices* (tabel van elementen van hetzelfde type)
+-   *Matrices* (tabel van elementen van hetzelfde type)
 
 -   *Dataframes* (tabel waarin elke kolom een ander type data kan zijn)
 
@@ -183,7 +175,18 @@ datatable(biologen, options = list(searching=F, pageLength = 3,lengthChange = FA
 
 <br>Als je deze dataset wil bekijken in Rstudio, kun je `View(biologen)` typen. Dit opent een tabblad waarin je de data kan verkennen en sorteren (voor grotere datasets is dit natuurlijk erg handig!).
 
-Het natuurlijk meestal niet handig om handmatig data frames in te typen in R. In plaats daarvan kun je grote datasets vaak opslaan of downloaden in een groot tekstbestand, bijvooreeld in *comma-seperated-value* (csv) bestanden. Als je een dergelijk tekstbestand hebt, kun je deze inlezen met de functie `read.table` of `read.csv`:
+Het natuurlijk meestal niet handig om handmatig data frames in te typen in R. In plaats daarvan kun je grote datasets vaak opslaan of downloaden in een groot tekstbestand, bijvooreeld in *comma-seperated-value* (csv) bestanden. Een voorbeeld van de eerste paar regels van een dergelijk csv-bestand, zie je hieronder.
+
+```
+datapunt,week,maand,jaar,positieve_testen
+1,1,10,2021,221
+2,2,10,2021,271
+3,3,10,2021,344
+4,4,10,2021,507
+5,5,10,2021,514
+```
+
+Als je een dergelijk tekstbestand op je computer hebt opgeslagen, kun je deze inlezen met de functie `read.table` of `read.csv`:
 
 ```{r}
 #| eval: false
@@ -228,7 +231,7 @@ Omdat in data frames de kolommen namen hebben, kun je ook deze gebruiken om spec
 
 ```{r}
 #| eval: false
-biologen[1,"leeftijd"] #identiek aan biologen[1,2], maar duidelijker wat je selecteert
+biologen[1,"leeftijd"] #identiek aan biologen[1,2], maar het is wat duidelijker wat je selecteert
 ```
 
 Je kunt met dataframes ook met het dollar-teken een gehele kolom opvragen, een kolom bewerken, of een kolom toevoegen:
@@ -236,7 +239,7 @@ Je kunt met dataframes ook met het dollar-teken een gehele kolom opvragen, een k
 ```{r}
 #| eval: false
 biologen$leeftijd
-biologen$leeftijd <- biologen$leeftijd + 1  # Alle biolgen zijn 1 jaar ouder geworden
+biologen$leeftijd <- biologen$leeftijd + 1  # De leeftijd van alle biologen wordt met 1 verhoogd
 biologen$rol <- c("student","assistent","docent") # Een nieuwe kolom genaamd 'rol'
 ```
 
@@ -257,7 +260,7 @@ datatable(biologen, options = list(searching=F, pageLength = 3,lengthChange = FA
 
 ## Selecteren uit een dataframe
 
-Je kunt condities ook gebruiken op vectoren. Dit geeft dan een vector van dezelfde lengte, met voor elke positie of aan de conditie voldaan wordt. Als we bijvoorbeeld de zelf-gemaakte biologen-dataframe nog eens bekijken, dan kunnen we een vector maken die voor de leeftijd-kolom zegt wie er jonger is dan 20:
+Je kunt ook bovengenoemde *conditionals* (groter dan, gelijk aan, *etc.*) gebruiken op vectoren. Dit geeft dan een vector van dezelfde lengte, met voor elke positie of aan de conditie voldaan wordt. Als we bijvoorbeeld de zelf-gemaakte biologen-dataframe nog eens bekijken, dan kunnen we een vector maken die voor de leeftijd-kolom zegt wie er jonger is dan 20:
 
 ```{r}
 #| eval: false
@@ -275,20 +278,19 @@ Met deze vector kunnen we dan selectie maken uit een dataframe. Weet je nog dat 
 biologen[jong,] # alleen biologen jonger dan 20
 ```
 
-Dit is natuurlijk vooral handig als je een grotere dataset hebt, zoals de bovengenoemde covid-data. 
+Dit is natuurlijk vooral handig als je een grotere dataset hebt, zoals de bovengenoemde covid-data. Met een dergelijke dataset is het niet handig om handmatig aan te geven welke rijen je wil behouden!
 
 ## Files, paden, en de 'working directory'
 
-Om (zoals hierboven) een bestand in te kunnen lezen, moet Rstudio wel weten waar het bestand staat. Op computers staan alle bestanden in een hierachische structuur (zie bijvoorbeeld onderstaande Figuur). Hoewel je misschien gewend bent om door deze structuur van "mappen" te klikken met de muis, moet je in een script altijd precies vertellen waar het bestand staat. Standaard zoekt Rstudio vaak in de home directory van je besturingsysteem (`/Users/Naam` in MacOs, `C:/Users/UserName/Documents` in Windows). De directory vanuit waar Rstudio naar het bestand zoekt, heet de *Working Directory* (rood omlijnd in de figuur). Door de Working Directory goed in te stellen, hoef je niet elke keer het hele pad naar het bestand in te typen (dit heet het absolute pad), maar kun je korter omschrijven waar het bestand staat (dit heet het relatieve pad). Vaak is het dus handig om je Working Directory aan te passen naar dezelfde map waar je het script hebt opgeslagen, zodat je alle data, scripts, en grafieken een beetje bij elkaar kan houden. Dit kan je doen door, nadat je je script ergens hebt opgeslagen, te navigeren naar `Session > Set Working Directory > To Source File Location`.
+Om (zoals hierboven) een bestand in te kunnen lezen, moet Rstudio wel weten waar het bestand staat. Op computers staan alle bestanden in een hierachische structuur (zie bijvoorbeeld onderstaande Figuur). Hoewel je misschien gewend bent om door deze structuur van "mappen" te klikken met de muis, moet je in een script altijd precies vertellen waar het bestand staat. Standaard zoekt Rstudio vaak in de home directory van je besturingsysteem (`/Users/Naam` in MacOs, `C:/Users/UserName/Documents` in Windows). De directory vanuit waar Rstudio naar het bestand zoekt, heet de *Working Directory* (rood omlijnd in de figuur). Door de Working Directory goed in te stellen, hoef je niet elke keer een heel lang pad (dit heet het absolute pad) naar het bestand in te typen, maar kun je met een korter pad omschrijven waar het bestand staat (dit heet het relatieve pad). Vaak is het dus handig om je Working Directory aan te passen naar dezelfde map waar je het script hebt opgeslagen, zodat je alle data, scripts, en grafieken een beetje bij elkaar kan houden. Dit kan je doen door, nadat je je script ergens hebt opgeslagen, te navigeren naar `Session > Set Working Directory > To Source File Location`, of door rechts te klikken op je script-naam bovenin het script-venster, en `Set Working Directory` te kiezen.
 
 ![Om te programmeren moet je weten waar bestanden (*files*) staan opgeslagen. Je kunt deze files vinden door het juiste pad (*paths*) te typens ](figuren/file_tree.png){#fig-filesandpaths}
-
 
 ## Functies, condities, en loops
 
 ### Functies en help-functie {#sec-functies}
 
-In het onderdeel @sec-vectoren heb je al een aantal voorbeelden gezien van functies, herhaalbare blokjes code die je gemakkelijk kan aanroepen. Functie hebben een `input` (waarde(n) die je meegeeft als zogeheten *argumenten*), en `output` (waarde(n) die het terug geeft, de *return*-waarde). Er bestaan standaard in R een heleboel functies, waarvan je een aantal in deze cursus nog veel zal tegenkomen:
+In het onderdeel @sec-vectoren heb je al een aantal voorbeelden gezien van functies, herhaalbare blokjes code die je gemakkelijk kan aanroepen. Functies hebben een `input` (waarde(n) die je meegeeft als zogeheten *argumenten*), en `output` (waarde(n) die het terug geeft, de *return*-waarde). Er bestaan standaard in R een heleboel functies, waarvan je een aantal in deze cursus nog veel zal tegenkomen:
 
 -   `read.csv`, leest comma-separated-values bestand in als dataframe
 -   `print` of `cat`, geeft iets (variabelen of tekst) weer in de console
@@ -308,7 +310,7 @@ Er zijn nog veel meer standaard functies in R. Als je graag meer wil eten over h
 ?mean
 ```
 
-Dit geeft extra uitleg voor deze functie in het "Help" venster:
+Dit geeft extra uitleg voor deze functie in het "Help" venster (rechtsonderin @fig-rstudiolayout).
 
 ![De help-functie in Rstudie kan je altijd vertellen wat een bepaalde functie doet, als je ```?functienaam``` typt](figuren/Screenshot%202024-07-20%20at%2017.58.11.png){#fig-helpinR}
 
