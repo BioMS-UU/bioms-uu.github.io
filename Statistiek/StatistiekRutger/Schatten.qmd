@@ -226,7 +226,7 @@ We komen hier later op terug.
 ## Een statistisch model voor herhaalde experimenten met meetfouten
 
 Een andere situatie die binnen de biologie veel voorkomt
-is dat we geinteresseed zijn in een bepaalde grootheid
+is dat we geïnteresseed zijn in een bepaalde grootheid
 en die door middel van een experiment proberen te meten.
 Je kunt bijvoorbeeld denken aan de groeisnelheid van een bepaalde bacterie in een specifiek medium,
 of de activiteit van een bepaald enzym.
@@ -297,29 +297,29 @@ We willen graag een schatting maken van het gemiddelde van deze normale verdelin
 
 Daarom berekenen we het gemiddelde van de steekproef,
 $$
-\overline{X} = \frac{\sum_{i=1}^n X_i}{n}.
+\mean{X} = \frac{\sum_{i=1}^n X_i}{n}.
 $$
 
 Het is belangrijk te beseffen dat het gemiddelde van de steekproef
-$\overline{X}$ zelf ook een kansvariabele is.
+$\mean{X}$ zelf ook een kansvariabele is.
 Als je meedere keren op dezelfde manier een steekproef zou uitvoeren 
 en steeds het steekproefgemiddelde zou uitrekenen,
-dan zou je steeds een ander gemiddelde vinden.
+dan zou je namelijk steeds een ander gemiddelde vinden.
 
 Het steekproefgemiddelde is een nauwkeurige schatter van $\mu_X$,
-want *gemiddeld* is $\overline{X}$ precies $\mu_X$. 
+want *gemiddeld* is $\mean{X}$ precies $\mu_X$. 
 Je kunt dit zelf nagaan met wat je in geleerd hebt in hoofdstuk
 ?? (Optellen van meerdere kansvariabelen). Ga maar na:
 $$
-\mathbb{E}\left(\overline{X}\right) = \frac{\sum_{i=1}^n \mathbb{E}(X_i)}{n} = \frac{n \mu_X}{n} = \mu_X.
+\mathbb{E}\left(\mean{X}\right) = \frac{\sum_{i=1}^n \mathbb{E}(X_i)}{n} = \frac{n \mu_X}{n} = \mu_X.
 $$
-De schatter $\overline{X}$ heeft dus geen *systematische* fout,
+De schatter $\mean{X}$ heeft dus geen *systematische* fout,
 maar wel een *toevallige* fout. 
 Kunnen we iets zeggen over hoe groot die toevallige fout is?
 
-Om dit te verhelderen zullen we het proces eens simuleren.
+Om dit te verhelderen is het nuttig om het nemen van een steekproef te simuleren.
 Stel dat het gemiddelde van $X$ in de populatie gelijk is aan $\mu_X = 100$,
-met een standaarddeviatie $\sigma_X = 10$.
+met een standaarddeviatie $\sd{X} = 10$.
 Dan ziet de verdeling van de populatie er dus zo uit:
 
 ::: {.todo-box}
@@ -327,7 +327,36 @@ Plot van een normale verdeling met gemiddelde 100 en standaarddeviatie 10.
 Label van de x-as: $X$. Label van de y-as: kansdichtheid $Pr(X)$.
 ::: 
 
-In de praktijk weten we $\mu_X$ en $\sigma$ niet,
+```{r, fig.width = 5, fig.height = 3}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Een normaalverdeelde populatie met gemiddelde 100 en standaarddeviatie 10."
+#| label: fig-populatie
+
+# Load ggplot2 (ensure it is loaded only when necessary)
+if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
+
+# Parameters for the normal distribution
+m <- 100
+s <- 10
+xval <- seq(70, 130, 1)
+pval <- dnorm(xval, mean = m, sd = s)
+data <- data.frame(xval, pval)
+
+# Plot the normal distribution with axis labels and fill color
+ggplot(data, aes(x = xval, y = pval)) +
+  geom_area(fill = "orange", alpha = 0.7) +  # Fill with color and transparency
+  geom_line(color = "black", size = 0.5) +      # Line for the curve
+  labs(
+    x = expression(italic(X)),
+    y = "kansdichtheid",
+    title = ""
+  ) +
+  theme_minimal()
+
+```
+
+In de praktijk weten we $\mu_X$ en $\sd{X}$ niet,
 maar zien we alleen één steekproef uit de populatie.
 Laten we als voorbeeld $n = 20$ individuen uit de populatie trekken
 en een histogram opstellen van de meetwaarden.
@@ -335,16 +364,58 @@ In figuur ??(a) is zo'n histogram weergegeven.
 In de figuur is ook het gemiddelde van de steekproef aangegeven
 met een vertikale lijn.
 
-::: {.todo-box}
-Creeer drie keer een random sample met $n = 20$ uit de kansverdeling hierboven. 
-Maak er steeds een histogram van.
-Geef steeds het gemiddelde aan met een vertikale lijn.
-Dit figuur krijgt dus 3 panels: (a), (b), en (c).
+```{r}
+#| fig-width: 9
+#| fig-height: 3
+#| fig-cap: "Histogrammen van drie steekproeven van 10 eenheden, met verticale lijnen voor de steekproefgemiddelden."
+#| label: fig-steekproef-meer
+#| code-fold: true
+#| warning: false
 
-Label van de x-as: $X$. Label van de y-as: absolute frequentie.
-Gebruik dezelfde schaal op de x-as als bij de andere figuur hierboven.
+# Load ggplot2 (ensure it is loaded only when necessary)
+if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
 
-::: 
+# Parameters for the normal distribution
+m <- 100
+s <- 10
+set.seed(124)  # For reproducibility
+
+# Generate three samples of size 10
+sample_size <- 10
+sample1 <- rnorm(sample_size, mean = m, sd = s)
+sample2 <- rnorm(sample_size, mean = m, sd = s)
+sample3 <- rnorm(sample_size, mean = m, sd = s)
+
+# Combine samples into one data frame with labels
+samples <- data.frame(
+  x = c(sample1, sample2, sample3),
+  group = rep(c("(a)", "(b)", "(c)"), each = sample_size)
+)
+
+# Calculate sample means for each group
+sample_means <- aggregate(x ~ group, data = samples, FUN = mean)
+
+# Plot histograms in three panels with vertical lines for sample means
+ggplot(samples, aes(x = x)) +
+  geom_histogram(
+    binwidth = 2, fill = "orange", alpha = 0.7, color = "black", size = 0.5
+  ) +
+  facet_wrap(~group, nrow = 1) +  # Arrange panels in a single row
+  geom_vline(
+    data = sample_means,
+    aes(xintercept = x),
+    color = "red", linetype = "dashed", size = 1
+  ) +
+  xlim(80, 120) +  # Consistent x-axis limits
+  labs(
+    x = expression(italic(X)),  # LaTeX-style X-axis label
+    y = "frequentie"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(face = "bold")  # Style the panel labels
+  )
+```
 
 Het is duidelijk dat de waarde van het steekproefgemiddelde
 dat we vinden
@@ -353,29 +424,34 @@ Als we opnieuw een steekproef uitvoeren uit dezelfde population
 vinden we net andere waarden
 en dus ook een ander gemiddelde.
 Figuur ??(b) en (c) laten twee willekeurige andere steekproeven zien, 
-ieder met hun eigen gemiddelde $\overline{X}$.
+ieder met hun eigen gemiddelde $\mean{X}$.
 
-Als iedere steekproef een andere waarde van $\overline{X}$ geeft
+Als iedere steekproef een andere waarde van $\mean{X}$ geeft
 en dus ook een andere schatting voor $\mu_X$,
 dan is de belangrijkste vraag:
-Hoe ver ligt $\overline{X}$ typisch van $\mu_X$ af?
-Als $\overline{X}$ bij een steekproef van $n = 20$
+Hoe ver ligt $\mean{X}$ typisch van $\mu_X$ af?
+Als $\mean{X}$ bij een steekproef van $n = 20$
 typisch heel ver van $\mu_X$ afligt,
 dan is een schatting op basis van zo'n steekproef blijkbaar erg onzeker.
-Als $\overline{X}$ typisch heel dicht bij $\mu_X$ ligt,
+Als $\mean{X}$ typisch heel dicht bij $\mu_X$ ligt,
 dan is die schatting blijkbaar juist heel precies.
 
 Om daar meer van te begrijpen
 stellen we ons nu voor dat we keer op keer een steekproef trekken
 met steekproefgrootte $n = 20$
-en elke keer opnieuw het gemiddelde $\overline{X}$ uitrekenen.
+en elke keer opnieuw het gemiddelde $\mean{X}$ uitrekenen.
 Vervolgens tekenen we een histogram van alle steekproefgemiddelden die we gevonden hebben.
 We kunnen dit weer simuleren in de computer;
 het resultaat staat in figuur ??.
 
-::: {.todo-box}
-Genereer 10^4 steekproeven met $n = 20$. 
+.todo-box}
+Genereer 10^4 steekproeven met $n = 10$. 
 Bereken de gemiddelden en maak er een histogram van.
+
+Voeg een lijn met een normale verdeling toe om te laten zien
+dat de steekproevenverdeling van het gemiddelde zelf een normale verdeling is.
+
+Herhaal dit met $n = 50$ en $n = 100$. De drie figuren worden panels (a), (b), en (c).
 
 Label $x$-as: "steekproefgemiddelde $\overline{X}$".
 
@@ -384,20 +460,178 @@ Label $y$-as: frequentie.
 Gebruik dezelfde schaal op de x-as als bij de andere figuren hierboven.
 :::
 
-Het figuur geeft de verdeling weer van steekproefgemiddelden.
-We noemen dit daarom de **steekproevenverdeling van het gemiddelde**.
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Steekproevenverdelingen voor $n = 10$, $n = 40$, en $n = 100$."
+#| label: fig-steekproevenverdelingen
+#| fig-height: 2.5
+#| fig-width: 9
+
+# Load libraries
+if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
+
+# Parameters
+nrep <- 10^4
+nvals <- c(10, 40, 100)
+m <- 100
+s <- 10
+binwidth <- 1  # Bin width for histograms
+
+# Simulate sample means
+sampleMeans <- matrix(nrow = nrep, ncol = length(nvals))
+for (i in 1:length(nvals)) {
+  for (j in 1:nrep) {
+    sam <- rnorm(nvals[i], m, s)
+    sampleMeans[j, i] <- mean(sam)
+  }
+}
+
+# Convert to long-format data frame for faceting
+sampleMeans <- data.frame(
+  x = c(sampleMeans[, 1], sampleMeans[, 2], sampleMeans[, 3]),
+  group = factor(rep(c("n = 10", "n = 40", "n = 100"), each = nrep),
+                 levels = c("n = 10", "n = 40", "n = 100"))  # Set natural order
+)
+
+# Standard deviations for each group
+sds <- c(s / sqrt(nvals[1]), s / sqrt(nvals[2]), s / sqrt(nvals[3]))
+scaling_factor <- nrep * binwidth
+
+# Plot the histograms with scaled normal curves
+ggplot(sampleMeans, aes(x = x)) +
+  geom_histogram(binwidth = binwidth, fill = "orange", color = "black", alpha = 0.7, size = 0.5) +
+  stat_function(
+    fun = function(x) dnorm(x, mean = m, sd = sds[1]) * scaling_factor, 
+    color = "red", size = 1, data = subset(sampleMeans, group == "n = 10")
+  ) +
+  stat_function(
+    fun = function(x) dnorm(x, mean = m, sd = sds[2]) * scaling_factor, 
+    color = "red", size = 1, data = subset(sampleMeans, group == "n = 40")
+  ) +
+  stat_function(
+    fun = function(x) dnorm(x, mean = m, sd = sds[3]) * scaling_factor, 
+    color = "red", size = 1, data = subset(sampleMeans, group == "n = 100")
+  ) +
+  facet_wrap(~group, nrow = 1, scales = "free_y") +  # Facet into one row
+  xlim(80, 120) +
+  labs(
+    x = expression(italic(X)),
+    y = "Frequentie"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(face = "bold"),  # Bold panel labels
+    axis.text.y = element_blank(),             # Remove repeated y-axis ticks
+    axis.ticks.y = element_blank(),            # Remove y-axis ticks
+    panel.spacing = unit(1, "lines")           # Increase spacing between panels
+  )
+```
+
+Het valt je misschien op dat de steekproevenverdeling van het gemiddelde
+(fig. ??) 
+een mooie klokvorm heeft die lijkt op de normale verdeling.
+Dat klopt: als de populatie normaal verdeeeld is,
+is de steekproevenverdeling van het gemiddelde dat ook.
+Maar als je de verdeling van de populatie (fig. ??) 
+vergelijkt met de steekproevenverdeling van het gemiddelde (fig. ??)
+dan valt op dat steekproevenverdeling een veel kleinere spreiding heeft.
+(De klokvorm is bij de steekproevenverdeling smaller.)
+
+Als de verschillende gemiddelden in de steekproevenverdeling
+sterk van elkaar verschillen,
+dan is $\overline{X}$ blijkbaar een onzekere (weinig precieze) schatting.
+Daarom is de spreiding van de steekproevenverdeling 
+een maat van de onzekerheid.
+
+Intuitief zou je verwachten dat een grote steekproef
+een preciezere schatting zou moeten opleveren dan een kleine steekproef.
+Laten we daarom ook de steekproevenverdeling bepalen 
+voor een grotere steekproef van $n = 40$.
+We nemen dus weer héél veel steekproeven,
+berekenen het gemiddelde van iedere steekproef,
+en geven die gemiddelden weer in een histogram.
+Het resultaat staat in Fig. ?? (midden). 
+Zoals je ziet is de piek van de steekproevenverdeling 
+bij $n = 40$ smaller dan bij $n = 10$.
+En de verdeling wordt nog smaller als $n = 100$;
+zie Fig. ??(rechts).
+De conclusie is:
+hoe groter de steekproeven zijn,
+hoe dichter de gemiddelden van de steekproeven bij elkaar liggen,
+en hoe kleiner dus de toevallige fout is.
+**Schattingen op basis van grotere steekproeven zijn dus preciezer
+dan schattingen op basis van kleine steekproeven.**
+
+## De standaarddeviatie van het steekproefgemiddelde.
+
+We zagen net dat de spreiding van de steekproevenverdeling van het gemiddelde
+bepaalt hoe ver een typische schatting van het populatiegemiddelde ligt.
+Het is daarom nuttig om die spreiding te kwantificeren.
+Een goede maat voor de spreiding in de steekproevenverdeling van het gemiddelde
+is de standaarddeviatie van die verdeling.
+
+Hierbij komt onze kennis van kansrekenen erg van pas.
+Zoals je weet is dit de formule voor het het gemiddelde van een steekproef:
+$$
+\overline{X} = \frac{\sum_{i = 1}^n X_i}{n}.
+$$
+In de teller staat de som van de waarnemingen.
+Dat isdus een som van kansvariabelen. 
+Volgens ons statistisch model waren die kansvariabelen bovendien onafhankelijk van elkaar.
+In hoofdstuk ?? hebben we geleerd dat de variantie
+van een som van onafhankelijke kansvariabelen
+gelijk is aan de som van de varianties.
+Dat kunnen we hier perfect toepassen!
+Hieruit volgt dat
+$$
+\var{\overline{X}} = \frac{\var{\sum_{i = 1}^n X_i}}{n^2} =\frac{n \sigma_X^2}{n^2} = \frac{\sigma_X^2}{n}.
+$$
+
+De standaarddeviatie van de steekproevenverdeling van het gemiddelde
+noteren we als $\sigma_\overline{X}$. Deze is simpelweg de wortel van de variantie, en wordt dus
+$$
+\sigma_\overline{X} = \frac{\sigma_X}{\sqrt{n}}.
+$$
+Dit is een belangrijk resultaat!
+Het bewijst wat we in figuur xx al hadden gezien:
+dat de standaarddeviatie van de steekproevenverdeling kleiner wordt
+als $n$ groter wordt. 
+Maar nu weten we precies in welke mate dat gebeurt:
+in de noemer van vergelijking ?? staat namelijk $\sqrt{n}$.
+Dat wortelteken heeft grote consequenties.
+Het gevolg daarvan is dat
+als we de standaarddeviatie 2 keer zo klein willen maken
+we een 4 keer zo grote steekproef nodig hebben.
+En als we de standaarddeviatie 10 keer zo klein willen maken
+hebben we een 100 keer zo grote steekproef nodig.
+Helaas loop je op deze manier al snel tegen de grenzen aan 
+van wat haalbaar is.
+
+Wat hebben we met al dit rekenwerk bereikt?
+We weten nu dat het gemiddelde van de steekproeven normaal verdeeld is
+met gemiddelde $\mu_\overline{X}$ en standaarddeviatie $\sigma_{\overline{X}}$.
+We hebben bovendien geleerd dat bij een normale verdeling ongeveer
+67% van de waarnemingen binnen één standaarddeviatie van het gemiddelde ligt,
+en ongeveer 95% binnen twee standaarddeviatie.
+Daaruit kunnen we concluderen dat een gemiddelde van een steekproef
+met ongeveer 95% zekerheid binnen $2 \sigma_{\overline{X}}$
+van de ware populatieparameter $\mu$ afligt.
+Andersom betekent dit dat met ongeveer 95% zekerheid $\mu$ binnen 
+$2 \sigma_{\overline{X}}$ van $\overline{X}$ afligt.
 
 
-
-## De variantie van het steekproefgemiddelde
 
 ## BHI als de variantie van de populatie bekend is
 
-$X$ is normaal verdeeld met standaarddeviatie $\sigma$ en gemiddelde $\mu$. $\mu$ is onbekend.
+We hebben nu alle theorie op een rijtje
+om af te gaan leiden hoe je het BHI van een gemiddelde kunt berekenen.
 
-$\mean{X}$ is normaal verdeeld met standaarddeviatie $\sd{\mean{X}} = \sigma(X)/\sqrt{n}$.
+$X$ is normaal verdeeld met standaarddeviatie $\sd{X}$ en gemiddelde $\mu_X$. $\mu_X$ is onbekend.
 
-$Z = \frac{\mean{X} - \mu}{\sd{\mean{X}}}$ is standaard-normaal verdeeld. 
+$\mean{X}$ is normaal verdeeld met standaarddeviatie $\sd{\mean{X}} = \sd{X}/\sqrt{n}$.
+
+$Z = \frac{\mean{X} - \mu_X}{\sd{\mean{X}}}$ is standaard-normaal verdeeld. 
 
 Kritieke waarde van de standaard-normale verdeling:
 $$    
