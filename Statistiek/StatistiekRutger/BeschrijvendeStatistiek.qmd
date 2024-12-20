@@ -577,26 +577,26 @@ hist(NHANES$Weight[NHANES$AgeMonths < 150], breaks = 30)
 :::
 
 
-## De cumulatieve verdeling van een variabele
+## De cumulatieve verdeling van een variabele {#sec-cumul}
 
 De **cumulatieve verdeling** van een variabele
 laat zien welk deel van de waarnemingen kleiner of gelijk is
 aan een bepaalde waarde. 
+We leggen dit uit aan de hand van een voorbeeld.
+
+::: {#exm-cumul-weight}
+
+## De cumulatieve verdeling van lichaamsgewicht
 
 In @fig-cumul is als voorbeeld de cumulatieve verdeling van `Weight` (lichaamsgewicht) weergegeven
 (de <span style="color:darkorange;">oranje</span> curve).
 Voor elk lichaamsgewicht op de $x$-as geeft de $y$-as
-aan welke proportie van de waarnemingen zich onder of op die waarde bevindt.
+aan welke proportie van de waarnemingen zich onder of op die waarde bevindt;
+dat wordt wel eens de **cumulatieve proportie** genoemd.
 Je kunt uit deze grafiek bijvoorbeeld aflezen 
 (zie de <span style="color:red;">rode</span> onderbroken lijnen) 
 dat 86% van de mensen een gewicht heeft van maximaal 100kg.
 Dit betekent dat de overige 14% méér weegt dan 100 kg.
-
-De cumulatieve proportie neemt altijd toe 
-naarmate de waarde op de $x$-as groter wordt, 
-omdat dan steeds meer waarnemingen kleiner zijn dan de waarde op de $x$-as. 
-Hierdoor is de cumulatieve verdeling een stijgende functie
-die begint bij 0 (bij de kleinste waarde binnen de waarnemingen) en eindigt bij 1 (bij de grootste waarde).
 
 ```{r}
 #| code-fold: true
@@ -611,7 +611,7 @@ cumulplot <- ggplot(NHANES, aes(x = Weight)) +
   labs(
     title = "Cumulatieve verdeling van lichaamsgewicht",
     x = "Lichaamsgewicht",
-    y = "Cumulatieve frequentie"
+    y = "Cumulatieve proportie"
     ) + theme_minimal()
 
 kruising <- c(100, 0.86)
@@ -642,6 +642,15 @@ cumulplot +
     labels = function(breaks) ifelse(breaks == 0.86, "0.86", breaks)
   )
 ```
+
+:::
+
+De cumulatieve proportie neemt altijd toe 
+naarmate de waarde op de $x$-as groter wordt, 
+omdat dan steeds meer waarnemingen kleiner zijn dan de waarde op de $x$-as. 
+Hierdoor is de cumulatieve verdeling een stijgende functie
+die begint bij 0 (bij de kleinste waarde binnen de waarnemingen) en eindigt bij 1 (bij de grootste waarde).
+
 
 ## Ligging en spreiding van een verdeling
 
@@ -793,10 +802,126 @@ Over die specifieke maten zullen we het nu hebben.
 
 Maten voor de ligging van een verdeling worden ook wel **centrummaten** genoemd.
 Hieronder bespreken we drie verschillende centrummaten:
-het **gemiddelde**, de **mediaan**, en de **modus**.
+de **modus**, de **mediaan**, en het **gemiddelde**.
 Deze drie maten geven allemaal een "typische" waarde
   voor de variable,
-  maar wat met "typisch" bedoeld wordt is bij iedere maat anders.
+  maar "typisch" is bij iedere maat net anders gedefineerd.
+
+### De modus 
+
+Een veelgebruikte centrummaat is de **modus**.
+In het algemeen is de modus de waarde die het vaakst voorkomt.
+Bij numerieke variabelen komt dat overeen met de $x$-waarde 
+  die hoort bij de "piek van de verdeling".
+Als er meerdere pieken zijn, dan zijn er meerdere modi (meervoud van modus).
+Daar komen ook de woorden unimodaal, bimodaal, etc. vandaan.
+
+  
+### De mediaan
+  
+Een andere veel gebruikte centrummaat is de mediaan.
+In dit boek noteren we de mediaan van een serie waarnemingen $x_1$, $x_2$, $\ldots$ als $\tilde{x}$.
+Om de mediaan te berekenen sorteer je de waarnemingen eerst van klein naar groot.
+Als het aantal waarnemingen $n$ oneven is, 
+  dan is de mediaan het middelste getal in de gesorteerde rij.
+Als het aantal waarnemingen $n$ even is,
+  dan bestaat zo'n middelste getal niet; 
+  in dat geval nemen we het gemiddelde van de middelste *twee* getallen.
+
+::: {#exm-tentamencijfers}
+
+## De mediaan van je tentamencijfers
+
+Laten we een voorbeeld nemen.
+Stel dat je voor vijf tentamens de volgende cijfers hebt gehaald:
+
+$$7;\quad 7{,}5;\quad 1;\quad 8{,}5;\quad 9.$$
+Wat is dan de mediaan van je cijfers?
+
+We sorteren de cijfers en krijgen
+
+$$1;\quad 7;\quad {\color{orange}7{,}5};\quad 8{,}5;\quad 9.$$
+
+Het getal midden in de rij is de ${\color{orange}7{,}5}$
+en dus is de mediaan gelijk aan ${\color{orange}7{,}5}$.
+
+Als je voor het volgende tentamen een 10 haalt, 
+verandert de gesorteerde reeks als volgt:
+
+$$1;\quad 7;\quad {\color{orange}7{,}5};\quad {\color{orange}8{,}5};\quad 9; \quad 10.$$
+
+Omdat het aantal tentamencijfers nu even is, is er geen middelste getal meer.
+Als mediaan nemen we daarom het gemiddelde van de *twee* middelse getallen:
+
+$$\tilde{x}=\frac{{\color{orange}7{,}5} + {\color{orange}8{,}5}}{2} = 8.$$
+:::
+
+
+De mediaan is dus een "typische" of representatieve waarde
+in de zin dat er evenveel waarden groter zijn
+als kleiner.
+Dat hoeft bij de modus en het gemiddelde niet zo te zijn.
+
+In @sec-cumul hebben we de cumulatieve verdeling besproken.
+De mediaan is per definitie de waarde
+  waarbij de cumulatieve proportie gelijk is aan $0{,}5$.
+De mediaan kan daarom uit de cumulatieve verdeling worden afgelezen
+door de waarde op de $x$-as te bepalen
+die hoort bij een cumulatieve proportie van $0{,}5$.
+In @fig-cumul-2a is net als in @exm-cumul-weight
+de cumulatieve verdeling van de variabele `Weight` (lichaamsgewicht) weergegeven.
+Het rode kruis geeft de mediaan van lichaamsgewicht aan.
+De rode lijnen laten zien dat de cumulative proportie daar precies $0{,}5$ is.
+
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. De mediaan is met een kruis op de $x$-as aangegeven. De mediaan is gedefineerd als de waarde zodanig dat de helft van de waarnemingen kleiner is en de helft groter. Daarom bereikt de cumulatieve verdeling op dat punt precies een half."
+#| label: fig-cumul-2a
+#| fig.width: 4.5
+#| fig.height: 3.5
+
+quantiles <- quantile(
+  NHANES$Weight, 
+  probs = c(0.25, 0.5, 0.75), 
+  na.rm = TRUE
+  )
+
+cumulplot_median <- cumulplot + 
+  geom_segment(
+    aes(
+      x = 0, xend = quantiles[2], 
+      y = 0.5, yend = 0.5
+      ), 
+    linetype = "dashed", color = lijnkleur2, size = 1
+    ) +
+  geom_segment(
+    aes(
+      x = quantiles[2], xend = quantiles[2], 
+      y = 0, yend = 0.5
+      ), 
+    linetype = "dashed", color = lijnkleur2, size = 1
+    ) +
+  geom_point(
+    aes(x = quantiles[2], y = 0.5), 
+    color = lijnkleur2, size = 3
+    ) +
+  geom_point(
+    aes(
+      x = quantiles[2], y = 0), 
+    color = lijnkleur2, shape = 4, size = 3, stroke = 2
+    ) +
+  labs(
+    title = "Cumulatieve verdeling van lichaamsgewicht",
+    x = "Lichaamsgewicht",
+    y = "Cumulatiefe proportie"
+    )
+
+cumulplot_median
+
+```
+
 
 ### Het gemiddelde
 
@@ -835,20 +960,22 @@ Je hebt al lang geleden geleerd wat een gemiddelde is
 Maar waarom is het gemiddelde eigenlijk een logische manier
   om een rij cijfers samen te vatten?
 
-Één nuttig perspectief is het volgende. 
-Stel dat je voor vijf tentamens de volgende cijfers hebt gehaald:
-
-$$7;\quad 6;\quad 1;\quad 8{,}5;\quad 9.$$
-
+Een nuttig perspectief is om over het gemiddelde te denken als het *zwaartepunt* van je getallen.
+Om dat concreet te maken
+  stellen we ons weer voor dat je, 
+  net als in @exm-tentamencijfers,
+  voor vijf tentamens 
+  de volgende cijfers hebt gehaald:
+$$7;\quad 7{,}5;\quad 1;\quad 8{,}5;\quad 9.$$
 Stel je die cijfers voor als kralen die op een getallenlijn geregen zijn,
    zoals in @fig-zwaartepunt hieronder.
-Het gemiddelde is nu precies het **zwaartepunt**
+Het gemiddelde is nu precies het zwaartepunt
   van de kralen.
 Dat wil zeggen:
   als de getallenlijn in @fig-zwaartepunt een dun stokje is
   met een verwaarloosbaar gewicht, 
   en je het stokje precies met het gemiddelde op het <span style="color:darkorange;">oranje</span> driehoekje plaatst,
-  dan blijft het stokje met kralen precies in balans.
+  dan blijft het geheel precies in balans.
 
 ```{r}
 #| code-fold: true
@@ -858,7 +985,7 @@ Dat wil zeggen:
 #| fig-cap: "Het gemiddelde als het zwaartepunt van de getallen"
 #| label: fig-zwaartepunt
 # Plot de volgende getallen
-x <- c(1, 6, 7, 8.5, 9)
+x <- c(1, 7, 7.5, 8.5, 9)
 m <- mean(x)
 
 # Genereer een data frame met zowel de getallen als hun labels
@@ -899,13 +1026,28 @@ ggplot(df, aes(x = x, y = 0)) +
 
 ```
 
-Merk trouwens op dat alle cijfers een voldoende zijn,
-behalve de grote uitzondering: een 1.
-Zo'n getal dat ver buiten de rest van de reeks ligt
-noemen we een **uitbijter**.
-Uitbijters hebben een groot effect op het gemiddelde.
+Merk trouwens op dat alle tentamencijfers voldoende zijn,
+  behalve één grote uitzondering: een 1.
+Zo'n waarneming die ver buiten de rest van de reeks ligt
+  noemen we een **uitbijter**.
+Uitbijters kunnen een groot effect hebben op het gemiddelde.
 Dat zie je ook in @fig-zwaartepunt: 
-zonder die 1 zouden de kralen nooit op driehoekje balanceren.
+  doordat de 1 zo ver van de andere cijfers ligt
+  kan deze in z'n eentje als tegengewicht dienen
+  voor alle overige getallen.
+Het is duidelijk de moeite waard om deze toets te herkansen!
+
+::: {#exr-cijfer}
+
+## Gevoeligheid voor uitbijters
+
+Stel dat je het tentamen waarvoor je een 1 had gehaald
+mag herkansen.
+Je haalt voor het hertentamen een 7.
+
+  a. Wat is het effect op je gemiddelde cijfer?
+  b. Wat is het effect op de mediaan?
+:::
 
 Een ander nuttig perspectief wordt geïllustreerd in @fig-res-1 hieronder.
 Dezelfde tentamencijfers zijn nu op de *verticale* as geplot. 
@@ -1041,8 +1183,8 @@ Redigeren, en mogelijk deels verplaatsen naar een supplement.
 Intuïtief verwacht je misschien 
   dat het gemiddelde de waarde is
   die zo dicht mogelijk bij alle punten ligt.
-Dat zou betekenen dat het gemiddelde
-  de waarde is
+Dat zou betekenen dat de oranje lijn
+  precies op de hoogte ligt
   die de totale lengte van de grijze lijntjes zo kort mogelijk maakt.
 Dat is helaas *niet* het geval.
 Om dat te begrijpen, 
@@ -1052,29 +1194,32 @@ De drie tentamencijfers zijn hier één zes en twee negens.
 Het gemiddelde is natuurlijk 8
 (de <span style="color:darkorange;">oranje</span> lijn).
 De totale lengte van de grijze lijntjes
-  kun je in dit geval gemakkelijk aflezen: 
+  kun je in dit voorbeeld gemakkelijk aflezen: 
   die is $1 + 1 + 2 = 4$.
 Is dat zo kort mogelijk? Nee!
 Kijk maar eens naar de <span style="color:DarkOrchid;">paarse</span> lijn.
 De afstanden van alle punten tot die lijn
   tellen op tot $0+0+3 = 3$.
-Het gemiddelde is dus *niet* de waarde die 
-de totale lengte van de grijze lijntjes minimaliseert.
+  
+::: {.callout-important}
 
-Je kunt de positie van de paarse lijn begrijpen
+Het gemiddelde is dus *niet* de waarde die de totale afstand tot de waarnemingen minimaliseert.
+
+:::
+
+Je kunt dit begrijpen
   met behulp van een metafoor.
-Als je de positie zoekt die de som van de grijze lijntjes
+Als je de positie van de lijn zoekt die de som van de grijze lijntjes
   minimaliseert, 
   dan lijkt de situatie op een spelletje touwtrekken.
-In deze metafoor vertegenwoordigt ieder grijs lijntje een touw,
+In deze metafoor is ieder grijs lijntje een touw,
   en elk punt trekt even hard aan zijn touw
-  in een poging om de paarse lijn naar zich toe te bewegen.
-De paarse lijn zal dan altijd 
+  in een poging om de lijn naar zich toe te bewegen.
+De lijn zal dan altijd 
    in de richting van de meerderheid van de punten schuiven.
 In het voorbeeld van @fig-res-2 winnen de negens
   het touwtrekken van de zes,
   simpelweg omdat ze in de meerderheid zijn.
-
 
 Stel nu dat we de lengtes van de grijze lijntjes niet simpelweg optellen,
   maar die lengtes eerst *kwadrateren* voordat we ze optellen.
@@ -1089,6 +1234,12 @@ Het is eenvoudig aan te tonen
   die deze *kwadratensom* minimaliseert.
 Voor wie benieuwd is:
   de afleiding kun je vinden in @sec-kwadratensom.
+  
+::: {.callout-important}
+
+Het gemiddelde is dus *wel* de waarde die kwadratensom minimaliseert.
+
+:::
 
 Ook hier past een metafoor.
 In dit geval zijn de grijze lijntjes geen touwen,
@@ -1109,7 +1260,7 @@ Het gemiddelde "luistert" op die manier ook
   naar de minderheid.
 Dat zorg ervoor 
   dat de evenwichtspositie van de <span style="color:darkorange;">oranje</span>  lijn nu wél overeenkomt
-  met het gemiddelde $\mean{x}$!
+  met het gemiddelde $\mean{x}$.
   
 Als je op de middelbare school natuurkunde hebt gekozen
   dan kun je begrijpen waarom deze metafoor werkt.
@@ -1128,119 +1279,8 @@ De uiteindelijk positie van de <span style="color:darkorange;">oranje</span>  li
   is de positie met minimale potentiële energie.
 Dat is precies de positie waar de kwadratensom minimaal is,
   oftewel het gemiddelde.
-  
-### De mediaan
-  
-Een andere veel gebruikte maat is de mediaan.
-In dit boek noteren we de mediaan van een serie waarnemingen $x_1$, $x_2$, $\ldots$ als $\tilde{x}$.
-Om de mediaan te berekenen sorteer je de waarnemingen eerst van klein naar groot.
-Als het aantal waarnemingen $n$ oneven is, 
-  dan is de mediaan het middelste getal in de gesorteerde rij.
-Als het aantal waarnemingen $n$ even is,
-  dan bestaat zo'n middelste getal niet; 
-  in dat geval nemen we het gemiddelde van de middelste *twee* getallen.
 
-Als voorbeeld kijken we weer naar je tentamencijfers: 
-$$7;\quad 6;\quad 1;\quad 8{,}5;\quad 9.$$
-We sorteren de cijfers en krijgen
-$$1;\quad 6;\quad {\color{orange}7};\quad 8{,}5;\quad 9.$$
-Het getal midden in de rij is de 7 (aangegeven in <span style="color:darkorange;">oranje</span> ), en dus is de mediaan gelijk aan 7.
-
-Als je voor het volgende tentamen een 10 haalt, 
-verandert de gesorteerde reeks als volgt:
-$$1;\quad 6;\quad {\color{orange}7};\quad {\color{orange}8{,}5};\quad 9; \quad 10.$$
-
-Omdat het aantal tentamencijfers nu even is, is er geen middelste getal meer.
-Als mediaan nemen we daarom het gemiddelde van de *twee* middelse getallen
-(weer aangegeven in <span style="color:darkorange;">oranje</span> ):
-
-$$\tilde{x}=\frac{7 + 8{,}5}{2} = 7,75.$$
-De mediaan is dus net als het gemiddelde een "typische" waarde,
-maar in een andere zin: 
-de mediaan is representatief omdat er evenveel waarden groter zijn
-als kleiner.
-Dat geldt over het algemeen niet voor het gemiddelde.
-
-::: {.todo-box}
-
-Schrijven: relatie tussen mediaan en cumulatieve verdeling. Gebruik onderstaande figuur. 
-
-:::
-
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. De mediaan is met een kruis op de $x$-as aangegeven. De cumulatieve verdeling bereikt op dat punt precies een half."
-#| label: fig-cumul-2a
-#| fig.width: 4.5
-#| fig.height: 3.5
-
-quantiles <- quantile(
-  NHANES$Weight, 
-  probs = c(0.25, 0.5, 0.75), 
-  na.rm = TRUE
-  )
-
-cumulplot_median <- cumulplot + 
-  geom_segment(
-    aes(
-      x = 0, xend = quantiles[2], 
-      y = 0.5, yend = 0.5
-      ), 
-    linetype = "dashed", color = lijnkleur2, size = 1
-    ) +
-  geom_segment(
-    aes(
-      x = quantiles[2], xend = quantiles[2], 
-      y = 0, yend = 0.5
-      ), 
-    linetype = "dashed", color = lijnkleur2, size = 1
-    ) +
-  geom_point(
-    aes(x = quantiles[2], y = 0.5), 
-    color = lijnkleur2, size = 3
-    ) +
-  geom_point(
-    aes(
-      x = quantiles[2], y = 0), 
-    color = lijnkleur2, shape = 4, size = 3, stroke = 2
-    ) +
-  labs(
-    title = "Cumulatieve verdeling van lichaamsgewicht",
-    x = "Lichaamsgewicht",
-    y = "Cumulatiefe frequentie"
-    )
-
-cumulplot_median
-
-```
-
-::: {#exr-mediaan}
-
-## De mediaan als rapportcijfer
-
-::: {.todo-box}
-
-Kopieer opgave over tentamencijfers uit oude werkboek.
-
-::: 
-
-:::
-
-
-
-### De modus 
-
-Een andere maat voor de ligging van een verdeling is de **modus**.
-Hiermee wordt de uitkomst bedoeld die het vaakst voorkomt.
-
-
-Bij numerieke variabelen is dat de plek van de piek van de verdeling.
-Als er meerdere pieken zijn, dan zijn er dus meerdere modi (meervoud van modus).
-Daar komen ook de woorden unimodaal, bimodaal, etc. vandaan.
-
-
-### Wanneer gebruik je welke maat voor de ligging? 
+### Wanneer gebruik je welke centrummaat? 
 
 ::: {.todo-box}
 
@@ -1379,7 +1419,7 @@ cumulplot +
   labs(
     title = "Cumulative verdeling en drie kwartielen",
     x = "Lichaamsgewicht",
-    y = "Cumulatieve frequentie"
+    y = "Cumulatieve proportie"
     ) 
 ```
 
