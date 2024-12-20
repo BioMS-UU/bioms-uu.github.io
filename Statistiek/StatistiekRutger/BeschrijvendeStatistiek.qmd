@@ -1,5 +1,17 @@
 {{< include _macros.tex >}}
 
+```{r}
+#| eval: true
+#| echo: false
+#| output: false
+
+library(ggplot2)
+
+opvulkleur <- "darkorange"
+lijnkleur1 <- "DarkOrchid"
+
+```
+
 # Variabelen en hun verdelingen {#sec-variabelen-verdelingen}
 
 ## Beschrijvende statistiek
@@ -382,15 +394,13 @@ Veel verdelingen in de biologie hebben een klokvorm.
 
 :::
 
-
-::: {.todo-box}
-Schrijven: **uniforme verdeling**. Gebruik een sample; label de grenzen van het interval $a$ en $b$. Maak in R door een steekproef te nemen van random getallen tussen 0 en 1 met runif().  Creeer een plot met ggplot2; zie code onder voor voorbeelden.
-:::
+Een verdeling wordt **uniform** genoemd als iedere uitkomst even vaak voorkomt.
+Bijvoorbeeld, de verdeling in @fig-uniform is ongeveer uniform in het domein tussen 0 en 1.
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 3
+#| fig.width: 5
 #| fig.height: 2.5
 #| fig.cap: "Histogram van een ongeveer uniforme verdeling."
 #| label: fig-uniform
@@ -417,12 +427,9 @@ ggplot(data.frame(x = data_unif), aes(x)) +
     y = "Frequentie"   # Label voor de y-as
   ) +
   theme_minimal() +
-  theme(
-    axis.text.y = element_text(size = 9),      # Y-as-ticks en labels
-    axis.ticks.y = element_line(),             # Y-as-ticks inschakelen
-    axis.text.x = element_text(size = 9),      # X-as-ticks en labels
-    axis.ticks.x = element_line(),             # X-as-ticks inschakelen
-    panel.grid = element_blank()               # Verwijder gridlijnen
+  coord_cartesian(
+    xlim = c(-0.5, 1.5),
+    ylim = c(0, 6000)
   )
 ```
 
@@ -463,7 +470,13 @@ data_uni <- rpois(samplesize, lambda = 10)
 # Combineer gegevens en voeg een groepsvariabele toe
 data <- data.frame(
   x = c(data_uni, data_bi),
-  group = factor(rep(c("Unimodaal", "Bimodaal"), each = samplesize))
+  group = factor(
+    rep(
+      c("Unimodaal", "Bimodaal"), 
+      each = samplesize
+      ), 
+    levels = c("Unimodaal", "Bimodaal")
+    )
 )
 
 # Plot met facet_wrap
@@ -856,6 +869,14 @@ ggplot(df, aes(x = x, y = 0)) +
 
 ```
 
+Merk trouwens op dat alle cijfers een voldoende zijn,
+behalve de grote uitzondering: een 1.
+Zo'n getal dat ver buiten de rest van de reeks ligt
+noemen we een **uitbijter**.
+Uitbijters hebben een groot effect op het gemiddelde.
+Dat zie je ook in @fig-zwaartepunt: 
+zonder die 1 zouden de kralen nooit op driehoekje balanceren.
+
 Een ander nuttig perspectief wordt geïllustreerd in @fig-res-1 hieronder.
 Dezelfde tentamencijfers zijn nu op de *verticale* as geplot. 
 (De horizontale positie van de punten is willekeurig.)
@@ -952,7 +973,7 @@ ggplot(data, aes(x = x, y = y)) +
   # alternatief
   geom_segment(
     aes(x = -0.15, xend = 0.15, y = 9, yend = 9), 
-    color = "DarkOrchid", 
+    color = lijnkleur1, 
     size = 1
     ) +
   # label
@@ -983,7 +1004,8 @@ ggplot(data, aes(x = x, y = y)) +
 :::
 
 ::: {.todo-box}
-De paragraaf hieronder loopt tekstueel niet zo lekker. Redigeren! 
+De paragraaf hieronder loopt tekstueel niet zo lekker en is misschien een *distraction*. 
+Redigeren, en mogelijk deels verplaatsen naar een supplement.
 :::
 
 Intuïtief verwacht je misschien 
@@ -1029,7 +1051,9 @@ Stel nu dat we de lengtes van de grijze lijntjes niet simpelweg optellen,
 Deze som van kwadraten noemen we de **kwadratensom**.
 Als we de oranje lijn op hoogte $m$ plaatsen, 
   dan wordt de kwadratensom $\mathrm{SS}(m)$ gegeven door:
+  
 $$ \mathrm{SS}(m) = \sum_{i=1}^n \left( x_i - m\right)^2.$$
+
 Het is eenvoudig aan te tonen
   dat het gemiddelde $\mean{x}$ de waarde van $m$ is
   die deze *kwadratensom* minimaliseert.
@@ -1038,12 +1062,24 @@ Voor wie benieuwd is:
 
 Ook hier past een metafoor.
 In dit geval zijn de grijze lijntjes geen touwen,
-  maar *elastiekjes* die aan de oranje lijn zijn vastgeknoopt.
+  maar *elastiekjes*.
 Net als bij de touwtrekwedstrijd
   trekken alle punten aan de oranje lijn,
-  maar de trekkracht van elastiekjes hangt af van hoever ze worden uitgerekt.
-De oranje lijn zal hierdoor omhoog of omlaag bewegen tot de trekkrachten in evenwicht zijn.
-De evenwichtspositie van de oranje lijn is dan wél het gemiddelde $\mean{x}$!
+  en daardoor zal de oranje lijn omhoog of omlaag bewegen,
+  totdat de krachten in evenwicht zijn.
+Het essentiële verschil tussen touwen en elastiekjes
+  is het volgende.
+Bij het touwtrekken hangt de kracht waarmee een punt aan de oranje lijn trekt
+  niet af van de lengte van het touw.
+Daardoor wint altijd de meerderheid.
+Bij elastiekjes hangt de trekkracht wel af van de uitrekking.
+Punten die verder van de lijn afliggen,
+  trekken daardoor harder.
+Het gemiddelde "luistert" op die manier ook
+  naar de minderheid.
+Dat zorg ervoor 
+  dat de evenwichtspositie van de oranje lijn nu wél overeenkomt
+  met het gemiddelde $\mean{x}$!
   
 Als je op de middelbare school natuurkunde hebt gekozen
   dan kun je begrijpen waarom deze metafoor werkt.
@@ -1062,22 +1098,11 @@ De uiteindelijk positie van de oranje lijn
   is de positie met minimale potentiële energie.
 Dat is precies de positie waar de kwadratensom minimaal is,
   oftewel het gemiddelde.
-
-Het essentiële verschil tussen de touwen en de elastiekjes
-  is het volgende.
-Bij het touwtrekken hangt de kracht waarmee een punt aan de oranje lijn trekt
-  niet af van de lengte van het touw.
-Daardoor wint altijd de meerderheid.
-Bij elastiekjes hangt de trekkracht wel af van de uitrekking;
-punten die verder van de lijn afliggen,
-  trekken harder.
-Het gemiddelde "luistert" op die manier ook
-  naar de minderheid.
   
 ### De mediaan
   
 Een andere veel gebruikte maat is de mediaan.
-We noteren de mediaan als $\tilde{x}$.
+In dit boek noteren we de mediaan van een serie waarnemingen $x_1$, $x_2$, $\ldots$ als $\tilde{x}$.
 Om de mediaan te berekenen sorteer je de waarnemingen eerst van klein naar groot.
 Als het aantal waarnemingen $n$ oneven is, 
   dan is de mediaan het middelste getal in de gesorteerde rij.
@@ -1125,7 +1150,6 @@ quantiles <- quantile(
   probs = c(0.25, 0.5, 0.75), 
   na.rm = TRUE
   )
-
 
 cumulplot_median <- cumulplot + 
   geom_segment(
@@ -1241,13 +1265,13 @@ Verband met cumulatieve verdeling; gebruik figuur @fig-cumul-IKA hieronder.
 :::
 
 ::: {.todo-box}
-In de figuur hieronder ziet de pijl er vreemd uit. De kleuren van de lijnen bevallen me ook niet echt.
+In de figuur hieronder ziet de pijl er vreemd uit.
 :::
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. Het eerste, tweede, en derde kwartiel worden aangegeven"
+#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. Het eerste, tweede, en derde kwartiel worden met verticale stippellijnen aangegeven. De zwarte pijl loopt van Q1 naar Q3; zijn lengte is dus de interkwartielafstand."
 #| label: fig-cumul-IKA
 #| fig.width: 4.5
 #| fig.height: 3.5
@@ -1310,21 +1334,21 @@ cumulplot +
     aes(x = quantiles[3], y = 0.75), 
     color = "purple", size = 3
     ) +
-  geom_point(
-    aes(x = quantiles[1], y = 0), 
-    color = "purple", shape = 4, size = 3, stroke = 1.5
-    ) +
-  geom_point(
-    aes(x = quantiles[3], y = 0), 
-    color = "purple", shape = 4, size = 3, stroke = 1.5
-    ) +  
+  # geom_point(
+  #   aes(x = quantiles[1], y = 0), 
+  #   color = "purple", shape = 4, size = 3, stroke = 1.5
+  #   ) +
+  # geom_point(
+  #   aes(x = quantiles[3], y = 0), 
+  #   color = "purple", shape = 4, size = 3, stroke = 1.5
+  #   ) +  
   geom_segment(
     aes(
-      x = quantiles[1], xend = quantiles[3], 
+      x = quantiles[1], xend = quantiles[3],
       y = 0, yend = 0
-      ), 
+      ),
     arrow = arrow(ends = "both", length = unit(0.3, "cm")),
-    color = "black", size = 1.5
+    color = "black", size = 1.2, lineend = "round"
     ) +
   labs(
     title = "Cumulative verdeling en drie kwartielen",
@@ -1346,7 +1370,7 @@ $$
 V_X = \frac{\sum_{i=1}^n \left(x_i - \overline{x}\right)^2}{n-1}.
 $$
 
--   Kwadratensom in de teller.
+-   Kwadratensom in de teller; zie figuur @fig-res-1.
 -   Waarom $n - 1$ in de noemer? Daar is een reden voor, maar die kan later pas worden uitgelegd -- geduld!
 -   Let op! De dimensie van $V_X$ is het kwadraat van de dimensie van $X$. 
 
@@ -1596,10 +1620,10 @@ van een rechthoek -- een "staaf". Zo is het op het oog direct duidelijk
 welke categorieën de hoogste frequentie hebben.
 
 ::: {#exm-staaf}
-## Staafdiagram van `gezondheidsstatus`
+## Staafdiagram van `HealthGen` (gezondheidsstatus)
 
 Als voorbeeld kijken we terug naar de frequentietabel in @tbl-gezondheid
-hierboven, over de `gezondheidsstatus` van de deelnemers aan de studie
+hierboven, over de ``HealthGen` (gezondheidsstatus) van de deelnemers aan de studie
 van de NCHS. Die frequentietabel ziet er als staafdiagram als volgt uit:
 
 ```{r}
@@ -1625,7 +1649,7 @@ library(knitr)
 # Laad de dataset in:
 data(NHANES)
 
-# Eerst: de variabele Gezondheidsstatus (HealthGen)
+# Eerst: de variabele `HealthGen` (gezondheidsstatus)
 
 # Vertaal de levels en zet ze in een logische volgorde:
 NHANES$HealthGen <- factor(
@@ -1653,10 +1677,11 @@ ggplot(
     color = "black"
     ) +
   labs(
-    title = "Gezondheidsstatus, zelf-gerapporteerd",
+    title = "",
     x = "Gezondheidsstatus",
     y = "Frequentie"
-    )
+    ) +
+  theme_minimal()
 ```
 
 Dit staafdiagram laat helder zien hoe de gegevens over de waarden zijn
@@ -1873,7 +1898,7 @@ De frequentie van iedere gewichtsklasse wordt uitgezet tegen
 #| fig.height: 3.5
 
 ggplot(NHANES, aes(x = Weight)) +
-  geom_freqpoly(binwidth = 5, color = "darkorange", size = 1) +
+  geom_freqpoly(binwidth = 5, color = opvulkleur, size = 1) +
   labs(title = "Frequentiepolygoon van gewicht",
        x = "Lichaamsgewicht (kg)",
        y = "Frequentie")
@@ -1931,7 +1956,7 @@ Nadelen:
 #| fig.height: 3.5
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
-  geom_boxplot(fill = "Bisque", color = "darkorange") +
+  geom_boxplot(fill = "Bisque", color = opvulkleur) +
   labs(title = "Boxplot",
        x = "",
        y = "Lichaamsgewicht (kg)") +
@@ -1962,7 +1987,7 @@ Uitwerken!
 #| fig.height: 3.5
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
-  geom_violin(fill = "Bisque", color = "darkorange") +
+  geom_violin(fill = "Bisque", color = opvulkleur) +
   labs(title = "Vioolplot",
        x = "",
        y = "Lichaamsgewicht (kg)") +
