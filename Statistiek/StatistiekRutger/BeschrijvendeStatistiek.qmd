@@ -656,7 +656,7 @@ die begint bij 0 (bij de kleinste waarde binnen de waarnemingen) en eindigt bij 
 
 Om de verdeling van een variabele te karakteriseren
   kunnen we naast woorden ook getallen gebruiken.
-Dat soort getallen worden **kengetallen** of **tatistieken** genoemd.
+Dat soort getallen worden **kengetallen** of **statistieken** genoemd.
 
 Om de verdeling van een numerieke variabele
   kort te omschrijven 
@@ -809,13 +809,16 @@ Deze drie maten geven allemaal een "typische" waarde
 
 ### De modus 
 
-Een veelgebruikte centrummaat is de **modus**.
-In het algemeen is de modus de waarde die het vaakst voorkomt.
-Bij numerieke variabelen komt dat overeen met de $x$-waarde 
-  die hoort bij de "piek van de verdeling".
+De eerste centrummaat is de **modus**.
+In het algemeen wordt met de modus de waarde bedoeld die het vaakst voorkomt.
+Bij categorische variabelen kun je simpelweg tellen welke uitkomst dat is.
+Bij numerieke variabelen wordt meestal het interval bedoeld 
+  dat hoort bij de hoogste staaf van het histogram.
 Als er meerdere pieken zijn, dan zijn er meerdere modi (meervoud van modus).
 Daar komen ook de woorden unimodaal, bimodaal, etc. vandaan.
-
+In @fig-histogram, het histogram van `Weight`,
+waren twee pieken te zien.
+Er zijn dan ook twee modi: het interval $[15,20)$ en het interval $[75,80)$.
   
 ### De mediaan
   
@@ -1173,11 +1176,8 @@ ggplot(data, aes(x = x, y = y)) +
   )
 ```
 
-:::
+Eigenschappen van het gemiddelde.
 
-::: {.todo-box}
-De rest van de paragraaf loopt tekstueel niet zo lekker en is misschien een *distraction*. 
-Redigeren, en mogelijk deels verplaatsen naar een supplement.
 :::
 
 Intuïtief verwacht je misschien 
@@ -1262,6 +1262,10 @@ Dat zorg ervoor
   dat de evenwichtspositie van de <span style="color:darkorange;">oranje</span>  lijn nu wél overeenkomt
   met het gemiddelde $\mean{x}$.
   
+::: {.todo-box}
+Volgende alinea redigeren en/of verplaatsen naar een appendix.
+:::
+  
 Als je op de middelbare school natuurkunde hebt gekozen
   dan kun je begrijpen waarom deze metafoor werkt.
 We nemen aan dat de elastiekjes zich gedragen volgens
@@ -1282,21 +1286,98 @@ Dat is precies de positie waar de kwadratensom minimaal is,
 
 ### Wanneer gebruik je welke centrummaat? 
 
+We hebben drie centrummaten besproken: de modus, de mediaan, en het gemiddelde.
+Wanneer gebruik je nu welke maat om een rij gegevens samen te vatten?
+
+Een belangrijk verschil tussen de drie maten
+is hoe ze reageren op uitbijters. 
+We hebben gezien dat het gemiddelde sterk beïnvloed kan worden door
+een uitbijter, terwijl de modus en mediaan daar ongevoelig voor zijn.
+
+Daarmee samenhangend wordt het gemiddeld ook sterk beïnvloed
+door de symmetrie van de verdeling. 
+Hieronder is in @fig-centrummaten een histogram gegeven
+die sterk rechts-scheef is.
+In zo'n geval is de modus typisch kleiner dan de mediaan
+en de mediaan kleiner dan het gemiddelde,
+doordat de "staart" aan de rechterkant een sterk effect heeft op het gemiddelde
+maar minder op de andere centrummaten.
+
 ::: {.todo-box}
 
-\[schrijven\]
+Liever zou ik een een biologische dataset gebruiken,
+maar ik heb geen mooie set kunnen vinden...
 
-Verschil tussen mediaan, modus en gemiddelde bij scheve verdelingen of uitbijters.
-
-Bij een min-of-meer symmetrische verdeling
-wordt meestal het gemiddelde gerapporteerd.
-
-Als de verdeling erg scheef is of uitbijters kent,
-wordt het gemiddelde sterk beinvloed door de staart;
-dan is het vaak wenselijker om de mediaan te gebruiken.
-
+Kleuren van de lijnen aanpassen!
 :::
 
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.width: 5
+#| fig.height: 3
+#| fig-cap: "Voorbeeld van een scheve verdeling, waarbij de modus, de mediaan, en het gemiddelde zijn aangegeven."
+#| label: fig-centrummaten
+
+# Installeer en laad ggplot2 als het niet al beschikbaar is
+if (!("ggplot2" %in% loadedNamespaces())) {
+  library(ggplot2)
+}
+
+# Stel een seed in voor reproduceerbaarheid
+set.seed(123)
+
+# Parameters voor de Gamma-verdeling
+shape <- 1.5  # Vormparameter (k)
+scale <- 3  # Schaalparameter (θ)
+sample_size <- 8000  # Aantal observaties
+
+# Trek een steekproef uit de Gamma-verdeling
+gamma_sample <- rgamma(sample_size, shape = shape, scale = scale)
+
+# Bereken statistieken
+mean_value <- mean(gamma_sample)
+median_value <- median(gamma_sample)
+
+# Modus berekening voor een Gamma-verdeling
+mode_value <- (shape - 1) * scale
+
+# Zet de data in een dataframe voor ggplot2
+gamma_df <- data.frame(
+  value = gamma_sample
+)
+
+# Maak een histogram en voeg verticale lijnen en labels toe
+ggplot(gamma_df, aes(x = value)) +
+  geom_histogram(binwidth = 0.5, boundary = 0, fill = opvulkleur, color = "black", alpha = 0.7) +
+  geom_vline(aes(xintercept = mean_value), color = "red", linetype = "dashed", size = 1.2) +
+  geom_vline(aes(xintercept = median_value), color = "green", linetype = "dashed", size = 1.2) +
+  geom_vline(aes(xintercept = mode_value), color = "purple", linetype = "dashed", size = 1.2) +
+  annotate("text", x = 10, y = 630, vjust = 0, 
+           label = paste0("Gemiddelde = ", round(mean_value, 1)), color = "red") +
+  annotate("text", x = 10, y = 530, vjust = 0, 
+           label = paste0("Mediaan = ", round(median_value, 1)), color = "green") +
+  annotate("text", x = 10, y = 430, vjust = 0, 
+                                   label = paste0("Modus = ", round(mode_value, 1)), color = "purple") +
+  labs(
+    title = "",
+    x = "Waarden",
+    y = "Frequentie"
+  ) +
+  theme_minimal() +
+  coord_cartesian(clip = "off")  # Zorg dat labels buiten het plotgebied zichtbaar blijven
+
+```
+
+**Optie 1: De verdeling van gegevens is grofweg symmetrisch
+en er zijn geen opvallende uitbijters.**
+In dat geval zullen de drie maten dicht bij elkaar liggen. 
+In dat geval is het aan te raden om het gemiddelde te rapporteren.
+Dat komt doordat 
+
+Je hebt hierboven gezien dat het gemiddelde erg gevoelig is
+voor uitbijters, en de mediaan juist niet.
+Als de verdeling van de gegevens erg symmetri
 
 ## Maten voor de spreiding van een verdeling
 
