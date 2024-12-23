@@ -34,24 +34,22 @@ Deze omschrijving kunnen we ook samenvatten in *functional responses*: wiskundig
 De eerste twee processen (@fig-lvresponses a+b, de reproductie en sterfte van konijnen) kennen we al van het vorige hoofdstuk. Hoewel we de konijnen eerder $N$ hadden genoemd, is het in dit predator-prooi model gebruikelijk om de [prooi]{style="color:blue; font-weight:bold"} R te noemen. Onze groeivergelijking voor prooidieren (met dichtheidsafhankelijke geboorte) ziet er dan dus zo uit:
 
 \begin{align*}
-    \color{black}\frac{\dd \color{blue}R}{\dd t} &\color{black}= b\left(1-\frac{\color{blue}R}{K}\right)\color{blue}R\color{black} - d\color{blue}R
+    \frac{\dd {\color{blue}R}}{\dd t} &= b\left(1-\frac{{\color{blue}R}}{K}\right){{\color{blue}R}} - d{\color{blue}R}
 
 \end{align*}
 
 Hieraan gaan we toevoegen dat vossen de konijnen opeten. De [predator]{style="color:#d46300; font-weight:bold"} word in deze modellen vaak aangegeven met een $N$. We gaan ervan uit dat predatie direct proportioneel is aan de dichtheden konijnen en vossen (dus $R\cdot N$), en vermenigvuldigen dit met een nieuwe vrije parameter ($a \cdot R\cdot N$) om daarmee de predatie omhoog of omlaag te kunnen schroeven (zie @fig-lvresponses c). Deze nieuwe term noemen we de predatieterm. Als we de predatieterm toevoegen aan onze vergelijking, krijgen we:
 
 \begin{align*}
-
-  \color{black}\frac{\dd \color{blue}R}{\dd t} &\color{black}= b\left(1-\frac{\color{blue}R}{K}\right)\color{blue}R\color{black} - d\color{blue}R - \color{black}a\color{blue}R\color{orange}N
-
+  \frac{\dd {\color{blue}R}}{\dd t} &= b\left(1-\frac{{\color{blue}R}}{K}\right){{\color{blue}R}} - d{{\color{blue}R}} - a{{\color{blue}R}}\color{orange}N
 \end{align*}
 
 Zoals je ziet is de variabele $N$ anders gekleurd, om aan te geven dat dit de [predator]{style="color:#f2790f; font-weight:bold"}-populatie is. Nu gaan we een tweede vergelijking schrijven voor het aantal vossen. Zoals gezegd wordt hun groeisnelheid alleen bepaald door de hoeveelheid predatie. Hiervoor kunnen we dus de predatieterm ($aRN$) uit de konijnen-vergelijking hergebruiken (@fig-lvresponses d). Echter, omdat de biomassa van konijnen natuurlijk niet 1-op-1 vertaalt in vossen-biomassa, kunnen we wederom een nieuwe vrije parameter toevoegen ($c \cdot aRN$). Meestal nemen we aan dat $c<=1$, dat wil zeggen: er wordt niet meer dan 1 vos geboren per geconsumeerd konijn. Als laatste voegen we een eenvoudig sterfteterm toe voor de predator, en zo wordt ons uiteindelijke model:
 
 \begin{align*}
-    \color{black}\frac{\dd \color{blue}R}{\dd t} &\color{black}= \underbrace{b\left(1-\frac{\color{blue}R}{K}\right)\color{blue}R\color{black}}_{\text{geboorte konijnen}} - 
-\underbrace{d\color{blue}R}_{\text{sterfte konijnen}} - \underbrace{\color{black}a\color{blue}R\color{orange}N\color{black}}_{\text{predatie}}\\
-\color{black}\frac{\dd \color{orange}N}{\dd t} &\color{black}= \underbrace{\color{black}ca\color{blue}R\color{orange}N\color{black}}_{\text{geboorte vossen}}\color{black} - \underbrace{\delta \color{orange}N\color{black}}_{\text{sterfte vossen}}
+    \frac{\dd {\color{blue}R}}{\dd t} &= \underbrace{b\left(1-\frac{{\color{blue}R}}{K}\right){\color{blue}R}}_{\text{geboorte konijnen}} - 
+\underbrace{d{\color{blue}R}}_{\text{sterfte konijnen}} - \underbrace{a{\color{blue}R}\color{orange}N}_{\text{predatie}}\\
+\frac{\dd \color{orange}N}{\dd t} &= \underbrace{ca{\color{blue}R}\color{orange}N}_{\text{geboorte vossen}} - \underbrace{\delta \color{orange}N}_{\text{sterfte vossen}}
 \end{align*} {#eq-vossen-konijnen}
 
 Het bovenstaande systeem bestaat uit 2 ODEs, en wordt een 2-dimensioneel (2D) ODE systeem genoemd. We zouden ook nog een apex predator (adelaars bijvoorbeeld) kunnen toevoegen, en dan hebben we een 3-dimensioneel (3D) ODE systeem (hierbij slaat 3D dus niet op ruimtelijke dimensies, maar op de hoeveelheid variabelen van het ODE systeem). We zouden zelfs een heel ecosysteem kunnen opbouwen, en een 10-D of 100-D systeem bestuderen. Voor deze "hoogdimensionele" systemen kunnen we vaak alleen numeriek (met de computer) uitrekenen wat er gebeurt. Maar voor 2D systemen kunnen we nog best veel met pen-en-papier voor elkaar krijgen.
@@ -104,16 +102,16 @@ Axis(side=2, labels=FALSE)
 Als we nu naar onze vergelijkingen kijken, kunnen we voor extreme waarden van R en N proberen te beredeneren wat er gebeurt. Laten we bijvoorbeeld kijken wat er gebeurt als er heel weinig prooien en predatoren zijn (bijvoorbeeld 0.001 van allebei). Als we de geboorteterm van prooien $b(1- \frac{bR}{K})R$ uitvermenigvuldigen krijgen we $bR - \frac{bR^2}{K}$, en omdat we aannemen dat $R=0.001$, is de tweede term extra klein (want $0.001^2 = 10^{-6}$). Deze tweede term is onder deze omstandigheden dus negeerbaar. Biologisch gesproken kunnen we zeggen dat wanneer er weinig konijnen zijn, dan is dichtheidsafhankelijke afname van groei negeerbaar. Ditzelfde principe kunnen we toepassen op de predatieterm ($aRN$), waar de kleine $R$ en kleine $N$ met elkaar vermenigvuldigd worden, dus dat wordt ook een extra klein getal. Samengevat geeft dit geeft dus hetvolgende inzicht:
 
 \begin{align*}
-  \frac{\dd {\color{blue}R}}{\dd t} &=\underbrace{b{\color{blue}R}}_{\text{klein}} -
-    \underbrace{b{\color{blue}R}^2}_{\text{negeerbaar klein}} -
-   \underbrace{d{\color{blue}R}}_{\text{klein}} - \underbrace{a{\color{blue}R}{\color{orange}N}}_{\text{negeerbaar klein}}
+  \frac{\dd {{\color{blue}R}}}{\dd t} &=\underbrace{b{{\color{blue}R}}}_{\text{klein}} -
+    \underbrace{b{{\color{blue}R}}^2}_{\text{negeerbaar klein}} -
+   \underbrace{d{{\color{blue}R}}}_{\text{klein}} - \underbrace{a{{\color{blue}R}}{\color{orange}N}}_{\text{negeerbaar klein}}
 \end{align*}
 
 Dus, als zowel $R$ als $N$ heel klein zijn, brengt dit onze konijnenvergelijking terug tot:
 
 \begin{align*}
-   \frac{\dd {\color{blue}R}}{\dd t} &= b{\color{blue}R} -
-   d{\color{blue}R}
+   \frac{\dd {{\color{blue}R}}}{\dd t} &= b{{\color{blue}R}} -
+   d{{\color{blue}R}}
 \end{align*}
 
 Aangenomen dat $b>d$, kan de konijnenpopulatie dus groeien.
@@ -122,7 +120,7 @@ Als we in de predator-vergelijking kijken wat er gebeurt bij hele kleine populat
 
 \begin{align*}
 \frac{\dd {\color{orange}N}}{\dd t} &=
-    \underbrace{a{\color{blue}R}{\color{orange}N}}_{\text{negeerbaar klein}} -
+    \underbrace{a{{\color{blue}R}}{\color{orange}N}}_{\text{negeerbaar klein}} -
     \underbrace{d{\color{orange}N}}_{\text{klein}}
 \end{align*}
 
@@ -199,10 +197,10 @@ vectorfield(95,5,-10,10)
 Uit het bovenstaande diagram kunnen we aflezen dat ergens tussen de pijltjes links onderin en de pijltjes rechts onderin, de pijltjes van richting zijn veranderd. Neem bijvoorbeeld de groei van de predator (de oranje pijltjes): eerst is de groei negatief, maar met genoeg prooi wordt deze positief. Kunnen we precies bepalen *waar* het oranje pijltje is omgeklapt? Hiervoor moeten we bepalen waar in deze faseruimte de groeisnelheid van de predator-populatie 0 is: dit geeft precies aan waar de pijl is omgeklapt. Om dit punt te bepalen, stellen we de predatorvergelijking gelijk  aan 0:
 
 \begin{align*}
-    ca{\color{blue}R}{\color{orange}N} - \delta {\color{orange}N} &= 0\\
-    {\color{orange}N} \big( ca{\color{blue}R} - \delta \big) &= 0 \\
+    ca{{\color{blue}R}}{\color{orange}N} - \delta {\color{orange}N} &= 0\\
+    {\color{orange}N} \big( ca{{\color{blue}R}} - \delta \big) &= 0 \\
     {\color{orange}N} &= 0 \qquad \text{Oplossing 1} \\
-    {\color{blue}R} &= \frac{\delta}{ca} \quad \text{Oplossing 2}
+    {{\color{blue}R}} &= \frac{\delta}{ca} \quad \text{Oplossing 2}
 \end{align*}
 
 Deze twee oplossingen, geven aan waar $\dt{N}$ gelijk is aan 0, en kunnen we als lijnen tekenen in ons diagram. $N=0$ is een horizontale lijn, en $R=\frac{\delta}{ca}$ een verticale lijn bij een bepaalde (positieve) waarde van R. Waar de verticale lijn precies ligt, ligt aan de parameters van het model. Echter weten we dat op dit punt de groei van predatoren 0 is, dus dat hier de pijltjes omklappen. Dus: we weten dat de verticale lijn ergens tussen onze pijltjes ligt:
@@ -241,13 +239,13 @@ abline(v=40, lwd=2, col="#f2790f")
 De lijnen die we hierboven geschetst hebben heten null-iscoclines, of kortgezegd: **nullclines**. Een nullcline is een lijn in de faseruimte waar de verandering van één van de variabelen (in dit geval de groei van populaties) nul is. We kunnen ook de nullclines voor de prooi bepalen:
 
 \begin{align*}
-    b\left(1-\frac{\color{blue}R}{K}\right)\color{blue}R\color{black} - d\color{blue}R - \color{black}a\color{blue}R\color{orange}N &= 0 \\
-    \color{blue}R\color{black} \left( b\left(1-\frac{\color{blue}R}{K}\right)\color{black} - d - a\color{orange}N\color{black} \right) &= 0\\
-    \color{blue}R &= 0 \quad \text{(oplossing 1)} \\
-    b\left(1-\frac{\color{blue}R}{K}\right)\color{black} - d - a\color{orange}N\color{black} &= 0 \\
-    a\color{orange}N\color{black} &= b\left(1-\frac{\color{blue}R}{K}\right)\color{black} - d  \\
-    \color{orange}N\color{black} &= \frac{b\left(1-\frac{\color{blue}R}{K}\right)\color{black} - d}{a} \\
-    \color{orange}N\color{black} &= \frac{b-d}{a} - \frac{b}{aK}\color{blue}R\color{black} \quad \text{(oplossing 2)}
+    b\left(1-\frac{{\color{blue}R}}{K}\right){\color{blue}R} - d{\color{blue}R} - a{\color{blue}R}\color{orange}N &= 0 \\
+    {\color{blue}R} \left( b\left(1-\frac{{\color{blue}R}}{K}\right) - d - a\color{orange}N \right) &= 0\\
+    {\color{blue}R} &= 0 \quad \text{(oplossing 1)} \\
+    b\left(1-\frac{{\color{blue}R}}{K}\right) - d - a\color{orange}N &= 0 \\
+    a\color{orange}N &= b\left(1-\frac{{\color{blue}R}}{K}\right) - d  \\
+    \color{orange}N &= \frac{b\left(1-\frac{{\color{blue}R}}{K}\right) - d}{a} \\
+    \color{orange}N &= \frac{b-d}{a} - \frac{b}{aK}{\color{blue}R} \quad \text{(oplossing 2)}
 
 \end{align*}
 
@@ -390,8 +388,8 @@ Voor evenwicht 2 en 3 kunnen we dezelfde analyse toepassen. Prooi toevoegen aan 
 Nu we onze faseruimte hebben uitgewerkt, is het heel makkelijk om biologisch relevante vragen te stellen. We zouden ons bijvoorbeeld af kunnen vragen wat er gebeurt met een verhoogde sterfte van de predatoren. Om het effect hiervan te begrijpen, kijken we naar de vergelijkingen voor de nullclines:
 
 \begin{align*}
-    {\color{blue}R}_{1} \rightarrow {\color{blue}R} &= 0 \\
-    \color{blue}R_{2} \rightarrow {\color{orange}N} &= \frac{b(1-\frac{\color{blue}R}{K}) - d}{a} \\
+    {{\color{blue}R}}_{1} \rightarrow {{\color{blue}R}} &= 0 \\
+    {\color{blue}R}_{2} \rightarrow {\color{orange}N} &= \frac{b(1-\frac{{\color{blue}R}}{K}) - d}{a} \\
     {\color{orange}N}_{1} \rightarrow {\color{orange}N} &= 0 \\
     {\color{orange}N}_{2} \rightarrow \frac{\delta}{ca}
 \end{align*}
