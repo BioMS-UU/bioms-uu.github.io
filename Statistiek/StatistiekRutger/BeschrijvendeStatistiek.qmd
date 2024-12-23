@@ -603,11 +603,11 @@ Dit betekent dat de overige 14% méér weegt dan 100 kg.
 #| warning: false
 #| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. De rode onderbroken lijnen laten zien dat 86% van de mensen in de dataset hoogstens 100kg weegt."
 #| label: fig-cumul
-#| fig.width: 4.5
+#| fig.width: 7
 #| fig.height: 3.5
 
 cumulplot <- ggplot(NHANES, aes(x = Weight)) +
-  stat_ecdf(geom = "step", color = opvulkleur, size = 1) +
+  stat_ecdf(geom = "step", color = opvulkleur, size = 1, bw = 2) +
   labs(
     title = "Cumulatieve verdeling van lichaamsgewicht",
     x = "Lichaamsgewicht",
@@ -1301,7 +1301,7 @@ die sterk rechts-scheef is.
 In zo'n geval is de modus typisch kleiner dan de mediaan
 en de mediaan kleiner dan het gemiddelde,
 doordat de "staart" aan de rechterkant een sterk effect heeft op het gemiddelde
-maar minder op de andere centrummaten.
+maar nauwelijks op de andere centrummaten.
 
 ::: {.todo-box}
 
@@ -1369,15 +1369,18 @@ ggplot(gamma_df, aes(x = value)) +
 
 ```
 
-**Optie 1: De verdeling van gegevens is grofweg symmetrisch
+Daarom gebruiken we de volgende richtlijnen. 
+
+**Situatie 1: De verdeling van gegevens is grofweg symmetrisch
 en er zijn geen opvallende uitbijters.**
 In dat geval zullen de drie maten dicht bij elkaar liggen. 
-In dat geval is het aan te raden om het gemiddelde te rapporteren.
-Dat komt doordat 
+In dat geval is het beste het *gemiddelde* te rapporteren.
 
-Je hebt hierboven gezien dat het gemiddelde erg gevoelig is
-voor uitbijters, en de mediaan juist niet.
-Als de verdeling van de gegevens erg symmetri
+**Situatie 2: De verdeling van gegevens is scheef en/of
+er zijn opvallende uitbijters.**
+In dat geval kan het gemiddelde sterk be\"invloed worden
+door uitbijters en de staart van de verdeling
+en kun je dus het beste de mediaan rapporteren.
 
 ## Maten voor de spreiding van een verdeling
 
@@ -1389,42 +1392,154 @@ korte inleiding.
 
 ### Bereik
 
-::: {.todo-box}
+Het **bereik** van een rij getallen
+is eenvoudigweg het interval van het kleinste getal
+naar het grootste getal.
+Dus, het bereik van de tentamencijfers die je in het voorbeeld hierboven 
+had gehaald is het interval $[1, 9]$.
 
-Interval van kleinste tot grootste getal tussen de waarnemingen. 
+### De interkwartielafstand
 
-:::
+We hebben het gehad over de mediaan.
+Je weet dus dat de helft van de waarnemingen kleiner is dan de mediaan.
+Om de mediaan te vinden deel je de waarnemingen in twee delen:
+de kleine waarden en de grote waarden.
+De mediaan geeft de scheiding aan tussen die twee delen.
 
-### Interkwartielafstand
+Op een vergelijkbare manier 
+  kun je de kengetallen definieren die we de **kwartielen** noemen.
+Om dat te doen
+  delen we de twee helften nog een keer in twee delen,
+  zodat we vier kwarten krijgen.
+De kwartielen geven de scheiding aan tussen de vier kwarten.
+Een kwart van de gegevens is kleiner dan het **eerste kwartiel**, genoteerd als Q1.
+De helft van de  gegevens is kleiner dan het **tweede kwartiel**, genoteerd als Q2.
+Q2 is dus precies de mediaan. 
+Drie kwart van de gegevens is kleiner dan het **derde kwartiel**, genoteerd als Q3.
+De kwartielen zijn in @fig-kwartielen1 geillustreerd.
 
-::: {.todo-box}
-Percentielen, kwartielen (Q1, Q2, Q3, Q4), kwantielen.
-Mediaan als P50 en Q250e percentiel of tweede kwartiel.
+```{r}
+#| code-fold: true
+#| fig.cap: "Illustratie van de kwartielen. De plot laat de verdeling van `Weight` (lichaamsgewicht) zien uit de NHANES dataset. De kwartielen Q1, Q2 en Q3 zijn bij de x-as aangegeven. Op die manier wordt de plot in vier stukken verdeeld met ieder 25% van de waarnemingen."
+#| label: fig-kwartielen1
+#| warning: false
+#| fig.width: 7
+#| fig.height: 3.5
+# Load necessary libraries only if they are not already loaded
+if (!("ggplot2" %in% loadedNamespaces())) { library("ggplot2") }
+if (!("NHANES" %in% loadedNamespaces())) { library("NHANES") }
+library("dplyr")
 
-Interkwartielafstand (IKA):
+# Use the Weight variable from the NHANES dataset
+data <- NHANES %>%
+  filter(!is.na(Weight)) %>%
+  select(Weight)
 
-$$ \mathrm{IKA} = \mathrm{Q3} - \mathrm{Q1}$$
-Interpretatie: de breedte van het interval waarbinnen
-de middelste 50% van de gegevens vallen.
+# Compute quartiles
+quartiles <- quantile(data$Weight, probs = c(0.25, 0.50, 0.75, 1.0))
+q1 <- quartiles[1]  # Q1 (25th percentile)
+q2 <- quartiles[2]  # Q2 (50th percentile / Median)
+q3 <- quartiles[3]  # Q3 (75th percentile)
+q4 <- quartiles[4]  # Q4 (100th percentile)
 
-Verband met cumulatieve verdeling; gebruik figuur @fig-cumul-IKA hieronder.
+lighten_color <- function(color, percentage) {
+  # Ensure percentage is between 0 and 1
+  percentage <- max(0, min(percentage, 1))
+  
+  # Convert the color to RGB and blend with white
+  rgb <- col2rgb(color) / 255
+  blended_rgb <- rgb + (1 - rgb) * percentage
+  
+  # Return as HEX
+  rgb(blended_rgb[1], blended_rgb[2], blended_rgb[3], maxColorValue = 1)
+}
 
-:::
+# Create a density plot with quartile-based clipping
+ggplot(data, aes(x = Weight)) +
+  # Full density plot (background layer) with bw = 2
+  geom_density(
+    aes(y = ifelse(after_stat(x) <= q1+5, after_stat(density), NA)), color = "darkorange",
+    fill = lighten_color("darkorange", 0.8), alpha = 1, bw = 2, size = 1
+  ) +  # Clipped density plot for Q1 to Q2
+  geom_density(
+    aes(y = ifelse(after_stat(x) >= q1 & after_stat(x) <= q2+5, after_stat(density), NA)), color = "darkorange",
+    fill = lighten_color("darkorange", 0.6), alpha = 1, bw = 2, size = 1
+  ) +
+  # Clipped density plot for Q2 to Q3
+  geom_density(
+    aes(y = ifelse(after_stat(x) >= q2 & after_stat(x) <= q3+5, after_stat(density), NA)), color = "darkorange",
+    fill = lighten_color("darkorange", 0.4), alpha = 1, bw = 2, size = 1
+  ) +
+  # Clipped density plot for Q3 to Q4
+  geom_density(
+    aes(y = ifelse(after_stat(x) >= q3, after_stat(density), NA)), color = "darkorange",
+    fill = lighten_color("darkorange", 0.2), alpha = 1, bw = 2, size = 1
+  ) +
+  # Add custom x-axis ticks and labels for quartiles
+  scale_x_continuous(
+    breaks = c(q1, q2, q3),
+    labels = c("Q1", "Q2", "Q3"),
+    minor_breaks = NULL
+  ) +
+  # Add "25%" labels for each domain
+  annotate("text", x = (min(data$Weight) + q1) / 2, y = 0.002, label = "25%", color = "black", size = 4, fontface = "bold") +
+  annotate("text", x = (q1 + q2) / 2, y = 0.005, label = "25%", color = "black", size = 4, fontface = "bold") +
+  annotate("text", x = (q2 + q3) / 2, y = 0.005, label = "25%", color = "black", size = 4, fontface = "bold") +
+  annotate("text", x = (q3 + .15*q4) / 1.15, y = 0.002, label = "25%", color = "black", size = 4, fontface = "bold") +
+  labs(
+    title = "",
+    x = "Lichaamsgewicht",
+    y = "dichtheid"
+  ) +
+  geom_segment(
+    aes(
+      x = quantiles[1], xend = quantiles[3],
+      y = 0.002, yend = 0.002
+      ),
+    arrow = arrow(ends = "both", length = unit(0.3, "cm")),
+    color = "black", size = 0.8, lineend = "round"
+  ) +
+  theme_minimal()
+```
 
-::: {.todo-box}
-In de figuur hieronder ziet de pijl er vreemd uit.
-:::
+
+De **interkwartielafstand** is gedefineerd als de afstand tussen
+  Q3 en Q1:
+  
+$$ \mathrm{IKA} = \mathrm{Q3} - \mathrm{Q1}.$$
+Dit is een maat voor de spreiding van de gegevens
+ omdat het aangeeft hoe breed het interval is
+ waarbinnen zich de "middelste" 50% van de gevens bevinden.
+
+Je kunt de kwartielen het het IKA trouwens ook vinden
+door gebruik te maken van de cumulatieve verdeling.
+In @fig-cumul-IKA2 is oranje curve de cumulatieve verdeling 
+voor de variabele `Weight` van de NHANES dataset die we al eerder hebben bekeken
+ (in @fig-cumul).
+De horizontale zwarte lijnen snijden de $y$-as bij $0{,}25$ en $0{,}75$.
+Ze snijden de cumulatieve verdeling precies bij Q1 en Q3,
+die weer op de $x$-as zijn aangegeven.
+De zwarte pijl geeft weer de IKA aan. 
 
 ```{r}
 #| code-fold: true
 #| warning: false
+#| eval: false
+#| include: false
 #| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. Het eerste, tweede, en derde kwartiel worden met verticale stippellijnen aangegeven. De zwarte pijl loopt van Q1 naar Q3; zijn lengte is dus de interkwartielafstand."
 #| label: fig-cumul-IKA
-#| fig.width: 4.5
+#| fig.width: 7
 #| fig.height: 3.5
 
 library(grid) # voor de pijl
 
+cumulplot <- ggplot(NHANES, aes(x = Weight)) +
+  stat_ecdf(geom = "step", color = opvulkleur, size = 1, bw = 2) +
+  labs(
+    title = "Cumulatieve verdeling van lichaamsgewicht",
+    x = "Lichaamsgewicht",
+    y = "Cumulatieve proportie"
+    ) + theme_minimal()
 
 cumulplot +
   geom_segment(
@@ -1492,17 +1607,147 @@ cumulplot +
   geom_segment(
     aes(
       x = quantiles[1], xend = quantiles[3],
-      y = 0, yend = 0
+      y = 0.1, yend = 0.1
       ),
     arrow = arrow(ends = "both", length = unit(0.3, "cm")),
-    color = "black", size = 1.2, lineend = "round"
+    color = "black", size = 0.8, lineend = "round"
     ) +
+    # Add custom x-axis ticks and labels for quartiles
+  scale_x_continuous(
+    breaks = c(q1, q2, q3),
+    labels = c("Q1", "Q2", "Q3"),
+    minor_breaks = NULL
+  ) +
   labs(
     title = "Cumulative verdeling en drie kwartielen",
     x = "Lichaamsgewicht",
     y = "Cumulatieve proportie"
     ) 
 ```
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. Het eerste, tweede, en derde kwartiel worden met verticale stippellijnen aangegeven. De zwarte pijl loopt van Q1 naar Q3; zijn lengte is dus de interkwartielafstand."
+#| label: fig-cumul-IKA2
+#| fig.width: 7
+#| fig.height: 3.5
+
+# Load necessary libraries only if they are not already loaded
+if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
+if (!("dplyr" %in% loadedNamespaces())) { library(dplyr) }
+if (!("NHANES" %in% loadedNamespaces())) { library(NHANES) }
+
+# Use the Weight variable from the NHANES dataset
+data <- NHANES %>%
+  filter(!is.na(Weight)) %>%
+  select(Weight)
+
+# Compute quartiles
+quartiles <- quantile(data$Weight, probs = c(0.25, 0.50, 0.75, 1.0))
+q1 <- quartiles[1]  # Q1 (25th percentile)
+q2 <- quartiles[2]  # Q2 (50th percentile / Median)
+q3 <- quartiles[3]  # Q3 (75th percentile)
+q4 <- quartiles[4]  # Q4 (100th percentile / Max)
+
+# Create a cumulative density plot with quartile-based fills
+ggplot(data, aes(x = Weight)) +
+  # Filled area for Q1
+  stat_ecdf(geom = "area",
+            aes(y = after_stat(y), fill = "Q1"),
+            alpha = 1, bw = 2) +
+  # Filled area for Q2
+  stat_ecdf(geom = "area",
+            aes(y = ifelse(after_stat(x) > q1 & after_stat(x) <= q2, after_stat(y), NA),
+                fill = "Q2"),
+            alpha = 1, bw = 2) +
+  # Filled area for Q3
+  stat_ecdf(geom = "area",
+            aes(y = ifelse(after_stat(x) > q2 & after_stat(x) <= q3, after_stat(y), NA),
+                fill = "Q3"),
+            alpha = 1, bw = 2) +
+  # Filled area for Q4
+  stat_ecdf(geom = "area",
+            aes(y = ifelse(after_stat(x) > q3 , after_stat(y), NA),
+                fill = "Q4"),
+            alpha = 1, bw = 2) +
+  # Full ECDF curve (consistent for the entire dataset)
+  stat_ecdf(geom = "step", size = 1, color = opvulkleur, bw = 2) +
+  # Add custom x-axis ticks and labels for quartiles
+  scale_x_continuous(
+    breaks = c(q1, q2, q3),
+    labels = c("Q1", "Q2", "Q3"),
+    minor_breaks = NULL
+  ) +
+  # Add custom colors for quartiles
+  scale_fill_manual(
+    values = c("Q1" = lighten_color("darkorange", 0.8), "Q2" = lighten_color("darkorange", 0.6), "Q3" = lighten_color("darkorange", 0.4), "Q4" = lighten_color("darkorange", 0.2))
+  ) +
+  geom_segment(
+    aes(
+      x = min(NHANES$Weight, na.rm = TRUE), xend = quantiles[1], 
+      y = 0.25, yend = 0.25
+      ), 
+    linetype = "dashed", color = "black", size = 0.8
+    ) +
+  geom_segment(
+    aes(
+      x = min(NHANES$Weight, na.rm = TRUE), xend = quantiles[2], 
+      y = 0.5, yend = 0.5
+      ), 
+    linetype = "dashed", color = "black", size = 0.8
+    ) +
+  geom_segment(
+    aes(
+      x = min(NHANES$Weight, na.rm = TRUE), xend = quantiles[3], 
+      y = 0.75, yend = 0.75
+      ), 
+    linetype = "dashed", color = "black", size = 0.8
+    ) +
+  geom_point(
+    aes(x = quantiles[1], y = 0.25), 
+    color = "black", size = 3
+    ) +
+  geom_point(
+    aes(x = quantiles[2], y = 0.5), 
+    color = lijnkleur2, size = 3
+    ) +
+  geom_point(
+    aes(x = quantiles[3], y = 0.75), 
+    color = "black", size = 3
+    ) +
+
+  geom_segment(
+    aes(
+      x = quantiles[1], xend = quantiles[3],
+      y = 0.1, yend = 0.1
+      ),
+    arrow = arrow(ends = "both", length = unit(0.3, "cm")),
+    color = "black", size = 0.8, lineend = "round"
+    ) +
+  labs(
+    title = "Cumulative verdeling en drie kwartielen",
+    x = "Lichaamsgewicht",
+    y = "Cumulatieve proportie",
+    fill = "Quartiles"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")  # Remove the legend
+```
+
+Tot slot noemen we nog even de **percentielen**.
+Die zijn gemakkelijk te begrijpen aan de hand van een paar voorbeelden.
+Omdat 25% van de waarnemingen kleiner is dan Q1, 
+  is Q1 gelijk aan het vijf-en-twintigste percentiel, P25.
+90% procent van de waarnemingen is kleiner dan P90, 
+  het negentigste percentiel.
+  
+In het algemeen worden statistieken zoals kwartielen en percentielen
+  ook **kwantielen** genoemd.
+  
+::: {#exr-percentielen}
+Simpele opgave over percentielen en kwartielen.
+:::
 
 ### Variantie
 
@@ -2010,7 +2255,7 @@ Korte intro. Hiervoor categorisch, nu komt numeriek.
 
 ### Histogrammen en frequentiepolygonen
 
-Histogrammen zijn we eerder in dit hoofdstuk al vaak tegengekome; 
+Histogrammen zijn we eerder in dit hoofdstuk al vaak tegengekomen; 
   toch komen we er even op terug.
 Histogrammen worden gebruikt om de verdeling van *numerieke* variabelen te laten zien.
 Een histogram lijkt op een staafdiagram: 
