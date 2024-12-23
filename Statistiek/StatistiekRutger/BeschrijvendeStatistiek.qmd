@@ -1301,7 +1301,7 @@ die sterk rechts-scheef is.
 In zo'n geval is de modus typisch kleiner dan de mediaan
 en de mediaan kleiner dan het gemiddelde,
 doordat de "staart" aan de rechterkant een sterk effect heeft op het gemiddelde
-maar minder op de andere centrummaten.
+maar nauwelijks op de andere centrummaten.
 
 ::: {.todo-box}
 
@@ -1369,15 +1369,18 @@ ggplot(gamma_df, aes(x = value)) +
 
 ```
 
-**Optie 1: De verdeling van gegevens is grofweg symmetrisch
+Daarom gebruiken we de volgende richtlijnen. 
+
+**Situatie 1: De verdeling van gegevens is grofweg symmetrisch
 en er zijn geen opvallende uitbijters.**
 In dat geval zullen de drie maten dicht bij elkaar liggen. 
-In dat geval is het aan te raden om het gemiddelde te rapporteren.
-Dat komt doordat 
+In dat geval is het beste het *gemiddelde* te rapporteren.
 
-Je hebt hierboven gezien dat het gemiddelde erg gevoelig is
-voor uitbijters, en de mediaan juist niet.
-Als de verdeling van de gegevens erg symmetri
+**Situatie 2: De verdeling van gegevens is scheef en/of
+er zijn opvallende uitbijters.**
+In dat geval kan het gemiddelde sterk be\"invloed worden
+door uitbijters en de staart van de verdeling
+en kun je dus het beste de mediaan rapporteren.
 
 ## Maten voor de spreiding van een verdeling
 
@@ -1389,31 +1392,126 @@ korte inleiding.
 
 ### Bereik
 
-::: {.todo-box}
+Het **bereik** van een rij getallen
+is eenvoudigweg het interval van het kleinste getal
+naar het grootste getal.
+Dus, het bereik van de tentamencijfers die je in het voorbeeld hierboven 
+had gehaald is het interval $[1, 9]$.
 
-Interval van kleinste tot grootste getal tussen de waarnemingen. 
+### De interkwartielafstand
 
-:::
+We hebben het gehad over de mediaan.
+Je weet dus dat de helft van de waarnemingen kleiner is dan de mediaan.
+Om de mediaan te vinden deel je de waarnemingen in twee delen:
+de kleine waarden en de grote waarden.
+De mediaan geeft de scheiding aan tussen die twee delen.
 
-### Interkwartielafstand
+Op een vergelijkbare manier 
+  kun je de kengetallen definieren die we de **kwartielen** noemen.
+Om dat te doen
+  delen we de twee helften nog een keer in twee delen,
+  zodat we vier kwarten krijgen.
+De kwartielen geven de scheiding aan tussen de vier kwarten.
+Een kwart van de gegevens is kleiner dan het **eerste kwartiel**, genoteerd als Q1.
+De helft van de  gegevens is kleiner dan het **tweede kwartiel**, genoteerd als Q2.
+Q2 is dus precies de mediaan. 
+Drie kwart van de gegevens is kleiner dan het **derde kwartiel**, genoteerd als Q3.
+De kwartielen zijn in @fig-kwartielen1 geillustreerd.
 
-::: {.todo-box}
-Percentielen, kwartielen (Q1, Q2, Q3, Q4), kwantielen.
-Mediaan als P50 en Q250e percentiel of tweede kwartiel.
+```{r}
+#| code-fold: true
+#| fig.cap: "Illustratie van de kwartielen. De plot laat de verdeling van `Weight` (lichaamsgewicht) zien uit de NHANES dataset. De kwartielen Q1, Q2 en Q3 zijn bij de x-as aangegeven. Op die manier wordt de plot in vier stukken verdeeld met ieder 25% van de waarnemingen."
+#| label: fig-kwartielen1
+#| warning: false
+#| fig.width: 7
+#| fig.height: 3.5
+# Load necessary libraries only if they are not already loaded
+if (!("ggplot2" %in% loadedNamespaces())) { library("ggplot2") }
+if (!("NHANES" %in% loadedNamespaces())) { library("NHANES") }
+library("dplyr")
 
-Interkwartielafstand (IKA):
+# Use the Weight variable from the NHANES dataset
+data <- NHANES %>%
+  filter(!is.na(Weight)) %>%
+  select(Weight)
 
-$$ \mathrm{IKA} = \mathrm{Q3} - \mathrm{Q1}$$
-Interpretatie: de breedte van het interval waarbinnen
-de middelste 50% van de gegevens vallen.
+# Compute quartiles
+quartiles <- quantile(data$Weight, probs = c(0.25, 0.50, 0.75, 1.0))
+q1 <- quartiles[1]  # Q1 (25th percentile)
+q2 <- quartiles[2]  # Q2 (50th percentile / Median)
+q3 <- quartiles[3]  # Q3 (75th percentile)
+q4 <- quartiles[4]  # Q4 (100th percentile)
 
-Verband met cumulatieve verdeling; gebruik figuur @fig-cumul-IKA hieronder.
+lighten_color <- function(color, percentage) {
+  # Ensure percentage is between 0 and 1
+  percentage <- max(0, min(percentage, 1))
+  
+  # Convert the color to RGB and blend with white
+  rgb <- col2rgb(color) / 255
+  blended_rgb <- rgb + (1 - rgb) * percentage
+  
+  # Return as HEX
+  rgb(blended_rgb[1], blended_rgb[2], blended_rgb[3], maxColorValue = 1)
+}
 
-:::
+# Create a density plot with quartile-based clipping
+ggplot(data, aes(x = Weight)) +
+  # Full density plot (background layer) with bw = 2
+  geom_density(
+    aes(y = ifelse(after_stat(x) <= q1+5, after_stat(density), NA)), color = "darkorange",
+    fill = lighten_color("darkorange", 0.8), alpha = 1, bw = 2, size = 1
+  ) +  # Clipped density plot for Q1 to Q2
+  geom_density(
+    aes(y = ifelse(after_stat(x) >= q1 & after_stat(x) <= q2+5, after_stat(density), NA)), color = "darkorange",
+    fill = lighten_color("darkorange", 0.6), alpha = 1, bw = 2, size = 1
+  ) +
+  # Clipped density plot for Q2 to Q3
+  geom_density(
+    aes(y = ifelse(after_stat(x) >= q2 & after_stat(x) <= q3+5, after_stat(density), NA)), color = "darkorange",
+    fill = lighten_color("darkorange", 0.4), alpha = 1, bw = 2, size = 1
+  ) +
+  # Clipped density plot for Q3 to Q4
+  geom_density(
+    aes(y = ifelse(after_stat(x) >= q3, after_stat(density), NA)), color = "darkorange",
+    fill = lighten_color("darkorange", 0.2), alpha = 1, bw = 2, size = 1
+  ) +
+  # Add custom x-axis ticks and labels for quartiles
+  scale_x_continuous(
+    breaks = c(q1, q2, q3),
+    labels = c("Q1", "Q2", "Q3"),
+    minor_breaks = NULL
+  ) +
+  # Add "25%" labels for each domain
+  annotate("text", x = (min(data$Weight) + q1) / 2, y = 0.002, label = "25%", color = "black", size = 4, fontface = "bold") +
+  annotate("text", x = (q1 + q2) / 2, y = 0.005, label = "25%", color = "black", size = 4, fontface = "bold") +
+  annotate("text", x = (q2 + q3) / 2, y = 0.005, label = "25%", color = "black", size = 4, fontface = "bold") +
+  annotate("text", x = (q3 + .15*q4) / 1.15, y = 0.002, label = "25%", color = "black", size = 4, fontface = "bold") +
+  labs(
+    title = "",
+    x = "Lichaamsgewicht",
+    y = "dichtheid"
+  ) +
+  theme_minimal()
+```
 
-::: {.todo-box}
-In de figuur hieronder ziet de pijl er vreemd uit.
-:::
+
+De **interkwartielafstand** is gedefineerd als de afstand tussen
+  Q3 en Q1:
+  
+$$ \mathrm{IKA} = \mathrm{Q3} - \mathrm{Q1}.$$
+Dit is een maat voor de spreiding van de gegevens
+ omdat het aangeeft hoe breed het interval is
+ waarbinnen zich de "middelste" 50% van de gevens bevinden.
+
+Je kunt de kwartielen het het IKA trouwens ook vinden
+door gebruik te maken van de cumulatieve verdeling.
+In @fig-cumul-IKA hieronder geven de paarse lijnen Q1 en Q3 aan
+  voor de variabele `Weight` van de NHANES dataset.
+De oranje curve is de cumulatieve verdeling die we al eerder hebben bekeken
+ (in @fig-cumul).
+De horizontale paarse lijnen snijden de $y$-as bij $0{,}25$ en $0{,}75$.
+De vertikale lijnen snijden de $x$-as dus precies bij Q1 en Q3.
+De lengte van de zwarte pijl is dus de interkwartielafstand. 
 
 ```{r}
 #| code-fold: true
@@ -1503,6 +1601,20 @@ cumulplot +
     y = "Cumulatieve proportie"
     ) 
 ```
+
+Tot slot noemen we nog even de **percentielen**.
+Die zijn gemakkelijk te begrijpen aan de hand van een paar voorbeelden.
+Omdat 25% van de waarnemingen kleiner is dan Q1, 
+  is Q1 gelijk aan het vijf-en-twintigste percentiel, P25.
+90% procent van de waarnemingen is kleiner dan P90, 
+  het negentigste percentiel.
+  
+In het algemeen worden statistieken zoals kwartielen en percentielen
+  ook **kwantielen** genoemd.
+  
+::: {#exr-percentielen}
+Simpele opgave over percentielen en kwartielen.
+:::
 
 ### Variantie
 
@@ -2010,7 +2122,7 @@ Korte intro. Hiervoor categorisch, nu komt numeriek.
 
 ### Histogrammen en frequentiepolygonen
 
-Histogrammen zijn we eerder in dit hoofdstuk al vaak tegengekome; 
+Histogrammen zijn we eerder in dit hoofdstuk al vaak tegengekomen; 
   toch komen we er even op terug.
 Histogrammen worden gebruikt om de verdeling van *numerieke* variabelen te laten zien.
 Een histogram lijkt op een staafdiagram: 
