@@ -131,10 +131,12 @@ Het bovenstaande model heeft een heel belangrijke bijdrage heeft geleverd aan on
 
 Met deze voorwaarde kwamen ze op de volgende twee vergelijkingen uit: 
 
+$$
 \begin{align}
     \dt{V}&=-V(V-a)(V-1)-W \\
     \dt{W}&=\epsilon(V-bW)
 \end{align}
+$$ {#eq-fitzhugh}
 
 V staat hier voor het voltage. Laten we stap voor stap ontcijferen wat hier staat. De eerste vergelijking ($\dt{V}$) beschrijft de verandering in $V$, en bestaat uit twee termen. De eerste term ($-V(V-a)(V-1)$) bevat drie maal de variabele $V$. Hoewel deze term er ingewikkeld uitziet, kun je wellicht wel zien dat deze term 0 is wanneer $V=0$, $V=a$, of $V=1$. Let op: dit zijn ook meteen de énige punten waar deze term 0 is. Bij elke andere waarde van $V$ zal deze term dus een positief of een negatief effect hebben op het voltage. Laten we deze term even schetsen met R:
 
@@ -252,7 +254,7 @@ In het vorige hoofdstuk hebben we "ODEs in hokjes gestopt", zodat we naast veran
 
 Zoals je ziet vormt er zich een golf van $V$ (rood), die van links naar rechts doorgegeven wordt door het weefsel. Daarachter volgt diepere band van $W$, dat er voor zorgt dat het actiepotentiaal niet meteen opnieuw geactiveert kan worden. Dit kan je zelf testen: met de muis kun je prikkels geven aan het medium. Als je dit doet vlak na een bestaande golf, zul je zien dat er geen nieuwe golf ontstaat!
 
-## Ophopingen, blokkades, en spiralen
+## Ophopingen, blokkades, en spiralen {#sec-spiral}
 
 Met de bovenstaande simulatie kunnen we vrij "virtueel" experimenteren. Zo weten we bijvoorbeeld dat littekenweefsel (bijv. op het hart) actiepotentialen kan verstoren, omdat deze het signaal niet (meer) geleiden. Laten we een dergelijke blokkade inbouwen door een deel van het weefsel altijd op refractair ($W=1$) te veronderstellen:
 
@@ -326,9 +328,9 @@ Het bovenstaande systeem van actie-potentialen in een weefsel is deel van een kl
 
 <br>
 
-In figuur  heb je gezien dat de activerende term van het FitzHugh-Nagumo model een zogeheten derdegraads polynoom vormt. Complexe polynomen (derdegraags, vierdegraads, *etc.*) veranderen vaak meerdere keren van richting. In @fig-fitzcurve zie je dat ook: eerst daalt de lijn, dan stijgt de lijn, en uiteindelijk daalt de lijn weer. Deze zogeheten *non-lineairiteit* resulteert er in dat er alleen toename van het voltage kan zijn als er eerst een bepaalde drempel-waarde is bereikt. 
+In @eq-fitzhugh heb je gezien dat de activerende term van het FitzHugh-Nagumo model een zogeheten derdegraads polynoom vormt. Complexe polynomen (derdegraags, vierdegraads, *etc.*) veranderen vaak meerdere keren van richting. In @fig-fitzcurve zie je dat ook: eerst daalt de lijn, dan stijgt de lijn, en uiteindelijk daalt de lijn weer. Deze zogeheten *non-lineairiteit* resulteert er in dat er alleen toename van het voltage kan zijn als er eerst een bepaalde drempel-waarde is bereikt. 
 
-a. In welke andere model (veel eerder in de cursus) heb je deze vorm ook gezien? 
+a. In welk andere model (veel eerder in de cursus) heb je deze vorm ook gezien? 
 
 b. De grafiek in @fig-fitzcurve is geschetst met $a=0.2$. Neem de onderstaande R-code over, en pas $a$ aan naar -0.2. Pas de assen aan zodat je de gehele curve kan zien. Bij welke drempelwaarde verwacht je nu dat er activatie is van een actiepotentiaal?
 
@@ -349,10 +351,10 @@ abline(v=a,lty=3,col="grey")
 ```
 
 c. Deze curve hadden we getekend door alleen naar de activerende term ($-V(V-a)(V-1)$) te kijken. We gaan nu bepalen waar de nullcline van $V$ ligt door $dt{V}$ op 0 te stellen. Neem aan dat we $W$ op de y-as zetten in de faseruimte, dus los op voor $W$. 
-d. Vergelijk je nullcline met de activatie-term die we eerder hebben geschetst. Wat valt je op? *is dezelfde functie als in vraag a, want het enige wat je doet is W aan de andere kant van de is zetten!!*
+d. Vergelijk je nullcline met de activatie-term die we eerder hebben geschetst. Wat valt je op?
 e. Bepaal ook de nullcline voor $W$, door $dt{W}$ op 0 te stellen. Schets beide nullclines in één faseruimte.
-f. Vergelijk je faseruimte (met $a=-0.3$ met de faseruimte uit het hoofdstuk (waar $a=0.3$). Wat is er verandert aan het evenwichtspunt? Heeft je faseruimte een rustpotentiaal? Een drempelwaarde? *pijlen wijzen er niet meer naar toe, het is nu instabiel, er is geen 'drempel' want er is geen rustpotentiaal meer. deze blijft oscilleren*
-g. Welk type weefsel in het menselijk lichaam gedraagd zich zoals dit nieuwe systeem? *sinusknoop van het hart, die constant potentialen genereert!*
+f. Vergelijk je faseruimte (met $a=-0.2$ met de faseruimte uit het hoofdstuk (waar $a=0.2$). Wat is er verandert aan het evenwichtspunt? Heeft je faseruimte een rustpotentiaal? Een drempelwaarde? 
+g. Welk type weefsel in het menselijk lichaam gedraagt zich zoals dit nieuwe systeem? 
 :::
 
 :::{.Rexr #exr-clear}
@@ -361,7 +363,7 @@ g. Welk type weefsel in het menselijk lichaam gedraagd zich zoals dit nieuwe sys
 
 <br>
 
-Zoals gezegd kunnen er spiralen vormen op het hartweefsel, wat een hartritmestoornis veroorzaakt. Bekijk devolgende simulatie, waarbij er door het hokje linksbovenin elke 250 tijdstappen een nieuwe golf start:
+Zoals gezegd kunnen er spiralen vormen op het hartweefsel, wat een hartritmestoornis veroorzaakt. Bekijk de volgende simulatie, waarbij er door het hokje linksbovenin elke 250 tijdstappen een nieuwe golf start:
 
 ::: {.content-visible when-format="html"}
 ```{=html}
@@ -373,10 +375,10 @@ Zoals gezegd kunnen er spiralen vormen op het hartweefsel, wat een hartritmestoo
 ...
 :::
 
-a. Laat de simulatie een tijdje lopen, en bepaal de frequentie van het hart (de tijdseenheden zijn arbitrair, dus het antwoord is in de vorm "een hartslag elke X-de tijdstap"). *elke 250, want dat is immers wat de 'sinusknoop' doet (dus het antwoord staat letterlijk in de beschrijving hierboven)*
-b. Gebruik de knop 'Boe' om dit virtuele persoon te laten schrikken. Zie je een effect op de hartslag? Is dit effect blijvend? *ja je ziet wat rommel, nee niet blijvend*
-c. Teken met de muis (deze zet $V$ op 0) een lijn door een golf heen. Kun je nu een blijvend effect op de hartslag creeeren? *ja want je kan spirals maken*
-d. Probeer het hart te herstellen met de muis. Gebruik ook eens de 'Clear!' knop. Wat werkt het beste, en waarom? *clear werkt het beste omdat hiermee het hele hart in 1 keer geactiveerd wordt. dit maakt het hele hart refractair zodat het weer even later weer normaal kan gaan kloppen*
+a. Laat de simulatie een tijdje lopen, en bepaal de frequentie van het hart (de tijdseenheden zijn arbitrair, dus het antwoord is in de vorm "een hartslag elke X-de tijdstap"). 
+b. Gebruik de knop 'Boe' om dit virtuele persoon te laten schrikken. Zie je een effect op de hartslag? Is dit effect blijvend? 
+c. Teken met de muis (deze zet $V$ op 0) een lijn door een golf heen. Kun je nu een blijvend effect op de hartslag creeeren? 
+d. Probeer het hart te herstellen met de muis. Gebruik ook eens de 'Clear!' knop. Wat werkt het beste, en waarom?
 :::
 
 
@@ -386,10 +388,10 @@ d. Probeer het hart te herstellen met de muis. Gebruik ook eens de 'Clear!' knop
 
 <br>
 
-Op een groot (hypothetisch) eiland breekt al decenia, keer op keer, een vervelende infectieziekte opnieuw uit. De ziekte verspreidt zich van dorp tot dorp, en de immuniteit voor de ziekte duurt helaas slechts enkele maanden. Deze observaties suggeren dat de ziekte zich verspreid als een golf door een excitabaar medium. 
+Op een groot (hypothetisch) eiland breekt al decenia, keer op keer, een vervelende infectieziekte opnieuw uit. De ziekte verspreidt zich van dorp tot dorp, en de immuniteit voor de ziekte duurt helaas slechts enkele maanden. Deze observaties suggeren dat de ziekte zich verspreidt als een golf door een exciteerbaar medium. 
 
-a. Wat gebeurt er als de ziektegolf een dorp binnenkomt, nadat dit dorp recent als is geïnfecteerd (door dezelfde ziekte!) door een ander dorp? *helemaal niets, iedereen is nog immuun*
-b. Iemand stelt voor om de ziekte te stoppen door alle vatbare individuen tegelijkertijd te infecteren. Zou dit werken? Is dit ook etisch verantwoord? *werkt wel, niet zo aardig*
+a. Wat gebeurt er als de ziektegolf een dorp binnenkomt, nadat dit dorp recent al is geïnfecteerd (door dezelfde ziekte!) door een ander dorp? 
+b. Iemand stelt voor om de ziekte te stoppen door alle vatbare individuen tegelijkertijd te infecteren. Zou dit werken? Is dit ook etisch verantwoord?
 
 Er wordt een vaccinatie campagne opgezet, maar een klein deel van de populatie komt niet opdagen. Bestudeer de volgende simulatie, van een golf die een gevaccineerd dorp binnenrolt.
 
@@ -403,8 +405,8 @@ Er wordt een vaccinatie campagne opgezet, maar een klein deel van de populatie k
 ...
 :::
 
-c. Kan een golf (links) de ongevaccineerde mensen (rechts) bereiken? Wanneer wel/niet? (gebruik de muis om nieuwe golven te starten) *dat kan, maar als genoeg mensen geinfecteerd zijn (vanaf 80% vaccinatie) zo langzaam door de rest van de populatie dat deze wordt ingehaald door de immunisatie-golf*
-d. Wat kan er gebeuren als een toerist van een niet-gevaccineerd land met het vliegtuig binnenkomt (rechts verschijnt)? *dat gaat prima als de vaccinatiegraad hoog genoeg is*
+c. Kan een golf (links) de ongevaccineerde mensen (rechts) bereiken? Wanneer wel/niet? (gebruik de muis om nieuwe golven te starten)
+d. Wat kan er gebeuren als een toerist van een niet-gevaccineerd land met het vliegtuig binnenkomt (rechts verschijnt)? 
 :::
 
   
@@ -426,14 +428,13 @@ Hoewel we tot nu toe voorbeelden hebben gezien van exciteerbare media in PDEs (o
 ...
 :::
 
-a. Begin de simulatie een paar keer met een bomen-dichtheid van 0.4. Schat ruwweg welke fractie van het bos afbrandt. Zie je veel variatie tussen de experimenten? *een heel klein deel, 10% ofzo*
+a. Begin de simulatie een paar keer met een bomen-dichtheid van 0.4. Schat ruwweg welke fractie van het bos afbrandt. Zie je veel variatie tussen de experimenten? 
 b. Herhaal je experiment ook met dichtheden 0.2, 0.3, 0.5, en 0.6. Bepaal opnieuw welke fractie afbrandt, en hoeveel variatie er is.
 c. Teken de hoeveelheid afgebrand bos als functie van de boom-dichtheid. Leg de vorm van deze functie uit in biologische termen.
 d. Wat zou je aanraden om ernstige bosbranden te voorkomen?
 e. Bomen planten zich ook voort. Wat denk je dat er kan gebeuren als de afgebrande bomen na een tijdje weer vruchtbare grond voor nieuwe bomen vormt? 
-*dan krijg je excitable medium!*
 
-Brand is meestal een heel snel proces ten op zichte van de voortplanting van bomen. Bestudeerd devolgende simulatie:
+Brand is meestal een heel snel proces ten opzichte van de voortplanting van bomen. Bestudeerd devolgende simulatie:
 
 ::: {.content-visible when-format="html"}
 ```{=html}
@@ -445,6 +446,4 @@ Brand is meestal een heel snel proces ten op zichte van de voortplanting van bom
 ...
 :::
 
-f. Is brand een groter of een kleine probleem als planten zich snel voort kunnen planten? *groter probleem als snel, excitable media krijgt steeds weer "vatbaar" weefsel. Als je de bomen langzaam maakt kan je de brand zelfs helemaal weg krijgen!*
-
-
+f. Is brand een groter of een kleine probleem als planten zich snel voort kunnen planten? 
