@@ -318,7 +318,9 @@ In @fig-symmetrisch zijn voorbeelden weergegeven.
 #| label: fig-symmetrisch
 
 # Laad benodigde bibliotheken
-if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
+if (!("ggplot2" %in% .packages())) { 
+  library(ggplot2) 
+}
 
 # Stel een seed in voor reproduceerbaarheid
 set.seed(123)
@@ -334,7 +336,10 @@ data <- data.frame(
     rgamma(samplesize, shape = 3, scale = 1)    # Rechts-scheve verdeling
   ),
   group = factor(
-    rep(c("Links-scheef", "Symmetrisch", "Rechts-scheef"), each = samplesize)
+    rep(
+      c("Links-scheef", "Symmetrisch", "Rechts-scheef"), 
+      each = samplesize
+    )
   )
 )
 
@@ -607,38 +612,52 @@ Dit betekent dat de overige 14% méér weegt dan 100 kg.
 #| fig.height: 3.5
 
 cumulplot <- ggplot(NHANES, aes(x = Weight)) +
-  stat_ecdf(geom = "step", color = opvulkleur, size = 1, bw = 2) +
+  stat_ecdf(
+    geom = "step", 
+    color = opvulkleur, 
+    size = 1, 
+    bw = 2
+  ) +
   labs(
     title = "Cumulatieve verdeling van lichaamsgewicht",
     x = "Lichaamsgewicht",
     y = "Cumulatieve proportie"
-    ) + theme_minimal()
+  ) + 
+  theme_minimal()
 
+# Definieer het kruispunt van de lijnen
 kruising <- c(100, 0.86)
 
 cumulplot +
+  # Voeg een horizontale stippellijn toe bij de cumulatieve proportie van 0.86
   geom_segment(
     aes(
       x = 0, xend = kruising[1], 
       y = kruising[2], yend = kruising[2]
-      ), 
-    linetype = "dashed", color = lijnkleur2, size = 1
-    ) +
+    ), 
+    linetype = "dashed", 
+    color = lijnkleur2, 
+    size = 1
+  ) +
+  # Voeg een verticale stippellijn toe bij het gewicht van 100 kg
   geom_segment(
     aes(
       x = kruising[1], xend = kruising[1], 
       y = 0, yend = kruising[2]
-      ), 
-    linetype = "dashed", color = lijnkleur2, size = 1
-    ) +
+    ), 
+    linetype = "dashed", 
+    color = lijnkleur2, 
+    size = 1
+  ) +
+  # Voeg een punt toe op het kruispunt van de lijnen
   geom_point(
     aes(x = kruising[1], y = kruising[2]), 
-    color = lijnkleur2, size = 3
-    ) +
+    color = lijnkleur2, 
+    size = 3
+  ) +
+  # Pas de y-as aan om een extra label toe te voegen bij 0.86
   scale_y_continuous(
-    # Add 0.86 to the default auto-generated breaks
     breaks = function(limits) c(0.86, scales::extended_breaks()(limits)),
-    # Ensure a label is explicitly assigned to 0.86
     labels = function(breaks) ifelse(breaks == 0.86, "0.86", breaks)
   )
 ```
@@ -728,12 +747,15 @@ data <- data.frame(
     rnorm(samplesize, mean1, sd2)         # Bottom-right: larger spread
   ),
   group = factor(
-    rep(c(
-      "Zelfde spreiding, verschillende ligging", 
-      "Zelfde ligging, verschillende spreiding",
-      "Bottom-left", 
-      "Bottom-right"
-    ), each = samplesize),
+    rep(
+      c(
+        "Zelfde spreiding, verschillende ligging", 
+        "Zelfde ligging, verschillende spreiding",
+        "Bottom-left", 
+        "Bottom-right"
+      ), 
+      each = samplesize
+    ),
     levels = c(
       "Zelfde spreiding, verschillende ligging", 
       "Zelfde ligging, verschillende spreiding", 
@@ -754,16 +776,31 @@ strip_labels <- data.frame(
     ),
     levels = levels(data$group)
   ),
-  title = c("Zelfde spreiding, verschillende ligging", 
-            "Zelfde ligging, verschillende spreiding", 
-            "", "")
+  title = c(
+    "Zelfde spreiding, verschillende ligging", 
+    "Zelfde ligging, verschillende spreiding", 
+    "", 
+    ""
+  )
 )
 
 # Plot basis
 base_plot <- ggplot(data, aes(x = x)) +
-  geom_histogram(binwidth = 0.5, fill = opvulkleur, color = "black") +
-  facet_wrap(~group, ncol = 2, scales = "free_y", labeller = as_labeller(setNames(strip_labels$title, strip_labels$group))) +
-  scale_x_continuous(limits = c(-6, 6), breaks = seq(-6, 6, by = 2)) +  # Gelijke x-assen
+  geom_histogram(
+    binwidth = 0.5, 
+    fill = opvulkleur, 
+    color = "black"
+  ) +
+  facet_wrap(
+    ~group, 
+    ncol = 2, 
+    scales = "free_y", 
+    labeller = as_labeller(setNames(strip_labels$title, strip_labels$group))
+  ) +
+  scale_x_continuous(
+    limits = c(-6, 6), 
+    breaks = seq(-6, 6, by = 2)
+  ) +  # Gelijke x-assen
   labs(
     x = "Waarde",
     y = "Frequentie"
@@ -779,14 +816,38 @@ base_plot <- ggplot(data, aes(x = x)) +
 # Annotaties toevoegen
 annotations <- list(
   # Pijl voor verschuiving (alleen linksonder)
-  annotate("segment", x = mean1, xend = mean2 + 1, y = 200, yend = 200,
-           arrow = arrow(length = unit(0.2, "cm")), color = lijnkleur3, size = 1.2),
+  annotate(
+    "segment", 
+    x = mean1, 
+    xend = mean2 + 1, 
+    y = 200, 
+    yend = 200,
+    arrow = arrow(length = unit(0.2, "cm")), 
+    color = lijnkleur3, 
+    size = 1.2
+  ),
   # Dubbelzijdige pijlen voor spreiding (alleen rechterkolom)
-  annotate("segment", x = mean1 - sd1, xend = mean1 + sd1, y = 200, yend = 200,
-           arrow = arrow(ends = "both", length = unit(0.2, "cm")), color = lijnkleur2, size = 1),
-  annotate("segment", x = mean1 - sd2, xend = mean1 + sd2, y = 200, yend = 200,
-           arrow = arrow(ends = "both", length = unit(0.2, "cm")), color = lijnkleur2, size = 1,
-           linetype = "dashed")
+  annotate(
+    "segment", 
+    x = mean1 - sd1, 
+    xend = mean1 + sd1, 
+    y = 200, 
+    yend = 200,
+    arrow = arrow(ends = "both", length = unit(0.2, "cm")), 
+    color = lijnkleur2, 
+    size = 1
+  ),
+  annotate(
+    "segment", 
+    x = mean1 - sd2, 
+    xend = mean1 + sd2, 
+    y = 200, 
+    yend = 200,
+    arrow = arrow(ends = "both", length = unit(0.2, "cm")), 
+    color = lijnkleur2, 
+    size = 1,
+    linetype = "dashed"
+  )
 )
 
 # Combineer de basis plot met annotaties
@@ -876,51 +937,71 @@ de cumulatieve verdeling van de variabele `Weight` (lichaamsgewicht) weergegeven
 Het rode kruis geeft de mediaan van lichaamsgewicht aan.
 De rode lijnen laten zien dat de cumulative proportie daar precies $0{,}5$ is.
 
-
 ```{r}
 #| code-fold: true
 #| warning: false
 #| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. De mediaan is met een kruis op de $x$-as aangegeven. De mediaan is gedefineerd als de waarde zodanig dat de helft van de waarnemingen kleiner is en de helft groter. Daarom bereikt de cumulatieve verdeling op dat punt precies een half."
 #| label: fig-cumul-2a
-#| fig.width: 4.5
+#| fig.width: 7
 #| fig.height: 3.5
 
+# Bereken de kwartielen van de Weight-variabele
 quantiles <- quantile(
   NHANES$Weight, 
   probs = c(0.25, 0.5, 0.75), 
   na.rm = TRUE
-  )
+)
 
-cumulplot_median <- cumulplot + 
+# Voeg lijnen, punten en labels toe aan de cumulatieve plot
+cumulplot_median <- cumulplot +
+  # Horizontale lijn bij de mediaan
   geom_segment(
     aes(
       x = 0, xend = quantiles[2], 
       y = 0.5, yend = 0.5
-      ), 
-    linetype = "dashed", color = lijnkleur2, size = 1
-    ) +
+    ),
+    linetype = "dashed", 
+    color = lijnkleur2, 
+    size = 1
+  ) +
+  # Verticale lijn bij de mediaan
   geom_segment(
     aes(
       x = quantiles[2], xend = quantiles[2], 
       y = 0, yend = 0.5
-      ), 
-    linetype = "dashed", color = lijnkleur2, size = 1
-    ) +
-  geom_point(
-    aes(x = quantiles[2], y = 0.5), 
-    color = lijnkleur2, size = 3
-    ) +
+    ),
+    linetype = "dashed", 
+    color = lijnkleur2, 
+    size = 1
+  ) +
+  # Punt op het kruispunt van mediaan en cumulatieve proportie 0.5
   geom_point(
     aes(
-      x = quantiles[2], y = 0), 
-    color = lijnkleur2, shape = 4, size = 3, stroke = 2
-    ) +
+      x = quantiles[2], 
+      y = 0.5
+    ),
+    color = lijnkleur2, 
+    size = 3
+  ) +
+  # Kruis op de x-as bij de mediaan
+  geom_point(
+    aes(
+      x = quantiles[2], 
+      y = 0
+    ),
+    color = lijnkleur2, 
+    shape = 4, 
+    size = 3, 
+    stroke = 2
+  ) +
+  # Labels voor titel en assen
   labs(
     title = "Cumulatieve verdeling van lichaamsgewicht",
     x = "Lichaamsgewicht",
-    y = "Cumulatiefe proportie"
-    )
+    y = "Cumulatieve proportie"
+  )
 
+# Toon de plot met de mediaan
 cumulplot_median
 
 ```
@@ -1068,41 +1149,56 @@ Vanuit ieder punt is een verticale grijze lijn getekend naar het gemiddelde.
 #| fig-cap: "Elastiekjes trekken de oranje lijn precies naar het gemiddelde."
 #| label: fig-res-1
 
+# Maak een dataset met handmatige jitter
 data <- data.frame(
-  x = c(0, -0.04, 0.08, 0.03, -0.08), # handmatice jitter
+  x = c(0, -0.04, 0.08, 0.03, -0.08), # handmatige jitter
   y = x
 )
 
 ggplot(data, aes(x = x, y = y)) +
-  # verticale lijnen
+  # Verticale lijnen naar het gemiddelde
   geom_segment(
-      aes(x = x, xend = x, y = y, yend = m), 
-      color = "SlateGray", 
-      linetype = "solid", 
-      size = 1
-      ) +
-  # punten
-  geom_point(shape = 21, fill = "SlateGray", size = 5) +
-  # gemiddelde
-  geom_segment(
-    aes(x = -0.15, xend = 0.15, y = m, yend = m), 
-    color = opvulkleur, 
+    aes(
+      x = x, xend = x, 
+      y = y, yend = m
+    ),
+    color = "SlateGray",
+    linetype = "solid",
     size = 1
-    ) +
-  # label
+  ) +
+  # Punten
+  geom_point(
+    shape = 21, 
+    fill = "SlateGray", 
+    size = 5
+  ) +
+  # Gemiddelde lijn
+  geom_segment(
+    aes(
+      x = -0.15, xend = 0.15, 
+      y = m, yend = m
+    ),
+    color = opvulkleur,
+    size = 1
+  ) +
+  # Label bij de gemiddelde lijn
   annotate(
-    "text", 
-    x = 0.12, y = m + .3, 
-    label = expression(bar(italic(x))), 
-    color = opvulkleur, 
-    hjust = 0, 
+    "text",
+    x = 0.12, 
+    y = m + 0.3,
+    label = expression(bar(italic(x))),
+    color = opvulkleur,
+    hjust = 0,
     size = 6
-    ) +
-  # y-as
-  scale_y_continuous(breaks = x, limits = c(min(x), max(x)),
-  labels = scales::number_format(accuracy = 0.1)) +
-  ylab("Tentamencijfers") + 
-  # geen x-as, geen grid, keep y-axis with no vertical grid lines
+  ) +
+  # Y-as instellen
+  scale_y_continuous(
+    breaks = x, 
+    limits = c(min(x), max(x)),
+    labels = scales::number_format(accuracy = 0.1)
+  ) +
+  ylab("Tentamencijfers") +
+  # Geen x-as, geen gridlijnen
   theme_classic() +
   theme(
     axis.title.x = element_blank(),
@@ -1110,7 +1206,7 @@ ggplot(data, aes(x = x, y = y)) +
     axis.line.x = element_blank(),
     axis.ticks.x = element_blank(),
     panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(),
+    panel.grid.minor.x = element_blank()
   )
 ```
 
@@ -1122,49 +1218,68 @@ ggplot(data, aes(x = x, y = y)) +
 #| fig-cap: "Voorbeeld met slechts drie punten. De paarse lijn minimaliseert som van de afstanden tot de punten; de oranje lijn die het gemiddelde aangeeft minimaliseert de kwadratensom."
 #| label: fig-res-2
 
+# Maak een dataset met drie punten
 data <- data.frame(
   x = c(0.08, 0, -0.08),
   y = c(9.0, 6, 9)
 )
 
-m2 = mean(data$y)
+# Bereken het gemiddelde
+m2 <- mean(data$y)
 
 ggplot(data, aes(x = x, y = y)) +
-  # verticale lijnen
+  # Verticale lijnen naar het gemiddelde
   geom_segment(
-      aes(x = x, xend = x, y = y, yend = m2), 
-      color = "SlateGray", 
-      linetype = "solid", 
-      size = 1
-      ) +
-  # punten
-  geom_point(shape = 21, fill = "SlateGray", size = 5) +
-  # gemiddelde
-  geom_segment(
-    aes(x = -0.15, xend = 0.15, y = m2, yend = m2), 
-    color = opvulkleur, 
+    aes(
+      x = x, xend = x, 
+      y = y, yend = m2
+    ),
+    color = "SlateGray",
+    linetype = "solid",
     size = 1
-    ) +
-  # alternatief
+  ) +
+  # Punten
+  geom_point(
+    shape = 21, 
+    fill = "SlateGray", 
+    size = 5
+  ) +
+  # Gemiddelde lijn
   geom_segment(
-    aes(x = -0.15, xend = 0.15, y = 9, yend = 9), 
-    color = lijnkleur1, 
+    aes(
+      x = -0.15, xend = 0.15, 
+      y = m2, yend = m2
+    ),
+    color = opvulkleur,
     size = 1
-    ) +
-  # label
+  ) +
+  # Alternatieve lijn
+  geom_segment(
+    aes(
+      x = -0.15, xend = 0.15, 
+      y = 9, yend = 9
+    ),
+    color = lijnkleur1,
+    size = 1
+  ) +
+  # Label bij de gemiddelde lijn
   annotate(
-    "text", 
-    x = 0.12, y = m2 + 0.3, 
-    label = expression(bar(italic(x))), 
-    color = opvulkleur, 
-    hjust = 0, 
+    "text",
+    x = 0.12, 
+    y = m2 + 0.3,
+    label = expression(bar(italic(x))),
+    color = opvulkleur,
+    hjust = 0,
     size = 6
-    ) +
-  # y-as
-  scale_y_continuous(breaks = c(1.0, data$y), limits = c(1.0, max(data$y)),
-  labels = scales::number_format(accuracy = 0.1)) +
-  ylab("") + 
-  # geen x-as, geen grid, geen grid-lijnen
+  ) +
+  # Y-as instellen
+  scale_y_continuous(
+    breaks = c(1.0, data$y), 
+    limits = c(1.0, max(data$y)),
+    labels = scales::number_format(accuracy = 0.1)
+  ) +
+  ylab("") +
+  # Geen x-as, geen gridlijnen
   theme_classic() +
   theme(
     axis.title.x = element_blank(),
@@ -1172,13 +1287,14 @@ ggplot(data, aes(x = x, y = y)) +
     axis.line.x = element_blank(),
     axis.ticks.x = element_blank(),
     panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(),
+    panel.grid.minor.x = element_blank()
   )
 ```
 
 Eigenschappen van het gemiddelde.
 
 :::
+
 
 Intuïtief verwacht je misschien 
   dat het gemiddelde de waarde is
@@ -1320,7 +1436,7 @@ Kleuren van de lijnen aanpassen!
 #| label: fig-centrummaten
 
 # Installeer en laad ggplot2 als het niet al beschikbaar is
-if (!("ggplot2" %in% loadedNamespaces())) {
+if (!("ggplot2" %in% .packages())) {
   library(ggplot2)
 }
 
@@ -1328,9 +1444,9 @@ if (!("ggplot2" %in% loadedNamespaces())) {
 set.seed(123)
 
 # Parameters voor de Gamma-verdeling
-shape <- 1.5  # Vormparameter (k)
-scale <- 3  # Schaalparameter (θ)
-sample_size <- 8000  # Aantal observaties
+shape <- 1.5        # Vormparameter (k)
+scale <- 3          # Schaalparameter (θ)
+sample_size <- 8000 # Aantal observaties
 
 # Trek een steekproef uit de Gamma-verdeling
 gamma_sample <- rgamma(sample_size, shape = shape, scale = scale)
@@ -1349,24 +1465,61 @@ gamma_df <- data.frame(
 
 # Maak een histogram en voeg verticale lijnen en labels toe
 ggplot(gamma_df, aes(x = value)) +
-  geom_histogram(binwidth = 0.5, boundary = 0, fill = opvulkleur, color = "black", alpha = 0.7) +
-  geom_vline(aes(xintercept = mean_value), color = "red", linetype = "dashed", size = 1.2) +
-  geom_vline(aes(xintercept = median_value), color = "green", linetype = "dashed", size = 1.2) +
-  geom_vline(aes(xintercept = mode_value), color = "purple", linetype = "dashed", size = 1.2) +
-  annotate("text", x = 10, y = 630, vjust = 0, 
-           label = paste0("Gemiddelde = ", round(mean_value, 1)), color = "red") +
-  annotate("text", x = 10, y = 530, vjust = 0, 
-           label = paste0("Mediaan = ", round(median_value, 1)), color = "green") +
-  annotate("text", x = 10, y = 430, vjust = 0, 
-                                   label = paste0("Modus = ", round(mode_value, 1)), color = "purple") +
+  geom_histogram(
+    binwidth = 0.5,
+    boundary = 0,
+    fill = opvulkleur,
+    color = "black",
+    alpha = 0.7
+  ) +
+  geom_vline(
+    aes(xintercept = mean_value),
+    color = "red",
+    linetype = "dashed",
+    size = 1.2
+  ) +
+  geom_vline(
+    aes(xintercept = median_value),
+    color = "green",
+    linetype = "dashed",
+    size = 1.2
+  ) +
+  geom_vline(
+    aes(xintercept = mode_value),
+    color = "purple",
+    linetype = "dashed",
+    size = 1.2
+  ) +
+  annotate(
+    "text",
+    x = 10,
+    y = 630,
+    vjust = 0,
+    label = paste0("Gemiddelde = ", round(mean_value, 1)),
+    color = "red"
+  ) +
+  annotate(
+    "text",
+    x = 10,
+    y = 530,
+    vjust = 0,
+    label = paste0("Mediaan = ", round(median_value, 1)),
+    color = "green"
+  ) +
+  annotate(
+    "text",
+    x = 10,
+    y = 430,
+    vjust = 0,
+    label = paste0("Modus = ", round(mode_value, 1)),
+    color = "purple"
+  ) +
   labs(
     title = "",
     x = "Waarden",
     y = "Frequentie"
   ) +
-  theme_minimal() +
-  coord_cartesian(clip = "off")  # Zorg dat labels buiten het plotgebied zichtbaar blijven
-
+  theme_minimal()
 ```
 
 Daarom gebruiken we de volgende richtlijnen. 
@@ -1384,39 +1537,37 @@ en kun je dus het beste de mediaan rapporteren.
 
 ## Maten voor de spreiding van een verdeling
 
-::: {.todo-box}
+Nu we de centrummaten hebben behandeld, 
+is het tijd om de spreidingsmaten te bespreken.
 
-korte inleiding.
+### Het bereik
 
-:::
-
-### Bereik
-
+We beginnen bij het **bereik**.
 Het **bereik** van een rij getallen
-is eenvoudigweg het interval van het kleinste getal
-naar het grootste getal.
-Dus, het bereik van de tentamencijfers die je in het voorbeeld hierboven 
-had gehaald is het interval $[1, 9]$.
+is eenvoudigweg het interval dat begint bij het kleinste getal
+en eindigt met het grootste getal.
+Dus, het bereik van de tentamencijfers uit het voorbeeld van zojuist
+is het interval $[1, 9]$.
 
-### De interkwartielafstand
+### Kwantielen en de interkwartielafstand
 
 We hebben het gehad over de mediaan.
 Je weet dus dat de helft van de waarnemingen kleiner is dan de mediaan.
-Om de mediaan te vinden deel je de waarnemingen in twee delen:
-de kleine waarden en de grote waarden.
-De mediaan geeft de scheiding aan tussen die twee delen.
+Om de mediaan te bepalen, deelde je de waarnemingen in twee groepen:
+de kleinere waarden en de grotere waarden.
+De mediaan vormde de scheidslijn tussen deze twee groepen.
 
-Op een vergelijkbare manier 
-  kun je de kengetallen definieren die we de **kwartielen** noemen.
-Om dat te doen
-  delen we de twee helften nog een keer in twee delen,
-  zodat we vier kwarten krijgen.
-De kwartielen geven de scheiding aan tussen de vier kwarten.
-Een kwart van de gegevens is kleiner dan het **eerste kwartiel**, genoteerd als Q1.
-De helft van de  gegevens is kleiner dan het **tweede kwartiel**, genoteerd als Q2.
-Q2 is dus precies de mediaan. 
-Drie kwart van de gegevens is kleiner dan het **derde kwartiel**, genoteerd als Q3.
-De kwartielen zijn in @fig-kwartielen1 geillustreerd.
+Op een vergelijkbare manier kunnen we kengetallen definiëren
+die we de **kwartielen** noemen.
+Hiervoor splitsen we de twee helften nogmaals in tweeën,
+waardoor we in totaal vier kwarten krijgen.
+De kwartielen markeren de grenzen tussen deze vier delen.
+
+Een kwart van de waarnemingen is kleiner dan het eerste kwartiel (Q1).
+De helft van de waarnemingen is kleiner dan het tweede kwartiel (Q2);
+die is dus precies gelijk aan de mediaan.
+Drie kwart van de waarnemingen is kleiner dan het derde kwartiel (Q3).
+De kwartielen zijn in @fig-kwartielen1 geïllustreerd.
 
 ```{r}
 #| code-fold: true
@@ -1425,101 +1576,175 @@ De kwartielen zijn in @fig-kwartielen1 geillustreerd.
 #| warning: false
 #| fig.width: 7
 #| fig.height: 3.5
-# Load necessary libraries only if they are not already loaded
-if (!("ggplot2" %in% loadedNamespaces())) { library("ggplot2") }
-if (!("NHANES" %in% loadedNamespaces())) { library("NHANES") }
-library("dplyr")
 
-# Use the Weight variable from the NHANES dataset
+# Laad de benodigde bibliotheken als ze nog niet beschikbaar zijn
+if (!("ggplot2" %in% .packages())) { library("ggplot2") }
+if (!("NHANES" %in% .packages())) { library("NHANES") }
+if (!("dplyr" %in% .packages())) { library("dplyr") }
+
+# Gebruik de Weight-variabele uit de NHANES dataset
 data <- NHANES %>%
   filter(!is.na(Weight)) %>%
   select(Weight)
 
-# Compute quartiles
+# Bereken kwartielen
 quartiles <- quantile(data$Weight, probs = c(0.25, 0.50, 0.75, 1.0))
-q1 <- quartiles[1]  # Q1 (25th percentile)
-q2 <- quartiles[2]  # Q2 (50th percentile / Median)
-q3 <- quartiles[3]  # Q3 (75th percentile)
-q4 <- quartiles[4]  # Q4 (100th percentile)
+q1 <- quartiles[1]  # Q1 (25e percentiel)
+q2 <- quartiles[2]  # Q2 (50e percentiel / Mediaan)
+q3 <- quartiles[3]  # Q3 (75e percentiel)
+q4 <- quartiles[4]  # Q4 (100e percentiel)
 
+# Functie om een kleur lichter te maken
 lighten_color <- function(color, percentage) {
-  # Ensure percentage is between 0 and 1
+  # Zorg ervoor dat het percentage tussen 0 en 1 ligt
   percentage <- max(0, min(percentage, 1))
   
-  # Convert the color to RGB and blend with white
+  # Converteer de kleur naar RGB en meng met wit
   rgb <- col2rgb(color) / 255
   blended_rgb <- rgb + (1 - rgb) * percentage
   
-  # Return as HEX
+  # Retourneer de kleur in HEX-formaat
   rgb(blended_rgb[1], blended_rgb[2], blended_rgb[3], maxColorValue = 1)
 }
 
-# Create a density plot with quartile-based clipping
+# Maak een density-plot met kwartielgebaseerde opvulling
 ggplot(data, aes(x = Weight)) +
-  # Full density plot (background layer) with bw = 2
+  # Volledige density-plot (achtergrondlaag) met bw = 2
   geom_density(
-    aes(y = ifelse(after_stat(x) <= q1+5, after_stat(density), NA)), color = "darkorange",
-    fill = lighten_color("darkorange", 0.8), alpha = 1, bw = 2, size = 1
-  ) +  # Clipped density plot for Q1 to Q2
-  geom_density(
-    aes(y = ifelse(after_stat(x) >= q1 & after_stat(x) <= q2+5, after_stat(density), NA)), color = "darkorange",
-    fill = lighten_color("darkorange", 0.6), alpha = 1, bw = 2, size = 1
+    aes(
+      y = ifelse(after_stat(x) <= q1 + 5, after_stat(density), NA)
+    ),
+    color = "darkorange",
+    fill = lighten_color("darkorange", 0.8),
+    alpha = 1,
+    bw = 2,
+    size = 1
   ) +
-  # Clipped density plot for Q2 to Q3
+  # Density-plot voor Q1 tot Q2
   geom_density(
-    aes(y = ifelse(after_stat(x) >= q2 & after_stat(x) <= q3+5, after_stat(density), NA)), color = "darkorange",
-    fill = lighten_color("darkorange", 0.4), alpha = 1, bw = 2, size = 1
+    aes(
+      y = ifelse(
+        after_stat(x) >= q1 & after_stat(x) <= q2 + 5,
+        after_stat(density),
+        NA
+      )
+    ),
+    color = "darkorange",
+    fill = lighten_color("darkorange", 0.6),
+    alpha = 1,
+    bw = 2,
+    size = 1
   ) +
-  # Clipped density plot for Q3 to Q4
+  # Density-plot voor Q2 tot Q3
   geom_density(
-    aes(y = ifelse(after_stat(x) >= q3, after_stat(density), NA)), color = "darkorange",
-    fill = lighten_color("darkorange", 0.2), alpha = 1, bw = 2, size = 1
+    aes(
+      y = ifelse(
+        after_stat(x) >= q2 & after_stat(x) <= q3 + 5,
+        after_stat(density),
+        NA
+      )
+    ),
+    color = "darkorange",
+    fill = lighten_color("darkorange", 0.4),
+    alpha = 1,
+    bw = 2,
+    size = 1
   ) +
-  # Add custom x-axis ticks and labels for quartiles
+  # Density-plot voor Q3 tot Q4
+  geom_density(
+    aes(
+      y = ifelse(after_stat(x) >= q3, after_stat(density), NA)
+    ),
+    color = "darkorange",
+    fill = lighten_color("darkorange", 0.2),
+    alpha = 1,
+    bw = 2,
+    size = 1
+  ) +
+  # Voeg aangepaste x-as ticks en labels toe voor de kwartielen
   scale_x_continuous(
     breaks = c(q1, q2, q3),
     labels = c("Q1", "Q2", "Q3"),
     minor_breaks = NULL
   ) +
-  # Add "25%" labels for each domain
-  annotate("text", x = (min(data$Weight) + q1) / 2, y = 0.002, label = "25%", color = "black", size = 4, fontface = "bold") +
-  annotate("text", x = (q1 + q2) / 2, y = 0.005, label = "25%", color = "black", size = 4, fontface = "bold") +
-  annotate("text", x = (q2 + q3) / 2, y = 0.005, label = "25%", color = "black", size = 4, fontface = "bold") +
-  annotate("text", x = (q3 + .15*q4) / 1.15, y = 0.002, label = "25%", color = "black", size = 4, fontface = "bold") +
+  # Voeg "25%" labels toe aan elk deel
+  annotate(
+    "text",
+    x = (min(data$Weight) + q1) / 2,
+    y = 0.002,
+    label = "25%",
+    color = "black",
+    size = 4,
+    fontface = "bold"
+  ) +
+  annotate(
+    "text",
+    x = (q1 + q2) / 2,
+    y = 0.005,
+    label = "25%",
+    color = "black",
+    size = 4,
+    fontface = "bold"
+  ) +
+  annotate(
+    "text",
+    x = (q2 + q3) / 2,
+    y = 0.005,
+    label = "25%",
+    color = "black",
+    size = 4,
+    fontface = "bold"
+  ) +
+  annotate(
+    "text",
+    x = (q3 + 0.15 * q4) / 1.15,
+    y = 0.002,
+    label = "25%",
+    color = "black",
+    size = 4,
+    fontface = "bold"
+  ) +
   labs(
     title = "",
     x = "Lichaamsgewicht",
-    y = "dichtheid"
+    y = "Dichtheid"
   ) +
   geom_segment(
     aes(
-      x = quantiles[1], xend = quantiles[3],
-      y = 0.002, yend = 0.002
-      ),
+      x = quantiles[1],
+      xend = quantiles[3],
+      y = 0.002,
+      yend = 0.002
+    ),
     arrow = arrow(ends = "both", length = unit(0.3, "cm")),
-    color = "black", size = 0.8, lineend = "round"
+    color = "black",
+    size = 0.8,
+    lineend = "round"
   ) +
   theme_minimal()
 ```
 
 
-De **interkwartielafstand** is gedefineerd als de afstand tussen
-  Q3 en Q1:
-  
-$$ \mathrm{IKA} = \mathrm{Q3} - \mathrm{Q1}.$$
-Dit is een maat voor de spreiding van de gegevens
- omdat het aangeeft hoe breed het interval is
- waarbinnen zich de "middelste" 50% van de gevens bevinden.
+De interkwartielafstand (IKA) wordt gedefinieerd als het verschil tussen
+Q3 en Q1:
 
-Je kunt de kwartielen het het IKA trouwens ook vinden
-door gebruik te maken van de cumulatieve verdeling.
-In @fig-cumul-IKA2 is oranje curve de cumulatieve verdeling 
-voor de variabele `Weight` van de NHANES dataset die we al eerder hebben bekeken
- (in @fig-cumul).
-De horizontale zwarte lijnen snijden de $y$-as bij $0{,}25$ en $0{,}75$.
-Ze snijden de cumulatieve verdeling precies bij Q1 en Q3,
-die weer op de $x$-as zijn aangegeven.
-De zwarte pijl geeft weer de IKA aan. 
+$$ \mathrm{IKA} = \mathrm{Q3} - \mathrm{Q1}. $$
+
+Dit is een maat voor de spreiding van de gegevens
+omdat de IKA aangeeft hoe breed het interval is
+waarin zich de “middelste” 50% van de waarnemingen bevindt.
+Het interval van Q1 tot Q3 is in @fig-kwartielen1 weergegeven met een dubbele pijl.
+De lengte van die pijl is dus de IKA
+
+Je kunt de kwartielen en de IKA ook bepalen
+met behulp van de cumulatieve verdelingsfunctie.
+In @fig-cumul-IKA2 zie je een oranje curve die de cumulatieve verdeling weergeeft
+voor de variabele `Weight` (lichaamsgewicht) uit de NHANES-dataset.
+We hadden die curve al eerder bekeken (zie @fig-cumul).
+De horizontale zwarte lijnen snijden de $y$-as bij $0{,}25$ en $0{,}75$,
+en raken de cumulatieve verdeling daarom precies bij Q1 en Q3.
+Deze kwartielen zijn vervolgens op de $x$-as gemarkeerd.
+De zwarte pijl geeft opnieuw de interkwartielafstand aan.
 
 ```{r}
 #| code-fold: true
@@ -1633,139 +1858,227 @@ cumulplot +
 #| fig.width: 7
 #| fig.height: 3.5
 
-# Load necessary libraries only if they are not already loaded
+# Laad de benodigde bibliotheken als ze nog niet geladen zijn
 if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
 if (!("dplyr" %in% loadedNamespaces())) { library(dplyr) }
 if (!("NHANES" %in% loadedNamespaces())) { library(NHANES) }
 
-# Use the Weight variable from the NHANES dataset
+# Gebruik de Weight-variabele uit de NHANES dataset
 data <- NHANES %>%
   filter(!is.na(Weight)) %>%
   select(Weight)
 
-# Compute quartiles
+# Bereken kwartielen
 quartiles <- quantile(data$Weight, probs = c(0.25, 0.50, 0.75, 1.0))
-q1 <- quartiles[1]  # Q1 (25th percentile)
-q2 <- quartiles[2]  # Q2 (50th percentile / Median)
-q3 <- quartiles[3]  # Q3 (75th percentile)
-q4 <- quartiles[4]  # Q4 (100th percentile / Max)
+q1 <- quartiles[1]  # Q1 (25e percentiel)
+q2 <- quartiles[2]  # Q2 (50e percentiel / Mediaan)
+q3 <- quartiles[3]  # Q3 (75e percentiel)
+q4 <- quartiles[4]  # Q4 (100e percentiel)
 
-# Create a cumulative density plot with quartile-based fills
+# Maak een cumulatieve verdelingsplot met kwartielopvulling
 ggplot(data, aes(x = Weight)) +
-  # Filled area for Q1
-  stat_ecdf(geom = "area",
-            aes(y = after_stat(y), fill = "Q1"),
-            alpha = 1, bw = 2) +
-  # Filled area for Q2
-  stat_ecdf(geom = "area",
-            aes(y = ifelse(after_stat(x) > q1 & after_stat(x) <= q2, after_stat(y), NA),
-                fill = "Q2"),
-            alpha = 1, bw = 2) +
-  # Filled area for Q3
-  stat_ecdf(geom = "area",
-            aes(y = ifelse(after_stat(x) > q2 & after_stat(x) <= q3, after_stat(y), NA),
-                fill = "Q3"),
-            alpha = 1, bw = 2) +
-  # Filled area for Q4
-  stat_ecdf(geom = "area",
-            aes(y = ifelse(after_stat(x) > q3 , after_stat(y), NA),
-                fill = "Q4"),
-            alpha = 1, bw = 2) +
-  # Full ECDF curve (consistent for the entire dataset)
-  stat_ecdf(geom = "step", size = 1, color = opvulkleur, bw = 2) +
-  # Add custom x-axis ticks and labels for quartiles
+  # Opvulgebied voor Q1
+  stat_ecdf(
+    geom = "area",
+    aes(
+      y = after_stat(y),
+      fill = "Q1"
+    ),
+    alpha = 1,
+    bw = 2
+  ) +
+  # Opvulgebied voor Q2
+  stat_ecdf(
+    geom = "area",
+    aes(
+      y = ifelse(
+        after_stat(x) > q1 & after_stat(x) <= q2,
+        after_stat(y),
+        NA
+      ),
+      fill = "Q2"
+    ),
+    alpha = 1,
+    bw = 2
+  ) +
+  # Opvulgebied voor Q3
+  stat_ecdf(
+    geom = "area",
+    aes(
+      y = ifelse(
+        after_stat(x) > q2 & after_stat(x) <= q3,
+        after_stat(y),
+        NA
+      ),
+      fill = "Q3"
+    ),
+    alpha = 1,
+    bw = 2
+  ) +
+  # Opvulgebied voor Q4
+  stat_ecdf(
+    geom = "area",
+    aes(
+      y = ifelse(
+        after_stat(x) > q3,
+        after_stat(y),
+        NA
+      ),
+      fill = "Q4"
+    ),
+    alpha = 1,
+    bw = 2
+  ) +
+  # Volledige ECDF-curve (consistent over de hele dataset)
+  stat_ecdf(
+    geom = "step",
+    size = 1,
+    color = opvulkleur,
+    bw = 2
+  ) +
+  # Voeg aangepaste x-as ticks en labels toe voor de kwartielen
   scale_x_continuous(
     breaks = c(q1, q2, q3),
     labels = c("Q1", "Q2", "Q3"),
     minor_breaks = NULL
   ) +
-  # Add custom colors for quartiles
+  # Voeg aangepaste kleuren toe voor de kwartielen
   scale_fill_manual(
-    values = c("Q1" = lighten_color("darkorange", 0.8), "Q2" = lighten_color("darkorange", 0.6), "Q3" = lighten_color("darkorange", 0.4), "Q4" = lighten_color("darkorange", 0.2))
+    values = c(
+      "Q1" = lighten_color("darkorange", 0.8),
+      "Q2" = lighten_color("darkorange", 0.6),
+      "Q3" = lighten_color("darkorange", 0.4),
+      "Q4" = lighten_color("darkorange", 0.2)
+    )
   ) +
   geom_segment(
     aes(
-      x = min(NHANES$Weight, na.rm = TRUE), xend = quantiles[1], 
-      y = 0.25, yend = 0.25
-      ), 
-    linetype = "dashed", color = "black", size = 0.8
-    ) +
+      x = min(NHANES$Weight, na.rm = TRUE),
+      xend = quantiles[1],
+      y = 0.25,
+      yend = 0.25
+    ),
+    linetype = "dashed",
+    color = "black",
+    size = 0.8
+  ) +
   geom_segment(
     aes(
-      x = min(NHANES$Weight, na.rm = TRUE), xend = quantiles[2], 
-      y = 0.5, yend = 0.5
-      ), 
-    linetype = "dashed", color = "black", size = 0.8
-    ) +
+      x = min(NHANES$Weight, na.rm = TRUE),
+      xend = quantiles[2],
+      y = 0.5,
+      yend = 0.5
+    ),
+    linetype = "dashed",
+    color = "black",
+    size = 0.8
+  ) +
   geom_segment(
     aes(
-      x = min(NHANES$Weight, na.rm = TRUE), xend = quantiles[3], 
-      y = 0.75, yend = 0.75
-      ), 
-    linetype = "dashed", color = "black", size = 0.8
-    ) +
+      x = min(NHANES$Weight, na.rm = TRUE),
+      xend = quantiles[3],
+      y = 0.75,
+      yend = 0.75
+    ),
+    linetype = "dashed",
+    color = "black",
+    size = 0.8
+  ) +
   geom_point(
-    aes(x = quantiles[1], y = 0.25), 
-    color = "black", size = 3
-    ) +
+    aes(
+      x = quantiles[1],
+      y = 0.25
+    ),
+    color = "black",
+    size = 3
+  ) +
   geom_point(
-    aes(x = quantiles[2], y = 0.5), 
-    color = lijnkleur2, size = 3
-    ) +
+    aes(
+      x = quantiles[2],
+      y = 0.5
+    ),
+    color = lijnkleur2,
+    size = 3
+  ) +
   geom_point(
-    aes(x = quantiles[3], y = 0.75), 
-    color = "black", size = 3
-    ) +
-
+    aes(
+      x = quantiles[3],
+      y = 0.75
+    ),
+    color = "black",
+    size = 3
+  ) +
   geom_segment(
     aes(
-      x = quantiles[1], xend = quantiles[3],
-      y = 0.1, yend = 0.1
-      ),
+      x = quantiles[1],
+      xend = quantiles[3],
+      y = 0.1,
+      yend = 0.1
+    ),
     arrow = arrow(ends = "both", length = unit(0.3, "cm")),
-    color = "black", size = 0.8, lineend = "round"
-    ) +
+    color = "black",
+    size = 0.8,
+    lineend = "round"
+  ) +
   labs(
-    title = "Cumulative verdeling en drie kwartielen",
+    title = "Cumulatieve verdeling en drie kwartielen",
     x = "Lichaamsgewicht",
     y = "Cumulatieve proportie",
-    fill = "Quartiles"
+    fill = "Kwartielen"
   ) +
   theme_minimal() +
-  theme(legend.position = "none")  # Remove the legend
+  theme(legend.position = "none")  # Verwijder de legenda
 ```
 
-Tot slot noemen we nog even de **percentielen**.
-Die zijn gemakkelijk te begrijpen aan de hand van een paar voorbeelden.
-Omdat 25% van de waarnemingen kleiner is dan Q1, 
-  is Q1 gelijk aan het vijf-en-twintigste percentiel, P25.
-90% procent van de waarnemingen is kleiner dan P90, 
-  het negentigste percentiel.
+Tot slot bespreken we de **percentielen**.
+Deze zijn gemakkelijk te begrijpen aan de hand van een paar voorbeelden.
+Omdat 25% van de waarnemingen kleiner is dan Q1,
+wordt Q1 ook wel het vijf-en-twintigste percentiel genoemd, 
+oftewel P25.
+Op dezelfde manier is 90% van de waarnemingen kleiner dan P90,
+het negentigste percentiel.
+
+In algemene termen worden statistieken zoals kwartielen en percentielen
+samen aangeduid als **kwantielen**.
+We komen in latere hoofdstukken ook nog tegen.
   
-In het algemeen worden statistieken zoals kwartielen en percentielen
-  ook **kwantielen** genoemd.
-  
-::: {#exr-percentielen}
-Simpele opgave over percentielen en kwartielen.
+::: {#exr-kwantielen}
+## Opgave: Kwantielen van tentamencijfers
+
+De scores van 16 studenten op een toets zijn als volgt (in volgorde van laag naar hoog):  
+**12, 15, 18, 20, 21, 23, 25, 28, 30, 32, 35, 38, 40, 42, 45, 46**.
+
+   a. Wat is de mediaan van deze dataset?  
+   a. Bereken Q1 (het eerste kwartiel) en Q3 (het derde kwartiel).  
+   b. Wat is de interkwartielafstand (IKA)?
+   d. Bereken de kwartielen en de IKA ook met R.  
+      Hint: Gebruik de functie `quantile()` om de kwartielen te berekenen.  
+   c. Wat zegt de interkwartielafstand over de spreiding van de scores?
+   a. Welk percentiel komt overeen met een score van 30?  
+   a. De docent zegt dat een score van 40 in het hoogste kwartiel ligt. Klopt dit?  
+   b. Een student scoort 20 op de toets. In welk kwartiel en percentiel valt deze score?  
+
 :::
 
 ### Variantie
 
+De **variantie** van een rij waarnemingen 
+is gedefineerd als de gemiddelde gekwadrateerde afwijking van de waarnemingen 
+ten opzichte van hun gemiddelde. De formule luidt:  
 
-::: {.todo-box}
-
-paragraaf hieronder uitwerken
-
-
-Gemiddelde gekwadrateerde afwijking van het gemiddelde. 
 $$
-V_X = \frac{\sum_{i=1}^n \left(x_i - \overline{x}\right)^2}{n-1}.
+V_X = \frac{\sum_{i=1}^n \left(x_i - \mean{x}\right)^2}{n-1}.
 $$
 
--   Kwadratensom in de teller; zie figuur @fig-res-1.
--   Waarom $n - 1$ in de noemer? Daar is een reden voor, maar die kan later pas worden uitgelegd -- geduld!
--   Let op! De dimensie van $V_X$ is het kwadraat van de dimensie van $X$. 
+- De teller is de **kwadratensom** die we in @fig-res-1 al tegenkwamen. 
+Dat is de som van de gekwadrateerde afwijkingen ten opzichte van het gemiddelde ($\mean{x}$). Door de afwijkingen te kwadrateren, zorgen we ervoor dat positieve en negatieve afwijkingen elkaar niet opheffen.  
+- In de noemer zou je misschien $n$ verwachten in plaats van $n - 1$. Dit heeft te maken met het corrigeren voor een effect dat optreedt bij het schatten van de variantie op basis van een steekproef. De reden hiervoor wordt later toegelicht.
 
+::: {.callout-warning}
+
+## Let op de dimensie en eenheid!
+
+De dimensie van de variantie, $V_X$, is het **kwadraat van de dimensie van $X$**. Als $X$ bijvoorbeeld een gewicht is (de dimensie) en gemeten wordt in kilogrammen (de eenheid), dan heeft $V_X$ de dimensie van gewicht-kwadraat en wordt die uitgedrukt in vierkante kilogrammen ($\text{kg}^2$). Dit maakt de variantie lastig te interpreteren in termen van de oorspronkelijke eenheden. Om dit probleem te omzeilen, gebruiken we vaak de **standaarddeviatie** -- de volgende maat op onze lijst!
 :::
 
 ### Standaarddeviatie
@@ -2293,7 +2606,8 @@ ggplot(NHANES, aes(x = Weight)) +
   geom_freqpoly(binwidth = 5, color = opvulkleur, size = 1) +
   labs(title = "Frequentiepolygoon van gewicht",
        x = "Lichaamsgewicht (kg)",
-       y = "Frequentie")
+       y = "Frequentie") +
+  theme_minimal()
 
 ```
 
