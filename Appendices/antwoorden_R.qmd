@@ -283,10 +283,12 @@ x[1]
 x[1] weet je niet, want runif geeft willekeurig getallen. Je weet wél dat het getal tussen 0 en 1 zal liggen. x[11] bestaat niet, want er zijn maar 10 getallen gegenereerd R geeft in dit geval 'NA' (not available).
 
 **e.**
+Om voor ieder persoon de score "per minuut" te berekenen, moeten we de score door het aantal minuten delen ("per" kun je eigenlijk altijd lezen als "gedeeld door"). Dit kunnen we doen door met het dollar-teken de kolommen te pakken, en deze door elkaar te delen. Deze nieuwe vector (hieronder 'spm') kan je dan ook als nieuwe kolom aan de dataframe toevoegen:
 ```{r}
 #| echo: true
 #| eval: false
-df$score_per_minuut <- df$score/df$minuten
+spm <- df$score/df$minuten
+df$score_per_minuut <- spm
 ```
 
 **f.**
@@ -294,7 +296,7 @@ dieren[2,3:4] geeft rij 2, kolom 3 en 4 terug.
 Let op: de eerste regel zijn de kolomnamen, dus de 2e rij is niet Joey, maar Roos! Daarom geeft dieren[2,3:4] de waarden "wit" en "energiek".
 
 **g.**
-De waarde begint op 1, en er wordt eerst 1, dan 2, en dan nog 3 bij opgeteld. Aan het einde is a dus 1+1+2+3 = 7.
+De waarde begint op 1, en dan loopt de for-loop over de waarden 1, 2 en 3. Deze waarden worden steeds aan a toegevoegd. Dus er wordt eerst 1, dan 2, en dan nog een keer 3 bij a opgeteld. Aan het einde is a dus 1+1+2+3 = 7.
 
 @exr-R-2
 
@@ -364,7 +366,7 @@ head(covid,n=12)
 #| echo: true
 
 # Lees het bestand covid.txt op de website in met 'read.table'
-covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/covid.txt",header=T)
+covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/data/covid.txt",header=T)
 str(covid) 
 # 5 rijen (observaties) en 
 # 5 kolommen (variables), 
@@ -382,7 +384,7 @@ typeof(covid$week) # integer (geheel getal)
 #| echo: true
 
 # Lees het bestand covid.txt op de website in met 'read.table'
-covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/covid.txt",header=T)
+covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/data/covid.txt",header=T)
 covid_subset <- covid[14:19,] # selecteer rij 14:19
 
 x <- covid_subset$datapunt # alle x-punten in een vector
@@ -399,7 +401,7 @@ plot(x,y, type='b',lwd=2, log="y",
 #| eval: false
 #| echo: true
 
-covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/covid.txt",header=T)
+covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/data/covid.txt",header=T)
 x <- covid$datapunt # alle x-punten in een vector
 y <- covid$positieve_testen # alle y-punten in een vector
 

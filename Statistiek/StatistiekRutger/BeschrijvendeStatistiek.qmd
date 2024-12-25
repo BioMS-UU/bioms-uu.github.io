@@ -1,5 +1,19 @@
 {{< include _macros.tex >}}
 
+```{r}
+#| eval: true
+#| echo: false
+#| output: false
+
+library(ggplot2)
+
+opvulkleur <- "darkorange"
+lijnkleur1 <- "DarkOrchid"
+lijnkleur2 <- "red"
+lijnkleur3 <- "blue"
+
+```
+
 # Variabelen en hun verdelingen {#sec-variabelen-verdelingen}
 
 ## Beschrijvende statistiek
@@ -257,7 +271,7 @@ ggplot(
   ) +
   geom_histogram(
     fill = "darkorange", 
-    color = "black", 
+    color = "black",
     binwidth = 36,
     boundary = 0,
     closed = "left"
@@ -304,7 +318,9 @@ In @fig-symmetrisch zijn voorbeelden weergegeven.
 #| label: fig-symmetrisch
 
 # Laad benodigde bibliotheken
-if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
+if (!("ggplot2" %in% .packages())) { 
+  library(ggplot2) 
+}
 
 # Stel een seed in voor reproduceerbaarheid
 set.seed(123)
@@ -320,13 +336,16 @@ data <- data.frame(
     rgamma(samplesize, shape = 3, scale = 1)    # Rechts-scheve verdeling
   ),
   group = factor(
-    rep(c("Links-scheef", "Symmetrisch", "Rechts-scheef"), each = samplesize)
+    rep(
+      c("Links-scheef", "Symmetrisch", "Rechts-scheef"), 
+      each = samplesize
+    )
   )
 )
 
 # Plot met facet_wrap
 ggplot(data, aes(x = x)) +
-  geom_histogram(bins = nr.bins, fill = "darkorange", color = "black") +
+  geom_histogram(bins = nr.bins, fill = opvulkleur, color = "black") +
   facet_wrap(~group, nrow = 1, scales = "free_x") +  # Maak drie panelen naast elkaar
   labs(
     x = "Waarde",           # Gezamenlijk label voor de x-as
@@ -382,15 +401,13 @@ Veel verdelingen in de biologie hebben een klokvorm.
 
 :::
 
-
-::: {.todo-box}
-Schrijven: **uniforme verdeling**. Gebruik een sample; label de grenzen van het interval $a$ en $b$. Maak in R door een steekproef te nemen van random getallen tussen 0 en 1 met runif().  Creeer een plot met ggplot2; zie code onder voor voorbeelden.
-:::
+Een verdeling wordt **uniform** genoemd als iedere uitkomst even vaak voorkomt.
+Bijvoorbeeld, de verdeling in @fig-uniform is ongeveer uniform in het domein tussen 0 en 1.
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 3
+#| fig.width: 5
 #| fig.height: 2.5
 #| fig.cap: "Histogram van een ongeveer uniforme verdeling."
 #| label: fig-uniform
@@ -409,7 +426,7 @@ data_unif <- runif(samplesize)  # Uniforme verdeling
 # Histogram plotten
 ggplot(data.frame(x = data_unif), aes(x)) +
   geom_histogram(
-    binwidth = 0.05, boundary = 0, fill = "darkorange", color = "black"
+    binwidth = 0.05, boundary = 0, fill = opvulkleur, color = "black"
   ) +
   labs(
     title = "Uniform", # Titel
@@ -417,12 +434,9 @@ ggplot(data.frame(x = data_unif), aes(x)) +
     y = "Frequentie"   # Label voor de y-as
   ) +
   theme_minimal() +
-  theme(
-    axis.text.y = element_text(size = 9),      # Y-as-ticks en labels
-    axis.ticks.y = element_line(),             # Y-as-ticks inschakelen
-    axis.text.x = element_text(size = 9),      # X-as-ticks en labels
-    axis.ticks.x = element_line(),             # X-as-ticks inschakelen
-    panel.grid = element_blank()               # Verwijder gridlijnen
+  coord_cartesian(
+    xlim = c(-0.5, 1.5),
+    ylim = c(0, 6000)
   )
 ```
 
@@ -463,18 +477,24 @@ data_uni <- rpois(samplesize, lambda = 10)
 # Combineer gegevens en voeg een groepsvariabele toe
 data <- data.frame(
   x = c(data_uni, data_bi),
-  group = factor(rep(c("Unimodaal", "Bimodaal"), each = samplesize))
+  group = factor(
+    rep(
+      c("Unimodaal", "Bimodaal"), 
+      each = samplesize
+      ), 
+    levels = c("Unimodaal", "Bimodaal")
+    )
 )
 
 # Plot met facet_wrap
 ggplot(data, aes(x = x)) +
   geom_histogram(
     data = subset(data, group == "Unimodaal"),
-    binwidth = 1, fill = "darkorange", color = "black"
+    binwidth = 1, fill = opvulkleur, color = "black"
   ) +
   geom_histogram(
     data = subset(data, group == "Bimodaal"),
-    bins = nr.bins, fill = "darkorange", color = "black"
+    bins = nr.bins, fill = opvulkleur, color = "black"
   ) +
   facet_wrap(~group, nrow = 1, scales = "free_x") +  # Creëer twee panelen naast elkaar
   labs(
@@ -515,7 +535,7 @@ ggplot(
   aes(x = Weight)
   ) +
   geom_histogram(
-    fill = "darkorange", 
+    fill = opvulkleur, 
     color = "black", 
     binwidth = 5,
     boundary = 0,
@@ -562,59 +582,108 @@ hist(NHANES$Weight[NHANES$AgeMonths < 150], breaks = 30)
 :::
 
 
-### Cumulatieve verdelingen
+## De cumulatieve verdeling van een variabele {#sec-cumul}
 
-::: {.todo-box}
+De **cumulatieve verdeling** van een variabele
+laat zien welk deel van de waarnemingen kleiner of gelijk is
+aan een bepaalde waarde. 
+We leggen dit uit aan de hand van een voorbeeld.
 
-Schrijven: cumulatieve verdeling. De cumulatieve verdeling geeft weer 
-welke proportie van de waarden kleiner of gelijk is aan een bepaalde waarde.
+::: {#exm-cumul-weight}
 
-Deze functie loopt altijd van 0  naar 1, en kan nooit dalen.
+## De cumulatieve verdeling van lichaamsgewicht
 
-Als voorbeeld is hieronder in @fig-cumul de cumulatieve verdeling van `Weight` (lichaamsgewicht) weergegeven. je kunt hieruit bijvoorbeeld aflezen dat ongeveer 87% 
-van de mensen een gewicht heeft van ten hoogste 100kg.
-Omgekeerd heeft dan 100% - 87% = 13% van de mensen een gewicht 
-van meer dan 100 kg.
-
-:::
+In @fig-cumul is als voorbeeld de cumulatieve verdeling van `Weight` (lichaamsgewicht) weergegeven
+(de <span style="color:darkorange;">oranje</span> curve).
+Voor elk lichaamsgewicht op de $x$-as geeft de $y$-as
+aan welke proportie van de waarnemingen zich onder of op die waarde bevindt;
+dat wordt wel eens de **cumulatieve proportie** genoemd.
+Je kunt uit deze grafiek bijvoorbeeld aflezen 
+(zie de <span style="color:red;">rode</span> onderbroken lijnen) 
+dat 86% van de mensen een gewicht heeft van maximaal 100kg.
+Dit betekent dat de overige 14% méér weegt dan 100 kg.
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset."
+#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. De rode onderbroken lijnen laten zien dat 86% van de mensen in de dataset hoogstens 100kg weegt."
 #| label: fig-cumul
-#| fig.width: 4.5
+#| fig.width: 7
 #| fig.height: 3.5
 
 cumulplot <- ggplot(NHANES, aes(x = Weight)) +
-  stat_ecdf(geom = "step", color = "darkorange", size = 1) +
+  stat_ecdf(
+    geom = "step", 
+    color = opvulkleur, 
+    size = 1, 
+    bw = 2
+  ) +
   labs(
     title = "Cumulatieve verdeling van lichaamsgewicht",
     x = "Lichaamsgewicht",
-    y = "Cumulatieve frequentie"
-    ) + theme_minimal()
+    y = "Cumulatieve proportie"
+  ) + 
+  theme_minimal()
 
-cumulplot
+# Definieer het kruispunt van de lijnen
+kruising <- c(100, 0.86)
+
+cumulplot +
+  # Voeg een horizontale stippellijn toe bij de cumulatieve proportie van 0.86
+  geom_segment(
+    aes(
+      x = 0, xend = kruising[1], 
+      y = kruising[2], yend = kruising[2]
+    ), 
+    linetype = "dashed", 
+    color = lijnkleur2, 
+    size = 1
+  ) +
+  # Voeg een verticale stippellijn toe bij het gewicht van 100 kg
+  geom_segment(
+    aes(
+      x = kruising[1], xend = kruising[1], 
+      y = 0, yend = kruising[2]
+    ), 
+    linetype = "dashed", 
+    color = lijnkleur2, 
+    size = 1
+  ) +
+  # Voeg een punt toe op het kruispunt van de lijnen
+  geom_point(
+    aes(x = kruising[1], y = kruising[2]), 
+    color = lijnkleur2, 
+    size = 3
+  ) +
+  # Pas de y-as aan om een extra label toe te voegen bij 0.86
+  scale_y_continuous(
+    breaks = function(limits) c(0.86, scales::extended_breaks()(limits)),
+    labels = function(breaks) ifelse(breaks == 0.86, "0.86", breaks)
+  )
 ```
+
+:::
+
+De cumulatieve proportie neemt altijd toe 
+naarmate de waarde op de $x$-as groter wordt, 
+omdat dan steeds meer waarnemingen kleiner zijn dan de waarde op de $x$-as. 
+Hierdoor is de cumulatieve verdeling een stijgende functie
+die begint bij 0 (bij de kleinste waarde binnen de waarnemingen) en eindigt bij 1 (bij de grootste waarde).
+
 
 ## Ligging en spreiding van een verdeling
 
 Om de verdeling van een variabele te karakteriseren
   kunnen we naast woorden ook getallen gebruiken.
-We noemen dat soort getallen **kengetallen** of statistieken.
+Dat soort getallen worden **kengetallen** of **statistieken** genoemd.
 
 Om de verdeling van een numerieke variabele
-  kort te karakteriseren 
+  kort te omschrijven 
   geven we vaak twee getallen.
-  
-::: {.todo-box}
-Ben niet tevreden met onderstaande intuitieve definitie van **ligging**.
-:::
-
 De eerste waarde geeft de **ligging** aan van de verdeling.
 Informeel bedoelen we met de ligging van een verdeling
   de plek op de $x$-as waar zich het histogram bevindt.
-We kunnen de ligging karakteriseren door een *typische* waarde
+We kunnen de ligging aangeven door een *typische* waarde
   voor de variabele uit te rekenen.
 Bijvoorbeeld,
   van de personen die zijn opgenomen in de NHANES dataset
@@ -625,17 +694,17 @@ Bijvoorbeeld,
 Het tweede getal geeft de **spreiding** van de verdeling weer.
 Informeel bedoelen we met de spreiding van de verdeling
   de mate waarin de verschillende waarden van de variabele
-  zoal van elkaar verschillen;
-  de mate waarin de waarden verspreid zijn.
+  van elkaar verschillen;
+  de mate waarin de waarden *verspreid* zijn.
 
-@fig-ligging-spreiding illustreert die twee begrippen
-  ligging en spreiding
+@fig-ligging-spreiding illustreert die twee begrippen,
+  ligging en spreiding,
   aan de hand van histogrammen.
 De twee histogrammen aan de linkerkant zijn enkel ten opzichte van elkaar verschoven. Daarom verschilt hun ligging maar is hun spreiding gelijk.
 De twee histogrammen aan de rechterkant liggen ongeveer op dezelfde plek,
-  gecentreerd rond de waarde 10,
-  maar de de waarden in het onderste histogram 
-  zijn over een groter domein verspreid.
+  gecentreerd op de waarde 0,
+  maar in het onderste histogram zijn de waarden  
+  over een groter domein verspreid.
   (De piek is breder.)
 Daarom verschilt hun spreiding, maar hun ligging is gelijk.
 
@@ -645,6 +714,9 @@ Maak een figuur met vier plaatjes van histogrammen. Vergelijkbaar met volgende p
 
 ![Ligging en spreiding in vier plaatjes.](figuren/ligging-spreiding-tmp.png){#fig-ligging-spreiding}
 Als voorbeeld heb ik samen met ChatGPT de volgende figuur gemaakt. Alleen de pijlen kloppen nog niet.
+
+:::
+
 ```{r}
 #| code-fold: true
 #| warning: false
@@ -675,12 +747,15 @@ data <- data.frame(
     rnorm(samplesize, mean1, sd2)         # Bottom-right: larger spread
   ),
   group = factor(
-    rep(c(
-      "Zelfde spreiding, verschillende ligging", 
-      "Zelfde ligging, verschillende spreiding",
-      "Bottom-left", 
-      "Bottom-right"
-    ), each = samplesize),
+    rep(
+      c(
+        "Zelfde spreiding, verschillende ligging", 
+        "Zelfde ligging, verschillende spreiding",
+        "Bottom-left", 
+        "Bottom-right"
+      ), 
+      each = samplesize
+    ),
     levels = c(
       "Zelfde spreiding, verschillende ligging", 
       "Zelfde ligging, verschillende spreiding", 
@@ -701,16 +776,31 @@ strip_labels <- data.frame(
     ),
     levels = levels(data$group)
   ),
-  title = c("Zelfde spreiding, verschillende ligging", 
-            "Zelfde ligging, verschillende spreiding", 
-            "", "")
+  title = c(
+    "Zelfde spreiding, verschillende ligging", 
+    "Zelfde ligging, verschillende spreiding", 
+    "", 
+    ""
+  )
 )
 
 # Plot basis
 base_plot <- ggplot(data, aes(x = x)) +
-  geom_histogram(binwidth = 0.5, fill = "darkorange", color = "black") +
-  facet_wrap(~group, ncol = 2, scales = "free_y", labeller = as_labeller(setNames(strip_labels$title, strip_labels$group))) +
-  scale_x_continuous(limits = c(-6, 6), breaks = seq(-6, 6, by = 2)) +  # Gelijke x-assen
+  geom_histogram(
+    binwidth = 0.5, 
+    fill = opvulkleur, 
+    color = "black"
+  ) +
+  facet_wrap(
+    ~group, 
+    ncol = 2, 
+    scales = "free_y", 
+    labeller = as_labeller(setNames(strip_labels$title, strip_labels$group))
+  ) +
+  scale_x_continuous(
+    limits = c(-6, 6), 
+    breaks = seq(-6, 6, by = 2)
+  ) +  # Gelijke x-assen
   labs(
     x = "Waarde",
     y = "Frequentie"
@@ -726,34 +816,196 @@ base_plot <- ggplot(data, aes(x = x)) +
 # Annotaties toevoegen
 annotations <- list(
   # Pijl voor verschuiving (alleen linksonder)
-  annotate("segment", x = mean1, xend = mean2 + 1, y = 200, yend = 200,
-           arrow = arrow(length = unit(0.2, "cm")), color = "blue", size = 1.2),
+  annotate(
+    "segment", 
+    x = mean1, 
+    xend = mean2 + 1, 
+    y = 200, 
+    yend = 200,
+    arrow = arrow(length = unit(0.2, "cm")), 
+    color = lijnkleur3, 
+    size = 1.2
+  ),
   # Dubbelzijdige pijlen voor spreiding (alleen rechterkolom)
-  annotate("segment", x = mean1 - sd1, xend = mean1 + sd1, y = 200, yend = 200,
-           arrow = arrow(ends = "both", length = unit(0.2, "cm")), color = "red", size = 1),
-  annotate("segment", x = mean1 - sd2, xend = mean1 + sd2, y = 200, yend = 200,
-           arrow = arrow(ends = "both", length = unit(0.2, "cm")), color = "red", size = 1,
-           linetype = "dashed")
+  annotate(
+    "segment", 
+    x = mean1 - sd1, 
+    xend = mean1 + sd1, 
+    y = 200, 
+    yend = 200,
+    arrow = arrow(ends = "both", length = unit(0.2, "cm")), 
+    color = lijnkleur2, 
+    size = 1
+  ),
+  annotate(
+    "segment", 
+    x = mean1 - sd2, 
+    xend = mean1 + sd2, 
+    y = 200, 
+    yend = 200,
+    arrow = arrow(ends = "both", length = unit(0.2, "cm")), 
+    color = lijnkleur2, 
+    size = 1,
+    linetype = "dashed"
+  )
 )
 
 # Combineer de basis plot met annotaties
 tidy_plot <- base_plot + annotations
 tidy_plot
 ```
-:::
 
-Er worden in de statistiek
-  verschillende maten voor ligging en spreiding gebruikt.
+Om ligging en spreiding in getallen uit te drukken
+  worden verschillende maten gebruikt.
 Over die specifieke maten zullen we het nu hebben.
 
 ## Maten voor de ligging van een verdeling
 
-We bespreken drie verschillende maten die gebruikt worden 
-om de ligging van een verdeling aan te duiden:
-het **gemiddelde**, de **mediaan**, en de **modus**.
-Alledrie de maten geven een "typische" waarde
+Maten voor de ligging van een verdeling worden ook wel **centrummaten** genoemd.
+Hieronder bespreken we drie verschillende centrummaten:
+de **modus**, de **mediaan**, en het **gemiddelde**.
+Deze drie maten geven allemaal een "typische" waarde
   voor de variable,
-  maar iedere maat gebruikt een andere definitie van wat "typisch" betekent.
+  maar "typisch" is bij iedere maat net anders gedefineerd.
+
+### De modus 
+
+De eerste centrummaat is de **modus**.
+In het algemeen wordt met de modus de waarde bedoeld die het vaakst voorkomt.
+Bij categorische variabelen kun je simpelweg tellen welke uitkomst dat is.
+Bij numerieke variabelen wordt meestal het interval bedoeld 
+  dat hoort bij de hoogste staaf van het histogram.
+Als er meerdere pieken zijn, dan zijn er meerdere modi (meervoud van modus).
+Daar komen ook de woorden unimodaal, bimodaal, etc. vandaan.
+In @fig-histogram, het histogram van `Weight`,
+waren twee pieken te zien.
+Er zijn dan ook twee modi: het interval $[15,20)$ en het interval $[75,80)$.
+  
+### De mediaan
+  
+Een andere veel gebruikte centrummaat is de mediaan.
+In dit boek noteren we de mediaan van een serie waarnemingen $x_1$, $x_2$, $\ldots$ als $\tilde{x}$.
+Om de mediaan te berekenen sorteer je de waarnemingen eerst van klein naar groot.
+Als het aantal waarnemingen $n$ oneven is, 
+  dan is de mediaan het middelste getal in de gesorteerde rij.
+Als het aantal waarnemingen $n$ even is,
+  dan bestaat zo'n middelste getal niet; 
+  in dat geval nemen we het gemiddelde van de middelste *twee* getallen.
+
+::: {#exm-tentamencijfers}
+
+## De mediaan van je tentamencijfers
+
+Laten we een voorbeeld nemen.
+Stel dat je voor vijf tentamens de volgende cijfers hebt gehaald:
+
+$$7;\quad 7{,}5;\quad 1;\quad 8{,}5;\quad 9.$$
+Wat is dan de mediaan van je cijfers?
+
+We sorteren de cijfers en krijgen
+
+$$1;\quad 7;\quad {\color{orange}7{,}5};\quad 8{,}5;\quad 9.$$
+
+Het getal midden in de rij is de ${\color{orange}7{,}5}$
+en dus is de mediaan gelijk aan ${\color{orange}7{,}5}$.
+
+Als je voor het volgende tentamen een 10 haalt, 
+verandert de gesorteerde reeks als volgt:
+
+$$1;\quad 7;\quad {\color{orange}7{,}5};\quad {\color{orange}8{,}5};\quad 9; \quad 10.$$
+
+Omdat het aantal tentamencijfers nu even is, is er geen middelste getal meer.
+Als mediaan nemen we daarom het gemiddelde van de *twee* middelse getallen:
+
+$$\tilde{x}=\frac{{\color{orange}7{,}5} + {\color{orange}8{,}5}}{2} = 8.$$
+:::
+
+
+De mediaan is dus een "typische" of representatieve waarde
+in de zin dat er evenveel waarden groter zijn
+als kleiner.
+Dat hoeft bij de modus en het gemiddelde niet zo te zijn.
+
+In @sec-cumul hebben we de cumulatieve verdeling besproken.
+De mediaan is per definitie de waarde
+  waarbij de cumulatieve proportie gelijk is aan $0{,}5$.
+De mediaan kan daarom uit de cumulatieve verdeling worden afgelezen
+door de waarde op de $x$-as te bepalen
+die hoort bij een cumulatieve proportie van $0{,}5$.
+In @fig-cumul-2a is net als in @exm-cumul-weight
+de cumulatieve verdeling van de variabele `Weight` (lichaamsgewicht) weergegeven.
+Het rode kruis geeft de mediaan van lichaamsgewicht aan.
+De rode lijnen laten zien dat de cumulative proportie daar precies $0{,}5$ is.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. De mediaan is met een kruis op de $x$-as aangegeven. De mediaan is gedefineerd als de waarde zodanig dat de helft van de waarnemingen kleiner is en de helft groter. Daarom bereikt de cumulatieve verdeling op dat punt precies een half."
+#| label: fig-cumul-2a
+#| fig.width: 7
+#| fig.height: 3.5
+
+# Bereken de kwartielen van de Weight-variabele
+quantiles <- quantile(
+  NHANES$Weight, 
+  probs = c(0.25, 0.5, 0.75), 
+  na.rm = TRUE
+)
+
+# Voeg lijnen, punten en labels toe aan de cumulatieve plot
+cumulplot_median <- cumulplot +
+  # Horizontale lijn bij de mediaan
+  geom_segment(
+    aes(
+      x = 0, xend = quantiles[2], 
+      y = 0.5, yend = 0.5
+    ),
+    linetype = "dashed", 
+    color = lijnkleur2, 
+    size = 1
+  ) +
+  # Verticale lijn bij de mediaan
+  geom_segment(
+    aes(
+      x = quantiles[2], xend = quantiles[2], 
+      y = 0, yend = 0.5
+    ),
+    linetype = "dashed", 
+    color = lijnkleur2, 
+    size = 1
+  ) +
+  # Punt op het kruispunt van mediaan en cumulatieve proportie 0.5
+  geom_point(
+    aes(
+      x = quantiles[2], 
+      y = 0.5
+    ),
+    color = lijnkleur2, 
+    size = 3
+  ) +
+  # Kruis op de x-as bij de mediaan
+  geom_point(
+    aes(
+      x = quantiles[2], 
+      y = 0
+    ),
+    color = lijnkleur2, 
+    shape = 4, 
+    size = 3, 
+    stroke = 2
+  ) +
+  # Labels voor titel en assen
+  labs(
+    title = "Cumulatieve verdeling van lichaamsgewicht",
+    x = "Lichaamsgewicht",
+    y = "Cumulatieve proportie"
+  )
+
+# Toon de plot met de mediaan
+cumulplot_median
+
+```
+
 
 ### Het gemiddelde
 
@@ -792,20 +1044,22 @@ Je hebt al lang geleden geleerd wat een gemiddelde is
 Maar waarom is het gemiddelde eigenlijk een logische manier
   om een rij cijfers samen te vatten?
 
-Één nuttig perspectief is het volgende. 
-Stel dat je voor vijf tentamens de volgende cijfers hebt gehaald:
-
-$$7;\quad 6;\quad 1;\quad 8{,}5;\quad 9.$$
-
+Een nuttig perspectief is om over het gemiddelde te denken als het *zwaartepunt* van je getallen.
+Om dat concreet te maken
+  stellen we ons weer voor dat je, 
+  net als in @exm-tentamencijfers,
+  voor vijf tentamens 
+  de volgende cijfers hebt gehaald:
+$$7;\quad 7{,}5;\quad 1;\quad 8{,}5;\quad 9.$$
 Stel je die cijfers voor als kralen die op een getallenlijn geregen zijn,
    zoals in @fig-zwaartepunt hieronder.
-Het gemiddelde is nu precies het **zwaartepunt**
+Het gemiddelde is nu precies het zwaartepunt
   van de kralen.
 Dat wil zeggen:
   als de getallenlijn in @fig-zwaartepunt een dun stokje is
   met een verwaarloosbaar gewicht, 
   en je het stokje precies met het gemiddelde op het <span style="color:darkorange;">oranje</span> driehoekje plaatst,
-  dan blijft het stokje met kralen precies in balans.
+  dan blijft het geheel precies in balans.
 
 ```{r}
 #| code-fold: true
@@ -815,7 +1069,7 @@ Dat wil zeggen:
 #| fig-cap: "Het gemiddelde als het zwaartepunt van de getallen"
 #| label: fig-zwaartepunt
 # Plot de volgende getallen
-x <- c(1, 6, 7, 8.5, 9)
+x <- c(1, 7, 7.5, 8.5, 9)
 m <- mean(x)
 
 # Genereer een data frame met zowel de getallen als hun labels
@@ -838,7 +1092,7 @@ ggplot(df, aes(x = x, y = 0)) +
     "polygon", 
     x = c(m, m - 0.2, m + 0.2),
     y = c(0, -0.3, -0.3), 
-    fill = "darkorange"
+    fill = opvulkleur
     ) + 
   coord_cartesian(xlim = c(min(x), max(x)), ylim = c(-0.6, 0.5)) +
   annotate(
@@ -849,12 +1103,35 @@ ggplot(df, aes(x = x, y = 0)) +
       bar(italic(x))), 
       size = 7, 
     vjust = 1, 
-    color = "darkorange"
+    color = opvulkleur
     ) +
   theme_void() + # geen y-as, geen ticks, geen labels
   theme(axis.line.x = element_blank())
 
 ```
+
+Merk trouwens op dat alle tentamencijfers voldoende zijn,
+  behalve één grote uitzondering: een 1.
+Zo'n waarneming die ver buiten de rest van de reeks ligt
+  noemen we een **uitbijter**.
+Uitbijters kunnen een groot effect hebben op het gemiddelde.
+Dat zie je ook in @fig-zwaartepunt: 
+  doordat de 1 zo ver van de andere cijfers ligt
+  kan deze in z'n eentje als tegengewicht dienen
+  voor alle overige getallen.
+Het is duidelijk de moeite waard om deze toets te herkansen!
+
+::: {#exr-cijfer}
+
+## Gevoeligheid voor uitbijters
+
+Stel dat je het tentamen waarvoor je een 1 had gehaald
+mag herkansen.
+Je haalt voor het hertentamen een 7.
+
+  a. Wat is het effect op je gemiddelde cijfer?
+  b. Wat is het effect op de mediaan?
+:::
 
 Een ander nuttig perspectief wordt geïllustreerd in @fig-res-1 hieronder.
 Dezelfde tentamencijfers zijn nu op de *verticale* as geplot. 
@@ -872,41 +1149,56 @@ Vanuit ieder punt is een verticale grijze lijn getekend naar het gemiddelde.
 #| fig-cap: "Elastiekjes trekken de oranje lijn precies naar het gemiddelde."
 #| label: fig-res-1
 
+# Maak een dataset met handmatige jitter
 data <- data.frame(
-  x = c(0, -0.04, 0.08, 0.03, -0.08), # handmatice jitter
+  x = c(0, -0.04, 0.08, 0.03, -0.08), # handmatige jitter
   y = x
 )
 
 ggplot(data, aes(x = x, y = y)) +
-  # verticale lijnen
+  # Verticale lijnen naar het gemiddelde
   geom_segment(
-      aes(x = x, xend = x, y = y, yend = m), 
-      color = "SlateGray", 
-      linetype = "solid", 
-      size = 1
-      ) +
-  # punten
-  geom_point(shape = 21, fill = "SlateGray", size = 5) +
-  # gemiddelde
-  geom_segment(
-    aes(x = -0.15, xend = 0.15, y = m, yend = m), 
-    color = "darkorange", 
+    aes(
+      x = x, xend = x, 
+      y = y, yend = m
+    ),
+    color = "SlateGray",
+    linetype = "solid",
     size = 1
-    ) +
-  # label
+  ) +
+  # Punten
+  geom_point(
+    shape = 21, 
+    fill = "SlateGray", 
+    size = 5
+  ) +
+  # Gemiddelde lijn
+  geom_segment(
+    aes(
+      x = -0.15, xend = 0.15, 
+      y = m, yend = m
+    ),
+    color = opvulkleur,
+    size = 1
+  ) +
+  # Label bij de gemiddelde lijn
   annotate(
-    "text", 
-    x = 0.12, y = m + .3, 
-    label = expression(bar(italic(x))), 
-    color = "darkorange", 
-    hjust = 0, 
+    "text",
+    x = 0.12, 
+    y = m + 0.3,
+    label = expression(bar(italic(x))),
+    color = opvulkleur,
+    hjust = 0,
     size = 6
-    ) +
-  # y-as
-  scale_y_continuous(breaks = x, limits = c(min(x), max(x)),
-  labels = scales::number_format(accuracy = 0.1)) +
-  ylab("Tentamencijfers") + 
-  # geen x-as, geen grid, keep y-axis with no vertical grid lines
+  ) +
+  # Y-as instellen
+  scale_y_continuous(
+    breaks = x, 
+    limits = c(min(x), max(x)),
+    labels = scales::number_format(accuracy = 0.1)
+  ) +
+  ylab("Tentamencijfers") +
+  # Geen x-as, geen gridlijnen
   theme_classic() +
   theme(
     axis.title.x = element_blank(),
@@ -914,7 +1206,7 @@ ggplot(data, aes(x = x, y = y)) +
     axis.line.x = element_blank(),
     axis.ticks.x = element_blank(),
     panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(),
+    panel.grid.minor.x = element_blank()
   )
 ```
 
@@ -926,49 +1218,68 @@ ggplot(data, aes(x = x, y = y)) +
 #| fig-cap: "Voorbeeld met slechts drie punten. De paarse lijn minimaliseert som van de afstanden tot de punten; de oranje lijn die het gemiddelde aangeeft minimaliseert de kwadratensom."
 #| label: fig-res-2
 
+# Maak een dataset met drie punten
 data <- data.frame(
   x = c(0.08, 0, -0.08),
   y = c(9.0, 6, 9)
 )
 
-m2 = mean(data$y)
+# Bereken het gemiddelde
+m2 <- mean(data$y)
 
 ggplot(data, aes(x = x, y = y)) +
-  # verticale lijnen
+  # Verticale lijnen naar het gemiddelde
   geom_segment(
-      aes(x = x, xend = x, y = y, yend = m2), 
-      color = "SlateGray", 
-      linetype = "solid", 
-      size = 1
-      ) +
-  # punten
-  geom_point(shape = 21, fill = "SlateGray", size = 5) +
-  # gemiddelde
-  geom_segment(
-    aes(x = -0.15, xend = 0.15, y = m2, yend = m2), 
-    color = "darkorange", 
+    aes(
+      x = x, xend = x, 
+      y = y, yend = m2
+    ),
+    color = "SlateGray",
+    linetype = "solid",
     size = 1
-    ) +
-  # alternatief
+  ) +
+  # Punten
+  geom_point(
+    shape = 21, 
+    fill = "SlateGray", 
+    size = 5
+  ) +
+  # Gemiddelde lijn
   geom_segment(
-    aes(x = -0.15, xend = 0.15, y = 9, yend = 9), 
-    color = "DarkOrchid", 
+    aes(
+      x = -0.15, xend = 0.15, 
+      y = m2, yend = m2
+    ),
+    color = opvulkleur,
     size = 1
-    ) +
-  # label
+  ) +
+  # Alternatieve lijn
+  geom_segment(
+    aes(
+      x = -0.15, xend = 0.15, 
+      y = 9, yend = 9
+    ),
+    color = lijnkleur1,
+    size = 1
+  ) +
+  # Label bij de gemiddelde lijn
   annotate(
-    "text", 
-    x = 0.12, y = m2 + 0.3, 
-    label = expression(bar(italic(x))), 
-    color = "darkorange", 
-    hjust = 0, 
+    "text",
+    x = 0.12, 
+    y = m2 + 0.3,
+    label = expression(bar(italic(x))),
+    color = opvulkleur,
+    hjust = 0,
     size = 6
-    ) +
-  # y-as
-  scale_y_continuous(breaks = c(1.0, data$y), limits = c(1.0, max(data$y)),
-  labels = scales::number_format(accuracy = 0.1)) +
-  ylab("") + 
-  # geen x-as, geen grid, geen grid-lijnen
+  ) +
+  # Y-as instellen
+  scale_y_continuous(
+    breaks = c(1.0, data$y), 
+    limits = c(1.0, max(data$y)),
+    labels = scales::number_format(accuracy = 0.1)
+  ) +
+  ylab("") +
+  # Geen x-as, geen gridlijnen
   theme_classic() +
   theme(
     axis.title.x = element_blank(),
@@ -976,21 +1287,20 @@ ggplot(data, aes(x = x, y = y)) +
     axis.line.x = element_blank(),
     axis.ticks.x = element_blank(),
     panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(),
+    panel.grid.minor.x = element_blank()
   )
 ```
 
+Eigenschappen van het gemiddelde.
+
 :::
 
-::: {.todo-box}
-De paragraaf hieronder loopt tekstueel niet zo lekker. Redigeren! 
-:::
 
 Intuïtief verwacht je misschien 
   dat het gemiddelde de waarde is
   die zo dicht mogelijk bij alle punten ligt.
-Dat zou betekenen dat het gemiddelde
-  de waarde is
+Dat zou betekenen dat de oranje lijn
+  precies op de hoogte ligt
   die de totale lengte van de grijze lijntjes zo kort mogelijk maakt.
 Dat is helaas *niet* het geval.
 Om dat te begrijpen, 
@@ -1000,50 +1310,77 @@ De drie tentamencijfers zijn hier één zes en twee negens.
 Het gemiddelde is natuurlijk 8
 (de <span style="color:darkorange;">oranje</span> lijn).
 De totale lengte van de grijze lijntjes
-  kun je in dit geval gemakkelijk aflezen: 
+  kun je in dit voorbeeld gemakkelijk aflezen: 
   die is $1 + 1 + 2 = 4$.
 Is dat zo kort mogelijk? Nee!
 Kijk maar eens naar de <span style="color:DarkOrchid;">paarse</span> lijn.
 De afstanden van alle punten tot die lijn
   tellen op tot $0+0+3 = 3$.
-Het gemiddelde is dus *niet* de waarde die 
-de totale lengte van de grijze lijntjes minimaliseert.
+  
+::: {.callout-important}
 
-Je kunt de positie van de paarse lijn begrijpen
+Het gemiddelde is dus *niet* de waarde die de totale afstand tot de waarnemingen minimaliseert.
+
+:::
+
+Je kunt dit begrijpen
   met behulp van een metafoor.
-Als je de positie zoekt die de som van de grijze lijntjes
+Als je de positie van de lijn zoekt die de som van de grijze lijntjes
   minimaliseert, 
   dan lijkt de situatie op een spelletje touwtrekken.
-In deze metafoor vertegenwoordigt ieder grijs lijntje een touw,
+In deze metafoor is ieder grijs lijntje een touw,
   en elk punt trekt even hard aan zijn touw
-  in een poging om de paarse lijn naar zich toe te bewegen.
-De paarse lijn zal dan altijd 
+  in een poging om de lijn naar zich toe te bewegen.
+De lijn zal dan altijd 
    in de richting van de meerderheid van de punten schuiven.
 In het voorbeeld van @fig-res-2 winnen de negens
   het touwtrekken van de zes,
   simpelweg omdat ze in de meerderheid zijn.
 
-
 Stel nu dat we de lengtes van de grijze lijntjes niet simpelweg optellen,
   maar die lengtes eerst *kwadrateren* voordat we ze optellen.
 Deze som van kwadraten noemen we de **kwadratensom**.
-Als we de oranje lijn op hoogte $m$ plaatsen, 
+Als we de <span style="color:darkorange;">oranje</span> lijn op hoogte $m$ plaatsen, 
   dan wordt de kwadratensom $\mathrm{SS}(m)$ gegeven door:
+  
 $$ \mathrm{SS}(m) = \sum_{i=1}^n \left( x_i - m\right)^2.$$
+
 Het is eenvoudig aan te tonen
   dat het gemiddelde $\mean{x}$ de waarde van $m$ is
   die deze *kwadratensom* minimaliseert.
 Voor wie benieuwd is:
   de afleiding kun je vinden in @sec-kwadratensom.
+  
+::: {.callout-important}
+
+Het gemiddelde is dus *wel* de waarde die kwadratensom minimaliseert.
+
+:::
 
 Ook hier past een metafoor.
 In dit geval zijn de grijze lijntjes geen touwen,
-  maar *elastiekjes* die aan de oranje lijn zijn vastgeknoopt.
+  maar *elastiekjes*.
 Net als bij de touwtrekwedstrijd
-  trekken alle punten aan de oranje lijn,
-  maar de trekkracht van elastiekjes hangt af van hoever ze worden uitgerekt.
-De oranje lijn zal hierdoor omhoog of omlaag bewegen tot de trekkrachten in evenwicht zijn.
-De evenwichtspositie van de oranje lijn is dan wél het gemiddelde $\mean{x}$!
+  trekken alle punten aan de <span style="color:darkorange;">oranje</span>  lijn,
+  en daardoor zal de <span style="color:darkorange;">oranje</span>  lijn omhoog of omlaag bewegen,
+  totdat de krachten in evenwicht zijn.
+Het essentiële verschil tussen touwen en elastiekjes
+  is het volgende.
+Bij het touwtrekken hangt de kracht waarmee een punt aan de <span style="color:darkorange;">oranje</span>  lijn trekt
+  niet af van de lengte van het touw.
+Daardoor wint altijd de meerderheid.
+Bij elastiekjes hangt de trekkracht wel af van de uitrekking.
+Punten die verder van de lijn afliggen,
+  trekken daardoor harder.
+Het gemiddelde "luistert" op die manier ook
+  naar de minderheid.
+Dat zorg ervoor 
+  dat de evenwichtspositie van de <span style="color:darkorange;">oranje</span>  lijn nu wél overeenkomt
+  met het gemiddelde $\mean{x}$.
+  
+::: {.todo-box}
+Volgende alinea redigeren en/of verplaatsen naar een appendix.
+:::
   
 Als je op de middelbare school natuurkunde hebt gekozen
   dan kun je begrijpen waarom deze metafoor werkt.
@@ -1058,202 +1395,376 @@ De potentiële energie van een elastiek die wordt uitgerekt
 Merk op dat dit precies gelijk is aan $k$ maal de 
   som van de gekwadrateerde lengtes,
   oftewel de kwadratensom.
-De uiteindelijk positie van de oranje lijn
+De uiteindelijk positie van de <span style="color:darkorange;">oranje</span>  lijn
   is de positie met minimale potentiële energie.
 Dat is precies de positie waar de kwadratensom minimaal is,
   oftewel het gemiddelde.
 
-Het essentiële verschil tussen de touwen en de elastiekjes
-  is het volgende.
-Bij het touwtrekken hangt de kracht waarmee een punt aan de oranje lijn trekt
-  niet af van de lengte van het touw.
-Daardoor wint altijd de meerderheid.
-Bij elastiekjes hangt de trekkracht wel af van de uitrekking;
-punten die verder van de lijn afliggen,
-  trekken harder.
-Het gemiddelde "luistert" op die manier ook
-  naar de minderheid.
-  
-### De mediaan
-  
-Een andere veel gebruikte maat is de mediaan.
-We noteren de mediaan als $\tilde{x}$.
-Om de mediaan te berekenen sorteer je de waarnemingen eerst van klein naar groot.
-Als het aantal waarnemingen $n$ oneven is, 
-  dan is de mediaan het middelste getal in de gesorteerde rij.
-Als het aantal waarnemingen $n$ even is,
-  dan bestaat zo'n middelste getal niet; 
-  in dat geval nemen we het gemiddelde van de middelste *twee* getallen.
+### Wanneer gebruik je welke centrummaat? 
 
-Als voorbeeld kijken we weer naar je tentamencijfers: 
-$$7;\quad 6;\quad 1;\quad 8{,}5;\quad 9.$$
-We sorteren de cijfers en krijgen
-$$1;\quad 6;\quad {\color{orange}7};\quad 8{,}5;\quad 9.$$
-Het getal midden in de rij is de 7 (aangegeven in oranje), en dus is de mediaan gelijk aan 7.
+We hebben drie centrummaten besproken: de modus, de mediaan, en het gemiddelde.
+Wanneer gebruik je nu welke maat om een rij gegevens samen te vatten?
 
-Als je voor het volgende tentamen een 10 haalt, 
-verandert de gesorteerde reeks als volgt:
-$$1;\quad 6;\quad {\color{orange}7};\quad {\color{orange}8{,}5};\quad 9; \quad 10.$$
+Een belangrijk verschil tussen de drie maten
+is hoe ze reageren op uitbijters. 
+We hebben gezien dat het gemiddelde sterk beïnvloed kan worden door
+een uitbijter, terwijl de modus en mediaan daar ongevoelig voor zijn.
 
-Omdat het aantal tentamencijfers nu even is, is er geen middelste getal meer.
-Als mediaan nemen we daarom het gemiddelde van de *twee* middelse getallen
-(weer aangegeven in oranje):
-
-$$\tilde{x}=\frac{7 + 8{,}5}{2} = 7,75.$$
-De mediaan is dus net als het gemiddelde een "typische" waarde,
-maar in een andere zin: 
-de mediaan is representatief omdat er evenveel waarden groter zijn
-als kleiner.
-Dat geldt over het algemeen niet voor het gemiddelde.
+Daarmee samenhangend wordt het gemiddeld ook sterk beïnvloed
+door de symmetrie van de verdeling. 
+Hieronder is in @fig-centrummaten een histogram gegeven
+die sterk rechts-scheef is.
+In zo'n geval is de modus typisch kleiner dan de mediaan
+en de mediaan kleiner dan het gemiddelde,
+doordat de "staart" aan de rechterkant een sterk effect heeft op het gemiddelde
+maar nauwelijks op de andere centrummaten.
 
 ::: {.todo-box}
 
-Schrijven: relatie tussen mediaan en cumulatieve verdeling. Gebruik onderstaande figuur. 
+Liever zou ik een een biologische dataset gebruiken,
+maar ik heb geen mooie set kunnen vinden...
 
+Kleuren van de lijnen aanpassen!
 :::
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. De mediaan is met een kruis op de $x$-as aangegeven. De cumulatieve verdeling bereikt op dat punt precies een half."
-#| label: fig-cumul-2a
-#| fig.width: 4.5
-#| fig.height: 3.5
+#| fig.width: 5
+#| fig.height: 3
+#| fig-cap: "Voorbeeld van een scheve verdeling, waarbij de modus, de mediaan, en het gemiddelde zijn aangegeven."
+#| label: fig-centrummaten
 
-quantiles <- quantile(
-  NHANES$Weight, 
-  probs = c(0.25, 0.5, 0.75), 
-  na.rm = TRUE
-  )
+# Installeer en laad ggplot2 als het niet al beschikbaar is
+if (!("ggplot2" %in% .packages())) {
+  library(ggplot2)
+}
 
+# Stel een seed in voor reproduceerbaarheid
+set.seed(123)
 
-cumulplot_median <- cumulplot + 
-  geom_segment(
-    aes(
-      x = 0, xend = quantiles[2], 
-      y = 0.5, yend = 0.5
-      ), 
-    linetype = "dashed", color = "red", size = 1
-    ) +
-  geom_segment(
-    aes(
-      x = quantiles[2], xend = quantiles[2], 
-      y = 0, yend = 0.5
-      ), 
-    linetype = "dashed", color = "red", size = 1
-    ) +
-  geom_point(
-    aes(x = quantiles[2], y = 0.5), 
-    color = "red", size = 3
-    ) +
-  geom_point(
-    aes(
-      x = quantiles[2], y = 0), 
-    color = "red", shape = 4, size = 3, stroke = 2
-    ) +
+# Parameters voor de Gamma-verdeling
+shape <- 1.5        # Vormparameter (k)
+scale <- 3          # Schaalparameter (θ)
+sample_size <- 8000 # Aantal observaties
+
+# Trek een steekproef uit de Gamma-verdeling
+gamma_sample <- rgamma(sample_size, shape = shape, scale = scale)
+
+# Bereken statistieken
+mean_value <- mean(gamma_sample)
+median_value <- median(gamma_sample)
+
+# Modus berekening voor een Gamma-verdeling
+mode_value <- (shape - 1) * scale
+
+# Zet de data in een dataframe voor ggplot2
+gamma_df <- data.frame(
+  value = gamma_sample
+)
+
+# Maak een histogram en voeg verticale lijnen en labels toe
+ggplot(gamma_df, aes(x = value)) +
+  geom_histogram(
+    binwidth = 0.5,
+    boundary = 0,
+    fill = opvulkleur,
+    color = "black",
+    alpha = 0.7
+  ) +
+  geom_vline(
+    aes(xintercept = mean_value),
+    color = "red",
+    linetype = "dashed",
+    size = 1.2
+  ) +
+  geom_vline(
+    aes(xintercept = median_value),
+    color = "green",
+    linetype = "dashed",
+    size = 1.2
+  ) +
+  geom_vline(
+    aes(xintercept = mode_value),
+    color = "purple",
+    linetype = "dashed",
+    size = 1.2
+  ) +
+  annotate(
+    "text",
+    x = 10,
+    y = 630,
+    vjust = 0,
+    label = paste0("Gemiddelde = ", round(mean_value, 1)),
+    color = "red"
+  ) +
+  annotate(
+    "text",
+    x = 10,
+    y = 530,
+    vjust = 0,
+    label = paste0("Mediaan = ", round(median_value, 1)),
+    color = "green"
+  ) +
+  annotate(
+    "text",
+    x = 10,
+    y = 430,
+    vjust = 0,
+    label = paste0("Modus = ", round(mode_value, 1)),
+    color = "purple"
+  ) +
   labs(
-    title = "Cumulatieve verdeling van lichaamsgewicht",
-    x = "Lichaamsgewicht",
-    y = "Cumulatiefe frequentie"
-    )
-
-cumulplot_median
-
+    title = "",
+    x = "Waarden",
+    y = "Frequentie"
+  ) +
+  theme_minimal()
 ```
 
-::: {#exr-mediaan}
+Daarom gebruiken we de volgende richtlijnen. 
 
-## De mediaan als rapportcijfer
+**Situatie 1: De verdeling van gegevens is grofweg symmetrisch
+en er zijn geen opvallende uitbijters.**
+In dat geval zullen de drie maten dicht bij elkaar liggen. 
+In dat geval is het beste het *gemiddelde* te rapporteren.
 
-::: {.todo-box}
-
-Kopieer opgave over tentamencijfers uit oude werkboek.
-
-::: 
-
-:::
-
-
-
-### De modus 
-
-::: {.todo-box}
-
-schrijven
-
-Bij categorische data: de categorie die het vaakst voorkomt.
-
-Bij numerieke data: de positie van de piek. 
-
-De waarde van de modus is ook een mate van typische waarde,
-maar dan in de zin van de waarde met de hoogste frequentie.
-
-:::
-
-### Wanneer gebruik je welke maat voor de ligging? 
-
-::: {.todo-box}
-
-\[schrijven\]
-
-Verschil tussen mediaan, modus en gemiddelde bij scheve verdelingen of uitbijters.
-
-Bij een min-of-meer symmetrische verdeling
-wordt meestal het gemiddelde gerapporteerd.
-
-Als de verdeling erg scheef is of uitbijters kent,
-wordt het gemiddelde sterk beinvloed door de staart;
-dan is het vaak wenselijker om de mediaan te gebruiken.
-
-:::
-
+**Situatie 2: De verdeling van gegevens is scheef en/of
+er zijn opvallende uitbijters.**
+In dat geval kan het gemiddelde sterk be\"invloed worden
+door uitbijters en de staart van de verdeling
+en kun je dus het beste de mediaan rapporteren.
 
 ## Maten voor de spreiding van een verdeling
 
-::: {.todo-box}
+Nu we de centrummaten hebben behandeld, 
+is het tijd om de spreidingsmaten te bespreken.
 
-korte inleiding.
+### Het bereik
 
-:::
+We beginnen bij het **bereik**.
+Het **bereik** van een rij getallen
+is eenvoudigweg het interval dat begint bij het kleinste getal
+en eindigt met het grootste getal.
+Dus, het bereik van de tentamencijfers uit het voorbeeld van zojuist
+is het interval $[1, 9]$.
 
-### Bereik
+### Kwantielen en de interkwartielafstand
 
-::: {.todo-box}
+We hebben het gehad over de mediaan.
+Je weet dus dat de helft van de waarnemingen kleiner is dan de mediaan.
+Om de mediaan te bepalen, deelde je de waarnemingen in twee groepen:
+de kleinere waarden en de grotere waarden.
+De mediaan vormde de scheidslijn tussen deze twee groepen.
 
-Interval van kleinste tot grootste getal tussen de waarnemingen. 
+Op een vergelijkbare manier kunnen we kengetallen definiëren
+die we de **kwartielen** noemen.
+Hiervoor splitsen we de twee helften nogmaals in tweeën,
+waardoor we in totaal vier kwarten krijgen.
+De kwartielen markeren de grenzen tussen deze vier delen.
 
-:::
+Een kwart van de waarnemingen is kleiner dan het eerste kwartiel (Q1).
+De helft van de waarnemingen is kleiner dan het tweede kwartiel (Q2);
+die is dus precies gelijk aan de mediaan.
+Drie kwart van de waarnemingen is kleiner dan het derde kwartiel (Q3).
+De kwartielen zijn in @fig-kwartielen1 geïllustreerd.
 
-### Interkwartielafstand
+```{r}
+#| code-fold: true
+#| fig.cap: "Illustratie van de kwartielen. De plot laat de verdeling van `Weight` (lichaamsgewicht) zien uit de NHANES dataset. De kwartielen Q1, Q2 en Q3 zijn bij de x-as aangegeven. Op die manier wordt de plot in vier stukken verdeeld met ieder 25% van de waarnemingen."
+#| label: fig-kwartielen1
+#| warning: false
+#| fig.width: 7
+#| fig.height: 3.5
 
-::: {.todo-box}
-Percentielen, kwartielen (Q1, Q2, Q3, Q4), kwantielen.
-Mediaan als P50 en Q250e percentiel of tweede kwartiel.
+# Laad de benodigde bibliotheken als ze nog niet beschikbaar zijn
+if (!("ggplot2" %in% .packages())) { library("ggplot2") }
+if (!("NHANES" %in% .packages())) { library("NHANES") }
+if (!("dplyr" %in% .packages())) { library("dplyr") }
 
-Interkwartielafstand (IKA):
+# Gebruik de Weight-variabele uit de NHANES dataset
+data <- NHANES %>%
+  filter(!is.na(Weight)) %>%
+  select(Weight)
 
-$$ \mathrm{IKA} = \mathrm{Q3} - \mathrm{Q1}$$
-Interpretatie: de breedte van het interval waarbinnen
-de middelste 50% van de gegevens vallen.
+# Bereken kwartielen
+quartiles <- quantile(data$Weight, probs = c(0.25, 0.50, 0.75, 1.0))
+q1 <- quartiles[1]  # Q1 (25e percentiel)
+q2 <- quartiles[2]  # Q2 (50e percentiel / Mediaan)
+q3 <- quartiles[3]  # Q3 (75e percentiel)
+q4 <- quartiles[4]  # Q4 (100e percentiel)
 
-Verband met cumulatieve verdeling; gebruik figuur @fig-cumul-IKA hieronder.
+# Functie om een kleur lichter te maken
+lighten_color <- function(color, percentage) {
+  # Zorg ervoor dat het percentage tussen 0 en 1 ligt
+  percentage <- max(0, min(percentage, 1))
+  
+  # Converteer de kleur naar RGB en meng met wit
+  rgb <- col2rgb(color) / 255
+  blended_rgb <- rgb + (1 - rgb) * percentage
+  
+  # Retourneer de kleur in HEX-formaat
+  rgb(blended_rgb[1], blended_rgb[2], blended_rgb[3], maxColorValue = 1)
+}
 
-:::
+# Maak een density-plot met kwartielgebaseerde opvulling
+ggplot(data, aes(x = Weight)) +
+  # Volledige density-plot (achtergrondlaag) met bw = 2
+  geom_density(
+    aes(
+      y = ifelse(after_stat(x) <= q1 + 5, after_stat(density), NA)
+    ),
+    color = "darkorange",
+    fill = lighten_color("darkorange", 0.8),
+    alpha = 1,
+    bw = 2,
+    size = 1
+  ) +
+  # Density-plot voor Q1 tot Q2
+  geom_density(
+    aes(
+      y = ifelse(
+        after_stat(x) >= q1 & after_stat(x) <= q2 + 5,
+        after_stat(density),
+        NA
+      )
+    ),
+    color = "darkorange",
+    fill = lighten_color("darkorange", 0.6),
+    alpha = 1,
+    bw = 2,
+    size = 1
+  ) +
+  # Density-plot voor Q2 tot Q3
+  geom_density(
+    aes(
+      y = ifelse(
+        after_stat(x) >= q2 & after_stat(x) <= q3 + 5,
+        after_stat(density),
+        NA
+      )
+    ),
+    color = "darkorange",
+    fill = lighten_color("darkorange", 0.4),
+    alpha = 1,
+    bw = 2,
+    size = 1
+  ) +
+  # Density-plot voor Q3 tot Q4
+  geom_density(
+    aes(
+      y = ifelse(after_stat(x) >= q3, after_stat(density), NA)
+    ),
+    color = "darkorange",
+    fill = lighten_color("darkorange", 0.2),
+    alpha = 1,
+    bw = 2,
+    size = 1
+  ) +
+  # Voeg aangepaste x-as ticks en labels toe voor de kwartielen
+  scale_x_continuous(
+    breaks = c(q1, q2, q3),
+    labels = c("Q1", "Q2", "Q3"),
+    minor_breaks = NULL
+  ) +
+  # Voeg "25%" labels toe aan elk deel
+  annotate(
+    "text",
+    x = (min(data$Weight) + q1) / 2,
+    y = 0.002,
+    label = "25%",
+    color = "black",
+    size = 4,
+    fontface = "bold"
+  ) +
+  annotate(
+    "text",
+    x = (q1 + q2) / 2,
+    y = 0.005,
+    label = "25%",
+    color = "black",
+    size = 4,
+    fontface = "bold"
+  ) +
+  annotate(
+    "text",
+    x = (q2 + q3) / 2,
+    y = 0.005,
+    label = "25%",
+    color = "black",
+    size = 4,
+    fontface = "bold"
+  ) +
+  annotate(
+    "text",
+    x = (q3 + 0.15 * q4) / 1.15,
+    y = 0.002,
+    label = "25%",
+    color = "black",
+    size = 4,
+    fontface = "bold"
+  ) +
+  labs(
+    title = "",
+    x = "Lichaamsgewicht",
+    y = "Dichtheid"
+  ) +
+  geom_segment(
+    aes(
+      x = quantiles[1],
+      xend = quantiles[3],
+      y = 0.002,
+      yend = 0.002
+    ),
+    arrow = arrow(ends = "both", length = unit(0.3, "cm")),
+    color = "black",
+    size = 0.8,
+    lineend = "round"
+  ) +
+  theme_minimal()
+```
 
-::: {.todo-box}
-In de figuur hieronder ziet de pijl er vreemd uit. De kleuren van de lijnen bevallen me ook niet echt.
-:::
+
+De interkwartielafstand (IKA) wordt gedefinieerd als het verschil tussen
+Q3 en Q1:
+
+$$ \mathrm{IKA} = \mathrm{Q3} - \mathrm{Q1}. $$
+
+Dit is een maat voor de spreiding van de gegevens
+omdat de IKA aangeeft hoe breed het interval is
+waarin zich de “middelste” 50% van de waarnemingen bevindt.
+Het interval van Q1 tot Q3 is in @fig-kwartielen1 weergegeven met een dubbele pijl.
+De lengte van die pijl is dus de IKA
+
+Je kunt de kwartielen en de IKA ook bepalen
+met behulp van de cumulatieve verdelingsfunctie.
+In @fig-cumul-IKA2 zie je een oranje curve die de cumulatieve verdeling weergeeft
+voor de variabele `Weight` (lichaamsgewicht) uit de NHANES-dataset.
+We hadden die curve al eerder bekeken (zie @fig-cumul).
+De horizontale zwarte lijnen snijden de $y$-as bij $0{,}25$ en $0{,}75$,
+en raken de cumulatieve verdeling daarom precies bij Q1 en Q3.
+Deze kwartielen zijn vervolgens op de $x$-as gemarkeerd.
+De zwarte pijl geeft opnieuw de interkwartielafstand aan.
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. Het eerste, tweede, en derde kwartiel worden aangegeven"
+#| eval: false
+#| include: false
+#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. Het eerste, tweede, en derde kwartiel worden met verticale stippellijnen aangegeven. De zwarte pijl loopt van Q1 naar Q3; zijn lengte is dus de interkwartielafstand."
 #| label: fig-cumul-IKA
-#| fig.width: 4.5
+#| fig.width: 7
 #| fig.height: 3.5
 
 library(grid) # voor de pijl
 
+cumulplot <- ggplot(NHANES, aes(x = Weight)) +
+  stat_ecdf(geom = "step", color = opvulkleur, size = 1, bw = 2) +
+  labs(
+    title = "Cumulatieve verdeling van lichaamsgewicht",
+    x = "Lichaamsgewicht",
+    y = "Cumulatieve proportie"
+    ) + theme_minimal()
 
 cumulplot +
   geom_segment(
@@ -1268,7 +1779,7 @@ cumulplot +
       x = min(NHANES$Weight, na.rm = TRUE), xend = quantiles[2], 
       y = 0.5, yend = 0.5
       ), 
-    linetype = "dashed", color = "red", size = 1
+    linetype = "dashed", color = lijnkleur2, size = 1
     ) +
   geom_segment(
     aes(
@@ -1289,7 +1800,7 @@ cumulplot +
       x = quantiles[2], xend = quantiles[2], 
       y = 0, yend = 0.5
       ), 
-    linetype = "dashed", color = "red", size = 1
+    linetype = "dashed", color = lijnkleur2, size = 1
     ) +
   geom_segment(
     aes(
@@ -1304,52 +1815,270 @@ cumulplot +
     ) +
   geom_point(
     aes(x = quantiles[2], y = 0.5), 
-    color = "red", size = 3
+    color = lijnkleur2, size = 3
     ) +
   geom_point(
     aes(x = quantiles[3], y = 0.75), 
     color = "purple", size = 3
     ) +
-  geom_point(
-    aes(x = quantiles[1], y = 0), 
-    color = "purple", shape = 4, size = 3, stroke = 1.5
-    ) +
-  geom_point(
-    aes(x = quantiles[3], y = 0), 
-    color = "purple", shape = 4, size = 3, stroke = 1.5
-    ) +  
+  # geom_point(
+  #   aes(x = quantiles[1], y = 0), 
+  #   color = "purple", shape = 4, size = 3, stroke = 1.5
+  #   ) +
+  # geom_point(
+  #   aes(x = quantiles[3], y = 0), 
+  #   color = "purple", shape = 4, size = 3, stroke = 1.5
+  #   ) +  
   geom_segment(
     aes(
-      x = quantiles[1], xend = quantiles[3], 
-      y = 0, yend = 0
-      ), 
+      x = quantiles[1], xend = quantiles[3],
+      y = 0.1, yend = 0.1
+      ),
     arrow = arrow(ends = "both", length = unit(0.3, "cm")),
-    color = "black", size = 1.5
+    color = "black", size = 0.8, lineend = "round"
     ) +
+    # Add custom x-axis ticks and labels for quartiles
+  scale_x_continuous(
+    breaks = c(q1, q2, q3),
+    labels = c("Q1", "Q2", "Q3"),
+    minor_breaks = NULL
+  ) +
   labs(
     title = "Cumulative verdeling en drie kwartielen",
     x = "Lichaamsgewicht",
-    y = "Cumulatieve frequentie"
+    y = "Cumulatieve proportie"
     ) 
 ```
 
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. Het eerste, tweede, en derde kwartiel worden met verticale stippellijnen aangegeven. De zwarte pijl loopt van Q1 naar Q3; zijn lengte is dus de interkwartielafstand."
+#| label: fig-cumul-IKA2
+#| fig.width: 7
+#| fig.height: 3.5
+
+# Laad de benodigde bibliotheken als ze nog niet geladen zijn
+if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
+if (!("dplyr" %in% loadedNamespaces())) { library(dplyr) }
+if (!("NHANES" %in% loadedNamespaces())) { library(NHANES) }
+
+# Gebruik de Weight-variabele uit de NHANES dataset
+data <- NHANES %>%
+  filter(!is.na(Weight)) %>%
+  select(Weight)
+
+# Bereken kwartielen
+quartiles <- quantile(data$Weight, probs = c(0.25, 0.50, 0.75, 1.0))
+q1 <- quartiles[1]  # Q1 (25e percentiel)
+q2 <- quartiles[2]  # Q2 (50e percentiel / Mediaan)
+q3 <- quartiles[3]  # Q3 (75e percentiel)
+q4 <- quartiles[4]  # Q4 (100e percentiel)
+
+# Maak een cumulatieve verdelingsplot met kwartielopvulling
+ggplot(data, aes(x = Weight)) +
+  # Opvulgebied voor Q1
+  stat_ecdf(
+    geom = "area",
+    aes(
+      y = after_stat(y),
+      fill = "Q1"
+    ),
+    alpha = 1,
+    bw = 2
+  ) +
+  # Opvulgebied voor Q2
+  stat_ecdf(
+    geom = "area",
+    aes(
+      y = ifelse(
+        after_stat(x) > q1 & after_stat(x) <= q2,
+        after_stat(y),
+        NA
+      ),
+      fill = "Q2"
+    ),
+    alpha = 1,
+    bw = 2
+  ) +
+  # Opvulgebied voor Q3
+  stat_ecdf(
+    geom = "area",
+    aes(
+      y = ifelse(
+        after_stat(x) > q2 & after_stat(x) <= q3,
+        after_stat(y),
+        NA
+      ),
+      fill = "Q3"
+    ),
+    alpha = 1,
+    bw = 2
+  ) +
+  # Opvulgebied voor Q4
+  stat_ecdf(
+    geom = "area",
+    aes(
+      y = ifelse(
+        after_stat(x) > q3,
+        after_stat(y),
+        NA
+      ),
+      fill = "Q4"
+    ),
+    alpha = 1,
+    bw = 2
+  ) +
+  # Volledige ECDF-curve (consistent over de hele dataset)
+  stat_ecdf(
+    geom = "step",
+    size = 1,
+    color = opvulkleur,
+    bw = 2
+  ) +
+  # Voeg aangepaste x-as ticks en labels toe voor de kwartielen
+  scale_x_continuous(
+    breaks = c(q1, q2, q3),
+    labels = c("Q1", "Q2", "Q3"),
+    minor_breaks = NULL
+  ) +
+  # Voeg aangepaste kleuren toe voor de kwartielen
+  scale_fill_manual(
+    values = c(
+      "Q1" = lighten_color("darkorange", 0.8),
+      "Q2" = lighten_color("darkorange", 0.6),
+      "Q3" = lighten_color("darkorange", 0.4),
+      "Q4" = lighten_color("darkorange", 0.2)
+    )
+  ) +
+  geom_segment(
+    aes(
+      x = min(NHANES$Weight, na.rm = TRUE),
+      xend = quantiles[1],
+      y = 0.25,
+      yend = 0.25
+    ),
+    linetype = "dashed",
+    color = "black",
+    size = 0.8
+  ) +
+  geom_segment(
+    aes(
+      x = min(NHANES$Weight, na.rm = TRUE),
+      xend = quantiles[2],
+      y = 0.5,
+      yend = 0.5
+    ),
+    linetype = "dashed",
+    color = "black",
+    size = 0.8
+  ) +
+  geom_segment(
+    aes(
+      x = min(NHANES$Weight, na.rm = TRUE),
+      xend = quantiles[3],
+      y = 0.75,
+      yend = 0.75
+    ),
+    linetype = "dashed",
+    color = "black",
+    size = 0.8
+  ) +
+  geom_point(
+    aes(
+      x = quantiles[1],
+      y = 0.25
+    ),
+    color = "black",
+    size = 3
+  ) +
+  geom_point(
+    aes(
+      x = quantiles[2],
+      y = 0.5
+    ),
+    color = lijnkleur2,
+    size = 3
+  ) +
+  geom_point(
+    aes(
+      x = quantiles[3],
+      y = 0.75
+    ),
+    color = "black",
+    size = 3
+  ) +
+  geom_segment(
+    aes(
+      x = quantiles[1],
+      xend = quantiles[3],
+      y = 0.1,
+      yend = 0.1
+    ),
+    arrow = arrow(ends = "both", length = unit(0.3, "cm")),
+    color = "black",
+    size = 0.8,
+    lineend = "round"
+  ) +
+  labs(
+    title = "Cumulatieve verdeling en drie kwartielen",
+    x = "Lichaamsgewicht",
+    y = "Cumulatieve proportie",
+    fill = "Kwartielen"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")  # Verwijder de legenda
+```
+
+Tot slot bespreken we de **percentielen**.
+Deze zijn gemakkelijk te begrijpen aan de hand van een paar voorbeelden.
+Omdat 25% van de waarnemingen kleiner is dan Q1,
+wordt Q1 ook wel het vijf-en-twintigste percentiel genoemd, 
+oftewel P25.
+Op dezelfde manier is 90% van de waarnemingen kleiner dan P90,
+het negentigste percentiel.
+
+In algemene termen worden statistieken zoals kwartielen en percentielen
+samen aangeduid als **kwantielen**.
+We komen in latere hoofdstukken ook nog tegen.
+  
+::: {#exr-kwantielen}
+## Opgave: Kwantielen van tentamencijfers
+
+De scores van 16 studenten op een toets zijn als volgt (in volgorde van laag naar hoog):  
+**12, 15, 18, 20, 21, 23, 25, 28, 30, 32, 35, 38, 40, 42, 45, 46**.
+
+   a. Wat is de mediaan van deze dataset?  
+   a. Bereken Q1 (het eerste kwartiel) en Q3 (het derde kwartiel).  
+   b. Wat is de interkwartielafstand (IKA)?
+   d. Bereken de kwartielen en de IKA ook met R.  
+      Hint: Gebruik de functie `quantile()` om de kwartielen te berekenen.  
+   c. Wat zegt de interkwartielafstand over de spreiding van de scores?
+   a. Welk percentiel komt overeen met een score van 30?  
+   a. De docent zegt dat een score van 40 in het hoogste kwartiel ligt. Klopt dit?  
+   b. Een student scoort 20 op de toets. In welk kwartiel en percentiel valt deze score?  
+
+:::
+
 ### Variantie
 
+De **variantie** van een rij waarnemingen 
+is gedefineerd als de gemiddelde gekwadrateerde afwijking van de waarnemingen 
+ten opzichte van hun gemiddelde. De formule luidt:  
 
-::: {.todo-box}
-
-paragraaf hieronder uitwerken
-
-
-Gemiddelde gekwadrateerde afwijking van het gemiddelde. 
 $$
-V_X = \frac{\sum_{i=1}^n \left(x_i - \overline{x}\right)^2}{n-1}.
+V_X = \frac{\sum_{i=1}^n \left(x_i - \mean{x}\right)^2}{n-1}.
 $$
 
--   Kwadratensom in de teller.
--   Waarom $n - 1$ in de noemer? Daar is een reden voor, maar die kan later pas worden uitgelegd -- geduld!
--   Let op! De dimensie van $V_X$ is het kwadraat van de dimensie van $X$. 
+- De teller is de **kwadratensom** die we in @fig-res-1 al tegenkwamen. 
+Dat is de som van de gekwadrateerde afwijkingen ten opzichte van het gemiddelde ($\mean{x}$). Door de afwijkingen te kwadrateren, zorgen we ervoor dat positieve en negatieve afwijkingen elkaar niet opheffen.  
+- In de noemer zou je misschien $n$ verwachten in plaats van $n - 1$. Dit heeft te maken met het corrigeren voor een effect dat optreedt bij het schatten van de variantie op basis van een steekproef. De reden hiervoor wordt later toegelicht.
 
+::: {.callout-warning}
+
+## Let op de dimensie en eenheid!
+
+De dimensie van de variantie, $V_X$, is het **kwadraat van de dimensie van $X$**. Als $X$ bijvoorbeeld een gewicht is (de dimensie) en gemeten wordt in kilogrammen (de eenheid), dan heeft $V_X$ de dimensie van gewicht-kwadraat en wordt die uitgedrukt in vierkante kilogrammen ($\text{kg}^2$). Dit maakt de variantie lastig te interpreteren in termen van de oorspronkelijke eenheden. Om dit probleem te omzeilen, gebruiken we vaak de **standaarddeviatie** -- de volgende maat op onze lijst!
 :::
 
 ### Standaarddeviatie
@@ -1596,10 +2325,10 @@ van een rechthoek -- een "staaf". Zo is het op het oog direct duidelijk
 welke categorieën de hoogste frequentie hebben.
 
 ::: {#exm-staaf}
-## Staafdiagram van `gezondheidsstatus`
+## Staafdiagram van `HealthGen` (gezondheidsstatus)
 
 Als voorbeeld kijken we terug naar de frequentietabel in @tbl-gezondheid
-hierboven, over de `gezondheidsstatus` van de deelnemers aan de studie
+hierboven, over de ``HealthGen` (gezondheidsstatus) van de deelnemers aan de studie
 van de NCHS. Die frequentietabel ziet er als staafdiagram als volgt uit:
 
 ```{r}
@@ -1625,7 +2354,7 @@ library(knitr)
 # Laad de dataset in:
 data(NHANES)
 
-# Eerst: de variabele Gezondheidsstatus (HealthGen)
+# Eerst: de variabele `HealthGen` (gezondheidsstatus)
 
 # Vertaal de levels en zet ze in een logische volgorde:
 NHANES$HealthGen <- factor(
@@ -1649,14 +2378,15 @@ ggplot(
   aes(x = HealthGen)
   ) +
   geom_bar(
-    fill = "darkorange", 
+    fill = opvulkleur, 
     color = "black"
     ) +
   labs(
-    title = "Gezondheidsstatus, zelf-gerapporteerd",
+    title = "",
     x = "Gezondheidsstatus",
     y = "Frequentie"
-    )
+    ) +
+  theme_minimal()
 ```
 
 Dit staafdiagram laat helder zien hoe de gegevens over de waarden zijn
@@ -1838,7 +2568,7 @@ Korte intro. Hiervoor categorisch, nu komt numeriek.
 
 ### Histogrammen en frequentiepolygonen
 
-Histogrammen zijn we eerder in dit hoofdstuk al vaak tegengekome; 
+Histogrammen zijn we eerder in dit hoofdstuk al vaak tegengekomen; 
   toch komen we er even op terug.
 Histogrammen worden gebruikt om de verdeling van *numerieke* variabelen te laten zien.
 Een histogram lijkt op een staafdiagram: 
@@ -1873,10 +2603,11 @@ De frequentie van iedere gewichtsklasse wordt uitgezet tegen
 #| fig.height: 3.5
 
 ggplot(NHANES, aes(x = Weight)) +
-  geom_freqpoly(binwidth = 5, color = "darkorange", size = 1) +
+  geom_freqpoly(binwidth = 5, color = opvulkleur, size = 1) +
   labs(title = "Frequentiepolygoon van gewicht",
        x = "Lichaamsgewicht (kg)",
-       y = "Frequentie")
+       y = "Frequentie") +
+  theme_minimal()
 
 ```
 
@@ -1931,7 +2662,7 @@ Nadelen:
 #| fig.height: 3.5
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
-  geom_boxplot(fill = "Bisque", color = "darkorange") +
+  geom_boxplot(fill = "Bisque", color = opvulkleur) +
   labs(title = "Boxplot",
        x = "",
        y = "Lichaamsgewicht (kg)") +
@@ -1962,7 +2693,7 @@ Uitwerken!
 #| fig.height: 3.5
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
-  geom_violin(fill = "Bisque", color = "darkorange") +
+  geom_violin(fill = "Bisque", color = opvulkleur) +
   labs(title = "Vioolplot",
        x = "",
        y = "Lichaamsgewicht (kg)") +

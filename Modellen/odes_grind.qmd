@@ -6,8 +6,9 @@
 
 In @sec-meerdere hebben we een heel beroemd model uit de biologie geanalyseerd: het *Lotka-Volterra predator-prooi model*. Dit model gaat natuurlijk niet specifiek over konijnen en vossen, maar zou op allerlei systemen toegepast kunnen worden: bacteriofagen die bacteriën infecteren, protozoa die bacteriën eten, lieveheersbeestjes die bladluizen eten, vleermuizen die motjes eten, *etc.* Daarnaast kun je met kleine aanpassingen ook meer subtiele interacties tussen soorten onderzoeken (zoals intra- en inter-specifieke competitie, later in dit hoofdstuk). Zodoende is het Lotka-Volterra model uitgegroeid tot één van de meest veelzijdige modellen in de biologie, waarmee voorspellingen gedaan kunnen worden over welke soorten wel/niet kunnen samenleven. 
 
-![Afbeelding gegenereerd met ChatGPT4-o](figuren/lv_spiral_ai.png){fig-align="center" width="80%"}
+We hebben gezien hoe met behulp van faseruimtes het best eenvoudig kan zijn om inzicht in een biologisch proces te vergaten. Maar de eenvoud van deze eerdere analyses is deels te verklaren door de eenvoud van het model dat we hebben gebruikt. Hoe meer interacties we willen begrijpen, hoe moeilijker het zal worden om met pen en papier te werk te gaan. Daarom gaan we leren om ODEs door te rekenen met het Rscript `grind.R`, waarmee je eenvoudig faseruimtes en grafiekjes door de tijd mee kan produceren. 
 
+![Een faseruimte (links) en oplossing (rechts) gegenereerd met het Rscript 'grind.R'. De zwarte lijnen links tonen trajectories voor verschillende intiële condities. De oplossing (rechts) correspondeert met een mogelijke trajectorie als functie van tijd. ](figuren/odes_grind.png){fig-align="center" width="90%"}
 
 ## Leerdoelen 
 
@@ -19,7 +20,7 @@ De leerdoelen voor dit hoofdstuk zijn:
   
 ## De verzadigde predator
 
-We hebben gezien hoe met behulp van faseruimtes het best eenvoudig kan zijn om inzicht in een biologisch proces te vergaten. Maar de eenvoud van deze eerdere analyses is deels te verklaren door de eenvoud van het model dat we hebben gebruikt. In ons eerdere Lotka-Volterra model namen we bijvoorbeeld aan dat predatie lineair proportioneel is aan de dichtheden predator en prooi door gebruik te maken van de predatieterm $aRN$. Dit betekend dat per predator (ookwel: *per capita*) in totaal $aR$ prooi gegeten kan worden (nogmaals, "per"  kun je lezen als "gedeeld door", dus $\frac{aRN}{N} = aR$). Bij oneindig hoge prooi dichtheden, kan er dus ook oneindig veel gegeten worden. In het echt zal een predator eigenlijk een tijd bezig zijn met het verwerken en verteren van de prooi. Zodoende zal de predatie-term bij hele hoge prooi-dichtheden eigenlijk moeten verzadigen. Om dit te verwerken, zouden we de predatie-term aan kunnen passen:
+In ons eerdere Lotka-Volterra model namen we bijvoorbeeld aan dat predatie lineair proportioneel is aan de dichtheden predator en prooi door gebruik te maken van de predatieterm $aRN$. Mede dankzij deze eenvoud waren de nullclines zo eenvoudig: een stel rechte lijnen waarvan het makkelijk te bepalen is waar ze snijden. Echter heeft deze eenvoud ook zijn beperkingen. Dit lineaire verband betekent dat per predator (ookwel: *per capita*) in totaal $aR$ prooi gegeten kan worden (nogmaals, "per"  kun je lezen als "gedeeld door", dus $\frac{aRN}{N} = aR$). Bij oneindig hoge prooi dichtheden, kan er dus ook oneindig veel gegeten worden. In het echt zal een predator eigenlijk een tijd bezig zijn met het verwerken en verteren van de prooi. Zodoende zal de predatie-term bij hele hoge prooi-dichtheden eigenlijk moeten verzadigen. Om dit te verwerken, zouden we de predatie-term aan kunnen passen:
 
 \begin{align*}
 \frac{\dd \color{blue}R}{\dd t} &= \underbrace{b(1-\frac{\color{blue}R}{K})\color{blue}R}_{\text{geboorte prooi}} - \underbrace{d\color{blue}R}_{\text{sterfte prooi}} - \underbrace{\frac{\color{black}a\color{blue}R\color{orange}N}{h+\color{blue}R\color{black}}}_{\text{nieuwe predatieterm}}\\

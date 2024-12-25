@@ -1,6 +1,6 @@
 # Extra R oefeningen {#sec-Rquestions}
 
-::: {#exr-R-1} 
+::: {.Rexr #exr-R-1} 
 ## Kennis-vraagjes
 <br><br>
 **a.**Wat is het verschil tussen een matrix en een data frame?
@@ -49,7 +49,7 @@ cat("De waarde van a is:",a)
 
 :::
 
-::: {#exr-R-2}
+::: {.Rexr #exr-R-2}
 ## Volgorde
 <br> Onder deze tekst staat een stukje code. Neem deze over in Rstudio (tip: je kan de hele code in 1 keer kopiëren met het knopje rechtsboven).
 
@@ -74,10 +74,10 @@ uitkomst <- a/b+a*(c+a)
 
 :::
 
-::: {#exr-R-3}
+::: {.Rexr #exr-R-3}
 ## Tabellen inlezen en plotten
 <br>
-**a.** Ga naar <https://tbb.bio.uu.nl/bvd/bms/>, en klik op txt-bestand `covid.txt`. Bekijk de inhoud van dit **plain text** bestand. Hoeveel kolommen bevat deze data? Is dit een CSV file? (hint: zoek op waar CSV voor staat). 
+**a.** Ga naar <https://tbb.bio.uu.nl/bvd/bms/data>, en klik op txt-bestand `covid.txt`. Bekijk de inhoud van dit **plain text** bestand. Hoeveel kolommen bevat deze data? Is dit een CSV file? (hint: zoek op waar CSV voor staat). 
 
 **b.** Bekijk de onderstaande code, en neem deze over. Tel het aantal rijen met `nrow`. Zijn dit er 52 zoals in het bestand? Tel ook het aantal kolommen met `ncol`. Klopt dit? <!-- de data bestaat niet uit 5 kolommen. het is niet goed ingelezen --> 
 ```{r}
@@ -87,7 +87,7 @@ uitkomst <- a/b+a*(c+a)
 #| code-summary: "Klik hier voor de code"
 
 # Lees het bestand covid.txt op de website in met 'read.table'
-covid <- read.csv("http://tbb.bio.uu.nl/bvd/bms/covid.txt")
+covid <- read.csv("http://tbb.bio.uu.nl/bvd/bms/data/covid.txt")
 View(covid)
 ```
 
@@ -100,7 +100,7 @@ View(covid)
 #| code-summary: "Klik hier voor de code"
 
 # Lees het bestand covid.txt op de website in met 'read.table'
-covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/covid.txt")
+covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/data/covid.txt")
 ```
 
 **d.** We passen `read.table` nog iets verder aan om ervoor te zorgen dat de eerste rij wordt gezien als de `header` (de namen van de kolommen). De data wordt nu goed ingelezen. Bereken hoeveel positieve testen er gedurende deze periode gemiddeld waren. <!-- mean(covid$positieve_testen) -->
@@ -111,7 +111,7 @@ covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/covid.txt")
 #| code-fold: false
 
 # Lees het bestand covid.txt op de website in met 'read.table' en header=T
-covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/covid.txt",header=T)
+covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/data/covid.txt",header=T)
 ```
 
 **e.** De laatste regel van bovenstaande code gebruikt `head` om de eerste 5 regels te van de covid-tabel te laten zien. Gebruik de hulpfunctie van Rstudio (`?head`) en pas de code aan zodat het de eerste 12 rijen van de dataframe laat zien.  
@@ -128,7 +128,7 @@ Om de data beter te kunnen bekijken kunnen we op allerlei manieren plotten. Late
 #| code-summary: "Klik hier voor de code"
 
 # Lees het bestand covid.txt op de website in met 'read.table'
-covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/covid.txt",header=T)
+covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/data/covid.txt",header=T)
 
 x <- covid$datapunt # alle x-punten in een vector
 y <- covid$positieve_testen # alle y-punten in een vector
@@ -165,7 +165,7 @@ plot(x,y, type='b',lwd=2, log="y",
 
 :::
 
-::: {#exr-R-4}
+::: {.Rexr #exr-R-4}
 ## Condities en loops
 <br>
 Je hebt geleerd dat je met een for-loop een bepaalde handeling kan herhalen. Bekijk de onderstaande for-loop. 
@@ -179,7 +179,7 @@ for(i in 1:12){
   cat(paste("Worp nummer",i,"is",dobbelsteen,"\n")) #\n staat voor een 'enter'
 }
 ```
-**a.** De `cat` functie geeft de gecompileerde zinnetjes weer in de terminal. Dit wordt in te programmeer-wereld `printen` genoemd. Met een dobbelsteen heb je 50% kans om 4, 5 of 6 te gooien. Pas de bovenstaande code aan zodat er alleen iets wordt geprint als er 4, 5 of 6 is gegooid. Is het aantal iedere keer precies 50% van het aantal progingen? Waaorm wel/niet?
+**a.** De `cat` functie geeft de gecompileerde zinnetjes weer in de terminal. Dit wordt in te programmeer-wereld `printen` genoemd. Met een dobbelsteen heb je 50% kans om 4, 5 of 6 te gooien. Pas de bovenstaande code aan zodat er alleen iets wordt geprint als er 4, 5 of 6 is gegooid. Is het aantal iedere keer precies 50% van het aantal progingen? Waarom wel/niet?
 
 Stel dat we het bovenstaande experiment van 12 keer een dobbelsteen rollen 100 keer uit willen voeren (honderd replicas). Om dit te doen kunnen we de bestaande `for-loop` zelf in een `for-loop` zetten. Dit heet het `nesten` van code. Zo kunnen we bijvoorbeeld bijhouden hoe vaak we precies 1 keer zes gooien, als we herhaaldelijk 12 keer een dobbelsteen rollen (zie code hieronder)
 
