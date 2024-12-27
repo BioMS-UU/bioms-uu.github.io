@@ -9,17 +9,17 @@ Soms komt dat door meetfouten,
 Het is daarom heel belangrijk om
   te begrijpen wat je wel of niet kunt concluderen 
   uit zulke onzekere gegevens.
-Daarvoor zul je om moeten gaan met *kansen*.
-In dit hoofdstuk geven we een korte introductie in *kansrekenen*,
+Daarvoor zul je om moeten gaan met **kansen**.
+In dit hoofdstuk geven we een korte introductie in kansrekenen,
 of met een mooi klassiek woord de *waarschijnlijkheidsleer*.
 
 We beginnen met een paar belangrijk begrippen.
 
 ## Basisbegrippen
 
-Wanneer je met een gewone dobbelsteen gooit
+Wanneer je met een gewone dobbelsteen gooit,
     weet je van tevoren niet wat de uitkomst zal zijn.
-Een dergelijk experiment, 
+Zo'n experiment, 
     gebeurtenis of proces met een onzekere uitkomst wordt een **kansexperiment** genoemd.
 Andere voorbeelden zijn het willekeurig trekken van een individu 
     uit een populatie,
@@ -31,9 +31,11 @@ Een voorbeeld is het aantal ogen van een dobbelsteen.
 Andere woorden voor kansvariabele zijn **stochastische variabele**
     of **stochast**.
 Een kansvariabele wordt meestal aangeduid met een hoofdletter,
-    zoals $X$.
+    zoals $X$ of $Y$.
 
-Eerder hebben we verschillende typen variabelen besproken, zoals continu, discreet, nominaal en ordinaal (zie @fig-variabelen). Kansvariabelen kunnen op dezelfde manier worden ingedeeld.
+Eerder hebben we verschillende typen variabelen besproken, 
+zoals continu, discreet, nominaal en ordinaal (zie @fig-variabelen). 
+Kansvariabelen kunnen op dezelfde manier worden ingedeeld.
 
 ::: {#exr-type}
 # Typen kansvariabelen
@@ -60,12 +62,13 @@ Soms zijn we geïnteresseerd in de kans op een specifieke
 De kans dat de uitkomst gelijk is aan 2
     kunnen we noteren als
 $\pr{X = 2}$.
+(De letters Pr staan hier voor *Probability*.)
 Bij een eerlijke dobbelsteen is die kans natuurlijk 
 $$\pr{X = 2} =\frac{1}{6}.$$
 
 In andere gevallen willen we weten wat de kans is 
     op een bepaalde **gebeurtenis**.
-Een gebeurtenis hoeft niet beperkt te zijn tot één specifieke uitkomst.
+Een gebeurtenis hoeft niet één specifieke uitkomst te zijn.
 Bijvoorbeeld, 
     laat $X$ het aantal ogen zijn bij een worp met een dobbelsteen.
 Dan kunnen we vragen naar de kans dat
@@ -88,11 +91,10 @@ Je kunt kansen op verschillende manieren definiëren,
     maken hier al zeker een eeuw ruzie over.
 (Als dit je interesse wekt, 
   is [dit artikel](https://plato.stanford.edu/entries/probability-interpret/) een goede ingang tot de uitgebreide literatuur hierover.)
-Voor veel berekeningen maken de definitie verschillen niet veel uit,
+Voor veel berekeningen maken de definitieverschillen niet veel uit,
     en daarom gebruiken we de interpretatie die 
     in de statistiek traditioneel het meest gebruikt wordt:
     de **frequentistische** interpretatie.
-
 
 In de frequentistische interpretatie is de kans op een gebeurtenis
     gedefiniëerd als de relatieve frequentie waarmee die gebeurtenis voorkomt
@@ -106,7 +108,7 @@ Dan zou je verwachten dat,
 De relatieve frequentie van de uitkomst 6
   in een héél lange reeks identieke kansexperimenten
   is dus $\frac{1}{6}$.
-Daarom is de kans $\pr{X = 6}$ per definitie gelijk aan $\frac{1}{6}$.
+Daarom is de kans $\pr{X = 6}$ gelijk aan $\frac{1}{6}$.
 
 Het lastige van deze definitie is het volgende.
 De definitie heeft het over een héél lange reeks kansexperimenten.
@@ -126,8 +128,7 @@ De frequentistische definitie van kansen gaat dus uit van een reeks kansexperime
 Een relatieve frequentie ligt altijd tussen 0 en 1
     (inclusief 0 en 1).
 Een kans is dus ook altijd een getal tussen 0 en 1.
-Als een gebeurtenis iedere keer dat we het kansexperiment uitvoeren
-    plaatsvindt,
+Als een gebeurtenis plaatsvindt iedere keer dat we het kansexperiment uitvoeren,
     dan is de kans op die gebeurtenis 1.
 Als een gebeurtenis nooit gebeurt,
   hoe vaak we het kansexperiment ook uitvoeren,
@@ -140,15 +141,13 @@ Daar is op zich niets mis mee.
 Maar het heeft eigenlijk ook geen voordelen om percentages te gebruiken,
     en wiskundige formules met procenten erin
     worden al snel omslachtig.
-Wij houden het dus 
-    (net als alle wiskundigen)
-    zoveel mogelijk bij getallen tussen 0 en 1.
+Wij houden het dus zoveel mogelijk bij getallen tussen 0 en 1.
 
 Als de kansvariabele discreet is of categorisch,
     dan kunnen we de kansen van alle mogelijke uitkomsten
     optellen.
 Omdat de som van alle relatieve frequenties altijd gelijk is aan 1
-    moet de som van alle kansen op alle uitkomsten ook altijd 1 zijn. 
+    moet de som van de kansen op alle uitkomsten ook altijd 1 zijn. 
 
 ::: {#wrn-continue-kansvariabelen .callout-warning}
 
@@ -160,7 +159,7 @@ altijd gelijk aan 1.
 Bij continue variabelen geldt ook zoiets, 
 maar daar is alles wat ingewikkelder.
 Continue kansvariabelen hebben oneindig veel mogelijke uitkomsten,
-  en daardoor is de kans op iedere mogelijke uitkomst 
+  en bovendien is de kans op iedere mogelijke uitkomst 
   meestal oneindig klein.
 Je kunt dus niet zomaar "alle kansen optellen".
 Dat maakt dat je over continue kansvariabelen
@@ -177,14 +176,21 @@ Bij het redeneren over kansen helpt het soms
 
 We kunnen ons de verzameling van alle mogelijke uitkomsten
     (de kansruimte) 
-    voorstellen als een groot rechthoek:
+    voorstellen als een groot rechthoek (@fig-venn):
 ```{r}
 #| code-fold: true
 #| warning: false
 #| fig-cap: "Een minimaal Venn-diagram. Het rechthoek stelt de volledige kansruimte voor."
 #| label: fig-venn
+#| fig.width: 6
+#| fig.height: 4
 
-library(ggforce)
+if (!("ggplot2" %in% .packages())){ 
+  library(ggplot2) 
+  }
+if (!("ggforce" %in% .packages())){ 
+  library(ggforce) 
+  }
 
 kleurKansruimte <- "FloralWhite"
 
@@ -214,21 +220,23 @@ We zagen dat iedere gebeurtenis kan worden gerepresenteerd als
     een deelverzameling van de kansruimte. 
 We kunnen een gebeurtenis $A$
     daarom voorsellen als een gedeelte van de kansruimte,
-    hieronder weergegeven als een gele cirkel:
+    hieronder in @fig-vennA weergegeven als een gele cirkel:
     
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig-cap: "Venn-diagram met gebeurtenis $A$."
+#| fig-cap: "Venn-diagram met gebeurtenis $A$. Een gebeurtenis is een deelverzameling van de kansruimte."
 #| label: fig-vennA
+#| fig.width: 6
+#| fig.height: 4
 
 kleurA <- "Gold"
 
-A <- kansruimte +
+A <- list(
   geom_ellipse(
     aes(x0 = 34, y0 = 47, a = 28,  b = 40,  angle = 0), 
     fill = kleurA , alpha = 0.7, size = .8
-    ) +
+    ),
   annotate(
     "text", 
     x = 25, y = 45, 
@@ -237,8 +245,9 @@ A <- kansruimte +
     hjust = 0, 
     size = 5
     )
+  )
 
-A
+kansruimte + A
 
 ```
 
@@ -252,21 +261,23 @@ Bijvoorbeeld,
     en de uitkomsten $\{1, 3, 5\}$ erbuiten.
 
 We kunnen ook meerdere gebeurtenissen weergeven in één diagram weergeven.
-Hieronder zie je bijvoorbeeld een Venn-diagram met gebeurtenissen $A$ en $B$:
+Hieronder in @fig-vennAB zie je bijvoorbeeld een Venn-diagram met gebeurtenissen $A$ en $B$:
 
 ```{r}
 #| code-fold: true
 #| warning: false
 #| fig-cap: "Venn-diagram met twee gebeurtenissen: $A$ en $B$."
 #| label: fig-vennAB
+#| fig.width: 6
+#| fig.height: 4
 
 kleurB <- "DodgerBlue"
 
-AB <- A + 
+B <- list( 
   geom_ellipse(
     aes(x0 = 66, y0 = 47, a = 28,  b = 40,  angle = 0), 
     fill = kleurB, alpha = 0.75, size = .8
-    ) +
+    ),
   annotate(
     "text", 
     x = 75, y = 45, 
@@ -275,8 +286,9 @@ AB <- A +
     hjust = 0, 
     size = 5
     )
+)
 
-AB
+(AB <- kansruimte + A + B)
 
 ```
 
@@ -295,17 +307,17 @@ Vaak verandert de kans op een gebeurtenis
 Bijvoorbeeld,
    de kans dat een willekeurige gekozen persoon zwanger is
    verandert zodra je leert dat deze persoon 60 jaar oud is.
-In het algemeen moeten we dus kunnen rekenen met kansen
-  op uitkomsten wanneer bepaalde informatie over de uitkomst
+We moeten de kansen op bepaalde uitkomsten dus aanpassen
+  wanneer bepaalde informatie over de uitkomst
   "gegeven is".
-We noemen dit **conditionele kansen**.
+We noemen zulke aangepaste kansen **conditionele kansen**.
 
 De kans op gebeurtenis $A$
     gegeven dat gebeurtenis $B$ plaatsvindt,
     wordt geschreven als
 $$\pr{A | B}.$$
-Je spreekt dit uit als: "de kans op $A$ gegeven $B$",
-of dat de kans "geconditioneerd is op $B$".
+Je spreekt dit uit als "de kans op $A$ gegeven $B$",
+of zegt dat de kans op A "geconditioneerd is op $B$".
 
 Venn-diagrammen geven een nuttig perspectief op conditionele kansen.
 Kijk maar eens terug naar het Venn-diagram van @fig-vennAB.
@@ -517,19 +529,16 @@ Dat betekent dat in het Venn-diagram
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig-cap: "Venn-diagram. De gebeurtenissen $A$ en $B$ sluiten elkaar uit."
+#| fig-cap: "Venn-diagram. De gebeurtenissen $A$ en $B$ overlappen niet en sluiten elkaar dus uit."
 #| label: fig-uitsluiten
+#| fig.width: 6
+#| fig.height: 4
 
-kansruimte + 
+A2 <- list(
   geom_ellipse(
     aes(x0 = 28, y0 = 32, a = 25,  b = 28,  angle = 0), 
     fill = kleurA, alpha = 0.5, size = 0.8
-    ) + 
-  geom_ellipse(
-    aes(x0 = 72, y0 = 68, a = 25,  b = 28,  angle = 0), 
-    fill = kleurB, alpha = 0.5, size = 0.8
-    ) +
-  theme_void() +
+    ), 
   annotate(
     "text", 
     x = 27, y = 31, 
@@ -537,7 +546,14 @@ kansruimte +
     color = "black", 
     hjust = 0, 
     size = 5
-    ) +
+    )
+  )
+
+B2 <- list(
+  geom_ellipse(
+    aes(x0 = 72, y0 = 68, a = 25,  b = 28,  angle = 0), 
+    fill = kleurB, alpha = 0.5, size = 0.8
+    ),
   annotate(
     "text", 
     x = 71, y = 67, 
@@ -546,6 +562,9 @@ kansruimte +
     hjust = 0, 
     size = 5
     )
+)
+
+(AB2 <- kansruimte + A2 + B2)
 ```
 
 Het betekent ook dat $\pr{A | B} = 0$ en $\pr{B | A} = 0$,
@@ -624,6 +643,8 @@ Maar,
 #| warning: false
 #| fig-cap: "Venn-diagram.Voor de kans op $A$ of $B$ moet het groene gebied één keer worden meegeteld!"
 #| label: fig-vennAB2
+#| fig.width: 6
+#| fig.height: 4
 
 AB
 
