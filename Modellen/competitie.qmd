@@ -2,9 +2,9 @@
 {{< include ../_macros.tex >}}
 :::
 
-## Coexistentie en exclusie {#sec-comp}
+## Competitie en evolutie {#sec-comp}
 
-De predator-prooi relaties uit de vorige hoofdstukken zijn natuurlijk een hele specifieke interacties tussen soorten. Maar soorten hebben vaak op een veel meer subtiele manier competitie: ze strijden om een beperkte hoeveelheid voedselbronnen of nestplekken. Sterker nog, dergelijke competitie is veel algemener: transcriptiefactoren hebben competitie om bindingsplekken op het DNA, eiwitten hebben competitie om substraat, cellen in een weefsel hebben competitie om nutrienten (denk hierbij bijvoorbeeld ook aan kanker!). Om dergelijke interacties te begrijpen, maken we kennis met inter- en intraspecifieke competitie.
+De predator-prooi relaties uit de vorige hoofdstukken zijn natuurlijk een hele specifieke interacties tussen soorten. Maar soorten hebben vaak op een veel meer subtiele manier competitie: ze strijden om een beperkte hoeveelheid voedselbronnen of nestplekken. Ook in andere biologische niveau's zien we subtiele vormen van "competitie" terug. Denk bijvoorbeeld aan hoe transcriptiefactoren competitie hebben om bindingsplekken op het DNA, eiwitten competitie hebben om substraat, cellen in een weefsel competitie hebben om nutrienten en zuurstof (denk hierbij bijvoorbeeld ook aan kanker!). Om dergelijke interacties te begrijpen, maken we kennis met inter- en intraspecifieke competitie.
 
 ![Afbeelding gegenereerd met ChatGPT4-o](figuren/vs_birds_ai.png){fig-align="center" width="70%"}
 
@@ -14,7 +14,9 @@ De leerdoelen voor dit hoofdstuk zijn:
 
 -   Begrijpen hoe intra- en interspecifieke interacties gemodelleerd kunnen worden.
 -   Mogelijke evenwichten in faseruimtes van competitie kunnen benoemen, en uitleggen wat de biologische intepretaties van deze evenwichten zijn.
--   Een gegeven vectorveld afmaken en daarbij horende oplossingen schetsen.
+-   Een gegeven vectorveld afmaken en daarbij horende oplossingen schetsen
+- Verschillende uitkomsten van competitie aflezen aan een faseruimte
+- Begrijpen hoe je met ODEs evolutionaire vragen kan stellen, en deze contrasteren met evolutionaire uitkomsten in ruimtelijke modellen
 
 ## Competitie binnen en tussen soorten
 
@@ -136,40 +138,41 @@ We volgen het hierboven genoemde stappenplan voor de analyse van ODEs, en gaan e
 
 
 $$
-\begin{align*}
+\begin{align}
 \dt{\textcolor{blue}N_\textcolor{blue}1} = r\textcolor{blue}N_{\textcolor{blue}1}\left(1 - c_{11}\textcolor{blue}N_{\textcolor{blue}1} - c_{12}\textcolor{orange}N_{\textcolor{orange}2}\right)
-\end{align*}
+\end{align}
 $${#eq-test}
 
-Verwijzing naar @eq-test.
 
 $$
-\dt{\color{orange}N_\color{orange}2} = r\color{orange}N_\color{orange}2\left(1 - c_{22}\color{orange}N_\color{orange}2 - c_{21}\color{blue}N_\color{blue}1\right)
-$$ 
+\begin{align}
+\dt{\textcolor{orange}N_\textcolor{orange}2} = r\textcolor{orange}N_\textcolor{orange}2\left(1 - c_{22}\textcolor{orange}N_\textcolor{orange}2 - c_{21}\textcolor{blue}N_\textcolor{blue}1\right)
+\end{align}
+$$ {#eq-soorten}
 
-{#eq-soorten}
 
-Zoals gezegd is het handig om eerst te kiezen wat we op straks op de x- en y-as gaan zetten (deze keuze heeft geen invloed op het model zelf, alleen op de visualisatie). Laten we ervoor kiezen om $\color{blue}N_\color{blue}1$ op de x-as te zetten, en $\color{orange}N_\color{orange}2$ op de y-as. We stellen beide ODEs gelijk aan 0, en gaan nullclines bepalen:
 
-\begin{align*}
+Zoals gezegd is het handig om eerst te kiezen wat we op straks op de x- en y-as gaan zetten (deze keuze heeft geen invloed op het model zelf, alleen op de visualisatie). Laten we ervoor kiezen om $\textcolor{blue}N_\textcolor{blue}1$ op de x-as te zetten, en $\textcolor{orange}N_\textcolor{orange}2$ op de y-as. We stellen beide ODEs gelijk aan 0, en gaan nullclines bepalen:
+
+\begin{align}
 \color{blue} \dt{N_1} &= r\textcolor{blue}{N_1}(1 - c_{11}\textcolor{blue}{N_1} - c_{12}\textcolor{orange}{N_2}) = 0  \quad \text{als...} \\
 \textcolor{blue}{N_1} &= 0 \quad \text{of...} \\
 1 - c_{11}\textcolor{blue}{N_1} - c_{12}\textcolor{orange}{N_2} &= 0 \\
  \textcolor{orange}{N_2} &= \frac{1 - c_{11}\textcolor{blue}{N_1}}{c_{12}}
-\end{align*}
+\end{align}
 
-Let op dat dit beide nullclines zijn voor \boldmath$\color{blue}N_\color{blue}1$. Met andere woorden: hoewel de tweede nullcline uitgedrukt is als $\color{orange}N_\color{orange}2=f(\color{blue}N_\color{blue}1)$, wordt dit straks een [blauwe]{style="color: blue; font-weight:bold"} nullcline. We hadden deze nullcline ook kunnen uitdrukken als $\color{blue}N_\color{blue}1=f(\color{orange}N_\color{orange}2)$, maar omdat $\color{orange}N_\color{orange}2$ op de y-as staat, is die laatste keuze wat minder fijn schetsen.
+Let op dat dit beide nullclines zijn voor \boldmath$\textcolor{blue}N_\textcolor{blue}1$. Met andere woorden: hoewel de tweede nullcline uitgedrukt is als $\textcolor{orange}N_\textcolor{orange}2=f(\textcolor{blue}N_\textcolor{blue}1)$, wordt dit straks een [blauwe]{style="color: blue; font-weight:bold"} nullcline. We hadden deze nullcline ook kunnen uitdrukken als $\textcolor{blue}N_\textcolor{blue}1=f(\textcolor{orange}N_\textcolor{orange}2)$, maar omdat $\textcolor{orange}N_\textcolor{orange}2$ op de y-as staat, is die laatste keuze wat minder fijn schetsen.
 
-Op dezelfde manier kunnen we ook de \boldmath$\color{orange}N_\color{orange}2$ ([oranje]{style="color: orange; font-weight:bold"}) nullclines vinden:
+Op dezelfde manier kunnen we ook de \boldmath$\textcolor{orange}N_\textcolor{orange}2$ ([oranje]{style="color: orange; font-weight:bold"}) nullclines vinden:
 
 \begin{align*}
 \textcolor{orange}{N_2} &= 0 \quad \text{of...} \\
 \textcolor{orange}{N_2} &= \frac{1 - c_{21}\textcolor{blue}{N_1}}{c_{22}}
 \end{align*}
 
-We vinden dus ook twee nullclines voor $\textcolor{orange}{N_2}$. We vinden wederom een nullcline voor een populatiegrootte van 0 (een populatie die niet bestaat kan ook niet groeien), en een nullcline die we uitdrukken als $\color{orange}N_\color{orange}2=f(\color{blue}N_\color{blue}1)$, zodat we dit kunnen schetsen in de vorm $y=f(x)$.
+We vinden dus ook twee nullclines voor $\textcolor{orange}{N_2}$. We vinden wederom een nullcline voor een populatiegrootte van 0 (een populatie die niet bestaat kan ook niet groeien), en een nullcline die we uitdrukken als $\textcolor{orange}N_\textcolor{orange}2=f(\textcolor{blue}N_\textcolor{blue}1)$, zodat we dit kunnen schetsen in de vorm $y=f(x)$.
 
-De twee "triviale" nullclines (dus $\color{blue}N_\color{blue}1=0$ en $\color{orange}N_\color{orange}2=0$) zijn simpelweg lijnen die op de assen liggen. De andere twee nullclines zijn functies die lineair afnemen met $\color{blue}N_\color{blue}1$, maar let op, er staan andere parameters in de vergelijkingen. Om precies te bepalen hoe deze rechte lijnen lopen, moeten we hun snijpunten met de x- en de y-as bepalen. [De nullcline van $N_1$]{style="color: blue; font-weight:bold"} snijdt de y-as wanneer $\color{blue}N_\color{blue}1=0$, dus bij $\color{orange}N_\color{orange}2=\frac{1}{c_{12}}$, en de x-as bij $\frac{1 - c_{11}\color{blue}N_\color{blue}1}{c_{12}}=0$, wat alleen 0 is als de teller 0 is, dus als $\color{blue}N_\color{blue}1=\frac{1}{c_{11}}$. Vergelijkbaar, snijdt [de nullcline van $N_2$]{style="color: #FF7F50; font-weight:bold"} de y-as bij $\color{orange}N_\color{orange}2=\frac{1}{c_{22}}$ en de x-as bij $\color{blue}N_\color{blue}1=\frac{1}{c_{21}}$.
+De twee "triviale" nullclines (dus $\textcolor{blue}N_\textcolor{blue}1=0$ en $\textcolor{orange}N_\textcolor{orange}2=0$) zijn simpelweg lijnen die op de assen liggen. De andere twee nullclines zijn functies die lineair afnemen met $\textcolor{blue}N_\textcolor{blue}1$, maar let op, er staan andere parameters in de vergelijkingen. Om precies te bepalen hoe deze rechte lijnen lopen, moeten we hun snijpunten met de x- en de y-as bepalen. [De nullcline van $N_1$]{style="color: blue; font-weight:bold"} snijdt de y-as wanneer $\textcolor{blue}N_\textcolor{blue}1=0$, dus bij $\textcolor{orange}N_\textcolor{orange}2=\frac{1}{c_{12}}$, en de x-as bij $\frac{1 - c_{11}\textcolor{blue}N_\textcolor{blue}1}{c_{12}}=0$, wat alleen 0 is als de teller 0 is, dus als $\textcolor{blue}N_\textcolor{blue}1=\frac{1}{c_{11}}$. Vergelijkbaar, snijdt [de nullcline van $N_2$]{style="color: #FF7F50; font-weight:bold"} de y-as bij $\textcolor{orange}N_\textcolor{orange}2=\frac{1}{c_{22}}$ en de x-as bij $\textcolor{blue}N_\textcolor{blue}1=\frac{1}{c_{21}}$.
 
 Om precies te weten hoe deze lijnen in de faseruimte liggen, moeten we keuzes maken over de parameters. Als we bijvoorbeeld aannemen dat interspecifieke competitie zwakker is dan intraspecifieke competitie ($c_{12}$ en $c_{21}$ zijn kleiner dan $c_{11}$ en $c_{22}$), dan liggen de nullclines zoals weergegeven in  (@fig-competition_nullclines-1). Om ook het vectorveld te bepalen, kijken we altijd naar extreme waarden (heel veel of weinig van beide populaties). Voor deze vergelijkingen komen we heel ver met alleen intuïtie: als beide soorten heel abundant zijn, kunnen ze alleen maar afnemen. Ook in de vergelijkingen zie je dit terug: als je de ODEs uitvermenigvuldigd zijn er kwadratische termen voor de competitie, terwijl de groei lineair toeneemt. Als de populaties dus heel groot zijn, zal competitie de overhand spelen, en de populaties dus afnemen. Beide manieren tonen dus aan dat het vectorveld rechtsbovenin naar links/onder wijst. De andere punten van het vectorveld kunnen we simpelweg afmaken door de pijltjes om te laten klappen als je over een nullcline gaat. Gaan we over een $N_1$ nullcline dan klapt de x-as om (want $N_1$ staat op de x-as), en gaan we over een $N_2$ nullcline dan klapt de y-as om. Omdat alle pijltjes naar het snijpunt wijzen (@fig-competition_nullclines-2), weten we dat het evenwicht op dit punt stabiel is.
 
@@ -281,6 +284,16 @@ Met het bovenstaande model zien we dat, afhankelijk van de parameters, we hele a
 | Instabiele spiraal  | Unstable spiral | Het vectorveld draait om het evenwicht heen, en het systeem beweegt weg van het evenwicht.| ![](figuren/equi_spiral_unst.png)
 :::
 
+## Evolutionaire vraagstukken
+
+De scenario's in dit hoofdstuk kunnen we zien als competitie tussen twee reed bestaande soorten, maar ook als een **invasie-experiment**. Als een mutant (of een invasieve soort) zich bevind in een gevestigde populatie, zal deze dan verspreiden? Zal deze soort de bestaande soort compleet vervangen, of zullen de populaties een evenwicht vinden? Al met al kunnen we drie mogelijke uitkomsten bedenken:
+
+- De mutant kan niet groeien
+- De mutant kan groeien en bereikt stabiel evenwicht met de bestaande populatie
+- De mutant kan groeien en vervangt de bestaande populatie
+
+Een heel interessante uitkomst vind je wanneer het evenwicht een zadelpunt vormt. In dit geval kan de mutant zich niet verspreiden, maar de bestaande populatie zou zich ook niet kunnen verspreiden in een populatie mutanten! Deze situatie wordt in de ecologie *founder control* genoemd. 
+
 ## Opgaven 
 :::{#exr-vectorveld}
 
@@ -374,7 +387,7 @@ We gaan nu aannemen dat de cheaters sneller groeien dan de cooperators (draai hi
 In de simulatie hieronder is de birth rate van cooperators iets lager gemaakt dan die van de cheaters.
 
 ```{=html}
-<iframe width="100%" height="460" src="//jsfiddle.net/bramvandijk88/dL1sb4ap/embedded/result/" frameborder="0" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
+<iframe width="100%" height="560" src="//jsfiddle.net/bramvandijk88/dL1sb4ap/embedded/result/" frameborder="0" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
 ```
 
   j. Hoe kan het dat het individual-based model coexistentie van de soorten laat zien, terwijl dit in de ODE niet kan? *het samenleven werkt alleen als je niet mengt. met mengen sterft alles uit, dus kennelijk is de ruimtelijke structuur belangrijk. dit kan je ook wel zien, want lokaal (in een klein stukje van de simulatie) is er WEL steeds sprake van uitsterven. maar dan is het niet onmiddelelijk einde verhaal!*
@@ -385,7 +398,7 @@ In de simulatie hieronder is de birth rate van cooperators iets lager gemaakt da
 
 :::{.Rexr #exr-parfitting}
 
-## Parameter fitting} 
+## **Verdieping**: parameter fitting
 
 ![Figuur 1 uit Gause (1934)](figuren/gausfit.png){width="80%" fig-align="center" #fig-gause}
 

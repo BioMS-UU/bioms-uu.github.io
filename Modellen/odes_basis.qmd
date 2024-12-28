@@ -1,6 +1,5 @@
-::: {.content-visible when-format="html"}
 {{< include ../_macros.tex >}}
-:::
+{{< include ../print_friendly.html >}}
 
 # Modelleren met ODEs {#sec-odes}
 
@@ -10,20 +9,18 @@ In dit onderdeel bouwen we voort op de kennis van exponentiële groei, logistisc
 
 De leerdoelen voor dit hoofdstuk zijn:
 
-* Begrijpen dat biologie modelleren met discrete tijdstappen soms vreemde.
-(maar interessante!) effecten op kan leveren.
-* Begrijpen dat ODEs geen “tijdstappen” hebben.
-* Begrijpen dat ODEs geschreven worden in termen van “x per tijdseenheid”,
+* Begrijpen dat biologie modelleren met discrete tijdstappen soms vreemde effecten op kan leveren.
+* Begrijpen dat ODEs geen "tijdstappen" hebben.
+* Begrijpen dat ODEs geschreven worden in termen van "x per tijdseenheid",
 en wat dit zegt over de individuele termen en parameters.
 * Begrijpen wanneer er in een ODE sprake is van een evenwicht.
 * Het in verband kunnen brengen van ODEs en hun oplossing.
 
-![Afbeelding gegenereerd met ChatGPT4-o](figuren/discr_vs_cont_ai.png){fig-align="center" width="80%"}
+![(afbeelding gegenereerd met ChatGPT4-o)](figuren/discr_vs_cont_ai.png){fig-align="center" width="70%"}
 
 ## Chaotische konijnen
 
-In @sec-exp hebben we gezien wat de consequenties zijn van 24 konijnen vrijlaten in een land waar geen natuurlijke predator voor konijnen bestaat. In de opgaven hebben we deze groei gemodelleerd in R, en geprobeerd om de groei van deze konijnen enigszins te beperken door een draagvermogen in te bouwen. Hoewel dit goed leek te gaan wanneer de intrinsieke groeisnelheid ($r$) laag was,
-liet snellere groei een vreemde grafiek zien (@fig-chaos-1). Van het één op het andere jaar springen we heen en weer van honderden miljoenen konijnen naar een heel klein aantal konijnen, en dit gaat over de jaren heen steeds maar door. Sterker nog, als we Thomas Austin’s experiment herhalen met een ander aantal konijnen (@fig-chaos-2) zien we dat deze fluctuaties iedere keer heel anders zijn! Met andere woorden: als we met behulp van dit model zouden willen voorspellen hoeveel konijnen er na 20 jaar zouden zijn, dan moeten we wel héél zeker weten met hoeveel konijn we precies begonnen! Bovendien hebben we niet bereikt wat we wilden: probeerde we niet juist een stabiel evenwicht te modelleren?
+In @sec-exp hebben we gezien wat de consequenties zijn van 24 konijnen vrijlaten in een land waar geen natuurlijke predator voor konijnen bestaat. In de opgaven hebben we deze groei gemodelleerd in R. Hoewel dit goed leek te gaan wanneer de intrinsieke groeisnelheid ($r$) laag was, gaf dit niet de snelle groei zoals waargenomen in Australië. Het verhogen van $r$ gaf echter vreemde grafieken zien (@fig-chaos-1). Van het één op het andere jaar springen we heen en weer van honderden miljoenen konijnen naar een heel klein aantal konijnen, en dit gaat over de jaren heen steeds maar door. Sterker nog, als we Thomas Austin’s experiment herhalen met een ander aantal konijnen (@fig-chaos-2) zien we dat deze fluctuaties iedere keer heel anders zijn! Met andere woorden: als we met behulp van dit model zouden willen voorspellen hoeveel konijnen er na 20 jaar zouden zijn, dan moeten we wel héél zeker weten met hoeveel konijn we precies begonnen! Bovendien hebben we niet bereikt wat we wilden: probeerde we niet juist een stabiel evenwicht te modelleren?
 
 ::: {#fig-chaos layout-ncol=2}
 ```{r}
@@ -92,14 +89,16 @@ R_series %>% filter(time>1,time <40,r==4) %>%
 ```
 :::
 
-Het vreemde gedrag in @fig-chaos wordt formeel **deterministische chaos** genoemd. Hiermee bedoelen we niet het type chaos dat men in spreektaal gebruikt om een rommelige kamer te omschrijven, maar de onvoorspelbare fluctuaties die bovendien extreem gevoelig zijn voor de begin-toestand. Een andere beroemd voorbeeld uit de natuurkunde
-is de [dubbele slinger](https://nl.wikipedia.org/wiki/Dubbele_slinger). Hoewel je op korte termijn vaak nog enigszins kan aanvoelen in welke richting de slinger beweegt, is het op lange termijn onmogelijk in te schatten waar de slinger zich zal bevinden. Kennelijk kunnen zelfs simpele systemen zich enorm vreemd en
+![](https://upload.wikimedia.org/wikipedia/commons/6/65/Trajektorie_eines_Doppelpendels.gif){style="width:20%; float: right; margin: 5px;"} Het vreemde gedrag in @fig-chaos wordt formeel **deterministische chaos** genoemd. Hiermee bedoelen we niet het type chaos dat men in spreektaal gebruikt om een rommelige kamer te omschrijven, maar de onvoorspelbare fluctuaties die bovendien extreem gevoelig zijn voor de begin-toestand. Een andere beroemd voorbeeld uit de natuurkunde
+is de [dubbele slinger](https://nl.wikipedia.org/wiki/Dubbele_slinger) (zie ook de animatie rechts). 
+
+Hoewel je op korte termijn vaak nog enigszins kan aanvoelen in welke richting de slinger beweegt, is het op lange termijn onmogelijk in te schatten waar de slinger zich zal bevinden. Kennelijk kunnen zelfs simpele systemen zich enorm vreemd en
 onvoorspelbaar gedragen. Geen wonder dat meer complexe systemen zoals biologische populaties en het weer zo moeilijk te voorspellen zijn!
 
-::: {#tip-detchaos .callout-tip}
+::: {#tip-detchaos .callout-tip collapse='false'}
 ## Meer over "deterministische chaos" (verdieping)
 
-Een systeem is deterministisch als de regels niet willekeurig zijn. Met andere woorden, er worden geen dobbelstenen gerold om te bepalen wat er gebeurt. De meeste chemische en biologische principes volgen zulke deterministische regeltjes, maar toch zijn ze moeilijk te voorspellen. Dit komt doordat ze ondanks het gebrek aan willekeur zeer gevoelig zijn voor de precisie van de metingen. Deze gevoeligheid ken je misschien van het concept the *butterfly effect*, waar een vleugelslag van een vlinder uiteindelijk (na lange tijd) de oorzaak kan zijn van een orkaan.  Dit wordt chaos genoemd. Zo zie je bijvoorbeeld dat als Thomas Austin 25 in plaats van 24 konijnen had vrijgelaten, dit een enorm ander beeld schept.
+Een systeem is deterministisch als de regels niet willekeurig zijn. Met andere woorden, er worden geen dobbelstenen gerold om te bepalen wat er gebeurt. De meeste chemische en biologische principes volgen zulke deterministische regeltjes, maar toch zijn ze moeilijk te voorspellen. Dit komt doordat ze ondanks het gebrek aan willekeur zeer gevoelig zijn voor de precisie van de metingen. Deze gevoeligheid ken je misschien van het concept the *butterfly effect*, waar een vleugelslag van een vlinder uiteindelijk (na lange tijd) de oorzaak kan zijn van een orkaan.  Zo zie je bijvoorbeeld dat als Thomas Austin 25 in plaats van 24 konijnen had vrijgelaten, het precies aantal konijnen na 20 jaar maximaal verschillend kan zijn!
 :::
 
 Hoewel deterministische chaos een interessant fenomeen is (en zeer zeker niet zomaar "willekeur", zie @tip-detchaos), kunnen we ons afvragen of de groei van biologische populaties ook daadwerkelijk chaotisch is. Als we bijvoorbeeld bacteriën in het lab groeien, krijgen we meestal een logistische (sigmoïde) groeicurve, en niet een populatie die lukraak fluctueert. Wat is nou eigenlijk de oorzaak van deze chaos, en kunnen we hier misschien ook vanaf komen?
@@ -157,7 +156,7 @@ Voor deze simpele algebraïsche vergelijking is de onbekende dus $x$, en de oplo
 
 ## Een hertenfeestje in wiskundige termen 
 
-![](figuren/hertenscenario.png){fig-align="center" width="60%"}
+![(Afbeelding gegenereerd met ChatGPT4-o)](figuren/hertenscenario.png){fig-align="center" width="60%"}
 
 Stel, er zijn 100 herten in een bos, en er migreren ieder uur 3 herten naar dit bos toe (er is kennelijk een feestje). We nemen voor nu even aan dat de herten op deze korte tijdschaal niet voortplanten of dood gaan. Onder deze simpele aannames, kunnen we de functie $H(t)$ bepalen die het aantal herten in het bos over de tijd omschrijft: 
 
@@ -406,7 +405,7 @@ c. Stel we vissen morgen (op een magische manier) alle plastic uit de oceaan. Sc
 
 ## Rode bloedcellen
 
-![Rode bloedcellen, of rode CUTEcellen? Gegenereerd met ChatGPT4-o](figuren/rode_bloedcellen.png){width="50%"}
+![Rode bloedcellen, of rode CUTEcellen? (gegenereerd met ChatGPT4-o)](figuren/rode_bloedcellen.png){width="50%"}
 
 Rode bloedcellen worden in het beenmerg geproduceerd met een snelheid $p$ cellen per dag. Elke rode bloedcel kan sterven met een kans $d$ per dag. 
 
