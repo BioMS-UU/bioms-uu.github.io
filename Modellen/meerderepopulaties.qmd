@@ -6,20 +6,28 @@
 
 Biologische populaties leven nooit in isolatie, maar ondergaan interacties met andere populaties. Neem bijvoorbeeld de populatie konijnen in Australië, waarvoor we hebben aangenomen dat ze een dichtheidsafhankelijke afname van hun groei hebben. Worden de populatiegroottes van konijnen (normaal gesproken) niet ook door predatoren beïnvloed? Is onder die omstandigheden voedselbeperking überhaupt nog erg relevant, of gaan konijnen vooral aan predatie dood? Om deze vragen te kunnen beantwoorden, gaan we leren om met **systemen van differentiaalvergelijkingen** te werken.
 
-![Afbeelding gegenereerd met ChatGPT4-o](figuren/meerdan1.png){fig-align="center" width="80%"}
+::: {#fig-shared .figure}
+::: {layout-ncol=2}
+![](figuren/fox_licking.jpeg){fig-align="center" width="100%"}
+
+![](figuren/rabbit_scared.jpg){fig-align="center" width="100%"}
+:::
+
+Afbeeldingen gedownload op pexels.com (CC0, free to use)
+:::
 
 ## Leerdoelen
 
 De leerdoelen van dit onderdeel zijn:
 
--   Begrijpen hoe in ODEs interacties tussen populaties worden beschreven.
+-   Begrijpen hoe met ODEs interacties tussen populaties kunnen worden beschreven.
 -   Beschrijven hoe een fase-ruimte in elkaar zit, en de belangrijkste onderdelen kunnen benoemen (nullclines, vectorveld, trajectory, evenwichten).
 -   Biologische vraagstukken kunnen vertalen naar parameter veranderingen.
 -   De consequenties van parameter veranderingen kunnen aflezen aan een faseruimte.
 
 ## Konijnen en vossen 
 
-In het vorige hoofdstuk hebben we populaties gemodelleerd waarbij de dichtheid de groeisnelheid verlaagt, zodat er een eindig draagvlak ontstaat (de *carrying capacity*). Echter zouden we ook kunnen modelleren dat er een dichtheidsafhankelijk effect is van een *andere* populatie. Bijvoorbeeld, als er heel veel konijnen zijn, zal een havik of vos heel gemakkelijk een konijn te grazen nemen. Door de consumptie van deze prooidieren, zal de predatorpopulatie toenemen. Laten we dit modelleren voor konijnen en vossen, met devolgende aannames:
+In het vorige hoofdstuk hebben we populaties gemodelleerd waarbij de groei wordt beperkt door de dichtheid, resulterend in een draagvlak (de *carrying capacity*). Echter zouden we ook kunnen modelleren dat er een dichtheidsafhankelijk effect is van een *andere* populatie. Bijvoorbeeld, als er heel veel predatoren zijn, zullen er meer konijnen dood gaan door predatie. Door de consumptie van deze prooidieren, zal deze predatorpopulatie zelf kunnen toenemen. Laten we dit modelleren voor konijnen en vossen, met devolgende aannames:
 
 -   De konijnen hebben dichtheidsafhankelijke geboorte $b$
 -   De konijnen sterven met een vaste snelheid $d$
@@ -27,36 +35,40 @@ In het vorige hoofdstuk hebben we populaties gemodelleerd waarbij de dichtheid d
 -   De groeisnelheid van vossen wordt uitsluitend bepaald door predatie
 -   Ook vossen sterven met een vaste snelheid $\delta$
 
-Deze omschrijving kunnen we ook samenvatten in *functional responses*: wiskundige functies die beschrijven hoe populaties reageren op hun eigen dichtheid, of die van een ander (@fig-lvresponses).
+We kunnen elk van deze aannames vertalen naar een *functional respons*: een wiskundige functie die beschrijven hoe populaties reageren op hun eigen dichtheid, of die van een ander (@fig-lvresponses).
 
-![Verschillende voorbeelden van functionele responsen. a) Per capita geboorte van konijnen als een functie van de dichtheid van konijnen. Hoe meer konijnen er zijn, hoe minder konijnen er *per capita* geboren worden. b) Per capita sterfte van konijnen blijft constant voor verschillende dichtheden (is niet dichtheidsafhankelijk). c) Het aantal konijnen dat per vos wordt gegeten neemt toe als het aantal konijnen R toeneemt en als het aantal vossen N toeneemt. d) De per capita geboorte van vossen hangt af van hoeveel konijnen ze vangen, vermenigvuldigt met $c$. e) De per capita sterfte van vossen is niet dichtheidsafhankelijk. Afbeelding gegenereerd met ChatGPT4-o](figuren/LV_responses.png){#fig-lvresponses fig-align="center" width="80%"}
+![Functionele responsen van ons predator/prooi model. Op de y-as staan de geboorte van prooi (a), sterfte van prooi (b), de predatie van prooi (c), de groei van predatoren (d) en de sterfte van predatoren (e). Al deze begrippen zijn gedefinieerd *per capita* (p.c.), dus "per prooi" voor a, b en c, en "per predator" voor d en e.](figuren/LV_responses.png){#fig-lvresponses fig-align="center" width="80%"}
 
-De eerste twee processen (@fig-lvresponses a+b, de reproductie en sterfte van konijnen) kennen we al van het vorige hoofdstuk. Hoewel we de konijnen eerder $N$ hadden genoemd, is het in dit predator-prooi model gebruikelijk om de [prooi]{style="color:#2d43fc; font-weight:bold"} R te noemen. Onze groeivergelijking voor prooidieren (met dichtheidsafhankelijke geboorte) ziet er dan dus zo uit:
+De eerste twee processen (@fig-lvresponses a+b, de reproductie en sterfte van konijnen) kennen we al van het vorige hoofdstuk. Hoewel we de konijnen eerder $N$ hadden genoemd, is het in het predator-prooi model dat we gaan bespreken gebruikelijk om de [prooi]{style="color:#2d43fc; font-weight:bold"} R te noemen. Onze groeivergelijking voor prooidieren (met dichtheidsafhankelijke geboorte) ziet er dan dus zo uit:
 
 \begin{align*}
     \frac{\dd {\color{#2d43fc}R}}{\dd t} &= b\left(1-\frac{{\color{#2d43fc}R}}{K}\right){{\color{#2d43fc}R}} - d{\color{#2d43fc}R}
 
 \end{align*}
 
-Hieraan gaan we toevoegen dat vossen de konijnen opeten. De [predator]{style="color:#ff7700; font-weight:bold"} wordt in deze modellen vaak aangegeven met een $N$. We gaan ervan uit dat predatie direct proportioneel is aan de dichtheden konijnen en vossen (dus $R\cdot N$), en vermenigvuldigen dit met een nieuwe vrije parameter ($a \cdot R\cdot N$) om daarmee de predatie omhoog of omlaag te kunnen schroeven (zie @fig-lvresponses c). Deze nieuwe term noemen we de predatieterm. Als we de predatieterm toevoegen aan onze vergelijking, krijgen we:
+Hieraan gaan we toevoegen dat vossen de konijnen opeten. De [predator]{style="color:#ff7700; font-weight:bold"} wordt in dit model vaak aangegeven met een $N$. We gaan ervan uit dat predatie direct proportioneel is aan de dichtheden konijnen en vossen (dus $R\cdot N$), en vermenigvuldigen dit met een nieuwe vrije parameter ($a \cdot R\cdot N$) om daarmee de predatie omhoog of omlaag te kunnen schroeven (zie @fig-lvresponses c). Deze nieuwe term noemen we de predatieterm. Als we de predatieterm toevoegen aan onze vergelijking, krijgen we:
 
 \begin{align*}
   \frac{\dd {\color{#2d43fc}R}}{\dd t} &= b\left(1-\frac{{\color{#2d43fc}R}}{K}\right){{\color{#2d43fc}R}} - d{{\color{#2d43fc}R}} - a{{\color{#2d43fc}R}}\color{#ff7700}N
 \end{align*}
 
-Zoals je ziet is de variabele $N$ anders gekleurd, om aan te geven dat dit de [predator]{style="color:#f2790f; font-weight:bold"}populatie is. Nu gaan we een tweede vergelijking schrijven voor het aantal vossen. Zoals gezegd wordt hun groeisnelheid alleen bepaald door de hoeveelheid predatie. Hiervoor kunnen we dus de predatieterm ($aRN$) uit de konijnen vergelijking hergebruiken (@fig-lvresponses d). Echter, omdat de biomassa van konijnen natuurlijk niet 1 op 1 vertaalt in vossen-biomassa, kunnen we wederom een nieuwe vrije parameter toevoegen ($c \cdot aRN$). Meestal nemen we aan dat $c<=1$, dat wil zeggen: er wordt niet meer dan 1 vos geboren per geconsumeerd konijn. Als laatste voegen we een eenvoudig sterfteterm toe voor de predator, en zo wordt ons uiteindelijke model:
+Zoals je ziet is de variabele $N$ oranje gekleurd, om aan te geven dat dit de [predator]{style="color:#f2790f; font-weight:bold"}populatie is. Nu gaan we een tweede vergelijking schrijven voor het aantal vossen. Zoals gezegd wordt hun groeisnelheid alleen bepaald door de hoeveelheid geconsumeerde prooi. Hiervoor kunnen we dus de predatieterm ($aRN$) uit de konijnen vergelijking hergebruiken (@fig-lvresponses d). Echter, omdat de biomassa van konijnen natuurlijk niet 1 op 1 vertaalt in biomassa voor vossen, kunnen we wederom een nieuwe vrije parameter toevoegen ($c \cdot aRN$). Meestal nemen we aan dat $c \leq 1$, dat wil zeggen: er wordt niet meer dan 1 vos geboren per geconsumeerd konijn. Als laatste voegen we een eenvoudig sterfteterm toe voor de predator, en zo wordt ons uiteindelijke model:
 
+$$
 \begin{align*}
     \frac{\dd {\color{#2d43fc}R}}{\dd t} &= \underbrace{b\left(1-\frac{{\color{#2d43fc}R}}{K}\right){\color{#2d43fc}R}}_{\text{geboorte konijnen}} - 
 \underbrace{d{\color{#2d43fc}R}}_{\text{sterfte konijnen}} - \underbrace{a{\color{#2d43fc}R}\color{#ff7700}N}_{\text{predatie}}\\
 \frac{\dd \color{#ff7700}N}{\dd t} &= \underbrace{ca{\color{#2d43fc}R}\color{#ff7700}N}_{\text{geboorte vossen}} - \underbrace{\delta \color{#ff7700}N}_{\text{sterfte vossen}}
-\end{align*} {#eq-vossen-konijnen}
+\end{align*}
+$$ {#eq-vossen-konijnen}
 
-Het bovenstaande systeem bestaat uit 2 ODEs, en wordt een 2 dimensioneel (2D) ODE systeem genoemd. We zouden ook nog een apex predator (adelaars bijvoorbeeld) kunnen toevoegen, en dan hebben we een 3 dimensioneel (3D) ODE systeem (hierbij slaat 3D dus niet op ruimtelijke dimensies, maar op de hoeveelheid variabelen van het ODE systeem). We zouden zelfs een heel ecosysteem kunnen opbouwen, en een 10D of 100D systeem bestuderen. Voor deze "hoogdimensionele" systemen kunnen we vaak alleen numeriek (met de computer) uitrekenen wat er gebeurt. Maar voor 2D systemen kunnen we nog best veel met pen en papier voor elkaar krijgen.
+@eq-vossen-konijnen bestaat uit 2 ODEs, en wordt een 2 dimensioneel (2D) ODE systeem genoemd. We zouden ook nog een apex predator (adelaars bijvoorbeeld) kunnen toevoegen, en dan hebben we een 3 dimensioneel (3D) ODE systeem^[3D slaat hier dus niet op ruimtelijke dimensies, maar op de hoeveelheid variabelen van het ODE systeem]. We zouden zelfs een heel ecosysteem kunnen opbouwen, en een 10D of 100D systeem bestuderen. Voor deze "hoogdimensionele" systemen kunnen we vaak alleen numeriek (met de computer) uitrekenen wat er gebeurt. Maar voor 2D systemen kunnen we nog best veel met pen en papier voor elkaar krijgen.
 
 ## Evenwichtsanalyse van 2D systemen
 
-In het vorige hoofdstuk hebben we geleerd dat een populatie in evenwicht wanneer er geen verandering meer is: als de ODE gelijk is aan $0$. Als je werkt met meerdere ODEs, moet dit **voor elke ODE waar zijn**. Dit is biologisch ook wel te begrijpen: de prooi is in evenwicht als alle processen (alle termen) elkaar opheffen, maar als ondertussen de predator nog verandert is deze balans onmiddelijk weer verstoord! We moeten dus uitzoeken wanneer zowel de prooi vergelijking als de predator vergelijking $0$ zijn. Door de ODEs beide aan 0 gelijk te stellen, en het stelsel met twee onbekende variabelen op te lossen, kunnen we ontrekken waar het evenwicht precies ligt (een specifieke hoeveelheid konijnen en vossen). Maar dit geeft eigenlijk maar weinig inzicht in hoe de populaties veranderen over de tijd. Maar dit is nou juist wat we graag willen weten, zodat we goed kunnen voorspellen wat er zou kunnen gebeuren als je plotseling een wolf op de Veluwe loslaat. Hoe gaan de populaties precies veranderen? Gaat het naar een stabiel evenwicht? Dit kunnen we bestuderen door kennis te maken met faseruimtes.
+In het vorige hoofdstuk hebben we geleerd dat een populatie in evenwicht wanneer er geen verandering meer is: als de ODE gelijk is aan $0$. Als je werkt met meerdere ODEs, moet dit **voor elke ODE waar zijn**. Dit is biologisch ook wel te begrijpen: de prooi is in evenwicht als alle processen (alle termen) elkaar opheffen, maar als ondertussen de predator nog verandert is deze balans onmiddelijk weer verstoord! 
+
+We moeten dus uitzoeken wanneer zowel de prooi vergelijking als de predator vergelijking $0$ zijn. Door de ODEs beide aan 0 gelijk te stellen, krijgen we twee algebraïsche vergelijkingen met 2 onbekenden. Deze kunnen we proberen op te lossen om te ontdekken bij welke hoeveelheid konijnen/vossen er een evenwicht is, maar dit geeft eigenlijk maar weinig inzicht in hoe de populaties veranderen *over de tijd*. Maar dit is nou juist wat we graag willen weten, zodat we goed kunnen voorspellen wat er zou kunnen gebeuren als je plotseling een wolf op de Veluwe loslaat. Hoe gaan de populaties precies veranderen? Gaat het naar een stabiel evenwicht? Dit kunnen we bestuderen door kennis te maken met faseruimtes.
 
 ## Wat zijn faseruimtes?
 
@@ -99,7 +111,11 @@ Axis(side=2, labels=FALSE)
 
 ```
 
-Als we nu naar onze vergelijkingen kijken, kunnen we voor extreme waarden van R en N proberen te beredeneren wat er gebeurt. Laten we bijvoorbeeld kijken wat er gebeurt als er heel weinig prooien en predatoren zijn (bijvoorbeeld 0.001 van allebei). Als we de geboorteterm van prooien $b(1- \frac{bR}{K})R$ uitvermenigvuldigen krijgen we $bR - \frac{bR^2}{K}$, en omdat we aannemen dat $R=0.001$, is de tweede term extra klein (want $0.001^2 = 10^{-6}$). Deze tweede term is onder deze omstandigheden dus negeerbaar. Biologisch gesproken kunnen we zeggen dat wanneer er weinig konijnen zijn, dan is dichtheidsafhankelijke afname van groei negeerbaar. Ditzelfde principe kunnen we toepassen op de predatieterm ($aRN$), waar de kleine $R$ en kleine $N$ met elkaar vermenigvuldigd worden, dus dat wordt ook een extra klein getal. Samengevat geeft dit geeft dus hetvolgende inzicht:
+Als we nu naar onze vergelijkingen kijken, kunnen we voor extreme waarden van R en N proberen te beredeneren wat er gebeurt. Laten we bijvoorbeeld kijken wat er gebeurt als er heel weinig prooien en predatoren zijn. Omdat ODEs meestal de dichtheden van de populaties beschrijven (bijvoorbeeld "vossen per vierkante kilometer"), kan deze dichtheid ook kleiner zijn dan 1. Wat als er een dichtheid is van 0.001 konijnen, en 0.001 vossen? 
+
+Als we de geboorteterm van prooien $b(1- \frac{bR}{K})R$ uitvermenigvuldigen krijgen we $bR - \frac{bR^2}{K}$. Omdat we aannemen dat $R=0.001$, is de tweede term extra klein (want $0.001^2 = 10^{-6}$). Deze tweede term is onder deze omstandigheden dus negeerbaar. Biologisch gesproken kunnen we zeggen dat wanneer er weinig konijnen zijn, dan is dichtheidsafhankelijke afname van groei negeerbaar. Ditzelfde principe kunnen we toepassen op de predatieterm ($aRN$), waar de kleine $R$ en kleine $N$ met elkaar vermenigvuldigd worden, dus dat wordt ook een extra klein getal. 
+
+Samengevat verwachten we bij lage dichtheden dus hetvolgende:
 
 \begin{align*}
   \frac{\dd {{\color{#2d43fc}R}}}{\dd t} &=\underbrace{b{{\color{#2d43fc}R}}}_{\text{klein}} -
@@ -107,16 +123,14 @@ Als we nu naar onze vergelijkingen kijken, kunnen we voor extreme waarden van R 
    \underbrace{d{{\color{#2d43fc}R}}}_{\text{klein}} - \underbrace{a{{\color{#2d43fc}R}}{\color{#ff7700}N}}_{\text{negeerbaar klein}}
 \end{align*}
 
-Dus, als zowel $R$ als $N$ heel klein zijn, brengt dit onze konijnenvergelijking terug tot:
+Als we de negeerbare termen weglaten (we gaan ze dus daadwerkelijk negeren), wordt onze konijnenvergelijking:
 
 \begin{align*}
    \frac{\dd {{\color{#2d43fc}R}}}{\dd t} &= b{{\color{#2d43fc}R}} -
    d{{\color{#2d43fc}R}}
 \end{align*}
 
-Aangenomen dat $b>d$, kan de konijnenpopulatie dus groeien.
-
-Als we in de predatorvergelijking kijken wat er gebeurt bij hele kleine populatiegroottes, zien we dit:
+Aangenomen dat $b>d$, een zeer redelijke aanname^[Als maximale geboorte niet groter is dan minimale sterfte, kan een populatie namelijk nooit groeien...], kan de konijnenpopulatie dus groeien. Als we ook in de predatorvergelijking kijken wat er gebeurt bij hele kleine populatiegroottes, zien we dit:
 
 \begin{align*}
 \frac{\dd {\color{#ff7700}N}}{\dd t} &=
@@ -160,7 +174,7 @@ Axis(side=2, labels=FALSE)
 vectorfield(5,10,10,-10)
 ```
 
-Oke, dus we weten nu dat er met weinig prooien/predators, toename van de prooi zal zijn en afname van de predator. Maar we weten ook dat er met meer en meer prooi, steeds meer negatieve dichtheidseffecten ondervonden worden door de prooi. De predator heeft juist alleen maar voordeel bij meer prooi. Met andere woorden, we kunnen rechtsonderin ons diagram een pijltje tekenen die de afname van prooi, en de toename van predatoren weergeeft:
+Oke, dus we weten nu dat er met weinig prooien/predators, toename van de prooi zal zijn en afname van de predator. We weten ook dat er met meer en meer prooi, steeds meer negatieve dichtheidseffecten zullen zijn voor de prooi: de birth rate gaat omlaag en er worden meer konijnen opgegeten. De predator heeft juist alleen maar voordeel bij meer prooi. Met andere woorden, we kunnen rechtsonderin ons diagram (meer prooi maar evenveel predator als het vorige scenario) een pijltje tekenen die de afname van prooi, en de toename van predatoren weergeeft:
 
 ```{r}
 #| fig.width: 7
@@ -194,7 +208,7 @@ vectorfield(95,5,-10,10)
 
 ## Nullclines en vectorvelden
 
-Uit het bovenstaande diagram kunnen we aflezen dat ergens tussen de pijltjes links onderin en de pijltjes rechts onderin, de pijltjes van richting zijn veranderd. Neem bijvoorbeeld de groei van de predator (de oranje pijltjes): eerst is de groei negatief, maar met genoeg prooi wordt deze positief. Kunnen we precies bepalen *waar* het oranje pijltje is omgeklapt? Hiervoor moeten we bepalen waar in deze faseruimte de groeisnelheid van de predatorpopulatie 0 is: dit geeft precies aan waar de pijl is omgeklapt. Om dit punt te bepalen, stellen we de predatorvergelijking gelijk  aan 0:
+Uit het bovenstaande diagram kunnen we aflezen dat ergens tussen de pijltjes links onderin en de pijltjes rechts onderin, beide pijltjes van richting zijn veranderd. Neem bijvoorbeeld de groei van de predator (de oranje pijltjes): eerst is de groei negatief, maar met genoeg prooi wordt deze, op een bepaald punt, positief. Kunnen we precies bepalen *waar* dit oranje pijltje is omgeklapt, zodat het nu naar boven wijst? Hiervoor moeten we bepalen waar in deze faseruimte de groeisnelheid van de predatorpopulatie 0 is: aan de ene kant van 0 liggen namelijk positieve nummers, en aan de andere kant negatieve nummers. Dit is dus waar de pijl is omgeklapt. Om dit punt te bepalen, stellen we de predatorvergelijking gelijk aan 0:
 
 \begin{align*}
     ca{{\color{#2d43fc}R}}{\color{#ff7700}N} - \delta {\color{#ff7700}N} &= 0\\
@@ -203,7 +217,7 @@ Uit het bovenstaande diagram kunnen we aflezen dat ergens tussen de pijltjes lin
     {{\color{#2d43fc}R}} &= \frac{\delta}{ca} \quad \text{Oplossing 2}
 \end{align*}
 
-Deze twee oplossingen, geven aan waar $\dt{N}$ gelijk is aan 0, en kunnen we als lijnen tekenen in ons diagram. $N=0$ is een horizontale lijn, en $R=\frac{\delta}{ca}$ een verticale lijn bij een bepaalde (positieve) waarde van R. Waar de verticale lijn precies ligt, ligt aan de parameters van het model. Echter weten we dat op dit punt de groei van predatoren 0 is, dus dat hier de pijltjes omklappen. Dus: we weten dat de verticale lijn ergens tussen onze pijltjes ligt:
+Deze twee oplossingen, geven aan waar $\dt{N}$ gelijk is aan 0, en kunnen we als lijnen tekenen in ons diagram. $N=0$ is een horizontale lijn op de x-as, en $R=\frac{\delta}{ca}$ een verticale lijn bij een bepaalde (positieve) waarde van $R$. Waar de verticale lijn precies ligt, ligt dus aan de parameters van het model. Maar één ding weten we zeker: dit is waar het oranje pijltje omklapt. De lijn moet dus tussen onze eerder getekende pijlen liggen: 
 
 ```{r}
 #| fig.width: 7
@@ -249,7 +263,7 @@ De lijnen die we hierboven geschetst hebben heten nullisoclines, of kortgezegd: 
 
 \end{align*}
 
-De eerste nullcline ligt dus bij R=0 (en is dus verticaal). De tweede nullcline ziet er wat ingewikkelder uit, want hier is $N$ een functie van $R$ (met andere woorden $N=f(R)$). Dit is conceptueel niet heel anders dan ``y als een functie van x'', zoals je misschien gewend bent. Je ziet dat $N$ lineair afneemt met $R$, dus deze nullcline zal een schuine lijn naar beneden zal vormen in ons assenstelsel. Met alle nullclines bij elkaar, zien we dus:
+De eerste nullcline ligt dus bij R=0 (en is dus verticaal). De tweede nullcline ziet er wat ingewikkelder uit, want hier is $N$ een functie van $R$ (met andere woorden $N=f(R)$). Dit is conceptueel niet heel anders dan "y als een functie van x", zoals je misschien gewend bent. Je ziet dat $N$ lineair afneemt met $R$, dus deze nullcline zal een schuine lijn naar beneden zal vormen in ons assenstelsel. Met alle nullclines bij elkaar, zien we dus:
 
 ```{r}
 #| fig.width: 7
@@ -327,7 +341,7 @@ abline(a=80,b=-1, lwd=2,col="#2d43fc")
 
 ```
 
-Laten we even stil staan bij wat het diagram dat we net hebben geconstrueerd eigenlijk betekent. In het diagram worden alle mogelijke toetsanden weergegeven voor onze prooi- en predatordichtheden (toestanden wordt ook wel fasen genoemd, vandaar het woord faseruimte). Zo kun je aflezen hoe de populaties zullen veranderen over de tijd. In het vorige hoofdstuk hebben we besproken dat het vinden van algemene oplossingen (de functie die precies omschrijft hoe populaties veranderen) vaak te moeilijk is. Voor het bovenstaande predator-prooi model is dat zelfs *onmogelijk*. Maar dit is toch juist wat we willen weten? We willen toch juist weten hoe de populaties over de tijd zullen veranderen? Gelukkig kunnen we met behulp van faseruimtes (zelfs met pen en papier!) specifieke oplossingen aflezen. Dat wil zeggen: gegeven een bepaalde begintoestand, waar zal het systeem zich heen bewegen? In @fig-faseruimteoplossingenlv zie je dat we op die manier een "traject" (*trajectory*) door de ruimte kunnen tekenen, wat direct vertaalt in een specifieke oplossing! Dus met minimaal rekenwerk, kunnen we toch voorspellen wat het systeem gaat doen!
+Laten we even stil staan bij wat het diagram dat we net hebben geconstrueerd eigenlijk betekent. In het diagram worden alle mogelijke toetsanden weergegeven voor onze prooi- en predatordichtheden (toestanden wordt ook wel fasen genoemd, vandaar het woord faseruimte). Met dit diagram kunnen we aflezen hoe de populaties zullen veranderen over de tijd. In het vorige hoofdstuk hebben we besproken dat het vinden van algemene oplossingen (de functie die precies omschrijft hoe populaties veranderen) vaak te moeilijk is. Voor het bovenstaande predator-prooi model is dat zelfs *onmogelijk*. Gelukkig kunnen we met behulp van faseruimtes (zelfs met pen en papier!) specifieke oplossingen aflezen. Dat wil zeggen: gegeven een bepaalde begintoestand, waar zal het systeem zich heen bewegen? In @fig-faseruimteoplossingenlv zie je dat we op die manier een "traject" (*trajectory*) door de ruimte kunnen tekenen, wat direct vertaalt in een specifieke oplossing. Zo kunnen we toch voorspellen wat het systeem gaat doen!
 
 ![Vanuit een faseruimte kunnen we aflezen hoe de populaties zich door de tijd zullen veranderen, en zo specifieke oplossingen schetsen!](figuren/trajectory_LV.png){#fig-faseruimteoplossingenlv}
 
@@ -379,13 +393,13 @@ text(90,8,"Evenwicht 2", cex=0.7)
 
 ```
 
-Laten we beginnen bij evenwicht 1, waar beide populaties 0 zijn. Een dergelijk evenwicht noemen we triviaal, omdat geen van de relevante variabelen (predator/prooi) aanwezig is. In dit punt is er dus ook geen verandering in de prooi- en predatorpopulatie. Maar wat als we een beetje predator toevoegen? Kan de predator dan groeien? In dit geval kijken we vlak boven het evenwicht, want dat is het punt waar er "een beetje predator" aanwezig is. We zien dat in dit gebied de oranje pijl naar beneden wijst, dus kan de predator alleen maar krimpen. Biologisch betekent dit het volgende: predatoren kunnen niet groeien als er geen prooien zijn (dit is het equivalent van vossen vrijlaten op Australië voordat er konijnen waren!). We moeten natuurlijk ook controleren wat er gebeurt als we een beetje prooi toevoegen. Om dit te bestuderen, kijken we rechts van dit evenwicht. Hier is de groeisnelheid van de prooi positief, en kan de prooipopulatie dus gaan groeien (ook dit is logisch, want dit is precies wat er gebeurde met de vrijgelaten konijnen in Australië!). Een evenwicht is alleen stabiel als het systeem na elke verstoring terug gaat naar het evenwicht. Dus we moeten we hierbij concluderen dat dit evenwicht **instabiel** is.
+Laten we beginnen bij evenwicht 1, waar beide populaties 0 zijn. Een dergelijk evenwicht noemen we triviaal, omdat geen van de relevante variabelen (predator/prooi) aanwezig is. In dit punt is er dus ook geen verandering in de prooi- en predatorpopulatie. Maar wat als we, vanaf dit punt ($0,0$), een beetje predator toevoegen? Kan de predator dan groeien? In dit geval kijken we vlak boven het evenwicht, want dat is het punt waar er "een beetje predator" aanwezig is. We zien dat in dit gebied de oranje pijl naar beneden wijst, dus kan de predatorpopulatie alleen maar weer afnemen. Biologisch betekent dit het volgende: predatoren kunnen niet groeien als er geen prooien zijn (dit is het equivalent van vossen vrijlaten op Australië voordat er konijnen waren!). We moeten natuurlijk ook controleren wat er gebeurt als we een beetje prooi toevoegen. Om dit te bestuderen, kijken we rechts van dit evenwicht. Hier is de groeisnelheid van de prooi positief, en kan de prooipopulatie dus gaan groeien (ook dit is logisch, want dit is precies wat er gebeurde met de vrijgelaten konijnen in Australië!). Een evenwicht is alleen stabiel als het systeem na **elke** verstoring terug gaat naar het evenwicht. Dus we moeten we hierbij concluderen dat het evenwicht bij ($0,0$) **instabiel** is.
 
-Voor evenwicht 2 en 3 kunnen we dezelfde analyse toepassen. Prooi toevoegen aan evenwicht 2 resulteert in afname van de prooipopulatie, maar predator toevoegen resulteert in toename van de predator. Vergelijkbaar met evenwicht 1 is ook dit een *instabiel evenwicht*. Voor evenwicht 3 geldt wederom dat prooi toevoegen resulteert in afname. Echter zien we dat we bij het toevoegen van predatoren (vlak boven evenwicht 3) precies *op* de nullcline zitten, en de groeisnelheid van de predator dus 0 blijft. Omdat evenwicht 3 robust is voor het toevoegen van prooi (de verstoring neemt af) en ook voor het toevoegen van predator (de verstoring vergoot in ieder geval niet), kunnen we concluderen dat dit evenwicht **stabiel** is. Daarom staat hij in figuur @fig-faseruimtecompleet aangegeven met een gesloten cirkel.
+Voor evenwicht 2 en 3 kunnen we dezelfde analyse toepassen. Prooi toevoegen aan evenwicht 2 resulteert in afname van de prooipopulatie, maar predator toevoegen resulteert in toename van de predator. Vergelijkbaar met evenwicht 1 is ook dit dus ook een *instabiel evenwicht*. Voor evenwicht 3 geldt wederom dat prooi toevoegen resulteert in afname. Echter zien we dat we bij het toevoegen van predatoren (vlak boven evenwicht 3) precies *op* de nullcline zitten, en de groeisnelheid van de predator dus 0 blijft. Omdat evenwicht 3 robust is voor het toevoegen van prooi (de verstoring neemt af) en ook voor het toevoegen van predator (de verstoring vergoot in ieder geval niet), kunnen we concluderen dat dit evenwicht **stabiel** is. Daarom staat hij in figuur @fig-faseruimtecompleet aangegeven met een gesloten cirkel.
 
 ## Verhoogde death rates van predatoren
 
-Nu we onze faseruimte hebben uitgewerkt, is het heel makkelijk om biologisch relevante vragen te stellen. We zouden ons bijvoorbeeld af kunnen vragen wat er gebeurt met een verhoogde sterfte van de predatoren. Om het effect hiervan te begrijpen, kijken we naar de vergelijkingen voor de nullclines:
+Nu we onze faseruimte hebben uitgewerkt, is het heel makkelijk om biologisch relevante vragen te stellen. We zouden ons bijvoorbeeld af kunnen vragen wat er gebeurt met een verhoogde sterfte van de predatoren. Om het effect hiervan te begrijpen, nemen we de eerder gevonden vergelijkingen voor de nullclines er weer even bij:
 
 \begin{align*}
     {{\color{#2d43fc}R}}_{1} \rightarrow {{\color{#2d43fc}R}} &= 0 \\
@@ -398,13 +412,15 @@ Nu we onze faseruimte hebben uitgewerkt, is het heel makkelijk om biologisch rel
 
 ## Een nullcline gegeven door X = ..., is niet altijd de nullcline voor X!
 
-Bij nullclines heb je vaak te maken met twee variabelen, dus kun je ze op meerdere manieren opschrijven. Bijvoorbeeld, de vergelijkingen $y=x^2$ en $x=\sqrt(y)$ bevatten dezelfde informatie en zien er hetzelfde uit in een grafiek.
+Bij nullclines heb je vaak te maken met twee variabelen, dus kun je ze op meerdere manieren opschrijven. Bijvoorbeeld, de vergelijkingen $y=x^2$ en $x=\sqrt y$ bevatten dezelfde informatie en zien er hetzelfde uit in een grafiek.
 
 Het is vaak handig om nullclines op te schrijven als functie van de variabele op de x-as (in het predator-prooi systeem, schrijven we dus $N=f(R)$). Dit is omdat we gewend zijn om y als functie van x te schetsen, en niet andersom. Dit is een conventie en kan omgedraaid worden — de prooi hoeft natuurlijk niet op de x-as te staan!
 
 :::
 
-Kijkende naar de vier nullclines hierboven, kunnen we zien dat slechts 1 ervan afhangt van de sterfte van predatoren ($\delta$). Als deze verhoogd, wordt de fractie $\frac{\delta}{ca}$ hoger, en verschuift dus de nullcline naar rechts. Let op! Dit zal ook veranderen hoe het vectorveld precies loopt, en waar eventuele snijpunten liggen! In @fig-predatordeath a) zie je hoe de nieuwe faseruimte eruit ziet, en dat er geen stabiel evenwicht meer is voor zowel predator als prooi. In plaats daarvan is er alleen een evenwicht met prooi overgebleven, en hoewel dit evenwicht voorheen instabiel was, is deze nu (kijkend naar het vectorveld) stabiel geworden! Dus: als de death rate te hoog is kunnen predatoren (zoals je eigenlijk wel verwacht) niet overleven. Maar let op, niet elke parameter-verandering heeft intuïtieve effecten! Als we bijvoorbeeld dezelde analyse doen voor een verhoogde birth rate van de prooi (@fig-predatordeath b), zien we dat er in evenwicht precies evenveel prooien zullen zijn, en alleen maar meer predatoren!
+Kijkende naar de vier nullclines hierboven, kunnen we zien dat slechts 1 ervan afhangt van de sterfte van predatoren ($\delta$). Als deze verhoogd, wordt de fractie $\frac{\delta}{ca}$ hoger, en verschuift dus de nullcline naar rechts. Let op! Dit kan ook veranderen hoe het vectorveld precies loopt, en waar eventuele snijpunten liggen! In @fig-predatordeath-1 zie je bijvoorbeeld hoe de faseruimte eruit ziet als predatoren een hoge death rate hebben. In dit geval zien we dat er geen stabiel evenwicht meer is voor zowel predator als prooi. In plaats daarvan is er alleen een evenwicht met prooi overgebleven, en hoewel dit evenwicht voorheen instabiel was, is deze nu (kijkend naar het vectorveld) stabiel geworden! Dus: als de death rate te hoog is kunnen predatoren (zoals je eigenlijk wel verwacht) niet overleven. Maar let op, niet elke parameter-verandering heeft intuïtieve effecten! Als we bijvoorbeeld dezelde analyse doen voor een verhoogde birth rate van de prooi (@fig-predatordeath-2), zien we dat er in evenwicht precies evenveel prooien zullen zijn, en alleen maar meer predatoren. 
+
+Zoals ik in de introductie al heb benadrukt: onze intuïtie is niet altijd genoeg!
 
 ```{r}
 #| fig-cap: ""
@@ -488,17 +504,19 @@ add_vector(30,95,-10,-10)
 add_vector(90,30,-10,10)
 ```
 
-Op een vergelijkbare manier kunnen we het effect van andere parameterveranderingen bestuderen. Zodoende kunnen ecologen voorspellen of soorten dreigen uit te sterven, of epidemiologen voorspellen of een virus zal uitbreiden *etc.*
+Op een vergelijkbare manier kunnen we het effect van andere parameterveranderingen bestuderen. Zodoende kunnen ecologen voorspellen of soorten dreigen uit te sterven, of epidemiologen voorspellen of een virus zal uitbreiden, *etc.*
 
 ## Opgaven
 
 :::{.pepexr #exr-ziekezeehonden}
 
 ## Zieke zeehonden
+<br>
 
-![](figuren/zieke_zeehonden_AI.png){width="80%" fig-align="center"}
 
-Laten we aannemen dat zeehonden ($Z$) op de waddenzee groeien met dichtheidsafhankelijke geboorte (maximale geboorte $b$, dichtheidseffect $k$) en constante sterfte ($d$). We nemen aan dat een deel van deze zeehonden geïnfecteerd wordt met een ziekte waardoor ze na een korte tijd dood gaan. De geïnfecteerde zeehonden noemen we $I$:
+![(Afbeelding gegenereerd met ChatGPT-4o)](figuren/zieke_zeehonden_AI.png){width="80%" fig-align="center"}
+
+Laten we aannemen dat zeehonden ($Z$) op de waddenzee groeien met dichtheidsafhankelijke geboorte (maximale geboorte $b$, dichtheidseffect $k$) en constante sterfte ($d$). Een deel van deze zeehonden is geïnfecteerd met een ziekte waardoor ze na een korte tijd dood gaan. De geïnfecteerde zeehonden noemen we $I$. Zodoende kunnen we het volgende systeem van ODEs opstellen:
 
 \begin{align*}
 \dt{Z} &= bZ(1-Z/k)-dZ-\beta ZI \text{,} \quad \text{en} \\
@@ -507,29 +525,21 @@ Laten we aannemen dat zeehonden ($Z$) op de waddenzee groeien met dichtheidsafha
 
   a. Waar staan de parameters $\beta$ en $\delta$ voor? Hoe zou je de $\beta ZI$ term noemen?
 
-  a. Naast de ODE voor $I$ staat een extra aanname, namelijk  $\delta \gg d$. Gegeven de modelomschrijving hierboven, vind je dit een redelijke aanname? 
+  b. Naast de ODE voor $I$ staat een extra aanname, namelijk  $\delta \gg d$. Gegeven de modelomschrijving hierboven, vind je dit een redelijke aanname? 
 
-  a. We gaan eerst het model bekijken zonder infectie. Als er geen infectie aanwezig is ($I=0$), versimpelt de vergelijking in een 1D populatiegroei model. Wat is in dit geval het evenwicht van de gezonde zeehondenpopulatie? 
+  c. We gaan eerst het model bekijken zonder infectie. Als er geen infectie aanwezig is ($I=0$), versimpelt de vergelijking in een 1D populatiegroei model. Wat is in dit geval het evenwicht van de gezonde zeehondenpopulatie? 
 
-  a. PCB's (polychloorbifenylen) zijn schadelijke stoffen die de geboortesnelheid van zeehonden kunnen beinvloeden. Stel dat er nogsteeds geen infectie aanwezig is, en dat de PCB's de geboortesnelheid ($b$) halveren. Wordt de populatie gezonde zeehonden kleiner?
+  d. PCB's (polychloorbifenylen) zijn schadelijke stoffen die de geboortesnelheid van zeehonden kunnen beinvloeden. Stel dat er nog steeds geen infectie aanwezig is, en dat de PCB's de geboortesnelheid ($b$) halveren. Wordt de populatie gezonde zeehonden kleiner?
 
-  a. We gaan bestuderen wat er gebeurt als er een ziekte wordt geïntroduceerd in deze populatie. Om het 2D systeem te analyseren, maken we een faseruimte. Zet de gezonde zeehonden op de x-as, en de zieke zeehonden op de y-as. Schets twee kwalitatief verschillende faseruimtes en trajectories: één waar de ziekte verspreidt en de zeehonden chronisch geinfecteerd blijven, en één waar de ziekte uitsterft. Bestudeer de stabiliteit van alle evenwichten  *ANTWOORD:werk dit goed uit!*
+  e. We gaan bestuderen wat er gebeurt als er een ziekte wordt geïntroduceerd in deze populatie. Om het 2D systeem te analyseren, maken we een faseruimte. Zet de gezonde zeehonden op de x-as, en de zieke zeehonden op de y-as. Schets twee kwalitatief verschillende faseruimtes: één waar de ziekte verspreidt en de zeehonden chronisch geinfecteerd blijven, en één waar de ziekte uitsterft. 
   
-::: todo
-Misschien deze vraag opdelen in subvragen? Is wel erg veel voor de eerste vraag hierover.
-:::
+  f. Bestudeer de stabiliteit van alle evenwichten (snijpunten tussen verschillende nullclines) in de faseruimtes uit e. Als je dit nog niet gedaan hebt, moet je hiervoor ook het vectoveld bepalen (de richtingen van de pijltjes). 
+ 
+  g. Welke parameters bepalen in welk scenario van de vorige vraag we ons bevinden? 
 
-  a. We gaan bestuderen wat er gebeurt als er een ziekte wordt geïntroduceerd in deze populatie. Om het 2D systeem te analyseren, maken we een faseruimte. Zet de gezonde zeehonden op de x-as, en de zieke zeehonden op de y-as. Schets de nullclines voor twee kwalitatief verschillende situaties.
-  
-  a. Wat zijn de verschillende mogelijke evenwichten?
-  
-  a. Teken het vectorveld voor beide situaties en bepaal de stabiliteit van alle evenwichten.
+  h. Ga er opnieuw vanuit dat PCB's de geboorte van gezonde zeehonden ($b$) halveren, en schets de nieuwe nullcline samen met de oude nullcline in 1 faseruimte.
 
-  a. Welke parameters bepalen in welk scenario van de vorige vraag we ons bevinden? 
-
-  a. Ga er opnieuw vanuit dat PCB's de geboorte van gezonde zeehonden ($b$) halveren, en schets de nieuwe nullcline samen met de oude nullcline in 1 faseruimte. 
-
-  a. Hoeveel kleiner wordt de gezonde zeehondenpopulatie in evenwicht? 
+  i. Hoeveel kleiner wordt de gezonde zeehondenpopulatie in evenwicht? 
 
 :::
 
@@ -546,9 +556,10 @@ Wederom delen we de ruimte op in verschillende types hokjes: lege hokjes (zwart)
 Net als bij de konijnen in Australië, hoeven we geen extra dichtheidseffect in te bouwen omdat deze automatisch bestaat: het aantal hokjes is eindig.
 
 ```{=html}
+<div class="interactive_content">
 
 <iframe id="iframeToReplace" width="100%" height="560" src="https://tbb.bio.uu.nl/bvd/bms/simulations/lotkavolterra/" title="Simulation"></iframe>
-
+</div>
 ```
 
 In dit "toy-model" wordt predatie versimpeld tot 1 prooihokje in 1 predatorhokje veranderen.
@@ -641,9 +652,10 @@ d. Controlleer of onder gemengde omstandigheden dit model zich zoals het ODE mod
 e. Is het effect in deze simulatie (zonder mengen) meer vergelijkbaar met *social distancing* of met *contactbeperkingen*? 
 
 ```{=html}
+<div class="interactive_content">
 
 <iframe id="iframeToReplace" width="100%" height="490" src="https://tbb.bio.uu.nl/bvd/bms/simulations/sir/" title="Simulation"></iframe>
-
+</div>
 ```
 
 f. Maak de $\beta$-parameters van het virus hoger (bijvoorbeeld 0.1, maar je kan ook andere waarden proberen). Beschrijf in je eigen woorden wat er gebeurt voor zowel gemengde als ongemende omstandigheden. 

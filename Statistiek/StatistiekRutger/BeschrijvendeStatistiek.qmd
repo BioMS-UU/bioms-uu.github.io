@@ -1400,141 +1400,6 @@ De uiteindelijk positie van de <span style="color:darkorange;">oranje</span>  li
 Dat is precies de positie waar de kwadratensom minimaal is,
   oftewel het gemiddelde.
 
-### Wanneer gebruik je welke centrummaat? 
-
-We hebben drie centrummaten besproken: de modus, de mediaan, en het gemiddelde.
-Wanneer gebruik je nu welke maat om een rij gegevens samen te vatten?
-
-Een belangrijk verschil tussen de drie maten
-is hoe ze reageren op uitbijters. 
-We hebben gezien dat het gemiddelde sterk beïnvloed kan worden door
-een uitbijter, terwijl de modus en mediaan daar ongevoelig voor zijn.
-
-Daarmee samenhangend wordt het gemiddeld ook sterk beïnvloed
-door de symmetrie van de verdeling. 
-Hieronder is in @fig-centrummaten een histogram gegeven
-die sterk rechts-scheef is.
-In zo'n geval is de modus typisch kleiner dan de mediaan
-en de mediaan kleiner dan het gemiddelde,
-doordat de "staart" aan de rechterkant een sterk effect heeft op het gemiddelde
-maar nauwelijks op de andere centrummaten.
-
-::: {.todo-box}
-
-Liever zou ik een een biologische dataset gebruiken,
-maar ik heb geen mooie set kunnen vinden...
-
-Kleuren van de lijnen aanpassen!
-:::
-
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.width: 5
-#| fig.height: 3
-#| fig-cap: "Voorbeeld van een scheve verdeling, waarbij de modus, de mediaan, en het gemiddelde zijn aangegeven."
-#| label: fig-centrummaten
-
-# Installeer en laad ggplot2 als het niet al beschikbaar is
-if (!("ggplot2" %in% .packages())) {
-  library(ggplot2)
-}
-
-# Stel een seed in voor reproduceerbaarheid
-set.seed(123)
-
-# Parameters voor de Gamma-verdeling
-shape <- 1.5        # Vormparameter (k)
-scale <- 3          # Schaalparameter (θ)
-sample_size <- 8000 # Aantal observaties
-
-# Trek een steekproef uit de Gamma-verdeling
-gamma_sample <- rgamma(sample_size, shape = shape, scale = scale)
-
-# Bereken statistieken
-mean_value <- mean(gamma_sample)
-median_value <- median(gamma_sample)
-
-# Modus berekening voor een Gamma-verdeling
-mode_value <- (shape - 1) * scale
-
-# Zet de data in een dataframe voor ggplot2
-gamma_df <- data.frame(
-  value = gamma_sample
-)
-
-# Maak een histogram en voeg verticale lijnen en labels toe
-ggplot(gamma_df, aes(x = value)) +
-  geom_histogram(
-    binwidth = 0.5,
-    boundary = 0,
-    fill = opvulkleur,
-    color = "black",
-    alpha = 0.7
-  ) +
-  geom_vline(
-    aes(xintercept = mean_value),
-    color = "red",
-    linetype = "dashed",
-    size = 1.2
-  ) +
-  geom_vline(
-    aes(xintercept = median_value),
-    color = "green",
-    linetype = "dashed",
-    size = 1.2
-  ) +
-  geom_vline(
-    aes(xintercept = mode_value),
-    color = "purple",
-    linetype = "dashed",
-    size = 1.2
-  ) +
-  annotate(
-    "text",
-    x = 10,
-    y = 630,
-    vjust = 0,
-    label = paste0("Gemiddelde = ", round(mean_value, 1)),
-    color = "red"
-  ) +
-  annotate(
-    "text",
-    x = 10,
-    y = 530,
-    vjust = 0,
-    label = paste0("Mediaan = ", round(median_value, 1)),
-    color = "green"
-  ) +
-  annotate(
-    "text",
-    x = 10,
-    y = 430,
-    vjust = 0,
-    label = paste0("Modus = ", round(mode_value, 1)),
-    color = "purple"
-  ) +
-  labs(
-    title = "",
-    x = "Waarden",
-    y = "Frequentie"
-  ) +
-  theme_minimal()
-```
-
-Daarom gebruiken we de volgende richtlijnen. 
-
-**Situatie 1: De verdeling van gegevens is grofweg symmetrisch
-en er zijn geen opvallende uitbijters.**
-In dat geval zullen de drie maten dicht bij elkaar liggen. 
-In dat geval is het beste het *gemiddelde* te rapporteren.
-
-**Situatie 2: De verdeling van gegevens is scheef en/of
-er zijn opvallende uitbijters.**
-In dat geval kan het gemiddelde sterk be\"invloed worden
-door uitbijters en de staart van de verdeling
-en kun je dus het beste de mediaan rapporteren.
-
 ## Maten voor de spreiding van een verdeling
 
 Nu we de centrummaten hebben behandeld, 
@@ -2072,46 +1937,295 @@ $$
 
 - De teller is de **kwadratensom** die we in @fig-res-1 al tegenkwamen. 
 Dat is de som van de gekwadrateerde afwijkingen ten opzichte van het gemiddelde ($\mean{x}$). Door de afwijkingen te kwadrateren, zorgen we ervoor dat positieve en negatieve afwijkingen elkaar niet opheffen.  
-- In de noemer zou je misschien $n$ verwachten in plaats van $n - 1$. Dit heeft te maken met het corrigeren voor een effect dat optreedt bij het schatten van de variantie op basis van een steekproef. De reden hiervoor wordt later toegelicht.
+- In de noemer zou je misschien $n$ verwachten in plaats van $n - 1$. 
+De reden waarom hier $n - 1$ wordt gebruikt
+kunnen we helaas pas in hoofdstuk @sec-schatten uitleggen; je zult het hier even moeten aannemen.
 
 ::: {.callout-warning}
 
 ## Let op de dimensie en eenheid!
 
-De dimensie van de variantie, $V_X$, is het **kwadraat van de dimensie van $X$**. Als $X$ bijvoorbeeld een gewicht is (de dimensie) en gemeten wordt in kilogrammen (de eenheid), dan heeft $V_X$ de dimensie van gewicht-kwadraat en wordt die uitgedrukt in vierkante kilogrammen ($\text{kg}^2$). Dit maakt de variantie lastig te interpreteren in termen van de oorspronkelijke eenheden. Om dit probleem te omzeilen, gebruiken we vaak de **standaarddeviatie** -- de volgende maat op onze lijst!
+De dimensie van de variantie, $V_X$, is het **kwadraat van de dimensie van $X$**. Als $X$ bijvoorbeeld een gewicht is (de dimensie) en gemeten wordt in kilogrammen (de eenheid), dan heeft $V_X$ de dimensie van gewicht-kwadraat en wordt die uitgedrukt in vierkante kilogrammen ($\text{kg}^2$). Dit maakt de variantie lastig te interpreteren in termen van de oorspronkelijke eenheden. Daarom gebruiken we vaak de **standaarddeviatie** -- de volgende maat op onze lijst!
 :::
 
 ### Standaarddeviatie
 
-Standaarddeviatie is de wortel van de variantie
-
+De **standaarddeviatie** is waarschijnlijk de meest gebruikte spreidingsmaat.
+De definitie van de standaarddeviatie is eenvoudig: het is de wortel van de variantie:
 $$
 s_X = \sqrt{V_X}.
 $$
-Dat wil zeggen:
+Als we de defitie van de variantie invullen levert dat op:
 $$
 s_X = \sqrt{\frac{\sum_i^n \left(x_i - \overline{x}\right)^2}{n-1}}.
 $$
+De standaarddeviatie wordt ook wet **standaardafwijking** genoemd. 
+Die twee woorden zijn synoniem en kunnen door elkaar gebruikt worden.
+
+De afwijkingen $(x_i - \mean{x})$ worden ook wel **residuen** genoemd.
+In @fig-res-1 waren de residuen weergegeven met grijze lijntjes.
+In de formule worden de residuen eerst gekwadrateerd en opgeteld,
+maar uiteindelijk nemen we weer de wortel. 
+Hierdoor heeft de standaarddeviatie heeft dezelfde dimensie 
+als de variabele zelf.
+Meet je dus een lengte in mm,
+dan is de standaarddeviatie ook een lengte in mm.
+Dit maakt de standaarddeviatie gemakkelijker te interpreteren
+dan de variantie.
+
+Je kunt de standaarddeviatie interpreteren 
+als een ``typische'' afwijking van het gemiddelde.
+Het is dus niet verrassend als een willekeurig gekozen waarneming
+een standaarddeviatie groter of kleiner is dan het gemiddelde.
+Bij de meeste verdelingen liggen verreweg
+de meeste waarnemingen binnen twee standaarddeviaties van het gemiddelde.
+
+Als voorbeeld nemen we weer een variabele uit de dataset NHANES.
+Van de mensen die onderzocht zijn is ook de rusthartslag bepaald.
+Dat is variabele `Pulse`.
+Een histogram van die variabele is in @fig-histogram-pulse weergegeven.
+Deze variabele is unimodaal en redelijk klokvormig. 
+Je kunt de standaarddeviatie dan grofweg inschatten als 
+de helft van de breedte van de piek van het histogram,
+gemeten op de helft van de hoogte van het histogram.
+In de figuur is de standaarddeviatie met een pijl aangegeven.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Histogram van `Pulse` (rusthartslag) in de NHANES dataset. De standaarddeviatie is aangegeven met een pijl. Deze komt ongeveer overeen met de helft van de breedte van de piek, gemeten halverwege de hoogte van de piek."
+#| label: fig-histogram-pulse
+#| fig.width: 7
+#| fig.height: 4
+
+# Controleer of de benodigde pakketten zijn geladen
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("NHANES" %in% .packages())) { library(NHANES) }
+if (!("scales" %in% .packages())) { library(scales) }
+
+# Laad de NHANES dataset
+data("NHANES")
+
+# Bereken het gemiddelde en de standaarddeviatie van Pulse
+mean_pulse <- mean(NHANES$Pulse, na.rm = TRUE)
+sd_pulse <- sd(NHANES$Pulse, na.rm = TRUE)
+
+# Automatisch gegenereerde breaks met het gemiddelde toegevoegd
+default_breaks <- extended_breaks()(range(NHANES$Pulse, na.rm = TRUE))
+all_breaks <- sort(c(default_breaks, mean_pulse))
+labels <- ifelse(
+  all_breaks == mean_pulse, 
+  expression(italic(bar(x))), 
+  all_breaks
+  )
+
+# Maak een histogram met een binbreedte van 6
+ggplot(NHANES, aes(x = Pulse)) +
+  geom_histogram(
+    binwidth = 6, 
+    fill = "darkorange", 
+    color = "black", 
+    alpha = 0.7
+  ) +
+  
+  # Voeg een verticale stippellijn toe voor het gemiddelde
+  geom_vline(
+    xintercept = mean_pulse, 
+    linetype = "dashed", 
+    color = "black", 
+    size = 1
+  ) +
+  
+  # Voeg een horizontale stippenlijn toe op de hoogte van de pijl
+  geom_hline(
+    yintercept = 800, 
+    linetype = "dotted", 
+    color = "black", 
+    size = 0.8
+  ) +
+  
+  # Voeg een horizontale pijl toe om de standaarddeviatie aan te geven
+  geom_segment(
+    aes(
+      x = mean_pulse, 
+      xend = mean_pulse + sd_pulse, 
+      y = 800, 
+      yend = 800
+    ),
+    arrow = arrow(
+      length = unit(0.2, "cm"), 
+      ends = "both"
+    ), 
+    color = "DarkOrchid", 
+    size = 1
+  ) +
+  
+  # Voeg een label toe voor de standaarddeviatie (s_X)
+  annotate(
+    "text", 
+    x = mean_pulse + sd_pulse / 2.5, 
+    y = 900, 
+    label = expression(italic(s[X])), 
+    color = "DarkOrchid", 
+    size = 5, 
+    parse = TRUE
+  ) +
+  
+  # Pas de x-as aan met automatische ticks en het gemiddelde als extra
+  scale_x_continuous(
+    name = "Hartslag in rust",
+    breaks = all_breaks, 
+    labels = labels,
+    minor_breaks = NULL # Schakel minor ticks uit
+  ) +
+  
+  # Pas de labels aan
+  labs(
+    y = "Frequentie"
+  ) +
+  
+  # Gebruik een minimalistisch thema
+  theme_minimal()
+```
+
+## Wanneer gebruik je welke centrum- en spreidingsmaat?
+
+We hebben drie centrummaten besproken: de modus, de mediaan, en het gemiddelde.
+Bovendien hebben we vier spreidingsmaten gezien: het bereik, de IKA, 
+de variantie en de standaarddeviatie.
+Wanneer gebruik je nu welke maat om een rij gegevens samen te vatten?
+
+Een belangrijk verschil tussen de verschillende maten
+is hoe ze reageren op uitbijters. 
+We hebben gezien dat het gemiddelde sterk beïnvloed kan worden door
+een uitbijter, terwijl de modus en mediaan daar ongevoelig voor zijn.
+Ook de standaarddeviatie is gevoelig voor uitbijters,
+doordat in de berekening van de standaarddeviatie de residuen gekwadrateerd worden.
+De IKA trekt zich juist niets aan van uitbijters.
+
+Daarmee samenhangend worden het gemiddeld en de standaarddeviatie ook sterk beïnvloed
+door de symmetrie van de verdeling. 
+Hieronder is in @fig-centrummaten een histogram gegeven
+die sterk rechts-scheef is.
+In zo'n geval is de modus typisch kleiner dan de mediaan
+en de mediaan kleiner dan het gemiddelde,
+doordat de "staart" aan de rechterkant een sterk effect heeft op het gemiddelde
+maar nauwelijks op de andere centrummaten.
 
 ::: {.todo-box}
 
-Paragraaf uitwerken:
+Liever zou ik een een biologische dataset gebruiken,
+maar ik heb geen mooie set kunnen vinden...
 
-Dimensie van $s$ is hetzelfde als die van $X$. Daardoor gemakkelijker te interpreteren
-
-Because the variance $V_X = s_X^2$, most books do not use the symbol $V_X$ but
-always write the variance as $s_X^2$.
-
-How to interpret the standard deviation?
-
-
-A typical distance between a number in the sample and the sample mean.
-
-In a roughly bell-shaped distribution, $s_X$ is about half the width of
-the peak, measure about halfway up the height.
-Plaatje!
-
+Kleuren van de lijnen aanpassen!
 :::
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.width: 5
+#| fig.height: 3
+#| fig-cap: "Voorbeeld van een scheve verdeling, waarbij de modus, de mediaan, en het gemiddelde zijn aangegeven."
+#| label: fig-centrummaten
+
+# Installeer en laad ggplot2 als het niet al beschikbaar is
+if (!("ggplot2" %in% .packages())) {
+  library(ggplot2)
+}
+
+# Stel een seed in voor reproduceerbaarheid
+set.seed(123)
+
+# Parameters voor de Gamma-verdeling
+shape <- 1.5        # Vormparameter (k)
+scale <- 3          # Schaalparameter (θ)
+sample_size <- 8000 # Aantal observaties
+
+# Trek een steekproef uit de Gamma-verdeling
+gamma_sample <- rgamma(sample_size, shape = shape, scale = scale)
+
+# Bereken statistieken
+mean_value <- mean(gamma_sample)
+median_value <- median(gamma_sample)
+
+# Modus berekening voor een Gamma-verdeling
+mode_value <- (shape - 1) * scale
+
+# Zet de data in een dataframe voor ggplot2
+gamma_df <- data.frame(
+  value = gamma_sample
+)
+
+# Maak een histogram en voeg verticale lijnen en labels toe
+ggplot(gamma_df, aes(x = value)) +
+  geom_histogram(
+    binwidth = 0.5,
+    boundary = 0,
+    fill = opvulkleur,
+    color = "black",
+    alpha = 0.7
+  ) +
+  geom_vline(
+    aes(xintercept = mean_value),
+    color = "red",
+    linetype = "dashed",
+    size = 1.2
+  ) +
+  geom_vline(
+    aes(xintercept = median_value),
+    color = "green",
+    linetype = "dashed",
+    size = 1.2
+  ) +
+  geom_vline(
+    aes(xintercept = mode_value),
+    color = "purple",
+    linetype = "dashed",
+    size = 1.2
+  ) +
+  annotate(
+    "text",
+    x = 10,
+    y = 630,
+    vjust = 0,
+    label = paste0("Gemiddelde = ", round(mean_value, 1)),
+    color = "red"
+  ) +
+  annotate(
+    "text",
+    x = 10,
+    y = 530,
+    vjust = 0,
+    label = paste0("Mediaan = ", round(median_value, 1)),
+    color = "green"
+  ) +
+  annotate(
+    "text",
+    x = 10,
+    y = 430,
+    vjust = 0,
+    label = paste0("Modus = ", round(mode_value, 1)),
+    color = "purple"
+  ) +
+  labs(
+    title = "",
+    x = "Waarden",
+    y = "Frequentie"
+  ) +
+  theme_minimal()
+```
+
+Daarom gebruiken we de volgende richtlijnen. 
+
+**Situatie 1: De verdeling van gegevens is grofweg symmetrisch
+en er zijn geen opvallende uitbijters.**
+In dat geval is het beste het *gemiddelde* en de *standaarddeviatie* te rapporteren.
+
+**Situatie 2: De verdeling van gegevens is scheef en/of
+er zijn opvallende uitbijters.**
+In dat geval kunnen het gemiddelde en de standaarddeviatie sterk be\"invloed worden
+door uitbijters en de staart van de verdeling.
+Daarom kun je in dat geval het beste de *mediaan* en de *IKA* rapporteren.
 
 ## Verdelingen samenvatten met frequentietabellen
 
@@ -2130,18 +2244,19 @@ We beginnen met categorische variabelen.
 ## Frequentietabel van gezondheidsstatus in de dataset NHANES
 
 De dataset NHANES bevat ook gegevens over de gezondheidsstatus
-  van de deelnemers aan het onderzoek.
+  van de deelnemers aan het onderzoek
+  (variabele `HealthGen`).
 Die gegevens zijn gebaseerd op een enquête die door alle deelnemers wordt ingevuld.
 Daarin geven ze onder andere aan hoe ze zelf hun algemene gezondheid
 inschatten: *Slecht*, *Matig*, *Goed*, *Zeer Goed*, of *Uitstekend*.
-`gezondheidsstatus` is in deze dataset dus een ordinale variabele. 
+Gezondheidsstatus is in deze dataset dus een ordinale variabele. 
 
-De frequentietabel van `gezondheidsstatus` ziet er als volgt uit:
+De frequentietabel van gezondheidsstatus ziet er als volgt uit:
 
 ```{r}
 #| echo: false
 #| label: tbl-gezondheid
-#| caption: "Frequentietabel van de gezondheidsstatus in de NHANES-dataset."
+#| caption: "Frequentietabel van gezondheidsstatus in de NHANES-gegevens."
 
 data <- data.frame(
   "Gezondheidsstatus" = c("Slecht", "Matig", "Goed", "Zeer Goed", "Uitstekend"),
@@ -2156,12 +2271,12 @@ knitr::kable(
     "Absolute frequentie", 
     "Relatieve frequentie"
     ), 
-  caption = "Frequentietabel van Gezondheidsstatus in de NCHS-gegevens"
+  caption = "Frequentietabel van gezondheidsstatus in de NHANES-gegevens."
   )
 ```
 :::
 
-Je ziet dat voor elke mogelijke waarde van de `gezondheidsstatus` de
+Je ziet dat voor elke mogelijke waarde van gezondheidsstatus de
 frequentie wordt weergegeven. In dit geval laat de tabel zowel de
 **absolute frequentie** als de **relatieve frequentie** zien. De
 absolute frequentie geeft aan hoe vaak een bepaalde waarde voorkomt in
@@ -2562,9 +2677,7 @@ ggplot(
 
 ## Het visualiseren van verdelingen van numerieke variabelen
 
-::: {.todo-box}
-Korte intro. Hiervoor categorisch, nu komt numeriek.
-:::
+Na het verkennen van methoden voor categorische variabelen, richten we ons nu op technieken om numerieke variabelen te visualiseren.
 
 ### Histogrammen en frequentiepolygonen
 
@@ -2580,7 +2693,7 @@ De categorieën van een categorische variabele staan los van elkaar,
   terwijl de klassen van een numerieke variabele direct in elkaar overlopen.
 Om dat te verbeelden wordt er bij staafdiagrammen altijd ruimte gelaten tussen de staven,
   en bij een histogram juist niet.
-(Kijk maar eens terug naar het histrogram van `lichaamsgewicht` in @fig-histogram.)
+(Kijk maar eens terug naar het histrogram van `Weight` (lichaamsgewicht) in @fig-histogram.)
 
 Net als bij
   staafdiagrammen is het belangrijk dat de $y$-as altijd bij 0 begint,
@@ -2589,7 +2702,7 @@ Net als bij
   
 Een alternatieve manier om exact dezelfde gegevens te presenteren
   is het **frequentiepolygoon**.
-Hieronder is een voorbeeld voor `lichaamsgewicht`.
+Hieronder is een voorbeeld voor `Weight` (lichaamsgewicht).
 De frequentie van iedere gewichtsklasse wordt uitgezet tegen
   het midden van die gewichtsklasse,
   en vervolgens wordt een lijn getrokken tussen deze punten.
@@ -2604,85 +2717,23 @@ De frequentie van iedere gewichtsklasse wordt uitgezet tegen
 
 ggplot(NHANES, aes(x = Weight)) +
   geom_freqpoly(binwidth = 5, color = opvulkleur, size = 1) +
-  labs(title = "Frequentiepolygoon van gewicht",
+  labs(title = "",
        x = "Lichaamsgewicht (kg)",
        y = "Frequentie") +
   theme_minimal()
 
 ```
 
-
-### Boxplot
-
-::: {.todo-box}
-
-Uitwerken! 
-
-Plaatje maken met uitleg van de anatomie van een boxplot.
-Vergelijkbaar met het volgende plaatje, maar
-
-- geef de jitterplot meer ruimte
-- voeg een paar outliers in wijs ze aan
-- kleur de whiskers corresponderend met de datapunten binnen de whiskers
-- opvallende kleur voor outliers.
-- in het Nederlands.
-
-
-![Uitleg boxplot](figuren/Boxplot_quartiles.png){#fig-anatomie-boxplot}
-
-Anatomie:
-
-- teken streep voor mediaan.
-- teken box rond mediaan van Q1 tot Q3.
-- bepaal IKA: Q3 - Q1.
-- bepaal uitbijters -- meer dan 1.5 IKA van de box -- en teken ze in.
-- teken whiskers van de box naar de verste punten die geen uitbijters zijn. 
-
-Interpretatie:
-
-- Boxplot Vat de verdeling samen in 5 getallen (Q1, Q2, Q3, ondergrens whisker, bovengrens whisker) + outliers.
-- 50% data in de box.
-- Hoe meer datapunten, hoe meer outliers.
-- Scheve verdelingen geven veel outliers en een lange whisker aan één kant. 
-Voorbeeld: Twee boxplots, één sample uit symmetrische verdeling, één uit een scheve. 
-
-Nadelen:
-
-- Bij veel datapunten geeft een histogram of frequentiepolygoon meer informatie. Bimodaliteit is bijvoorbeeld niet goed zichtbaar (@fig-box-gewicht).
-- Bij weinig datapunten kunnen ook gewoon de ruwe datapunten getoond worden (de jitterplot in @fig-anatomie-boxplot .)
-
-:::
-
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.cap: "Boxplot van lichaamsgewicht in de dataset NHANES. De bimodaliteit is van de variabele is in deze representatie niet zichtbaar."
-#| label: fig-box-gewicht
-#| fig.width: 2.5
-#| fig.height: 3.5
-
-ggplot(NHANES, aes(x = "", y = Weight)) +
-  geom_boxplot(fill = "Bisque", color = opvulkleur) +
-  labs(title = "Boxplot",
-       x = "",
-       y = "Lichaamsgewicht (kg)") +
-  theme_minimal()
-```
-
-
 ### Vioolplot
 
-::: {.todo-box}
+Een **vioolplot** is aan andere grafische weergave die de verdeling van een numerieke variabele toont.
+Als voorbeeld is in @fig-viool een vioolplot weergegeven voor de variabele `Weight` (lichaamsgewicht).
+Een vioolplot is vergelijkbaar met een histogram, maar er zijn enkele belangrijke verschillen:
 
-Uitwerken!
-
-- Breedte van de "viool" geeft de frequentie aan.
-- Doet denken aan histogram, maar verschillen:
-    - verticaal geplot
-    - geen staven; breedte van "viool" geeft frequentie weer
-    - de frequentie van een waarde wordt geschat door punten te tellen in de omgeving van die waarde. De grootte van de omgeving die wordt meegenomen is een parameter die de bandwidth wordt genoemd. In software wordt vaak automatisch een redelijke waarde gekozen voor de bandwidth, maar je kunt die aanpassen.
-
-:::
+- Een vioolplot wordt verticaal weergegeven, in plaats van met horizontale staven zoals bij een histogram.
+- In plaats van staven, wordt de breedte van de “viool” gebruikt om de frequentie aan te geven: hoe breder de viool op een bepaald punt, hoe meer waarnemingen er zijn bij die waarde.
+- De frequentie van een waarde wordt niet direct berekend, maar geschat door het aantal punten in de buurt van die waarde te tellen. Dat resulteert in een vloeiende vorm.
+Hoe groot de buurt is die wordt meegenomen wordt bepaald door een parameter die de **bandwidth** wordt genoemd. Software kiest vaak automatisch een geschikte waarde voor de bandwidth, maar je kunt deze aanpassen om meer of minder detail in de grafiek weer te geven.
 
 ```{r}
 #| code-fold: true
@@ -2699,6 +2750,113 @@ ggplot(NHANES, aes(x = "", y = Weight)) +
        y = "Lichaamsgewicht (kg)") +
   theme_minimal()
 ```
+
+
+### De boxplot
+
+
+
+Een **boxplot** is een compacte grafische weergave 
+die een verdeling samenvat aan de hand van vijf kengetallen plus eventuele uitbijters. 
+Boxplots worden vaak gebruikt voor het verkennen en vergelijken van datasets.
+De anatomie van een boxplot is getoond in @fig-anatomie-boxplot; 
+we leggen het hieronder verder uit.
+
+::: {.todo-box}
+
+Plaatje maken met anatomie van een boxplot.
+Vergelijkbaar met het volgende plaatje, maar
+
+- geef de jitterplot meer ruimte
+- voeg een paar outliers in en wijs ze aan
+- kleur de whiskers corresponderend met de datapunten binnen de whiskers
+- opvallende kleur voor outliers.
+- in het Nederlands.
+ 
+![Uitleg boxplot](figuren/Boxplot_quartiles.png){#fig-anatomie-boxplot}
+:::
+
+Een boxplot bestaat uit verschillende elementen 
+die elk een specifiek aspect van de verdeling van de variabele weergeven.
+
+1. **De mediaan:**  
+   De mediaan, oftewel Q2 wordt weergegeven met een horizontale streep.
+
+2. **De box:**  
+   Om de mediaan wordt een rechthoek getekend -- de "box".
+   Deze rechthoek loopt van het eerste kwartiel (Q1, 25e percentiel) 
+   tot het derde kwartiel (Q3, 75e percentiel). 
+   De hoogte van de box vertegenwoordigt dus de interkwartielafstand (IKA), 
+   waarin de middelste 50% van de data zich bevindt. 
+   Hoe hoger de box, hoe groter de spreiding in dit centrale gebied.
+
+3. **Uitbijters:**  
+   Waarden die meer dan $1{,}5$ keer de IKA buiten de box liggen, 
+   worden als uitbijters beschouwd. 
+   Deze datapunten worden afzonderlijk weergegeven, 
+   vaak als kleine stippen. 
+   Dit maakt uitbijters makkelijk herkenbaar.
+
+4. **Snorharen:**  
+   De snorharen of "whiskers" zijn lijnen die 
+   vanuit het midden van de box naar boven en naar beneden lopen. 
+   Ze eindigen bij de verste datapunten die géén uitbijters zijn.
+   De uiteinden van de whiskers geven aan waar de "normale" data ophoudt
+   en de uitbijters beginnen.
+
+Een boxplot biedt een visueel overzicht van de verdeling 
+en maakt het mogelijk om een aantal aspecten snel te herkennen.
+Q1 (de onderkant van de box), de mediaan (de lijn binnenin de box),
+en Q3 (de bovenkant van de box) kunnen direct worden afgelezen.
+De box maakt het zo gemakkelijk om te zien in welk gebied zich de meeste waarnemingen bevinden
+en de spreiding (de IKA) is zichtbaar als de hoogte van de box.
+Uitbijters die mogelijk grote invloed zouden kunnen hebben op gemiddelde en 
+standaarddeviatie zijn apart geplot en worden zo niet over het hoofd gezien.
+
+De boxplot laat ook gemakkelijk beoordelen 
+of een verdeling scheef is.
+Bij een scheve verdeling zijn de snorharen vaak asymmetrisch. 
+Is de verdeling rechts-scheef, 
+dan zijn de snorharen aan de bovenkant vaak langer dan aan de onderkant.
+Vaak ligt de mediaan dan ook onder het midden van de box.
+Bovendien zullen er dan vaak ook meer uitbijters zijn aan de bovenkant
+dan aan de onderkant. 
+
+Naast deze voordelen hebben boxplots ook enkele beperkingen.
+
+Doordat boxplots grote datasets in feite samenvatten met een klein aantal kengetallen 
+kunnen ze belangrijke details verbergen.
+Kijk als voorbeeld eens naar @fig-box-gewicht, 
+waarin de boxplot van de lichaamsgewichten van de NHANES dataset is weergegeven.
+Eerder hebben we in @fig-lichaamsgewicht gezien dat de verdeling van 
+lichaamgsgewicht bimodaal is. 
+Die belangrijke eigenschap is in de boxplot niet te zien.
+Een histogram, vioolplot of frequentiepolygoon geeft in zulke gevallen meer inzicht.  
+
+Een boxplot kan ook misleidend zijn bij datasets met weinig waarnemingen.
+Het heeft niet veel zin om een dataset met zes datapunten
+samen te vatten in vijf kengetallen (plus uitbijters).
+De kengetallen zijn dan bovendien zozeer door het toeval bepaald
+dat de vorm dan de boxplot niet veel zegt.
+In zulke gevallen is het vaak beter om individuele datapunten weer te geven, 
+bijvoorbeeld met een **jitterplot** (zie @fig-anatomie-boxplot).
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Boxplot van lichaamsgewicht in de dataset NHANES. De bimodaliteit is van de variabele is in deze representatie niet zichtbaar."
+#| label: fig-box-gewicht
+#| fig.width: 2.5
+#| fig.height: 3.5
+
+ggplot(NHANES, aes(x = "", y = Weight)) +
+  geom_boxplot(fill = "Bisque", color = opvulkleur) +
+  labs(title = "",
+       x = "",
+       y = "Lichaamsgewicht (kg)") +
+  theme_minimal()
+```
+
 
 
 ## Alles samen: het beschrijven van een de verdeling van een dataset

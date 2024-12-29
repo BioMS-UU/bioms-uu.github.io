@@ -12,11 +12,11 @@ In dit eerste hoofdstuk gaan we een belangrijk concept uit de biologie beter ler
 -   Uitleggen dat snelle groei niet altijd exponentiële groei is
 -   Uitleggen wat dichtheidsafhankelijkheid (*density dependence*) is, en hoe dit resulteert in een draagvermogen (*carrying capacity*)
 
-![](./figuren/knijnen.png){fig-align="center" width="80%"}
+![Afbeelding gegenereerd met ChatGPT4-o](./figuren/knijnen.png){fig-align="center" width="60%"}
 
 ## Bergen met rijst
 
-In het introducerence hoofdstuk hebben we besproken dat alle modellen drie belangrijke basisingrediënten hebben: variabelen, parameters, en aannames. Laten we aan de hand van deze begrippen een model maken van de beroemde mythe over de ontdekking van het schaakspel. De koning beloofde de ontdekker namelijk een gigantische hoeveelheid rijst.
+In het [introducerende hoofdstuk](#sec-tbintro) hebben we besproken dat alle modellen drie belangrijke basisingrediënten hebben: variabelen, parameters, en aannames. Laten we aan de hand van deze begrippen een model maken van de beroemde mythe over de ontdekking van het schaakspel. De koning beloofde de ontdekker namelijk een gigantische hoeveelheid rijst.
 
 ### De mythe van de ontdekking van het schaakspel
 
@@ -42,8 +42,8 @@ Deze legende van de ontdekking van het schaakspel illustreert de snelheids waarm
 
 De vergissing van de koning was dat hij (zoals veel mensen) niet in kon zien hoe snel verdubbelingen toenemen. We kunnen deze aan de hand van deze mythe de volgende variabelen, parameters, en aannames formuleren:
 
--   Variabele: aantal rijstkorrels, 𝑅
--   Parameters: vermenigvuldigingswaarde (𝑟 = 2) en aantal hokjes op een schaakbord ($n=64$)
+-   Variabele: aantal rijstkorrels, $𝑅$
+-   Parameters: vermenigvuldigingswaarde ($r = 2$) en aantal hokjes op een schaakbord ($n=64$)
 -   Aannames: teveel om te benoemen, maar één is in ieder geval dat de rijst ook daadwerkelijk op het bord past!
 
 Naast deze drie basisingrediënten, is het natuurlijk ook belangrijk om te bepalen wat de hoeveelheid rijst is waar we mee beginnen (hier $R(0) = 1$). Dit wordt in de model-wereld de **initiële conditie** (*initial condition*) genoemd. Vanaf daar gaan we verder rekenen: op het tweede vakje liggen $R(1) = R(0) \cdot 2$ rijstkorrels, op het derde vakje $R(2) = R(0) \cdot 2 \cdot 2$ korrels, *etc.* Het aantal korrels op het 64e vakje, wordt gegeven door 63 verdubbelingen (want let op: het eerste vakje was al bezet!). Dit kunnen we omschrijven met de volgende vergelijking:
@@ -58,7 +58,7 @@ $$
 R(t+1) = 2\cdot R(t) 
 $$ {#eq-differentie-vergelijking}
 
-Een vergelijking in de vorm van @eq-differentie-vergelijking wordt een **differentievergelijking** genoemd^[Niet te verwarren met de differen**tiaal**vergelijking, waar we in het volgende hoofdstuk over gaan leren!]. Deze differentievergelijking is zo simpel, dat we een eenvoudig R-script kunnen schrijven die deze herhaardelijk toepast: 
+Een vergelijking in de vorm van @eq-differentie-vergelijking wordt een **differentievergelijking** genoemd^[Niet te verwarren met de differen**tiaal**vergelijking, waar we in het volgende hoofdstuk over gaan leren!]. Deze differentievergelijking is zo simpel, dat we een eenvoudig R-script kunnen schrijven die deze herhaaldelijk toepast: 
 
 ```{r}
 #| eval: true
@@ -68,13 +68,14 @@ Een vergelijking in de vorm van @eq-differentie-vergelijking wordt een **differe
 R <- 1 # beginaantal rijst (initiële conditie)
 
 # herhaal iets 63 keer met een for-loop
-for (t in 1:63) {
-  R[t+1] <- 2*R[t]
+for (i in 1:63) {
+  R[i+1] <- 2*R[i] # het aantal rijstkorrels in elk vakje op in R
 }
-print(R[64])
+print(R[64]) # print het aantal rijskorrels in het 64e vakje
 ```
 
-In de bovenstaande code wordt er steeds een getalletje aan R toegevoegd. $R$ is dus nu niet meer één getal, maar een steeds langer wordende lijst getallen: $1, 2, 4, 8, \dots, 2^{63}$ etcetera. Zoals je hebt geleerd heet een dergelijke lijst in R een vector, die we kunnen plotten met R:
+
+In de bovenstaande code wordt er steeds een getalletje aan R toegevoegd. $R$ is dus nu niet meer één getal, maar een steeds langer wordende lijst getallen: $1, 2, 4, 8, \dots, 2^{63}$ etcetera. Zoals je hebt geleerd heet een dergelijke lijst in R een vector, die we eenvoudig kunnen plotten met R:
 
 ```{r}
 #| eval: true
@@ -117,7 +118,7 @@ Nu we weten over de exponentiële groei van rijst, is het hoog tijd om de biolog
 
 ## Konijnen in Australië
 
-![](figuren/konijnen_in_australie.png){fig-align="center" width="80%"}
+![Afbeelding gegenereerd met ChatGPT4-o](figuren/konijnen_in_australie.png){fig-align="center" width="80%"}
 
 Thomas Austin was een Engelse kolonist in Australië, en hield van jagen. Daarom liet hij in de 19e eeuw 24 konijnen vrij in Autralië. Binnen tien jaar waren er meer dan honderd miljoen konijnen op Australië, en kon de populatie onmogelijk nog onder controle gehouden worden. Net als bij het voorbeeld van de rijstkorrels, kunnen we een simpele differentievergelijking opschrijven om het aantal konijnen in Autralië te modelleren:
 
@@ -177,6 +178,7 @@ $$
 Exponentiële groei is zo simpel dat het gemakkelijk te simuleren is met de computer, bijvoorbeeld in R. Neem de volgende code over in Rstudio:
 
 ```{r}
+
 # definieren van begin aantal konijnen
 N <- 24
 r <- 2
@@ -187,7 +189,7 @@ for (i in 1:10){
 }
 ```
 
-  a. Pas de code aan om te bepalen hoeveel konijnen er na 20 verdubbelingen zijn. Voeg aan het eind van de code zelf een regel toe, waardoor er het volgende geprint wordt: `Het aantal konijnen na 20 tijdstappen is gelijk aan 25165824`.
+  (a.) Pas de code aan om te bepalen hoeveel konijnen er na 20 verdubbelingen zijn. Voeg aan het eind van de code zelf een regel toe, waardoor er het volgende geprint wordt: `Het aantal konijnen na 20 tijdstappen is gelijk aan 25165824`.
 
 Om beter bij te kunnen houden hoeveel konijnen er zijn na elke herhaling, kunnen we het aantal konijnen bijhouden in een lijst, waar we elke herhaling het aantal konijnen op dat tijdpunt aan toevoegen:
 
@@ -205,7 +207,7 @@ for (t in 1:30){
 plot(N, type='l')
 ```
 
-  b.  Voer de bovenstaande code uit en bekijk het resultaat. Groeit het aantal konijnen exponentieel? Pas de R-code aan om dit te bevestigen.
+  (b.)  Voer de bovenstaande code uit en bekijk het resultaat. Groeit het aantal konijnen exponentieel? Pas de R-code aan om dit te bevestigen.
 
 Hoewel het aantal konijnen in Australië aanvankelijk exponentieel groeide, is er uiteindelijk een evenwicht bereikt bij ongeveer 500 miljoen konijnen. Kennelijk was er bij dit aantal een balans tussen geboorte en sterfte van konijnen. Laten we onze vergelijking veranderen in groei door een geboorte-term ($b$, birth) en een sterfte-term ($d$, death):
 
@@ -249,8 +251,8 @@ We hebben dus niet bereikt wat we wilden: dat er bij lage aantallen konijnen gro
 $$
 N(t+1) = b \cdot N(t) - d \cdot N(t)^2
 $$ 
-  e. Neem aan dat $b=2$, $d=0.001$, en dat we beginnen met 24 konijnen. Als je dit aantal konijnen invult, wat zijn dan de waarden van de geboorte- en sterfteterm?
-  f. Voer dezelfde berekening uit voor 10000 konijnen (voor dezelfde waarden van $b$ en $d$) 
+  e. Neem aan dat $b=2$, $d=0.001$, en dat we beginnen met 24 konijnen ($N=24$). Als je deze drie waarden gebruikt, wat zijn dan de waarden van de geboorte- en sterfteterm, en de totale hoeveelheid groei?
+  f. Voer dezelfde berekening uit voor 1000 konijnen (voor dezelfde waarden van $b$ en $d$) 
 
 De onderstaande code gebruikt de bovengenoemde parameters $b=2$ en $d=0.001$.
 
@@ -267,20 +269,28 @@ for (t in 1:30){
 }
 
 # Stap 3: Plot het resultaat
+
 plot(N, type='l')
 ```
 
-  g. Waarom stabiliseert de populatiegrootte bij $K=1000$? (hint: kijk naar je vorige antwoord) 
+De populatie bereikt een stabiel evenwicht wanneer $N(t+1)$ gelijk is aan $N(t)$. Omdat beide vormen van $N$ nu gelijk zijn, kunnen we de differentievergelijking opschrijven als:
 
-De populatie stabiliseert dus bij een waarde van $1 \over d$. Om de populaties bij 500 miljoen te laten stabiliseren, moeten we $d$ dus nog veel kleiner maken: ${1 \over 5^8} = 2^{-9}$. In R schrijven we dan `d <- 2e-9`.
+$$
+N = b N - d  N^2
+$$
 
-  h. Gebruik de bovengenoemde death rate, en plot het aantal konijnen op een log-lineaire schaal (voeg `log="y"` toe aan de laatste regel). Groeit de populatie in de eerste jaren (bij benadering) exponentieel? Groeit de populatie in de laatste jaren exponentieel?
+  (g.)  Los de bovenstaande vergelijking op voor $N$. Waarom stabiliseert de populatiegrootte in je Rscript dus bij $N=1000$, en niet bij $N=500$? 
 
-  i. Neem aan dat elke tijdstap 1 jaar is. Hoeveel konijnen zijn er in je nieuwe model na 10 jaar? (let op: `K[1]` is tijdstap 0, niet tijdstap 1). Wat is er vreemd aan deze hoeveelheid? 
+Om de populaties bij 500 miljoen te laten stabiliseren, moeten we $d$ dus nog veel kleiner maken: ${1 \over 5 \cdot 10^8} = 2^{-9}$. In R schrijven we dan `d <- 2e-9`.
 
-  j. De konijnenpopulatie bereikte naar schatting binnen 10 jaar een populatiegrootte van meer dan honderd miljoen. Als we dit vergelijken met onze eigen resultaten uit de bovenstaande vraag, groeit onze populatie dus te langzaam. Hiervoor kunnen we de birthrate ($b$) verhogen. Neem aan dat $b=3$. Gaat de konijnenpopulatie naar een evenwicht? Heb je dit keer wel ongeveer 100 miljoen konijnen na 10 jaar? 
+  (h.) Gebruik de bovengenoemde death rate, en plot het aantal konijnen op een log-lineaire schaal (voeg `log="y"` toe aan de laatste regel). Groeit de populatie in de eerste jaren (bij benadering) exponentieel? Groeit de populatie in de laatste jaren exponentieel?
 
-  h. Met een birthrate van $b=3.7$ komen we aardig in de buurt van de geobserveerde groeisnelheid. Wat gebeurt er als je deze waarde gebruikt?
+  (i.) Neem aan dat elke tijdstap 1 jaar is. Hoeveel konijnen zijn er in je nieuwe model na 10 jaar? (let op: `N[1]` is tijdstap 0, niet tijdstap 1). Wat is er vreemd aan deze hoeveelheid? 
+
+  (j.) De konijnenpopulatie bereikte naar schatting binnen 10 jaar een populatiegrootte van meer dan honderd miljoen. Als we dit vergelijken met onze eigen resultaten uit de bovenstaande vraag, groeit onze populatie dus te langzaam. Misschien kunnen we de birthrate ($b$) verhogen zodat ons model overeenkomt met de data. Neem aan dat $b=3$. Gaat de konijnenpopulatie naar een evenwicht? 
+  (k.) Heb je met dit keer genoeg konijnen binnen 10 jaar om het scenario in Australië te evenaren? 
+
+  (l.) Met een birthrate van $b=3.7$ komen we aardig in de buurt van de geobserveerde groeisnelheid. Wat gebeurt er als je deze waarde gebruikt?
 :::
 
 ::: {.Rexr #exr-rabbits-in-space}
