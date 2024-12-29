@@ -82,7 +82,7 @@ Merk op dat we dezelfde gebeurtenis ook zo hadden kunnen schrijven:
 Iedere gebeurtenis is dus eigenlijk een omschrijving van een 
     *deelverzameling* van de kansruimte.
 
-## Kansen als frequenties van een lange serie identieke kansexperimenten
+## Kansen als frequenties van een lange serie identieke kansexperimenten {#sec-frequentistisch}
 
 Wat is een kans nu eigenlijk precies?
 Deze vraag is eigenlijk veel moeilijker dan je zou denken.
@@ -831,8 +831,6 @@ De manier waarop de kans
     wordt de **kansverdeling** genoemd.
 Dit begrip speelt een grote rol in deze cursus.
 
-
-
 ::: {.callout-tip #tip-kans-en-histo}
 @fig-kansverdeling-twee-dobbelstenen lijkt op een histogram.
 Dat is niet voor niets.
@@ -846,6 +844,13 @@ Dat betekent dat je de kansverdeling in @fig-kansverdeling-twee-dobbelstenen kun
     als je hetzelfde kansexperiment héél vaak zou herhalen.
 :::
 
+In @sec-terminologie heb je verschillende woorden geleerd 
+waarmee je een verdeling kunt beschrijven:
+**symmetrisch** en **scheef**, **klokvormig**, **uniform**, **unimodaal** en 
+**bimodaal**.
+Die woorden kunnen net zo goed gebruikt woorden voor het beschrijven van een kansverdeling.
+De kansverdeling van @fig-uniform-dobbelsteen is uniform;
+die van @fig-kansverdeling-twee-dobbelstenen is symmetrisch en unimodaal.
 
 ## Kansen als oppervlakten onder de grafiek van de kansverdeling
 
@@ -915,7 +920,7 @@ De cumulatieve verdeling maakt in dit geval sprongen omdat de uitkomst
 #| warning: false
 #| fig.cap: "Cumulatieve verdeling van de som van de ogen van twee dobbelstenen."
 #| label: fig-cumulverdeling-twee-dobbelstenen
-#| fig.width: 6
+#| fig.width: 5
 #| fig.height: 4
 
 # Controleer of de benodigde pakketten zijn geladen
@@ -929,10 +934,16 @@ kansen_dobbelsteen_cumulatief <- data.frame(
   kansen = c(0, cumsum(kansen), 1)   # Voeg 0 en 1 toe aan de kansen
 )
 
+# Genereer de datapunten voor de open cirkels
+open_cirkels <- data.frame(
+  uitkomsten = uitkomsten,
+  kansen = c(0, cumsum(kansen)[-length(kansen)])
+)
+
 # Maak een data frame voor de horizontale lijnen (stappen van de cumulatieve kans)
 lijnen_data <- data.frame(
   x_start = kansen_dobbelsteen_cumulatief$uitkomsten[-nrow(kansen_dobbelsteen_cumulatief)],
-  x_end = kansen_dobbelsteen_cumulatief$uitkomsten[-1],
+  x_end = kansen_dobbelsteen_cumulatief$uitkomsten[-1] - .1,
   y = kansen_dobbelsteen_cumulatief$kansen[-nrow(kansen_dobbelsteen_cumulatief)]
 )
 
@@ -951,6 +962,15 @@ ggplot() +
     aes(x = uitkomsten, y = kansen),
     shape = 16,                  # Gesloten cirkel
     size = 3,
+    color = "darkorange"
+  ) +
+  # Voeg open cirkels (rechterkanten) toe
+  geom_point(
+    data = open_cirkels,
+    aes(x = uitkomsten, y = kansen),
+    shape = 1,                 # Open cirkel
+    size = 1.8,
+    stroke = 1.4,
     color = "darkorange"
   ) +
   scale_x_continuous(
@@ -985,58 +1005,79 @@ De kans op $7 < X < 11$ is namelijk de kans dat $X$
 ## Maten voor ligging en spreiding van kansverdelingen
 
 In @sec-variabelen-verdelingen
-    heb je gezien dat de verdeling van een variabele in een dataset 
+    heb je gezien dat de verdeling van een numerieke variabele in een dataset 
     kan worden samengevat
     door maten te geven voor de ligging en spreiding van die verdeling.
-Op dezelfde manier kunnen we ook de *kansverdeling* van een kansvariabele 
+Op dezelfde manier kunnen we ook de *kans*verdeling van een *kans*variabele 
 beschrijven
     door maten van ligging en de spreiding te geven.
 De maten die we hieronder bespreken
   zijn dus volledig analoog aan de maten uit 
   @sec-variabelen-verdelingen.
-  
 
+### Maten voor de ligging van een kansverdeling
 
-### Maten van ligging/locatie
-
-We beginnen met maten van ligging.
+We beginnen met de centrummaten.
 
 De **modus** van de kansverdeling van een kansvariabele $X$ 
     is die uitkomst
     die de grootste kans heeft.
-Dat komt overeen met de positie van de piek 
-    in de grafiek van de kansverdeling.
-Als een kansverdeling twee pieken heeft
-    dan wordt die "bimodaal" genoemd.
+Als de kansverdeling een piek heeft,
+  dan is de $x$-waarde die bij die piek hoort
+  de modus.
+  
+De **mediaan** van een kansvariabele $X$
+    is de waarde zodanig
+    dat de kans op een uitkomst kleiner dan die waarde
+    precies gelijk is aan $\frac{1}{2}$.
+Dat is dus ook de waarde waar de cumulatieve verdeling 
+  gelijk is aan $\frac{1}{2}$.
 
 Het **gemiddelde** van een kansverdeling van een kansvariabele $X$ 
   wordt ook wel de **verwachtingswaarde** genoemd.
 Een nette notatie daarvoor is $\ev{X}$;
   die bijzondere $\mathbb{E}$ staat voor het Engelse *Expectation*.
 Vaak wordt ook het Griekse symbool $\mu$ gebruikt,
-  of $\mu_X$ as we willen aangeven dat het om de verwachtingswaarde 
-  van de variabele $X$ gaat.
+  of $\mu_X$ as we willen benadrukken dat het gaat
+  om de verwachtingswaarde van de variabele $X$.
+
 Als de variabele discreet is
-    dan kan de verwachtingswaarde berekend worden als:
-$$ \ev{X} = \sum_x \pr{X = x}\, x. $$
-Dat wil zeggen:
+    dan kan de verwachtingswaarde berekend worden als
+$$ \ev{X} = \sum_x \pr{X = x}\, x. $$ {#eq-verwachtingswaarde-discreet}
+De sommatie gaat over alle mogelijke uitkomsten $x$.
+@Eq-verwachtingswaarde-discreet wil dus zeggen:
     we nemen het gemiddelde van alle mogelijke uitkomsten $x$,
     waarbij uitkomsten met een grotere kans
-    zwaarder worden meegeteld.
+    een zwaarder gewicht krijgen.
+    
+::: {#exr-gemiddelde-herhalen}
 
-::: {.todo-box}
-Formule van verwachtingswaarde beter uitleggen. Verwijs naar @exr-gemiddelde-frequentietabel;
-daar is het voorbereidende werk gedaan.
+## Formule @eq-verwachtingswaarde-discreet 
+
+In @exr-gemiddelde-frequentietabel heb je een formule bestudeerd 
+  (@eq-mean-rel-freq)
+  waarmee je het gemiddelde kunt berekenen
+  van een dataset 
+  die beschreven is met een frequentietabel.
+Bestudeer die opgave nog een keer. 
+
+Vergelijk @eq-mean-rel-freq met @eq-verwachtingswaarde-discreet
+en leg uit waarom ze zo op elkaar lijken.
+
+(Hint: Weet je nog dat we in @sec-frequentistisch de kans op een uitkomst
+hadden gedefinieerd als de relatieve frequentie van die uitkomst
+in een zéér lange (oneindige) reeks herhalingen van het kansexperiment?)
 :::
     
-De **mediaan** van een kansvariabele $X$
-    is de waarde zodanig
-    dat de kans op een uitkomst kleiner dan die waarde
-    precies gelijk is aan \textonehalf.
+::: {#exr-verwachtingswaarde}
 
+## Verwachtingswaarde
+
+
+
+:::
     
-\[Scheve kansverdeling, mediaan aangegeven, kans links en rechts aangegeven.\]
-
+    
 ### Maten van spreiding
 
 Dan nu de maten van spreiding.
