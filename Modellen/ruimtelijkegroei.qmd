@@ -5,9 +5,9 @@
 
 # Ruimtelijke groei {#sec-ruimtelijk}
 
-Zoals je nu wel hebt begrepen, modellen maken vaak vele aannames. Hoewel we tot nu toe veel aannames expliciet hebben benoemd (goed gemengd systeem, parameters zijn constant, \textit{etc.}), zijn er soms ook aannames die je misschien niet onmiddellijk zijn opgevallen. Zo hebben we het bijvoorbeeld gehad over dichtheidsafhankelijke groei, maar daarbij altijd aangenomen dat alle individuen deze dichtheidseffecten op dezelfde manier ervaren. Maar een bos kan zich vooral aan de rand uitbreiden: daar hebben de individuen toegang tot lege plekjes met veel licht. Hetzelfde geldt voor bacteriën op een agarplaat (aan de rand zijn meer nutriënten beschikbaar) of een groeiende tumor (cellen in het midden schieten zuurstof en voedingsstoffen tekort).
+Zoals je nu wel hebt begrepen, modellen maken vaak vele aannames. Hoewel we tot nu toe veel aannames expliciet hebben benoemd (goed gemengd systeem, parameters zijn constant, *etc.*), zijn er soms ook aannames die je misschien niet onmiddellijk zijn opgevallen. Zo hebben we het bijvoorbeeld gehad over dichtheidsafhankelijke groei, maar daarbij altijd aangenomen dat alle individuen deze dichtheidseffecten op dezelfde manier ervaren. Maar een bos kan zich vooral aan de rand uitbreiden: daar hebben de individuen toegang tot lege plekjes met veel licht. Hetzelfde geldt voor bacteriën op een agarplaat (aan de rand zijn meer nutriënten beschikbaar) of een groeiende tumor (cellen in het midden schieten zuurstof en voedingsstoffen tekort).
 
-In de bovenstaande scenario's is het steeds geval dat de individuen/cellen aan de rand een lagere dichtheid ervaren dan individuen in het midden. Met andere woorden: niet ieder individu ondervindt dezelfde dichtheidseffecten, wat in onze eerdere modellen wel aangenomen werd! Sterker nog, tot nu toe spraken we helemaal niet over individuen, want we omschreven steeds slechts de totale populatiegrootte als een dichtheid!
+In de bovenstaande scenario's is het steeds geval dat de individuen/cellen aan de rand een lagere dichtheid ervaren dan individuen in het midden. Met andere woorden: niet ieder individu ondervindt dezelfde dichtheidseffecten, wat in onze eerdere modellen wel aangenomen werd! Sterker nog, tot nu toe spraken we helemaal niet over individuen, want we omschreven steeds slechts de totale populatiegrootte.
 
 ![Afbeelding gegenereerd met ChatGPT4-o](figuren/ai_spatial.png){fig-align="center" width="80%"}
 
@@ -310,8 +310,8 @@ In de biologie is vaak sprake van samenwerking (ook wel coöperatie genoemd). Wo
 
 Als we positieve dichtheidsafhankelijke effecten willen gebruiken in een IBM op een grid, zouden we de totaalpopulatie kunnen meten en de kans op geboorte ($b$) hiermee aan kunnen aanpassen. Echter hoeft het helemaal niet zo te zijn dat iedereen de vruchten plukt van samenwerkingen. Als een individu in grid-punt `(10,10)` anderen helpt (bijvoorbeeld de bacterie maakt suikers vrij), zal een individu in gridpunt `(25,20)` daar geen direct voordeel van hebben. In plaats daarvan, zouden we bijvoorbeeld de geboortekans van de 8 buren van `(10,10)` kunnen verhogen. Dit noemen we een **lokale interactie**. Bijvoorbeeld, de oranje en rode individuen kunnen de volgende geboortekansen krijgen:
 
-$$ \text{Geboortekans(\color{red}rood\color{black})} = b+c\cdot \left(\sum{\text{aantal \color{orange}oranje \color{black} buren}}\right)$$
-$$\text{Geboortekans(\color{orange}oranje\color{black})} = b+c\cdot \left(\sum{\text{aantal \color{red} rode \color{black} buren}}\right)$$
+$$ \text{Geboortekans(\color{red}rood)} = b+c\cdot \left(\sum{\text{aantal \color{orange}oranje  buren}}\right)$$
+$$\text{Geboortekans(\color{orange}oranje)} = b+c\cdot \left(\sum{\text{aantal \color{red} rode  buren}}\right)$$
 
 Hieronder zie je een interactieve simulatie van dit systeem (je moet nog wel even op start drukken), waarbij je de parameters $b$, $c$, en $d$, en de begin-dichtheid kan instellen. De parameters zijn zo ingesteld dat $b$ maar een klein beetje groter is dan $d$, maar doordat de individuen elkaar helpen groeien ze toch prima uit totdat het hele grid vol is.
 
@@ -329,11 +329,11 @@ Wat opvalt aan de bovenstaande simulatie is dat de populatie uitgroeit, maar dat
 
 ## De parasiet
 
-Als we het hebben over samenwerking, kunnen we ons afvragen wat er zou gebeuren als iemand valsspeelt. Daarom gaan we de bovenstaande simulaties uitbreiden met een derde soort: een [parasiet]{style="color:blue; font-weight:bold"}. In het Engels worden samenwerkers vaak *cooperators* worden genoemd, en heten de parasieten vaak *cheaters* of *defectors*. We nemen aan dat deze cheater geen hulp geeft, en wel wordt geholpen door zowel de rode als oranje individuen:
+Als we het hebben over samenwerking, kunnen we ons afvragen wat er zou gebeuren als iemand valsspeelt. Daarom gaan we de bovenstaande simulaties uitbreiden met een derde soort: een [parasiet]{style="color:#2a53f7; font-weight:bold"}. In het Engels worden samenwerkers vaak *cooperators* worden genoemd, en heten de parasieten vaak *cheaters* of *defectors*. We nemen aan dat deze cheater geen hulp geeft, en wel wordt geholpen door zowel de rode als oranje individuen:
 
-$$ \text{Geboortekans(\color{red}rood\color{black})} = b+c\cdot \left(\sum{\text{aantal \color{orange}oranje \color{black} buren}}\right)$$
-$$\text{Geboortekans(\color{orange}oranje\color{black})} = b+c\cdot \left(\sum{\text{aantal \color{red} rode \color{black} buren}}\right)$$
-$$\text{Geboortekans(\color{blue}blauw\color{black})} = b+c\cdot \left(\sum{\text{aantal \color{red} rode \color{black} plus \color{orange}oranje \color{black} buren}}\right)$$ 
+$$ \text{Geboortekans({\color{red}rood})} = b+c\cdot \left(\sum{\text{aantal {\color{orange}oranje}  buren}}\right)$$
+$$\text{Geboortekans({\color{orange}oranje})} = b+c\cdot \left(\sum{\text{aantal {\color{red} rode}  buren}}\right)$$
+$$\text{Geboortekans({\color{#2a53f7}blauw})} = b+c\cdot \left(\sum{\text{aantal {\color{red} rode}  plus {\color{orange}oranje}  buren}}\right)$$ 
 
 
 Dit levert de volgende dynamica op:
@@ -469,9 +469,9 @@ ewigen Kreis miteinander verbunden. Alles ist miteinander verbunden.*](figuren/k
 In dit hoofdstuk hebben we een voorbeeld gezien van een "cheater", die wanneer het systeem goed gemengd is kan leiden tot grote problemen voor de cooperators. Maar wat nu als de cooperators "terug cheaten"? Of wat als er meer complexe afhankelijkheden ontstaan, zoals weergegeven in de cyclus in bovenstaande figuur? De geboortekansen volgens deze kringloop kunnen we definiëren als:
 
 \begin{align}
-{Geboortekans(\color{red}rood\color{black})} = b+c\cdot \left(\sum{\text{aantal \color{orange}oranje \color{black} buren}}\right) \\
-{Geboortekans(\color{blue}blauw\color{black})} = b+c\cdot \left(\sum{\text{aantal \color{red}rode \color{black} buren}}\right) \\
-{Geboortekans(\color{orange}oranje\color{black})} = b+c\cdot \left(\sum{\text{aantal \color{blue}blauwe \color{black} buren}}\right)
+{Geboortekans({\color{red}rood})} = b+c\cdot \left(\sum{\text{aantal {\color{orange}oranje}  buren}}\right) \\
+{Geboortekans({\color{#2a53f7}blauw})} = b+c\cdot \left(\sum{\text{aantal {\color{red}rode}  buren}}\right) \\
+{Geboortekans({\color{orange}oranje})} = b+c\cdot \left(\sum{\text{aantal {\color{#2a53f7}blauwe}  buren}}\right)
 \end{align}
 
 

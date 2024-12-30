@@ -2,7 +2,7 @@
 {{< include ../_macros.tex >}}
 :::
 
-# ODEs modelleren met R {#sec-grind .unnumbered}
+# Complexe ODEs in R {#sec-grind .unnumbered}
 
 In @sec-meerdere hebben we een heel beroemd model uit de biologie geanalyseerd: het *Lotka-Volterra predator-prooi model*. Dit model gaat natuurlijk niet specifiek over konijnen en vossen, maar zou op allerlei systemen toegepast kunnen worden: bacteriofagen die bacteriën infecteren, protozoa die bacteriën eten, lieveheersbeestjes die bladluizen eten, vleermuizen die motjes eten, *etc.* Daarnaast kun je met kleine aanpassingen ook meer subtiele interacties tussen soorten onderzoeken (zoals intra- en inter-specifieke competitie, later in dit hoofdstuk). Zodoende is het Lotka-Volterra model uitgegroeid tot één van de meest veelzijdige modellen in de biologie, waarmee voorspellingen gedaan kunnen worden over welke soorten wel/niet kunnen samenleven. 
 
@@ -357,11 +357,18 @@ run(tstep=0.5, traject=T,col="grey")
 newton(state=c(R=0.5,N=0.5),plot=T)
 ```
 
-Voortdurende oscillaties tussen prooi en predator worden inderdaad waargenomen, bijvoorbeeld de oscillaties tussen hazen en lynxen in Noord Amerika (@fig-hazenenlynxen). Ook experimenteel zijn dergelijke oscillaties waargenomen, bijvoorbeeld door *Paramecium* (een-cellige protist, prooi) en *Didinium* (eencellige protist, predator) samen te groeien in een Erlenmeyer (Xia *et al.*, 1992, **INSERT REFERENCE**).
+Voortdurende oscillaties tussen prooi en predator worden inderdaad waargenomen, bijvoorbeeld de oscillaties tussen hazen en lynxen in Noord Amerika (@fig-hazenenlynxen). Ook experimenteel zijn dergelijke oscillaties waargenomen, bijvoorbeeld door *Paramecium* (een-cellige protist, prooi) en *Didinium* (eencellige protist, predator) samen te groeien in een Erlenmeyer (Xia *et al.*, 1992).
 
 ![Populatieaantallen hazen en lynxen in Noord Amerika van medio 19e eeuw tot medio 20e eeuw (bepaald op basis van de vachten-verkoop)](figuren/hazen_en_lynxen.png){#fig-hazenenlynxen}
 
 Bifurcaties kun je weergeven in een bifurcatiediagram, waarbij we de parameter die het evenwicht beinvloed op de x-as zetten, en de populatiegroottes in evenwicht op de y-as. Als we dit doen voor de bovenstaande bifurcaties, krijgen we dit: 
+
+```{r results='hide'}
+#| echo: false
+source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
+library(ggplot2)
+library(dplyr)
+```
 
 ```{r results='hide'}
 #| fig-cap: "Bifurcatiediagram van het Lotka-Volterra predator-prooi model"
@@ -370,9 +377,7 @@ Bifurcaties kun je weergeven in een bifurcatiediagram, waarbij we de parameter d
 #| fig.width: 5
 #| fig.height: 3
 #| 
-source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
-library(ggplot2)
-library(dplyr)
+
 my_theme <- theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
@@ -429,6 +434,36 @@ bifurcation_data %>%
 ```
 
 Omdat er bij hoge waarden van $K$ oscillaties zijn, geven de lijnen de minimale en maximale waarde van deze oscillaties aan. Omdat de parameter $K$ het draagvlak van de prooi beinvloed, geeft dit diagram dus weer wat er bijvoorbeeld zou gebeuren als we konijnen op de Veluw gaan bijvoeren: eerst krijgen we meer konijnen, dan krijgen we alleen meer predatoren, en daarna begint het systeem harder en harder te schommelen! Zo zie je: het behoud van biodiversiteit is zelfs in dit simplistische "ecosysteem" niet triviaal!
+
+## Grind.R kan nog veel meer
+
+Met het R-script `Grind.R` kan je nog veel meer dan alleen faseplaatjes en bifurcaties analyseren. Zo kan je bijvoorbeeld met zogeheten "interactie matrices" (waarin staat hoe alle soorten interacteren met alle soorten) een heel ecosysteem doorrekenen (zie @fig-grindvoorbeeld), wat fascinerend complexe en onvoorspelbare dynamiek kan opleveren. Hoewel [al deze extra functionaliteiten](https://tbb.bio.uu.nl/rdb/grindR/manual.html) leuk zijn om mee te spelen, is dit geen leerstof. De algemene boodschap van dit hoofdstuk is dat voor meer ingewikkelde systemen we meestal niet met pen en papier te hoeven rekenen, maar de computer het werk kunnen laten doen! 
+
+
+```{r results='hide'}
+#| label: fig-grindvoorbeeld
+#| code-fold: true
+
+source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
+set.seed(12)
+model <- function(t, state, parms) {
+  N <- state
+  S <- A %*% N # R code for matrix x vector multiplication
+  dN <- r*N*(1 - S)
+  return(list(dN))  
+}  
+
+p <- c()
+n <- 30
+s <- rep(0.01,n)
+names(s) <- paste("N",seq(1,n),sep="")
+r <- abs(rnorm(n,1,0.1))
+A <- matrix(runif(n*n),nrow=n,ncol=n)
+diag(A) <- 1; A
+
+run(tmax=300,legend=F)
+
+```
 
 ## Terminologie
 
