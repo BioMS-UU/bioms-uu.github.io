@@ -38,7 +38,7 @@ zoals continu, discreet, nominaal en ordinaal (zie @fig-variabelen).
 Kansvariabelen kunnen op dezelfde manier worden ingedeeld.
 
 ::: {#exr-type}
-# Typen kansvariabelen
+## Typen kansvariabelen
 
 Van welk type zijn de volgende kansvariabelen?
 
@@ -219,7 +219,7 @@ Bijvoorbeeld, bij het gooien met één dobbelsteen
 We zagen dat iedere gebeurtenis kan worden gerepresenteerd als
     een deelverzameling van de kansruimte. 
 We kunnen een gebeurtenis $A$
-    daarom voorsellen als een gedeelte van de kansruimte,
+    daarom voorstellen als een gedeelte van de kansruimte,
     hieronder in @fig-vennA weergegeven als een gele cirkel:
     
 ```{r}
@@ -259,6 +259,8 @@ Bijvoorbeeld,
     als $A$ de gebeurtenis is dat we een even getal gooien,
     dan vinden we de uitkomsten $\{2, 4, 6\}$ binnen de cirkel,
     en de uitkomsten $\{1, 3, 5\}$ erbuiten.
+    
+### De gebeurtenis "$A$ en $B$"
 
 We kunnen ook meerdere gebeurtenissen weergeven in één diagram weergeven.
 Hieronder in @fig-vennAB zie je bijvoorbeeld een Venn-diagram met gebeurtenissen $A$ en $B$:
@@ -288,7 +290,15 @@ B <- list(
     )
 )
 
-(AB <- kansruimte + A + B)
+labelAenB <- annotate(
+  "text",
+  x = 50, y = 50, 
+  label = expression(italic(A) ~ "en" ~ italic(B)),
+  color = "black",
+  size = 5
+)
+
+(AB <- kansruimte + A + B + labelAenB)
 
 ```
 
@@ -299,6 +309,50 @@ Een voorbeeld zou zijn als $A$ de gebeurtenis "$X$ is oneven" voorstelt
     en $B$ de gebeurtenis "$X$ is groter dan 3". 
 Die gebeurtenissen overlappen omdat de uitkomst 5
     zowel oneven is als groter dan 3.
+    
+Het deel van het Venn diagram waar $A$ en $B$ overlappen --- 
+  het groene gedeelte ---
+  is zelf óók een gebeurtenis; 
+  we noemen dit de gebeurtenis "$A$ en $B$".
+In de praktijk zijn we heel vaak geïnteresseerd in de kans
+  dat de gebeurtenis $A$ en $B$ plaats vindt, 
+  $\pr{A \text{ en } B}$.
+Denk aan de kans dat een willekeurig persoon 
+  zowel rookt en longkanker heeft,
+  of de kans dat op een gegeven moment springvloed
+  én noordwesterstorm samenkomen.
+
+### De gebeurtenis "$A$ of $B$"
+
+We zijn ook vaak geïnteresseert 
+  in de situatie dat gebeurtenis $A$ *of* gebeurtenis $B$ plaatsvindt.
+Dat is de gebeurtenis "$A$ of $B$".
+In het Venn-diagram @fig-vennAB wordt de gebeurtenis $A$ of $B$
+  gerepresenteerd door het hele gekleurde gebied,
+  omdat in dat hele gebied ofwel $A$ ofwel $B$ plaatsvindt (of beide).
+De kans op een uitkomst in dat gebied wordt geschreven als $\pr{A \textrm{ of } B}$.
+
+::: {.callout-warning}
+
+## Inclusieve en exclusieve "of"
+
+Het wordt *of* wordt in het Nederlands op twee manieren gebruikt.
+Als iemand zegt dat je een koekje *of* een bonbon mag pakken,
+is het meestal niet de bedoeling dat je en koekje én een bonbon pakt.
+Het woord *of* wordt dan *exclusief* gebruikt:
+  het één of het ander, maar niet allebei.
+Maar als de overheid zegt dat je een vaccin mag komen halen
+  als je tot een risicogroep behoort *of* in de zorg werkt,
+  dan mag je de prik ook als je tot een risicogroep behoort én in de zorg werkt.
+Het woord *of* wordt dan *inclusief* gebruikt:
+  het één of het ander, of allebei.
+  
+Als we het hebben over de gebeurtenis $A$ of $B$ dan bedoelen we 
+dit altijd inclusief.
+$A$ of $B$ vindt plaats als $A$ plaatsvindt of als $B$ plaatsvindt,
+  of beide.
+:::
+
 
 ## Conditionele kansen
 
@@ -327,9 +381,12 @@ De kans op $A$,
 Maar als gegeven is dat gebeurtenis $B$ plaatsvindt,
     dan zijn alle uitkomsten buiten de blauwe cirkel daarmee uitgesloten.
 De conditionele kans $\pr{A | B}$
-    is dus de kans op de uitkomsten in het groene gedeelte
-    --- de overlap tussen gebeurtenissen $A$ en $B$ --- 
-    relatief ten opzichte van de kans op de uitkomsten in de gehele blauwe cirkel. 
+    is dus de kans op de uitkomsten in het groene gedeelte,
+    dus $\pr{A \text{ en } B}$, 
+    relatief ten opzichte van de kans op de uitkomsten in de gehele blauwe cirkel,
+    dus $\pr{B}$.
+Dat levert de volgende formule op:
+$$\pr{A | B} = \frac{\pr{A \text{ en } B}}{\pr{B}}.$$ {#eq-conditionele-kans}
 
 Bij het interpreteren van conditionele kansen
   is het vaak inzichtelijk om te denken aan subpopulaties.
@@ -361,27 +418,57 @@ Gebeurtenis $A$ is "$X$ is even" en gebeurtenis $B$ is "$X < 3$".
 
 :::
 
-## De kans op $A$ en $B$
+## De kans op $A$ en $B$ berekenen
 
-Vaak willen we de kans weten dat $A$ én $B$ plaatsvinden.
+Vaak willen we de kans op $A$ en $B$ uitrekenen.
 Bijvoorbeeld:
     wat is de kans dat een willekeurig gekozen persoon in Nederland
     diabetes heeft én hartfalen?
-We schrijven dit als
-$$ \pr{A \textrm{ en } B}. $$
+    
+### Algemene regel voor $\pr{A \textrm{ en } B}$
 
-Het berekenen van deze kans is erg eenvoudig
-    als de gebeurtenissen $A$ en $B$ *onafhankelijk* zijn.
-Daarom moeten we dat begrip eerst behandelen.
+De regel die in *alle* situaties geldt is:
+$$ 
+\pr{A \textrm{ en } B} = \pr{A}\pr{B | A}.  
+$$ {#eq-AenBalgemeen1}
+Die regel volgt direct uit @eq-conditionele-kans,
+  zoals je zelf kunt verifiëren.
+Om de kans op $A$ en $B$ te berekenen,
+    berekenen we dus eerst de kans op $A$,
+    en vermenigvuldigen die kans met de kans op $B$ gegeven $A$.
+Omdat het niet uitmaakt welke gebeurtenis je $A$ noemt
+    en welke $B$,
+    geldt ook:
+$$
+\pr{A \textrm{ en } B} = \pr{B}\pr{A | B}.  
+$$ {#eq-AenBalgemeen2}   
+Je kunt dus ook de kans op $B$
+    vermenigvuldigen met de kans op $A$ gegeven $B$.
+
+::: {#exr-oneindig}
+Opgave om inzichtelijk te maken dat in een oneindige rij met experimenten
+de kans op $A$ en $B$ gelijk is aan de fractie van de experimenten waarin $A$ gebeurt
+keer de fractie *van die experimenten* waarin ook $B$ gebeurt.
+
+
+**a.** a
+
+**b.** b
+
+:::
 
 ### Onafhankelijke gebeurtenissen
+
+Het berekenen van $\pr{A \text{ en } B}$ is erg eenvoudig
+    als de gebeurtenissen $A$ en $B$ *onafhankelijk* zijn.
+Laten we dat begrip eerst behandelen.
 
 Twee gebeurtenissen $A$ en $B$ zijn **onafhankelijk**
     als de kans op gebeurtenis $A$ niet verandert 
     wanneer we leren dat gebeurtenis $B$ plaatsvindt:
 $$ \pr{A} = \pr{A | B}. $$
 In dat geval verandert ook de kans op $B$ niet als $A$ gegeven wordt:
-$$ \pr{B} = \pr{B | A}. $$
+$$ \pr{B} = \pr{B | A}. $$ {#eq-onafhankelijk}
 
 Een voorbeeld: 
     stel je weer voor
@@ -442,13 +529,17 @@ Redeneerfout: Ik heb al 4 keer 6 gegooid dus de kans dat ik de volgende keer wé
 
 Als gebeurtenissen $A$ en $B$ onafhankelijk zijn, 
     dan kunnen we de kans op $A$ en $B$
-    eenvoudig berekenen met de volgende **vermenigvuldigingsregel**:
+    eenvoudig berekenen.
+Kijk nog eens naar de algemene regel, @eq-AenBalgemeen1.
+We hebben net gezien dat voor onafhankelijke gebeurtenissen 
+  @eq-onafhankelijk geldt.
+Als je die combineert, 
+  krijg je de volgende **vermenigvuldigingsregel**:
 $$ 
 \pr{A \textrm{ en } B} = \pr{A}\pr{B}.
 $$ {#eq-vermenigvuldigingsregel}
 De volgende opgave laat je hopelijk inzien dat deze regel eigenlijk 
     heel logisch is.
-
 
 ::: {#exr-vermenigingsregel-intuitie}
 Maak de vermenigvuldigingsregel intuïtief.
@@ -474,50 +565,11 @@ Toepassen vermenigvuldigingsregel op biologische data.
 
 :::
 
-### Algemene regel voor $\pr{A \textrm{ en } B}$
+## De kans op $A$ of $B$ berekenen
 
-Als gebeurtenissen $A$ en $B$ *niet* onafhankelijk zijn,
-    dan geldt de vermenigvuldigingsregel 
-    niet.
-De regel die in *alle* situaties geldt is:
-$$ 
-\pr{A \textrm{ en } B} = \pr{A}\pr{B | A}.  
-$$ {#eq-AenBalgemeen1}
-Om de kans op $A$ en $B$ te berekenen,
-    berekenen we dus eerst de kans op $A$,
-    en vermenigvuldigen die kans met de kans op $B$ gegeven $A$.
-Omdat het niet uitmaakt welke gebeurtenis je $A$ noemt
-    en welke $B$,
-    geldt ook:
-$$
-\pr{A \textrm{ en } B} = \pr{B}\pr{A | B}.  
-$$ {#eq-AenBalgemeen2}   
-Je kunt dus ook de kans op $B$
-    vermenigvuldigen met de kans op $A$ gegeven $B$.
-
-::: {#exr-oneindig}
-Opgave om inzichtelijk te maken dat in een oneindige rij met experimenten
-de kans op $A$ en $B$ gelijk is aan de fractie van de experimenten waarin $A$ gebeurt
-keer de fractie *van die experimenten* waarin ook $B$ gebeurt.
-
-
-**a.** a
-
-**b.** b
-
-:::
-
-## De kans op $A$ of $B$
-
-In de praktijk willen we ook vaak weten 
-    wat de kans is dat gebeurtenis $A$ of gebeurtenis $B$ plaatsvindt:
-$$ \pr{A \textrm{ of } B}. $$
-Met $A$ of $B$ wordt hier bedoeld dat $A$ plaatsvindt, 
-    of $B$ plaatsvindt, 
-    of beide.
-
-Het is gemakkelijk om $\pr{A \textrm{ of } B}$ te berekenen
-    als de gebeurtenissen $A$ en $B$ elkaar uitsluiten.
+Nu we formules besproken hebben voor de kans op $A$ én $B$
+gaan we nu door met formules voor de kans op $A$ óf $B$.
+Dat is gemakkelijk als de gebeurtenissen $A$ en $B$ elkaar uitsluiten.
 Daar moeten we het dus eerst over hebben.
 
 ### Gebeurtenissen die elkaar uitsluiten
@@ -1052,21 +1104,21 @@ De sommatie gaat over alle mogelijke uitkomsten $x$.
     
 ::: {#exr-gemiddelde-herhalen}
 
-## Formule @eq-verwachtingswaarde-discreet 
+## De definitie van de verwachtingswaarde 
 
 In @exr-gemiddelde-frequentietabel heb je een formule bestudeerd 
   (@eq-mean-rel-freq)
   waarmee je het gemiddelde kunt berekenen
   van een dataset 
   die beschreven is met een frequentietabel.
-Bestudeer die opgave nog een keer. 
 
-Vergelijk @eq-mean-rel-freq met @eq-verwachtingswaarde-discreet
+  a. Bestudeer die opgave nog een keer. 
+
+  b. Vergelijk @eq-mean-rel-freq met @eq-verwachtingswaarde-discreet
 en leg uit waarom ze zo op elkaar lijken.
-
-(Hint: Weet je nog dat we in @sec-frequentistisch de kans op een uitkomst
-hadden gedefinieerd als de relatieve frequentie van die uitkomst
-in een zéér lange (oneindige) reeks herhalingen van het kansexperiment?)
+  (Hint: In @sec-frequentistisch hebben we de kans op een uitkomst gedefinieerd 
+  als de relatieve frequentie van die uitkomst
+  in een zéér lange (oneindige) reeks herhalingen van het kansexperiment.)
 :::
     
 ::: {#exr-verwachtingswaarde}
