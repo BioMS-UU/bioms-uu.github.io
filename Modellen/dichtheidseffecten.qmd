@@ -4,27 +4,26 @@
 
 # Dichtheidseffecten {#sec-dichtheid}
 
-In het vorige onderdeel heb je geleerd dat een populatie in evenwicht is als hun snelheid van verandering gelijk is aan 0. Zodoende bereikte de populatie die eerst exponentiëel groeide, een evenwicht bij een bepaald draagvermogen: de **carrying capacity**. In dit onderdeel gaan we explicieter zijn over *hoe* een carrying capacity nou eigenlijk bepaald wordt, door naar veranderingen in geboorte- en sterftesnelheden te kijken.
+In het vorige onderdeel heb je geleerd dat een populatie in evenwicht is als de snelheid van verandering gelijk is aan 0. Door een parameter $K$ te introduceren voor het draagvermogen (de **carrying capacity**), zorgen we dat de populatie niet oneindig door kan groeien. Echter hadden we in een eerder werkcollege juist expliciet geboorte- en sterfteprocessen gemodelleerd. Is dat niet een meer natuurlijke manier om na te denken over gelimiteerde groei? In dit hoofdstuk, gaan we dichtheidsafhankelijke geboorte en sterfte bestuderen.
 
 ## Leerdoelen
 
 Na dit hoofdstuk, moet je het volgende kunnen:
 
--   Uitleggen wat een functionele respons is, en veelgebruikte (zoals dichtheidsafhankelijke geboorte, *density dependent birth*) kunnen herkennen.
--   Een faseportret kunnen lezen, en corresponderende oplossing schetsen.
--   Uitleggen waarom het afschieten van dieren positieve effecten kan hebben op dierwelzijn.
+- Uitleggen wat dichtheidsafhankelijke geboorte (*density dependent birth*) en dichtheidsafhankelijke sterfte (*density dependent death*) zijn, en deze herkennen in een ODE.
+- Een faseportret kunnen lezen, en corresponderende oplossing schetsen.
+- Uitleggen waarom het afschieten van dieren positieve effecten kan hebben op dierwelzijn.
 
-![Afbeelding gegenereerd met ChatGPT4-o](figuren/heck_ai.png){fig-align="center" width="80%"}
+![(afbeelding gegenereerd met ChatGPT4-o)](figuren/heck_ai.png){fig-align="center" width="80%"}
 
 ## Geboorte en sterfte
 
-In het vorige onderdeel hebben we dichtheidsafhankelijkheid ingebouwd zodat de populatie langzamer gaat groeien bij grote dichtheden:
+In het vorige hoofdstuk hebben we dichtheidsafhankelijkheid ingebouwd zodat de populatie langzamer gaat groeien bij grote dichtheden:
 
 $$
 \frac{\dd N}{\dd t} = rN\left(1-\frac{N}{K}\right)
 $$
-
-De parameter $r$ in deze vergelijking staat bekend als de **intrinsieke groeisnelheid** (*intrinsic growth rate*) van de populatie. Als $r$ positief is, is er groei (ook als $r=0.1$!). Als $r$ negatief is, is de groei negatief. Maar biologisch gezien is "negatieve groei" natuurlijk een beetje vreemd. Bedoelen we niet eigenlijk dat de hoeveelheid sterfte (hierna: *death*) hoger is dan geboorte (hierna: *birth*)? Een gebrek aan voedsel kan bijvoorbeeld een verhoogde death rate opleveren, terwijl birth rate gelijk blijft. Het zou ook zo kunnen zijn dat individuen met minder voedsel minder reproduceren (dus een verlaagde birth rate krijgen). Om deze verbale begrippen in onze ODE te verwerken, moeten we afstappen van de parameter $r$, en deze uitsplitsen in birth ($b$) en death ($d$). Bijvoorbeeld, neem ons model van exponentiële groei:
+Deze ODE voor logistische groei kom je veel tegen in biologische modellen. De parameter $r$ in deze vergelijking staat bekend als de **intrinsieke groeisnelheid** (*intrinsic growth rate*) van de populatie. Als $r$ positief is, is er groei (ook als $r=0.1$!). Als $r$ negatief is, is de groei negatief. Maar biologisch gezien is "negatieve groei" natuurlijk een beetje vreemd. Bedoelen we niet eigenlijk dat de hoeveelheid sterfte (hierna: *death*) hoger is dan geboorte (hierna: *birth*)? Een gebrek aan voedsel kan bijvoorbeeld een verhoogde death rate opleveren, terwijl birth rate gelijk blijft. Het zou ook zo kunnen zijn dat individuen met minder voedsel minder reproduceren (dus een verlaagde birth rate krijgen). Om deze verbale begrippen in onze ODE te verwerken, moeten we afstappen van de parameter $r$, en deze uitsplitsen in birth ($b$) en death ($d$). Bijvoorbeeld, neem ons model van exponentiële groei:
 
 $$
     \frac{\dd N}{\dd t} = rN 
@@ -32,7 +31,7 @@ $$
 Nogmaals: in dit model is er exponentiele groei wanneer $r>0$, en exponentiele afname wanneer $r<0$. Als we r vervangen door het verschil in birth ($b$) en death ($d$), dan krijgen we:
 
 $$
-    \frac{\dd N}{\dd t} = ( {\color{blue}b} - {\color{red}d} )N
+    \frac{\dd N}{\dd t} = ( {\color{#2a53f7}b} - {\color{red}d} )N
 $${#eq-rbd}
 
 ::: {.callout-caution}
@@ -45,34 +44,33 @@ Hoewel we twee nieuwe parameters hebben geintroduceerd, is er weinig veranderd a
 
 ## Dichtheidsafhankelijke geboorte
 
-Hoewel onze nieuwe vergelijking voor groei nog niet heel anders is, kunnen we met deze aanpassing wel na gaan denken over *birth* en *death* processen. Stel je voor dat we experimenteel hebben bepaald dat een soort dichtheidsafhankelijke geboorte heeft (*density dependent birth*), zie bijvoorbeeld @fig-ddbpears.
+Hoewel onze nieuwe vergelijking voor groei zich nog niet anders gedraagt, kunnen we met deze aanpassing wel na gaan denken over *birth* en *death* processen. Stel je voor dat we experimenteel hebben bepaald dat een soort dichtheidsafhankelijke geboorte heeft (*density dependent birth*), zie bijvoorbeeld @fig-ddbpears.
 
 ![Reproductiesucces neemt vaak af met dichtheid (© 2014 Pearson Education Inc.)](figuren/ddb_pears.png){#fig-ddbpears}
 
-Waar we deze afname eerder in het gehele groei-process hadden verwerkt door aan te nemen dat $r$ kleiner werd, gaan we nu een nieuw model bekijken waar alleen de birth verandert bij grotere dichtheden. Hiervoor is het handig om eerst de birth en death termen op te splitsen:
+Waar we deze afname eerder in het algehele groei-process hadden verwerkt, gaan we nu een nieuw model bekijken waar alleen de birth verandert bij grotere dichtheden. Hiervoor is het handig om eerst de birth en death termen op te splitsen:
 
 \begin{align}
-    \frac{\dd N}{\dd t} &= ({\color{blue}b}-{\color{red}d})N\\
-    \frac{\dd N}{\dd t} &= {\color{blue}b}N - {\color{red}d}N
+    \frac{\dd N}{\dd t} &= ({\color{#2a53f7}b}-{\color{red}d})N\\
+    \frac{\dd N}{\dd t} &= {\color{#2a53f7}b}N - {\color{red}d}N
 \end{align}
 
 Nu kunnen we ervoor kiezen om voor de geboorteterm met een **functionele respons** aan te passen:
 
 \begin{align}
-    {\color{blue}b} & \rightarrow {\color{blue}b} \cdot f(N)
+    {\color{#2a53f7}b} & \rightarrow {\color{#2a53f7}b} \cdot f(N)
 \end{align}
 
 Bijvoorbeeld dezelfde functionele respons die we eerder hebben gebruikt:
 
 \begin{align}
-
-    \color{blue}b\color{black} & \rightarrow \color{blue}b\color{black}\left(1-\frac{N}{K}\right) 
+    {\color{#2a53f7}b} & \rightarrow {\color{#2a53f7}b}\left(1-\frac{N}{K}\right) 
 \end{align}
 
 Dat wil zeggen, de constante parameter $b$ wordt vervangen door een term die afneemt met $N$. De parameter $b$ staat nu niet meer voor de birth rate, maar voor de *maximale birth rate* die alleen bereikt wordt bij kleine populatiegroottes. Als we dit in de gehele ODE invullen, krijgen we nu:
 
 \begin{align}
-    \frac{\dd N}{\dd t} &= \color{blue}b\color{black}\left(1-\frac{N}{K}\right)N - \color{red}d\color{black}N
+    \frac{\dd N}{\dd t} &= {\color{#2a53f7}b}\left(1-\frac{N}{K}\right)N - {\color{red}d}N
 \end{align}
 
 ::: {#exr-functioneleresponses}
@@ -93,15 +91,15 @@ Zoals je in het vorige hoofdstuk geleerd hebt, kunnen we ODEs eenvoudig analyser
 
 ![Rekenen aan evenwichten, of deze visualiseren in een faseportret](figuren/faseportret_logistische_groei.png){#fig-faseportret width="80%"}
 
-Er is nog iets wat je heel snel aan een faseportret af kan lezen. We weten dat er groei is als $\dt{N}$ groter is dan $0$ en dat de populatie afneemt als $\dt{N}$ kleiner is dan $0$ (en zoals gezegd: dat er een evenwicht is als $\dt{N}$ gelijk is aan $0$). In het figuur staan deze punten aangegeven op de x-as. Pijltjes naar rechts geven aan dat er groei is (pijltje wijst naar "meer N"), pijltjes naar links geven aan dat er afname is, en cirkels geven aan dat er een evenwicht is. Als de pijltjes naar dit evenwicht toewijzen, dan zal het systeem daar op ten duur naartoe gaan. Zo'n **stabiel evenwicht** wordt ook wel een **attractor** genoemd, en wordt vaak aangegeven met een ingevulde cirkel. Het evenwicht bij $N=0$ heeft alleen pijltjes die ervan wegwijzen, en is dus een **instabiel evenwicht** (en is geen attractor). Deze worden vaak aangegeven met een open cirkel. Dankzij deze visualisatie is het relatief eenvoudig om te bedenken hoe het systeem zich over de tijd zal ontwikkelen. Voor specifieke begin-waarden, kunnen we dus *specifieke oplossingen* schetsen!
+Er is nog iets wat je heel snel aan een faseportret af kan lezen. We weten dat er groei is als $\dt{N}$ groter is dan $0$ en dat de populatie afneemt als $\dt{N}$ kleiner is dan $0$ (en zoals gezegd: dat er een evenwicht is als $\dt{N}$ gelijk is aan $0$). In het figuur staan deze punten aangegeven op de x-as. Pijltjes naar rechts geven aan dat er groei is (pijltje wijst naar "meer N"), pijltjes naar links geven aan dat er afname is, en cirkels geven aan dat er een evenwicht is. Als de pijltjes naar dit evenwicht toewijzen, dan zal het systeem daar op ten duur naartoe gaan. Dit **stabiele evenwicht** (aangegeven met een ingevulde cirkel) vormt een zogeheten **attractor** voor het systeem: als je lang genoeg wacht zal de populatie hier uit komen. Het evenwicht bij $N=0$ heeft alleen pijltjes die ervan wegwijzen, en is dus een **instabiel evenwicht** (en is dus geen attractor). Deze worden vaak aangegeven met een open cirkel. Dankzij deze visualisatie is het relatief eenvoudig om te bedenken hoe het systeem zich over de tijd zal ontwikkelen. Voor specifieke begin-waarden, kunnen we dus *specifieke oplossingen* schetsen!
 
 ## Dichtheidsafhankelijke sterfte     
 
 Op een vergelijkbare manier als hierboven, zouden we ook een populatie kunnen modelleren die dichtheidsafhankelijke sterfte (*density dependent death*) ondergaat: 
 
 \begin{align}
-    \color{red}d\color{black} & \rightarrow \color{red}d\color{black}\left(1+\frac{N}{K}\right) \\
-    \frac{\dd N}{\dd t} &= \color{blue}b\color{black}N - \color{red}d\color{black}\left(1+\frac{N}{K}\right)N
+    \frac{\dd N}{\dd t} &= {\color{#2a53f7}b}N-{\color{red}d}N, \quad \text{met } \quad {\color{red}d} \rightarrow {\color{red}d}\left(1+\frac{N}{K}\right) \\
+    \frac{\dd N}{\dd t} &= {\color{#2a53f7}b}N - {\color{red}d}\left(1+\frac{N}{K}\right)N
 \end{align}
 
 Let op dat we hier de sterfte laten *toenemen* met de dichtheid (er staat een $+$ in plaats van een $-$). 
@@ -112,28 +110,28 @@ Let op dat we hier de sterfte laten *toenemen* met de dichtheid (er staat een $+
 
 Hierboven hebben we een ODE opgesteld voor dichtheidsafhankelijke sterfte, namelijk:
 $$
-\frac{\dd N}{\dd t} = \color{blue}b\color{black}N - \color{red}d\color{black} \left( 1+\frac{N}{K}\right)N
+\frac{\dd N}{\dd t} = {\color{#2a53f7}b}N - {\color{red}d} \left( 1+\frac{N}{K}\right)N
 $$
-Bekijk nog eens @fig-faseportret. 
+Bekijk nog eens @fig-faseportret, waar de evenwichten voor dichtheidsafhankelijke geboorte worden berekend en gevisualiseerd. 
 
-a. Bereken waar de evenwichten liggen met de dichtheidsafhankelijke sterfte 
+a. Bereken zelf waar de evenwichten liggen met de dichtheidsafhankelijke sterfte.
 a. Schets het faseportret en geef aan waar eventuele evenwichten liggen.
 :::
 
 ## Andere dichtheidseffecten 
 
-In de natuur zal het vaak zo zijn dat zowel geboorte als sterfte door de populatiegrootte worden beinvloed, dus moeten we ook beide in ons model opnemen. Dan krijgen we: 
+In de natuur zal het vaak zo zijn dat zowel geboorte als sterfte door de populatiegrootte worden beïnvloed, dus moeten we ook beide in ons model opnemen. Dan krijgen we: 
 
 \begin{align}
-    \frac{\dd N}{\dd t} &= {\color{blue}b}\left(1-\frac{N}{K_b}\right)N - {\color{red}d}\left(1+\frac{N}{K_d}\right)N\\
+    \frac{\dd N}{\dd t} &= {\color{#2a53f7}b}\left(1-\frac{N}{K_b}\right)N - {\color{red}d}\left(1+\frac{N}{K_d}\right)N\\
 \end{align}
 
 Hier schaalt $K_b$ de dichtheidsafhankelijke geboorte, en $K_d$ de dichtheidsafhankelijke sterfte. In het werkcollege zullen jullie zien dat dit simpele model inzicht kan geven in belangrijke beleidsbeslissingen met betrekking tot dierenwelzijn. 
 
-Er zijn vele andere mogelijke dichtheidseffecten mogelijk (teveel om te benoemen). Als we het over ecosystemen hebben, zullen er ook effecten zijn die afhangen van de dichtheid van een *andere* soort. We kunnen ons bijvoorbeeld voorstellen dat de konijnen ($N$) door vossen ($V$) worden opgegeten. Hoe meer konijnen en vossen, hoe waarschijnlijker het wordt dat konijnen worden weggegeten: dus dit is ook een dichtheidseffect:
+Er zijn vele andere mogelijke dichtheidseffecten mogelijk (teveel om te benoemen). Als we het over ecosystemen hebben, zullen er ook effecten zijn die afhangen van de dichtheid van een *andere* soort. We kunnen ons bijvoorbeeld voorstellen dat de konijnen ($N$) door vossen ($V$) worden opgegeten. Hoe meer konijnen en vossen, hoe waarschijnlijker het wordt dat konijnen worden weggegeten: 
 
 \begin{align}
-    \frac{\dd N}{\dd t} &= {\color{blue}b}\left(1-\frac{N}{K_b}\right)N - {\color{red}d}\left(1+\frac{N}{K_d}\right)N - cNV\\
+    \frac{\dd N}{\dd t} &= {\color{#2a53f7}b}\left(1-\frac{N}{K_b}\right)N - {\color{red}d}\left(1+\frac{N}{K_d}\right)N - cNV\\
 \end{align}
 
 Deze vergelijking begint er aardig ingewikkeld uit te zien, maar doordat we het stapje voor stapje hebben opgebouwd, zie je wellicht goed in wat elke term betekent. In de laatste (nieuwe term), staat  $c$ voor de predatiesnelheid is en $V$ de hoeveelheid vossen. Maar vossen zouden zelf dan toch ook van populatiegrootte moeten veranderen? In @sec-meerdere ga je zien hoe we ons model kunnen uitbreiden om zowel konijnen (prooi) als vossen (predator) te kunnen beschrijven.
@@ -153,25 +151,25 @@ $$\dt{B}=rB-kNB $$
 
 Hier is B de hoeveelheid bacterien in je bloed is, N de hoeveelheid neutrofielen in je bloed, $r$ de groeisnelheid van de bacteriën (per uur), en k de snelheid waarmee neutrofielen bacteriën opruimen. 
 
-a. Leg uit waar je denkt dat iedere term in de ODE voor staat ($rB$ en $=kNB$), en welke eenheden deze termen hebben. 
-a. Wat zijn de eenheden voor $r$ en $k$? 
+a. Leg uit waar je denkt dat iedere term in de ODE voor staat ($rB$ en $kNB$), en welke eenheden deze termen hebben. 
+b. Wat zijn de eenheden voor $r$ en $k$? 
 
 Als er geen bacteriën zijn ($B=0$) is er geen groei. Dit wordt een triviaal (irrelevant) evenwicht genoemd, omdat we voor dit inzicht het hele model niet hadden hoeven maken.
 
-  c. Neem aan dat er een constante hoeveelheid neutrofielen in je bloed is ($N$ is constant). Is er een niet-triviaal evenwicht van bacteriën? 
+  c. Neem aan dat er een constante hoeveelheid neutrofielen in je bloed is ($N$ is constant). Bij welke hoeveelheid neutrofielen is er een niet-triviaal evenwicht?
 
-a.  Chemotherapie kan een groot effect hebben op het aantal neutrofielen in het bloed, waardoor de tweede term steeds kleiner wordt. Schets de termen $rB$ en $kNB$ als een functie van $N$ (dat wil zeggen, met $N$ op de x-as, en deze termen op de y-as. 
-a. Bepaal hoeveel neutrofielen je minimaal nodig hebt om de groei van de bacteriën te stoppen. 
-a. De $kNB$ term heet een *mass-action* term omdat de snelheid direct proportioneel is aan de dichtheden van $N$ en $B$. Wat moeten we doen als we willen weten hoeveel bacteriën er "per neutrofiel" opgeruimd worden? 
-a. Hoeveel bacteriën worden er per neutrofiel opgeruimd als er 0 bacteriën zijn? En als er oneindig veel bacteriën zijn? Is dit een redelijke aanname? 
+d.  Chemotherapie kan een groot effect hebben op het aantal neutrofielen in het bloed, waardoor de tweede term steeds kleiner wordt. Schets de termen $rB$ en $kNB$ als een functie van $N$ (dat wil zeggen, met $N$ op de x-as, en deze termen op de y-as. 
+e. Bepaal hoeveel neutrofielen je minimaal nodig hebt om de groei van de bacteriën te stoppen. 
+f. De $kNB$ term heet een *mass-action* term omdat de snelheid direct proportioneel is aan de dichtheden van $N$ en $B$. Wat moeten we doen als we willen weten hoeveel bacteriën er "per neutrofiel" opgeruimd worden? 
+g. Hoeveel bacteriën worden er per neutrofiel opgeruimd als er 0 bacteriën zijn? En als er oneindig veel bacteriën zijn? Is dit een redelijke aanname? 
 
 Bekijk devolgende uitbreiding van ons model $$\dt{B}=rB-\frac{kNB}{h+B}  $$
 De vernieuwde (tweede) term ziet er misschien wat ingewikkeld uit. Om te begrijpen wat er gebeurt is het wederom handig om even na te gaan wat er gebeurt met 0 of heel veel bacterien. Als er 0 bacterien zijn is deze term 0, omdat boven de breuk een $B$ staat. 
 
   h. Als $B$ heel groot is, hoe belangrijk is $h$ dan nog in deze vergelijking? 
 
-a. Als er dus heel veel bacterien zijn, hoeveel bacterien kunnen er dan per neutrofiel opgeruimd worden in dit nieuwe model? 
-a. Bepaal opnieuw hoeveel neutrofielen je minimaal nodig hebt om de groei van bacteriën te stoppen. 
+i. Als er dus heel veel bacterien zijn, hoeveel bacterien kunnen er dan per neutrofiel opgeruimd worden in dit nieuwe model? 
+j. Bepaal opnieuw hoeveel neutrofielen je minimaal nodig hebt om de groei van bacteriën te stoppen. 
 :::
 
 ::: {.mixedexr #exr-heck}
@@ -188,21 +186,21 @@ Omdat er veel dieren van de honger doodgaan, zijn er veel debatten geweest over 
 a. Bekijk bovenstaande metingen van de geboorte- en sterfte van heckrunderen. Hoeveel heckrunderen zou je op basis van deze data verwachten in evenwicht? 
 
 De data laat zien dat zowel geboorte als sterfte dichtheidsafhankelijk zijn. In het hoofdstuk hebben we hier al een model voor besproken:
-  $$
-      \frac{\dd N}{\dd t} = \color{blue}b\color{black}\left(1-\frac{N}{K_b}\right)N - \color{red}d\color{black}\left(1+\frac{N}{K_d}\right)N
 
-  $$
+$$
+\frac{\dd N}{\dd t} = {\color{#2a53f7}b}\left(1-\frac{N}{K_b}\right)N - {\color{red}d}\left(1+\frac{N}{K_d}\right)N
+$$ {#eq-modeldd}
 
-Uit het figuur kunnen we zien dat geboorte per rund hoogstens 0.4 per jaar is, en dat deze bij 400 runderen gehalveerd is. 
+Uit het figuur kunnen we zien dat geboorte per rund hoogstens 0.4 per jaar is (als de populatie klein is), en dat deze bij 400 runderen gehalveerd is. 
   
-  b. Wat zijn dan de parameters $b$ en $K_b$? 
-a.  In de figuur zien we ook dat sterfte minimaal 0.03 is, en dat deze 0.33 is bij een populatiegrootte van 500. Wat zijn dan de parameters $d$ en $K_d$? 
-a.  Vul de parameterwaarden die hebt gevonden in, en bepaal bij welke populatiegrootte er een evenwicht is. 
-a.  Hoeveel dieren gaan er in dit evenwicht per jaar dood?
+  b. Bepaal met deze informatie wat de waarden van de parameters $b$ en $K_b$ is. 
+c.  In de figuur zien we ook dat sterfte minimaal 0.03 is, en dat deze 0.33 is bij een populatiegrootte van 500. Wat zijn dan de parameters $d$ en $K_d$? 
+d.  Vul de parameterwaarden die hebt gevonden in, en bepaal bij welke populatiegrootte er een evenwicht is. 
+e.  Hoeveel dieren gaan er in dit evenwicht per jaar dood?
 
 Om het afschieten van runderen in dit model te betrekken, kunnen we een extra term aan de ODE toevoegen:
   $$
-      \frac{\dd N}{\dd t} = {\color{blue}b}(1-\frac{N}{K_b})N - {\color{red}d}(1+\frac{N}{K_b})N - kN
+      \frac{\dd N}{\dd t} = {\color{#2a53f7}b}(1-\frac{N}{K_b})N - {\color{red}d}(1+\frac{N}{K_b})N - kN
   $$
 Waarbij $k$ de fractie runderen is die we afschieten. Bekijk hetvolgende R-script:
     ```{r}
@@ -253,8 +251,8 @@ plot(tijdserie$t, tijdserie$percentage_sterfte, type="l")
 
   g. Bekijk het nieuwe dataframe met `View(tijdserie)`, en vergelijk het percentage sterfte in jaar 30 en 50. Wat valt je op? 
   
-a. Met het percentage stervende dieren kunnen we inschatten hoe lang de dieren gemiddeld leven. Als 10% van de dieren jaarlijks overlijdt, dan leeft een dier gemiddeld 10 jaar. Als je dit combineert met je antwoord op de vorige vraag, zou je het afschieten van dieren dan aanmoedigen of afraden?
-a. Als je de verwachte levensduur zo min mogelijk wil beinvloeden, wat voor beleid zou je dan nog meer kunnen bedenken? 
+h. Met het percentage stervende dieren kunnen we inschatten hoe lang de dieren gemiddeld leven. Als 10% van de dieren jaarlijks overlijdt, dan leeft een dier gemiddeld 10 jaar. Als je dit combineert met je antwoord op de vorige vraag, zou je het afschieten van dieren dan aanmoedigen of afraden?
+i Als je de verwachte levensduur zo min mogelijk wil beinvloeden, wat voor beleid zou je dan nog meer kunnen bedenken? 
 :::
 
 

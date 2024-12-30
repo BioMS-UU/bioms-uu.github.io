@@ -2,13 +2,13 @@
 {{< include ../_macros.tex >}}
 :::
 
-# ODEs modelleren met R {#sec-grind}
+# Complexe ODEs in R {#sec-grind .unnumbered}
 
-In @sec-meerdere hebben we een heel beroemd model uit de biologie geanalyseerd: het *Lotka-Volterra predator-prooi model*. Dit model gaat natuurlijk niet specifiek over konijnen en vossen, maar zou op allerlei systemen toegepast kunnen worden: bacteriofagen die bacteriën infecteren, protozoa die bacteriën eten, lieveheersbeestjes die bladluizen eten, vleermuizen die motjes eten, *etc.* Daarnaast kun je met kleine aanpassingen ook meer subtiele interacties tussen soorten onderzoeken (zoals intra- en inter-specifieke competitie, later in dit hoofdstuk). Zodoende is het Lotka-Volterra model uitgegroeid tot één van de meest veelzijdige modellen in de biologie, waarmee voorspellingen gedaan kunnen worden over welke soorten wel/niet kunnen samenleven. 
+In @sec-meerdere hebben we een heel beroemd model uit de biologie geanalyseerd: het *Lotka-Volterra predator-prooi model*. Dit model gaat natuurlijk niet specifiek over konijnen en vossen, maar zou op allerlei systemen toegepast kunnen worden: bacteriofagen die bacteriën infecteren, protozoa die bacteriën eten, lieveheersbeestjes die bladluizen eten, vleermuizen die motjes eten, *etc.* Naast het predator-prooi model bestaat er ook het *Lotka-Volterra competitie model* (waar we in het volgende hoofdstuk naar gaan kijken). Zodoende is het Lotka-Volterra model uitgegroeid tot één van de meest veelzijdige modellen in de biologie, waarmee voorspellingen gedaan kunnen worden over welke soorten wel/niet kunnen samenleven. 
 
-We hebben gezien hoe met behulp van faseruimtes het best eenvoudig kan zijn om inzicht in een biologisch proces te vergaten. Maar de eenvoud van deze eerdere analyses is deels te verklaren door de eenvoud van het model dat we hebben gebruikt. Hoe meer interacties we willen begrijpen, hoe moeilijker het zal worden om met pen en papier te werk te gaan. Daarom gaan we leren om ODEs door te rekenen met het Rscript `grind.R`, waarmee je eenvoudig faseruimtes en grafiekjes door de tijd mee kan produceren. 
+We hebben gezien hoe met behulp van faseruimtes het best eenvoudig kan zijn om inzicht in een biologisch proces te vergaten. Maar de eenvoud van deze eerdere analyses is deels te verklaren door de eenvoud van het model dat we hebben gebruikt. Hoe meer interacties we willen begrijpen, hoe moeilijker het zal worden om met pen en papier te werk te gaan. Daarom gaan we leren om ODEs door te rekenen met het Rscript `Grind.R`, waarmee je eenvoudig faseruimtes en grafiekjes door de tijd mee kan produceren. 
 
-![Een faseruimte (links) en oplossing (rechts) gegenereerd met het Rscript 'grind.R'. De zwarte lijnen links tonen trajectories voor verschillende intiële condities. De oplossing (rechts) correspondeert met een mogelijke trajectorie als functie van tijd. ](figuren/odes_grind.png){fig-align="center" width="90%"}
+![Een faseruimte (links) en oplossing (rechts) gegenereerd met het Rscript 'Grind.R'. De zwarte lijnen links tonen trajectories voor verschillende intiële condities. De oplossing (rechts) correspondeert met een mogelijke trajectorie als functie van tijd. ](figuren/odes_grind.png){fig-align="center" width="90%"}
 
 ## Leerdoelen 
 
@@ -20,18 +20,20 @@ De leerdoelen voor dit hoofdstuk zijn:
   
 ## De verzadigde predator
 
-In ons eerdere Lotka-Volterra model namen we bijvoorbeeld aan dat predatie lineair proportioneel is aan de dichtheden predator en prooi door gebruik te maken van de predatieterm $aRN$. Mede dankzij deze eenvoud waren de nullclines zo eenvoudig: een stel rechte lijnen waarvan het makkelijk te bepalen is waar ze snijden. Echter heeft deze eenvoud ook zijn beperkingen. Dit lineaire verband betekent dat per predator (ookwel: *per capita*) in totaal $aR$ prooi gegeten kan worden (nogmaals, "per"  kun je lezen als "gedeeld door", dus $\frac{aRN}{N} = aR$). Bij oneindig hoge prooi dichtheden, kan er dus ook oneindig veel gegeten worden. In het echt zal een predator eigenlijk een tijd bezig zijn met het verwerken en verteren van de prooi. Zodoende zal de predatie-term bij hele hoge prooi-dichtheden eigenlijk moeten verzadigen. Om dit te verwerken, zouden we de predatie-term aan kunnen passen:
+In ons eerdere Lotka-Volterra model namen we aan dat predatie lineair proportioneel is aan de dichtheden predator en prooi door gebruik te maken van de predatieterm $aRN$. Mede dankzij deze eenvoud waren de nullclines zo eenvoudig: een stel rechte lijnen waarvan het makkelijk te bepalen is waar/of ze snijden. Echter heeft deze eenvoud ook zijn beperkingen. Dit lineaire verband betekent dat per predator (ookwel: *per capita*) in totaal $aR$ prooi gegeten kan worden (nogmaals, "per"  kun je lezen als "gedeeld door", dus $\frac{aRN}{N} = aR$). Bij oneindig hoge prooi dichtheden, kan elke predator dus oneindig veel prooi eten. In het echt zal een predator eigenlijk een tijd bezig zijn met het verwerken en verteren van de prooi. Zodoende zal de predatie-term bij hele hoge prooi-dichtheden eigenlijk moeten verzadigen. Om dit te verwerken, zouden we de predatie-term aan kunnen passen:
 
 \begin{align*}
-\frac{\dd \color{blue}R}{\dd t} &= \underbrace{b(1-\frac{\color{blue}R}{K})\color{blue}R}_{\text{geboorte prooi}} - \underbrace{d\color{blue}R}_{\text{sterfte prooi}} - \underbrace{\frac{\color{black}a\color{blue}R\color{orange}N}{h+\color{blue}R\color{black}}}_{\text{nieuwe predatieterm}}\\
-\color{black}\frac{\dd \color{orange}N}{\dd t} &\color{black}= \underbrace{\frac{\color{black}a\color{blue}R\color{orange}N}{h+\color{blue}R\color{black}}}_{\text{geboorte predator}} - \underbrace{\delta \color{orange}N}_{\text{sterfte predator}}
+\frac{\dd \color{#2a53f7}R}{\dd t} &= \underbrace{b(1-\frac{\color{#2a53f7}R}{K})\color{#2a53f7}R}_{\text{geboorte prooi}} - \underbrace{d\color{#2a53f7}R}_{\text{sterfte prooi}} - \underbrace{\frac{\color{black}a\color{#2a53f7}R\color{orange}N}{h+\color{#2a53f7}R}}_{\text{nieuwe predatieterm}}\\
+\frac{\dd \color{orange}N}{\dd t} &= \underbrace{\frac{a\color{#2a53f7}R\color{orange}N}{h+\color{#2a53f7}R\color{black}}}_{\text{geboorte predator}} - \underbrace{\delta \color{orange}N}_{\text{sterfte predator}}
 \end{align*}
 
 Wat is met deze nieuwe predator-term de *per capita* predatie? Dat wil zeggen: hoeveel prooi kan een enkele predator per tijdseenheid opeten? Hiervoor delen we wederom de predatie-term door $N$, waardoor we functie $\frac{aR}{h+R}$ krijgen. Om een beeld van deze functie te krijgen, is het handig om deze even te schetsen. 
 
-## Hill-functies
+## Vorm van de nieuwe predatieterm 
 
 Laten we eerst even naar de noemer te kijken, en vooral naarde balans tussen $h$ en $R$. Als $R$ heel klein is, heeft $h$ de overhand in de noemer, waardoor $R$ verwaarloosbaar is. Dus voor kleine $R$ nadert de functie $\frac{aR}{h}$, wat een lineaire toename is. Dus voor kleine prooi-dichtheden, neemt predatie lineair toe met de prooi-dichtheid, net zoals in het eerdere model. Maar als $R$ alsmaar groter wordt, wordt $h$ juist verwaarloosbaar ten opzichte van $R$. Daarom nadert deze functie bij hoge $R$ de waarde $\frac{aR}{R} = a$. Dus: zelfs bij hele hoge prooidichtheiden kan een enkele predator per tijdseenheid (bijv. per dag) hoogstens $a$ prooi eten. Tussen deze twee extreme waarden zit nog een laatste bijzondere punt: het punt waar $R$ precies gelijk is aan $h$. Op dit punt is de functie gelijk aan $\frac{aR}{R+R}=\frac{aR}{2R}=\frac{a}{2}$. De parameter $h$ geeft dus de prooi-dichtheid waar de predatieterm half-maximaal is. Nu kunnen we de functie schetsen, zoals weergegeven in @fig-predatieterm-1. 
+
+## Hill-functies
 
 Functies van deze vorm worden "Hill-functies" genoemd (vernoemd naar Archibald Hill, niet naar het feit dat het een soort heuveltje is). Met een kleine aanpassing aan deze Hill-functie ($\frac{aR^2}{h^2+R^2}$), kun je deze response ook sigmoide (S-vormig) laten verlopen (@fig-predatieterm-2). 
 
@@ -116,7 +118,7 @@ We zien dat gen 2 ook een effect heeft op gen 1. Dit effect is wél gradueel, ma
 
 Nu we kennis hebben gemaakt met Hill-functies (zie ook @tip-hillfuncties), gaan we terug naar het Lotka-Volterra model. Omdat het Lotka-Volterra model is uitgebreid met deze verzadigingsterm, moeten we opnieuw de nullclines uitrekenen en schetsen (ook die zijn veranderd!). Maar zoals je je wellicht kan voorstellen worden de nullclines iets ingewikkelder door deze non-lineaire term in onze vergelijkingen. Naar mate we onze modellen meer en meer uitbreiden, wordt het natuurlijk steeds lastiger om alles met de hand te doen. Daarom gaan we in dit hoofdstuk de faseruimte en het vectorveld laten tekenen door Grind.R, een Rscript dat deze analyses een fluitje van een cent maakt!
 
-::: {.callout-tip #tip-hillfuncties collapse="true"}
+::: {.callout-tip #tip-hillfuncties collapse="false"}
 
 ## Veel gebruikte Hill-functies 
 
@@ -184,7 +186,7 @@ colors[1] = "blue"
 colors[2] = "#FF7F50"
 ```
 
-Nu kunnen we Grind.R gebruiken. De differentiaalvergelijkingen staan in een functie genaamd 'model'^[Op regel 2 zie dat dat deze 'model'-functie zit een beetje raar zit ingepakt in een `with` functie. Dit heeft een technische reden (en is zeker geen leerstof), maar helpt R begrijpen hoe de variabelen/parameters heten. De enige regels die je eigenlijk hoeft aan te passen zijn degene met de vergelijkingen (hier regel 3 en 4)]: 
+Nu kunnen we Grind.R gebruiken. De differentiaalvergelijkingen staan in een functie genaamd 'model'^[Op regel 2 zie dat dat deze 'model'-functie zit een beetje raar zit ingepakt in een `with` functie. Dit heeft een technische reden (en is zeker geen leerstof), maar helpt R begrijpen hoe de variabelen/parameters heten. De enige regels die je eigenlijk hoeft aan te passen zijn degene met de vergelijkingen (hier regel 3 en 4), en zorgen dat deze vergelijkingen in de goede volgorde worden teruggegeven (regel 5).]: 
 ```{r}
 #| code-fold: false
 #| eval: true
@@ -239,7 +241,7 @@ We kunnen ook een faseruimte maken met de functie `plane`:
 plane() 
 ```
 
-Ook deze functie kunnen we weer argumenten meegeven, bijvoorbeeld om de assen iets verder te vergroten, een vectorveld te tekenen: 
+Ook deze functie kunnen we weer argumenten meegeven, bijvoorbeeld om de assen iets verder te vergroten en een vectorveld te tekenen: 
 
 ```{r}
 #| code-fold: false
@@ -270,7 +272,7 @@ args(plane)
 Zo zie je bijvoorbeeld dat je de legenda zou kunnen verbergen met de `legend` optie, of de lijndikte (`lwd`) zou kunnen aanpassen. Met andere woorden: met R kunnen we zonder al te veel rekenwerk prachtige figuren genereren en wiskundige modellen doorrekenen! 
 
 ## Lotka-Volterra in Grind
-Als je de bovenstaande tutorial hebt gevolgd (en de packages hebt geïnstalleerd), kun je nu het volgende script overnemen en aan de slag met het Lotka-Volterra model:
+Als je de bovenstaande tutorial hebt gevolgd (en de packages hebt geïnstalleerd), kun je nu het volgende script overnemen en aan de slag met het vernieuwde Lotka-Volterra model, waar de predatieterm verzadigd:
 
 ```{r}
 #| code-fold: false
@@ -295,7 +297,7 @@ plane(xmax=3,ymax=2)
 run(tstep=0.5, legend=F)
 ```
 
-Door te oefenen met dit R-script, naast de pen-en-papier opgaven, is het de bedoeling dat je een goed gevoel ontwikkeld voor ODEs: simpele, wiskundige modellen, die veel in de biologische literatuur voorkomen. Hieronder volgt een korte vraag, om met zowel pen-en-papier als Grind te oefenen.
+Door te oefenen met dit R-script, naast de pen en papier opgaven, is het de bedoeling dat je een goed gevoel ontwikkeld voor ODEs: simpele, wiskundige modellen, die veel in de biologische literatuur voorkomen. Hieronder volgt een korte vraag, om met zowel pen en papier als Grind te oefenen.
 
 ::: {#exr-paraboollv}
 
@@ -304,7 +306,7 @@ Door te oefenen met dit R-script, naast de pen-en-papier opgaven, is het de bedo
 
 Hierboven hebben we nullclines gegenereerd van het vernieuwde Lotka-Volterra model (met een verzadigbare predator). Zoals je ziet is dit geen rechte lijn meer. 
 
-  a. Bepaal met pen-en-papier aan welke functie de vernieuwde nullcline voor de prooi voldoet. 
+  a. Bepaal met pen en papier aan welke functie de vernieuwde nullcline voor de prooi voldoet. 
   b. Wat is het effect van de $K$ parameter op de ligging van deze nullcline?
   c. Neem het R-script hierboven over met het Lotka-Volterra model met verzadigbare predator. Verdubbel de waarde van $K$. Wat valt je op?
 :::
@@ -357,11 +359,18 @@ run(tstep=0.5, traject=T,col="grey")
 newton(state=c(R=0.5,N=0.5),plot=T)
 ```
 
-Voortdurende oscillaties tussen prooi en predator worden inderdaad waargenomen, bijvoorbeeld de oscillaties tussen hazen en lynxen in Noord Amerika (@fig-hazenenlynxen). Ook experimenteel zijn dergelijke oscillaties waargenomen, bijvoorbeeld door *Paramecium* (een-cellige protist, prooi) en *Didinium* (eencellige protist, predator) samen te groeien in een Erlenmeyer (Xia *et al.*, 1992, **INSERT REFERENCE**).
+Voortdurende oscillaties tussen prooi en predator worden inderdaad waargenomen, bijvoorbeeld de oscillaties tussen hazen en lynxen in Noord Amerika (@fig-hazenenlynxen). Ook experimenteel zijn dergelijke oscillaties waargenomen, bijvoorbeeld door *Paramecium* (een-cellige protist, prooi) en *Didinium* (eencellige protist, predator) samen te groeien in een Erlenmeyer (Xia *et al.*, 1992).
 
 ![Populatieaantallen hazen en lynxen in Noord Amerika van medio 19e eeuw tot medio 20e eeuw (bepaald op basis van de vachten-verkoop)](figuren/hazen_en_lynxen.png){#fig-hazenenlynxen}
 
 Bifurcaties kun je weergeven in een bifurcatiediagram, waarbij we de parameter die het evenwicht beinvloed op de x-as zetten, en de populatiegroottes in evenwicht op de y-as. Als we dit doen voor de bovenstaande bifurcaties, krijgen we dit: 
+
+```{r results='hide'}
+#| echo: false
+source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
+library(ggplot2)
+library(dplyr)
+```
 
 ```{r results='hide'}
 #| fig-cap: "Bifurcatiediagram van het Lotka-Volterra predator-prooi model"
@@ -370,9 +379,7 @@ Bifurcaties kun je weergeven in een bifurcatiediagram, waarbij we de parameter d
 #| fig.width: 5
 #| fig.height: 3
 #| 
-source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
-library(ggplot2)
-library(dplyr)
+
 my_theme <- theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
@@ -429,6 +436,36 @@ bifurcation_data %>%
 ```
 
 Omdat er bij hoge waarden van $K$ oscillaties zijn, geven de lijnen de minimale en maximale waarde van deze oscillaties aan. Omdat de parameter $K$ het draagvlak van de prooi beinvloed, geeft dit diagram dus weer wat er bijvoorbeeld zou gebeuren als we konijnen op de Veluw gaan bijvoeren: eerst krijgen we meer konijnen, dan krijgen we alleen meer predatoren, en daarna begint het systeem harder en harder te schommelen! Zo zie je: het behoud van biodiversiteit is zelfs in dit simplistische "ecosysteem" niet triviaal!
+
+## Grind.R kan nog veel meer
+
+Met het R-script `Grind.R` kan je nog veel meer dan alleen faseplaatjes en bifurcaties analyseren. Zo kan je bijvoorbeeld met een zogeheten "interactie matrix" (waarin staat hoe alle soorten interacteren met alle soorten) een heel ecosysteem doorrekenen (zie @fig-grindvoorbeeld voor een voorbeeld met 30 soorten), wat fascinerend complexe en onvoorspelbare dynamiek kan opleveren. Hoewel [het brede scale aan functionaliteiten van Grind.R](https://tbb.bio.uu.nl/rdb/grindR/manual.html) leuk zijn om mee te spelen, is dit geen leerstof. De algemene boodschap is dat we voor meer ingewikkelde systemen meestal niet met pen en papier te hoeven rekenen, maar de computer het werk kunnen laten doen! 
+
+
+```{r results='hide'}
+#| label: fig-grindvoorbeeld
+#| code-fold: true
+
+source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
+set.seed(12)
+model <- function(t, state, parms) {
+  N <- state
+  S <- A %*% N # R code for matrix x vector multiplication
+  dN <- r*N*(1 - S)
+  return(list(dN))  
+}  
+
+p <- c()
+n <- 30
+s <- rep(0.01,n)
+names(s) <- paste("N",seq(1,n),sep="")
+r <- abs(rnorm(n,1,0.1))
+A <- matrix(runif(n*n),nrow=n,ncol=n)
+diag(A) <- 1; A
+
+run(tmax=300,legend=F)
+
+```
 
 ## Terminologie
 

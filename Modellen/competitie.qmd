@@ -2,9 +2,9 @@
 {{< include ../_macros.tex >}}
 :::
 
-## Coexistentie en exclusie {#sec-comp}
+## Competitie en evolutie {#sec-comp}
 
-De predator-prooi relaties uit de vorige hoofdstukken zijn natuurlijk een hele specifieke interacties tussen soorten. Maar soorten hebben vaak op een veel meer subtiele manier competitie: ze strijden om een beperkte hoeveelheid voedselbronnen of nestplekken. Sterker nog, dergelijke competitie is veel algemener: transcriptiefactoren hebben competitie om bindingsplekken op het DNA, eiwitten hebben competitie om substraat, cellen in een weefsel hebben competitie om nutrienten (denk hierbij bijvoorbeeld ook aan kanker!). Om dergelijke interacties te begrijpen, maken we kennis met inter- en intraspecifieke competitie.
+De predator-prooi relaties uit de vorige hoofdstukken zijn natuurlijk een hele specifieke interacties tussen soorten. Maar soorten hebben vaak op een veel meer subtiele manier competitie: ze strijden om een beperkte hoeveelheid voedselbronnen of nestplekken. Ook in andere biologische niveau's zien we subtiele vormen van "competitie" terug. Denk bijvoorbeeld aan hoe transcriptiefactoren competitie hebben om bindingsplekken op het DNA, eiwitten competitie hebben om substraat, cellen in een weefsel competitie hebben om nutrienten en zuurstof (denk hierbij bijvoorbeeld ook aan kanker!). Om dergelijke interacties te begrijpen, maken we kennis met inter- en intraspecifieke competitie.
 
 ![Afbeelding gegenereerd met ChatGPT4-o](figuren/vs_birds_ai.png){fig-align="center" width="70%"}
 
@@ -14,11 +14,13 @@ De leerdoelen voor dit hoofdstuk zijn:
 
 -   Begrijpen hoe intra- en interspecifieke interacties gemodelleerd kunnen worden.
 -   Mogelijke evenwichten in faseruimtes van competitie kunnen benoemen, en uitleggen wat de biologische intepretaties van deze evenwichten zijn.
--   Een gegeven vectorveld afmaken en daarbij horende oplossingen schetsen.
+-   Een gegeven vectorveld afmaken en daarbij horende oplossingen schetsen
+- Verschillende uitkomsten van competitie aflezen aan een faseruimte
+- Begrijpen hoe je met ODEs evolutionaire vragen kan stellen, en deze contrasteren met evolutionaire uitkomsten in ruimtelijke modellen
 
 ## Competitie binnen en tussen soorten
 
-**Inter-specifieke competitie** is competitie tussen soorten, en **intra-specifieke competitie** staat voor competitie binnen een soort[^ecoevo_competitie-1]. Als twee soorten bijvoorbeeld voornamelijk hetzelfde voedsel eten (we blijven nog even bij ecologie), zullen ze veel competitie om dat voedsel hebben. Formeel zeggen we dan dat de niches van de soorten overlappen, wat we bijvoorbeeld kunnen bepalen door precies te meten welk zaadjes verschillende soorten vogels eten (@fig-zaadoverlap). Hoe meer de niches overlappen, hoe sterker de **inter-specifieke** competitie.
+**Inter-specifieke competitie** is competitie tussen soorten, en **intra-specifieke competitie** staat voor competitie binnen een soort[^ecoevo_competitie-1]. Als twee soorten bijvoorbeeld voornamelijk hetzelfde voedsel eten (of transcriptiefactoren dezelfde bindingsplaats), zullen ze onderling veel competitie hebben. In ecologische begrippen stellen we dan dat de niches van de soorten overlappen, wat we bijvoorbeeld kunnen bepalen door precies te meten welk zaadjes verschillende soorten vogels eten (@fig-zaadoverlap). Hoe meer de niches overlappen, hoe sterker de **inter-specifieke** competitie.
 
 [^ecoevo_competitie-1]: Als je net als ik dit slecht kan onthouden, kun je de **Intratuin** als ezelsbruggetje gebruiken: "in de tuin" klinkt kloppend, maar "tussen de tuin" klinkt toch een beetje vreemd
 
@@ -74,7 +76,7 @@ par(mfrow=c(1,1),mar=c(4,4,0,4))
 plot_niche_overlap()
 ```
 
-De niche overlap binnen een soort is eigenlijk per definitie 100%. Het is daarom redelijk om aan te nemen dat de competitie om voedsel binnen een soort (intra-specifieke competitie) sterker dan de inter-specifieke competitie om voedsel. Echter kan **intra-specifieke competitie** ook door andere biologische processen teweeg gebracht worden. Zo kunnen bijvoorbeeld haviken uilen aanvallen om hen uit de beste jachtgebieden te verdrijven, of produceren veel schimmels toxines om bacteriën te onderdrukken. Zodoende kan het toch zijn dat de intra-specifieke competitie de overhand speelt, afhankelijk van de situatie. Hoe hebben de twee bovengenoemde processen precies invloed om het wel/niet kunnen samenleven van soorten? Dit gaan we bestuderen met het **Lotka-Volterra competitie** model (vergelijkbaar maar niet hetzelfde als het Lotka-Volterra predator-prooi model).
+De niche overlap binnen een soort is eigenlijk per definitie 100%. Het is daarom redelijk om aan te nemen dat de competitie om voedsel binnen een soort (intra-specifieke competitie) sterker dan de inter-specifieke competitie om voedsel. Echter kan **intra-specifieke competitie** ook door andere biologische processen teweeg gebracht worden. Zo kunnen bijvoorbeeld haviken uilen aanvallen om hen uit de beste jachtgebieden te verdrijven, of produceren veel schimmels toxines om bacteriën te onderdrukken. Zodoende kan het toch zijn dat de intra-specifieke competitie de overhand speelt, afhankelijk van het biologische scenario. Hoe hebben de twee bovengenoemde processen precies invloed om het wel/niet kunnen samenleven van soorten? Dit gaan we bestuderen met het **Lotka-Volterra competitie** model (vergelijkbaar maar niet hetzelfde als het Lotka-Volterra predator-prooi model).
 
 ## Lotka-Volterra competitie
 
@@ -102,8 +104,8 @@ Beide populaties hebben nu een gedeeld draagvlak ($K$). Dit is biologisch goed t
 Hierbij schalen $c_{11}$ en $c_{22}$ de intraspecifieke competitie voor respectievelijk soort 1 en 2, $c_{12}$ de competitie die soort 1 van soort 2 ondervindt, en $c_{21}$ de competitie die soort 2 van soort 1 ondervindt. Laten we het aantal parameters beperken door aan te nemen dat $K=1$, waardoor we deze kunnen weglaten uit de vergelijking. Als we $N_1$ blauw kleuren, en $N_2$ oranje, dan wordt ons systeem:
 
 \begin{align*}
-\color{blue} \dt{N_1} &= r\textcolor{blue}{N_1}(1 - c_{11}\textcolor{blue}{N_1} - c_{12}\textcolor{orange}{N_2})\\
-\color{orange}\dt{N_2} &= r\textcolor{orange}{N_2}(1 - c_{22}\textcolor{orange}{N_2} - c_{21}\textcolor{blue}{N_1})
+\color{#2a53f7} \dt{N_1} &= r\textcolor{#2a53f7}{N_1}(1 - c_{11}\textcolor{#2a53f7}{N_1} - c_{12}\textcolor{orange}{N_2})\\
+\color{orange}\dt{N_2} &= r\textcolor{orange}{N_2}(1 - c_{22}\textcolor{orange}{N_2} - c_{21}\textcolor{#2a53f7}{N_1})
 \end{align*}
 
 Om te kunnen onderzoeken of twee soorten kunnen samenleven, en onder welke voorwaarden, kunnen we weer de faseruimte analyseren. In het vorige hoofdstuk heb je geleerd hoe je dit eenvoudig met R zou kunnen doen. Echter is er ook een belangrijk voordeel aan het zelf schetsen van de faseruimte: we weten dan precies welke parameters bepalen hoe de nullclines liggen. Bovendien ontwikkel je door hiermee te oefenen een beter gevoel voor deze dynamische systemen. Daarom staat in @tip-odesschetsen een uitgebreid stappenplan voor het zelf tekenen van een faseruimte.
@@ -136,40 +138,41 @@ We volgen het hierboven genoemde stappenplan voor de analyse van ODEs, en gaan e
 
 
 $$
-\begin{align*}
-\dt{\textcolor{blue}N_\textcolor{blue}1} = r\textcolor{blue}N_{\textcolor{blue}1}\left(1 - c_{11}\textcolor{blue}N_{\textcolor{blue}1} - c_{12}\textcolor{orange}N_{\textcolor{orange}2}\right)
-\end{align*}
+\begin{align}
+\dt{\textcolor{#2a53f7}N_\textcolor{#2a53f7}1} = r\textcolor{#2a53f7}N_{\textcolor{#2a53f7}1}\left(1 - c_{11}\textcolor{#2a53f7}N_{\textcolor{#2a53f7}1} - c_{12}\textcolor{orange}N_{\textcolor{orange}2}\right)
+\end{align}
 $${#eq-test}
 
-Verwijzing naar @eq-test.
 
 $$
-\dt{\color{orange}N_\color{orange}2} = r\color{orange}N_\color{orange}2\left(1 - c_{22}\color{orange}N_\color{orange}2 - c_{21}\color{blue}N_\color{blue}1\right)
-$$ 
+\begin{align}
+\dt{\textcolor{orange}N_\textcolor{orange}2} = r\textcolor{orange}N_\textcolor{orange}2\left(1 - c_{22}\textcolor{orange}N_\textcolor{orange}2 - c_{21}\textcolor{#2a53f7}N_\textcolor{#2a53f7}1\right)
+\end{align}
+$$ {#eq-soorten}
 
-{#eq-soorten}
 
-Zoals gezegd is het handig om eerst te kiezen wat we op straks op de x- en y-as gaan zetten (deze keuze heeft geen invloed op het model zelf, alleen op de visualisatie). Laten we ervoor kiezen om $\color{blue}N_\color{blue}1$ op de x-as te zetten, en $\color{orange}N_\color{orange}2$ op de y-as. We stellen beide ODEs gelijk aan 0, en gaan nullclines bepalen:
 
-\begin{align*}
-\color{blue} \dt{N_1} &= r\textcolor{blue}{N_1}(1 - c_{11}\textcolor{blue}{N_1} - c_{12}\textcolor{orange}{N_2}) = 0  \quad \text{als...} \\
-\textcolor{blue}{N_1} &= 0 \quad \text{of...} \\
-1 - c_{11}\textcolor{blue}{N_1} - c_{12}\textcolor{orange}{N_2} &= 0 \\
- \textcolor{orange}{N_2} &= \frac{1 - c_{11}\textcolor{blue}{N_1}}{c_{12}}
-\end{align*}
+Zoals gezegd is het handig om eerst te kiezen wat we op straks op de x- en y-as gaan zetten (deze keuze heeft geen invloed op het model zelf, alleen op de visualisatie). Laten we ervoor kiezen om $\textcolor{#2a53f7}N_\textcolor{#2a53f7}1$ op de x-as te zetten, en $\textcolor{orange}N_\textcolor{orange}2$ op de y-as. We stellen beide ODEs gelijk aan 0, en gaan nullclines bepalen:
 
-Let op dat dit beide nullclines zijn voor \boldmath$\color{blue}N_\color{blue}1$. Met andere woorden: hoewel de tweede nullcline uitgedrukt is als $\color{orange}N_\color{orange}2=f(\color{blue}N_\color{blue}1)$, wordt dit straks een [blauwe]{style="color: blue; font-weight:bold"} nullcline. We hadden deze nullcline ook kunnen uitdrukken als $\color{blue}N_\color{blue}1=f(\color{orange}N_\color{orange}2)$, maar omdat $\color{orange}N_\color{orange}2$ op de y-as staat, is die laatste keuze wat minder fijn schetsen.
+\begin{align}
+\color{#2a53f7} \dt{N_1} &= r\textcolor{#2a53f7}{N_1}(1 - c_{11}\textcolor{#2a53f7}{N_1} - c_{12}\textcolor{orange}{N_2}) = 0  \quad \text{als...} \\
+\textcolor{#2a53f7}{N_1} &= 0 \quad \text{of...} \\
+1 - c_{11}\textcolor{#2a53f7}{N_1} - c_{12}\textcolor{orange}{N_2} &= 0 \\
+ \textcolor{orange}{N_2} &= \frac{1 - c_{11}\textcolor{#2a53f7}{N_1}}{c_{12}}
+\end{align}
 
-Op dezelfde manier kunnen we ook de \boldmath$\color{orange}N_\color{orange}2$ ([oranje]{style="color: orange; font-weight:bold"}) nullclines vinden:
+Let op dat dit beide nullclines zijn voor \boldmath$\textcolor{#2a53f7}N_\textcolor{#2a53f7}1$. Met andere woorden: hoewel de tweede nullcline uitgedrukt is als $\textcolor{orange}N_\textcolor{orange}2=f(\textcolor{#2a53f7}N_\textcolor{#2a53f7}1)$, wordt dit straks een [blauwe]{style="color: #2a53f7; font-weight:bold"} nullcline. We hadden deze nullcline ook kunnen uitdrukken als $\textcolor{#2a53f7}N_\textcolor{#2a53f7}1=f(\textcolor{orange}N_\textcolor{orange}2)$, maar omdat $\textcolor{orange}N_\textcolor{orange}2$ op de y-as staat, is die laatste keuze wat minder fijn schetsen.
+
+Op dezelfde manier kunnen we ook de \boldmath$\textcolor{orange}N_\textcolor{orange}2$ ([oranje]{style="color: orange; font-weight:bold"}) nullclines vinden:
 
 \begin{align*}
 \textcolor{orange}{N_2} &= 0 \quad \text{of...} \\
-\textcolor{orange}{N_2} &= \frac{1 - c_{21}\textcolor{blue}{N_1}}{c_{22}}
+\textcolor{orange}{N_2} &= \frac{1 - c_{21}\textcolor{#2a53f7}{N_1}}{c_{22}}
 \end{align*}
 
-We vinden dus ook twee nullclines voor $\textcolor{orange}{N_2}$. We vinden wederom een nullcline voor een populatiegrootte van 0 (een populatie die niet bestaat kan ook niet groeien), en een nullcline die we uitdrukken als $\color{orange}N_\color{orange}2=f(\color{blue}N_\color{blue}1)$, zodat we dit kunnen schetsen in de vorm $y=f(x)$.
+We vinden dus ook twee nullclines voor $\textcolor{orange}{N_2}$. We vinden wederom een nullcline voor een populatiegrootte van 0 (een populatie die niet bestaat kan ook niet groeien), en een nullcline die we uitdrukken als $\textcolor{orange}N_\textcolor{orange}2=f(\textcolor{#2a53f7}N_\textcolor{#2a53f7}1)$, zodat we dit kunnen schetsen in de vorm $y=f(x)$.
 
-De twee "triviale" nullclines (dus $\color{blue}N_\color{blue}1=0$ en $\color{orange}N_\color{orange}2=0$) zijn simpelweg lijnen die op de assen liggen. De andere twee nullclines zijn functies die lineair afnemen met $\color{blue}N_\color{blue}1$, maar let op, er staan andere parameters in de vergelijkingen. Om precies te bepalen hoe deze rechte lijnen lopen, moeten we hun snijpunten met de x- en de y-as bepalen. [De nullcline van $N_1$]{style="color: blue; font-weight:bold"} snijdt de y-as wanneer $\color{blue}N_\color{blue}1=0$, dus bij $\color{orange}N_\color{orange}2=\frac{1}{c_{12}}$, en de x-as bij $\frac{1 - c_{11}\color{blue}N_\color{blue}1}{c_{12}}=0$, wat alleen 0 is als de teller 0 is, dus als $\color{blue}N_\color{blue}1=\frac{1}{c_{11}}$. Vergelijkbaar, snijdt [de nullcline van $N_2$]{style="color: #FF7F50; font-weight:bold"} de y-as bij $\color{orange}N_\color{orange}2=\frac{1}{c_{22}}$ en de x-as bij $\color{blue}N_\color{blue}1=\frac{1}{c_{21}}$.
+De twee "triviale" nullclines (dus $\textcolor{#2a53f7}N_\textcolor{#2a53f7}1=0$ en $\textcolor{orange}N_\textcolor{orange}2=0$) zijn simpelweg lijnen die op de assen liggen. De andere twee nullclines zijn functies die lineair afnemen met $\textcolor{#2a53f7}N_\textcolor{#2a53f7}1$, maar let op, er staan andere parameters in de vergelijkingen. Om precies te bepalen hoe deze rechte lijnen lopen, moeten we hun snijpunten met de x- en de y-as bepalen. [De nullcline van $N_1$]{style="color: #2a53f7; font-weight:bold"} snijdt de y-as wanneer $\textcolor{#2a53f7}N_\textcolor{#2a53f7}1=0$, dus bij $\textcolor{orange}N_\textcolor{orange}2=\frac{1}{c_{12}}$, en de x-as bij $\frac{1 - c_{11}\textcolor{#2a53f7}N_\textcolor{#2a53f7}1}{c_{12}}=0$, wat alleen 0 is als de teller 0 is, dus als $\textcolor{#2a53f7}N_\textcolor{#2a53f7}1=\frac{1}{c_{11}}$. Vergelijkbaar, snijdt [de nullcline van $N_2$]{style="color: #FF7F50; font-weight:bold"} de y-as bij $\textcolor{orange}N_\textcolor{orange}2=\frac{1}{c_{22}}$ en de x-as bij $\textcolor{#2a53f7}N_\textcolor{#2a53f7}1=\frac{1}{c_{21}}$.
 
 Om precies te weten hoe deze lijnen in de faseruimte liggen, moeten we keuzes maken over de parameters. Als we bijvoorbeeld aannemen dat interspecifieke competitie zwakker is dan intraspecifieke competitie ($c_{12}$ en $c_{21}$ zijn kleiner dan $c_{11}$ en $c_{22}$), dan liggen de nullclines zoals weergegeven in  (@fig-competition_nullclines-1). Om ook het vectorveld te bepalen, kijken we altijd naar extreme waarden (heel veel of weinig van beide populaties). Voor deze vergelijkingen komen we heel ver met alleen intuïtie: als beide soorten heel abundant zijn, kunnen ze alleen maar afnemen. Ook in de vergelijkingen zie je dit terug: als je de ODEs uitvermenigvuldigd zijn er kwadratische termen voor de competitie, terwijl de groei lineair toeneemt. Als de populaties dus heel groot zijn, zal competitie de overhand spelen, en de populaties dus afnemen. Beide manieren tonen dus aan dat het vectorveld rechtsbovenin naar links/onder wijst. De andere punten van het vectorveld kunnen we simpelweg afmaken door de pijltjes om te laten klappen als je over een nullcline gaat. Gaan we over een $N_1$ nullcline dan klapt de x-as om (want $N_1$ staat op de x-as), en gaan we over een $N_2$ nullcline dan klapt de y-as om. Omdat alle pijltjes naar het snijpunt wijzen (@fig-competition_nullclines-2), weten we dat het evenwicht op dit punt stabiel is.
 
@@ -185,7 +188,7 @@ Faseruimte voor het Lotka-Volterra competitie model, aangenomen dat competitie b
 
 ## Sterkere intraspecifieke competitie
 
-Hierboven hebben we nullclines geschetst van het competitiemodel, onder de aannamen dat interspecifieke competitie sterker is dan intraspecifieke competitie ($c_{12}$ en $c_{21}$ zijn kleiner dan $c_{11}$ en $c_{22}$). Beginnende vanuit deze opstellen: stel dat $N_2$ steeds sterkere competitie krijgt met $N_1$.
+Hierboven hebben we nullclines geschetst van het competitiemodel, onder de aannamen dat interspecifieke competitie sterker is dan intraspecifieke competitie ($c_{12}$ en $c_{21}$ zijn kleiner dan $c_{11}$ en $c_{22}$). Beginnende vanuit deze opstelling: stel dat $N_2$ steeds sterkere competitie krijgt met $N_1$.
 
   a. Welke parameter gaat er veranderen? 
   b. Welke nullcline in deze faseruimte zal verschuiven?
@@ -228,7 +231,7 @@ run(traject=F,tstep=0.1,col="black",tmax=50) # numerieke oplossing
 mtext("LV competitie met sterke intraspecifieke competitie", cex=1.2,font=2,side = 3, line = -3, outer = TRUE)
 ```
 
-Het bovenstaande Grind-script bevestigt wat we net met pen-en-papier al hebben aangetoond: twee soorten kunnen samenleven wanneer er sterke intraspecifieke competitie is. Het evenwicht waar beide soorten voorkomen is dus een \textbf{attractor} van het systeem. Je zou je deze attractor kunnen voorstellen als een kuil waar een balletje door de zwaartekracht heen zal rollen (zie linkerzijde van @fig-attractorlandscapes). Tenzij één van de soorten vanaf het begin afwezig is, krijgen we dus altijd coexistentie (*coexistence*).
+Het bovenstaande Grind-script bevestigt wat we net met pen-en-papier al hebben aangetoond: twee soorten kunnen samenleven wanneer er sterke intraspecifieke competitie is. Het evenwicht waar beide soorten voorkomen is dus een **attractor** van het systeem. Je zou je deze attractor kunnen voorstellen als een kuil waar een balletje door de zwaartekracht heen zal rollen (zie linkerzijde van @fig-attractorlandscapes). Tenzij één van de soorten vanaf het begin afwezig is, krijgen we dus altijd coexistentie (*coexistence*).
 
 ![Een bal die een dal in rolt en daar een stabiele plek bereikt (links) en een bal die een "zadelpunt" af rolt (rechts)](figuren/attractor_landscapes.png){#fig-attractorlandscapes}
 
@@ -264,9 +267,9 @@ mtext("LV competitie met sterke interspecifieke competitie", cex=1.2,font=2,side
 
 Zoals je ziet heeft deze parameterverandering het vectorveld verandert: waar eerst \textbf{alle} pijltjes naar het evenwicht in het midden wezen, wijzen nu slechts twee van de vier pijltjes naar het evenwicht. De andere twee wijzen er juist van weg. Dit type evenwicht heet een zadelpunt (*saddle point*). 
 
-Als we ons weer een balletje voorstellen dat naar beneden rolt, zal dit er uitzien zoals de rechterzijde van @fig-attractorlandscapes. Of het balletje naar links of naar rechts rolt, wordt eigenlijk uitsluitend bepaald door waar het balletje begon. Sterker nog, als het *precies* in het midden was begonnen, was het precies op het midden van het "zadel" blijven liggen (een dergelijke situatie is natuurlijk biologisch gezien niet heel reëel). Als we dit terug vertalen naar de samenleving van de twee soorten, kunnen we concluderen dat er geen coexistentie zal zijn, maar competitieve exclusie (*competitive exclusion*): één soort blijft over en de ander sterft uit. De soort die aanvankelijk meer voorkomt zal winnen. Dit betekent dus ook dat als de andere soort invasief is (een nieuwe mutant of geïntroduceerd vanuit een ander continent), dat deze *niet* zal kunnen verspreiden. 
+Als we ons weer een balletje voorstellen dat naar beneden rolt, zal dit er uitzien zoals de rechterzijde van @fig-attractorlandscapes. Of het balletje naar links of naar rechts rolt, wordt eigenlijk uitsluitend bepaald door waar het balletje begon. Sterker nog, als het *precies* in het midden was begonnen, was het precies op het midden van het "zadel" blijven liggen (een dergelijke situatie is natuurlijk biologisch gezien niet heel reëel). Als we dit terug vertalen naar de samenleving van de twee soorten, kunnen we concluderen dat er geen coexistentie zal zijn, maar competitieve exclusie (*competitive exclusion*): één soort blijft over en de ander sterft uit. De soort die aanvankelijk meer voorkomt zal winnen, wat in de ecologie *founder control* wordt genoemd. Dit betekent dus ook dat als de andere soort invasief is (een nieuwe mutant of geïntroduceerd vanuit een ander continent), dat deze *niet* zal kunnen verspreiden. 
 
-Met het bovenstaande model zien we dat, afhankelijk van de parameters, we hele andere voorspellingen kunnen doen. Bovendien zien we dat evenwichtspunten (daar waar twee nullclines snijden) er heel anders uit kunnen zien. We zagen in het Lotka-Volterra model zonder verzadigbare predator een stabiele spiraal, met verzadigbare predator dat de populaties prooi- en predator blijven oscilleren, met zwakke competitie tussen soorten samenleving, en met sterke competitie tussen soorten competetieve exclusie. Al deze verschillende evenwichtsituaties (zie @tip-typeevenwichten) kunnen we aflezen aan de gegeven faseruimtes, en dit vertalen naar hoe het systeem zich over de tijd zal ontwikkelen. 
+Met het bovenstaande model zien we dat, afhankelijk van de parameters, we hele andere voorspellingen kunnen doen. Bovendien zien we dat evenwichtspunten (daar waar twee nullclines snijden) er heel anders uit kunnen zien. We zagen in het Lotka-Volterra model zonder verzadigbare predator een stabiele spiraal, met verzadigbare predator dat de populaties prooi- en predator blijven oscilleren, met zwakke competitie tussen soorten samenleving, en met sterke competitie tussen soorten competitieve exclusie. Al deze verschillende evenwichtsituaties (zie @tip-typeevenwichten) kunnen we aflezen aan de gegeven faseruimtes, en dit vertalen naar hoe het systeem zich over de tijd zal ontwikkelen. 
 
 ::: {.callout-tip #tip-typeevenwichten collapse="false"}
 
@@ -281,16 +284,28 @@ Met het bovenstaande model zien we dat, afhankelijk van de parameters, we hele a
 | Instabiele spiraal  | Unstable spiral | Het vectorveld draait om het evenwicht heen, en het systeem beweegt weg van het evenwicht.| ![](figuren/equi_spiral_unst.png)
 :::
 
+## Evolutionaire vraagstukken
+
+De scenario's in dit hoofdstuk kunnen we zien als competitie tussen twee reed bestaande soorten, maar ook als een **invasie-experiment**. Als een mutant (of een invasieve soort) zich bevind in een gevestigde populatie, zal deze dan verspreiden? Zal deze soort de bestaande soort compleet vervangen, of zullen de populaties een evenwicht vinden? Al met al kunnen we drie mogelijke uitkomsten bedenken:
+
+- De mutant kan niet groeien
+- De mutant kan groeien en bereikt stabiel evenwicht met de bestaande populatie
+- De mutant kan groeien en vervangt de bestaande populatie
+
+Een heel interessante uitkomst vind je wanneer het evenwicht een zadelpunt vormt. In dit geval kan de mutant zich niet verspreiden, maar de bestaande populatie zou zich ook niet kunnen verspreiden in een populatie mutanten! Het eerder genoemde begrip *founder control* uit de ecologie, speelt dus ook een belangrijke rol in evolutionaire processen. 
+
 ## Opgaven 
 :::{#exr-vectorveld}
 
 ## Het "werkelijke" vectorveld
 
-Het vectorveld hebben we tot nu toe versimpeld door slechts voor enkele punten aan te geven of de variabelen langs de x- en y-as zullen afnemen of toenemen. In werkelijkheid is dit vectorveld veel gedetailleerder: het geeft voor elk punt in de ruimte de *unieke richting* aan waarin het systeem zich beweegt (zie onderstaande figuur). 
+<br>
+
+Het vectorveld hebben we tot nu toe versimpeld door slechts voor enkele punten aan te geven of de variabelen langs de x- en y-as zullen afnemen of toenemen. In werkelijkheid is dit vectorveld veel gedetailleerder: het geeft voor elk punt in de ruimte de *unieke richting* en *unieke snelheid* aan voor het systeem (zie bijvoorbeeld onderstaande figuur). 
 
 ![](figuren/vectorveld.png){width="50%" fig-align="center"}
 
-Het bovenstaande vectorveld hoort bij het Lotka-Volterra competitie model zoals besproken in dit hoofdstuk (let op: dit is weergegeven **zonder** de nullclines). 
+Het bovenstaande vectorveld hoort bij het Lotka-Volterra competitie model zoals besproken in dit hoofdstuk (weergegeven **zonder** de nullclines). 
 
   a. Is in bovenstaande vectorveld de inter- of intraspecifieke competitie sterker? 
   b. Kan je in een ODE met dezelfde begincondities verschillende richtingen op gaan? Waarom wel/niet? 
@@ -303,6 +318,8 @@ e. Als een trajectorie een nullcline snijdt, gaat dat altijd onder een hele spec
 :::{.pepexr #exr-evenwichtentraj}
 
 ## Evenwichten en trajectories
+
+<br>
 
 ::: {#fig-competition_nullclines layout-ncol=3}
 ![](figuren/faseruimtevraag_1.png){#fig-vraag_nullclines-1}
@@ -320,7 +337,7 @@ In de bovenstaande faseruimtes zijn al nullclines getekend, en het vectorveld is
 a. Schets de faseruimtes na. Vul de rest van het vectorveld in en benoem de evenwichten (zie @tip-typeevenwichten voor de namen voor de verschillende typen evenwichten) 
 b. Stel we beginnen met X=0.1 en Y=0.2. Schets in elke faseruimte een geldige trajectorie
 
-c. Schets voor elke trajectory uit de vorige vraag een geldige oplossing (dat zijn dus twee "grafiekjes door de tijd"). 
+c. Schets voor elke trajectory uit de vorige vraag een geldige oplossing (dat zijn dus per scenario **twee** grafieken in één assenstelsel). 
 
 :::
 
@@ -328,7 +345,9 @@ c. Schets voor elke trajectory uit de vorige vraag een geldige oplossing (dat zi
 
 ## Cheaters en cooperators
 
-In hoofdstuk @sec-ruimtelijk heb je kennis gemaakt met *individual based modelling*, en heb je gezien hoe cooperators en cheaters kunnen samenleven. Echter zagen we ook dat hoe meer we het systeem mengde, hoe slechter dat ging. Sterker nog, onder goed gemengde condities ging het eigenlijk nooit goed, omdat de cheaters teveel toenamen en daarna het hele systeem uitstierf. Laten we kijken hoe dit uitpakt in een ODE die vergelijkbare aannames doet. Bekijk het volgende ODE model: 
+<br>
+
+In hoofdstuk @sec-ruimtelijk heb je kennis gemaakt met *individual based modelling*, en heb je gezien hoe cooperators en cheaters kunnen samenleven. Echter zagen we ook dat als het systeem te sterk gemengd werd, dat minder goed ging. Sterker nog, onder goed gemengde condities ging het eigenlijk helemaal mis, omdat de cheaters teveel toenamen en daarna het hele systeem uitstierf. Laten we kijken hoe dit uitpakt in een ODE die vergelijkbare aannames doet. Bekijk het volgende ODE model: 
 
 \begin{align*}
 \dt{C_1} &= b_1C_1^2(1-\frac{C_1+C_2}{K}) - dC_1\\
@@ -339,7 +358,7 @@ Anders dan in het individual-based model, waar we twee cooperators en één chea
 
   a. Welk van de twee populaties is de cooperator, en welke de cheater? Waar zie je dit aan?
   b. Waarom bevat de functionele response $(1-\frac{C_1+C_2}{K})$ zowel $C_1$ als $C_2$? 
-  c. Als we een in de IBM een grid van 100x100 hadden, en er maar 1 individu in elke cel past, hoe groot zou $K$ dan zijn?
+  c. Als we een in de IBM een grid van 100x100 hadden, en er maar 1 individu in elke gridpunt past, hoe groot zou $K$ dan ongeveer zijn?
   
 Neem de volgende Grind code over, waar de cooperators iets sneller groeien dan de cheaters:
 ```{r}
@@ -360,6 +379,7 @@ colors[2] = "blue"
 p <- c(b1=2.0,b2=1,d=0.1)
 s <- c(C1=0.2,C2=0.1)
 plane(vector=T,grid=7)
+
 ```
   d. Bestudeer de faseruimte en het vectorveld. Is het evenwicht met alleen cooperators en géén cheaters stabiel, of instabiel? Controlleer je antwoord met `newton(c(C1=1,C2=0),plot=T)` 
   e. Voorspel wie er overleeft wanneer je begint met veel van beide soorten. 
@@ -374,7 +394,7 @@ We gaan nu aannemen dat de cheaters sneller groeien dan de cooperators (draai hi
 In de simulatie hieronder is de birth rate van cooperators iets lager gemaakt dan die van de cheaters.
 
 ```{=html}
-<iframe width="100%" height="460" src="//jsfiddle.net/bramvandijk88/dL1sb4ap/embedded/result/" frameborder="0" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
+<iframe width="100%" height="560" src="//jsfiddle.net/bramvandijk88/dL1sb4ap/embedded/result/" frameborder="0" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
 ```
 
   j. Hoe kan het dat het individual-based model coexistentie van de soorten laat zien, terwijl dit in de ODE niet kan? *het samenleven werkt alleen als je niet mengt. met mengen sterft alles uit, dus kennelijk is de ruimtelijke structuur belangrijk. dit kan je ook wel zien, want lokaal (in een klein stukje van de simulatie) is er WEL steeds sprake van uitsterven. maar dan is het niet onmiddelelijk einde verhaal!*
@@ -385,7 +405,7 @@ In de simulatie hieronder is de birth rate van cooperators iets lager gemaakt da
 
 :::{.Rexr #exr-parfitting}
 
-## Parameter fitting} 
+## **Verdieping**: parameter fitting
 
 ![Figuur 1 uit Gause (1934)](figuren/gausfit.png){width="80%" fig-align="center" #fig-gause}
 
