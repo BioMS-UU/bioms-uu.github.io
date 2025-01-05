@@ -1161,19 +1161,19 @@ De **standaarddeviatie** van $X$
     is de wortel van de variantie van $X$.
 Deze wordt vaak genoteerd als de Griekse letter $\sigma$.
 Als het nuttig is om te benadrukken dat het gaat om de standaarddeviatie
-    van de variabele $X$ wordt ook wel $\sigma_X$ gebruikt:
+    van de variabele $X$ wordt ook wel $\sd{X}$ gebruikt:
 $$
-    \sigma_X = \sqrt{\var{X}}.
+    \sd{X} = \sqrt{\var{X}}.
 $$
 
 Omgekeerd is de variantie van $X$ dus
     het kwadraat van de standaarddeviatie:
 $$
-    \var{X} = \sigma_X^2.
+    \var{X} = \sd{X}^2.
 $$
 Daarom wordt de variantie van een kansvariabele $X$
     ook vaak genoteerd
-    als $\sigma^2$ of $\sigma_X^2$ in plaats van $\var{X}$.
+    als $\sigma^2$ of $\sd{X}^2$ in plaats van $\var{X}$.
     
     
 ::: {#exr-variantie}
@@ -1411,34 +1411,22 @@ De normale verdeling heeft dus een precieze wiskundige definitie.
 Niet iedere verdeling die een klokvorm heeft is ook een normale verdeling
 (maar iedere normale verdeling heeft wel dezelfde klokvorm).
 
-### Waarom de normale verdeling?
-
-::: {.todo-box}
-Uitleggen waarom de normale verdeling zo belangrijk is:
-  
-- Veel variabelen in de biologie en daarbuiten ongeveer normaal verdeeld.
-- Laat voorbeelden zien.
-- We zullen later, en sectie [centrale limitestelling] uitleggen hoe dit komt.
-:::
-
-### Vuistregels voor de normale verdeling
+### Vuistregels voor de normale verdeling {#sec-vuistregels}
 
 Het is heel nuttig om de volgende twee eigenschappen
 uit je hoofd te leren; je hebt ze vaak nodig.
 
 Als $X$ normaal verdeeld is, dan geldt:
 
-1.  De kans is (afgerond) 0,68 
-dat de uitkomst
-binnen één standaarddeviatie van het gemiddelde valt.
+1.  De kans dat de uitkomst
+binnen één standaarddeviatie van het gemiddelde valt is (afgerond) 0,68.
 Uitgedrukt in een vergelijking:
-$$\pr{\mu - \sigma < X < \mu + \sigma} = 0.68.$$
-2.  Als $X$ normaal verdeeld is, dan is de kans (afgerond) 0,95 
-dat de uitkomst
-binnen 1,96 standaarddeviaties van het gemiddelde valt.
+$$\pr{\mu - \sigma < X < \mu + \sigma} = 0.683\ldots.$$
+2.  De kans dat de uitkomst
+binnen twee standaarddeviaties van het gemiddelde valt is (afgerond) 0,95.
 Uitgedrukt in een vergelijking:
 
-$$\pr{\mu - 1{,}96\sigma < X < \mu + 1{,}96\sigma} = 0{,}95.$$
+$$\pr{\mu - 2\sigma < X < \mu + 2\sigma} = 0{,}954\ldots.$$
 @Fig-vuistregels laat beide eigenschappen zien.
 
 ```{r}
@@ -1448,17 +1436,17 @@ $$\pr{\mu - 1{,}96\sigma < X < \mu + 1{,}96\sigma} = 0{,}95.$$
 #| fig-cap: "Vuistregels voor de normale verdeling."
 #| layout-ncol: 2
 #| fig-subcap: 
-#|   - "68% van de kans valt binnen één standaarddeviatie van het gemiddelde."
-#|   - "95% van de kans valt binnen 1,96 standaarddeviaties van het gemiddelde."
+#|   - "Ongeveer 68% van de kans valt binnen één standaarddeviatie van het gemiddelde."
+#|   - "Ongeveer 95% van de kans valt binnen 2 standaarddeviaties van het gemiddelde."
 #| fig.width: 4
 #| fig.height: 2.7
 
-percentage <- function(perc){
+proportie <- function(prop){
   annotate(
   "text", 
   x = 0, 
   y = 0.15, 
-  label = paste0(perc, "%"), # Dynamically include the variable
+  label = prop, # Dynamically include the variable
   color = "black", 
   size = 5, 
   hjust = 0.5, 
@@ -1466,26 +1454,11 @@ percentage <- function(perc){
 )
 }
 
-normaalGeneriek + oppervlak(-1,1) + percentage(68)
+normaalGeneriek + oppervlak(-1,1) + proportie("0,68...")
 
-normaalGeneriek + oppervlak(-1.96, 1.96) + percentage(95)
+normaalGeneriek + oppervlak(-2, 2) + proportie("0,95...")
 ```
 
-::: {.callout-tip}
-
-## Vuistregels voor de normale verdeling
-
-Als je geen exacte berekening doet maar alleen een grove inschatting wilt maken,
-dan kun je de volgende **vuistregels** gebruiken:
-
-1. de kans op een waarneming die minder dan 1 standaarddeviatie afwijkt van het gemiddelde 
-is *ongeveer* $\frac{2}{3}$, 
-
-2. de kans op een waarneming die minder dan 2 standaarddeviaties afwijkt van het gemiddelde
-is *ongeveer* $0{,}95$.
-
-:::
-    
 ::: {#exr-normale-verdeling}
   
 Opgave
@@ -1499,6 +1472,16 @@ Arceer de oppervlakte onder de curve die overeenkomt met de gevraagde kans.
 - $\pr{X < \mu - 2 \sigma}$
 - $\pr{X < \mu - 2 \sigma \text{ of } X > \mu + 2 \sigma}$
 
+:::
+
+### Waarom de normale verdeling?
+
+::: {.todo-box}
+Uitleggen waarom de normale verdeling zo belangrijk is:
+  
+- Veel variabelen in de biologie en daarbuiten ongeveer normaal verdeeld.
+- Laat voorbeelden zien.
+- We zullen later, en sectie [centrale limitestelling] uitleggen hoe dit komt.
 :::
     
 ## De standaard-normale verdeling
@@ -1516,21 +1499,25 @@ en de standaarddeviatie $\sigma$ gelijk aan 1.
 #| fig.width: 4
 #| fig.height: 3
 
-plotNormaal(0,1) +   
+# Plot de standaard-normale verdeling
+plotNormaal(0, 1) +
+  # Labels voor de assen
   labs(
     y = "Kansdichtheid", 
     x = expression(italic(Z))
-  ) +# Labels voor de assen
+  ) +
+  # Voeg de pijl toe
   pijl +
+  # Annotatie toevoegen met sigma
   annotate(
-  "text", 
-  x = 0.5, 
-  y = 0.88 * h, # Use the variable h to scale the y-coordinate
-  label = expression(italic(sigma) == 1), # Use expression() for mathematical notation
-  color = "black", 
-  size = 5, 
-  hjust = 0.47, 
-  vjust = 0.5
+    "text", 
+    x = 0.5, 
+    y = 0.88 * h,        # Gebruik de variabele h voor de y-positie
+    label = expression(italic(sigma) == 1),  # Wiskundige notatie voor sigma
+    color = "black", 
+    size = 5, 
+    hjust = 0.47, 
+    vjust = 0.5
   )
 ```
 
@@ -1542,7 +1529,165 @@ zoals $X$, $Y$ of $W$.
 Toch is het handig: kom je in een statistische formule een kansvariabele $Z$ tegen,
 dan is dat een hint dat die variabele standaard-normaal verdeeld is.
 
-### Transformeren naar de standaard-normale verdeling
+
+### Kritieke waarden van de standaard-normale verdeling
+
+In de volgende figuur is weer 
+een standaard-normale verdeling weergegeven.
+Onder beide staarten is een gebiedje oranje gekleurd.
+De oppervlakte van beide gebiedjes is 0,025; samen dus exact 0,05.
+Om dat voor elkaar te krijgen
+is de grens van het rechter-gebiedje ingesteld op (afgerond) 1,96,
+en de grens van het linker-gebiedje op (afgerond) -1,96.
+Deze grenswaarde van 1,96 heet de **kritieke waarde van de normale verdeling** 
+die hoort bij de kans 0,05 
+en wordt genoteerd als $Z_{0{,}05(2)}$.
+
+::: {#fig-krit layout="[[1,1]]"}
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: fig-krit-std-normaal_0.1
+#| fig-cap: "De kritieke waarde van de standaard-normale verdeling $Z_{0{,}1(2)} = 1{,}64\\ldots$."
+#| fig.width: 3.75
+#| fig.height: 2.75
+
+# Instellen van kritieke waarde en pijlcoördinaten
+Z_crit <- 1.644854  # Kritieke waarde van Z
+
+xstart <- Z_crit + 0.74  # Begin x-coördinaat van pijlen
+ystart <- 0.093          # Begin y-coördinaat van pijlen
+xend <- Z_crit + 0.2     # Eind x-coördinaat van pijlen
+yend <- 0.03             # Eind y-coördinaat van pijlen
+
+# Plot de standaard-normale verdeling met ingekleurde staarten en annotaties
+plotNormaal(0, 1) +
+  # Labels voor de assen
+  labs(
+    y = "Kansdichtheid", 
+    x = expression(italic(Z))
+  ) +
+  # Ingekleurd oppervlak onder de curve
+  oppervlak(-10, -Z_crit) +
+  oppervlak(Z_crit, 10) +
+  # Schaalinstellingen voor de x-as
+  scale_x_continuous(
+    breaks = c(-Z_crit, 0, Z_crit), 
+    labels = c("-1.64...", "0", "1.64..."),
+    minor_breaks = NULL  # Verwijder minor ticks
+  ) +
+  # Kromme pijltjes toevoegen
+  geom_curve(
+    aes(x = -xstart, y = ystart, xend = -xend, yend = yend), 
+    curvature = 0.2, 
+    arrow = arrow(length = unit(0.2, "cm")), 
+    color = "black", 
+    size = 0.7
+  ) +
+  geom_curve(
+    aes(x = xstart, y = ystart, xend = xend, yend = yend), 
+    curvature = -0.2, 
+    arrow = arrow(length = unit(0.2, "cm")), 
+    color = "black", 
+    size = 0.7
+  ) +
+  # Annotaties toevoegen
+  annotate(
+    "text", 
+    x = -xstart, 
+    y = ystart + 0.02,  # Plaats annotatie net boven de pijl
+    label = "0,05", 
+    color = "black", 
+    hjust = 0.5, 
+    size = 4
+  ) +
+  annotate(
+    "text", 
+    x = xstart, 
+    y = ystart + 0.02,  # Plaats annotatie net boven de pijl
+    label = "0,05", 
+    color = "black", 
+    hjust = 0.5, 
+    size = 4
+  ) +
+  # label in het midden
+  proportie("0,90")
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: fig-krit-std-normaal_0.05
+#| fig-cap: "De kritieke waarde van de standaard-normale verdeling $Z_{0{,}05(2)} = 1{,}96\\ldots$."
+#| fig.width: 3.75
+#| fig.height: 2.75
+
+# Instellen van kritieke waarde en pijlcoördinaten
+Z_crit <- 1.959964  # Kritieke waarde van Z
+
+xstart <- Z_crit + 0.74  # Begin x-coördinaat van pijlen
+ystart <- 0.065          # Begin y-coördinaat van pijlen
+xend <- Z_crit + 0.2     # Eind x-coördinaat van pijlen
+yend <- 0.012            # Eind y-coördinaat van pijlen
+
+# Plot de standaard-normale verdeling met ingekleurde staarten en annotaties
+plotNormaal(0, 1) +
+  # Labels voor de assen
+  labs(
+    y = "Kansdichtheid", 
+    x = expression(italic(Z))
+  ) +
+  # Ingekleurd oppervlak onder de curve
+  oppervlak(-10, -Z_crit) +
+  oppervlak(Z_crit, 10) +
+  # Schaalinstellingen voor de x-as
+  scale_x_continuous(
+    breaks = c(-Z_crit, 0, Z_crit), 
+    labels = c("-1.96...", "0", "1.96..."),
+    minor_breaks = NULL  # Verwijder minor ticks
+  ) +
+  # Kromme pijltjes toevoegen
+  geom_curve(
+    aes(x = -xstart, y = ystart, xend = -xend, yend = yend), 
+    curvature = 0.2, 
+    arrow = arrow(length = unit(0.2, "cm")), 
+    color = "black", 
+    size = 0.7
+  ) +
+  geom_curve(
+    aes(x = xstart, y = ystart, xend = xend, yend = yend), 
+    curvature = -0.2, 
+    arrow = arrow(length = unit(0.2, "cm")), 
+    color = "black", 
+    size = 0.7
+  ) +
+  # Annotaties toevoegen
+  annotate(
+    "text", 
+    x = -xstart, 
+    y = ystart + 0.02,  # Plaats annotatie net boven de pijl
+    label = "0,025", 
+    color = "black", 
+    hjust = 0.5, 
+    size = 4
+  ) +
+  annotate(
+    "text", 
+    x = xstart, 
+    y = ystart + 0.02,  # Plaats annotatie net boven de pijl
+    label = "0,025", 
+    color = "black", 
+    hjust = 0.5, 
+    size = 4
+  ) +
+  # label in het midden
+  proportie("0,95")
+```
+
+:::
+
+### Transformeren naar de standaard-normale verdeling {#sec-transformeren}
   
 ::: {.todo-box}
 
@@ -1566,12 +1711,12 @@ Horizontaal uitrekken gaat dus altijd samen met vertikaal indrukken.
 Bekijk Fig xx hieronder eens.
 Deze laat twee normale verdelingen zien.
 De bovenste figuur is de verdeling van variabele $X$, 
-met gemiddelde $\mu_X = 170$ en standaarddeviatie $\sigma_X = 7$.
+met gemiddelde $\mu_X = 170$ en standaarddeviatie $\sd{X} = 7$.
 Het zou de verdeling van de lichaamslengte 
 van Nederlandse volwassen vrouwen kunnen zijn, gemeten in cm.
 Het onderste figuur is de verdeling van variabele $Z$
 die standaard-normaal verdeeld is,
-dus met $\mu_Z=0$ en $\sigma_Z = 1$.
+dus met $\mu_Z=0$ en $\sd{Z} = 1$.
 Dat beide plaatjes er ondanks de verschillende parameters
 precies hetzelfde uitzien komt doordat het domein en het bereik 
 van de $x$- en $y$-as zijn aangepast.
@@ -1581,7 +1726,7 @@ Maak een plot met de twee normaalverdelingen direct onder elkaar,
 precies uitgelijnd en geschaald
 zodat ze er afgezien van de getallen op de assen 
 precies hetzelfde uitzien.
-![dummy](figuren/dummy.png){#fig-transformeren}
+![dummy](figuren/dummy.png) {#fig-transformeren}
 :::
 
 
@@ -1600,28 +1745,28 @@ kunnen dus we identificeren met een kans voor variabele $Z$.
 
 Je kunt dit ook als volgt zien.
 Als de kansvariabele $X$ normaal verdeeld is met gemiddelde $\mu_X$
-en standaarddeviatie $\sigma_X$,
+en standaarddeviatie $\sd{X}$,
 dan kunnen we een andere kansvariabele definieren als 
-$$ Z = \frac{X - \mu_X}{\sigma_X}. $$
+$$ Z = \frac{X - \mu_X}{\sd{X}}. $$
 Het kansexperiment die bij de kansvariabele $Z$ hoort is:
   
 - meet $X$, 
 - trek het gemiddelde van $X$, dus $\mu_X$, van het resultaat af,
-- en deel wat je dan krijgt door de standaarddeviatie van $X$, dus $\sigma_X$.
+- en deel wat je dan krijgt door de standaarddeviatie van $X$, dus $\sd{X}$.
 
 Doordat je het gemiddelde van $X$ hebt afgetrokken,
   is $Z$ gemiddeld $\mu_Z = 0$,
   en doordat je vervolgens door de standaarddeviatie  van $X$ gedeeld hebt,
-  is de standaarddeviatie $\sigma_Z = 1$.
+  is de standaarddeviatie $\sd{Z} = 1$.
 $Z$ is dus *standaard*-normaal verdeeld. 
 
 Daaruit volgt:
 $$
 \begin{aligned}
 \pr{X > 173{,}5} 
-  & = \pr{\frac{X - \mu_X}{\sigma_X}> \frac{173{,}5 - \mu_X}{\sigma}}\\
+  & = \pr{\frac{X - \mu_X}{\sd{X}} > \frac{173{,}5 - \mu_X}{\sd{X}}}\\
   & = 
-  \pr{Z > \frac{173{,}5 - \mu_X}{\sigma}}\\
+  \pr{Z > \frac{173{,}5 - \mu_X}{\sd{X}}}\\
   &  = 
   \pr{Z > \frac{173{,}5 - 170}{7}}\\
   & = 
@@ -1726,7 +1871,7 @@ op het oog al moeilijk te onderscheiden.
 In de limiet van $\text{df}\rightarrow \infty$ convergeert de $t$-verdeling
 naar de standaard-normale verdeling.
 
-## Optellen van meerdere kansvariabelen
+## Optellen van meerdere kansvariabelen {#sec-optellen}
 
 We zullen in deze cursus regelmatig
     situaties tegenkomen waarbij
@@ -1751,7 +1896,7 @@ In dat algemene geval is $Y$ dus:
 $$ Y = \sum_{i=1}^n X_i.$$
 De vraag is weer wat we kunnen zeggen over de kansverdeling van $Y$.
 
-### De verwachtingswaarde van een som
+### De verwachtingswaarde van een som {#sec-som-ev}
 
 Om te beginnen kijken we naar 
     de verwachtingswaarde van $Y$, dus $\ev{Y}$.
