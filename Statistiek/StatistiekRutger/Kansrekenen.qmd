@@ -1532,227 +1532,292 @@ dan is dat een hint dat die variabele standaard-normaal verdeeld is.
 
 ### Kritieke waarden van de standaard-normale verdeling
 
-In de volgende figuur is weer 
+In figuur @fig-krit-1 is weer 
 een standaard-normale verdeling weergegeven.
-Onder beide staarten is een gebiedje oranje gekleurd.
-De oppervlakte van beide gebiedjes is 0,025; samen dus exact 0,05.
-Om dat voor elkaar te krijgen
-is de grens van het rechter-gebiedje ingesteld op (afgerond) 1,96,
-en de grens van het linker-gebiedje op (afgerond) -1,96.
-Deze grenswaarde van 1,96 heet de **kritieke waarde van de normale verdeling** 
-die hoort bij de kans 0,05 
-en wordt genoteerd als $Z_{0{,}05(2)}$.
+In beide staarten van de verdeling is een gebied oranje gekleurd.
+De oppervlakte elk van deze gebieden is 0,1; 
+samen representeren ze dus een kans van exact 0,2.
+Om dit te realiseren
+is de grens van het rechtergebied ingesteld op (afgerond) 1,28
+en de grens van het linkergebied op (afgerond) -1,28.
+Zo'n grenswaarde wordt een **kritieke waarde** van de verdeling genoemd.
+In dit geval betreft het de kritieke waarde die hoort bij een totale kans van 0,2.
+Deze kritieke waarde noteren we als $Z_{0{,}2(2)}$.
+Hier verwijst de 0,2 naar de totale oppervlakte van de oranje gebieden,
+en de $(2)$ geeft aan dat daarbij beide staarten worden meegeteld.
+
+Op dezelfde manier is $Z_{0{,}05(2)}$ de kritieke waarde 
+die hoort bij oranje gebieden met een totale oppervlakte van 0,05. 
+Deze situatie is weergegeven in @fig-krit-2.
+De kritieke waarde is $Z_{0{,}05(2)} = 1{,}96\ldots$. 
+Dat deze kritieke waarde dicht bij 2 ligt,
+had je kunnen inschatten op basis van 
+de tweede vuistregel uit @sec-vuistregels:
+die stelt dat een kans van ongeveer 0,95 binnen 2 standaarddeviaties
+van het gemiddelde ligt 
+(en de overige 0,05 dus daarbuiten).
+Onthoud de waarde 1,96; 
+  deze kritieke waarde komt in de statistiek keer op keer terug.
 
 ::: {#fig-krit layout="[[1,1]]"}
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| label: fig-krit-std-normaal_0.1
-#| fig-cap: "De kritieke waarde van de standaard-normale verdeling $Z_{0{,}1(2)} = 1{,}64\\ldots$."
+#| label: fig-krit-1
+#| fig-cap: "De kritieke waarde van de standaard-normale verdeling $Z_{0{,}1(2)} \\approx 1{,}64$."
 #| fig.width: 3.75
 #| fig.height: 2.75
+# Functie om een plot te maken van de kritieke waarde
+crit_plot <- function(alpha) {
+  # Kritieke waarde van Z
+  Z_crit <- qnorm(1 - alpha / 2)  # Bereken de kritieke waarde
+  
+  # Coördinaten voor de pijlen
+  xstart <- (Z_crit + 3.5) / 2         # Beginpunt x-coördinaat
+  ystart <- dnorm(0) / 4               # Beginpunt y-coördinaat
+  xend <- Z_crit + (3.5 - Z_crit) / 7  # Eindpunt x-coördinaat
+  yend <- dnorm(xend) / 3              # Eindpunt y-coördinaat
+  
+  # Plot de standaard-normale verdeling met staarten en annotaties
+  plotNormaal(0, 1) +
+    # Labels voor de assen
+    labs(
+      y = "Kansdichtheid", 
+      x = expression(italic(Z))
+    ) +
+    # Ingekleurd oppervlak onder de curve
+    oppervlak(-10, -Z_crit) +
+    oppervlak(Z_crit, 10) +
+    # Schaalinstellingen voor de x-as
+    scale_x_continuous(
+      breaks = c(-Z_crit, 0, Z_crit), 
+      labels = c(
+        paste0(round(-Z_crit, 2), "..."), 
+        "0", 
+        paste0(round(Z_crit, 2), "...")
+      ),
+      minor_breaks = NULL  # Verwijder minor ticks
+    ) +
+    # Kromme pijltjes toevoegen
+    geom_curve(
+      aes(x = -xstart, y = ystart, xend = -xend, yend = yend), 
+      curvature = 0.2, 
+      arrow = arrow(length = unit(0.2, "cm")), 
+      color = "black", 
+      size = 0.7
+    ) +
+    geom_curve(
+      aes(x = xstart, y = ystart, xend = xend, yend = yend), 
+      curvature = -0.2, 
+      arrow = arrow(length = unit(0.2, "cm")), 
+      color = "black", 
+      size = 0.7
+    ) +
+    # Annotaties toevoegen
+    annotate(
+      "text", 
+      x = -xstart, 
+      y = ystart + 0.02,  # Plaats annotatie net boven de pijl
+      label = gsub("\\.", ",", round(alpha / 2, 3)), 
+      color = "black", 
+      hjust = 0.5, 
+      size = 4
+    ) +
+    annotate(
+      "text", 
+      x = xstart, 
+      y = ystart + 0.02,  # Plaats annotatie net boven de pijl
+      label = gsub("\\.", ",", round(alpha / 2, 3)), 
+      color = "black", 
+      hjust = 0.5, 
+      size = 4
+    ) +
+    # Label in het midden
+    proportie(gsub("\\.", ",", round(1 - alpha, 2)))
+}
 
-# Instellen van kritieke waarde en pijlcoördinaten
-Z_crit <- 1.644854  # Kritieke waarde van Z
-
-xstart <- Z_crit + 0.74  # Begin x-coördinaat van pijlen
-ystart <- 0.093          # Begin y-coördinaat van pijlen
-xend <- Z_crit + 0.2     # Eind x-coördinaat van pijlen
-yend <- 0.03             # Eind y-coördinaat van pijlen
-
-# Plot de standaard-normale verdeling met ingekleurde staarten en annotaties
-plotNormaal(0, 1) +
-  # Labels voor de assen
-  labs(
-    y = "Kansdichtheid", 
-    x = expression(italic(Z))
-  ) +
-  # Ingekleurd oppervlak onder de curve
-  oppervlak(-10, -Z_crit) +
-  oppervlak(Z_crit, 10) +
-  # Schaalinstellingen voor de x-as
-  scale_x_continuous(
-    breaks = c(-Z_crit, 0, Z_crit), 
-    labels = c("-1.64...", "0", "1.64..."),
-    minor_breaks = NULL  # Verwijder minor ticks
-  ) +
-  # Kromme pijltjes toevoegen
-  geom_curve(
-    aes(x = -xstart, y = ystart, xend = -xend, yend = yend), 
-    curvature = 0.2, 
-    arrow = arrow(length = unit(0.2, "cm")), 
-    color = "black", 
-    size = 0.7
-  ) +
-  geom_curve(
-    aes(x = xstart, y = ystart, xend = xend, yend = yend), 
-    curvature = -0.2, 
-    arrow = arrow(length = unit(0.2, "cm")), 
-    color = "black", 
-    size = 0.7
-  ) +
-  # Annotaties toevoegen
-  annotate(
-    "text", 
-    x = -xstart, 
-    y = ystart + 0.02,  # Plaats annotatie net boven de pijl
-    label = "0,05", 
-    color = "black", 
-    hjust = 0.5, 
-    size = 4
-  ) +
-  annotate(
-    "text", 
-    x = xstart, 
-    y = ystart + 0.02,  # Plaats annotatie net boven de pijl
-    label = "0,05", 
-    color = "black", 
-    hjust = 0.5, 
-    size = 4
-  ) +
-  # label in het midden
-  proportie("0,90")
+# Voorbeeld: plot voor alpha = 0.2
+crit_plot(0.2)
 ```
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| label: fig-krit-std-normaal_0.05
-#| fig-cap: "De kritieke waarde van de standaard-normale verdeling $Z_{0{,}05(2)} = 1{,}96\\ldots$."
+#| label: fig-krit-2
+#| fig-cap: "De kritieke waarde van de standaard-normale verdeling $Z_{0{,}05(2)} \\approx 1{,}96$."
 #| fig.width: 3.75
 #| fig.height: 2.75
 
-# Instellen van kritieke waarde en pijlcoördinaten
-Z_crit <- 1.959964  # Kritieke waarde van Z
-
-xstart <- Z_crit + 0.74  # Begin x-coördinaat van pijlen
-ystart <- 0.065          # Begin y-coördinaat van pijlen
-xend <- Z_crit + 0.2     # Eind x-coördinaat van pijlen
-yend <- 0.012            # Eind y-coördinaat van pijlen
-
-# Plot de standaard-normale verdeling met ingekleurde staarten en annotaties
-plotNormaal(0, 1) +
-  # Labels voor de assen
-  labs(
-    y = "Kansdichtheid", 
-    x = expression(italic(Z))
-  ) +
-  # Ingekleurd oppervlak onder de curve
-  oppervlak(-10, -Z_crit) +
-  oppervlak(Z_crit, 10) +
-  # Schaalinstellingen voor de x-as
-  scale_x_continuous(
-    breaks = c(-Z_crit, 0, Z_crit), 
-    labels = c("-1.96...", "0", "1.96..."),
-    minor_breaks = NULL  # Verwijder minor ticks
-  ) +
-  # Kromme pijltjes toevoegen
-  geom_curve(
-    aes(x = -xstart, y = ystart, xend = -xend, yend = yend), 
-    curvature = 0.2, 
-    arrow = arrow(length = unit(0.2, "cm")), 
-    color = "black", 
-    size = 0.7
-  ) +
-  geom_curve(
-    aes(x = xstart, y = ystart, xend = xend, yend = yend), 
-    curvature = -0.2, 
-    arrow = arrow(length = unit(0.2, "cm")), 
-    color = "black", 
-    size = 0.7
-  ) +
-  # Annotaties toevoegen
-  annotate(
-    "text", 
-    x = -xstart, 
-    y = ystart + 0.02,  # Plaats annotatie net boven de pijl
-    label = "0,025", 
-    color = "black", 
-    hjust = 0.5, 
-    size = 4
-  ) +
-  annotate(
-    "text", 
-    x = xstart, 
-    y = ystart + 0.02,  # Plaats annotatie net boven de pijl
-    label = "0,025", 
-    color = "black", 
-    hjust = 0.5, 
-    size = 4
-  ) +
-  # label in het midden
-  proportie("0,95")
+crit_plot(0.05)
 ```
 
 :::
 
 ### Transformeren naar de standaard-normale verdeling {#sec-transformeren}
+
+Test inline \(x\).
   
-::: {.todo-box}
+Normale verdelingen hebben altijd dezelfde klokvorm,
+maar kunnen natuurlijk verschillen in hun gemiddelde 
+en hun standaarddeviatie.
+Als twee normale verdelingen verschillen in hun gemiddelde,
+dan zijn ze ten opzichte van elkaar verschoven.
+Verschillen ze in hun standaarddeviatie,
+dan zijn de klokvormen ten opzichte van elkaar horizontaal uitgerekt of samengedrukt.
+Ondanks die verschillen is de totale oppervlakte onder de grafiek altijd gelijk aan 1,
+want de kans op een uitkomst tussen $-\infty$ en $\infty$ is altijd 1.
+Horizontaal uitrekken gaat dus altijd samen met vertikaal samendrukken.
 
-IK ZOU HET TRANSFORMEREN LIEVER WEGLATEN UIT DE CURSUS,
-MAAR WEET NOG NIET GOED OF DAT KAN.
-HIERONDER EEN START VAN EEN UITLEG,
-MAAR DIE IS NOG NIET AF.
-
-Schrijven:
-  
-Alle normaalverdelingen hebben exact dezelfde vorm;
-het enige verschil is dat hun gemiddelde $\mu$ en hun standaarddeviatie $\sigma$
-verschillend kunnen zijn. 
-Dat betekent dat verschillende normaalverdelingen 
-ten opzichte van elkaar *verschoven* kunnen zijn (verschillende $\mu$)
-en/of horizontaal uitgerekt (verschillende $\sigma$).
-De totale oppervlakte onder de grafiek is altijd 1
-(omdat de kans op een uitkomst tussen $-\infty$ en $\infty$ altijd 1 is).
-Horizontaal uitrekken gaat dus altijd samen met vertikaal indrukken.
-
-Bekijk Fig xx hieronder eens.
+Bekijk @fig-transformeren eens.
 Deze laat twee normale verdelingen zien.
-De bovenste figuur is de verdeling van variabele $X$, 
+De bovenste figuur toont de verdeling van een variabele $X$, 
 met gemiddelde $\mu_X = 170$ en standaarddeviatie $\sd{X} = 7$.
-Het zou de verdeling van de lichaamslengte 
-van Nederlandse volwassen vrouwen kunnen zijn, gemeten in cm.
-Het onderste figuur is de verdeling van variabele $Z$
-die standaard-normaal verdeeld is,
-dus met $\mu_Z=0$ en $\sd{Z} = 1$.
-Dat beide plaatjes er ondanks de verschillende parameters
-precies hetzelfde uitzien komt doordat het domein en het bereik 
-van de $x$- en $y$-as zijn aangepast.
+Het zou de verdeling kunnen zijn van de lichaamslengte 
+van Nederlandse volwassen vrouwen, in centimeters.
+Het onderste figuur toont de verdeling van variabele $Z$,
+die standaard-normaal verdeeld is (met $\mu_Z=0$ en $\sd{Z} = 1$).
+Hoewel de parameters van beide verdelingen verschillen, 
+hebben beide grafieken exact dezelfde vorm. 
+Alleen de schalen van de $x$- en $y$-assen zijn aangepast.
 
-::: {.todo-box}
-Maak een plot met de twee normaalverdelingen direct onder elkaar,
-precies uitgelijnd en geschaald
-zodat ze er afgezien van de getallen op de assen 
-precies hetzelfde uitzien.
-![dummy](figuren/dummy.png) {#fig-transformeren}
-:::
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: fig-transformeren
+#| fig-cap: "Caption nog schrijven"
+#| fig.width: 3.75
 
+# Laad benodigde pakketten
+if (!("ggplot2" %in% loadedNamespaces())) { 
+  library(ggplot2) 
+}
+if (!("cowplot" %in% loadedNamespaces())) { 
+  library(cowplot) 
+}
 
-Stel nu dat we geïnteresseerd zijn in de kans dat $X$ groter is dan 
-173,5 cm:
+# Basisparameters instellen
+mu_x <- 170             # Gemiddelde voor X
+sigma_x <- 7            # Standaarddeviatie voor X
+x_threshold <- 173.5    # Drempelwaarde voor X
+
+mu_z <- 0               # Gemiddelde voor Z
+sigma_z <- 1            # Standaarddeviatie voor Z
+z_threshold <- 0.5      # Drempelwaarde voor Z
+
+nr_sd <- 3.5            # Aantal standaarddeviaties om te tonen
+
+# Berekeningen op basis van parameters
+x_range <- c(mu_x - nr_sd * sigma_x, mu_x + nr_sd * sigma_x)   # Bereik voor X
+z_range <- c(mu_z - nr_sd * sigma_z, mu_z + nr_sd * sigma_z)   # Bereik voor Z
+n_points <- 50 * nr_sd                                        # Aantal datapunten
+
+# Domeinen voor X en Z
+x_values <- seq(x_range[1], x_range[2], length.out = n_points)
+z_values <- seq(z_range[1], z_range[2], length.out = n_points)
+
+# Bereken kansdichtheden
+x_data <- data.frame(
+  x = x_values,
+  y = dnorm(x_values, mean = mu_x, sd = sigma_x)
+)
+
+z_data <- data.frame(
+  x = z_values,
+  y = dnorm(z_values, mean = mu_z, sd = sigma_z)
+)
+
+# Gebied waar X > x_threshold
+x_fill <- data.frame(
+  x = seq(x_threshold, x_range[2], length.out = 100),
+  y = dnorm(seq(x_threshold, x_range[2], length.out = 100), 
+            mean = mu_x, sd = sigma_x)
+)
+
+# Gebied waar Z > z_threshold
+z_fill <- data.frame(
+  x = seq(z_threshold, z_range[2], length.out = 100),
+  y = dnorm(seq(z_threshold, z_range[2], length.out = 100), 
+            mean = mu_z, sd = sigma_z)
+)
+
+# Plot voor X
+plot_x <- ggplot(x_data, aes(x = x, y = y)) +
+  geom_line(size = 1, color = "darkorange") +
+  geom_area(
+    data = x_fill, aes(x = x, y = y),
+    fill = "darkorange", alpha = 0.5
+  ) +
+  labs(
+    x = expression(italic(X)),
+    y = "Kansdichtheid"
+  ) +
+  theme_minimal()
+
+# Plot voor Z
+plot_z <- ggplot(z_data, aes(x = x, y = y)) +
+  geom_line(size = 1, color = "darkorange") +
+  geom_area(
+    data = z_fill, aes(x = x, y = y),
+    fill = "darkorange", alpha = 0.5
+  ) +
+  labs(
+    x = expression(italic(Z)),
+    y = "Kansdichtheid"
+  ) +
+  theme_minimal()
+
+# Combineer de twee plots met cowplot
+combined_plot <- plot_grid(
+  plot_x, plot_z, 
+  ncol = 1, align = "v"
+)
+
+# Voeg een verticale lijn toe over beide plots
+final_plot <- ggdraw(combined_plot) +
+  draw_line(
+    x = c(0.62, 0.62),  # Relatieve positie op de x-as (0-1 schaal)
+    y = c(0.09, 1),  # Relatieve positie op de y-as (0-1 schaal)
+    color = "DarkOrchid", 
+    size = 1, 
+    linetype = "dashed"
+  )
+
+# Toon de finale plot
+print(final_plot)
+
+```
+
+Stel nu dat we geïnteresseerd zijn in de kans dat $X > 
+173{,}5$:
 $$ \pr{X > 173{,}5}.$$ 
-Die kans komt overeen met de oppervlakte van het rode vlak in de bovenste plot
-in @fig-transformeren.    
-Dat oppervlak is precies gelijk aan het rode vlak in de *onderste* plot.
-In de onderste plot is het rode vlak precies de kans
+In de *bovenste* plot van @fig-transformeren komt die kans komt overeen met de oppervlakte van het oranje gekleurde gebied.    
+Dezelfde kans kan echter ook worden berekend aan de hand van de variabele $Z$.
+In de *onderste* plot van @fig-transformeren is namelijk precies hetzelfde gebied
+ingekleurd.
+(De paarse stippellijn laat zien 
+dat de grenzen van de oranje gebieden in beide plots
+precies zijn uitgelijnd.)
+In de onderste plot komt het oranje gebied precies overeen met de kans
 $$ \pr{Z > 0{,}5}.$$
-Het moet dus zo zijn dat
+We zien dus dat
 $$ \pr{X > 173{,}5} = \pr{Z > 0{,}5}. $$
-Iedere kans die we willen berekenen voor variabele $X$
-kunnen dus we identificeren met een kans voor variabele $Z$.
+Dit werkt in het algemeen: 
+kansen voor een
+normaalverdeelde variabele $X$ kunnen altijd worden gerelateerd 
+aan kansen voor de standaard-normaalverdeelde variabele $Z$.
 
-Je kunt dit ook als volgt zien.
-Als de kansvariabele $X$ normaal verdeeld is met gemiddelde $\mu_X$
+Laten we dat preciezer maken.
+Als kansvariabele $X$ normaal verdeeld is met gemiddelde $\mu_X$
 en standaarddeviatie $\sd{X}$,
 dan kunnen we een andere kansvariabele definieren als 
 $$ Z = \frac{X - \mu_X}{\sd{X}}. $$
-Het kansexperiment die bij de kansvariabele $Z$ hoort is:
-  
-- meet $X$, 
-- trek het gemiddelde van $X$, dus $\mu_X$, van het resultaat af,
-- en deel wat je dan krijgt door de standaarddeviatie van $X$, dus $\sd{X}$.
+In deze formule wordt de verdeling van $X$ eerst verschoven 
+door $\mu_X$ van $X$ af te trekken, waardoor het gemiddelde 0 wordt. 
+Vervolgens wordt de wordt de klokvorm uitgerekt of ingedrukt
+door te delen door $\sigma_X$, waardoor de standaarddeviatie 1 wordt. 
+In het statistisch jargon zeggen we dat $X$ is **getransformeerd**
+naar een standaard-normaalverdeelde variabele.
 
 Doordat je het gemiddelde van $X$ hebt afgetrokken,
   is $Z$ gemiddeld $\mu_Z = 0$,
@@ -1773,9 +1838,28 @@ $$
   \pr{Z > 0{,}5}. 
 \end{aligned}
 $$
-  
+Op die manier hebben we laten zien dat de kans
+op gebeurtenis $X > 173,5$ 
+gelijk moet zijn aan de kans op gebeurtenis $Z >0.5$
+de standaard-normaal verdeelde variabele $Z$.
+
+Laten we als voorbeeld teruggaan naar de kans op $X > 173{,}5$. 
+Door de transformatie naar $Z$ toe te passen, krijgen we:
+$$
+\begin{aligned}
+P(X > 173{,}5) 
+  & = P\left(\frac{X - \mu_X}{\sigma_X} > \frac{173{,}5 - \mu_X}{\sigma_X}\right) \\
+  & = P\left(Z > \frac{173{,}5 - 170}{7}\right) \\
+  & = P(Z > 0{,}5).
+\end{aligned}
+$$
+
+::: {.todo-box}
+Einde erg abrupt, en de hele paragraaf voelt nog erg moeilijk en complex.
+Het nut is hier ook niet erg duidelijk -- is pas in het volgende hoofdstuk 
+echt nodig. 
+Nog eens over nadenken.
 :::
-    
     
 ## De $t$-verdeling
 
@@ -1802,56 +1886,69 @@ we laten in @fig-t hieronder een aantal voorbeelden zien.
 #| code-fold: true
 #| fig-height: 4
 
-t_values <- seq(-3.5, 3.5, by = 0.1)
-z_values <- seq(-3.5, 3.5, by = 0.1)
+#| code-fold: true
+#| warning: false
+#| label: fig-t-verdelingen
+#| fig-cap: "Vergelijking van $t$-verdelingen met verschillende vrijheidsgraden."
 
+# Genereer t-waarden
+t_values <- seq(-3.5, 3.5, by = 0.1)
+
+# Maak een dataframe voor de kansdichtheden
 dataframe <- data.frame(
-  t = c(z_values, rep(t_values, 3)),
+  t = c(
+    t_values, 
+    rep(t_values, 3)
+  ),
   prob = c(
-    dnorm(z_values),
-    dt(t_values, df = 2),
-    dt(t_values, df = 5),
-    dt(t_values, df = 20)
+    dnorm(t_values),              # Standaard-normale verdeling
+    dt(t_values, df = 2),         # t-verdeling met df = 2
+    dt(t_values, df = 5),         # t-verdeling met df = 5
+    dt(t_values, df = 20)         # t-verdeling met df = 20
   ),
   df = factor(
-    c(
-      rep("standaard-normaal", length(z_values)),
-      rep("df = 2", length(t_values)),
-      rep("df = 5", length(t_values)),
-      rep("df = 20", length(t_values))
+    rep(
+      c("standaard-normaal", "df = 2", "df = 5", "df = 20"), 
+      each = length(t_values)
     ),
-    levels = c(
-      "df = 2", "df = 5", "df = 20", "standaard-normaal"
-    )
-  ) 
+    levels = c("df = 2", "df = 5", "df = 20", "standaard-normaal")
+  )
 )
 
+# Plot de verdelingen
 ggplot(
   dataframe, 
   aes(
     x = t, y = prob, 
-    group = df, color = df, linewidth = df, linetype = df)
+    group = df, color = df, linewidth = df, linetype = df
+  )
 ) +
-  geom_line(
-  ) +
+  # Voeg de lijnen toe
+  geom_line() +
+  # Pas de kleuren aan
   scale_color_manual(
-    values = c( rep("black", 3), "#e8601d")
-  ) + 
+    values = c(rep("black", 3), "darkorange")
+  ) +
+  # Pas de lijndiktes aan
   scale_linewidth_manual(
     values = c(1, 1, 1, 1.2)
   ) +
+  # Pas de lijnstijlen aan
   scale_linetype_manual(
     values = c(
-      "df = 2"="longdash", 
-      "df = 5"="dashed", 
-      "df = 20"="dotted",
-      "standaard-normaal"="solid" 
+      "df = 2" = "dotted", 
+      "df = 5" = "dashed", 
+      "df = 20" = "longdash",
+      "standaard-normaal" = "solid"
     )
   ) +
+  # Labels toevoegen
   labs(
-    x = expression(italic(t)),
-    y = "kansdichtheid"
-  )
+    x = expression(italic(t) ~ "of" ~ italic(Z)),
+    y = "Kansdichtheid"
+  ) +
+  # Thema toepassen
+  theme_minimal()
 ```
 Vergeleken met de standaard-normale verdeling
 heeft de $t$-verdeling een lagere piek
