@@ -974,16 +974,166 @@ Het resultaat wordt de **standaardfout van het gemiddelde** genoemd:
 $$
 \se{\mean{X}} = \frac{s}{\sqrt{n}}.
 $$
-Wij gebruiken de notatie $\se{\mean{X}}$;
+Hier gebruiken we de notatie $\se{\mean{X}}$;
 in de literatuur kom je ook de afkorting SEM tegen,
-voor *Standard Error of the Mean*.
+wat staat voor *Standard Error of the Mean*.
+
+::: {.callout-important appearance="simple"}
+
+## Definitie: Standaardfout van het gemiddelde.
+
+$$
+\se{\mean{X}} = \frac{s}{\sqrt{n}}.
+$$
+
+:::
+
+### Transformeren naar $t$
+
+In de situatie dat $\sd{X}$ bekend was,
+konden we de kansvariabele $\mean{X}$ transformeren naar een standaard-normaal verdeelde variabele
+door middel van @eq-trans:
+$$ Z = \frac{\mean{X} - \mu_X}{\sd{\mean{X}}}. $$
+Om uiteindelijk een formule voor een BHI te krijgen 
+waarin in plaats van $\sd{\mean{X}}$ de standaardfout $\se{\mean{X}}$ voorkomt, 
+moeten we in de noemer $\sd{\mean{X}}$ vervangen door zijn schatter $\se{\mean{X}}$.
+Helaas heeft dat ook tot gevolg dat de getransformeerde variabele 
+nu niet meer standaardnormaal verdeeld is. 
+We noemen het resultaat van de transformatie daarom niet meer $Z$,
+maar $t$:
+$$
+t = \frac{\mean{X} - \mu_X}{\se{\mean{X}}}.
+$$ {#eq-t}
+
+De keuze voor $t$ als de naam van deze getransformeerde variabele is niet willekurig.
+Er kan namelijk worden aangetoond
+dat $t$ onder het Normale Model
+een $t$-verdeling volgt met $n - 1$ vrijheidsgraden.
+(Kijk nog eens terug naar @sec-t als je de details over de $t$-verdeling
+niet meer helder hebt.)
+Helaas voert het bewijs voor deze stelling te ver voor deze cursus;
+je zult ons daarop moeten vertrouwen.
+Maar in de spirit van *trust, but verify* kun je de bewering wel 
+controleren met behulp van simulaties.
+
+::: {.callout-tip}
+
+## De $t$-verdeling controleren met simulaties
+
+Het is niet moeilijk om te verifieren dat de $t$ uit @eq-t 
+onder het Normale Model
+een $t$-verdeling volgt met $n - 1$ vrijheidsgraden.
+
+De code hieronder (klik op "Code" om die zichtbaar te maken) neemt $10^4$ keer een (kleine) steekproef ($n = 4$)
+uit een normale verdeling, en berekent op basis van die steekproeven steeds $t$.
+Het histogram van de verkregen $t$ waarden zou de $t$-verdeling met $\mathrm{df}= n -1 = 3$
+vrijheidsgraden moeten volgen.
+Daarom plot de code bovenop het histogram ook die $t$-verdeling (in paars).
+Ter vergelijking is ook de standaard-normale verdeling toegevoegd (zwarte stippellijn).
+De $t$-verdeling heeft een lagere piek en dikkere staarten,
+waardoor zijn spreiding groter is.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Histogram van $t$-waarden vergeleken met de $t$-verdeling en standaardnormale verdeling."
+#| label: fig-t-waarden
+#| fig.width: 6
+#| fig.height: 3
+
+# Laad ggplot2 indien nodig
+if (!("ggplot2" %in% loadedNamespaces())) { 
+  library(ggplot2) 
+}
+
+# Parameters instellen
+aantal_iteraties <- 10000   # Aantal herhalingen
+steekproefgrootte <- 4      # Grootte van de steekproef
+mu <- 100                   # Populatiegemiddelde
+sigma <- 10                 # Populatiestandaarddeviatie
+vrijheidsgraden <- steekproefgrootte - 1  # Vrijheidsgraden voor t-verdeling
+staafbreedte <- 0.2         # Binbreedte voor het histogram
+domein <- seq(-4, 4, length.out = 400)  # Verfijnd domein voor gladde lijnen
+
+# Genereer t-waarden
+set.seed(42)  # Voor reproduceerbaarheid
+t_waarden <- replicate(aantal_iteraties, {
+  # Trek een steekproef
+  steekproef <- rnorm(steekproefgrootte, mean = mu, sd = sigma)
+  
+  # Bereken steekproefgemiddelde en standaarddeviatie van de steekproef
+  gemiddelde <- mean(steekproef)
+  s <- sd(steekproef)
+  
+  # Bereken standaardfout
+  SE <- s / sqrt(steekproefgrootte)
+  
+  # Bereken t-waarde
+  t <- (gemiddelde - mu) / SE
+  return(t)
+})
+
+# Zet t-waarden in een data frame
+data <- data.frame(t_waarden)
+
+# Bereid theoretische verdelingen voor
+theoretische_data <- data.frame(
+  x = domein,
+  t_verdeling = dt(domein, df = vrijheidsgraden),
+  standaard_normaal = dnorm(domein)
+)
+
+# Maak het histogram en voeg de theoretische verdelingen toe
+ggplot(data, aes(x = t_waarden)) +
+  geom_histogram(
+    aes(y = ..density..), # schaal het histogram, totale oppervlakte 1 
+    binwidth = staafbreedte, 
+    fill = "darkorange", 
+    color = "black", 
+    alpha = 0.5,
+    show.legend = FALSE
+  ) +
+  geom_line(
+    data = theoretische_data, 
+    aes(x = x, y = t_verdeling, color = "t-verdeling"), 
+    size = 1
+  ) +
+  geom_line(
+    data = theoretische_data, 
+    aes(x = x, y = standaard_normaal, color = "standaardnormaal"), 
+    size = 1, linetype = "dashed"
+  ) +
+  scale_color_manual(
+    values = c("t-verdeling" = "DarkOrchid", "standaardnormaal" = "black"),
+    name = "Verdeling"
+  ) +
+  coord_cartesian(xlim = c(-4, 4)) +  # Beperk het domein van de plot
+  labs(
+    x = expression(italic(t)-waarden),
+    y = "Kansdichtheid",
+    title = ""
+  ) +
+  theme_minimal()
+```
+
+:::
+
+::: {.callout-important appearance="simple"}
+## Belangrijk:
+
+De kansverdeling van de variabele 
+$$
+t = \frac{\mean{X} - \mu_X}{\se{\mean{X}}}
+$$
+is de $t$-verdeling met $n - 1$ vrijheidsgraden.
+
+:::
+
+### Kritieke waarden van de $t$-verdeling:
 
 
-Transformatie naar $Z$ niet mogelijk;
-gebruik
-$t = \frac{\mean{X} - \mu}{\se{\mean{X}}}$ volgt een $t$-verdeling met $n - 1$ vrijheidsgraden. 
 
-Kritieke waarde van de $t$-verdeling:
+
 $$
 \pr{ -\ct{(n-1)}{2}{0{,}05} < t < \ct{(n-1)}{2}{0{,}05} } = 0{,}95.
 $$
