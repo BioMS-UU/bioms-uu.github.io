@@ -248,7 +248,7 @@ In deze cursus zullen we veel gebruik maken van
 het volgende model, 
 dat we het Normale Model zullen noemen.
 
-::: {.callout-important appearance="simple"}
+::: {.callout-important appearance=\sd{X}}
 
 ## Definitie: Het Normale Model voor steekproeven.
 
@@ -328,7 +328,7 @@ met toevallige fout.
 Maar in beide gevallen veronderstelt het model 
 dat de waarnemingen onafhankelijk getrokken zijn uit een normale verdeling.
 
-::: {.callout-important appearance="simple"}
+::: {.callout-important appearance="default" icon=false}
 
 ## Conclusie: 
 
@@ -738,7 +738,7 @@ hoe groter de steekproeven zijn,
 hoe dichter de gemiddelden van de steekproeven bij elkaar liggen,
 en hoe kleiner dus de toevallige fout is.
 
-::: {.callout-important appearance="simple"} 
+::: {.callout-important appearance="default" icon=false} 
 
 ## Conclusies op basis van de simulaties: 
 
@@ -838,7 +838,7 @@ $2 \sigma_{\overline{X}}$ van $\overline{X}$ afligt.*
 Dit is het idee achter het BHI van het gemiddelde. 
 We kunnen dat idee nu precies maken.
 
-## BHI van het gemiddelde als de standaarddeviatie van de populatie bekend is
+## 95%-BHI van het gemiddelde als de standaarddeviatie van de populatie bekend is {#sec-bhi-Z}
 
 We hebben nu alle theorie op een rijtje
 om af te gaan leiden hoe je het BHI van een gemiddelde kunt berekenen.
@@ -889,7 +889,6 @@ $$
 \pr{- 1{,}96\, \sd{\mean{X}} <  \mu_X - \mean{X} < 1{,}96\,\sd{\mean{X}}} = 0{,}95.
 $$
 Tot slot tellen we bij alle termen van de ongelijkheid $\mean{X}$ op:
-
 $$
 \pr{\mean{X} -1{,}96\, \sd{\mean{X}} < \mu_X < \mean{X} + 1{,}96\, \sd{\mean{X}}} = 0{,}95.
 $$
@@ -906,14 +905,14 @@ $$ \mu_X = \mean{X} \pm 1{,}96\, \sd{\mean{X}}. $$
 Laten we dit resultaat weer even samenvatten.
 
 ::: {.callout-important}
-## BHI voor de situatie dat $\sd{X}$ bekend is
+## 95%-BHI voor de situatie dat $\sd{X}$ bekend is
 
-We gaan uit van het Normale Model waarin variabele $X$ normaal verdeeld is in de populatie
+We gaan uit van het Normale Model, waarin variabele $X$ normaal verdeeld is in de populatie
 en de steekproef bestaat uit $n$ eenheden die onafhankelijk uit die normale verdeling zijn getrokken.
 
 We weten het populatiegemiddelde $\mu_X$ niet, maar de standaarddeviatie $\sd{X}$ wel.
 
-Dan wordt het betrouwbaarheidsinterval van het populatiegemiddelde $\mu_X$ gegeven door:
+Dan wordt het 95%-BHI van het populatiegemiddelde $\mu_X$ gegeven door:
 
 $$ \mu_X = \mean{X} \pm 1{,}96\, \sd{\mean{X}}, $$ {#eq-BHI}
 waarin
@@ -978,13 +977,13 @@ Hier gebruiken we de notatie $\se{\mean{X}}$;
 in de literatuur kom je ook de afkorting SEM tegen,
 wat staat voor *Standard Error of the Mean*.
 
-::: {.callout-important appearance="simple"}
+::: {.callout-important appearance="default" icon=false}
 
 ## Definitie: Standaardfout van het gemiddelde.
 
 $$
 \se{\mean{X}} = \frac{s}{\sqrt{n}}.
-$$
+$$ {#eq-se}
 
 :::
 
@@ -1118,57 +1117,153 @@ ggplot(data, aes(x = t_waarden)) +
 
 :::
 
-::: {.callout-important appearance="simple"}
+::: {.callout-important appearance="default" icon=false}
 ## Belangrijk:
 
-De kansverdeling van de variabele 
+De kansverdeling van de kansvariabele 
 $$
 t = \frac{\mean{X} - \mu_X}{\se{\mean{X}}}
-$$
+$$ {#eq-def-t}
 is de $t$-verdeling met $n - 1$ vrijheidsgraden.
 
 :::
 
-### Kritieke waarden van de $t$-verdeling:
+### Afleiding van het 95%-BHI
 
+Nu we dit alles weten, kunnen we de afleiding van het 95%-BHI eindelijk vervolgen.
 
-
-
+Voor iedere variabele $t$ die $t$-verdeeld is met df vrijheidsgraden geldt: 
 $$
-\pr{ -\ct{(n-1)}{2}{0{,}05} < t < \ct{(n-1)}{2}{0{,}05} } = 0{,}95.
+\pr{ -\ct{0{,}05}{2}{df} < t < \ct{0{,}05}{2}{df} } = 0{,}95.
 $$
-Dat betekent dat:
+Als dat niet vanzelfsprekend voor je is, kijk dan eens terug naar @eq-crit-t en de paragraaf daaromheen.
+
+Specifiek voor de variabele $t$ van @eq-def-t geldt dus
+$$
+\pr{ -\ct{0{,}05}{2}{(n-1)} < t < \ct{0{,}05}{2}{(n-1)} } = 0{,}95.
+$$
+
+
+Als we @eq-def-t hierin invullen, krijgen we
 $$
 \pr{
-    -\ct{(n-1)}{2}{0{,}05} < \frac{\mean{X} - \mu}{\se{\mean{X}}} < \ct{(n-1)}{2}{0{,}05} } = 0{,}95.
+    -\ct{0{,}05}{2}{(n-1)} < \frac{\mean{X} - \mu_X}{\se{\mean{X}}} < \ct{0{,}05}{2}{(n-1)} } = 0{,}95.
 $$
+De afleiding is verder helemaal analoog aan die van @sec-bhi-Z. 
+We vermenigvuldigen de ongelijkheden eerst met $-\se{\mean{X}}$:
 $$
-    \pr{-\ct{(n-1)}{2}{0{,}05}\, \se{\mean{X}} < \mean{X} - \mu < \ct{(n-1)}{2}{0{,}05}\,\se{\mean{X}}} = 0{,}95.
+    \pr{\ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}} >  \mu_X - \mean{X} > -\ct{0{,}05}{2}{(n-1)}\,\se{\mean{X}}} = 0{,}95.
 $$
+Het is overzichtelijker om de ongelijkheden om te draaien:
 $$
-    \pr{-\mean{X} -\ct{(n-1)}{2}{0{,}05}\, \se{\mean{X}} < - \mu < - \mean{X} + \ct{(n-1)}{2}{0{,}05}\, \se{\mean{X}}} = 0{,}95.
+    \pr{-\ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}} < \mu_X - \mean{X} < \ct{0{,}05}{2}{(n-1)}\,\se{\mean{X}}} = 0{,}95.
 $$
-en dus:
+Tot slot tellen we $\mean{X}$ bij de ongelijkheden op:
 $$
-\pr{\mean{X} -\ct{(n-1)}{2}{0{,}05}\, \se{\mean{X}} < \mu < \mean{X} + \ct{(n-1)}{2}{0{,}05}\, \se{\mean{X}}} = 0{,}95.
+\pr{\mean{X} -\ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}} < \mu_X < \mean{X} + \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}}} = 0{,}95.
 $$
-Dus, het 95\%-BHI is:
+Dit is precies de vergelijking waarnaar we op zoek waren!
+De vergelijking zegt dat er iedere keer dat we een steekproef nemen een kans van 0{,}95 is
+dat de populatieparameter $\mu_X$ tussen de grenzen $\mean{X} -\ct{0{,}05}{2}{(n-1)}$ en $\mean{X} + \ct{0{,}05}{2}{(n-1)}$
+invalt. Oftewel, het 95\%-BHI is:
 $$
-\left[\mean{X} -\ct{(n-1)}{2}{0{,}05}\, \se{\mean{X}}, \mean{X} + \ct{(n-1)}{2}{0{,}05}\, \se{\mean{X}} \right].
+\left[\mean{X} -\ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}}, \mean{X} + \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}} \right].
 $$
-Andere notatie:
+Dit wordt ook vaak geschreven als
 $$
-    \mu = \mean{X} \pm \ct{(n-1)}{2}{0{,}05}\, \se{\mean{X}}.
+    \mu_X = \mean{X} \pm \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}}.
+$$
+Laten we dit maar weer eens samenvatten:
+
+::: {.callout-important}
+## 95%-BHI voor de situatie dat $\sd{X}$ onbekend is
+
+We gaan uit van het Normale Model, waarin variabele $X$ normaal verdeeld is in de populatie
+en de steekproef bestaat uit $n$ eenheden die onafhankelijk uit die normale verdeling zijn getrokken.
+
+Het populatiegemiddelde $\mu_X$ en de standaarddeviatie $\sd{X}$ van de populatie
+zijn ons onbekend.
+
+Dan wordt het 95%-BHI van het populatiegemiddelde $\mu_X$ gegeven door:
+
+$$ \mu_X = \mean{X} \pm \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}}, $$ {#eq-BHI-t}
+waarin
+$$
+\se{\mean{X}} = \frac{s_X}{\sqrt{n}}.
 $$
 
-In de praktijk: bereken $\se{\mean{X}} = s / \sqrt{n}$.
+:::
 
-## Controleer of het statistische model van toepassing is.
+Om concreet te maken hoe het bereken van een 95%-BHI in de praktijk werkt,
+werken we nu een eenvoudig voorbeeld uit.
+
+::: {#exm-BHI}
+
+## 95%-BHI voor de opbrengst van aardappelplanten
+
+StSP6A is een transgene lijn van aardappelplanten.
+Onderzoekers willen weten wat het effect van de mutatie is
+op de aardappelopbrengst. 
+Daarom planten ze 5 planten in een kas
+en laten die 100 dagen groeien onder gecontroleerde condities.
+Daarna worden de aardappels gerooid en wordt van iedere plant 
+het totale gewicht aan aardappels bepaald.
+
+De resultaten zijn:
+
+| Plant | Tubergewicht (g)  |
+|-------|-------------------|
+| 1     | 112               |
+| 2     | 125               |
+| 3     | 119               |
+| 4     | 89                |
+| 5     | 102               |
+
+We berekenen het 95%-BHI van het gemiddelde tubergewicht.
+We volgen de volgende stappen:
+
+1. De steekproefgrootte is $n = 5$.
+2. Het steekproefgemiddelde (@eq-gemiddelde) van de aardappelen is $\mean{x} = 109{,}4$ g.
+3. De standaarddeviatie (@eq-sd) van de steekproef is $s_X = 14{,}26$ g.
+4. De standaardfout (@eq-se) is $\se{X} = s / \sqrt{n} = 6{,}38$ g.
+5. Het aantal vrijheidsgraden is $\mathrm{df} = n - 1 = 4$.
+6. Voor de kritieke waarde $\ct{0{,}05}{2}{4}$ raadplegen we R (@sec-krit-R):
+```{r}
+alpha <- 0.05
+qt(1 - alpha/2, df = 4)
+```
+7. De ondergrens van het 95%-BHI is $\mean{X} - \ct{0{,}05}{2}{4} \se{X} = 91{,}7$.
+8. De bovengrens van het 95%-BHI is $\mean{X} + \ct{0{,}05}{2}{4} \se{X} = 127{,}1$.
+
+Het betrouwbaarheidsinterval is dus $[91{,}7; 127{,}1]$, oftewel $109{,}4 \pm 17{,}7$.
+:::
+
+::: {#exr-BHI}
+
+Bereken een BHI
+
+:::
+
+### Een BHI berekenen met R
+
+```{r}
+# creeer een vector met de gewichten (in g)
+gewichten <- c(112, 125, 119, 89, 102)
+
+# voer de functie t.test uit en sla de resultaten op
+uitvoer_t.test <- t.test(gewichten)
+
+# selecteer uit de resultaten het 95%-BHI
+uitvoer_t.test$conf.int
+```
+
+
+## Controleer of het Normale Model van toepassing is.
 
 1.    Volledig willekeurige steekproef.
 2.    Normale verdeling.
 
-## Wat als het statistische model niet van toepassing is?
+### Wat als het statistische model niet van toepassing is? {#sec-aannames}
 
 ## Samenvatting
 
