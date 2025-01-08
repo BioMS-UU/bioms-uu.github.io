@@ -206,7 +206,7 @@ Van welk type zijn de volgende variabelen?
 **b.** Aantal chromosomen in een cel.
 
 **c.** Opleidingsniveau. Het CBS hanteert 5 niveaus, waarbij niveau 1
-staat voor "Basisonderwijs", niveau 2 voor "vmbo, mbo1, avo onderbouw",
+staat voor "Basisonderwijs", niveau 2 voor "vmbo, mbo1, havo onderbouw",
 etc.
 
 **d.** Hartslagfrequentie.
@@ -232,6 +232,112 @@ Schrijven. Vector maken van type character.
 Omzetten in een factor.
 Levels bekijken.
 :::
+
+
+
+Hieronder staat data over meerdere spelers van een videogame in verschillende vectoren. Deze zijn daarna samengevoegd in 1 dataframe. 
+
+```{r}
+naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
+level <- c(8, 1, 3, 2, 10)
+totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
+klassement <- c("Goud", "Brons", "Zilver", "Zilver", "Goud")
+console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
+
+df = data.frame(naam, level, totale_speeltijd, klassement, console)
+```
+
+**a.** Schrijf voor elke vector op wat voor soort variabelen ze bevatten. 
+
+*De `naam` vector is een nominale categorische variabel, de `level` vector is een discrete numerieke variabel, de `totale_speeltijd` vector is een continue numerieke variabel, de `klassement` vector is een ordinale categorische variabel en 'console` is een nominale categorische variabel*
+
+Om de data beter te kunnen analyseren zouden we de `factor` functie kunnen gebruiken. 
+
+**b,** Zoek de `factor` functie op en probeer te begrijpen wat het inhoudt. Op welke 2 variabelen zouden we deze functie het beste toe kunnen passen?   
+
+*Deze zouden we op de `klassement` en `console` functie toe kunnen passen. Dit zijn namelijk variabelen die niet uniek zijn per datapunt. Door ze in factoren te veranderen kunnen we ze beter analyseren.*
+
+**c.** Pas de code hierboven aan om de `factor` functie toe te passen op de `klassement` vector. 
+
+*antwoord*
+
+```{r}
+naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
+level <- c(8, 1, 3, 2, 10)
+totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
+klassement <- factor(c("Goud", "Brons", "Zilver", "Zilver", "Goud"))
+console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
+
+df = data.frame(naam, level, totale_speeltijd, klassement, console)
+
+#of 
+
+df$klassement = factor(df$klassement)
+```
+
+**d.** Gebruik de `levels` functie om te bepalen wat de levels zijn van de `klassement` vector. 
+
+*antwoord*
+
+```{r}
+levels(klassement)
+
+```
+
+We willen op een andere manier naar de data kijken door Brons en Zilver de nieuwe naam "Laag" te geven en Goud de nieuwe naam "Hoog" te geven. 
+
+**e.** Gebruik de `levels` functie om een nieuwe vector aan de dataframe toe te voegen genaamd `niveau`. De `niveau` vector is precies hetzelfde als de `klassement` vector, maar dan zijn Zilver en Brons vervangen door Laag en Goud door hoog. 
+
+*antwoord*
+```{r}
+naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
+level <- c(8, 1, 3, 2, 10)
+totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
+klassement <- factor(c("Goud", "Brons", "Zilver", "Zilver", "Goud"))
+console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
+
+df <- data.frame(naam, level, totale_speeltijd, klassement, console)
+
+#We voegen de kolom toe
+df$niveau <- klassement
+
+#Eerst bekijken we weer wat de levels zijn. 
+levels(df$niveau)
+
+#Daarna maken we een nieuwe vector waarin we de levels een nieuwe naam geven. 
+levels(df$niveau) <- c("Laag", "Hoog", "Laag")
+
+levels(df$niveau)
+```
+*We zien dat er nu maar 2 levels zijn*
+
+**f.** Gebruik de `boxplot` functie om twee figuren te maken. Een die het klassement tegen de speeltijd uit zet en een die het niveau tegen de speeltijd uitzet. Zijn de veranderingen in de levels terug te zien? 
+
+*Antwoord: De veranderingen zijn duidelijk terug te zien. Er staan nu maar 2 categorien op de x as in plaats van 3.*
+
+```{r}
+naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
+level <- c(8, 1, 3, 2, 10)
+totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
+klassement <- factor(c("Goud", "Brons", "Zilver", "Zilver", "Goud"))
+console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
+
+df <- data.frame(naam, level, totale_speeltijd, klassement, console)
+
+#We voegen de kolom toe
+df$niveau <- klassement
+
+#Daarna maken we een nieuwe vector waarin we de levels een nieuwe naam geven. 
+levels(df$niveau) <- c("Laag", "Hoog", "Laag")
+
+
+par(mfrow = c(1, 2))
+
+boxplot(totale_speeltijd ~ klassement, data=df)
+
+boxplot(totale_speeltijd ~ niveau, data=df)
+
+```
 
 :::
 
