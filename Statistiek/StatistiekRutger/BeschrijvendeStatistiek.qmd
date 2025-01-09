@@ -843,6 +843,30 @@ strip_labels <- data.frame(
   )
 )
 
+annotation_upperleft <- data.frame(
+  x = c(mean1 - 2.5),
+  xend = c(mean2 + 1),
+  y = c(500),
+  yend = c(500),
+  group = "Zelfde spreiding, verschillende ligging"
+)
+
+annotation_upperright <- data.frame(
+  x = c(mean1 - 1.2*sd1),
+  xend = c(mean1 + 1.2*sd1),
+  y = c(1000),
+  yend = c(1000),
+  group = "Zelfde ligging, verschillende spreiding"
+)
+
+annotation_bottomright <- data.frame(
+  x = c(mean1 - 1.1*sd2),
+  xend = c(mean1 + 1.1*sd2),
+  y = c(500),
+  yend = c(500),
+  group = "Bottom-right"
+)
+
 # Plot basis
 base_plot <- ggplot(data, aes(x = x)) +
   geom_histogram(
@@ -850,8 +874,40 @@ base_plot <- ggplot(data, aes(x = x)) +
     fill = opvulkleur, 
     color = "black"
   ) +
+  geom_segment(
+    data = annotation_upperleft,
+    aes(x = x, xend = xend, y = y, yend = yend),
+    arrow = arrow(length = unit(0.2, "cm")), 
+    color = lijnkleur3,  
+    size = 1.2
+  ) +
+    geom_segment(
+    data = annotation_upperleft,
+    aes(x = x, xend = x, y = y - 100, yend = yend + 100),
+    color = lijnkleur3,  
+    size = 1.2
+  ) +
+    geom_segment(
+    data = annotation_upperright,
+    aes(x = x, xend = xend, y = y, yend = yend),
+    arrow = arrow(ends = "both", length = unit(0.2, "cm")), 
+    color = lijnkleur2, 
+    size = 1.2
+  ) +
+      geom_segment(
+    data = annotation_bottomright,
+    aes(x = x, xend = xend, y = y, yend = yend),
+    arrow = arrow(ends = "both", length = unit(0.2, "cm")), 
+    color = lijnkleur2, 
+    size = 1.2
+  ) +
   facet_wrap(
-    ~group, 
+    ~factor(group, c(
+        "Zelfde spreiding, verschillende ligging", 
+        "Zelfde ligging, verschillende spreiding",
+        "Bottom-left", 
+        "Bottom-right"
+      )), 
     ncol = 2, 
     scales = "free_y", 
     labeller = as_labeller(setNames(strip_labels$title, strip_labels$group))
@@ -872,46 +928,7 @@ base_plot <- ggplot(data, aes(x = x)) +
     axis.title.y = element_text(size = 12)
   )
 
-# Annotaties toevoegen
-annotations <- list(
-  # Pijl voor verschuiving (alleen linksonder)
-  annotate(
-    "segment", 
-    x = mean1, 
-    xend = mean2 + 1, 
-    y = 200, 
-    yend = 200,
-    arrow = arrow(length = unit(0.2, "cm")), 
-    color = lijnkleur3, 
-    size = 1.2
-  ),
-  # Dubbelzijdige pijlen voor spreiding (alleen rechterkolom)
-  annotate(
-    "segment", 
-    x = mean1 - sd1, 
-    xend = mean1 + sd1, 
-    y = 200, 
-    yend = 200,
-    arrow = arrow(ends = "both", length = unit(0.2, "cm")), 
-    color = lijnkleur2, 
-    size = 1
-  ),
-  annotate(
-    "segment", 
-    x = mean1 - sd2, 
-    xend = mean1 + sd2, 
-    y = 200, 
-    yend = 200,
-    arrow = arrow(ends = "both", length = unit(0.2, "cm")), 
-    color = lijnkleur2, 
-    size = 1,
-    linetype = "dashed"
-  )
-)
-
-# Combineer de basis plot met annotaties
-tidy_plot <- base_plot + annotations
-tidy_plot
+base_plot
 ```
 
 Om ligging en spreiding in getallen uit te drukken worden verschillende
@@ -2809,6 +2826,90 @@ samenvat aan de hand van vijf kengetallen plus eventuele uitbijters.
 Boxplots worden vaak gebruikt voor het verkennen en vergelijken van
 datasets. De anatomie van een boxplot is getoond in
 @fig-anatomie-boxplot; we leggen het hieronder verder uit.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "boxplot van lichaamsgewicht"
+#| label: fig-boxplot
+
+data <- NHANES[1:200,]
+data <- data[order(data$Weight),]
+quantiles <- quantile(data$Weight)
+quantiles[1] <- quantiles[1] - 1
+IQR <- quantiles[4] - quantiles[2]
+outliers <- c(quantiles[2] - 1.5*IQR,
+              quantiles[4] + 1.5*IQR)
+cut_data <- c(quantiles, outliers)
+
+ggplot(data, aes(x = "", y = Weight)) +
+  geom_boxplot(aes(x = 3), 
+               fill = "Bisque", 
+               color = opvulkleur,
+               outlier.color = "red") +
+  stat_boxplot(aes(x = 3),
+               geom = "errorbar",
+               colour = "blue",
+               width = 0.15) + 
+  geom_boxplot(aes(x = 3), 
+               fill = "Bisque", 
+               color = opvulkleur,
+               coef = 0, 
+               outlier.shape = NA) +
+  geom_jitter(aes(x = 2, 
+                  col = cut(data$Weight, cut_data))) +
+  annotate("text", 
+           y = quantiles[2], 
+           x = 3.45, 
+           label = "q1",
+           color = "darkorange") +
+  annotate("text", 
+           y = quantiles[4], 
+           x = 3.45, 
+           label = "q3",
+           color = "darkorange") +
+  annotate("text", 
+           y = quantiles[3], 
+           x = 3.75, 
+           label = "interkwartiel-
+afstand",
+           color = "darkorange") +
+  annotate("segment", 
+           y = quantiles[2] + 5, 
+           yend = quantiles[4] - 5,
+           x = 3.45, 
+           color = "darkorange") +
+  annotate("text", 
+           y = outliers, 
+           x = 3.45, 
+           label = "outliers",
+           color = "red") +
+  annotate("text", 
+           y = quantiles[3], 
+           x = 1, 
+           label = "50% van de data 
+bevindt zich in de box") +
+  annotate("text", 
+           y = mean(quantiles[1:2]), 
+           x = 1, 
+           label = "25% van de data 
+bevindt zich onder q1") +
+  annotate("text", 
+           y = mean(quantiles[4:5]), 
+           x = 1, 
+           label = "25% van de data 
+bevindt zich boven q3") +
+  labs(title = "Boxplot",
+       x = "",
+       y = "Lichaamsgewicht (kg)") +
+  theme_minimal() +
+  scale_x_continuous(breaks = NULL, limits = c(0.5, 4)) + 
+  scale_colour_manual(values = c("red", "blue", opvulkleur, 
+                                 opvulkleur, "blue", "red")) +
+  theme(legend.position = "none")
+
+```
+
 
 ::: todo-box
 Plaatje maken met anatomie van een boxplot. Vergelijkbaar met het
