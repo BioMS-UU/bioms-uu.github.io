@@ -361,7 +361,7 @@ ggplot(
     boundary = 0,
     closed = "left"
     ) +
-  labs(title = "",
+  labs(title = NULL,
     x = "Leeftijd (maanden)",
     y = "Frequentie"
   ) +
@@ -508,7 +508,7 @@ ggplot(data.frame(x = data_unif), aes(x)) +
     binwidth = 0.05, boundary = 0, fill = opvulkleur, color = "black"
   ) +
   labs(
-    title = "Uniform", # Titel
+    title = NULL, # Titel
     x = "Waarde",      # Label voor de x-as
     y = "Frequentie"   # Label voor de y-as
   ) +
@@ -618,7 +618,7 @@ ggplot(
     boundary = 0,
     closed = "left"
     ) +
-  labs(title = "Lichaamsgewicht in dataset NHANES",
+  labs(title = NULL,
     x = "Lichaamsgewicht (kg)",
     y = "Frequentie"
   ) +
@@ -687,7 +687,7 @@ cumulplot <- ggplot(NHANES, aes(x = Weight)) +
     bw = 2
   ) +
   labs(
-    title = "Cumulatieve verdeling van lichaamsgewicht",
+    title = NULL,
     x = "Lichaamsgewicht",
     y = "Cumulatieve proportie"
   ) + 
@@ -762,19 +762,9 @@ spreiding, aan de hand van histogrammen. De twee histogrammen aan de
 linkerkant zijn enkel ten opzichte van elkaar verschoven. Daarom
 verschilt hun ligging maar is hun spreiding gelijk. De twee histogrammen
 aan de rechterkant liggen ongeveer op dezelfde plek, gecentreerd op de
-waarde 0, maar in het onderste histogram zijn de waarden\
+waarde 0, maar in het onderste histogram zijn de waarden
 over een groter domein verspreid. (De piek is breder.) Daarom verschilt
 hun spreiding, maar hun ligging is gelijk.
-
-::: todo-box
-Maak een figuur met vier plaatjes van histogrammen. Vergelijkbaar met
-volgende plaatje uit mijn slides:
-
-![Ligging en spreiding in vier
-plaatjes.](figuren/ligging-spreiding-tmp.png){#fig-ligging-spreiding}
-Als voorbeeld heb ik samen met ChatGPT de volgende figuur gemaakt.
-Alleen de pijlen kloppen nog niet.
-:::
 
 ```{r}
 #| code-fold: true
@@ -791,51 +781,51 @@ if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
 set.seed(123)
 
 # Parameters
-samplesize <- 10^4  # Aantal punten per histogram
-mean1 <- 0          # Gemiddelde voor de eerste verdeling
-mean2 <- mean1 + 1.5  # Gemiddelde voor de verschoven verdeling
-sd1 <- 1            # Standaarddeviatie voor de eerste verdeling
-sd2 <- sd1 * 2      # Verdubbelde standaarddeviatie
+steekproefgrootte <- 10^4  # Aantal punten per histogram
+gemiddelde1 <- 0           # Gemiddelde voor de eerste verdeling
+gemiddelde2 <- gemiddelde1 + 1.5  # Gemiddelde voor de verschoven verdeling
+standaardafwijking1 <- 1   # Standaardafwijking voor de eerste verdeling
+standaardafwijking2 <- standaardafwijking1 * 2  # Verdubbelde standaardafwijking
 
 # Data genereren
 data <- data.frame(
-  x = c(
-    rnorm(samplesize, mean1 - 2.5, sd1),  # Top-left: shifted left
-    rnorm(samplesize, mean1, sd1),        # Top-right
-    rnorm(samplesize, mean2 + 1, sd1),    # Bottom-left: shifted right
-    rnorm(samplesize, mean1, sd2)         # Bottom-right: larger spread
+  waarden = c(
+    rnorm(steekproefgrootte, gemiddelde1 - 2.5, standaardafwijking1),  # Linksboven: verschoven naar links
+    rnorm(steekproefgrootte, gemiddelde1, standaardafwijking1),        # Rechtsboven
+    rnorm(steekproefgrootte, gemiddelde2 + 1, standaardafwijking1),    # Linksonder: verschoven naar rechts
+    rnorm(steekproefgrootte, gemiddelde1, standaardafwijking2)         # Rechtsonder: grotere spreiding
   ),
-  group = factor(
+  groep = factor(
     rep(
       c(
         "Zelfde spreiding, verschillende ligging", 
         "Zelfde ligging, verschillende spreiding",
-        "Bottom-left", 
-        "Bottom-right"
+        "Linksonder", 
+        "Rechtsonder"
       ), 
-      each = samplesize
+      each = steekproefgrootte
     ),
     levels = c(
       "Zelfde spreiding, verschillende ligging", 
       "Zelfde ligging, verschillende spreiding", 
-      "Bottom-left", 
-      "Bottom-right"
+      "Linksonder", 
+      "Rechtsonder"
     )
   )
 )
 
-# Panel titels aanpassen
-strip_labels <- data.frame(
-  group = factor(
+# Paneltitels aanpassen
+paneel_titels <- data.frame(
+  groep = factor(
     c(
       "Zelfde spreiding, verschillende ligging", 
       "Zelfde ligging, verschillende spreiding", 
-      "Bottom-left", 
-      "Bottom-right"
+      "Linksonder", 
+      "Rechtsonder"
     ),
-    levels = levels(data$group)
+    levels = levels(data$groep)
   ),
-  title = c(
+  titel = c(
     "Zelfde spreiding, verschillende ligging", 
     "Zelfde ligging, verschillende spreiding", 
     "", 
@@ -843,74 +833,76 @@ strip_labels <- data.frame(
   )
 )
 
-annotation_upperleft <- data.frame(
-  x = c(mean1 - 2.5),
-  xend = c(mean2 + 1),
+annotatie_linksboven <- data.frame(
+  x = c(gemiddelde1 - 2.5),
+  xend = c(gemiddelde2 + 1),
   y = c(500),
   yend = c(500),
-  group = "Zelfde spreiding, verschillende ligging"
+  groep = "Zelfde spreiding, verschillende ligging"
 )
 
-annotation_upperright <- data.frame(
-  x = c(mean1 - 1.2*sd1),
-  xend = c(mean1 + 1.2*sd1),
+annotatie_rechtsboven <- data.frame(
+  x = c(gemiddelde1 - 1.2 * standaardafwijking1),
+  xend = c(gemiddelde1 + 1.2 * standaardafwijking1),
   y = c(1000),
   yend = c(1000),
-  group = "Zelfde ligging, verschillende spreiding"
+  groep = "Zelfde ligging, verschillende spreiding"
 )
 
-annotation_bottomright <- data.frame(
-  x = c(mean1 - 1.1*sd2),
-  xend = c(mean1 + 1.1*sd2),
+annotatie_rechtsonder <- data.frame(
+  x = c(gemiddelde1 - 1.1 * standaardafwijking2),
+  xend = c(gemiddelde1 + 1.1 * standaardafwijking2),
   y = c(500),
   yend = c(500),
-  group = "Bottom-right"
+  groep = "Rechtsonder"
 )
 
-# Plot basis
-base_plot <- ggplot(data, aes(x = x)) +
+# Basisplot
+basis_plot <- ggplot(data, aes(x = waarden)) +
   geom_histogram(
     binwidth = 0.5, 
     fill = opvulkleur, 
     color = "black"
   ) +
   geom_segment(
-    data = annotation_upperleft,
+    data = annotatie_linksboven,
     aes(x = x, xend = xend, y = y, yend = yend),
-    arrow = arrow(length = unit(0.2, "cm")), 
+    arrow = arrow(length = unit(0.3, "cm")), 
     color = lijnkleur3,  
     size = 1.2
   ) +
-    geom_segment(
-    data = annotation_upperleft,
+  geom_segment(
+    data = annotatie_linksboven,
     aes(x = x, xend = x, y = y - 100, yend = yend + 100),
     color = lijnkleur3,  
     size = 1.2
   ) +
-    geom_segment(
-    data = annotation_upperright,
+  geom_segment(
+    data = annotatie_rechtsboven,
     aes(x = x, xend = xend, y = y, yend = yend),
-    arrow = arrow(ends = "both", length = unit(0.2, "cm")), 
-    color = lijnkleur2, 
+    arrow = arrow(ends = "both", length = unit(0.3, "cm")), 
+    color = lijnkleur1, 
     size = 1.2
   ) +
-      geom_segment(
-    data = annotation_bottomright,
+  geom_segment(
+    data = annotatie_rechtsonder,
     aes(x = x, xend = xend, y = y, yend = yend),
-    arrow = arrow(ends = "both", length = unit(0.2, "cm")), 
-    color = lijnkleur2, 
+    arrow = arrow(ends = "both", length = unit(0.3, "cm")),
+    color = lijnkleur1, 
     size = 1.2
   ) +
   facet_wrap(
-    ~factor(group, c(
+    ~factor(
+      groep, c(
         "Zelfde spreiding, verschillende ligging", 
         "Zelfde ligging, verschillende spreiding",
-        "Bottom-left", 
-        "Bottom-right"
-      )), 
+        "Linksonder", 
+        "Rechtsonder"
+      )
+    ), 
     ncol = 2, 
     scales = "free_y", 
-    labeller = as_labeller(setNames(strip_labels$title, strip_labels$group))
+    labeller = as_labeller(setNames(paneel_titels$titel, paneel_titels$groep))
   ) +
   scale_x_continuous(
     limits = c(-6, 6), 
@@ -928,7 +920,7 @@ base_plot <- ggplot(data, aes(x = x)) +
     axis.title.y = element_text(size = 12)
   )
 
-base_plot
+basis_plot
 ```
 
 Om ligging en spreiding in getallen uit te drukken worden verschillende
@@ -1065,7 +1057,7 @@ cumulplot_median <- cumulplot +
   ) +
   # Labels voor titel en assen
   labs(
-    title = "Cumulatieve verdeling van lichaamsgewicht",
+    title = NULL,
     x = "Lichaamsgewicht",
     y = "Cumulatieve proportie"
   )
@@ -1426,7 +1418,7 @@ spreidingsmaten te bespreken.
 ### Het bereik
 
 We beginnen bij het **bereik**. Het **bereik** van een rij getallen is
-eenvoudigweg het interval dat begint bij het kleinste getal en eindigt
+simpelweg het interval dat begint bij het kleinste getal en eindigt
 met het grootste getal. Dus, het bereik van de tentamencijfers uit het
 voorbeeld van zojuist is het interval $[1, 9]$.
 
@@ -1584,7 +1576,7 @@ ggplot(data, aes(x = Weight)) +
     fontface = "bold"
   ) +
   labs(
-    title = "",
+    title = NULL,
     x = "Lichaamsgewicht",
     y = "Dichtheid"
   ) +
@@ -1637,7 +1629,7 @@ library(grid) # voor de pijl
 cumulplot <- ggplot(NHANES, aes(x = Weight)) +
   stat_ecdf(geom = "step", color = opvulkleur, size = 1, bw = 2) +
   labs(
-    title = "Cumulatieve verdeling van lichaamsgewicht",
+    title = NULL,
     x = "Lichaamsgewicht",
     y = "Cumulatieve proportie"
     ) + theme_minimal()
@@ -1720,7 +1712,7 @@ cumulplot +
     minor_breaks = NULL
   ) +
   labs(
-    title = "Cumulative verdeling en drie kwartielen",
+    title = NULL,
     x = "Lichaamsgewicht",
     y = "Cumulatieve proportie"
     ) 
@@ -1897,7 +1889,7 @@ ggplot(data, aes(x = Weight)) +
     lineend = "round"
   ) +
   labs(
-    title = "Cumulatieve verdeling en drie kwartielen",
+    title = NULL,
     x = "Lichaamsgewicht",
     y = "Cumulatieve proportie",
     fill = "Kwartielen"
@@ -2054,7 +2046,7 @@ ggplot(NHANES, aes(x = Pulse)) +
   
   # Voeg een horizontale stippenlijn toe op de hoogte van de pijl
   geom_hline(
-    yintercept = 800, 
+    yintercept = 850, 
     linetype = "dotted", 
     color = "black", 
     size = 0.8
@@ -2065,11 +2057,11 @@ ggplot(NHANES, aes(x = Pulse)) +
     aes(
       x = mean_pulse, 
       xend = mean_pulse + sd_pulse, 
-      y = 800, 
-      yend = 800
+      y = 850, 
+      yend = 850
     ),
     arrow = arrow(
-      length = unit(0.2, "cm"), 
+      length = unit(0.3, "cm"), 
       ends = "both"
     ), 
     color = "DarkOrchid", 
@@ -2080,7 +2072,7 @@ ggplot(NHANES, aes(x = Pulse)) +
   annotate(
     "text", 
     x = mean_pulse + sd_pulse / 2.5, 
-    y = 900, 
+    y = 950, 
     label = expression(italic(s[X])), 
     color = "DarkOrchid", 
     size = 5, 
@@ -2221,7 +2213,7 @@ ggplot(gamma_df, aes(x = value)) +
     color = "purple"
   ) +
   labs(
-    title = "",
+    title = NULL,
     x = "Waarden",
     y = "Frequentie"
   ) +
@@ -2561,7 +2553,7 @@ ggplot(
     color = "black"
     ) +
   labs(
-    title = "",
+    title = NULL,
     x = "Gezondheidsstatus",
     y = "Frequentie"
     ) +
@@ -2813,7 +2805,7 @@ belangrijke verschillen:
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
   geom_violin(fill = "Bisque", color = opvulkleur) +
-  labs(title = "Vioolplot",
+  labs(title = NULL,
        x = "",
        y = "Lichaamsgewicht (kg)") +
   theme_minimal()
@@ -2951,7 +2943,7 @@ bevindt zich boven Q3"
   ) +
   # Labels en thema
   labs(
-    title = "",
+    title = NULL,
     x = "",
     y = "Lichaamsgewicht (kg)"
   ) +
@@ -2977,7 +2969,7 @@ aspect van de verdeling van de variabele weergeven.
     Om de mediaan wordt een rechthoek getekend -- de "box". Deze
     rechthoek loopt van het eerste kwartiel (Q1, 25e percentiel) tot het
     derde kwartiel (Q3, 75e percentiel). De hoogte van de box
-    vertegenwoordigt dus de interkwartielafstand (IKA), waarin de
+    vertegenwoordigt dus de interkwartielafstand (IKA), waarbinnen de
     middelste 50% van de data zich bevindt. Hoe hoger de box, hoe groter
     de spreiding in dit centrale gebied.
 
@@ -3039,7 +3031,7 @@ individuele datapunten weer te geven, bijvoorbeeld met een
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
   geom_boxplot(fill = "Bisque", color = opvulkleur) +
-  labs(title = "",
+  labs(title = NULL,
        x = "",
        y = "Lichaamsgewicht (kg)") +
   theme_minimal()
