@@ -2830,8 +2830,8 @@ datasets. De anatomie van een boxplot is getoond in
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.cap: "boxplot van lichaamsgewicht"
-#| label: fig-boxplot
+#| fig.cap: "Anatomie van een boxplot. Links is van een steekproef uit de NHANES dataset het lichaamsgewicht geplot in een jitterplot. Daarnaast is de bijbehorende boxplot weergegeven.   "
+#| label: fig-anatomie-boxplot
 
 data <- NHANES[1:200,]
 data <- data[order(data$Weight),]
@@ -2846,10 +2846,12 @@ ggplot(data, aes(x = "", y = Weight)) +
   geom_boxplot(aes(x = 3), 
                fill = "Bisque", 
                color = opvulkleur,
+               size = 0.7,
                outlier.color = "red") +
   stat_boxplot(aes(x = 3),
                geom = "errorbar",
-               colour = "blue",
+               colour = "DarkOrchid",
+               size = 0.7,
                width = 0.15) + 
   geom_boxplot(aes(x = 3), 
                fill = "Bisque", 
@@ -2860,27 +2862,38 @@ ggplot(data, aes(x = "", y = Weight)) +
                   col = cut(data$Weight, cut_data))) +
   annotate("text", 
            y = quantiles[2], 
-           x = 3.45, 
-           label = "q1",
+           x = 3.47, 
+           label = "Q1",
            color = "darkorange") +
   annotate("text", 
            y = quantiles[4], 
-           x = 3.45, 
-           label = "q3",
+           x = 3.47, 
+           label = "Q3",
            color = "darkorange") +
   annotate("text", 
            y = quantiles[3], 
-           x = 3.75, 
+           x = 3.8, 
            label = "interkwartiel-
 afstand",
            color = "darkorange") +
+  annotate("text", 
+           y = mean(quantiles[4:5]), 
+           x = 3.45, 
+           label = "snorhaar",
+           color = "DarkOrchid") +
+  annotate("text", 
+           y = mean(quantiles[1:2]), 
+           x = 3.45, 
+           label = "snorhaar",
+           color = "DarkOrchid") +
   annotate("segment", 
            y = quantiles[2] + 5, 
            yend = quantiles[4] - 5,
-           x = 3.45, 
+           x = 3.46,
+           size = 0.7,
            color = "darkorange") +
   annotate("text", 
-           y = outliers, 
+           y = outliers + c(-3, 3), 
            x = 3.45, 
            label = "outliers",
            color = "red") +
@@ -2893,37 +2906,22 @@ bevindt zich in de box") +
            y = mean(quantiles[1:2]), 
            x = 1, 
            label = "25% van de data 
-bevindt zich onder q1") +
+bevindt zich onder Q1") +
   annotate("text", 
            y = mean(quantiles[4:5]), 
            x = 1, 
            label = "25% van de data 
-bevindt zich boven q3") +
-  labs(title = "Boxplot",
+bevindt zich boven Q3") +
+  labs(title = "",
        x = "",
        y = "Lichaamsgewicht (kg)") +
   theme_minimal() +
   scale_x_continuous(breaks = NULL, limits = c(0.5, 4)) + 
-  scale_colour_manual(values = c("red", "blue", opvulkleur, 
-                                 opvulkleur, "blue", "red")) +
+  scale_colour_manual(values = c("red", "DarkOrchid", opvulkleur, 
+                                 opvulkleur, "DarkOrchid", "red")) +
   theme(legend.position = "none")
 
 ```
-
-
-::: todo-box
-Plaatje maken met anatomie van een boxplot. Vergelijkbaar met het
-volgende plaatje, maar
-
--   geef de jitterplot meer ruimte
--   voeg een paar outliers in en wijs ze aan
--   kleur de whiskers corresponderend met de datapunten binnen de
-    whiskers
--   opvallende kleur voor outliers.
--   in het Nederlands.
-
-![Uitleg boxplot](figuren/Boxplot_quartiles.png){#fig-anatomie-boxplot}
-:::
 
 Een boxplot bestaat uit verschillende elementen die elk een specifiek
 aspect van de verdeling van de variabele weergeven.
