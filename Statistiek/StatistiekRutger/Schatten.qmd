@@ -931,7 +931,7 @@ en breder is naarmate $\sd{X} groter is.
 :::
 
 
-## BHI als de variantie van de populatie *niet* bekend is
+## BHI als de variantie van de populatie *niet* bekend is {#sec-BHI-sigma-niet-bekend}
 
 In de vorige paragraaf hebben we een 95%-BHI afgeleid
 voor de situatie waarin de populatievariantie $\sd{X}$ bekend is.
@@ -1307,9 +1307,73 @@ Bereken betrouwbaarheidsinterval van een dataset.
 
 ## Afwijkingen van het Normale Model
 
+Bij de afleiding van de formule voor het BHI
+  zijn we steeds uitgegaan van het Normale Model.
+In de praktijk is het Normale Model zelden precies van toepassen.
+Met name wijkt de verdeling van de variabele 
+  vaak af van de normale verdeling.
+Kunnen we de formules die we geleerd hebben dan niet gebruiken?
+En zo niet, wat moeten we dan doen?
 
+### De centrale limietstelling en de robuustheid van het Normale Model
 
-### Robuustheid van het Normale Model
+Als de verdeling van de variabele in de populatie niet normaal is
+  gaat de afleiding van het BHI niet precies op.
+In deze paragraaf zullen we uitleggen
+  dat de formule for het BHI dan vaak nog steeds een heel goede benadering is.
+
+Om dat te laten zien doen we weer een aantal simulaties.
+In @fig-robuust-1 is weer de verdeling van lichaamsgewicht (`Weight`)
+uit de dataset NHANES weergegeven.
+We stellen ons voor dat deze verdeling de populatie voorstelt
+van personen uit de VS, waarvan wij het gemiddelde niet weten.
+Om iets te weten te komen over het gemiddelde van die populatie
+voeren we een steekproef uit.
+@Fig-robuust-2 laat een kleine steekproef zien van $n = 3$ personen, en 
+@fig-robuust-3 een iets grotere steekproef van $n = 30$,
+getrokken uit de populatie.
+Paarse lijntjes geven het steekproefgemiddelde aan.
+Wat zegt zo'n steekproefgemiddelde over het gemiddelde van de populatie?
+
+In @sec-? hebben we dat bestudeerd door ons voor te stellen
+dat we heel vaak een steekproef trekken en telkens
+het steekproefgemiddelde uitrekenen.
+De verdeling van die steekproefgemiddelden vertelt ons
+hoe ver een steekproefgemiddelde typisch van het populatiegemiddelde afligt.
+Voor een variabele die normaal verdeeld is hadden we gezien
+  dat de verdeling van het steekproefgemiddelde ook een normale verdeling is.
+Dat feit hebben we gebruikt in de afleiding van de formule voor het BHI.
+
+De verdeling van lichaamsgewicht is echter bimodaal en bovendien scheef.
+De aannames van het Normale Model zijn dus niet van toepassing.
+Hoe zou de verdeling van het steekproefgemiddelde er in dit geval uitzien?
+
+Om dat te demonstreren
+  nemen we heel vaak een steekproef uit de NHANES dataset,
+  berekenen steeds het gemiddelde, 
+  en tekenen een histogram van de steekproefgemiddelden.
+Het resultaat voor steekproeven met $n = 3$ is weergegeven in @fig-robuust-4,
+  het resultaat voor $n = 30$ in @fig-robuust-5.
+Het resultaat is heel verrassend:
+  hoewel de populatie niet normaal verdeeld is,
+  ziet de verdeling van de steekproefgemiddelden er behoorlijk normaal uit!
+Om dat te controleren
+  is in de figuren in het paars een normale verdeling toegevoegd.
+
+::: {.todo-box}
+
+Voeg hieronder labels toe.
+
+In figuur (a) het woord "populatie", dikgedrukt,
+in de ruimte rond positie (150, 600).
+
+In figuur (b) en (c) het woord "steekproef" in de witruimte rechts van 
+het histogram. Bovendien $n = 3$ en $n = 30$, respectievelijk. De n is schuin gedrukt; dat kan met expression(italic(n)~=~3).
+
+In figuur (d) en (e) de term "verdeling steekproefgemiddelden". Bovendien weer $n = 3$ en $n = 30$, respectievelijk.
+
+:::
+
 
 ::: {#fig-robuust layout="[[1], [1,1], [1,1]]"}
 
@@ -1511,6 +1575,45 @@ Steekproeven uit een populatie die niet normaal verdeeld is. We nemen steekproev
 
 :::
 
+Waar komt die normale verdeling vandaan?
+Intuitief kun je je misschien voorstellen dat de bimodaliteit
+van de populatie niet terug te zien is in de gemiddelden van de steekproeven.
+Als de steekproef groot genoeg is, 
+  zal de steekproef typisch zowel kinderen bevatten 
+  (uit de linkerpiek van de verdeling)
+  als volwassenen (uit de rechterpiek van de verdeling).
+Het gemiddelde komt daarom meestal in het midden terecht.
+
+Wiskundig kan bovendien worden aangetoond
+  dat de verdeling van de gemiddelden
+  meer op een normale verdeling gaat lijken
+  naarmate de steekproef groter wordt.
+Dit volgt uit een wiskundige stelling 
+  die de **centrale limietstelling** heet:
+
+::: {.callout-important appearance="default" icon=false}
+
+## De centrale limietstelling 
+
+Trek onafhankelijk $n$ waarden
+  uit een kansverdeling.
+De kansverdeling van het gemiddelde $\mean{X}$ van die waarden
+  convergeert naar een normale verdeling
+  als $n \rightarrow \infty$.
+:::
+
+Een consequentie is dat de afleiding van @sec-BHI-sigma-niet-bekend 
+  bij goede benadering ook opgaat 
+  als de verdeling van de variabele in de populatie 
+  niet normaal is,
+  mits $n$ groot genoeg is.
+Precies hoe groot $n$ moet zijn hangt af
+  van in hoeverre de populatie scheef is.
+Als vuistregel kun je aannemen dat
+  bij steekproeven van $n = 30$ of meer
+  de formule voor het BHI ook van toepassing is
+  als de populatie niet normaalverdeeld is.
+  
 
 ::: {#exr-bhi-controleren}
 
