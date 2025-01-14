@@ -511,13 +511,31 @@ want we hebben net geconcludeerd dat de kans op iedere specifieke waarde
 gelijk is aan 0.
 Hoe moeten we deze kansverdeling dan interpreteren?
 
-::: {#fig-continue-kansverdeling}
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Kansenverdeling van lichaamslengtes van volwassen mannen uit de NHANES dataset."
+#| label: fig-continue-kansverdeling
+#| fig.width: 5
+#| fig.height: 4
 
-::: {.todo-box}
-[plot van een kansverdeling, belvormig.]
-:::
+# Controleer of de benodigde pakketten zijn geladen
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("tidyverse" %in% .packages())) { library(tidyverse) }
+if (!("NHANES" %in% .packages())) { library(NHANES) }
 
-:::
+# Selecteer alleen de volwassen mannen
+data_mannen <- NHANES %>%
+  filter(Age >= 18 & Gender == "male") 
+
+ggplot(data_mannen, aes(x = Height)) +
+  geom_density(color = "darkorange", linewidth = 1) +
+  labs(
+    x = "Lengte (cm)",
+    y = "Kansdichtheid"
+  ) +
+  theme_minimal()
+```
 
 Om dit te begrijpen, 
 denken we terug aan @fig-kansverdeling-twee-dobbelstenen-2,
@@ -530,11 +548,70 @@ Dit principe geldt ook voor continue variabelen.
 Hieronder, in @fig-interval, die je weer de kansverdeling van de lichaamslengte 
 van een willekeurig gekozen man.
 
-::: {#fig-interval}
-::: {.todo-box}
-[Plot van een kansverdeling met een interval gekleurd met hash-tag fig-interval.]
-:::
-:::
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Kansenverdeling van lichaamslengtes van volwassen mannen uit de NHANES dataset. De kans op een lichaamslengte tussen 178cm en 182cm wordt gegeven door het paarse gebied."
+#| label: fig-interval
+#| fig.width: 5
+#| fig.height: 4
+
+# Controleer of de benodigde pakketten zijn geladen
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("tidyverse" %in% .packages())) { library(tidyverse) }
+if (!("NHANES" %in% .packages())) { library(NHANES) }
+
+# Selecteer alleen de volwassen mannen
+data_mannen <- NHANES %>%
+  filter(Age >= 18 & Gender == "male") 
+
+# Bereken de dichtheid voor de gehele dataset
+dichtheid_data <- density(data_mannen$Height, na.rm = TRUE)
+dichtheid_df <- data.frame(
+  Lengte = dichtheid_data$x,   
+  Kansdichtheid = dichtheid_data$y 
+)
+
+# Selecteer alleen de dichtheidswaarden binnen het interval
+dichtheid_interval <- dichtheid_df %>%
+  filter(Lengte > 178 & Lengte < 182)
+
+# Plot de figuur
+ggplot(
+  data = dichtheid_df, 
+  aes(x = Lengte, y = Kansdichtheid)) +
+  geom_line(
+    color = "darkorange", 
+    linewidth = 1) +          
+  geom_area(
+    data = dichtheid_interval, 
+    aes(x = Lengte, y = Kansdichtheid),
+    fill = "darkorchid", 
+    alpha = 0.5) +
+  annotate(
+    "text", 
+    x = 178, 
+    y = -0.001, 
+    label = "178", 
+    size = 3, 
+    color = "darkorchid"
+    ) +          
+  annotate(
+    "text", 
+    x = 182, 
+    y = -0.001, 
+    label = "182", 
+    size = 3, 
+    color = "darkorchid"
+    ) +  
+  labs(
+    x = "Lengte (cm)",           
+    y = "Kansdichtheid"          
+  ) +
+  theme_minimal()
+
+```
+
 
 De kans dat een willekeurige observatie tussen
 178cm en 182cm valt, wordt gegeven door de oppervlakte onder de grafiek
