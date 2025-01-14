@@ -1291,12 +1291,152 @@ uitvoer_t.test$conf.int
 ```
 
 
-## Controleer of het Normale Model van toepassing is.
+## Afwijkingen van het Normale Model.
 
-1.    Volledig willekeurige steekproef.
-2.    Normale verdeling.
+### Robuustheid van het Normale Model
+
+::: {#fig-robuust layout-ncol=2}
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: ""
+#| label: fig-robuust-1
+#| fig.width: 3.5
+#| fig.height: 7.5
+
+# Controleer en laad benodigde pakketten
+if (!("ggplot2" %in% .packages())) { 
+    library(ggplot2) 
+}
+if (!("NHANES" %in% .packages())) { 
+    library(NHANES) 
+}
+if (!("patchwork" %in% .packages())) { 
+    library(patchwork) 
+}
+
+# Functie om een histogram te maken
+maak_histogram <- function(data, xvariabele, x_label, 
+    binbreedte = 5, x_bereik = c(0, 200), kleur = "darkorange", 
+    alpha = 0.7) {
+    
+    ggplot(data, aes_string(x = xvariabele)) +
+        geom_histogram(fill = kleur, alpha = alpha, 
+            binwidth = binbreedte, boundary = 0, color = "black") +
+        labs(x = x_label, y = "Frequentie") +
+        scale_x_continuous(
+            limits = x_bereik, 
+            breaks = seq(x_bereik[1], x_bereik[2], by = 50)  # Major ticks op 0, 50, 100, ...
+        ) +
+        theme_minimal()
+}
+
+# Functie om een verticale lijn toe te voegen
+voeg_lijn_toe <- function(plot, x_waarde, 
+    lijnkleur = "DarkOrchid", linetype = "dashed", size = 1) {
+    
+    plot + geom_vline(aes(xintercept = x_waarde), 
+        color = lijnkleur, linetype = linetype, size = size)
+}
+
+# Functie om steekproef-histogram te maken
+maak_steekproef_histogram <- function(data, xvariabele, 
+    steekproefgrootte, x_label, binbreedte = 5, x_bereik = c(0, 200), 
+    kleur = "darkorange", alpha = 0.7) {
+    
+    # Neem een steekproef
+    steekproef <- sample(data[[xvariabele]], 
+        size = steekproefgrootte, replace = TRUE)
+    steekproefgemiddelde <- mean(steekproef)
+    
+    # Maak een histogram van de steekproef
+    plot <- maak_histogram(data.frame(steekproef), "steekproef", 
+        x_label, binbreedte, x_bereik, kleur, alpha)
+    
+    # Voeg een lijn toe voor het steekproefgemiddelde
+    voeg_lijn_toe(plot, steekproefgemiddelde, 
+        lijnkleur = "DarkOrchid")
+}
+
+# Functie om histogram van steekproefgemiddelden te maken
+maak_gemiddelden_histogram <- function(data, xvariabele, 
+    steekproefgrootte, n_steekproeven, x_label, 
+    binbreedte = 5, x_bereik = c(0, 200), kleur = "darkorange", 
+    alpha = 0.7) {
+    
+    # Bereken steekproefgemiddelden
+    steekproefgemiddelden <- replicate(n_steekproeven, 
+        mean(sample(data[[xvariabele]], 
+            size = steekproefgrootte, replace = TRUE)))
+    
+    # Maak een histogram van de steekproefgemiddelden
+    maak_histogram(data.frame(steekproefgemiddelden), 
+        "steekproefgemiddelden", x_label, binbreedte, 
+        x_bereik, kleur, alpha)
+}
+
+# Parameters
+steekproefgrootte <- 4  # Grootte van de steekproef
+n_steekproeven <- 5000    # Aantal steekproeven
+x_label_boven_midden <- "Lichaamsgewicht (kg)"  # Label voor boven- en middenfiguur
+x_label_onder <- "Steekproefgemiddelde van Lichaamsgewicht (kg)"  # Label voor onderfiguur
+binbreedte <- 5          # Binbreedte voor alle histogrammen
+x_bereik <- c(0, 200)    # Bereik van de x-as
+
+# Data
+data <- NHANES
+
+# Maak de drie histogrammen
+boven_plot <- maak_histogram(data, "Weight", x_label_boven_midden, 
+    binbreedte, x_bereik)
+midden_plot <- maak_steekproef_histogram(data, "Weight", 
+    steekproefgrootte, x_label_boven_midden, binbreedte, x_bereik)
+onder_plot <- maak_gemiddelden_histogram(data, "Weight", 
+    steekproefgrootte, n_steekproeven, x_label_onder, binbreedte, 
+    x_bereik)
+
+# Combineer de plots in één figuur
+(boven_plot / midden_plot / onder_plot)
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: ""
+#| label: fig-robuust-2
+#| fig.width: 3.5
+#| fig.height: 7.5
+
+# Parameters
+steekproefgrootte <- 30  # Grootte van de steekproef
+n_steekproeven <- 10000    # Aantal steekproeven
+binbreedte <- 5          # Binbreedte voor bovenste twee histogrammen
+binbreedte_onder <- 2
+
+# Maak de drie histogrammen
+boven_plot_b <- maak_histogram(data, "Weight", x_label_boven_midden, 
+    binbreedte, x_bereik)
+midden_plot_b <- maak_steekproef_histogram(data, "Weight", 
+    steekproefgrootte, x_label_boven_midden, binbreedte, x_bereik)
+onder_plot_b <- maak_gemiddelden_histogram(data, "Weight", 
+    steekproefgrootte, n_steekproeven, x_label_onder, binbreedte_onder, 
+    x_bereik)
+
+# Combineer de plots in één figuur
+(boven_plot_b / midden_plot_b / onder_plot_b)
+
+```
+
+:::
+
+### Afwijkingen van de normale verdeling herkennen
+
+### (On)afhankelijkheid van waarnemingen
 
 ### Wat als het statistische model niet van toepassing is? {#sec-aannames}
+
+- 
 
 ## Samenvatting
 
