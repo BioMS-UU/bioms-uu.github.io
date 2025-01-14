@@ -248,7 +248,7 @@ In deze cursus zullen we veel gebruik maken van
 het volgende model, 
 dat we het Normale Model zullen noemen.
 
-::: {.callout-important appearance=\sd{X}}
+::: {.callout-important appearance="default" icon=false}
 
 ## Definitie: Het Normale Model voor steekproeven.
 
@@ -273,7 +273,7 @@ Methoden die op dit statistisch model gebaseerd zijn
 geven in die situaties geen betrouwbare resultaten.
 We komen hier in @sec-aannames op terug.
 
-## Het Normale Model is ook geschkt voor herhaalde experimenten met meetfouten
+## Het Normale Model is ook geschikt voor herhaalde experimenten met meetfouten
 
 Een andere situatie die binnen de biologie veel voorkomt
 is dat we een bepaalde grootheid proberen te meten
@@ -1275,10 +1275,7 @@ Maar zelfs dan moesten we van R gebruik maken
 om de kritieke waarde op te zoeken.
 In de praktijk is het dus veel gemakkelijker en betrouwbaarder
 om de hele berekening in R uit te voeren.
-
-
-
-
+Het volgende blokje code laat zien hoe gemakkelijk dat is:
 ```{r}
 # creeer een vector met de gewichten (in g)
 gewichten <- c(112, 125, 119, 89, 102)
@@ -1289,9 +1286,28 @@ uitvoer_t.test <- t.test(gewichten)
 # selecteer uit de resultaten het 95%-BHI
 uitvoer_t.test$conf.int
 ```
+Je maakt gebruik van de functie `t.test()`
+die we in de volgende hoofdstukken nog vaker gaan terugzien.
+Deze functie berekent allerlei statistieken,
+waaronder het BHI.
+We slaan eerst de uitvoer van `t.text()` op in een variabele.
+Vervolgens vragen we uit deze uitvoer het betrouwbaarheidsinterval op.
+Als het goed is, komt de uitvoer precies overeen met de getallen
+die in @exm-BHI berekend hadden. Klopt dat? 
+
+::: {.todo-box}
+::: {#exr-oefenen-BHI-r}
+
+## Berekenen van betrouwbaarheidsintervalen met R
+
+Bereken betrouwbaarheidsinterval van een dataset.
+
+:::
+:::
+
+## Afwijkingen van het Normale Model
 
 
-## Afwijkingen van het Normale Model.
 
 ### Robuustheid van het Normale Model
 
@@ -1350,7 +1366,7 @@ maak_histogram <- function(
         fun = function(x) {
           schaal * dnorm(x, mean = gemiddelde, sd = standaarddev)
         },
-        color = "blue", size = 1
+        color = "DarkOrchid", size = 1
       )
   }
   
@@ -1393,7 +1409,7 @@ maak_gemiddelden_histogram <- function(data, xvariabele,
     n_steekproeven,
     mean(
       sample(
-        data[[xvariabele]], size = steekproefgrootte, replace = TRUE
+        data[[xvariabele]], size = steekproefgrootte, replace = FALSE
       )
     )
   )
@@ -1506,24 +1522,50 @@ zelfs als de populatie dat niet is,
 mits de steekproef niet al te klein is.
 Dat suggereert dat de formule voor het BHI
 gebaseerd op het Normale Model
+bij $n = 30$
 ook goed zou moeten werken
-zolang de steekproefgrootte niet heel klein is.
+voor de variabele lichaamsgewicht (`Weight`)
+uit de NHANES dataset.
 
+Dat kunnen we met simulaties controleren!
+
+  a. Maak een nieuw script in R. Laad daarin de library NHANES:
+```{r}
+#| eval: false
+library("NHANES")
+```
+  b. Voor sommige personen in de dataset mist het gewicht.  In dat geval is `NA` ingevuld. Die regels halen we weg:
+```{r}
+#| eval: false
+data <- data[!is.na(data$Weight), ]
+```
+  c. Voeg een regel toe die het gemiddelde van de populatie berekent.
+  d. Voeg een regel toe waarmee je een steekproef neemt uit de populatie:
+```{r}
+#| eval: false
+
+steekproefgrootte <- 30
+sample(
+    data$Weight, size = steekproefgrootte
+  )
+```
+  e. Bereken van die steekproef het BHI, zoals je dat hierboven geleerd hebt, met de functie `t.test()`. Ligt het ware populatiegemiddelde in het berekende BHI? Als de formule van het Normale Model werkt, zou dat in 95% van de gevallen zo moeten zijn. Voer de code een paar keer uit om te zien of dat ongeveer kan kloppen.
+  f. Om het BHI goed te controleren, willen we de code heel vaak uitvoeren en tellen hoe vaak het populatiegemiddelde in het interval ligt. Het script hieronder doet dat. Kopieer het en voer het uit op je laptop. Lijkt de formule voor het BHI goed te werken?
 ```{r}
 #| code-fold: true
-#| warning: false
+#| eval: false
 
 library("NHANES")
 
 # Parameters
-aantal_steekproeven <- 10000  # Aantal steekproeven
+aantal_steekproeven <- 50000  # Aantal steekproeven
 steekproefgrootte <- 30        # Grootte van elke steekproef
 
 # Populatiegegevens (filter op NA's)
 data <- NHANES
 data <- data[!is.na(data$Weight), ]
+
 populatiegemiddelde <- mean(data$Weight)
-print(populatiegemiddelde)
 
 # Functie om te controleren of het populatiegemiddelde in het betrouwbaarheidsinterval valt
 controleer_bhi <- function(
@@ -1537,23 +1579,22 @@ controleer_bhi <- function(
 
 # Simuleer steekproeven
 resultaten <- logical(aantal_steekproeven)
-set.seed(42)  # Voor reproduceerbaarheid
 
 for (i in seq_len(aantal_steekproeven)) {
   steekproef <- sample(
-    data$Weight, size = steekproefgrootte, replace = TRUE
+    data$Weight, size = steekproefgrootte, replace = FALSE
   )
   resultaten[i] <- controleer_bhi(steekproef, populatiegemiddelde)
 }
 
-# Bereken en print proportie
-proportie_binnen <- mean(resultaten)
+# Bereken en print percentage
 cat(
-  "Proportie waarbij populatiegemiddelde binnen het BHI valt:", 
-  proportie_binnen, "\n"
+  "Percentage waarbij populatiegemiddelde binnen het BHI valt:", 
+  mean(resultaten)*100, "%\n"
 )
 ```
 
+  g. Bij kleine steekproeven verwachten we dat het BHI zou kunnen afwijken. Voer het script opnieuw uit, maar dan met steekproeven van grootte 4. Wat concludeer je?
 :::
 
 
