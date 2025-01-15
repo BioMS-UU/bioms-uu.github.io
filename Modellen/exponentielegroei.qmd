@@ -1,5 +1,4 @@
 {{< include ../_macros.tex >}}
-
 {{< include ../print_friendly.html >}}
 
 # Exponentiële groei {#sec-exp}
@@ -10,7 +9,7 @@ In dit eerste hoofdstuk gaan we een belangrijk concept uit de biologie beter ler
 
 -   Aantonen wanneer groei exponentiëel is
 -   Uitleggen dat snelle groei niet altijd exponentiële groei is
--   Uitleggen wat dichtheidsafhankelijkheid (*density dependence*) is, en hoe dit resulteert in een draagvermogen (*carrying capacity*)
+-   Uitleggen wat dichtheidsafhankelijkheid (*density dependence*) is, en hoe dit resulteert in een maximaal draagvermogen (*carrying capacity*) van een (eco)systeem of populatie 
 
 ![Afbeelding gegenereerd met ChatGPT4-o](./figuren/knijnen.png){fig-align="center" width="60%"}
 
@@ -20,7 +19,7 @@ In het [introducerende hoofdstuk](#sec-tbintro) hebben we besproken dat alle mod
 
 ### De mythe van de ontdekking van het schaakspel
 
-De mythe van de ontdekking van het schaakspel is een beroemde legende uit India. Volgens het verhaal wilde een koning de uitvinder van het schaakspel belonen. In schijnbare bescheidenheid vroeg de uitvinder om rijst: één korrel op het eerste veld van het schaakbord, twee op het tweede, vier op het derde, en zo verder, telkens verdubbelend op elk van de 64 velden. De koning stemde toe, zich niet realiserend hoeveel rijst hij zojuist had beloofd. Tegen de tijd dat het 64e veld bereikt was, had de koning niet genoeg rijst in zijn hele koninkrijk om aan de vraag te voldoen. Het totaal aantal korrels rijst komt uit op:
+De mythe van de ontdekking van het schaakspel is een beroemde legende uit India. Volgens het verhaal wilde een koning de uitvinder van het schaakspel belonen. In schijnbare bescheidenheid vroeg de uitvinder om rijst: één korrel op het eerste veld van het schaakbord, twee op het tweede, vier op het derde, en zo verder, telkens verdubbelend tot het 64e veld is bereikt. De koning stemde toe, zich niet realiserend hoeveel rijst hij zojuist had beloofd. Tegen de tijd dat het 64e veld bereikt was, had de koning niet genoeg rijst in zijn hele koninkrijk om aan de vraag te voldoen. Het totaal aantal korrels rijst komt uit op:
 
 $$
 1 + 2 + 4 + · · · + 2^{63} = 2^{64} − 1 = 18.446.744.073.709.551.615
@@ -40,19 +39,19 @@ Deze legende van de ontdekking van het schaakspel illustreert de snelheids waarm
 
 ## Verdubellingen modelleren
 
-De vergissing van de koning was dat hij (zoals veel mensen) niet in kon zien hoe snel verdubbelingen toenemen. We kunnen deze aan de hand van deze mythe de volgende variabelen, parameters, en aannames formuleren:
+De vergissing van de koning was dat hij (zoals veel mensen) niet in kon zien hoe snel verdubbelingen toenemen. We kunnen aan de hand van deze mythe de volgende variabelen, parameters, en aannames formuleren:
 
 -   Variabele: aantal rijstkorrels, $𝑅$
 -   Parameters: vermenigvuldigingswaarde ($r = 2$) en aantal hokjes op een schaakbord ($n=64$)
 -   Aannames: teveel om te benoemen, maar één is in ieder geval dat de rijst ook daadwerkelijk op het bord past!
 
-Naast deze drie basisingrediënten, is het natuurlijk ook belangrijk om te bepalen wat de hoeveelheid rijst is waar we mee beginnen (hier $R(0) = 1$). Dit wordt in de model-wereld de **initiële conditie** (*initial condition*) genoemd. Vanaf daar gaan we verder rekenen: op het tweede vakje liggen $R(1) = R(0) \cdot 2$ rijstkorrels, op het derde vakje $R(2) = R(0) \cdot 2 \cdot 2$ korrels, *etc.* Het aantal korrels op het 64e vakje, wordt gegeven door 63 verdubbelingen (want let op: het eerste vakje was al bezet!). Dit kunnen we omschrijven met de volgende vergelijking:
+Naast deze drie basisingrediënten, is het natuurlijk ook belangrijk om te bepalen wat de hoeveelheid rijst is waar we mee beginnen (hier $R(0) = 1$). Dit wordt in de model-wereld de **initiële conditie** (*initial condition*) genoemd, oftewel de start waarde van de variabele(n). Vanaf daar gaan we verder rekenen: op het tweede vakje liggen $R(1) = R(0) \cdot 2$ rijstkorrels, op het derde vakje $R(2) = R(0) \cdot 2 \cdot 2$ korrels, *etc.* Het aantal korrels op het 64e vakje, wordt gegeven door 63 verdubbelingen (want let op: het eerste vakje was al bezet!). Dit kunnen we omschrijven met de volgende vergelijking:
 
 $$
 R(63) = R(0) \cdot 2^{63}
 $$ {#eq-rijst}
 
-Vergelijking @eq-rijst geeft het aantal korrels op het 64e vakje. Dat is dus nog niet het *totaal* aantal korrels. Het totaal wordt gegeven door $R(0) + R(1) + R(2) + \cdots + R(63)$. Deze som is een beetje te lang om volledig op te schrijven, maar we weten dat elke stap de volgende **vergelijking** wordt toegepast:
+@eq-rijst geeft het aantal korrels op het 64e vakje. Dat is dus nog niet het *totaal* aantal korrels. Het totaal wordt gegeven door $R(0) + R(1) + R(2) + \cdots + R(63)$. Deze som is een beetje te lang om volledig op te schrijven, maar we weten dat elke stap de volgende **vergelijking** wordt toegepast:
 
 $$
 R(t+1) = 2\cdot R(t) 
@@ -118,9 +117,9 @@ Nu we weten over de exponentiële groei van rijst, is het hoog tijd om de biolog
 
 ## Konijnen in Australië
 
-![Afbeelding gegenereerd met ChatGPT4-o](figuren/konijnen_in_australie.png){fig-align="center" width="80%"}
+![Afbeelding gegenereerd met ChatGPT4-o (November 2024)](figuren/konijnen_in_australie.png){fig-align="center" width="80%"}
 
-Thomas Austin was een Engelse kolonist in Australië, en hield van jagen. Daarom liet hij in de 19e eeuw 24 konijnen vrij in Autralië. Binnen tien jaar waren er meer dan honderd miljoen konijnen op Australië, en kon de populatie onmogelijk nog onder controle gehouden worden. Net als bij het voorbeeld van de rijstkorrels, kunnen we een simpele differentievergelijking opschrijven om het aantal konijnen in Autralië te modelleren:
+Thomas Austin was een Engelse kolonist in Australië, en hield van jagen. Daarom liet hij in de 19e eeuw 24 konijnen vrij in Autralië. Binnen tien jaar waren er meer dan honderd miljoen konijnen in Australië, en kon de populatie onmogelijk nog onder controle gehouden worden. Net als bij het voorbeeld van de rijstkorrels, kunnen we een simpele differentievergelijking opschrijven om het aantal konijnen in Autralië te modelleren:
 
 ```{=tex}
 \begin{equation}
@@ -145,20 +144,20 @@ In de opgaven gaan we rekenen aan de konijnenpopulatie in Australië en onze eer
 #| label: fig-logaritmischecurves
 #| code-fold: true
 #| eval: true
-#| fig-height: 3
-#| fig-cap: "Logistische groei."
+#| layout-ncol: 2
+#| fig-height: 4
+#| fig-width: 5
+#| fig-cap: "Logistische groei van de konijnenpopulatie met een lineaire en logaritmisch geschaalde y-as"
 #| fig-subcap: 
-#|   - "Op lineaire schaal."
-#|   - "Op logaritmische schaal."
+#|   - "(lineaire schaal)"
+#|   - "(logaritmische schaal)"
 x<- 24
 for(i in 1:70){
   x[i+1] <- x[i] * 1.2 * (1-(x[i]/10^5))
 }
-par(mfrow=c(1,2))
 plot(x, xlab="Tijd", ylab="Aantal", lwd=2.5, type='l', col='seagreen')
 plot(x, xlab="Tijd", ylab="Aantal", lwd=2.5, type='l', col='seagreen',log="y")
 ```
-:::
 
 
 ## Opgaven
@@ -169,7 +168,7 @@ plot(x, xlab="Tijd", ylab="Aantal", lwd=2.5, type='l', col='seagreen',log="y")
 
 <br>
 
-Als een biologische populatie zich ergens vestigt, kan het aanvankelijk enorm snel groeien. Voorbeelden hiervan zijn een virus dat zich verspreidt in een nieuwe gastheer, een bacteriële populatie in een voedselrijk medium, of zoals in dit hoofdstuk omschreven, de konijnenpopulatie in Australie:
+Als een biologische populatie zich ergens vestigt, kan deze aanvankelijk enorm snel groeien. Voorbeelden hiervan zijn een virus dat zich verspreidt in een nieuwe gastheer, een bacteriële populatie in een voedselrijk medium, of zoals in dit hoofdstuk omschreven, de konijnenpopulatie in Australie:
 
 $$
 N(t+1) = r \cdot N(t) 
@@ -181,33 +180,33 @@ Exponentiële groei is zo simpel dat het gemakkelijk te simuleren is met de comp
 
 # definieren van begin aantal konijnen
 N <- 24
-r <- 2
 
-# verdubbel het aantal konijnen 10 keer
+# Verdubbel het aantal konijnen 10 keer
 for (i in 1:10){
-    N <- r*N
+    N <- 2*N
 }
 ```
 
-  (a.) Pas de code aan om te bepalen hoeveel konijnen er na 20 verdubbelingen zijn. Voeg aan het eind van de code zelf een regel toe, waardoor er het volgende geprint wordt: `Het aantal konijnen na 20 tijdstappen is gelijk aan 25165824`.
+a. Pas de code aan om te bepalen hoeveel konijnen er na 20 stappen zijn. Voeg aan het eind van de code zelf een regel toe, waardoor er het volgende geprint wordt: `Het aantal konijnen na 20 stappen is gelijk aan 25165824`.
 
-Om beter bij te kunnen houden hoeveel konijnen er zijn na elke herhaling, kunnen we het aantal konijnen bijhouden in een lijst, waar we elke herhaling het aantal konijnen op dat tijdpunt aan toevoegen:
+Om beter bij te kunnen houden hoeveel konijnen er zijn na elke stap, kunnen we het aantal konijnen bijhouden in een lijst, waar we elke herhaling het aantal konijnen op dat tijdpunt aan toevoegen. Ook kunnen we de groeisnelheid in een parameter $r$ opslaan, zodat we deze gemakkelijk kunnen aanpassen:
 
 ```{r}
 #| eval: false
 # Stap 1: Stel begin-aantal konijnen in
 N <- 24
+r <- 2
 
-# Stap 2: Verdubbel het aantal konijnen 30 keer
+# Stap 2: Vermeerder het aantal konijnen 30 keer
 for (t in 1:30){
-  N[t+1] <- 2*N[t]
+  N[t+1] <- r*N[t]
 }
 
 # Stap 3: Plot het resultaat
 plot(N, type='l')
 ```
 
-  (b.)  Voer de bovenstaande code uit en bekijk het resultaat. Groeit het aantal konijnen exponentieel? Pas de R-code aan om dit te bevestigen.
+b. Voer de bovenstaande code uit en bekijk het resultaat. Groeit het aantal konijnen exponentieel? Pas de R-code aan om dit te bevestigen. Wat gebeurt er als $r<1$?
 
 Hoewel het aantal konijnen in Australië aanvankelijk exponentieel groeide, is er uiteindelijk een evenwicht bereikt bij ongeveer 500 miljoen konijnen. Kennelijk was er bij dit aantal een balans tussen geboorte en sterfte van konijnen. Laten we onze vergelijking veranderen in groei door een geboorte-term ($b$, birth) en een sterfte-term ($d$, death):
 
@@ -223,7 +222,7 @@ N <- 24
 b <- 2
 d <- 0.1
 
-# Stap 2: Verdubbel het aantal konijnen 30 keer
+# Stap 2: Verander het aantal konijnen 30 keer met de gegeven birth en death rates
 for (t in 1:30){
   N[t+1] <- b*N[t] - d*N[t]
 }
@@ -263,13 +262,12 @@ N <- 24
 b <- 2
 d <- 0.001
 
-# Stap 2: Verdubbel het aantal konijnen 30 keer
+# Stap 2: Verander het aantal konijnen 30 keer met de gegeven birth/death rates
 for (t in 1:30){
   N[t+1] <- b*N[t] - d*N[t]^2
 }
 
 # Stap 3: Plot het resultaat
-
 plot(N, type='l')
 ```
 
@@ -279,24 +277,23 @@ $$
 N = b N - d  N^2
 $$
 
-  (g.)  Los de bovenstaande vergelijking op voor $N$. Waarom stabiliseert de populatiegrootte in je Rscript dus bij $N=1000$, en niet bij $N=500$? 
+g.  Los de bovenstaande vergelijking op voor $N$. Waarom stabiliseert de populatiegrootte in je Rscript dus bij $N=1000$, en niet bij $N=500$? 
 
 Om de populaties bij 500 miljoen te laten stabiliseren, moeten we $d$ dus nog veel kleiner maken: ${1 \over 5 \cdot 10^8} = 2^{-9}$. In R schrijven we dan `d <- 2e-9`.
 
-  (h.) Gebruik de bovengenoemde death rate, en plot het aantal konijnen op een log-lineaire schaal (voeg `log="y"` toe aan de laatste regel). Groeit de populatie in de eerste jaren (bij benadering) exponentieel? Groeit de populatie in de laatste jaren exponentieel?
+h. Gebruik de bovengenoemde death rate, en plot het aantal konijnen op een log-lineaire schaal (voeg `log="y"` toe aan de laatste regel). Groeit de populatie in de eerste jaren (bij benadering) exponentieel? Groeit de populatie in de laatste jaren exponentieel?
 
-  (i.) Neem aan dat elke tijdstap 1 jaar is. Hoeveel konijnen zijn er in je nieuwe model na 10 jaar? (let op: `N[1]` is tijdstap 0, niet tijdstap 1). Wat is er vreemd aan deze hoeveelheid? 
+i. Neem aan dat elke tijdstap 1 jaar is. Hoeveel konijnen zijn er in je nieuwe model na 10 jaar? (let op: `N[1]` is tijdstap 0, niet tijdstap 1). Wat is er vreemd aan deze hoeveelheid? 
 
-  (j.) De konijnenpopulatie bereikte naar schatting binnen 10 jaar een populatiegrootte van meer dan honderd miljoen. Als we dit vergelijken met onze eigen resultaten uit de bovenstaande vraag, groeit onze populatie dus te langzaam. Misschien kunnen we de birthrate ($b$) verhogen zodat ons model overeenkomt met de data. Neem aan dat $b=3$. Gaat de konijnenpopulatie naar een evenwicht? 
-  (k.) Heb je met dit keer genoeg konijnen binnen 10 jaar om het scenario in Australië te evenaren? 
-
-  (l.) Met een birthrate van $b=3.7$ komen we aardig in de buurt van de geobserveerde groeisnelheid. Wat gebeurt er als je deze waarde gebruikt?
+j. De konijnenpopulatie bereikte naar schatting binnen 10 jaar een populatiegrootte van meer dan honderd miljoen. Als we dit vergelijken met onze eigen resultaten uit de bovenstaande vraag, groeit onze populatie dus te langzaam. Misschien kunnen we de birthrate ($b$) verhogen zodat ons model overeenkomt met de data. Neem aan dat $b=3$. Gaat de konijnenpopulatie naar een evenwicht? 
+k.  Heb je dit keer genoeg konijnen binnen 10 jaar om het scenario in Australië te evenaren?
+l.  Met een birthrate van $b=3.7$ komen we aardig in de buurt van de geobserveerde groeisnelheid tijdens de eerste jaren in Australië. Wat gebeurt er als je deze waarde gebruikt?
 :::
 
 ::: {.Rexr #exr-rabbits-in-space}
 ## Miniatuur Australië 
 
-![](figuren/rabbits_in_australia.png){#fig-rabbits-sim}
+![De regels van een simpele computersimulatie voor de verspreiding van konijnen in Australië](figuren/rabbits_in_australia.png){#fig-rabbits-sim}
 
 <br> 
 
@@ -306,7 +303,7 @@ Laten we de konijnenpopulatie uit de vorige opgave ook in een ander type model b
 
   a. Lees de bovenstaande modelomschrijving zorgvuldig door. Verwacht je exponentiële groei? Waarom wel/niet? 
 
-  b. Verwacht je dat er een draagvlak (*carrying capacity*) zal zijn?
+  b. Verwacht je dat er een draagvermogen (*carrying capacity*) zal zijn?
 
   c. Een interactieve versie van deze simulatie zie je hieronder. Start de simulatie en bekijk de grafieken. Had je de vorige vragen juist beantwoord? 
   
@@ -323,7 +320,7 @@ Laten we de konijnenpopulatie uit de vorige opgave ook in een ander type model b
 
   d. De populatie groeit in het begin erg snel: 13, 100, 292, 619, 1081, 1695, 2458, 3291. Bepaal met R of deze toename exponentieel is.
 
-  e. De simulatie bereikt een draagvermogen van ongeveer 8000 konijnen, wat veel minder is dan honderden miljoenen. We zouden een veel groter Australië kunnen simuleren, maar dat maakt een dergelijke computer-simulatie erg langzaam. We kunnen ook definiëren dat elk hokje niet 1 konijn is, maar een lokale populatie konijnen. Wat zou dit betekenen voor de interpretatie van de geboortekans en de sterftekans? 
+  e. De simulatie bereikt een draagvermogen van ongeveer 8000 konijnen, wat veel minder is dan honderden miljoenen. We zouden een veel groter Australië kunnen simuleren, maar dat maakt een dergelijke computer-simulatie erg langzaam. We kunnen ook definiëren dat elk hokje niet 1 konijn is, maar een lokale populatie konijnen. Wat zou dit betekenen voor de interpretatie van de geboorte- en de sterftekans? 
 
 :::
 
@@ -332,8 +329,8 @@ Laten we de konijnenpopulatie uit de vorige opgave ook in een ander type model b
 
 | Nederlands              | Engels                    | Beschrijving |
 |------------------|--------------------|-----------------------------------|
-| Initiële conditie       | Initial condition         | De begin-toestand van het model. In simpele wiskundige modellen is dit vaak een aantal (zoals de begin-hoeveelheid rijst in dit hoofdstuk). Bij andere modellen (uit latere hoofdstukken) kan de begin-toestand kan ook een kleur of een patroon zijn. |
+| Initiële conditie       | Initial condition         | De begin-toestand van het model. In simpele wiskundige modellen is dit vaak een aantal (zoals de begin-hoeveelheid rijst in dit hoofdstuk). Bij andere modellen (uit latere hoofdstukken) kan de begin-toestand ook een kleur of een patroon zijn. |
 | Differentievergelijking | Difference equation / Map | Een wiskundige formule die de relatie beschrijft tussen opeenvolgende waarden van een variabele in **discrete** tijdstappen.                                                                                                                            |
-| Exponentiële groei      | Exponential growth        | Groei waarbij het toenamingspercentage constant blijft.                                                                                                                                                                                                 |
-| Logaritmische groei     | Logarithmic growth        | Groei die exponentiëel begint, maar wat uiteindelijk een evenwicht bereikt.                                                                                                                                                                            |
+| Exponentiële groei      | Exponential growth        | Groei waarbij het percentage van toename constant blijft.                                                                                                      |
+| Logaritmische groei     | Logarithmic growth        | Groei die exponentiëel begint, maar waarbij het (eco)systeem of de populatie uiteindelijk een evenwicht bereikt.                                                                                                                                                                            |
 | Draagvermogen           | Carrying capacity         | Het maximale aantal individuen (of de maximale concentratie) dat een systeem in evenwicht kan ondersteunen.                                                                                                                                             |

@@ -1,26 +1,25 @@
-::: {.content-visible when-format="html"}
 {{< include ../_macros.tex >}}
-:::
+{{< include ../print_friendly.html >}}
 
-# Complexe ODEs in R {#sec-grind .unnumbered}
+# ODEs modelleren in R {#sec-grind .unnumbered}
 
 In @sec-meerdere hebben we een heel beroemd model uit de biologie geanalyseerd: het *Lotka-Volterra predator-prooi model*. Dit model gaat natuurlijk niet specifiek over konijnen en vossen, maar zou op allerlei systemen toegepast kunnen worden: bacteriofagen die bacteriën infecteren, protozoa die bacteriën eten, lieveheersbeestjes die bladluizen eten, vleermuizen die motjes eten, *etc.* Naast het predator-prooi model bestaat er ook het *Lotka-Volterra competitie model* (waar we in het volgende hoofdstuk naar gaan kijken). Zodoende is het Lotka-Volterra model uitgegroeid tot één van de meest veelzijdige modellen in de biologie, waarmee voorspellingen gedaan kunnen worden over welke soorten wel/niet kunnen samenleven. 
 
-We hebben gezien hoe met behulp van faseruimtes het best eenvoudig kan zijn om inzicht in een biologisch proces te vergaten. Maar de eenvoud van deze eerdere analyses is deels te verklaren door de eenvoud van het model dat we hebben gebruikt. Hoe meer interacties we willen begrijpen, hoe moeilijker het zal worden om met pen en papier te werk te gaan. Daarom gaan we leren om ODEs door te rekenen met het Rscript `Grind.R`, waarmee je eenvoudig faseruimtes en grafiekjes door de tijd mee kan produceren. 
+We hebben gezien hoe met behulp van faseruimtes het best eenvoudig kan zijn om inzicht in een biologisch proces te vergaten. Maar de eenvoud van deze eerdere analyses is deels te verklaren door de eenvoud van het model dat we hebben gebruikt. Hoe meer interacties we willen begrijpen, hoe moeilijker het zal worden om met pen en papier te werk te gaan. Daarom gaan we leren om ODEs door te rekenen met het Rscript `Grind.R`, waarmee je eenvoudig faseruimtes en grafiekjes van de dynamica van variabelen kan plotten. 
 
-![Een faseruimte (links) en oplossing (rechts) gegenereerd met het Rscript 'Grind.R'. De zwarte lijnen links tonen trajectories voor verschillende intiële condities. De oplossing (rechts) correspondeert met een mogelijke trajectorie als functie van tijd. ](figuren/odes_grind.png){fig-align="center" width="90%"}
+![Een faseruimte (links) en oplossing (rechts) gegenereerd met het Rscript 'Grind.R'. De zwarte lijnen links tonen trajectories (de dynamica vanaf specifieke initiële condities). De oplossing (rechts) geeft deze trajectorie weer als functie van tijd, met de twee variabelen op de y-as. ](figuren/odes_grind.png){fig-align="center" width="90%"}
 
 ## Leerdoelen 
 
-De leerdoelen voor dit hoofdstuk zijn: 
+Misschien is het je opgevallen dat dit hoofdstuk geen nummer heeft. Dit hoofdstuk is inhoudelijk namelijk vrij kort, en is vooral bedoeld om kennis te maken met het R-script `Grind.R`. De overige leerdoelen zijn:
 
-  * Begrijpen hoe een simpel model (zoals het Lotka-Volterra model) kan worden uitgebreid door extra details in te voegen (bijvoorbeeld een predator die verzadigd).
+  * Begrijpen hoe een simpel model (zoals het Lotka-Volterra model) kan worden uitgebreid door extra details toe te voegen (bijvoorbeeld een predator die verzadigd).
   * Een Hill-functie herkennen, en de kenmerken kunnen benoemen (initiële helling, half-waarde, maximum).
   * R kunnen gebruiken om faseruimtes met nullclines en trajectories te tekenen, en de daarbij horende oplossingen.
   
 ## De verzadigde predator
 
-In ons eerdere Lotka-Volterra model namen we aan dat predatie lineair proportioneel is aan de dichtheden predator en prooi door gebruik te maken van de predatieterm $aRN$. Mede dankzij deze eenvoud waren de nullclines zo eenvoudig: een stel rechte lijnen waarvan het makkelijk te bepalen is waar/of ze snijden. Echter heeft deze eenvoud ook zijn beperkingen. Dit lineaire verband betekent dat per predator (ookwel: *per capita*) in totaal $aR$ prooi gegeten kan worden (nogmaals, "per"  kun je lezen als "gedeeld door", dus $\frac{aRN}{N} = aR$). Bij oneindig hoge prooi dichtheden, kan elke predator dus oneindig veel prooi eten. In het echt zal een predator eigenlijk een tijd bezig zijn met het verwerken en verteren van de prooi. Zodoende zal de predatie-term bij hele hoge prooi-dichtheden eigenlijk moeten verzadigen. Om dit te verwerken, zouden we de predatie-term aan kunnen passen:
+In ons eerdere Lotka-Volterra model namen we aan dat predatie lineair proportioneel is aan de dichtheden van de predator en prooi. Dit deden we door gebruik te maken van een simpele predatieterm: $aRN$. Mede dankzij deze eenvoud waren de nullclines zo eenvoudig: een stel rechte lijnen waarvan het makkelijk te bepalen is waar/of ze snijden. Echter heeft deze eenvoud ook zijn beperkingen. Dit lineaire verband betekent dat per predator (ookwel: *per capita*) in totaal $aR$ prooi gegeten kan worden (nogmaals, "per"  kun je lezen als "gedeeld door", dus $\frac{aRN}{N} = aR$). Bij oneindig hoge prooi dichtheden, kan elke predator dus oneindig veel prooi eten. In het echt zal een predator eigenlijk een tijd bezig zijn met het verwerken en verteren van de prooi. Zodoende zal de predatie-term bij hele hoge prooi-dichtheden eigenlijk moeten verzadigen. Om dit te verwerken, zouden we de predatie-term aan kunnen passen:
 
 \begin{align*}
 \frac{\dd \color{#2a53f7}R}{\dd t} &= \underbrace{b(1-\frac{\color{#2a53f7}R}{K})\color{#2a53f7}R}_{\text{geboorte prooi}} - \underbrace{d\color{#2a53f7}R}_{\text{sterfte prooi}} - \underbrace{\frac{\color{black}a\color{#2a53f7}R\color{orange}N}{h+\color{#2a53f7}R}}_{\text{nieuwe predatieterm}}\\
@@ -87,34 +86,38 @@ text(-0.5,1,"a",xpd=NA)
 ```
 
 
-::: {#exr-hillfuncties}
+<!-- ::: {#exr-hillfuncties} -->
 
-## Hill-functies
+<!-- ## Hill-functies  -->
+<!-- <br><br> -->
+<!-- De bovengenoemde Hill-functies zijn zeer veelzijdig, en met kleine aanpassingen kun je de vorm goed aanpassen. Vaak willen we bijvoorbeeld kunnen wisselen tussen geen interactie (0) en volledige interactie (1), of geen genexpressie (0) en volledige genexpressie (1), *etc.* Om dit te doen kunnen we de parameter $a$ op 1 zetten, waardoor we deze volledig weg kunnen laten uit de hill-functie. -->
 
-De bovengenoemde Hill-functies zijn zeer veelzijdig, en met kleine aanpassingen kun je de vorm goed aanpassen. Vaak willen we kunnen wisselen tussen geen interactie (0) en volledige interactie (1), of geen genexpressie (0) en volledige genexpressie (1), *etc.*. Zodoende kunnen we de parameter $a$ op 1 veronderstellen, en deze dus weglaten. Neem de onderstaande code over in R: 
+<!-- Neem de onderstaande code over in R: -->
 
-```{r}
-#| eval: false
+<!-- ```{r} -->
+<!-- #| eval: false -->
 
-h=1
-n=2
+<!-- h=1 -->
+<!-- n=2 -->
 
-func <- function(x){
-  return(x^n/(x^n+h^n))
-}
+<!-- func <- function(x){ -->
+<!--   return(x^n/(x^n+h^n)) -->
+<!-- } -->
 
-curve(func,0,3,lwd=2.5,ylim=c(0,1.), 
-      ylab="f(x)",xlab="x",col="seagreen")
-```
+<!-- curve(func,0,3,lwd=2.5,ylim=c(0,1.),  -->
+<!--       ylab="f(x)",xlab="x",col="seagreen") -->
+<!-- ``` -->
 
-Stel dat we in de interacties tussen genen bestuderen die elkaars expressie beinvloeden. Hoewel de bovengenoemde Hill-functies een graduele overgang beschrijven, zien we in dit hypothetische scenario iets anders. We zien dat de expressie van gen 1 bij lage concentraties geen invloed heeft op gen 2. Bij een bepaalde kritische concentratie van gen 1, zien we plotseling volledige expressie van gen 2. Een nog hogere concentratie van gen 1 heeft geen invloed meer op de expressie van gen 2. 
+<!-- Stel dat we de interacties tussen genen bestuderen die elkaars expressie beïnvloeden. Hoewel de bovengenoemde Hill-functies een graduele overgang beschrijven, zien we in dit (hypothetische) scenario iets anders. We zien dat een klein beetje expressie van gen 1 geen invloed heeft op gen 2, maar dat er bij een bepaalde kritische expressie van gen 1 plotseling maximale expressie van gen 2 is. Nog meer expressie van gen 1 heeft geen verdere invloed op de expressie van gen 2. -->
 
-  a. Bestudeer hoe je de Hill-functie kan aanpassen om het bovengenoemde scenario te vinden. In ons geval is f(x) de hoeveelheid invloed van gen 1 ($x$) op de expressie van gen 2 ($f(x)$)  
-We zien dat gen 2 ook een effect heeft op gen 1. Dit effect is wél gradueel, maar er vindt juist remming plaats. 
-  b. Hoe kun je de Hill-functie omkeren zodat deze niet van 0 naar 1 gaat, maar van 1 naar 0 gaat? Schrijf de vergelijking op, en test het met je R script. 
-  c. Kun je de vergelijking die je hebt opgeschreven in b nog versimpelen? (je kunt je algebra checken met R) 
-  d. Wat moet je doen als je toch wil dat de maximale genexpressie $a$ is, en niet 1? 
-:::
+<!--   a. Bestudeer hoe je de Hill-functie in de R-code hierboven zou kunnen aanpassen om het bovengenoemde scenario met een plotseling overgang te modelleren (neem aan dat $x$ de expressie van gen 1 is, en dat op de y-as de expressie van gen 2 staat). -->
+
+<!-- We zien dat gen 2 ook een effect heeft op gen 1. Dit effect is wél gradueel, maar er vindt juist remming plaats.  -->
+
+<!--   b. Hoe kun je de Hill-functie omkeren zodat deze niet van 0 naar 1 gaat, maar van 1 naar 0 gaat? Schrijf de vergelijking op, en test het met je R script.  -->
+<!--   c. Kun je de vergelijking die je hebt opgeschreven in b nog versimpelen? (je kunt je algebra altijd even controleren met het R-script!)  -->
+<!--   d. Wat moet je doen als je toch wil dat de maximale genexpressie $a$ is, en niet 1?  -->
+<!-- ::: -->
 
 Nu we kennis hebben gemaakt met Hill-functies (zie ook @tip-hillfuncties), gaan we terug naar het Lotka-Volterra model. Omdat het Lotka-Volterra model is uitgebreid met deze verzadigingsterm, moeten we opnieuw de nullclines uitrekenen en schetsen (ook die zijn veranderd!). Maar zoals je je wellicht kan voorstellen worden de nullclines iets ingewikkelder door deze non-lineaire term in onze vergelijkingen. Naar mate we onze modellen meer en meer uitbreiden, wordt het natuurlijk steeds lastiger om alles met de hand te doen. Daarom gaan we in dit hoofdstuk de faseruimte en het vectorveld laten tekenen door Grind.R, een Rscript dat deze analyses een fluitje van een cent maakt!
 
@@ -469,8 +472,10 @@ run(tmax=300,legend=F)
 
 ## Terminologie
 
+:::{ .striped .hover}
 | Nederlands                | Engels                | Beschrijving                                                                                                                                    |
 |------------------|--------------------|----------------------------------|
 | Hill-functies | Hill functions | Een set wiskundige functies die verzadigen bij grote waarden hoge waarden (ze hebben een horizontale assymptoot). |
 | Critische-transitie | Critical Transition | Het punt waarna twee populaties samen kunnen leven zonder dat een of beide volledig uitsterft. Hier is meestal een minimale "prooi" populatie aan verbonden met een bepaalde carrying capacity. |
 | Hopf-bifurcatie | Hopf-bifurcation | Het punt waarna twee populaties niet meer met constante populaties in evenwicht zijn, maar blijven schommelen. |
+:::

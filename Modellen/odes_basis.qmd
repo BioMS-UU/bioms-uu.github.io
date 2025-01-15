@@ -16,11 +16,19 @@ en wat dit zegt over de individuele termen en parameters.
 * Begrijpen wanneer er in een ODE sprake is van een evenwicht.
 * Het in verband kunnen brengen van ODEs en hun oplossing.
 
-![(afbeelding gegenereerd met ChatGPT4-o)](figuren/discr_vs_cont_ai.png){fig-align="center" width="70%"}
+![(afbeelding gegenereerd met ChatGPT4-o)](figuren/discr_vs_cont_ai_text.png){fig-align="center" width="70%"}
 
 ## Chaotische konijnen
 
-In @sec-exp hebben we gezien wat de consequenties zijn van 24 konijnen vrijlaten in een land waar geen natuurlijke predator voor konijnen bestaat. In de opgaven hebben we deze groei gemodelleerd in R. Hoewel dit goed leek te gaan wanneer de intrinsieke groeisnelheid ($r$) laag was, gaf dit niet de snelle groei zoals waargenomen in Australië. Het verhogen van $r$ gaf echter vreemde grafieken (@fig-chaos-1). Van het één op het andere jaar springen we heen en weer van honderden miljoenen konijnen naar een heel klein aantal konijnen, en dit gaat over de jaren heen steeds maar door. Sterker nog, als we Thomas Austin’s experiment herhalen met een ander aantal konijnen (@fig-chaos-2) zien we dat deze fluctuaties iedere keer heel anders zijn! Met andere woorden: als we met behulp van dit model zouden willen voorspellen hoeveel konijnen er na 20 jaar zouden zijn, dan moeten we wel héél zeker weten met hoeveel konijn we precies begonnen! Bovendien hebben we niet bereikt wat we wilden: probeerde we niet juist een stabiel evenwicht te modelleren?
+In @sec-exp hebben we gezien wat de consequenties zijn van 24 konijnen vrijlaten in een land waar geen natuurlijke predator voor konijnen bestaat. In de opgaven hebben we deze groei gemodelleerd in R, en hebben we geprobeerde de populatie te laten stabiliseren bij 500 miljoen konijnen. Met een lage groeisnelheid zagen we dat ons model een prachtige logistische groeicurve gaf, maar dat de groei veel langzamer was dan waargenomen in Australië. Het verhogen van de groeisnelheid gaf echter vreemde grafieken (@fig-chaos-1). Deze vreemde grafieken zijn een beroemde eigenschap van differentievergelijkingen met logistische groei. De meest beroemde vorm van deze differentievergelijking, is:
+
+$$
+\begin{align}
+ N(t+1) &= rN(1-\frac{N}{K})
+ \end{align}
+$$ {#eq-logisticmap}
+
+Waarbij niet $b$ (birth) en $d$ (death) zijn gebruikt (zoals in het werkcollege), maar een intrinsieke (netto) groei parameter ($r$) en daarnaast een parameter die het draagvlak bepaalt ($K$). Anders dan dit verschil, laat @eq-logisticmap dezelfde vreemde grafieken zien wanneer $r \geq 3.7$ (zie @fig-chaos-1). Van het één op het andere jaar springen we heen en weer van honderden miljoenen konijnen naar een heel klein aantal konijnen, en dit gaat over de jaren heen steeds maar door. Sterker nog, als we Thomas Austin’s experiment herhalen met een ander aantal konijnen (@fig-chaos-2) zien we dat deze fluctuaties iedere keer heel anders zijn! Met andere woorden: als we met behulp van dit model zouden willen voorspellen hoeveel konijnen er na 20 jaar zouden zijn, dan moeten we wel héél zeker weten met hoeveel konijnen we precies begonnen! Bovendien hebben we niet bereikt wat we wilden: probeerden we niet juist een stabiel evenwicht te modelleren?
 
 
 ::: {#fig-chaos layout-ncol=2}
@@ -102,17 +110,16 @@ onvoorspelbaar gedragen. Geen wonder dat meer complexe systemen zoals biologisch
 ::: {#tip-detchaos .callout-tip collapse='false'}
 ## Meer over "deterministische chaos" (verdieping)
 
-Een systeem is deterministisch als de regels niet willekeurig zijn. Met andere woorden, er worden geen dobbelstenen gerold om te bepalen wat er gebeurt. De meeste chemische en biologische principes volgen zulke deterministische regeltjes, maar toch zijn ze moeilijk te voorspellen. Dit komt doordat ze ondanks het gebrek aan willekeur zeer gevoelig zijn voor de precisie van de metingen. Deze gevoeligheid ken je misschien van het concept the *butterfly effect*, waar een vleugelslag van een vlinder uiteindelijk (na lange tijd) de oorzaak kan zijn van een orkaan.  Zo zie je bijvoorbeeld dat als Thomas Austin 25 in plaats van 24 konijnen had vrijgelaten, het precies aantal konijnen na 20 jaar maximaal verschillend kan zijn!
+Een systeem is deterministisch als de regels niet willekeurig zijn. Met andere woorden, er worden geen dobbelstenen gerold om te bepalen wat er gebeurt. De meeste chemische en biologische principes volgen zulke deterministische regeltjes, maar toch zijn ze moeilijk te voorspellen. Dit komt doordat ze ondanks het gebrek aan willekeur zeer gevoelig zijn voor de precisie van de metingen. Deze gevoeligheid ken je misschien van het concept the *butterfly effect*, waar een vleugelslag van een vlinder uiteindelijk (na lange tijd) de oorzaak kan zijn van een orkaan.  Zo zie je bijvoorbeeld dat als Thomas Austin 25 in plaats van 24 konijnen had vrijgelaten, het precieze aantal konijnen na 20 jaar maximaal verschillend kan zijn!
 :::
 
 Hoewel deterministische chaos een interessant fenomeen is (en zeer zeker niet zomaar "willekeur", zie @tip-detchaos), kunnen we ons afvragen of de groei van biologische populaties ook daadwerkelijk chaotisch is. Als we bijvoorbeeld bacteriën in het lab groeien, krijgen we meestal een logistische (sigmoïde) groeicurve, en niet een populatie die lukraak fluctueert. Wat is nou eigenlijk de oorzaak van deze chaos, en kunnen we hier misschien ook vanaf komen?
 
 ## Het probleem van "tijdstappen"
 
-Tot nu toe namen we aan dat elke "tijdstap" van de konijnenpopulatie een jaar is. Met een bepaalde groeisnelheid ($r=2$) geeft dit inderdaad prachtige logischtische groei, maar
-de daadwerkelijke populatie konijnen groeide sneller (dus: $r>2$). Helaas zagen we dat het verhogen van $r$ niet de gewenste resultaten heeft. Wat kunnen we doen om toch "snellere groei" te krijgen? 
+Tot nu toe namen we aan dat elke "tijdstap" van de konijnenpopulatie een jaar is, en hebben we de groeisnelheid geprobeerd aan te passen om ons model overeen te laten komen met de data uit Australië. Helaas zagen we dat dit niet de gewenste resultaten heeft. Wat kunnen we doen om toch "snellere groei" te krijgen? 
 
-We zouden kunnen overwegen om niet $r$ aan te passen, maar in plaats daarvan te heroverwegen wat "een tijdstap" is. Dat wil zeggen, hoeveel tijd zit er eigenlijk tussen $R(t)$ en $R(t+1)$? Als elke tijdstap een half jaar is, is er na 20 tijdstappen slechts 10 jaar voorbij. Dat betekent dat er nu na 10 jaar, 20 stappen groei hebben kunnen plaatsvinden. Als elke tijdstap een maand is ($1 \over 12$ jaar), is er na 20 tijdstappen nog geen twee jaar voorbij. In plaats van de groeisnelheid aan te passen, zouden we dus ook de grootte van "de tijdstap" aan kunnen passen! 
+We zouden kunnen overwegen om niet de groeisnelheid aan te passen, maar in plaats daarvan te heroverwegen wat "een tijdstap" is. Dat wil zeggen, hoeveel tijd zit er eigenlijk tussen $R(t)$ en $R(t+1)$? Als elke tijdstap een half jaar is, is er na 20 tijdstappen slechts 10 jaar voorbij. Dat betekent dat er nu na 10 jaar, 20 stappen groei hebben kunnen plaatsvinden. Als elke tijdstap een maand is ($1 \over 12$ jaar), is er na 20 tijdstappen nog geen twee jaar voorbij. In plaats van de groeisnelheid aan te passen, zouden we dus ook de grootte van "de tijdstap" aan kunnen passen! 
 
 Om de grootte van onze tijdstap aan te passen, kunnen we het R-script uit de opgaven van het vorige onderdeel hergebruiken: 
 
@@ -135,7 +142,7 @@ plot(konijnen,type="o",xlab="Tijd",ylab="Aantal konijnen")
 
 Als je de code hierboven uitvoert zul je zien dat er na 20 halve jaren 12,425,902 konijnen zijn, en dat we gewoon een mooie sigmoïde groeicurve krijgen. Dit is ook niet raar, want eigenlijk hebben we niets aangepast: alleen onze interpretatie van "tijdstappen" is anders. Door aan te nemen dat de tijdstap kleiner is (een half jaar in plaats van een jaar), zijn we het vreemde chaotische gedrag kwijt. Kennelijk ontstaat dit probleem alleen als de tijdstap "te groot" is. 
 
-Dit kunnen we ook intuïtief begrijpen. Als je alleen kijkt naar hoeveel konijnen er aan het begin en aan het eind van het jaar zijn, mis je alle tussenstappen van hoe de konijnen zich tijdens het jaar voortplanten. De tussentijdse veranderingen zouden de groei kunnen aanpassen, zodat je bijvoorbeeld niet doorschiet tot onder of boven het evenwicht, maar voorzichtig het evenwicht nadert. Kleinere stapjes nemen maakt het groeiprocess simpelweg soepeler. 
+Dit kunnen we ook intuïtief begrijpen. Als je alleen kijkt naar hoeveel konijnen er aan het begin en aan het eind van het jaar zijn, mis je alle tussenstappen van hoe de konijnen zich tijdens het jaar voortplanten. De tussentijdse veranderingen zouden de groei kunnen aanpassen, zodat je bijvoorbeeld niet doorschiet tot onder of boven het evenwicht, maar voorzichtig het evenwicht nadert. Kleinere stapjes nemen maakt het groeiprocess simpelweg gelijkmatiger. 
 
 Hoewel we nu een oplossing voor ons fluctuatie-probleem hebben, is dit eigenlijk geen houdbare oplossing. Moeten we de hele tijd blijven controleren of de tijdstap van ons model wel "klein genoeg" is? Het antwoord op deze vraag is nee, omdat we gebruik kunnen maken van een wiskundig modelformalisme dat oneindig kleine tijdstapjes aanneemt. We stappen over van de differen**tie**vergelijkingen, naar de differen**tiaal**vergelijkingen. Deze worden ook wel *ordinary differential equations* (ODEs) genoemd. 
 
@@ -179,7 +186,7 @@ Hier is tijd ($t$) de onafhankelijke variabele, wat betekent dat de waarde vrij 
 
 ## Continue en discrete variabelen
 
-Biologische variabelen kunnen continu of discreet zijn. Continue variabelen zijn eigenschappen zoals lengte, gewicht of temperatuur, die elke waarde op een schaal kunnen aannemen, inclusief decimalen. Tussen twee gegeven waarden zijn altijd tussenliggende waarden mogelijk. Dit maakt continue variabelen zeer geschikt voor processen met vloeiende overgangen, zeker wanneer ook tijd continu wordt verondersteld. Discrete variabelen hebben alleen specifieke waarden (vaak gehele getallen). Er bestaan geen tussenliggende waarden, omdat ze gebaseerd zijn op tellingen.
+Biologische variabelen kunnen continu of discreet zijn. Continue variabelen zijn eigenschappen zoals lengte, gewicht of temperatuur, die elke waarde op een schaal kunnen aannemen, inclusief niet-gehele getallen met decimalen. Tussen twee gegeven waarden zijn altijd tussenliggende waarden mogelijk. Dit maakt continue variabelen zeer geschikt voor processen met vloeiende overgangen, zeker wanneer ook tijd continu wordt verondersteld. Discrete variabelen hebben alleen specifieke waarden (vaak gehele getallen). Er bestaan geen tussenliggende waarden, omdat ze gebaseerd zijn op tellingen.
 
 :::
 
@@ -193,11 +200,11 @@ $$ {#eq-odeherten}
 
 Formeel staat hier: de afgeleide van $H(t)$ over de tijd (dat wil zeggen de snelheid van verandering) is gelijk aan $m$. Inderdaad, als we $H(t)$ uit @eq-ht zouden differentiëren voor $t$ (tijd), dan krijgen we $m$. *So far so good*.
 
-Stel je echter even voor dat we hadden alleen de differentiaalvergelijking (@eq-odeherten) hadden opgesteld, zonder de specifieke vorm van $H(t)$ te kennen. In dat geval is $H(t)$ dus een **onbekende functie** (zoals in een algebraïsche vergelijking $x$ een onbekende waarde is). De oplossing van deze ODE is dus een wiskundige functie $H(t)$, waarvan de afgeleide altijd $m$ is. 
+Stel je echter voor dat we niet weten met hoeveel herten we begonnen maar alleen weten dat er ieder uur $m$ herten bijkomen. In dat geval kunnen dus we alleen @eq-odeherten opschrijven, zonder dat we de specifieke vorm van $H(t)$ weten. In dat geval is $H(t)$ dus een **onbekende functie** (zoals in een algebraïsche vergelijking $x$ een onbekende waarde is). De oplossing van deze ODE is dus een wiskundige functie $H(t)$, waarvan de afgeleide altijd $m$ is. Hoe vinden we dan deze oplossing?
 
 ## Functies als oplossingen
 
-Omdat @eq-odeherten vrij simpel is, kunnen we wel bedenken hoe mogelijke oplossingen er uit zouden kunnen zien: 
+Omdat @eq-odeherten heel erg simpel is, kunnen we wel bedenken hoe mogelijke oplossingen er uit zouden kunnen zien: 
 
 ![](figuren/solutions_herten_geldig.png){fig-align="center" width="80%"}
 
@@ -218,7 +225,7 @@ $$ {#eq-ht2}
 ::: {.callout-important}
 ## Let op! $\mathrm{d}$ en $d$ zijn niet hetzelfde!
 
-De bovenstaande vergelijking heeft twee verschillende d's. De d aan de linkerkant van de vergelijking is de d van differentiaal, en geeft dus aan dat we het over de afgeleide hebben. De $d$ aan de rechterkant van de vergelijking staat voor *death rate*, en is een model-parameter. Je kunt deze twee dus niet tegen elkaar wegdelen! We hadden deze parameter ook $q$ kunnen noemen, maar het is wel zo prettig als de letter enigzins aangeeft over wel proces we het hebben. 
+De bovenstaande vergelijking heeft twee verschillende d's. De d aan de linkerkant van de vergelijking is de d van differentiaal, en geeft dus aan dat we het over de afgeleide hebben. De $d$ aan de rechterkant van de vergelijking staat voor *death rate*, en is een model-parameter. Je kunt deze twee dus niet tegen elkaar wegdelen! We hadden deze parameter ook $q$ kunnen noemen, maar het is wel zo prettig als de letter enigzins aangeeft over welk proces we het hebben. 
 :::
 
 Welke algemene oplossing ($H(t)=\dots$) voldoet nu aan deze vergelijking? Oftewel: welke functie $H(t)$ heeft altijd een afgeleide die aan deze ODE voldoet? Wat in ons eerste model eenvoudig uit ons hoofd te doen was, is nu ineens wat lastiger geworden. Om de oplossing te vinden, moeten we differentiaalvergelijkingen integreren, wat niet altijd eenvoudig is. Gelukkig hoeven jullie dit niet handmatig te doen, en wel om de volgende redenen:
@@ -229,7 +236,7 @@ Welke algemene oplossing ($H(t)=\dots$) voldoet nu aan deze vergelijking? Oftewe
 
 ## Rekenen aan eenheden {#sec-odes-eenheden}
 
-Later in de cursus gaan we R-scripts gebruiken om specifieke oplossingen te laten uitrekenen, maar zoals gezegd kun je met pen en papier ook al veel voor elkaar krijgen. Hiermee oefenenen is belangrijk, want zo krijgen we een beter gevoel voor ODEs, zodat we eerder doorhebben wanneer de computer (wellicht door een typfoutje) rare resultaten geeft. Laten we beginnen met waar al het rekenwerk begint: zorgen dat we appels met appels vergelijken.
+Later in de cursus gaan we R-scripts gebruiken om specifieke oplossingen te laten uitrekenen, maar zoals gezegd kun je met pen en papier ook al veel voor elkaar krijgen. Hiermee oefenenen is belangrijk, want zo krijgen we een beter gevoel voor ODEs, zodat we eerder doorhebben wanneer de computer (wellicht door een typefoutje) rare resultaten geeft. Laten we beginnen met waar al het rekenwerk begint: zorgen dat we appels met appels vergelijken.
 
 Laten we nog even doorgaan met het model van herten-migratie met sterfte:
 
@@ -245,7 +252,7 @@ Om het allemaal wat overzichtelijker te houden kunnen we het vermenigvuldigingst
 
 Laten we nogmaals omschrijven wat hier staat. Aan de linkerzijde staat de verandering in de hoeveelheid herten per tijdseenheid (in het hertenscenario hadden we het over tijd in uren). De verbale omschrijving "per tijdseenheid" kunnen we wiskundig opschrijven als $\frac{1}{t}$ (of $t^{-1}$, dat is hetzelfde). Hetzelfde geldt overigens voor "per hert", wat zou vertalen naar $\frac{1}{H}$ of $H^{-1}$. Je kunt het woord "per" dus vertalen naar "gedeeld door". Dus: "herten per uur" kunnen we opschrijven als $\frac{H}{t}$.
 
-Aan de linkerkant staat dus iets in termen van "herten per uur", dus $H \over t$. Aan de rechterzijde staan twee individuele termen, namelijk $m$ en $dH$. Om de differentiaalvergelijking geldig te houden moeten deze individuele termen dezelfde eenheden hebben, want je kan immers geen appels en peren bij elkaar optellen. 
+Aan de linkerkant staat dus iets in termen van van "verandering in aantal herten per tijdsinterval in uren", wat we voor het gemak afkorten naar "herten per uur", dus $H \over t$. Aan de rechterzijde staan twee individuele termen, namelijk $m$ en $dH$. Om de differentiaalvergelijking geldig te houden moeten deze individuele termen dezelfde eenheden van "herten per uur" hebben, want je kan immers geen appels en peren bij elkaar optellen. 
 
 \begin{align}
 \underbrace{\dt{H}}_{\text{herten per uur}} = \underbrace{m}_{\text{herten per uur}} - \underbrace{dH}_{\text{herten per uur}}
@@ -260,7 +267,7 @@ Maar wat zijn de eenheden van de parameter $d$, die de sterfte bepaalt? Hiervoor
     d = 1/t
 \end{align*}
 
-Nu weten we dus dat de sterfteparameter de eenheid/dimensie $1 \over t$ heeft, met andere woorden "per tijdseenheid" of "per uur". Omdat we het aantal herten hebben weggedeeld, beschrijft deze parameter dus de niet de *absolute sterfte*, maar de *relatieve sterfte*. Als we deze parameter in het veld zouden willen meten, zouden we het aantal gestorven herten per uur moeten meten *gedeeld door het totaal aantal herten*. 
+Nu weten we dus dat de sterfteparameter de eenheid/dimensie $1 \over t$ heeft, met andere woorden "per tijdseenheid" of "per uur". Omdat we het aantal herten hebben weggedeeld, beschrijft deze parameter dus de niet de sterfte op populatieniveau, maar de sterfte per individueel (dat laaste wordt ook wel *per capita* genoemd). Als we deze parameter in het veld zouden willen meten, zouden we het aantal gestorven herten per uur moeten meten *gedeeld door het totaal aantal herten*. 
 
 ::: {.callout-tip collapse='false'} 
 ## ODEs doen belangrijke aannames
@@ -268,9 +275,8 @@ Nu weten we dus dat de sterfteparameter de eenheid/dimensie $1 \over t$ heeft, m
 Zoals in de introductie uitgelegd, maken alle modellen aannames. Bij ODEs maken we ook een paar stevige aannames, namelijk:
 
 * Populatiegroottes zijn continu. <br>*Daarom worden ze meestal als dichtheden (en niet aantallen individuen) geïnterpreteerd. *
-* Er is geen variatie binnen de populatie (elk hert is gelijk)
-* Parameters zijn constant (en meestal ook groter dan $0$)
-* De populatie is goed gemengd (*well-mixed assumption*)
+* Er is geen variatie binnen de populatie <br> *Elk hert is gelijk, dus dezelfde sterftekans ongeacht leeftijd, geslacht, etc.*
+* De populatie is goed gemengd (*well-mixed assumption*)<br>*Er is dus niet zoiets als een ruimtelijk patroon, waarbij bijvoorbeeld herten aan de rand van een bos meer kans hebben op sterfte door predatie dan herten in het midden van het bos.*
 :::
 
 ::: {#exr-eenheden-tussen}
@@ -300,13 +306,13 @@ Een mogelijk ODE-model voor de exponentiële groei van konijnen ziet er zo uit:
     \frac{\dd N(t)}{\dd t} = r \cdot N(t)
 \end{equation}
 
-Wederom laten we het vermenigvuldigingsteken en de $(t)$ weg, zodat het iets minder slordig wordt:
+Wederom laten we het vermenigvuldigingsteken en de $(t)$ weg, zodat het iets leesbaarder wordt:
 
 \begin{equation}
     \frac{\dd N}{\dd t} = rN
 \end{equation}
 
-De rechterzijde van deze vergelijking lijkt heel erg op de differentievergelijking uit het vorige hoofdstuk, *maar let op*, de interpretatie is net anders. Hier staat dat de **groeisnelheid** gelijk is aan $rN$, en niet de populatiegrootte in "de volgende tijdstap". Dat betekent dat bij deze ODE elke positieve waarde van $r$ (ook $r=0.1$) resulteert in groei, terwijl in de differentievergelijking alleen groei is wanneer $r>1$. Ondanks deze verschillen, kunnen we ook met ODEs de groei beperken door kleine uitbreidingen te doen. In het volgende hoofdstuk zullen we bijvoorbeeld -- zoals in opgave @exr-rabbits-map -- geboorte- ($b$, *birth*) en sterfte- ($d$, *death*) processen gaan toevoegen. Maar eerst gaan we onze ODE op een andere manier uitbreiden:
+De rechterzijde van deze vergelijking lijkt heel erg op de differentievergelijking uit het vorige hoofdstuk, *maar let op*, de interpretatie is net anders. Hier staat dat de **groeisnelheid** gelijk is aan $rN$, en niet de populatiegrootte in "de volgende tijdstap". Dat betekent dat bij deze ODE elke positieve waarde van $r$ (ook $r=0.1$) resulteert in groei, terwijl er in de differentievergelijking alleen groei is wanneer $r>1$. Ondanks deze verschillen, kunnen we ook met ODEs de groei beperken door kleine uitbreidingen te doen. In het volgende hoofdstuk zullen we bijvoorbeeld -- zoals in opgave @exr-rabbits-map -- geboorte- ($b$, *birth*) en sterfte- ($d$, *death*) processen gaan toevoegen. Maar eerst gaan we onze ODE op een andere manier uitbreiden:
 
 \begin{equation}
     \frac{\dd N}{\dd t} = rN \cdot f(N)
@@ -328,7 +334,7 @@ $$ {#eq-logisticode}
 Over het algemeen gebruiken we voor variabelen hoofdletters ($R$, $N$) en voor parameters kleine letters ($r$, $d$). Dit is echter niet altijd zo, zoals bij de parameter $K$, die in de ecologie veel wordt gebruikt voor de *carrying capacity*. 
 :::
 
-Als een populatie groeit volgens vergelijking @eq-logisticode, wanneer is er dan een evenwicht? Wanneer verandert de populatie niet meer? Met een ODE, is het antwoord daarop vrij eenvoudig: wanneer de snelheid van verandering ($\frac{\dd N}{\dd t}$) gelijk is aan 0:
+Als een populatie groeit volgens vergelijking @eq-logisticode, wanneer is er dan een evenwicht? Wanneer verandert de populatie niet meer? Met een ODE, is het antwoord daarop vrij eenvoudig te vinden: wanneer de snelheid van verandering ($\frac{\dd N}{\dd t}$) gelijk is aan 0:
 
 \begin{equation}
     0 = rN \left(1-\frac{N}{K}\right)
@@ -342,7 +348,7 @@ Het gelijkstellen aan $0$ levert een enorm voordeel op: we raken de vreemde $\dt
     \left(1-\frac NK \right) &= 0 \rightarrow \color{blue} \bar{N}=K \\
 \end{align*}
 
-Blauw-gedrukt staan de twee oplossingen van onze vergelijking, die de evenwichten of *steady states* van de populatie geven. Soms (maar lang niet altijd) worden populaties in evenwicht aangegeven met een streepje boven de variabele, in dit geval $\bar{N}$. Uit deze analyse kunnen we concluderen dat de populatie konijnen niet kan groeien wanneer $N=0$ (als er geen konijnen zijn) of als $N=K$ (als de populatie gelijk is aan de *carrying capacity*). Het eerste evenwicht ($N=0$) wordt vaak een "triviaal" evenwicht genoemd: als populaties niet bestaan kunnen ze ook niet groeien. Het tweede evenwicht ($N=K$) is echter biologisch meer relevant: de populatie groeit totdat de *carrying capacity* is bereikt. 
+Blauw-gedrukt staan de twee oplossingen van onze vergelijking, die de evenwichten of *steady states* van de populatie geven. Soms (maar lang niet altijd) worden populaties in evenwicht aangegeven met een streepje boven de variabele, in dit geval $\bar{N}$. Uit deze analyse kunnen we concluderen dat de populatie konijnen niet kan groeien wanneer $N=0$ (als er geen konijnen zijn) of als $N=K$ (als de populatie gelijk is aan $K$: de *carrying capacity* van het systeem. Het eerste evenwicht ($N=0$) wordt vaak een "triviaal" evenwicht genoemd: als populaties niet bestaan kunnen ze ook niet groeien. Het tweede evenwicht ($N=K$) is echter biologisch meer relevant: de populatie groeit totdat de *carrying capacity* is bereikt. 
 
 We kunnen dezelfde strategie gebruiken om te controleren of pure exponentiële groei een evenwicht heeft: 
 
@@ -391,7 +397,7 @@ Bekijk nogmaals de volgende vergelijking voor hoe snel de hoeveelheid plastic in
 \dt{P} = k - \delta P
 \end{align}
 
-a. Bepaal bij elke hoeveelheid plastic er sprake is van een evenwichtssituatie (*steady state*)
+a. Bepaal bij welke hoeveelheid plastic er sprake is van een evenwichtssituatie (*steady state*)
 b. Is er een triviaal ($P=0$) evenwicht?
 c. Stel we vissen morgen (op een magische manier) alle plastic uit de oceaan. Schets met pen en paper wat er daarna zal gebeuren. 
 
@@ -412,7 +418,7 @@ Rode bloedcellen worden in het beenmerg geproduceerd met een snelheid $p$ cellen
   a. Stel nu dat je juist bloed ontvangt. Maak nog een schets van de hoeveelheid bloedcellen over de tijd. 
   a. Welke van deze twee parameters denk je dat de snelheid van het herstel bepaalt? 
 
-Je hebt geleerd dat het vinden van algemene oplossingen van ODEs heel moeilijk kan zijn (met andere woorden, de exacte functie $B(t)$ die aan onze bloed-cellen ODE voldoet is lastig). Echter kunnen we de specifieke oplossing van een ODE wel doorrekenen als we de begin-hoeveelheid en de parameters van het model invullen. Als we deze waarden weten, kunnen we met R numeriek een specifieke oplossing doorrekenen. **Analyseer het onderstaande script regel voor regel, en lees de comments en zorg dat je begrijpt wat er gebeurt**.
+Je hebt geleerd dat het vinden van algemene oplossingen van ODEs heel moeilijk kan zijn (met andere woorden, de exacte functie $B(t)$ vinden die aan onze bloedcellen-ODE voldoet is lastig). We kunnen echter een specifieke oplossing van een ODE wel berekenen, als we tenminste de begin-hoeveelheid en de parameters van het model invullen. Dan kunnen we met R numeriek doorrekenen wat er gaat gebeuren. **Analyseer het onderstaande script regel voor regel, en lees de comments en zorg dat je begrijpt wat er gebeurt**.
 ```{r}
 #| eval: false
 # Stap 1: stel parameters in
@@ -505,9 +511,8 @@ plot(tijdserie$t, tijdserie$konijnen, type="l",xlab="Tijd (jaren)", ylab="Aantal
 
 Het bovenstaande script is iets anders geschreven dan het eerste script. Simpele scripts kunnen vaak op heel veel manieren geschreven worden. Zo genereert de bovenstaande code niet een tijdserie-vector (zoals het vorige voorbeeld), maar een tijdserie-dataframe. Het voordeel hiervan is dat we ook een tweede kolom kunnen bijhouden: de hoeveelheid tijd die is verstreken.
 
-a. Bestudeer het eerste R-script (voor de \textbf{differentie}vergelijking). Voer het script uit voor veel verschillende waarden van $r$. Wat gebeurt er met $r<1$? Wat gebeurt er met $r>3.7$? <br>
-b. Bestudeer ook het R-script voor de \textbf{differentiaal}vergelijking. Wat gebeurt er met $r<1$? \\
-        Wat gebeurt er met $r>3.7$? Welke waarde van $r$ geeft afname? Welke Bij welke waarde van $r$ krijg je chaotische fluctuaties? 
+a. Bestudeer het eerste R-script (voor de **differentie**vergelijking). Voer het script uit voor veel verschillende waarden van $r$. Wat gebeurt er met $r<1$? Wat gebeurt er met $r>3.7$? <br>
+b. Bestudeer ook het tweede R-script (voor de **differentiaal**vergelijking, waarbij we kleine stapjes nemen). Wat gebeurt er met $r<1$? Wat gebeurt er nu met $r>3.7$? Welke waarde van $r$ geeft afname? Welke Bij welke waarde van $r$ krijg je chaotische fluctuaties? 
 c. Maak de tijdstap voor de differentiaalvergelijking heel klein (bijv `delta_t = 0.0001`), en voer het hele script uit. Wat valt je op? (hint: R-studio heeft rechtsboven in de console een grote rode STOP-knop)
 
 :::
@@ -523,5 +528,5 @@ c. Maak de tijdstap voor de differentiaalvergelijking heel klein (bijv `delta_t 
 | Specifieke oplossing van een ODE | Specific solution of an ODE | Eén van de vele mogelijke oplossingen van een ODE, bijvoorbeeld door specifieke parameters / begin-hoeveelheden in te vullen |
 | Algemene oplossing | General solution | De wiskundige vergelijking waar alle specifieke oplossingen aan voldoen. Meestal moeilijk te verkrijgen. |
 | Functionele respons | Functional respons | Een (meestal eenvoudige) wiskundige functie die de relatie omschrijft tussen de snelheid waarmee een proces verloopt, en de grootte van een variabele |
-| Evenwicht | Equilibrium / steady state | We spreken van een evenwichtssitautie als alle processen elkaar opheffen, zodat de variabelen van het systeem niet meer veranderen. |
+| Evenwicht | Equilibrium / steady state | We spreken van een evenwichtssituatie als alle processen elkaar opheffen, zodat de variabelen van het systeem niet meer veranderen. |
 | Triviaal evenwicht | Trivial equilibrium | Een evenwichts-situatie die biologisch gezien niet interessant is, bijvoorbeeld een evenwicht bij $0$ konijnen.  |

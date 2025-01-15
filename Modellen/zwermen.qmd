@@ -1,19 +1,22 @@
+{{< include ../_macros.tex >}}
+{{< include ../print_friendly.html >}}
+
 # Zwermen en foerageren {#sec-zwermen}
 
-In @sec-ruimtelijk hebben jullie kennis gemaakt met individual-based models, en met name het belang van ruimtelijke structuur in biologische populaties. Voor het gemak namen we in dit eerdere hoofdstuk aan dat individuen posities innamen op een grid, maar in werkelijkheid is ruimte natuurlijk niet in hokjes opgedeeld. In dit hoofdstuk gaan we een aantal individual-based modellen bekijken waar individuen vrij kunnen bewegen in in een continue ruimte. Hiervoor zullen we eerst leren wat er eigenlijk wordt bedoeld met een "continue" ruimte. Daarna bekijken we eerst wat conceptuele voorbeelden, en gaan dan ook naar concrete biologische vraagstukken kijken. De leerdoelen zijn:
+In @sec-ruimtelijk hebben jullie kennis gemaakt met individual-based models, en met name het belang van ruimtelijke structuur in biologische populaties. Voor het gemak namen we in dit eerdere hoofdstuk aan dat individuen posities innamen op een grid, maar in werkelijkheid is ruimte natuurlijk niet in hokjes opgedeeld. In dit hoofdstuk gaan we een aantal individual-based modellen bekijken waar individuen vrij kunnen bewegen in een continue ruimte. Hiervoor zullen we eerst leren wat er eigenlijk wordt bedoeld met een "continue" ruimte. Daarna bekijken we eerst wat conceptuele voorbeelden, en gaan dan naar meer biologisch relevante scenarios kijken. De leerdoelen zijn:
 
 Aan het eind van dit hoofdstuk, word je geacht hetvolgende te kunnen:
 
 * Uitleggen wat het verschil is tussen discrete en continue variabelen, en modelaspecten kunnen benoemen waarbij deze keuze relevant is 
 * Begrijpen dat simpele regels complexe patronen en gedrag kunnen opleveren
-* Uitleggen wat de voordelen zijn van het virtueel bestuderen van gedrag
+* Uitleggen wat de voordelen zijn van het virtuele experimenten / het virtueeel bestuderen van gedrag
 * Uitleggen wat een *parameter-sweep* is, en hoe dit zich verhoud tot bifurcatie analyse van wiskundige modellen
 
 ## Modelkeuzes met continue en discrete variabelen 
 
-Eerder in dit cursusonderdeel heb je al kennisgemaakt met discrete tijdstappen. Zo zagen we bijvoorbeeld bij de differentievergelijkingen dat je alleen in één keer van $t=1$ naar $t=2$ kan gaan. Met differentiaalvergelijkingen is tijd continu, en is de tijd tussen $t=1$ en $t=2$ in oneindig kleine stapjes is opgedeeld. Ook bij andere facetten van een model moeten we kiezen tussen discrete en continue waarden: modelleren we de het daadwerkelijke (discrete) aantal konijnen, of versimpelen we hun aantal tot een (continue) dichtheid? Met ODEs, en zo ook met het predator-prooi model, nemen we aan dat populatiegrootes continu zijn. Zelfs als de dichtheid vossen kleiner is dan 1, kan dit nog steeds een biologisch relevant aantal vossen omschrijven (want $1 \over 10$ vossen per vierkante meter is nogsteeds een behoorlijk druk bos!). Maar hoe klein kan de dichtheid zijn voordat we ons zorgen moeten maken of we het nog over "hele vossen" hebben? Om te illustreren hoe belangrijk dit is, kun je in @nte-atto lezen over het probleem van "de atto-vos". 
+Eerder in dit cursusonderdeel heb je al kennisgemaakt met discrete tijdstappen. Zo zagen we bijvoorbeeld bij de differentievergelijkingen dat je alleen in één keer van $t=1$ naar $t=2$ kan gaan. Met differentiaalvergelijkingen is tijd continu, en is de tijd tussen $t=1$ en $t=2$ in oneindig kleine stapjes is opgedeeld. Ook bij andere facetten van een model moeten we kiezen tussen discrete en continue waarden: modelleren we de het daadwerkelijke (discrete) aantal konijnen, of versimpelen we hun aantal tot een (continue) dichtheid? Met ODEs, en zo ook met het predator-prooi model, nemen we aan dat populatiegrootes continu zijn. Zelfs als de dichtheid vossen kleiner is dan 1, kan dit nog steeds een biologisch relevant aantal vossen omschrijven (want $1 \over 10$ vossen per vierkante meter is nogsteeds een behoorlijk druk bos!). Maar hoe klein kan de dichtheid zijn voordat we ons zorgen moeten maken of we het nog over "hele vossen" hebben? Om te illustreren hoe belangrijk dit is, kun je in @tip-atto lezen over het probleem van "de atto-vos". 
 
-::: {.callout-warning #nte-atto}
+::: {.callout-important #tip-atto collapse=false}
 
 ## De atto-vos
 In 1991, tijdens het graven van de kanaaltunnel tussen Engeland en Frankrijk, waren er veel zorgen dat vossen met rabiës (hondsdolheid) de vossen in het Verenigd Koninkrijk zouden besmetten. Echter is het VK tot op de dag van vandaag volledig rabiës-vrij gebleven. De voorspelling was gedaan met een ODE-model, maar de dichtheid van de vossenpopulatie die succesvol door de kanaal-tunnel zou migreren was zeer laag ($10^{-18}$). Omdat $10^{-18}$ seconden een atto-seconde heet, kunnen we dit artefact van modelleren het ``atto-vos''-probleem noemen. Want laten we eerlijk zijn: een heel klein stukje vos kan niet door een tunnel migreren, en dus ook geen ziektes verspreiden!
@@ -22,7 +25,7 @@ In 1991, tijdens het graven van de kanaaltunnel tussen Engeland en Frankrijk, wa
 
 :::
 
-Het probleem van discrete tijdstappen uit @sec-exp en de anekdote van de atto-vos zijn niet de enige momenten dat het belangrijk is om stil te staan bij wat voor variabelen we gebruiken, en wat ze precies betekenen. Bij elk model is het belangrijk om na te gaan welke keuze het meest logisch is: zijn de variabelen (toestand, tijd, en ruimte) discreet of continu (@fig-contdisc)? Natuurlijk zijn modellen altijd doelbewuste versimpelingen, maar in het geval van de atto-vos schepte het model een heel verkeerd beeld van het probleem! Toch is experimenteren met infectieziektes zeer onwenselijk, dus zijn deze modellen natuurlijk wel een zeer belangrijk stuk gereedschap!
+Het probleem van discrete tijdstappen uit @sec-exp en de anekdote van de atto-vos zijn niet de enige momenten dat het belangrijk is om stil te staan bij wat voor variabelen we gebruiken, en wat ze precies betekenen. Bij elk model is het belangrijk om na te gaan welke keuze het meest logisch is: zijn de variabelen (toestand, tijd, en ruimte) discreet of continu (@fig-contdisc)? Natuurlijk zijn modellen altijd doelbewuste versimpelingen, maar in het geval van de atto-vos schepte het model een heel verkeerd beeld van het probleem! Toch is experimenteren met infectieziektes zeer onwenselijk, dus zijn deze modellen natuurlijk wel een zeer belangrijk stuk gereedschap! Laten we onze eerdere aanname dat ruimte in "hokjes" is opgedeeld dus ook eens onder de loep nemen. 
 
 ![CAPTION TODO](figuren/continuous_discrete_choices.png){#fig-contdisc}
 
@@ -30,7 +33,7 @@ Het probleem van discrete tijdstappen uit @sec-exp en de anekdote van de atto-vo
 
 [![From https://youtu.be/p4YirERTVF0](figuren/particle_life.png){width="80%" fig-align="center"}](https://youtu.be/p4YirERTVF0)
 
-Hoewel biologie zeer complex is, bestaat het fundamenteel niet uit andere deeltjes dan niet-levende systemen. Deeltjes trekken elkaar aan, stoten elkaar af, en ondergaan interacties. Laten we zoiets in R modelleren, en kijken wat er gebeurt. Stel je voor dat we 100 punten in een ruimte verspreiden, allemaal met een x- en y-coördinaat. Zoals hierboven besproken kunnen we ervoor kiezen om deze coördinaten niet als gehele getallen (1, 2, 3, \textit{etc.}), maar als decimale getallen (2.159, 0.156, \textit{etc.}) uit te drukken. Laten we aannemen dat de 100 punten die we in willekeurige plekken in de ruimte zetten elkaar van een afstand aantrekken, terwijl ze op kleine schaal elkaar juist afstoten. Hoewel de code hiervoor niet super ingewikkeld is, is dit geen leerstof. In plaats daarvan, kunnen we onze regels uitdrukken in "pseudocode", waarin we verbaal omschrijven wat er moet gebeuren: 
+Hoewel biologie zeer complex is, bestaat het fundamenteel niet uit andere deeltjes dan niet-levende systemen. Deeltjes trekken elkaar aan, stoten elkaar af, en ondergaan interacties. Laten we zoiets in R modelleren, en kijken wat er gebeurt. Stel je voor dat we 100 punten in een ruimte verspreiden, allemaal met een x- en y-coördinaat. Zoals hierboven besproken kiezen we er dit keer niet voor om de coördinaten als gehele getallen (1, 2, 3, \textit{etc.}) uit te drukken, maar drukken we ze uit als decimale getallen (2.159, 0.156, \textit{etc.}). We geven de 100 punten allereerst een willekeurige plek in de ruimte, en nemen dan aan dat ze elkaar van een afstand aantrekken, terwijl ze op kleine schaal elkaar juist afstoten. Hoewel de code hiervoor niet super ingewikkeld is, is **de code geen leerstof**. In plaats daarvan, kunnen we onze **regels uitdrukken in "pseudocode"**, waarin we verbaal omschrijven wat er moet gebeuren: 
 
 1. Verspreid 100 punten in een 2D ruimte met willekeurige coördinaten tussen 0 en 1
 1. Voor elk punt, bereken de afstand tot alle andere punten, en zet een stapje in hun richting
@@ -38,8 +41,6 @@ Hoewel biologie zeer complex is, bestaat het fundamenteel niet uit andere deeltj
 1. (elke 10e tijdstap, geef de punten weer in een plot)
 1. Ga terug naar stap 2
 
-
-::: {.content-visible when-format="html"}
 Zoals gezegd, de R code hoeven jullie niet te begrijpen, maar voor de geïnteresserde student staat deze hier: 
 
 ```{r}
@@ -117,15 +118,9 @@ for (t in 1:aantal_tijdstappen) {
   
 }
 ```
-:::
-  
-::: {.content-visible when-format="pdf"}
-Zoals gezegd, de R code hoeven jullie niet te begrijpen, maar voor de geïnteresserde student staat die op de website. 
-:::
 
-Zoals je ziet onstaat er een zeer specifiek patroon. Als je dit patroon nog niet erg spannend vindt, zouden we ook kunnen kijken wat er met meerdere deeltjes (kleuren) gebeurt, die naast de aantrekkingskracht op hunzelf ook elkaar aantrekken:
+Zoals je ziet onstaat er na een tijdje een zeer specifiek patroon. Als je dit patroon nog niet erg spannend vindt, zouden we ook kunnen kijken wat er met meerdere deeltjes (kleuren) gebeurt, die naast de aantrekkingskracht op hunzelf ook elkaar aantrekken:
 
-::: {.content-visible when-format="html"}
 ```{r}
 #| eval: false
 #| code-fold: true
@@ -235,45 +230,44 @@ for (i in 1:1000) {
 }
 ```
 
-::: {.content-visible when-format="html"}
-```{=html}
-<iframe width="100%" height="550" src="https://tbb.bio.uu.nl/bvd/bms/simulations/plife/" title="Simulation"></iframe>
-```
-:::
-  
-::: {.content-visible when-format="pdf"}
-...
-:::
 
+```{=html}
+<div class="interactive_content">
+<iframe id="iframeToReplace" width="100%" height="550" src="https://tbb.bio.uu.nl/bvd/bms/simulations/plife/" title="Simulation"></iframe>
+<center><img src="figuren/interactive_plife.png" id="imgToShow" style="display:none;padding-bottom:30px;"></img>
+</center>
+</div><br>
+```
+  
 Zoals je ziet vormen de deeltjes nu niet meer een stabiel patroon, maar blijven de deeltjes constant rondjes om elkaar heen draaien. Als we één van deze 6 kleuren (rood) juist geen aantrekking geven tot een andere kleur, dan gebeurt er werkelijk iets opmerkelijks:
 
-::: {.content-visible when-format="html"}
-```{=html}
-<iframe width="100%" height="550" src="https://tbb.bio.uu.nl/bvd/bms/simulations/plife2/" title="Simulation"></iframe>
-```
-:::
-  
-::: {.content-visible when-format="pdf"}
-...
-:::
 
-:::
+```{=html}
+<div class="interactive_content">
+<iframe id="iframeToReplace" width="100%" height="550" src="https://tbb.bio.uu.nl/bvd/bms/simulations/plife2/" title="Simulation"></iframe>
+<center><img src="figuren/interactive_plife2.png" id="imgToShow" style="display:none;padding-bottom:30px;"></img>
+</center>
+</div><br>
+```
 
 Zoals je je kan voorstellen, kunnen variaties om deze simpele regels enorm veel verschillende patronen opleveren. Het systeem wat je hier bekijkt is *particle life* genoemd. Als je hier meer over wil weten, vind je [hier](https://www.youtube.com/watch?v=p4YirERTVF0) een uitgebreide video, en [hier](https://webgl-particle-life.netlify.app/) een app die je zelf kan downloaden om met deze systemen te spelen.
 
-Als je de bovenstaande video's en simulaties bekijkt zou je bijna denken dat je naar echte beestjes kijkt. Het lijkt bijvoorbeeld bijna alsof de bovenstaande worm ``beslissingen'' maakt wanneer deze zich plotseling omdraait. Maar alles gaat alleen maar om het aantrekken en wegduwen van stipjes. Een enkele stip zou natuurlijk niet dergelijk complex gedrag ontwikkelen, dat gebeurt alleen in de aanwezigheid van anderen. Het complexe gedrag (of het complexe patroon) wordt daarom een *emergente eigenschap* genoemd. Emergente eigenschappen komen we overal tegen in de biologie: van vetzuren die zich organiseren tot dubbele membranen, tot schimmels die doolhof-achtige patronen vormen, tot de strepen op een zebra, tot chimpansees en mensen die complexe politieke structuren vormen. Hoewel al deze structuren erg complex lijken, is het in de kern wellicht gedreven door hele simpele regels. 
+Als je de bovenstaande video's en simulaties bekijkt zou je bijna denken dat je naar echte beestjes kijkt. Het lijkt bijvoorbeeld bijna alsof de bovenstaande worm "beslissingen" maakt wanneer deze zich plotseling omdraait. Maar alles gaat alleen maar om het aantrekken en wegduwen van stipjes. Een enkele stip zou natuurlijk niet dergelijk complex gedrag ontwikkelen, dat gebeurt alleen in de aanwezigheid van anderen. Als simpele onderdelen bij elkaar komen en daardoor complexe dynamica of patronen genereren, spreken we van *emergente eigenschap*. Emergente eigenschappen komen we overal tegen in de biologie: van vetzuren die zich organiseren tot dubbele membranen, tot microben die doolhof-achtige patronen vormen (@fig-maze), tot de strepen op een zebra, tot chimpansees en mensen die complexe politieke structuren vormen. Hoewel al deze structuren erg complex lijken, is het in de kern wellicht gedreven door hele simpele regels. 
+
+![Foto door Lars Dietrich (Columbia University)](figuren/mazepattern.jpg){#fig-maze width="60%"}
 
 ## Zwermpatronen in boids
 
-Particle life is een zogenaamd *toy model*. Dat wil zeggen: het laat bepaalde principes heel goed zien, maar het is niet per se een model van een specifiek biologisch systeem. Maar het illustreert wel heel goed dat complex (emergent) gedrag uit hele simpele regeltjes kan ontstaan. Hier en daar doet het zelfs wel wat denken aan de zwermpatronen die je ziet in bijvoorbeeld insecten, vissen en vogels. Wellicht kunnen we dit model aanpassen om specifieker naar dit gedrag te kijken: hoe vogels zogenaamde "murmuraties" vormen. 
+Particle life is een zogenaamd *toy model*. Dat wil zeggen: het laat bepaalde principes heel goed zien, maar het is niet per se een model van een specifiek biologisch systeem. Maar het illustreert wel heel goed dat complex (emergent) gedrag uit hele simpele regels kan ontstaan. Hier en daar doet het zelfs wel wat denken aan de zwermpatronen die je ziet in bijvoorbeeld insecten, vissen en vogels. Wellicht kunnen we dit model aanpassen om specifieker naar dit gedrag te kijken: hoe vogels zogenaamde "murmuraties" vormen. 
 
 Laten we er allereerst vanuit gaan dat vogels alleen vogels in de buurt kunnen zien. Dat wil zeggen, hun gedrag wordt alleen bepaald door nabije buren. In pseudocode, volgt elke vogel de volgende regels:
 
-* Beweeg je naar het midden van de groep toe
 * Probeer je richting uit te lijnen met de groep
+* Beweeg je naar het midden van de groep toe
 * Probeer te voorkomen dat je met anderen botst
 
-![Caption TODO](figuren/boid_rules.png)
+![De drie simpele regels van Boids: een model dat prachtige "murmuraties" op kan leveren.](figuren/boid_rules.png)
+
 Als je deze drie regels samenvoegt, zul je zien dat je onmiddelijk prachtige murmuraties ziet:
 
 ::: {.content-visible when-format="html"}
@@ -281,22 +275,14 @@ Als je deze drie regels samenvoegt, zul je zien dat je onmiddelijk prachtige mur
 <iframe width="100%" height="550" src="https://tbb.bio.uu.nl/bvd/bms/simulations/murmuraties/" title="Simulation"></iframe>
 ```
 :::
-  
-  
-::: {.content-visible when-format="pdf"}
 
-...
-
-:::
-
-
-Dit model is door de bedenker, Craig Reynolds, "boids" genoemd, omdat hij het grappig vond hoe mensen in New York het woord *birds* uitspraken. Anders dan particle life, kunnen we met een dergelijk model weldegelijk biologisch onderzoek doen. Het wordt bijvoorbeeld gebruikt om te onderzoeken hoe zwermen van spreeuwen reageren op predatie door havikken, wat in het echt natuurlijk tijdrovend, verstorend, en gewoon heel lastig te meten kan zijn!
+Dit model is door de bedenker, Craig Reynolds, "boids" genoemd, omdat hij het grappig vond hoe mensen in New York het woord *birds* uitspraken. Anders dan particle life, kunnen we met een dergelijk model weldegelijk biologisch onderzoek doen. Het wordt bijvoorbeeld door de onderzoeksgroep van Charlotte Hemelrijk (Emeritus professor aan de Rijksuniversiteit Groningen) gebruikt om te onderzoeken hoe zwermen van spreeuwen reageren op [predatie door havikken](https://www.sciencedirect.com/science/article/abs/pii/S0003347211002867). Met dergelijk onderzoek kunnen we observaties uit het veld goed aanvullen, want dergelijk veldwerk is natuurlijk heel pittig en tijdrovend!
 
 ## Aapjes met gedrag
 
-In hoofdstuk @sec-ruimtelijk hebben we de basis geleerd van individual-based modellen, maar hebben we vooral gekeken naar groeiende populaties op een grid. Hoewel dergelijke grids veel technische voordelen hebben (een grid is heel handig als je snel wilt opzoeken wie er "naast" iemand zit), is een echt ecosysteem natuurlijk niet in hokjes opgedeeld. Nu we hierboven individuen iets meer vrijheid hebben gegeven, kunnen we wellicht ook meer "gedragsregels" toevoegen. Laten we dit eerst doen met een simpel model van aapjes die naar fruit zoeken.
+In hoofdstuk @sec-ruimtelijk hebben we de basis geleerd van individual-based modellen, maar hebben we vooral gekeken naar groeiende populaties op een grid. Hoewel dergelijke grids veel technische voordelen hebben (een grid is heel handig als je snel wilt bepalen wie er "naast" iemand zit), is een echt ecosysteem natuurlijk niet in hokjes opgedeeld. Nu we hierboven individuen iets meer vrijheid hebben gegeven, kunnen we wellicht ook meer "gedragsregels" toevoegen. Laten we dit eerst doen met een simpel model van aapjes die naar fruit zoeken.
 
-![CAPTION TODO](figuren/aapjes.png)
+![Overzicht van een individual based model van aapjes die naar eten zoeken.](figuren/aapjes.png)
 
 Laten we een groot grasveld voorstellen, waarin zich individuele aapjes bevinden. Wederom schrijven we het systeem op in pseudocode:
 
@@ -310,11 +296,21 @@ Voor elke aap in de simulatie:
 Nu je een paar keer pseudocode hebt gezien, begrijp je misschien waarom dit handig is. Als wetenschapper is het belangrijk om goed te communiceren hoe je onderzoek precies is opgezet, maar we willen niet altijd door hele stukken code moeten lezen. Het doel van pseudocode is om deze precies genoeg te maken, zodat iemand anders het zou kunnen reproduceren (eventueel in een andere programmeertaal!). De resultaten van zo'n computermodel zouden namelijk niet van de programmeertaal moeten afhangen, maar van de aannames die gedaan worden. 
 :::
 
-Zoals je in de bovenstaande omschrijving kan lezen, zal niet elk aapje hetzelfde doen. Aapje 1 t/m 5 hebben veel buur-aapjes en voelen zich veilig. Omdat ze ook geen honger hebben, blijven ze zitten. Aapje 6 heeft ook geen honger, maar voelt zich niet veilig, en rent terug naar de groep. Aapje 7 heeft echter veel honger, en zal dus (eventueel met gevaar voor eigen leven) naar eten blijven zoeken. Door deze gedragsregels een lange tijd te herhalen, kunnen we onderzoeken hoe onze virtuele aapjes naar eten zoeken, en hoe ze groepjes vormen. In het werkcollege gaan jullie [met deze simulatie](https://tbb.bio.uu.nl/bvd/bms/simulations/aapjes/) aan de slag, en bestuderen hoe emergente eigenschappen bepalen hoe veel fruit deze aapjes vinden. Natuurlijk kan je allerlei gedrag aan een dergelijk model toevoegen: vlooien, vechten, opvoeden, en ga zo maar door. Deze modellen kunnen dus een hele efficiënte (snel, goedkoop) en niet-verstorende manier zijn om gedrag mee te bestuderen. 
+Zoals je in de bovenstaande omschrijving kan lezen, zal niet elk aapje hetzelfde doen. Aapje 1 t/m 5 hebben veel buur-aapjes en voelen zich veilig. Omdat ze ook geen honger hebben, blijven ze zitten. Aapje 6 heeft ook geen honger, maar voelt zich niet veilig, en rent terug naar de groep. Aapje 7 heeft echter veel honger, en zal dus (eventueel met gevaar voor eigen leven) naar eten blijven zoeken. Door deze gedragsregels een lange tijd te herhalen, kunnen we onderzoeken hoe onze virtuele aapjes naar eten zoeken, en hoe ze groepjes vormen. 
+
+```{=html}
+<div class="interactive_content">
+<iframe id="iframeToReplace" width="100%" height="330" src="https://tbb.bio.uu.nl/bvd/bms/simulations/aapjes_min/" title="Simulation"></iframe>
+<center><img src="figuren/interactive_aapjes.png" id="imgToShow" style="display:none;padding-bottom:30px;"></img>
+</center>
+</div><br>
+```
+
+In het werkcollege gaan jullie [met deze simulatie](https://tbb.bio.uu.nl/bvd/bms/simulations/aapjes/) aan de slag, en bestuderen hoe emergente eigenschappen bepalen hoe veel fruit deze aapjes vinden. Natuurlijk kan je allerlei gedrag aan een dergelijk model toevoegen: vlooien, vechten, opvoeden, en ga zo maar door. Deze modellen kunnen dus een hele efficiënte (snel, goedkoop) en niet-verstorende manier zijn om gedrag te bestuderen. 
 
 ## Parameter-sweeps
 
-In de hoofdstukken over het Lotka-Volterra predator-prooi model heb je kennis gemaakt een bifurcatie-diagram (@fig-lvbif). Door de parameter $K$ te varieren, zagen we twee belangrijke overgangen (bifurcaties): eerst een overgang van alleen prooi naar een stabiele samenleving van predator en prooi, en dan een tweede overgang naar oscillerende predator-prooi populaties (Hopf bifurcatie). Computermodellen zoals de IBM van de aapjes hierboven bevatten vaak erg veel parameters: hoe snel eten de aapjes, hoeveel aapjes moeten er in de buurt zijn zodat een aapje zich veilig voelt, hoeveel eten ligt er in de omgeving, *etc.*. Zodoende is het vaak belangrijk om een zogeheten *parameter-sweep* te doen, waarbij je vele parameters systematisch bestudeert en de uitkomst classificeert. Als je twee parameters varieert, kun je deze uitkomsten bijvoorbeeld opslaan in een grote tabel waarbij de rijen de ene parameter zijn, en de kolommen de andere (@fig-parsweep).
+In de hoofdstukken over het Lotka-Volterra predator-prooi model heb je kennis gemaakt een bifurcatie-diagram (@fig-lvbif). Door de parameter $K$ te varieren, zagen we twee belangrijke overgangen (bifurcaties): eerst een overgang van alleen prooi naar een stabiele samenleving van predator en prooi, en dan een tweede overgang naar oscillerende predator-prooi populaties (Hopf bifurcatie). Computermodellen zoals de IBM van de aapjes hierboven bevatten vaak erg veel parameters: hoe snel eten de aapjes, hoeveel aapjes moeten er in de buurt zijn zodat een aapje zich veilig voelt, hoeveel eten ligt er in de omgeving, *etc.* Zodoende is het vaak belangrijk om een zogeheten *parameter-sweep* te doen, waarbij je vele parameters systematisch bestudeert en de uitkomst classificeert. Als je twee parameters varieert, kun je deze uitkomsten bijvoorbeeld opslaan in een grote tabel waarbij de rijen de ene parameter zijn, en de kolommen de andere (@fig-parsweep).
 
 ![CAPTION TODO](figuren/parsweep.png){#fig-parsweep width="80%" fig-align="center"}
 
@@ -344,27 +340,24 @@ In de hoofdstukken over het Lotka-Volterra predator-prooi model heb je kennis ge
 
 ## Foeragerende mieren
 
-Als het gaat om foerageren, lijken mieren een stuk meer georganiseerd dan de aapjes uit de bovenstaande simulatie. Ze rennen niet maar zo een kant op, maar volgen elkaar netjes van/naar een voedselbron. Echter doen mieren dat niet altijd door elkaar te zien (sterker nog, sommige mieren zijn volledig blind!). In plaats daarvan ruiken ze elkaars feromonen, die bijvoorbeeld aangeven waar het voedsel ligt, waar het nest is, of waar er gevaar dreigt. Hoewel dit meestal heel goed werkt, kun je ook een zogeheten "mierenkringen" *ant mills* krijgen, waar mieren voor eeuwig in rondjes achter elkaar aan lopen (soms net zo lang tot ze van uitputting dood gaan!). 
+Als het gaat om foerageren, lijken mieren een stuk georganiseerder dan de aapjes uit de bovenstaande simulatie. Ze rennen niet maar zo een kant op, maar volgen elkaar netjes van/naar een voedselbron. Echter doen mieren dat niet altijd door elkaar te zien (sterker nog, sommige mieren zijn volledig blind!). In plaats daarvan ruiken ze elkaars feromonen, die bijvoorbeeld aangeven waar het voedsel ligt, waar het nest is, of waar er gevaar dreigt. Hoewel dit meestal heel goed werkt, kun je ook een zogeheten "mierenkringen" *ant mills* krijgen, waar mieren voor eeuwig in rondjes achter elkaar aan lopen (soms net zo lang tot ze van uitputting dood gaan!). 
 
-![Todo: naast elkaar zetten. CAPTION + replace / find out where I found these images. I think they were creative commons but I didnt save the link...](figuren/ant_trail.png){width="49%"}
+:::{layout-ncol=2}
+![Mieren vormen paadjes naar/van het eten door elkaars feromonen te volgen...](figuren/ant_trail.png){width="80%"}
 
-![Todo CAPTION + replace / find out where I found these images. I think they were creative commons but I didnt save the link...](figuren/mosh_ants.png){width="49%"}
+![.. maar kunnen daardoor ook in een zogeheten *ant-mill* terecht komen!](figuren/mosh_ants.png){width="95%"}
+
+:::
 
 Dus, een belangrijke verschil met de aapjes is dat de mieren niet direct *elkaar* zien, maar feromonen. Deze feromonen zijn bovendien stofjes die een beetje kunnen diffunderen, een concept waar we in het volgende hoofdstuk nog meer naar zullen kijken. Als we deze componenten samenbrengen in een simulatie, zien we inderdaad dat mieren niet alleen prachtige sporen vormen, maar ook de bovengenoemde mierenkringen kunnen vormen:
 
-
-::: {.content-visible when-format="html"}
 ```{=html}
-<iframe width="100%" height="650" src="https://tbb.bio.uu.nl/bvd/bms/simulations/ants/" title="Simulation"></iframe>
+<div class="interactive_content">
+<iframe id="iframeToReplace" width="100%" height="650" src="https://tbb.bio.uu.nl/bvd/bms/simulations/ants/" title="Simulation"></iframe>
+<center><img src="figuren/interactive_ants.png" id="imgToShow" style="display:none;padding-bottom:30px;"></img>
+</center>
+</div><br>
 ```
-:::
-  
-  
-::: {.content-visible when-format="pdf"}
-
-...
-
-:::
 
 
 ## Opgaven
@@ -455,7 +448,7 @@ Kijk nu naar het rechter scenario, waar de ruimte continu is. De prooi zit dan o
     
 c. Leg opnieuw in pseudocode uit hoe je bepaalt welke prooidieren binnen een interactie-afstand van 1 zitten. Dit keer moet je wél afstanden berekenen. Hoeveel prooidieren heb je nu gevonden? Vergelijk je antwoord weer met een medestudent.
 
-d. Hierboven heb je twee algoritmes bedacht. Stel dat er veel meer prooidieren aanwezig zijn (bijvoorbeeld 100). Met welk van de twee algoritmen kun je sneller bepalen welke prooien er ``in de buurt'' van de predator zijn? 
+d. Hierboven heb je twee algoritmes bedacht. Stel dat er veel meer prooidieren aanwezig zijn (bijvoorbeeld 1000). Met welk van de twee algoritmen kun je sneller bepalen welke prooien er ``in de buurt'' van de predator zijn? 
 :::
 
 ::: {.Rexr #exr-gol}
