@@ -40,11 +40,13 @@ Kansvariabelen kunnen op dezelfde manier worden ingedeeld.
 ::: {#exr-type}
 ## Typen kansvariabelen
 
-Van welk type zijn de volgende kansvariabelen?
+Kansvariabelen kunnen nogsteeds discreet, numeriek, categoriaal en ordinaal zijn. Van welk type zijn de volgende kansvariabelen?
 
 **a.**  Het aantal ogen bij het werpen van een dobbelsteen.
 
 **b.**  Het resultaat bij het gooien van een muntje (dus kop of munt). 
+
+**c.** Een getrokken kaart uit een set speelkaarten
 :::
 
 De verzameling van alle mogelijke uitkomsten
@@ -406,8 +408,23 @@ Opgaven maken.
 
 ## Hartfalen en diabetes
 
-:::
+In een land wonen 30 miljoen mensen. In 2024 hebben 15.000 van deze mensen een hartfalen ondergaan. 450.000 mensen in dit land hebben diabetes. 
 
+**a.** Stel je pakt een random persoon uit dit land, hoe groot is de kans dat je iemand vindt die vorig jaar een hartfalen heeft ondergaan?  
+
+*Antwoord: *$30*10^6 / 15*10^3 = 0.0005$
+
+**b.** Hoe groot is de kans dat iemand die diabetes heeft afgelopen jaar ook een hartfalen heeft ondergaan? 
+
+*Antwoord:* $0.0005*450*10^3/30*10^6 = 0.0000075$
+
+Het blijkt dat 1/1000 mensen met diabetes vorig jaar een hartfalen heeft ondergaan. 
+
+**c.** Bereken de kans dat iemand die diabetes heeft afgelopen jaar ook een hartfalen heeft ondergaan gegeven deze nieuwe informatie. Gebruik  @eq-conditionele-kans
+
+*Antwoord: * $Pr(hartfalen|diabetes)\frac{Pr(Diabetes\&Hartfalen)}{Pr(diabetes)} = \frac{1/1000}{450.000/30.000.000} = \frac{1}{15}\approx 0.067$
+
+:::
 
 ::: {#exr-omdraaien-bayes}
 
@@ -419,21 +436,21 @@ Gebeurtenis $A$ is "$X$ is even" en gebeurtenis $B$ is "$X < 3$".
 
 **a.**  Teken het Venn-diagram van @fig-vennAB na.
 
-**b.**  Bepaal voor elke mogelijke uitkomst of deze thuishoort in het witte, het gele, het blauwe, of het groene deel van het Venn-diagram, en schrijf de uitkomst vervolgens in dat deel.
+**b.**  Bepaal voor elke mogelijke uitkomst (1 tot 6)
+in welk deel van het Venn-diagram het thuishoort, 
+en schrijf het daarin.
 
-**c.**  Wat is de kans op $\pr{A|B}$?
+**c.**  Wat is de kans $\pr{A}$?
 
-**d.**  Wat is de kans $\pr{B|A}$?
+**d.**  Wat is de kans $\pr{B}$?
 
-**e**   Leg uit waarom in het algemeen $\pr{A|B}$ niet gelijk is aan $\pr{B|A}$.
+**e.**  Wat is de kans $\pr{A \text{ en } B}$?
 
-:::
+**f.**  Wat is de kans op $\pr{A|B}$?
 
+**g.**  Wat is de kans $\pr{B|A}$?
 
-### De stelling van Bayes
-
-::: {.todo-box}
-Schrijven en oefenopgave maken.
+**h.**   Leg uit waarom in het algemeen $\pr{A|B}$ niet gelijk is aan $\pr{B|A}$.
 
 :::
 
@@ -536,11 +553,14 @@ Oefenen met onafhankelijke gebeurtenissen.
 
 ## Redeneerfout
 
-Redeneerfout: Ik heb al 4 keer 6 gegooid dus de kans dat ik de volgende keer wéér 6 gooi is kleiner.
+Welke van de volgende redenaties kloppen? Waarom kloppen de anderen niet? 
 
-**a.**  x
+**a.**  Ik heb al 4 keer 6 gegooid dus de kans dat ik de volgende keer wéér 6 gooi is kleiner.
 
-**b.**  y
+**b.**  De kans dat ik eerst 1, daarna 2, daarna 3, daarna 4, daarna 5 en daarna 6 gooi is even groot als 6 keer achter elkaar 6 gooien. 
+
+**c.**  Als ik 6 dobbelstenen gooi is de kans even groot dat ik 6 verschillende getallen heb dan dat ik dat niet heb
+
 
 :::
 
@@ -760,10 +780,10 @@ Stel dat $A$ en $B$ elkaar wederzijds uitsluiten.
 **a.** Wat is $\pr{A \textrm{ en } B}$?
 
 **b.** Als $A$ en $B$ elkaar uitsluiten 
-        mag je de optelregel uit vergelijking~\ref{eq:AofBspeciaal}
+        mag je de optelregel uit vergelijking~\ref{eq-AofBspeciaal}
         gebruiken om $\pr{A \textrm{ of } B}$ te berekenen.
         Gaat er iets mis als je in plaats daarvan de algemene regel
-        van vergelijking~\ref{eq:AofBspeciaal} gebruikt?
+        van vergelijking~\ref{eq-AofBspeciaal} gebruikt?
 :::
 
 ::: {#exr-or-context}
@@ -775,6 +795,108 @@ Oefenen met $A$ of $B$ in biologische context
 :::
 
 
+## De Stelling van Bayes
+
+In @exr-omdraaien-bayes heb je gezien dat $\pr{A |B}$ en $\pr{B | A}$
+over het algemeen niet gelijk zijn.
+Dat is eigenlijk ook logisch als je het concreet maakt
+met een voorbeeld.
+De kans dat een willekeurig persoon zwanger is 
+gegeven dat die persoon een vrouw is,
+is iets heel anders dan de kans dat een persoon een vrouw is gegeven dat deze zwanger is.
+
+Toch is er wel een relatie tussen de twee conditionele kansen.
+Die relatie heet de **Stelling van Bayes** of ook wel
+de *regel* van Bayes,
+naar Thomas Bayes (1701--1761),
+de Engelsman die deze regel als eerste lijkt te hebben gebruikt.
+
+De relatie is gemakkelijk af te leiden
+uit twee vergelijkingen die we eerder gezien hebben,
+namelijk @eq-AenBalgemeen1 en @eq-AenBalgemeen1:
+$$
+\begin{gather}
+\pr{A \text{ en } B} = \pr{A}\pr{ B | A},\\
+\pr{A \text{ en } B} = \pr{B}\pr{ A | B}.
+\end{gather}
+$$
+Daaruit volgt gelijk dat
+$$
+\pr{ B | A}\pr{A} = \pr{ A | B}\pr{B}.
+$$
+Aangenomen dat $\pr{A} \neq 0$ kunnen we vervolgens
+delen door $\pr{A}$,
+en daarmee krijgen we de gewenste regel:
+
+::: {.callout-important #imp-bayes icon=false}
+
+## De Stelling van Bayes
+
+$$ 
+\pr{ B | A} = \frac{\pr{A | B} \pr{B}}{\pr{A}}.
+$$
+:::
+
+Deze stelling maakt het mogelijk om $\pr{B | A}$ en $\pr{A | B}$ in elkaar om te rekenen.
+
+::: {#exr-bayes-screening}
+
+## De *screening*paradox
+
+Bij bevolkingsonderzoeken worden mensen gescreend 
+om ziektes in een vroeg stadium te ontdekken. 
+Bijvoorbeeld,
+in de strijd tegen borstkanker
+worden in Nederland vrouwen van 50 tot 75 jaar elke twee jaar uitgenodigd voor een mammografie.
+
+De **sensitiviteit** van een mammografie is ongeveer 90%; dat wil zeggen dat de kans 0,9 is dat de test positief is als een vrouw daadwerkelijk borstkanker heeft.
+De **specificiteit** van een mammografie is ongeveer 95%;
+dat wil zeggen dat de kans 0,95 is dat de test negatief uitvalt bij vrouwen die geen borstkanker hebben.
+Een mammografie is dus een behoorlijk sensitieve en specifieke test, en bovendien niet duur.
+
+Borstkanker komt ook voor bij jongere vrouwen,
+met akelige consequenties.
+De vraag rijst dan: 
+waarom screenen we jongere vrouwen niet?
+
+Dit heeft te maken met de **screeningparadox**;
+deze opgave illustreert die paradox.
+
+Laten we als voorbeeld bekijken wat er zou gebeuren
+als we alle vrouwen van 30 jaar zouden screenen.
+Dat zijn er in Nederland zo'n 120.000. 
+Schattingen geven aan dat ongeveer 0,1% van de vrouwen van die leeftijd borstkanker heeft. 
+(We noemen dat getal de **incidentie** van borstkanker op die leeftijd.)
+
+De gebeurtenis dat een vrouw van 30 borstkanker heeft
+noteren we als $K$,
+de gebeurtenis dat ze geen borstkanker heeft als $G$
+(voor gezond).
+De gebeurtenis van een positieve test is $P$ en die van een negatieve test is $N$.
+
+  a. Wat is $\pr{K}$ (*incidence*)? Om hoeveel vrouwen van 30 jaar gaat het dus naar verwachting?
+  b. Wat is $\pr{G}$?
+  c. Wat is $\pr{P | K}$ (*true positive rate*)? Bij hoeveel vrouwen zou de screening naar verwachting kanker ontdekken?
+  d. Wat is $\pr{N | G}$ (*true negative rate*)?
+  e. Wat is $\pr{P | G}$ (*false positive rate*)? Bij hoeveel vrouwen zou de screening *onterecht* positief uitvallen? Vergelijk dit met je antwoord op onderdeel b.
+  f. Wat is $\pr{P}$? Hint: gebruik dat
+$$ 
+\begin{align}
+\pr{P} &= \pr{K \text{ and } P} + \pr{G \text{ and } P}\\
+& = \pr{P | K}\pr{K} + \pr{P | G}\pr{G}.\\
+\end{align}
+$$
+  Hoeveel vrouwen krijgen in totaal een positieve test terug?
+  g. Wat is $\pr{K | P}$, de kans dat iemand die met een positieve test wordt doorverwezen naar de cardioloog
+  ook daadwerkelijk kanker heeft? Hint: gebruik de [Stelling van Bayes](#imp-bayes).
+  h. Wat is, gezien deze resultaten, het grote nadeel van vroegtijdig screenen?
+  i. De sensitiviteit en specificiteit van deze test
+  was behoorlijk hoog; toch hebben de meeste vrouwen
+  met een positieve uitslag geen kanker.
+  Dat gegeven wordt de screeningparadox genoemd.
+  Leg uit wanneer die paradox optreedt.
+
+:::
 
 ## Samenvatting
   
@@ -787,19 +909,17 @@ Schrijven!
   
 ## Terminologie in het Engels
 
-| Nederlands    | Engels             |
-|---------------|--------------------|
-| kansen              | probabilities                   |
-| kansexperiment              | chance experiment                   |
-| kansvariabele              | ? random variable                   |
-| stochastische variabele              | stochastic variable                   |
-| kansruimte              | sample space                   |
-| gebeurtenis              | event                   |
-| frequentistische              | frequentist                   |
-| Venn-diagram              | Venn diagram                   |
-| conditionele kansen              |  conditional probabilities                  |
-| onafhankelijk              |  independent                  |
-| vermenigvuldigingsregel              | multiplication principle                   |
+| Nederlands                  | Engels                        | Betekenis |
+|---------------              |--------------------           |-------------------     |
+| conditionele kansen         |  conditional probabilities    | Een kans wiens grootte afhangt van de context |
+| frequentistische            | frequentist                   | De kans dat iets kan gebeuren uitgedrukt in de relatieve frequentie vergeleken met de andere mogelijkheden |
+| gebeurtenis                 | event                         | Een (verzameling van) mogelijke uitkomst(en) van een kansexperiment |
+| kansexperiment              | chance experiment             | Een experiment waarbij de uitkomst niet van tevoren te voorspellen is |
+| kansruimte                  | sample space                  | De verzameling van alle mogelijke uitkomsten van een kansexperiment. 
+| kansvariabele               | random variable               | Een variabele waarvan de waarde afhangt van een kansexperiment, wordt meestal aangeduid met een hoofdletter |
+| onafhankelijk               |  independent                  | Een gebeurtenis die niet afhangt van een andere gebeurtenis |
+| stochastische variabele/stochast     | stochastic variable           | Een ander woord voor kansvariabele |
+| Venn-diagram                | Venn diagram                  | Een diagram waarin je (overlappende) kansen in een kansruimte weer kan geven |
 
 
 : Woordenlijst @sec-kans . {#tbl-woorden-kans .striped .hover}
