@@ -1448,26 +1448,230 @@ Voorbeelden:
   dus niet zomaar uitgaan van een model waarbij opeenvolgende metingen
   onafhankelijk zijn.
   
+- **Steekproeven die bestaan uit groepjes.** 
+  Een andere situatie is een steekproef die bestaat uit samenhangende groepjes.
+  Bijvoorbeeld,
+  stel dat een reisorganisatie alle reizigers om hun mening vraagt,
+  maar de reizigers vaak reizen in paren of als gezin.
+  Dan is er een gevaar dat de mening van reisgezellen niet onafhankelijk zijn.
   
+Kortom, 
+  het is belangrijk om goed na te denken
+  over de aard van de variabele
+  en de manier waarop de gegevens tot stand zijn gekomen
+  om zo te bepalen of het Normale Model bij voorbaat van toepassing lijkt.
+
+### Geven de gegevens aanleiding tot twijfel?
   
-
-
-Het is dus belangrijk dat je altijd goed nadenkt
-  of het Normale
+Vervolgens is het belangrijk om de gegevens zelf te bekijken
+  om zo te bepalen of die aanleiding geven tot twijfel over het Normale Model.
   
+Als de populatie een verdeling heeft die sterk afwijkt
+  van een normale verdeling,
+  dan verwacht je dat ook te zien in een steekproef uit die populatie
+  (tenzij die steekproef heel klein is).
+Voordat je een BHI berekent 
+  of welke statistische analyse dan ook uitvoert
+  moet je dus altijd eerst je gegevens goed bestuderen.
+
+In @sec-variabelen-verdelingen heb je geleerd hoe je de verdeling van een variabele
+  kunt beschrijven en visualiseren.
+Voordat je een BHI berekent pas je dus altijd die methoden toe.
+Dat wil zeggen:
+
+1. **Bereken beschrijvende statistieken.** 
+  Deze geven je een grof beeld van de verdeling van je variabele. 
+  Bekijk het aantal waarnemingen $n$. 
+  Bereken maten van ligging en spreiding en gekijk die kritisch.
+  Als de mediaan bijvoorbeeld sterk afwijkt van het gemiddelde,
+  dan is dat een indicatie van een scheve verdeling
+  of bijzondere uitbijters.
   
-  
+2. **Visualiseer de gegevens.**
+  Je hebt geleerd hoe je een verdeling kunt visualiseren.
+  Maak een histogram en/of een boxplot en bekijk die goed. 
+  Ziet de histogram er symmetrisch en klokvormig uit?
+  Zijn de snorharen van de boxplot ongeveer symmetrisch,
+  ligt de mediaan ongeveer in het midden van de box,
+  en zijn er opvallende uitbijters?
+  Als de verdeling er vreemd of scheef uitziet
+  is het Normale Model mogelijk niet van toepassing.
 
+3. **Maak een Normale Kwantiel-Kwantiel-plot.**
+  Er bestaat een grafiek
+  die speciaal ontworpen is om afwijkingen van de normale verdeling beter zichtbaar te maken.
+  Deze grafiek heet de **Normale Kwantiel-Kwantiel-plot**,
+  of *Normal QQ plot* in het Engels.
+  We bespreken die plot in het de volgende paragraaf even apart bespreken.
 
+Door altijd de bovenstaande bekeningen en figuren te bestuderen
+krijg je een goed beeld van de toepasbaarheid van het Normale Model.
 
+### Het Normale Kwantiel-Kwantiel-plot
 
+In een Normale Kwantiel-Kwantiel-plot 
+(we zullen dat afkorten als QQ-plot)
+worden de kwantielen van de waarnemingen
+uitgezet tegen de kwantielen die je zou verwachten 
+als de 
 
-### Afwijkingen van de normale verdeling herkennen
+::: {#exm-normale-QQ}
 
-Voordat je de formule voor het BHI toepast
-  moet je je dus altijd afvragen of het Normale Model wel redelijk is.
+## Is `Pulse` (rusthartslag) ongeveer normaal verdeeld?
 
+Als voorbeeld zullen we de variabele `Pulse` (rusthartslag) onderzoeken
+uit de NHANES-database.
 
+We laden het pakket NHANES in:
+```{r}
+library(NHANES) 
+```
+Niet voor iedere persoon in de dataset is de hartslag ingevoerd.
+In sommige regels staat daarom `NA` (not available).
+We selecteren alleen de waarden die niet `NA` zijn:
+```{r}
+# Verwijder missende waarden van de variabele 'Pulse'
+pulse_data <- na.omit(NHANES$Pulse)
+length(pulse_data) # aantal datapunten dat overblijft
+```
+We vatten de gegevens eerst samen met kengetallen:
+```{r}
+summary(pulse_data)
+```
+De mediaan is iets kleiner dan het gemiddelde. De afstand van Q1 naar de mediaan (8,00)
+is ook kleiner dan van de mediaan naar Q3 (10,00). Dat suggereert een 
+iets rechts-scheve verdeling. 
+
+Hoe variabel zijn de gegevens?
+```{r}
+sd(pulse_data)
+IQR(pulse_data)
+```
+
+We maken nu achtereenvolgens een histogram en een boxplot:
+```{r}
+#| fig.width: 3.75
+#| fig.height: 3
+hist(pulse_data)
+```
+
+We maken nu achtereenvolgens een histogram en een boxplot:
+```{r}
+#| fig.width: 3
+#| fig.height: 4
+boxplot(pulse_data)
+```
+
+Beide plots bevestigen dat de verdeling iets scheef is. Je ziet dat
+het beste aan de uitbijters in de box plot: die zijn er alleen 
+aan de bovenkant.
+
+Tot slot voegen we een Normale QQ-plot toe:
+```{r}
+#| fig.width: 4
+#| fig.height: 4.4
+qqnorm(pulse_data)
+qqline(pulse_data)
+```
+Het midden van de verdeling volgt netjes een rechte lijn,
+maar in de staarten van de verdeling
+zijn de waargenomen waarden groter
+dan op basis van de normale verdeling verwacht zou worden. 
+(De punten liggen boven de diagonale lijn.)
+Dat laat zien dat ten opzichte van de normale verdeling
+de punten in beide staarten een te hoge waarde hebben.
+De linkerstaart van de verdeling is dus korter, de rechterstaart juist langer.
+Dat zagen we ook in de boxplot.
+
+We concluderen dat de rusthartslag rechts-scheef verdeeld is
+:::
+
+::: {#exr-matching-QQs}
+
+## Normale QQ-plots en histogrammen
+
+Hieronder vind je een figuur met vijf histogrammen
+en vijf Normale QQ-plots
+van variabelen uit de NHANES dataset. Kun jij uitvinden 
+welke QQ-plot bij welke histogram hoort?
+
+```{r}
+#| echo: false
+#| fig.height: 12
+#| fig.width: 6
+
+# Laad benodigde pakketten
+if (!requireNamespace("NHANES", quietly = TRUE)) {
+  install.packages("NHANES")
+}
+if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  install.packages("ggplot2")
+}
+if (!requireNamespace("gridExtra", quietly = TRUE)) {
+  install.packages("gridExtra")
+}
+
+library(NHANES)
+library(ggplot2)
+library(gridExtra)
+
+# Selecteer variabelen met verschillende verdelingen
+selected_vars <- c("Weight", "Height", "BMI", "BPSysAve", "SleepHrsNight")
+binwidths <- c(5, 2, 2, 5, 1)  # Specificeer binwidths voor elke variabele
+
+# Functie om NA's per variabele te verwijderen
+filter_na <- function(data, variable) {
+  data[!is.na(data[[variable]]), variable, drop = FALSE]
+}
+
+# Functie om histogrammen te genereren
+generate_histogram <- function(var_name, label, binwidth) {
+  filtered_data <- filter_na(NHANES, var_name)
+  ggplot(filtered_data, aes(x = .data[[var_name]])) +
+    geom_histogram(binwidth = binwidth, fill = "darkorange", color = "black", alpha = 0.7) +
+    labs(x = "Variabele", y = "Frequentie", subtitle = label) +
+    theme_minimal()
+}
+
+# Functie om QQ-plots te genereren
+generate_qqplot <- function(var_name, label) {
+  filtered_data <- filter_na(NHANES, var_name)
+  ggplot(filtered_data, aes(sample = .data[[var_name]])) +
+    stat_qq(distribution = qnorm) +
+    stat_qq_line(distribution = qnorm, color = "darkorange", size = 1) +
+    labs(x = "Theoretische kwantielen", y = "Geobserveerde waarden", subtitle = label) +
+    theme_minimal()
+}
+
+# Genereer histogrammen en QQ-plots met per variabele gefilterde data
+histograms <- mapply(
+  generate_histogram,
+  selected_vars,
+  paste0(letters[1:5], "."),
+  binwidths,
+  SIMPLIFY = FALSE
+)
+
+qqplots <- mapply(
+  generate_qqplot,
+  selected_vars,
+  paste0(letters[6:10], "."),
+  SIMPLIFY = FALSE
+)
+
+custom_order <- c("Height", "BMI", "SleepHrsNight", "Weight", "BPSysAve")
+qqplots <- qqplots[match(custom_order, selected_vars)]
+
+# Combineer histogrammen en QQ-plots in één figuur
+plots_left <- histograms
+plots_right <- qqplots
+all_plots <- c(rbind(plots_left, plots_right))  # Zorgt dat ze in kolommen staan
+
+grid.arrange(grobs = all_plots, ncol = 2)
+
+```
+
+:::
 
 ### De centrale limietstelling en de robuustheid van het Normale Model {#sec-centrale-limiet}
 
@@ -1863,14 +2067,6 @@ cat(
 
   g. Bij kleine steekproeven verwachten we dat het BHI zou kunnen afwijken. Voer het script opnieuw uit, maar dan met steekproeven van grootte 4. Wat concludeer je?
 :::
-
-### Afwijkingen van de normale verdeling herkennen
-
-
-
-### (On)afhankelijkheid van waarnemingen
-
-
 
 ### Wat als het statistische model echt niet van toepassing is? {#sec-aannames}
 
