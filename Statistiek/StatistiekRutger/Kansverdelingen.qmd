@@ -1,0 +1,1781 @@
+
+{{< include _macros.tex >}}
+
+# Kansverdelingen {#sec-kansverdelingen}
+
+::: {.todo-box}
+
+Korte intro.
+
+:::
+
+## Kansverdelingen 
+
+Een eerlijke dobbelsteen heeft de vorm van een bijna perfecte kubus,
+    en is van binnen homogeen.
+De symmetrische vorm maakt het vanzelfsprekend 
+    dat alle uitkomsten even waarschijnlijk zijn.
+We kunnen de kansen als volgt in een grafiek weergeven:
+
+  
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Kansverdeling: de kansen bij het gooien van één dobbelsteen."
+#| label: fig-uniform-dobbelsteen
+#| fig.width: 5
+#| fig.height: 4
+ 
+# Controleer of de benodigde pakketten zijn geladen
+if (!("ggplot2" %in% .packages())) {
+  library("ggplot2")
+}
+
+# Parameters definiëren
+min_ogen <- 1       # Minimum aantal ogen op een dobbelsteen
+max_ogen <- 6       # Maximum aantal ogen op een dobbelsteen
+kans <- 1 / max_ogen # Gelijke kans voor elke uitkomst
+kleur <- "darkorange"   # Kleur voor de balken in de plot
+
+# Genereer de uitkomsten en bijbehorende kansen
+uitkomsten <- seq(min_ogen, max_ogen)
+kansen <- rep(kans, length(uitkomsten))
+
+# Maak een data frame met uitkomsten en kansen
+kansen_dobbelsteen <- data.frame(
+  uitkomsten = factor(uitkomsten),
+  kansen = kansen
+)
+
+# Maak de plot
+ggplot(kansen_dobbelsteen, aes(x = uitkomsten, y = kansen)) +
+  geom_bar(
+    stat = "identity",     # Balken representeren kanswaarden direct
+    width = 1,             # Volledige breedte van de categorie
+    fill = kleur,          # Kleur voor de balken
+    color = "black"        # Randkleur voor de balken
+  ) +
+  labs(
+    title = "",
+    x = "Totaal aantal ogen",      # Titel voor de x-as
+    y = "Kans"              # Titel voor de y-as
+  ) +
+  ylim(0, 0.2) +            # Zorg dat de y-as tot 0.02 loopt
+  theme_minimal()
+```
+
+In de figuur geven de oppervlaktes van de staafjes
+de kans weer van iedere uitkomst.
+
+Stel je nu voor dat het kansexperiment bestaat
+    uit het werpen van niet één maar twee dobbelstenen,
+    zeg,
+    een blauwe en een rode.
+Deze keer zijn we geïnteresseerd in de som van het aantal ogen.
+De kansruimte is nu de verzameling van getallen van 2 tot 12.
+Het is gemakkelijk te zien dat de verschillende uitkomsten 
+  nu *niet* meer even waarschijnlijk zijn.
+Er is maar één manier om de uitkomst 2 te krijgen,
+    namelijk als we met zowel de rode als de blauwe dobbelsteen
+    1 gooien.
+Maar er zijn wel *zes* manieren om 7 te gooien:
+$1 + 6$, $2 + 5$, $3 + 4$, $4 + 3$, $5 + 2$, $6 + 1$.
+Je zult met twee dobbelstenen dus veel vaker 7 gooien dan 2.
+De kunnen de kansen weer in een grafiek laten zien:
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Kansverdeling voor het aantal ogen van twee dobbelstenen."
+#| label: fig-kansverdeling-twee-dobbelstenen
+#| fig.width: 5
+#| fig.height: 4
+
+# Controleer of de benodigde pakketten zijn geladen
+if (!("ggplot2" %in% .packages())) {
+  library("ggplot2")
+}
+
+# Parameters definiëren
+min_som <- 2          # Minimum som bij twee dobbelstenen
+max_som <- 2*max_ogen # Maximum som bij twee dobbelstenen
+kleur <- rep("darkorange", 11) # Kleur voor de balken in de plot
+
+# Genereer uitkomsten en bijbehorende kansen
+uitkomsten <- seq(min_som, max_som)                     # Mogelijke uitkomsten
+kansen <- pmin(uitkomsten - 1, 13 - uitkomsten) / max_ogen^2    # Kansen berekenen
+
+# Maak een data frame met uitkomsten en kansen
+kansen_dobbelsteen <- data.frame(
+  uitkomsten = factor(uitkomsten),
+  kansen = kansen
+)
+
+# Maak de plot
+verdelingTweeDobbelstenen <- function(kleur)
+  {
+  ggplot(kansen_dobbelsteen, aes(x = uitkomsten, y = kansen)) +
+  geom_bar(
+    stat = "identity",     # Balken representeren kanswaarden direct
+    width = 1,             # Volledige breedte van de categorie
+    fill = kleur,          # Kleur voor de balken
+    color = "black"        # Randkleur voor de balken
+  ) +
+  labs(
+    title = "",
+    x = "Totaal aantal ogen",      # Titel voor de x-as
+    y = "Kans"              # Titel voor de y-as
+  ) +
+  theme_minimal()           # Minimalistisch thema voor de plot
+}
+
+verdelingTweeDobbelstenen(kleur)
+
+```
+
+De manier waarop de kans 
+    over de verschillende mogelijke uitkomsten verdeeld is,
+    wordt de **kansverdeling** genoemd.
+Dit begrip speelt een grote rol in deze cursus.
+
+::: {.callout-tip #tip-kans-en-histo}
+@fig-kansverdeling-twee-dobbelstenen lijkt op een histogram.
+Dat is niet voor niets.
+Je herinnert je misschien nog dat we de kans op een uitkomst hebben gedefinieerd
+    als de relatieve frequentie van die uitkomst
+    in een héél lange 
+    (neigend naar oneindige) 
+    reeks identieke kansexperimenten.
+Dat betekent dat je de kansverdeling in @fig-kansverdeling-twee-dobbelstenen kunt interpreteren
+    als het histogram dat je zou krijgen
+    als je hetzelfde kansexperiment héél vaak zou herhalen.
+:::
+
+### De vorm van een verdeling
+
+In @sec-terminologie heb je verschillende termen geleerd 
+waarmee je een verdeling kunt beschrijven:
+**symmetrisch** en **scheef**, **klokvormig**, **uniform**, **unimodaal** en 
+**bimodaal**.
+Die woorden kunnen net zo goed gebruikt woorden voor het beschrijven van een kansverdeling.
+De kansverdeling van @fig-uniform-dobbelsteen is uniform;
+die van @fig-kansverdeling-twee-dobbelstenen is symmetrisch en unimodaal.
+
+## Kansen als oppervlakten onder de grafiek van de kansverdeling
+
+We kijken nog even terug naar de kansverdeling 
+    voor het totaal aantal ogen bij twee dobbelstenen.
+
+Stel dat we nu willen weten wat de kans is
+    dat het aantal ogen groter is dan 7
+    maar kleiner dan 11:
+$$7 < X < 11.$$
+Deze gebeurtenis 
+    kunnen we ook anders uitdrukken,
+    namelijk als
+$$  X = 8 \textrm{ of } X = 9  \textrm{ of } X = 10.$$
+Omdat de verschillende uitkomsten $X = 8$, $9$ en $10$ elkaar uitsluiten
+    kunnen we de optelregel gebruiken:
+
+$$ \pr{7 < X < 11}  = \pr{X = 8} + \pr{X = 9} + \pr{X = 10}. $$ {#eq-som8_9_10}
+
+In de grafiek van de kansverdeling (@fig-kansverdeling-twee-dobbelstenen)
+    is de kans op een uitkomst
+    weergegeven als de oppervlakte van de bijbehorende staaf.
+De kans $\pr{7 < X < 11}$ 
+    komt dus overeen met de totale oppervlakte van de staven
+    voor de uitkomsten 8, 9 en 10.
+In @fig-kansverdeling-twee-dobbelstenen-2 hieronder is die oppervlakte in paars weergegeven:
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Kansverdeling van het totaal aantal ogen van twee dobbelstenen."
+#| label: fig-kansverdeling-twee-dobbelstenen-2
+#| fig.width: 5
+#| fig.height: 4
+
+kleur <- rep("darkorange", 11)
+kleur[7:9] <- "darkorchid"
+
+verdelingTweeDobbelstenen(kleur)
+
+```
+
+In het algemeen geldt dat de kans dat de uitkomst $X$ binnen een bepaald interval valt, $a < X < b$, gelijk is aan de totale oppervlakte van de staven die horen bij de uitkomsten tussen deze grenzen.
+
+In dit voorbeeld is de kansvariabele numeriek en discreet. We zullen echter zien dat ook bij continue variabelen de kans dat $X$ binnen het interval $(a, b)$ valt wordt bepaald door de oppervlakte onder de grafiek van de kansverdeling tussen de grenzen $a$ en $b$.
+    
+## De cumulatieve kansverdeling
+    
+De **cumulatieve kansverdeling** $F_X(x)$ van kansvariabele $X$ 
+  is de functie die aangeeft wat de kans is dat de uitkomst kleiner of gelijk is 
+  aan de waarde $x$:
+$$ F_X(x) = \pr{X\le x}. $$ {#eq-cumverdeling}
+Dit zou je bekend moeten voorkomen,
+  want in @sec-cumul hebben we de cumulatieve verdeling 
+  van een variabele besproken.
+Het verschil is dat we het nu over kansverdelingen hebben,
+  niet over een rij waarnemingen van een variabele.
+Bij wijze van voorbeeld geeft @fig-cumulverdeling-twee-dobbelstenen hieronder
+  de cumulatieve kansverdeling weer die hoort bij
+  het totaal aantal ogen bij het werpen met twee dobbelstenen.
+De cumulatieve verdeling maakt in dit geval sprongen omdat de uitkomst 
+  alleen een geheel aantal ogen kan zijn.
+(De variabele is discreet.)
+  
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Cumulatieve verdeling van de som van de ogen van twee dobbelstenen."
+#| label: fig-cumulverdeling-twee-dobbelstenen
+#| fig.width: 5
+#| fig.height: 4
+
+# Controleer of de benodigde pakketten zijn geladen
+if (!("ggplot2" %in% .packages())) {
+  library("ggplot2")
+}
+
+# Voeg extra punten toe om de cumulatieve kansen buiten het bereik van 2-12 te tonen
+kansen_dobbelsteen_cumulatief <- data.frame(
+  uitkomsten = c(1, uitkomsten, 13), # Voeg 1 en 13 toe als grenzen
+  kansen = c(0, cumsum(kansen), 1)   # Voeg 0 en 1 toe aan de kansen
+)
+
+# Genereer de datapunten voor de open cirkels
+open_cirkels <- data.frame(
+  uitkomsten = uitkomsten,
+  kansen = c(0, cumsum(kansen)[-length(kansen)])
+)
+
+# Maak een data frame voor de horizontale lijnen (stappen van de cumulatieve kans)
+lijnen_data <- data.frame(
+  x_start = kansen_dobbelsteen_cumulatief$uitkomsten[-nrow(kansen_dobbelsteen_cumulatief)],
+  x_end = kansen_dobbelsteen_cumulatief$uitkomsten[-1] - .1,
+  y = kansen_dobbelsteen_cumulatief$kansen[-nrow(kansen_dobbelsteen_cumulatief)]
+)
+
+# Maak de plot
+ggplot() +
+  # Voeg de horizontale lijnen toe
+  geom_segment(
+    data = lijnen_data,
+    aes(x = x_start, xend = x_end, y = y, yend = y),
+    color = "darkorange",        # Kleur van de lijnen
+    size = 1                     # Dikte van de lijnen
+  ) +
+  # Voeg gesloten cirkels (linkerkanten) toe, behalve bij (1, 0) en (13, 1)
+  geom_point(
+    data = kansen_dobbelsteen_cumulatief[-c(1, nrow(kansen_dobbelsteen_cumulatief)), ],
+    aes(x = uitkomsten, y = kansen),
+    shape = 16,                  # Gesloten cirkel
+    size = 3,
+    color = "darkorange"
+  ) +
+  # Voeg open cirkels (rechterkanten) toe
+  geom_point(
+    data = open_cirkels,
+    aes(x = uitkomsten, y = kansen),
+    shape = 1,                 # Open cirkel
+    size = 1.8,
+    stroke = 1.4,
+    color = "darkorange"
+  ) +
+  scale_x_continuous(
+    breaks = 2:12,               # Ticks alleen bij gehele getallen van 2 tot 12
+    minor_breaks = NULL          # Verwijder alle minor ticks
+  ) +
+  labs(
+    title = "",
+    x = "Totaal aantal ogen",    # Titel voor de x-as
+    y = "Cumulatieve kans"       # Titel voor de y-as
+  ) +
+  theme_minimal()                 # Minimalistisch thema
+```
+
+Hierboven lieten we zien dat je de kans $\pr{7<X<11}$ 
+  kunt aflezen als de totale oppervlakte van de staven 
+  voor $X=8$, $X =9$, en $X = 10$ in de kansverdeling.
+Merk op dat je dezelfde kans ook zo kunt berekenen:
+  $$\pr{7<X<11} = F_X(10) - F_X(7).$$
+De kans op $7 < X < 11$ is namelijk de kans dat $X$
+  kleiner of gelijk is aan 10
+  min de kans dan $X$ kleiner of gelijk is aan 7.
+  
+::: {#exr-cumul}
+
+## Kansen berekenen met de cumulatieve verdeling.
+
+  a.  x
+  b.  y
+:::
+
+## Maten voor ligging en spreiding van kansverdelingen
+
+::: {.todo-box}
+
+Ik realiseer me dat ik nog nergens de maten voor ligging en spreiding
+voor continue kansverdelingen heb behandeld.
+Misschien is het handiger om de maten voor liggin en spreiding 
+pas te geven na een inleiding op kansverdelingen voor continue variabelen.
+
+Dus 5.4 en 5.5. omdraaien.
+
+:::
+
+In @sec-variabelen-verdelingen
+    heb je gezien dat de verdeling van een numerieke variabele in een dataset 
+    kan worden samengevat
+    door maten te geven voor de ligging en spreiding van die verdeling.
+Op dezelfde manier kunnen we ook de *kans*verdeling van een *kans*variabele 
+beschrijven
+    door maten van ligging en de spreiding te geven.
+De maten die we hieronder bespreken
+  zijn dus volledig analoog aan de maten uit 
+  @sec-variabelen-verdelingen.
+
+### Maten voor de ligging van een kansverdeling
+
+We beginnen met de centrummaten.
+
+De **modus** van de kansverdeling van een kansvariabele $X$ 
+    is die uitkomst
+    die de grootste kans heeft.
+Als de kansverdeling een piek heeft,
+  dan is de $x$-waarde die bij die piek hoort
+  de modus.
+  
+De **mediaan** van een kansvariabele $X$
+    is de waarde zodanig
+    dat de kans op een uitkomst kleiner dan die waarde
+    precies gelijk is aan $\frac{1}{2}$.
+Dat is dus ook de waarde waar de cumulatieve verdeling 
+  gelijk is aan $\frac{1}{2}$.
+
+Het **gemiddelde** van een kansverdeling van een kansvariabele $X$ 
+  wordt ook wel de **verwachtingswaarde** genoemd.
+Een nette notatie daarvoor is $\ev{X}$;
+  die bijzondere $\mathbb{E}$ staat voor het Engelse *Expectation*.
+Vaak wordt ook het Griekse symbool $\mu$ gebruikt,
+  of $\mu_X$ as we willen benadrukken dat het gaat
+  om de verwachtingswaarde van de variabele $X$.
+
+Als de variabele discreet is
+    dan kan de verwachtingswaarde berekend worden als
+$$ \mu_X = \ev{X} = \sum_x \pr{X = x}\, x. $$ {#eq-verwachtingswaarde-discreet}
+De sommatie gaat over alle mogelijke uitkomsten $x$.
+@Eq-verwachtingswaarde-discreet wil dus zeggen:
+    we nemen het gemiddelde van alle mogelijke uitkomsten $x$,
+    waarbij uitkomsten met een grotere kans
+    een zwaarder gewicht krijgen.
+    
+::: {#exr-gemiddelde-herhalen}
+
+## De definitie van de verwachtingswaarde 
+
+In @exr-gemiddelde-frequentietabel heb je een formule bestudeerd 
+  (@eq-mean-rel-freq)
+  waarmee je het gemiddelde kunt berekenen
+  van een dataset 
+  die beschreven is met een frequentietabel.
+
+  a. Bestudeer die opgave nog een keer. 
+
+  b. Vergelijk @eq-mean-rel-freq met @eq-verwachtingswaarde-discreet
+en leg uit waarom ze zo op elkaar lijken.
+  (Hint: In @sec-frequentistisch hebben we de kans op een uitkomst gedefinieerd 
+  als de relatieve frequentie van die uitkomst
+  in een zéér lange (oneindige) reeks herhalingen van het kansexperiment.)
+:::
+    
+::: {#exr-verwachtingswaarde}
+
+## Verwachtingswaarde
+
+
+
+:::
+    
+    
+### Maten van spreiding
+
+Dan nu de maten van spreiding.
+
+De meest gebruikte maten van spreiding van een kansverdeling
+    zijn de variantie
+    en de standaarddeviatie
+    (ook standaardafwijking genoemd).
+  
+De **variantie** van de kansverdeling
+    van een kansvariabele $X$
+    wordt vaak genoteerd als $\var{X}$.
+
+Het is de verwachtingswaarde van de gekwadrateerde afwijking
+    van gemiddelde:
+$$ 
+    \var{X} = \ev{ \left( X - \mu_X \right)^2}.
+$$ {#eq-variantie}
+Van iedere mogelijke uitkomst wordt dus het gemiddelde van $X$ afgetrokken,
+  en die afwijking wordt gekwadrateerd.
+Vervolgens nemen we het gemiddelde van die gekwadrateerde afwijkingen,
+  waarbij uitkomsten met een grotere kans zwaarder worden meegewogen.
+Als $X$ een discrete kansvariabele is, dan komt dat neer op
+$$ 
+    \var{X} = \sum_x \pr{X = x} \left( x - \mu_X \right)^2.
+$$ {#eq-variantie-discreet}
+
+De **standaarddeviatie** van $X$
+    is de wortel van de variantie van $X$.
+Deze wordt vaak genoteerd als de Griekse letter $\sigma$.
+Als het nuttig is om te benadrukken dat het gaat om de standaarddeviatie
+    van de variabele $X$ wordt ook wel $\sd{X}$ gebruikt:
+$$
+    \sd{X} = \sqrt{\var{X}}.
+$$ {#eq-sd-var}
+
+Omgekeerd is de variantie van $X$ dus
+    het kwadraat van de standaarddeviatie:
+$$
+    \var{X} = \sd{X}^2.
+$$ {#eq-var-sd}
+Daarom wordt de variantie van een kansvariabele $X$
+    ook vaak genoteerd
+    als $\sigma^2$ of $\sd{X}^2$ in plaats van $\var{X}$.
+    
+    
+::: {#exr-variantie}
+
+## Variantie en standaarddeviatie van een kansvariabele
+
+
+
+:::
+
+::: {#exr-kwadraat}
+
+## Dimensies en eenheden van de variantie
+
+$$ \var{\frac{X}{n}} = \frac{\var{X}}{n^2}. $$ {#eq-kwadraat}
+
+:::
+
+## Kansenverdelingen voor continue variabelen
+
+Tot nu toe hebben we alleen kansverdelingen gezien
+  van discrete kansvariabelen.
+Als een kansvariabele continu is,
+  moeten we op een andere manier nadenken
+  over de kans op een uitkomst.
+Dat is het onderwerp van deze paragraaf.
+
+Een continue kansvariabele heeft 
+oneindig veel mogelijke uitkomsten.
+(Om precies te zijn, *onaftelbaar oneindig*![^onaftelbaar])
+Tussen elke twee getallen die je kiest
+bestaan namelijk altijd weer andere getallen.
+Bij de meeste kansverdelingen van continue kansvariabelen
+is de kans op iedere *specifieke* uitkomst daarom gelijk aan 0.
+Bijvoorbeeld, de kans dat een willekeurig gekozen persoon
+  een lichaamslengte heeft van exact $180{,}00\ldots$cm, *tot in oneindig veel decimalen*,
+  is 0.
+  
+[^onaftelbaar]: Voor wie dat interessant vindt: 
+In de wiskunde bestaan er verschillende versies van het begrip *oneindig*.
+Van de natuurlijke getallen $\{0, 1, 2, \ldots\}$, bestaan er **aftelbaar oneindig** veel.
+Van de reële getallen bestaan er **onaftelbaar oneindig** veel.
+
+    Een verzameling is onaftelbaar als het niet mogelijk is om de elementen
+in die verzameling ieder een eigen nummer te geven in een oneindige lijst.
+Als je dat probeert, kom je erachter dat iedere oneindige lijst 
+met reële getallen incompleet is. 
+Hoewel er oneindig veel natuurlijke getallen zijn,
+zijn er alsnog oneindig veel meer reële getallen dan natuurlijke getallen.
+
+Bij continue variabelen zijn we daarom niet geïnteresseerd
+in de kans op een specifieke uitkomst,
+maar in de kans dat de uitkomst binnen een bepaald *interval* valt.
+Stel bijvoorbeeld dat we weer kijken
+  naar de lichaamslengte van een willekeurig persoon.
+De kans dat deze lengte
+  tussen 178 en 182cm ligt
+  is wél groter dan 0.
+  
+Bekijk @fig-continue-kansverdeling hieronder eens.
+Deze figuur toont een kansverdeling die de lichaamslengte
+van Nederlandse mannen kunnen beschrijven. 
+De verdeling laat zien dat een lengte in de buurt van 185cm
+waarschijnlijker is dan een lengte rond 160cm.
+Toch mogen we de waarde op de $y$-as
+niet interpreteren als de *kans* op een bepaalde $x$-waarde,
+want we hebben net geconcludeerd dat de kans op iedere specifieke waarde
+gelijk is aan 0.
+Hoe moeten we deze kansverdeling dan interpreteren?
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Kansenverdeling van lichaamslengtes van volwassen mannen uit de NHANES dataset."
+#| label: fig-continue-kansverdeling
+#| fig.width: 5
+#| fig.height: 4
+
+# Controleer of de benodigde pakketten zijn geladen
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("tidyverse" %in% .packages())) { library(tidyverse) }
+if (!("NHANES" %in% .packages())) { library(NHANES) }
+
+# Selecteer alleen de volwassen mannen
+data_mannen <- NHANES %>%
+  filter(Age >= 18 & Gender == "male") 
+
+ggplot(data_mannen, aes(x = Height)) +
+  geom_density(color = "darkorange", linewidth = 1) +
+  labs(
+    x = "Lengte (cm)",
+    y = "Kansdichtheid"
+  ) +
+  theme_minimal()
+```
+
+Om dit te begrijpen, 
+denken we terug aan @fig-kansverdeling-twee-dobbelstenen-2,
+waarin de verdeling van een discrete variabele werd getoond.
+Daar zagen we al
+dat de kans op een waarde binnen een bepaald interval 
+kan worden voorgesteld als een oppervlakte onder de kansverdeling.
+Dit principe geldt ook voor continue variabelen.
+
+Hieronder, in @fig-interval, die je weer de kansverdeling van de lichaamslengte 
+van een willekeurig gekozen man.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Kansenverdeling van lichaamslengtes van volwassen mannen uit de NHANES dataset. De kans op een lichaamslengte tussen 178cm en 182cm wordt gegeven door het paarse gebied."
+#| label: fig-interval
+#| fig.width: 5
+#| fig.height: 4
+
+# Controleer of de benodigde pakketten zijn geladen
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("tidyverse" %in% .packages())) { library(tidyverse) }
+if (!("NHANES" %in% .packages())) { library(NHANES) }
+
+# Selecteer alleen de volwassen mannen
+data_mannen <- NHANES %>%
+  filter(Age >= 18 & Gender == "male") 
+
+# Bereken de dichtheid voor de gehele dataset
+dichtheid_data <- density(data_mannen$Height, na.rm = TRUE)
+dichtheid_df <- data.frame(
+  Lengte = dichtheid_data$x,   
+  Kansdichtheid = dichtheid_data$y 
+)
+
+# Selecteer alleen de dichtheidswaarden binnen het interval
+dichtheid_interval <- dichtheid_df %>%
+  filter(Lengte > 178 & Lengte < 182)
+
+# Plot de figuur
+ggplot(
+  data = dichtheid_df, 
+  aes(x = Lengte, y = Kansdichtheid)) +
+  geom_line(
+    color = "darkorange", 
+    linewidth = 1) +          
+  geom_area(
+    data = dichtheid_interval, 
+    aes(x = Lengte, y = Kansdichtheid),
+    fill = "darkorchid", 
+    alpha = 0.5) +
+  annotate(
+    "text", 
+    x = 178, 
+    y = -0.001, 
+    label = "178", 
+    size = 3, 
+    color = "darkorchid"
+    ) +          
+  annotate(
+    "text", 
+    x = 182, 
+    y = -0.001, 
+    label = "182", 
+    size = 3, 
+    color = "darkorchid"
+    ) +  
+  labs(
+    x = "Lengte (cm)",           
+    y = "Kansdichtheid"          
+  ) +
+  theme_minimal()
+
+```
+
+
+De kans dat een willekeurige observatie tussen
+178cm en 182cm valt, wordt gegeven door de oppervlakte onder de grafiek
+tussen die grenzen;
+dit gebied is in de grafiek ingekleurd met paars.
+*Bij continue kansvariabelen
+gebruiken we de kansverdeling dus alleen
+om de kans te bepalen op een uitkomst in een bepaald interval.*
+
+Merk op: de waarde op de $y$-as is bij kansverdelingen van continue variabelen
+dus niet de kans op een specifieke waarde. 
+In plaats daarvan spreken we bij continue variabelen over de **kansdichtheid**.
+De $y$-waarden worden zo geschaald
+dat de totale oppervlakte onder de curve,
+  van $-\infty$ tot $\infty$, 
+  gelijk is aan 1,
+want kans dat een uitkomst *ergens* op de $x$-as ligt is natuurlijk altijd gelijk aan 1.
+
+In @sec-kansverdelingen vergeleken we een kansverdeling met een histogram van een *enorm* (oneindig) aantal waarnemingen.
+Die vergelijking gaat ook op bij continue variabelen.
+Je kunt je voorstellen dat het aantal waarnemingen zo groot is
+dat we de klassen van het histogram extreem smal hebben kunnen maken ---
+zo smal dat de rechthoekige staven niet meer zichtbaar zijn
+en het histogram een gladde curve wordt.
+
+::: {.todo-box}
+Opgave: schat kansen op basis van een schets van de kansverdeling.
+:::
+
+## De normale verdeling
+  
+Kansverdelingen kunnen in principe allerlei vormen hebben.
+Maar bepaalde kansverdelingen komen in theorie en praktijk steeds weer terug
+en hebben daarom een naam gekregen.
+De meest beroemde is de **normale verdeling**, 
+ook wel de **normaalverdeling**, **Gaussische verdeling** of **Gausscurve** genoemd
+naar de grote Wiskundige Carl Friedrich Gauss (1777--1855).
+
+Eigenlijk gaat het niet om één specifieke kansverdeling
+maar om een "familie" van kansverdelingen.
+Leden van deze familie lijken precies op elkaar, 
+behalve dat ze verschillen in gemiddelde $\mu$ 
+en standaarddeviatie $\sigma$.
+We noemen $\mu$ en $\sigma$ de **parameters** van de normale verdeling.
+
+De verdelingen zien er als volgt uit (@fig-normale-verdeling):
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "De normale verdeling."
+#| label: fig-normale-verdeling
+#| fig.width: 4
+#| fig.height: 3
+
+# Controleer of ggplot2 geladen is, zo niet, laad het pakket
+if (!("ggplot2" %in% .packages())) {
+  library(ggplot2)
+}
+
+# Definieer de standaardnormale verdeling
+x <- seq(-3.5, 3.5, length.out = 350)
+data <- data.frame(x = x, y = dnorm(x))
+
+plotNormaal <- function(mu, sigma){
+    # Plot maken
+  ggplot(data, aes(x, y)) +
+  geom_line(color = "darkorange", linewidth = 1) + # Curve van de standaardnormale verdeling
+  scale_x_continuous(
+    breaks = c(mu - 2*sigma, -mu - sigma, mu, mu + sigma, mu + 2*sigma), 
+    labels = c(
+      mu - 2 * sigma, 
+      mu -sigma, 
+      mu, 
+      mu + sigma, 
+      mu + 2 * sigma
+    )
+  ) + # Labels voor x-as
+  labs(
+    y = "Kansdichtheid", 
+    x = expression(italic(X))
+  ) + # Labels voor de assen
+  theme_minimal()
+}
+
+normaalGeneriek <- 
+  # Plot maken
+  ggplot(data, aes(x, y)) +
+  geom_line(color = "darkorange", linewidth = 1) + # Curve van de standaardnormale verdeling
+  scale_x_continuous(
+    breaks = c(-2, -1, 0, 1, 2), 
+    labels = c(
+      expression(italic(mu - 2 * sigma)), 
+      expression(italic(mu -sigma)), 
+      expression(italic(mu)), 
+      expression(italic(mu + sigma)), 
+      expression(italic(mu + 2 * sigma))
+    ),
+    minor_breaks = NULL # Verwijdert minor ticks
+  ) + # Labels voor x-as
+  scale_y_continuous(labels = NULL) + # getallen van y-as weglaten
+  labs(
+    y = "Kansdichtheid", 
+    x = expression(italic(X))
+  ) + # Labels voor de assen
+  theme_minimal()
+
+# Hoogte van de pijl bepalen
+h <- exp(-0.5) / sqrt(2 * pi)
+
+pijl <- geom_segment(
+    aes(x = 0, xend = 1, y = h, yend = h), 
+    arrow = arrow(length = unit(0.2, "cm")), 
+    color = "black", 
+    linewidth = 0.8
+  ) # Pijl voor standaarddeviatie
+  
+oppervlak <- function(a, b){# Gebied tussen a en b kleuren
+  geom_area(
+    data = subset(data, x >= a & x <= b), 
+    aes(x, y), 
+    fill = "darkorange", 
+    alpha = 0.4
+  ) 
+} 
+
+normaalGeneriek + pijl +
+  annotate(
+  "text", 
+  x = 0.5, 
+  y = 0.9 * h, # Use the variable h to scale the y-coordinate
+  label = expression(italic(sigma)), # Use expression() for mathematical notation
+  color = "black", 
+  size = 5, 
+  hjust = 0.5, 
+  vjust = 0.5
+  )
+
+```
+Je ziet dat de verdeling een *klokvorm* heeft en volledig *symmetrisch* is.
+Daardoor is $\mu$ het gemiddelde, de mediaan, én de modus.
+De meeste kans ligt binnen twee standaarddeviaties van $\mu$.
+
+De precieze formule voor de normale verdeling zul je in deze cursus
+niet nodig hebben,
+maar het is toch handig deze een keer te zien:
+$$ \pr{X = x} = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x - \mu)^2}{2\sigma^2}}.$$
+De normale verdeling heeft dus een precieze wiskundige definitie.
+Niet iedere verdeling die een klokvorm heeft is ook een normale verdeling
+(maar iedere normale verdeling heeft wel dezelfde klokvorm).
+
+### Vuistregels voor de normale verdeling {#sec-vuistregels}
+
+Het is heel nuttig om de volgende twee eigenschappen
+uit je hoofd te leren; je hebt ze vaak nodig.
+
+Als $X$ normaal verdeeld is, dan geldt:
+
+1.  De kans dat de uitkomst
+binnen één standaarddeviatie van het gemiddelde valt is (afgerond) 0,68.
+Uitgedrukt in een vergelijking:
+$$\pr{\mu - \sigma < X < \mu + \sigma} = 0.683\ldots.$$
+2.  De kans dat de uitkomst
+binnen twee standaarddeviaties van het gemiddelde valt is (afgerond) 0,95.
+Uitgedrukt in een vergelijking:
+
+$$\pr{\mu - 2\sigma < X < \mu + 2\sigma} = 0{,}954\ldots.$$
+@Fig-vuistregels laat beide eigenschappen zien.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: fig-vuistregels
+#| fig-cap: "Vuistregels voor de normale verdeling."
+#| layout-ncol: 2
+#| fig-subcap: 
+#|   - "Ongeveer 68% van de kans valt binnen één standaarddeviatie van het gemiddelde."
+#|   - "Ongeveer 95% van de kans valt binnen 2 standaarddeviaties van het gemiddelde."
+#| fig.width: 4
+#| fig.height: 2.7
+
+proportie <- function(prop){
+  annotate(
+  "text", 
+  x = 0, 
+  y = 0.15, 
+  label = prop, # Dynamically include the variable
+  color = "black", 
+  size = 5, 
+  hjust = 0.5, 
+  vjust = 0.5
+)
+}
+
+normaalGeneriek + oppervlak(-1,1) + proportie("0,68...")
+
+normaalGeneriek + oppervlak(-2, 2) + proportie("0,95...")
+```
+
+::: {#exr-normale-verdeling}
+  
+Opgave
+
+Schatten van kansen op basis van vuistregels en geschetst plaatje.
+Bereken de kansen. Schets steeds eerst op papier een normale verdeling.
+Arceer de oppervlakte onder de curve die overeenkomt met de gevraagde kans.
+  
+- $\pr{X < \mu}$
+- $\pr{X > \mu + \sigma}$
+- $\pr{X < \mu - 2 \sigma}$
+- $\pr{X < \mu - 2 \sigma \text{ of } X > \mu + 2 \sigma}$
+
+:::
+
+### Waarom de normale verdeling?
+
+::: {.todo-box}
+Uitleggen waarom de normale verdeling zo belangrijk is:
+  
+- Veel variabelen in de biologie en daarbuiten ongeveer normaal verdeeld.
+- Laat voorbeelden zien.
+- We zullen later, in @sec-centrale-limiet uitleggen hoe dit komt.
+:::
+    
+## De standaard-normale verdeling
+  
+De **standaard-normale verdeling** (@fig-std-normaal) 
+is een speciaal geval van de normale verdeling 
+waarbij de verwachtingswaarde $\mu$ gelijk is aan 0 
+en de standaarddeviatie $\sigma$ gelijk aan 1. 
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: fig-std-normaal
+#| fig-cap: "Standaard-normale verdeling"
+#| fig.width: 4
+#| fig.height: 3
+
+# Plot de standaard-normale verdeling
+plotNormaal(0, 1) +
+  # Labels voor de assen
+  labs(
+    y = "Kansdichtheid", 
+    x = expression(italic(Z))
+  ) +
+  # Voeg de pijl toe
+  pijl +
+  # Annotatie toevoegen met sigma
+  annotate(
+    "text", 
+    x = 0.5, 
+    y = 0.88 * h,        # Gebruik de variabele h voor de y-positie
+    label = expression(italic(sigma) == 1),  # Wiskundige notatie voor sigma
+    color = "black", 
+    size = 5, 
+    hjust = 0.47, 
+    vjust = 0.5
+  )
+```
+
+Eerder hebben we kansvariabelen vaak $X$ genoemd.
+Voor een standaard-normaal-verdeelde variabele wordt vaak de letter $Z$ gebruikt. 
+Dit is niet meer dan een conventie: 
+je zou net zo goed een andere letter kunnen kiezen, 
+zoals $X$, $Y$ of $W$. 
+Toch is het handig: kom je in een statistische formule een kansvariabele $Z$ tegen,
+dan is dat een hint dat die variabele standaard-normaal verdeeld is.
+
+
+
+
+### Transformeren naar de standaard-normale verdeling {#sec-transformeren}
+
+Normale verdelingen hebben altijd dezelfde klokvorm,
+maar kunnen natuurlijk verschillen in hun gemiddelde 
+en hun standaarddeviatie.
+Als twee normale verdelingen verschillen in hun gemiddelde,
+dan zijn ze ten opzichte van elkaar verschoven.
+Verschillen ze in hun standaarddeviatie,
+dan zijn de klokvormen ten opzichte van elkaar horizontaal uitgerekt of samengedrukt.
+Ondanks die verschillen is de totale oppervlakte onder de grafiek altijd gelijk aan 1,
+want de kans op een uitkomst tussen $-\infty$ en $\infty$ is altijd 1.
+Horizontaal uitrekken gaat dus altijd samen met vertikaal samendrukken.
+
+Bekijk @fig-transformeren eens.
+Deze laat twee normale verdelingen zien.
+De bovenste figuur toont de verdeling van een variabele $X$, 
+met gemiddelde $\mu_X = 170$ en standaarddeviatie $\sd{X} = 7$.
+Het zou de verdeling kunnen zijn van de lichaamslengte 
+van Nederlandse volwassen vrouwen, in centimeters.
+Het onderste figuur toont de verdeling van variabele $Z$,
+die standaard-normaal verdeeld is (met $\mu_Z=0$ en $\sd{Z} = 1$).
+Hoewel de parameters van beide verdelingen verschillen, 
+hebben beide grafieken exact dezelfde vorm. 
+Alleen de schalen van de $x$- en $y$-assen zijn aangepast.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: fig-transformeren
+#| fig-cap: "Caption nog schrijven"
+#| fig.width: 3.75
+
+# Laad benodigde pakketten
+if (!("ggplot2" %in% loadedNamespaces())) { 
+  library(ggplot2) 
+}
+if (!("cowplot" %in% loadedNamespaces())) { 
+  library(cowplot) 
+}
+
+# Basisparameters instellen
+mu_x <- 170             # Gemiddelde voor X
+sigma_x <- 7            # Standaarddeviatie voor X
+x_threshold <- 173.5    # Drempelwaarde voor X
+
+mu_z <- 0               # Gemiddelde voor Z
+sigma_z <- 1            # Standaarddeviatie voor Z
+z_threshold <- 0.5      # Drempelwaarde voor Z
+
+nr_sd <- 3.5            # Aantal standaarddeviaties om te tonen
+
+# Berekeningen op basis van parameters
+x_range <- c(mu_x - nr_sd * sigma_x, mu_x + nr_sd * sigma_x)   # Bereik voor X
+z_range <- c(mu_z - nr_sd * sigma_z, mu_z + nr_sd * sigma_z)   # Bereik voor Z
+n_points <- 50 * nr_sd                                        # Aantal datapunten
+
+# Domeinen voor X en Z
+x_values <- seq(x_range[1], x_range[2], length.out = n_points)
+z_values <- seq(z_range[1], z_range[2], length.out = n_points)
+
+# Bereken kansdichtheden
+x_data <- data.frame(
+  x = x_values,
+  y = dnorm(x_values, mean = mu_x, sd = sigma_x)
+)
+
+z_data <- data.frame(
+  x = z_values,
+  y = dnorm(z_values, mean = mu_z, sd = sigma_z)
+)
+
+# Gebied waar X > x_threshold
+x_fill <- data.frame(
+  x = seq(x_threshold, x_range[2], length.out = 100),
+  y = dnorm(seq(x_threshold, x_range[2], length.out = 100), 
+            mean = mu_x, sd = sigma_x)
+)
+
+# Gebied waar Z > z_threshold
+z_fill <- data.frame(
+  x = seq(z_threshold, z_range[2], length.out = 100),
+  y = dnorm(seq(z_threshold, z_range[2], length.out = 100), 
+            mean = mu_z, sd = sigma_z)
+)
+
+# Plot voor X
+plot_x <- ggplot(x_data, aes(x = x, y = y)) +
+  geom_line(size = 1, color = "darkorange") +
+  geom_area(
+    data = x_fill, aes(x = x, y = y),
+    fill = "darkorange", alpha = 0.5
+  ) +
+  labs(
+    x = expression(italic(X)),
+    y = "Kansdichtheid"
+  ) +
+  theme_minimal()
+
+# Plot voor Z
+plot_z <- ggplot(z_data, aes(x = x, y = y)) +
+  geom_line(size = 1, color = "darkorange") +
+  geom_area(
+    data = z_fill, aes(x = x, y = y),
+    fill = "darkorange", alpha = 0.5
+  ) +
+  labs(
+    x = expression(italic(Z)),
+    y = "Kansdichtheid"
+  ) +
+  theme_minimal()
+
+# Combineer de twee plots met cowplot
+combined_plot <- plot_grid(
+  plot_x, plot_z, 
+  ncol = 1, align = "v"
+)
+
+# Voeg een verticale lijn toe over beide plots
+final_plot <- ggdraw(combined_plot) +
+  draw_line(
+    x = c(0.62, 0.62),  # Relatieve positie op de x-as (0-1 schaal)
+    y = c(0.09, 1),  # Relatieve positie op de y-as (0-1 schaal)
+    color = "DarkOrchid", 
+    size = 1, 
+    linetype = "dashed"
+  )
+
+# Toon de finale plot
+print(final_plot)
+
+```
+
+Stel nu dat we geïnteresseerd zijn in de kans dat $X > 
+173{,}5$:
+$$ \pr{X > 173{,}5}.$$ 
+In de *bovenste* plot van @fig-transformeren komt die kans komt overeen met de oppervlakte van het oranje gekleurde gebied.    
+Dezelfde kans kan echter ook worden berekend aan de hand van de variabele $Z$.
+In de *onderste* plot van @fig-transformeren is namelijk precies hetzelfde gebied
+ingekleurd.
+(De paarse stippellijn laat zien 
+dat de grenzen van de oranje gebieden in beide plots
+precies zijn uitgelijnd.)
+In de onderste plot komt het oranje gebied precies overeen met de kans
+$$ \pr{Z > 0{,}5}.$$
+We zien dus dat
+$$ \pr{X > 173{,}5} = \pr{Z > 0{,}5}. $$
+Dit werkt in het algemeen: 
+kansen voor een
+normaalverdeelde variabele $X$ kunnen altijd worden gerelateerd 
+aan kansen voor de standaard-normaalverdeelde variabele $Z$.
+
+Laten we dat preciezer maken.
+Als kansvariabele $X$ normaal verdeeld is met gemiddelde $\mu_X$
+en standaarddeviatie $\sd{X}$,
+dan kunnen we een andere kansvariabele definieren als 
+$$ Z = \frac{X - \mu_X}{\sd{X}}. $$
+In deze formule wordt de verdeling van $X$ eerst verschoven 
+door $\mu_X$ van $X$ af te trekken, waardoor het gemiddelde 0 wordt. 
+Vervolgens wordt de wordt de klokvorm uitgerekt of ingedrukt
+door te delen door $\sigma_X$, waardoor de standaarddeviatie 1 wordt. 
+In het statistisch jargon zeggen we dat $X$ is **getransformeerd**
+naar een standaard-normaalverdeelde variabele.
+
+Doordat je het gemiddelde van $X$ hebt afgetrokken,
+  is $Z$ gemiddeld $\mu_Z = 0$,
+  en doordat je vervolgens door de standaarddeviatie  van $X$ gedeeld hebt,
+  is de standaarddeviatie $\sd{Z} = 1$.
+$Z$ is dus *standaard*-normaal verdeeld. 
+
+Daaruit volgt:
+$$
+\begin{aligned}
+\pr{X > 173{,}5} 
+  & = \pr{\frac{X - \mu_X}{\sd{X}} > \frac{173{,}5 - \mu_X}{\sd{X}}}\\
+  & = 
+  \pr{Z > \frac{173{,}5 - \mu_X}{\sd{X}}}\\
+  &  = 
+  \pr{Z > \frac{173{,}5 - 170}{7}}\\
+  & = 
+  \pr{Z > 0{,}5}. 
+\end{aligned}
+$$
+Op die manier hebben we laten zien dat de kans
+op gebeurtenis $X > 173,5$ 
+gelijk moet zijn aan de kans op gebeurtenis $Z >0.5$
+de standaard-normaal verdeelde variabele $Z$.
+
+Laten we als voorbeeld teruggaan naar de kans op $X > 173{,}5$. 
+Door de transformatie naar $Z$ toe te passen, krijgen we:
+$$
+\begin{aligned}
+P(X > 173{,}5) 
+  & = P\left(\frac{X - \mu_X}{\sigma_X} > \frac{173{,}5 - \mu_X}{\sigma_X}\right) \\
+  & = P\left(Z > \frac{173{,}5 - 170}{7}\right) \\
+  & = P(Z > 0{,}5).
+\end{aligned}
+$$
+
+::: {.todo-box}
+Einde erg abrupt, en de hele paragraaf voelt nog erg moeilijk en complex.
+Het nut is hier ook niet erg duidelijk -- is pas in het volgende hoofdstuk 
+echt nodig. 
+Nog eens over nadenken.
+:::
+    
+## De $t$-verdeling {#sec-t}
+
+Later in de cursus komen we ook een andere verdeling tegen:
+de ***t*-verdeling**.
+
+Eigenlijk is de $t$-verdeling niet één verdeling
+maar een lange rij van verdelingen die bij elkaar horen.
+Deze verdelingen zijn genummerd: 
+  de eerste heet $t_1$, de tweede $t_2$, enzovoort.
+De index wordt het aantal **vrijheidsgraden** genoemd.
+Je kunt $t_8$ dus ook omschrijven als de $t$-verdeling 
+met 8 vrijheidsgraden,
+of met $\text{df} = 8$.
+(Hier staat df voor *degrees of freedom**.)
+
+De $t$-verdelingen lijken behoorlijk op de standaard-normale verdeling;
+we laten in @fig-t hieronder een aantal voorbeelden zien.
+
+```{r}
+#| label: fig-t
+#| fig-cap: "Verschillende $t$-verdelingen en de standaard-normale verdeling"
+#| warning: false
+#| code-fold: true
+#| fig-height: 4
+
+#| code-fold: true
+#| warning: false
+#| label: fig-t-verdelingen
+#| fig-cap: "Vergelijking van $t$-verdelingen met verschillende vrijheidsgraden."
+
+# Genereer t-waarden
+t_values <- seq(-3.5, 3.5, by = 0.1)
+
+# Maak een dataframe voor de kansdichtheden
+dataframe <- data.frame(
+  t = c(
+    t_values, 
+    rep(t_values, 3)
+  ),
+  prob = c(
+    dnorm(t_values),              # Standaard-normale verdeling
+    dt(t_values, df = 2),         # t-verdeling met df = 2
+    dt(t_values, df = 5),         # t-verdeling met df = 5
+    dt(t_values, df = 20)         # t-verdeling met df = 20
+  ),
+  df = factor(
+    rep(
+      c("standaard-normaal", "df = 2", "df = 5", "df = 20"), 
+      each = length(t_values)
+    ),
+    levels = c("df = 2", "df = 5", "df = 20", "standaard-normaal")
+  )
+)
+
+# Plot de verdelingen
+ggplot(
+  dataframe, 
+  aes(
+    x = t, y = prob, 
+    group = df, color = df, linewidth = df, linetype = df
+  )
+) +
+  # Voeg de lijnen toe
+  geom_line() +
+  # Pas de kleuren aan
+  scale_color_manual(
+    values = c(rep("black", 3), "darkorange")
+  ) +
+  # Pas de lijndiktes aan
+  scale_linewidth_manual(
+    values = c(1, 1, 1, 1.2)
+  ) +
+  # Pas de lijnstijlen aan
+  scale_linetype_manual(
+    values = c(
+      "df = 2" = "dotted", 
+      "df = 5" = "dashed", 
+      "df = 20" = "longdash",
+      "standaard-normaal" = "solid"
+    )
+  ) +
+  # Labels toevoegen
+  labs(
+    x = expression(italic(t) ~ "of" ~ italic(Z)),
+    y = "Kansdichtheid"
+  ) +
+  # Thema toepassen
+  theme_minimal()
+```
+Vergeleken met de standaard-normale verdeling
+heeft de $t$-verdeling een lagere piek
+en "dikkere staarten".
+Dat zorgt ervoor dat de spreiding van de $t$-verdeling groter is.^[Voor wie 
+dat interessant vindt: de variantie van de $t$-verdeling hangt af
+van het aantal vrijheidsgraden en is gelijk aan $\mathrm{df}/(\mathrm{df} - 2)$.
+In de limiet waarbij het aantal vrijheidsgraden naar oneindig gaat,
+convergeert dit naar 1. Dat moet ook,
+want in die limiet convergeert de $t$-verdeling naar de 
+standaard-normale verdeling, en die heeft variantie $\sigma = 1$.]
+Het verschil tussen de $t$-verdeling en de standaard-normale verdeling
+wordt echter kleiner naarmaten het aantal vrijheidsgraden groter wordt.
+Dat kun je in @fig-t duidelijk zien:
+bij $\text{df} = 20$ zijn de $t$-verdeling en de standaard-normale verdeling
+op het oog al moeilijk te onderscheiden.
+In de limiet van $\text{df}\rightarrow \infty$ convergeert de $t$-verdeling
+naar de standaard-normale verdeling.
+
+## Kritieke waarden {#sec-kritieke-waarde}
+
+### Kritieke waarden van de standaardnormale verdeling
+
+In figuur @fig-krit-1 is weer 
+een standaard-normale verdeling weergegeven.
+In beide staarten van de verdeling is een gebied oranje gekleurd.
+De oppervlakte van elk van deze gebieden is 0,1; 
+samen representeren ze dus een kans van exact 0,2.
+Om dit te realiseren
+moet de grens van het rechtergebied worden ingesteld op (afgerond) 1,28
+en de grens van het linkergebied op (afgerond) -1,28.
+
+De grenswaarde van het rechtergebied wordt een **kritieke waarde** van de verdeling genoemd.
+In dit geval betreft het de kritieke waarde die hoort bij een totale kans van 0,2
+(voor beide oranje gebieden samen).
+Deze kritieke waarde wordt genoteerd als $Z_{0{,}2(2)}$.
+Hierin verwijst 0,2 naar de totale oppervlakte van de oranje gebieden,
+en de (2) geeft aan dat daarbij beide staarten worden meegeteld.
+
+Op dezelfde manier verwijst $Z_{0{,}05(2)}$ naar de grenswaarde 
+die hoort bij gebieden met een totale oppervlakte van 0,05. 
+Deze situatie is weergegeven in @fig-krit-2.
+De kritieke waarde is nu $Z_{0{,}05(2)} \approx 1{,}96$. 
+Dat deze kritieke waarde dicht bij 2 ligt,
+had je kunnen inschatten op basis van 
+de tweede vuistregel uit @sec-vuistregels:
+die stelt dat bij een normale verdeling ongeveer 95% van de kansmassa
+zich binnen 2 standaarddeviaties van het gemiddelde bevindt 
+(en de overige 5% dus daarbuiten).
+Onthoud de waarde 1,96; 
+  deze kritieke waarde komt in de statistiek keer op keer terug.
+
+In het algemeen bestaan er kritieke waarden voor elke keuze
+van de totale oppervlakte van de oranje gebieden.
+Als we deze oppervlakte $\alpha$ noemen,
+is er een kritieke waarde $Z_{\alpha(2)}$ voor iedere waarde van $\alpha$
+tussen 0 en 1. Samengevat:
+
+::: {.callout-important appearance="default" icon=false}
+
+## Definitie: Kritieke waarden van de standaardnormale verdeling
+
+De kritieke waarde $Z_{\alpha(2)}$ is de waarde waarvoor geldt:
+
+$$\pr{Z < -Z_{\alpha(2)} \text{ of } Z > Z_{\alpha(2)}} = \alpha. $$
+{#eq-crit-norm}
+Hieruit volgt direct dat
+
+$$\pr{-Z_{\alpha(2)} < Z < Z_{\alpha(2)}} = 1 - \alpha. $$ {#eq-crit-norm-2}
+:::
+
+
+### Kritieke waarden van de $t$-verdeling
+
+Kritieke waarden kunnen ook worden gedefinieerd voor $t$-verdelingen.
+Het grote verschil is dat de kritieke waarde die hoort bij een bepaalde kans
+$\alpha$ nu ook afhangt van het aantal vrijheidsgraden (df) van de $t$-verdeling.
+In @fig-krit-3 is de $t$-verdeling met $\mathrm{df} = 4$ weergegeven.
+Net als in @fig-krit-1 hebben de oranje gebieden in totaal
+een oppervlakte van 0,2.
+De grenzen van deze gebieden zijn de kritieke waarden 
+voor de kans 0,2 en $\mathrm{df} = 4$.
+We noteren dat als $\ct{0{,}2}{2}{4}$.
+
+::: {.callout-important appearance="default" icon=false}
+
+## Definitie: Kritieke waarden van de $t$-verdeling
+
+De kritieke waarde $\ct{\alpha}{2}{df}$ voor de $t$-verdeling
+met df vrijheidsgraden is de waarde waarvoor geldt:
+
+$$\pr{t < -\ct{\alpha}{2}{df} \text{ of } t > \ct{\alpha}{2}{df}} = \alpha. $$
+{#eq-crit-t}
+Hieruit volgt direct dat
+
+$$\pr{-\ct{\alpha}{2}{df} < t < \ct{\alpha}{2}{df}} = 1 - \alpha. $$ {#eq-crit-t-2}
+:::
+
+
+Doordat de $t$-verdeling dikkere staarten heeft dan de standaardnormale verdeling
+(meer kansmassa in de staarten)
+zijn bij gelijke $\alpha$ de kritieke waarden van de $t$-verdeling groter.
+Vergelijk bijvoorbeeld @fig-krit-1 met @fig-krit-3:
+$Z_{0.2(2)}\approx 1{,}28$, terwijl $\ct{0{,}2}{2}{4} \approx 1.53$.
+Of vergelijk @fig-krit-2 met @fig-krit-4:
+$Z_{0.05(2)}\approx 1{,}96$, terwijl $\ct{0{,}05}{2}{4} \approx 2.78$.
+
+::: {#fig-krit layout-nrow=2}
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: fig-krit-1
+#| fig-cap: "De kritieke waarde van de standaard-normale verdeling $Z_{0{,}2(2)} \\approx 1{,}28$."
+#| fig.width: 3.75
+#| fig.height: 2.75
+# Functie om een plot te maken van de kritieke waarde
+crit_plot <- function(alpha) {
+  # Kritieke waarde van Z
+  Z_crit <- qnorm(1 - alpha / 2)  # Bereken de kritieke waarde
+  
+  # Coördinaten voor de pijlen
+  xstart <- (Z_crit + 3.5) / 2         # Beginpunt x-coördinaat
+  ystart <- dnorm(0) / 4               # Beginpunt y-coördinaat
+  xend <- Z_crit + (3.5 - Z_crit) / 7  # Eindpunt x-coördinaat
+  yend <- dnorm(xend) / 3              # Eindpunt y-coördinaat
+  
+  # Plot de standaard-normale verdeling met staarten en annotaties
+  plotNormaal(0, 1) +
+    # Labels voor de assen
+    labs(
+      y = "Kansdichtheid", 
+      x = expression(italic(Z))
+    ) +
+    # Ingekleurd oppervlak onder de curve
+    oppervlak(-10, -Z_crit) +
+    oppervlak(Z_crit, 10) +
+    # Schaalinstellingen voor de x-as
+    scale_x_continuous(
+      breaks = c(-Z_crit, 0, Z_crit), 
+      labels = c(
+        paste0(round(-Z_crit, 2), "..."), 
+        "0", 
+        paste0(round(Z_crit, 2), "...")
+      ),
+      minor_breaks = NULL  # Verwijder minor ticks
+    ) +
+    # Kromme pijltjes toevoegen
+    geom_curve(
+      aes(x = -xstart, y = ystart, xend = -xend, yend = yend), 
+      curvature = 0.2, 
+      arrow = arrow(length = unit(0.2, "cm")), 
+      color = "black", 
+      size = 0.7
+    ) +
+    geom_curve(
+      aes(x = xstart, y = ystart, xend = xend, yend = yend), 
+      curvature = -0.2, 
+      arrow = arrow(length = unit(0.2, "cm")), 
+      color = "black", 
+      size = 0.7
+    ) +
+    # Annotaties toevoegen
+    annotate(
+      "text", 
+      x = -xstart, 
+      y = ystart + 0.02,  # Plaats annotatie net boven de pijl
+      label = gsub("\\.", ",", round(alpha / 2, 3)), 
+      color = "black", 
+      hjust = 0.5, 
+      size = 4
+    ) +
+    annotate(
+      "text", 
+      x = xstart, 
+      y = ystart + 0.02,  # Plaats annotatie net boven de pijl
+      label = gsub("\\.", ",", round(alpha / 2, 3)), 
+      color = "black", 
+      hjust = 0.5, 
+      size = 4
+    ) +
+    # Label in het midden
+    proportie(gsub("\\.", ",", round(1 - alpha, 2)))
+}
+
+# Voorbeeld: plot voor alpha = 0.2
+crit_plot(0.2)
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: fig-krit-2
+#| fig-cap: "De kritieke waarde van de standaard-normale verdeling $Z_{0{,}05(2)} \\approx 1{,}96$."
+#| fig.width: 3.75
+#| fig.height: 2.75
+
+crit_plot(0.05)
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: fig-krit-3
+#| fig-cap: "De kritieke waarde van de $t$-verdeling $t_{0{,}2(2)4} \\approx 1{,}53$."
+#| fig.width: 3.75
+#| fig.height: 2.75
+
+# Functie om een plot te maken van de kritieke waarde
+crit_plot_t <- function(alpha, df) {
+  # Kritieke waarde van t
+  t_crit <- qt(1 - alpha / 2, df = df)  # Bereken de kritieke waarde
+  
+  # Coördinaten voor de pijlen
+  xstart <- (t_crit + 3.5) / 2         # Beginpunt x-coördinaat
+  ystart <- dt(0, df) / 4               # Beginpunt y-coördinaat
+  xend <- t_crit + (3.5 - t_crit) / 7  # Eindpunt x-coördinaat
+  yend <- dt(xend, df) / 3              # Eindpunt y-coördinaat
+
+  # Plot de t-verdeling met staarten en annotaties
+  dataT <- data.frame(x = x, y = dt(x, df = df))
+  plotT <- ggplot(dataT, aes(x, y)) +
+    geom_line(color = "darkorange", linewidth = 1) + # Curve van de t-verdeling
+    labs(
+      y = "Kansdichtheid", 
+      x = expression(italic(t))
+    ) + # Labels voor de assen
+    theme_minimal()
+  
+  oppervlakT <- function(a, b){# Gebied tussen a en b kleuren
+    geom_area(
+      data = subset(dataT, x >= a & x <= b), 
+      aes(x, y), 
+      fill = "darkorange", 
+      alpha = 0.4
+    ) 
+    } 
+  
+  plotT +
+    # Ingekleurd oppervlak onder de curve
+    oppervlakT(-10, -t_crit) +
+    oppervlakT(t_crit, 10) +
+    # Schaalinstellingen voor de x-as
+    scale_x_continuous(
+      breaks = c(-t_crit, 0, t_crit), 
+      labels = c(
+        paste0(round(-t_crit, 2), "..."), 
+        "0", 
+        paste0(round(t_crit, 2), "...")
+      ),
+      minor_breaks = NULL  # Verwijder minor ticks
+    ) +
+    # Kromme pijltjes toevoegen
+    geom_curve(
+      aes(x = -xstart, y = ystart, xend = -xend, yend = yend), 
+      curvature = 0.2, 
+      arrow = arrow(length = unit(0.2, "cm")), 
+      color = "black", 
+      size = 0.7
+    ) +
+    geom_curve(
+      aes(x = xstart, y = ystart, xend = xend, yend = yend), 
+      curvature = -0.2, 
+      arrow = arrow(length = unit(0.2, "cm")), 
+      color = "black", 
+      size = 0.7
+    ) +
+    # Annotaties toevoegen
+    annotate(
+      "text", 
+      x = -xstart, 
+      y = ystart + 0.02,  # Plaats annotatie net boven de pijl
+      label = gsub("\\.", ",", round(alpha / 2, 3)), 
+      color = "black", 
+      hjust = 0.5, 
+      size = 4
+    ) +
+    annotate(
+      "text", 
+      x = xstart, 
+      y = ystart + 0.02,  # Plaats annotatie net boven de pijl
+      label = gsub("\\.", ",", round(alpha / 2, 3)), 
+      color = "black", 
+      hjust = 0.5, 
+      size = 4
+    ) +
+    # Label in het midden
+    proportie(gsub("\\.", ",", round(1 - alpha, 2)))
+}
+
+# Voorbeeld: plot voor alpha = 0.2 en df = 4
+crit_plot_t(0.2, 4)
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| label: fig-krit-4
+#| fig-cap: "De kritieke waarde van de $t$-verdeling $t_{0{,}05(2)4} \\approx 2{,}78$."
+#| fig.width: 3.75
+#| fig.height: 2.75
+
+crit_plot_t(0.05, 4)
+```
+
+Kritieke waarden van de standaardnormale verdeling en de $t$-verdeling.
+
+:::
+
+In @sec-t zagen we ook 
+dat de $t$-verdeling naar de standaard-normale verdeling convergeert
+als het aantal vrijheidsgraden groot wordt.
+Dat betekent dat ook de kritieke waarden van de $t$-verdeling 
+convergeren naar de kritieke waarden van de standaardnormale verdeling.
+@Fig-convergentie-krit laat dit zien: $t_{0{,}05(2)\mathrm{df}}$ 
+convergeert naar $Z_{0{,}05(2)}=1{,}96$ in de limiet van grote df.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Kritieke $t$-waarde bij $\\alpha = 0.05$ als functie van het aantal vrijheidsgraden df. Voor grote df convergeert de kritieke waarde naar de kritieke waarde van de standaardnormale verdeling, 1,96."
+#| label: fig-convergentie-krit
+#| fig.width: 3.75
+#| fig.height: 2.75
+
+# Laad ggplot2 indien nodig
+if (!("ggplot2" %in% loadedNamespaces())) { 
+  library(ggplot2) 
+}
+
+# Parameters
+alpha <- 0.05                # Significatieniveau
+vrijheidsgraden <- 1:30      # Aantal vrijheidsgraden
+kritieke_t <- qt(1 - alpha / 2, df = vrijheidsgraden)  # Kritieke $t$-waarden
+kritieke_normaal <- qnorm(1 - alpha / 2)
+
+# Data voorbereiden
+data <- data.frame(
+  df = vrijheidsgraden,
+  kritieke_t = kritieke_t
+)
+
+# Plot
+ggplot(data, aes(x = df, y = kritieke_t)) +
+  geom_point(color = "darkorange", size = 2) +    # Punten
+  geom_line(color = "darkorange", size = 1) +     # Lijnen
+  geom_hline(
+    yintercept = kritieke_normaal, 
+    color = "DarkOrchid", 
+    linetype = "dashed", 
+    size = 1
+  ) +
+  annotate(
+    "text", 
+    x = 6, 
+    y = kritieke_normaal - 0.4, 
+    label = expression(italic(Z)[0.05 * "(" * 2 * ")"] == 1.96), 
+    color = "DarkOrchid", 
+    size = 4
+  ) +
+  annotate(
+    "text", 
+    x = 6, 
+    y = 3.75, 
+    label = expression(italic(t)[0.05 * "(" * 2 * ")"*"df"]), 
+    color = "darkorange", 
+    size = 4
+  ) +
+  coord_cartesian(ylim = c(0, 5)) +  # Stel het bereik van de y-as in
+  labs(
+    x = "Vrijheidsgraden (df)",
+    y = expression(Kritieke~italic(t)-waarde),
+    title = NULL
+  ) +
+  theme_minimal()
+```
+
+De kritieke waarden van de standaard-normale verdeling
+en de $t$-verdeling
+zullen een belangrijke rol spelen in @sec-schatten en @sec-hypothesetoetsen.
+
+### Kritieke waarden bepalen met R {#sec-krit-R}
+
+Om de kritieke waarden van een verdeling te bepalen
+zullen we in deze cursus gebruik maken van R.
+
+Kijk nog eens naar @fig-krit-1,
+waarin de kritieke waarde is geïllustreerd voor $\alpha = 0{,}2$.
+De kritieke waarde is de grenswaarde van $Z$
+zodanig het gebied rechts ervan een oppervlakte heeft van $\alpha/2 = 0{,}1$,
+en het hele gebied links ervan dus een oppervlak van $1 - \alpha/2 = 0{,}9$.
+Dat betekent dat de kritieke waarde gelijk kwantiel 0,9, 
+oftwel het 90e percentiel, van de standaard-normale verdeling.
+Die waarde kunnen we aan R vragen met de functie `qnorm()`.
+In de naam van die functie staat `q` voor *quantile*, en `norm` voor 
+de normale verdeling. Het werkt zo:
+```{r}
+qnorm(0.9)
+```
+Het resultaat is precies de grenswaarde van (afgerond) 1,28
+die je in @fig-krit-1 aan de $x$-as ziet staan.
+
+Voor een algemene waarde van $\alpha$ kun je het als volgt aanpakken:
+```{r}
+alpha <- 0.2
+qnorm(1 - alpha/2)
+```
+
+::: {#exr-krit-norm-R}
+
+## Kritieke waarden voor de normale verdeling.
+
+:::
+
+@Fig-krit-3 illustreert de kritieke waarde van de $t$-verdeling
+met 4 vrijheidsgraden, weer voor $\alpha = 0,2$.
+Weer kunnen we deze kritieke waarde aan R vragen,
+nu met de functie met de voorspelbare naam `qt()`.
+Omdat de kritieke waarde afhangt van het aantal vrijheidsgraden
+zul je die aan de functie moeten meegeven:
+
+```{r}
+alpha <- 0.2
+qt(1 - alpha/2, df = 4)
+```
+Hier komt precies de waarde van (afgerond) 1,53 uit die in de figuur
+is aangegeven.
+
+::: {#exr-krit-t-R}
+
+## Oefenen met kritieke waarden van de $t$-verdeling
+
+:::
+
+## Optellen van meerdere kansvariabelen {#sec-optellen}
+
+We zullen in deze cursus regelmatig
+    situaties tegenkomen waarbij
+    we kansvariabelen bij elkaar optellen.
+Bijvoorbeeld, 
+    als we met twee dobbelstenen gooien
+    en geïnteresseerd zijn in het totaal aantal ogen,
+    dan tellen we in feite twee kansvariabelen op:
+    het aantal ogen van de eerste dobbelsteen 
+    en het aantal ogen van de tweede dobbelsteen.
+Als we die twee kansvariabelen $X_1$ en $X_2$ noemen,
+    dan gaat onze interesse dus uit naar
+$$ Y = X_1 + X_2.$$ {#eq-som-1}
+We hebben op deze manier een nieuwe kansvariabele $Y$ gedefinieerd.
+De vraag is nu:
+    wat kunnen we zeggen over de kansverdeling van $Y$?
+
+Meer in het algemeen kan het zijn dat we niet twee
+    maar $n$ kansvariabelen optellen.
+We kunnen die variabelen $X_i$ noemen.
+In dat algemene geval is $Y$ dus:
+$$ Y = \sum_{i=1}^n X_i.$$ {#eq-som-2}
+De vraag is weer wat we kunnen zeggen over de kansverdeling van $Y$.
+
+### De verwachtingswaarde van een som {#sec-som-ev}
+
+Om te beginnen kijken we naar 
+    de verwachtingswaarde van $Y$, dus $\ev{Y}$.
+(De verwachtingswaarde is het gemiddelde van de kansverdeling,
+  weet je nog?)
+Hier is de regel heel eenvoudig:
+    de verwachtingswaarde van de som
+    is de som verwachtingswaarden, dus
+$$
+\ev{Y} = \sum_{i = 1}^n \ev{X_i}.
+$$ {#eq-evsom}
+Dit is niet erg verrassend.
+Bijvoorbeeld:
+Als het aantal ogen bij het gooien van één dobbelsteen 
+    gemiddeld $3 \frac{1}{2}$ is (zie @fig-uniform-dobbelsteen),
+    dan is het aantal ogen van twee dobbelstenen gemiddeld
+    $3 \frac{1}{2} + 3 \frac{1}{2} = 7$
+    (zoals te zien was in @fig-kansverdeling-twee-dobbelstenen).
+
+### De variantie van de som
+
+En hoe zit het met de variantie van $Y$, oftewel $\var{Y}$?
+
+Het berekenen van de variantie van $Y$ is eenvoudig als de kansvariabelen $X_i$ **onafhankelijk** zijn. In @sec-onafhankelijk hebben we besproken wat het betekent als twee *gebeurtenissen* onafhankelijk zijn. Hier gaat het echter om de onafhankelijkheid van *variabelen*, wat om een specifieke uitleg vraagt.
+
+Twee kansvariabelen zijn onafhankelijk 
+  als de kansverdeling van de ene variabele niet afhangt 
+  van de uitkomst van de andere. 
+Met andere woorden: 
+  de kans op een bepaalde uitkomst van $X_1$ verandert niet, 
+  ongeacht wat je weet over de uitkomsten van $X_2$. 
+Dit betekent dat elke mogelijke gebeurtenis van $X_1$ 
+  onafhankelijk is van elke mogelijke gebeurtenis van $X_2$.
+
+::: {#exr-onafhankelijk}
+Verwerkingsopgave over onafhankelijkheid.
+
+**a.**
+
+**b.**
+
+:::
+
+Terug naar de variantie van $Y$,
+    waarbij $Y$ de som was van $n$ kansvariabelen $X_i$.
+Als alle variabelen $X_i$ onafhankelijk zijn van elkaar,
+    dan is de variantie van $Y$ simpelweg
+    de som van de varianties van de variabelen $X_i$:
+$$
+\var{Y} = \var{\sum_{i = 1}^n X_i} = \sum_{i = 1}^n \var{X_i}.
+$$ {#eq-somvarianties}
+Als je meerdere onafhankelijke variabelen optelt
+    wordt de variantie dus steeds groter.
+
+Zoals je weet is de standaarddeviatie 
+    simpelweg de wortel van de variantie.
+De standaarddeviatie van $Y$ is in dit geval dus
+$$ 
+\sd{Y} = \sqrt{\var{Y}} = \sqrt{\sum_{i = 1}^n \var{X_i}}.
+$$ {#eq-somvarianties}
+Het is belangrijk te zien dat je eerst de varianties van de $X_i$ optelt
+    en daarna pas de wortel neemt.
+De standaarddeviatie van $Y$ is dus *niet*
+    de som van de standaarddeviaties van de $X_i$!
+  
+Als de $X_i$ niet onafhankelijk zijn,
+kun je niets algemeens zeggen over de variantie van $Y$.
+
+::: {#exr-wortel}
+Verwerkingsopgave over $\sqrt{a + b} \neq \sqrt{a} + \sqrt{b}$.
+:::
+
+
+::: {#exr-psychologisch-experiment}
+Psychologisch experiment. 
+Twee proefpersonen (mensen? zijn er voorbeelden met primaten?). 
+Eerste proefpersoon krijgt 10 euro (of iets anders)
+    maar krijgt de gelegenheid om dat bedrag te delen
+    met de tweede proefpersoon.
+$X_1$ is het bedrag dat proefpersoon 1 zelf houdt,
+$X_2$ is het bedrag dat deze aan proefpersoon 2 geeft.
+Zowel $X_1$ als $X_2$ zijn kansvariabelen,
+    want verschillende proefpersonen maken verschillende beslissingen.
+
+**a.** Zijn $X_1$ en $X_2$ onafhankelijk?
+
+**b.** Stel dat de standaarddeviatie van variabele $X_1$ gelijk is aan 5\,€.  Wat is de variantie van variabele $X_2$?
+    
+**c.** De variabele $Y$ is gedefinieerd als de som van $X_1$ en $X_2$, dus $Y = X_1 + X_2$. Wat is de variantie van $Y$?
+
+**d.** Zie je waarom je de varianties van $X_1$ en $X_2$ in dit geval niet mag optellen?
+
+:::
+
+
+## Samenvatting
+  
+::: {.todo-box}
+
+Schrijven!
+  
+:::
+
+  
+## Terminologie in het Engels
+
+| Nederlands    | Engels             |
+|---------------|--------------------|
+| kansverdeling              |  probability distribution                  |
+| symmetrisch              | symmetrical                   |
+| scheef              | skewed                   |
+| klokvormig              | bell-shaped                   |
+| uniform              | uniform                   |
+| unimodaal              | unimodal                   |
+| bimodaal              | bimodal                   |
+| cumulatieve kansverdeling              | cumulative probability distribution                   |
+| modus              | mode                   |
+| mediaan              |  median                  |
+| gemiddelde              | mean                   |
+| verwachtingswaarde              | expected value                   |
+| variantie              | variance                   |
+| standaarddeviatie              | standard deviation                   |
+| kansdichtheid              |  probability density                  |
+| normaalverdeling              |  normal distribution                  |
+| Gaussische verdeling              | Gaussian distribution                   |
+| Gausscurve              | Gauss curve                   |
+| klokkromme              | bell curve                   |
+| parameters              | parameters                   |
+| standaard-normale verdeling              |  standard normal distribution                  |
+| kritieke waarde              | critical value                   |
+| getransformeerd              | transformed                   |
+| *t*-verdeling              | *t* distribution                   |
+| vrijheidsgraden              | degrees of freedom                   |
+| onafhankelijk              | independent                   |
+
+: Woordenlijst @sec-kansverdelingen . {#tbl-woorden-kans .striped .hover}
+
+## Opgaven
+
+
+## Voetnoten

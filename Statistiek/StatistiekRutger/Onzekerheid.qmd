@@ -80,11 +80,16 @@ Bovendien zijn metingen vaak destructief:
   en proefpersonen blootgesteld aan risico's.
 Daarom onderzoeken we meestal slechts een aantal individuen
     uit de populatie --- een **steekproef**.
-
 De waarden uit de steekproef gebruiken we vervolgens
     om de populatieparameter te **schatten**.
-Helaas betekent dat dat het resultaat
-    niet exact is.
+Dat doen we door een bepaalde statistiek uit te rekenen,
+  zoals het gemiddelde.
+Als we een bepaalde statistiek gebruiken om een parameter te schatten
+  dan noemen we die statistiek een **schatter**.
+
+Dat we alleen toegang hebben tot de steekproef
+betekent helaas dat het resultaat
+    meestal niet exact is.
 Het resultaat van de schatting hangt immers af van de specifieke steekproef.
 Als je het onderzoek opnieuw zou uitvoeren 
   op identieke wijze,
@@ -135,7 +140,7 @@ Maar meetfouten zijn niet beperkt tot situaties waarin geen steekproef wordt geb
 Kortom, meetfouten zijn een belangrijke oorzaak van onzekerheid, zowel in individuele metingen als in schattingen die gebaseerd zijn op steekproeven. Ze zijn een onvermijdelijk onderdeel van het meten en schatten, en het begrijpen van meetfouten is essentieel om de precisie en betrouwbaarheid van resultaten te beoordelen.
 
 
-## Schattingen: precisie, nauwkeurigheid, en bias
+## Schattingen: precisie, nauwkeurigheid, zuiverheid en bias
 
 Het is belangrijk om stil te staan bij de verschillende manieren
     waarop schattingen
@@ -147,12 +152,12 @@ Deze begrippen worden in @fig-precisie-vs-nauwkeurig hieronder geïllustreerd.
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Vier doelen in een 2x2 grid met geschaalde en verschoven steekproeven."
+#| fig.cap: "Illustratie van de begrippen precies en nauwkeurig."
 #| label: fig-precisie-vs-nauwkeurig
 #| fig.width: 5
 #| fig.height: 5
 
-# Controleer of de benodigde pakketten zijn geladen
+# Controleer of benodigde pakketten zijn geladen
 if (!("ggplot2" %in% .packages())) { library(ggplot2) }
 if (!("dplyr" %in% .packages())) { library(dplyr) }
 if (!("MASS" %in% .packages())) { library(MASS) }
@@ -160,57 +165,31 @@ if (!("gridExtra" %in% .packages())) { library(gridExtra) }
 if (!("grid" %in% .packages())) { library(grid) }
 
 # Functie om een ring (donut) te genereren als polygon
-genereer_ring <- function(x, y, straal_binnen, straal_buiten,
-                          punten = 100) {
-  # Bereken hoeken van 0 tot 2π
+genereer_ring <- function(x, y, straal_binnen, straal_buiten, punten = 100) {
   theta <- seq(0, 2 * pi, length.out = punten)
-  
-  # Genereer coördinaten voor buiten- en binnenrand
   data.frame(
-    x = c(
-      x + straal_buiten * cos(theta),
-      NA,
-      x + straal_binnen * cos(rev(theta))
-    ),
-    y = c(
-      y + straal_buiten * sin(theta),
-      NA,
-      y + straal_binnen * sin(rev(theta))
-    )
+    x = c(x + straal_buiten * cos(theta), NA, x + straal_binnen * cos(rev(theta))),
+    y = c(y + straal_buiten * sin(theta), NA, y + straal_binnen * sin(rev(theta)))
   )
 }
 
 # Functie om een volledig doelwit te genereren
 genereer_doelwit <- function(punten = 100) {
-  bind_rows(
-    genereer_ring(0, 0, 4, 5, punten = punten) %>%
-      mutate(kleur = "red", groep = 1),
-    genereer_ring(0, 0, 3, 4, punten = punten) %>%
-      mutate(kleur = "white", groep = 2),
-    genereer_ring(0, 0, 2, 3, punten = punten) %>%
-      mutate(kleur = "red", groep = 3),
-    genereer_ring(0, 0, 1, 2, punten = punten) %>%
-      mutate(kleur = "white", groep = 4),
-    genereer_ring(0, 0, 0, 1, punten = punten) %>%
-      mutate(kleur = "red", groep = 5)
-  )
+  kleuren <- c("red", "white", "red", "white", "red")
+  straal_randen <- list(c(4, 5), c(3, 4), c(2, 3), c(1, 2), c(0, 1))
+  
+  bind_rows(lapply(1:5, function(i) {
+    genereer_ring(0, 0, straal_randen[[i]][1], straal_randen[[i]][2], punten) %>%
+      mutate(kleur = kleuren[i], groep = i)
+  }))
 }
 
 # Functie om een steekproef te schalen en verschuiven
 scale_and_shift_sample <- function(n, desired_mean, desired_variance) {
-  # Genereer standaard normaal verdeelde steekproef
-  sample <- as.data.frame(
-    MASS::mvrnorm(n = n, mu = c(0, 0), Sigma = diag(2))
-  )
-  
-  # Schaal steekproef om gewenste variantie te krijgen
-  scale_factor <- sqrt(desired_variance / apply(sample, 2, var))
-  scaled_sample <- sweep(sample, 2, scale_factor, `*`)
-  
-  # Verschuif steekproef naar gewenst gemiddelde
-  shifted_sample <- sweep(scaled_sample, 2, desired_mean, `+`)
-  
-  setNames(shifted_sample, c("x", "y")) # Hernoem kolommen
+  sample <- as.data.frame(MASS::mvrnorm(n, mu = c(0, 0), Sigma = diag(2)))
+  scaled_sample <- sweep(sample, 2, sqrt(desired_variance / apply(sample, 2, var)), `*`)
+  sweep(scaled_sample, 2, desired_mean, `+`) %>%
+    setNames(c("x", "y"))
 }
 
 # Genereer gegevens voor het doelwit
@@ -230,64 +209,42 @@ basis_doelwit <- ggplot() +
 
 # Genereer steekproeven
 set.seed(134)
-steekproef_links_boven <- scale_and_shift_sample(
-  n = 10, desired_mean = c(0, 0), desired_variance = 0.15
-)
-steekproef_rechts_boven <- scale_and_shift_sample(
-  n = 10, desired_mean = c(0, 0), desired_variance = 2
-)
-steekproef_links_onder <- scale_and_shift_sample(
-  n = 10, desired_mean = c(-2.5, -2.5), desired_variance = 0.15
-)
-steekproef_rechts_onder <- scale_and_shift_sample(
-  n = 10, desired_mean = c(3, 1), desired_variance = 2
+steekproeven <- list(
+  links_boven = scale_and_shift_sample(10, c(0, 0), 0.15),
+  rechts_boven = scale_and_shift_sample(10, c(0, 0), 2),
+  links_onder = scale_and_shift_sample(10, c(-2.5, -2.5), 0.15),
+  rechts_onder = scale_and_shift_sample(10, c(3, 1), 2)
 )
 
-# Functie om een doelwit te maken met een specifieke steekproef
+# Functie om doelwit met steekproef te maken
 maak_plot_met_steekproef <- function(basis, steekproef) {
   basis +
-    geom_point(
-      data = steekproef,
-      aes(x = x, y = y),
-      shape = 4, size = 3, stroke = 1, color = "black"
-    )
+    geom_point(data = steekproef, aes(x = x, y = y),
+               shape = 4, size = 3, stroke = 1, color = "black")
 }
 
 # Maak de individuele doelwitplots
-doelwit_links_boven <- maak_plot_met_steekproef(
-  basis_doelwit, steekproef_links_boven
-)
-doelwit_rechts_boven <- maak_plot_met_steekproef(
-  basis_doelwit, steekproef_rechts_boven
-)
-doelwit_links_onder <- maak_plot_met_steekproef(
-  basis_doelwit, steekproef_links_onder
-)
-doelwit_rechts_onder <- maak_plot_met_steekproef(
-  basis_doelwit, steekproef_rechts_onder
-)
+doelwit_plots <- lapply(steekproeven, function(sp) maak_plot_met_steekproef(basis_doelwit, sp))
 
-# Maak labels als tekstGrob-objecten
-label_precies <- textGrob("Precies", gp = gpar(fontsize = 14))
-label_niet_precies <- textGrob("Niet precies", gp = gpar(fontsize = 14))
-label_nauwkeurig <- textGrob("Nauwkeurig", gp = gpar(fontsize = 14), rot = 90)
-label_niet_nauwkeurig <- textGrob(
-  "Niet nauwkeurig", gp = gpar(fontsize = 14), rot = 90
+# Labels en lege grob
+labels <- list(
+  prec = textGrob("Precies", gp = gpar(fontsize = 14)),
+  not_prec = textGrob("Niet precies", gp = gpar(fontsize = 14)),
+  acc = textGrob("Nauwkeurig", gp = gpar(fontsize = 14), rot = 90),
+  not_acc = textGrob("Niet nauwkeurig", gp = gpar(fontsize = 14), rot = 90)
 )
-
-# Maak een lege grob als placeholder
 empty_grob <- rectGrob(gp = gpar(col = NA))
 
-# Combineer alles in een 3x3 grid
+# Combineer in grid
 gridExtra::grid.arrange(
   grobs = list(
-    empty_grob, label_precies, label_niet_precies,  # Eerste rij
-    label_nauwkeurig, doelwit_links_boven, doelwit_rechts_boven,  # Tweede rij
-    label_niet_nauwkeurig, doelwit_links_onder, doelwit_rechts_onder  # Derde rij
+    empty_grob, labels$prec, labels$not_prec,
+    labels$acc, doelwit_plots[[1]], doelwit_plots[[2]],
+    labels$not_acc, doelwit_plots[[3]], doelwit_plots[[4]]
   ),
   ncol = 3,
-  widths = c(0.1, 1, 1),  # Pas breedtes aan
-  heights = c(0.1, 1, 1)  # Pas hoogtes aan
+  widths = c(0.1, 1, 1),
+  heights = c(0.1, 1, 1)
 )
 ```
 
@@ -302,18 +259,17 @@ Je kunt je dat vast voorstellen:
 en opeenvolgende metingen meerdere kilo's van elkaar verschillen,
     dan zul je concluderen dat de weegschaal niet erg precies is.
 
-Merk op:
-    dat de verschillende schattingen dicht bij elkaar liggen
-    wil niet zeggen dat ze ook dicht bij de waarheid liggen.
+Als de verschillende schattingen dicht bij elkaar liggen
+    wil dat nog niet zeggen dat ze ook dicht bij de waarde van de ware parameter liggen.
 In beide plaatjes in de linker-kolom van @fig-precisie-vs-nauwkeurig 
     is de methode precies. 
 Toch wijken in het onderste plaatje 
     de waarden sterk af van de juiste waarde
-    (de *bull's-eye*). 
+    (gesymboliseerd door de *bull's-eye*). 
 
 Een methode wordt **nauwkeurig** genoemd
 als het gemiddelde van de verschillende resultaten
-dicht bij de waarheid ligt.
+dicht bij de juiste waarde ligt.
 In beide plaatjes in de eerste rij
 van @fig-precisie-vs-nauwkeurig
 zijn de resultaten geclusterd rond de *bull's-eye*.
@@ -330,7 +286,7 @@ De eerste is er de **toevallige fout**:
     levert dit steeds een iets andere waarde op.
 Een precieze methode geeft een kleine toevallige fout.
 
-::: {.callout-warning #wrn-toevallig}
+::: {.callout-warning #wrn-toevallig appearance="simple"}
 
 ## Wat is "toevallig"?
 
@@ -347,17 +303,19 @@ Ten tweede is er een **systematische fout**:
     daar is sprake van als de methode *gemiddeld* een te hoge of te lage waarde oplevert.
 Een nauwkeurige methode geeft een kleine systematische fout.
 
-Als een methode een systematische fout heeft
-    dan zegt men ook wel dat de schatter **bias** heeft
+Als een methode of een schatter een systematische fout heeft
+    dan zegt men ook wel dat deze **bias** heeft
     of "gebiasd" is.
 Bias is een Engels woord;
     de beste vertalingen zijn misschien "vertekening" of "vooroordeel".
 Maar omdat de Nederlandse woorden de lading vaak niet goed dekken
     zullen we de Engelse term bias ook blijven gebruiken.
-
 Bias kan op heel veel manieren ontstaan 
     en is een heel belangrijk onderwerp.
 Daarom komen we er later nog uitgebreid op terug.
+
+Als een methode of schatter geen bias heeft
+  dan noemen we de schatter **zuiver**.
   
 ## Toevallige fouten in steekproeven
 
@@ -410,7 +368,7 @@ Die redenering kun je ook omdraaien:
     als we in onze steekproef 3,3% CDA-stemmers vinden
     dan kunnen we vrijwel uitsluiten dat het in de gehele populatie
     om 20% gaat.
-Later in deze cursus leer je
+In @sec-schatten leer je
     hoe je kunt berekenen
     hoe groot de onzekerheid in een schatting is.
 
@@ -470,14 +428,43 @@ Dat kan wel als je een lijst hebt van alle eenheden in de populatie,
 Ieder individu wordt dan genummerd,
     en we vragen een computer om uit de lijst met nummers
     er willekeurig $n$ te kiezen,
-    op basis van randomgetallen.
+    op basis van random getallen.
 
-::: {#exr-aselect}
+::: {.Rexr #exr-aselect}
 
 ## Een aselecte steekproef
 
-Opgave: gebruik R om een eenvoudige aselecte steekproef te kiezen uit een lijst.
-Gebruik de functie `sample()`.
+De functie `sample()` kan gebruikt worden om aselecte steekproeven te doen
+met behulp van R.
+Deze functie kan gebruikt worden om een steekproef te selecteren bij het 
+opzetten van je experiment:
+
+  (a.) Stel je hebt twintig plotjes land, waarmee je wilt testen wat het effect 
+  is van bemesting op de biodiversiteit. Om dit te testen, ben je van plan de 
+  helft van de plotjes wel te bemesten en de andere helft niet. Schrijf een 
+  simpele R-code met de functie `sample()` om een aselecte steekproef uit te 
+  voeren. Je hebt elk plotje al een nummer gegeven, zoals aangegeven met de code 
+  hieronder:
+```{R}
+plotjes <- seq(20)
+```
+
+Daarnaast kun je de aselecte steekproef ook achteraf gebruiken als je slechts 
+een deel van een dataset wilt gebruiken:
+
+  (b.) Stel je hebt een redelijk grote dataset, zoals de NHANES-dataset, 
+  waarvan je slechts een deel wilt gebruiken. Gebruik de functie `sample()` om 
+  1000 individuen uit de gehele NHANES dataset te selecteren.
+  Je kunt de dataset laden met behulp van de volgende code:
+```{r}
+if (!requireNamespace("NHANES", quietly = TRUE)) {
+  # Installeer het pakket als deze nog niet geïnstalleerd is
+  install.packages("NHANES")  
+}
+# Laad het pakket
+library(NHANES)
+```
+  
 :::
 
 Maar in veel gevallen bestaat zo'n lijst met alle eenheden uit de populatie niet,
@@ -510,6 +497,12 @@ dat ze een naam hebben gekregen.
 
 ::: {.todo-box}
 mooi voorbeeld?
+Paar handige links:
+- https://methods.sagepub.com/ency/edvol/encyc-of-research-design/chpt/volunteer-bias
+- https://catalogofbias.org/biases/volunteer-bias/
+Misschien staat hier een leuk voorbeeld bij? 
+Een onderzoek dat ik wel grappig vind laat zien dat de mensen die meedoen aan seksualiteit-
+onderzoek een positievere houding hebben richting seks (https://link.springer.com/article/10.1007/BF01541853).
 :::
   
 - **Non-respons-bias**: Dit treedt op wanneer een deel van de benaderde groep mensen 
@@ -552,7 +545,7 @@ mooi voorbeeld?
   die géén kogelgaten hadden in de teruggekeerde vliegtuigen:
   de vliegtuigen die niet terugkeerden waarschijnlijk juist op die plekken fataal geraakt.
   
-  Dit inzicht leidde tot een tegenintuitieve conclusie: 
+  Dit inzicht leidde tot een tegenintuïtieve conclusie: 
   juist die ongedeerde plekken moesten worden versterkt 
   om de overlevingskansen van de vliegtuigen te vergroten. 
   Dit voorbeeld illustreert hoe overlevingsbias kan leiden 
@@ -578,9 +571,33 @@ Schrijven
   
 | Nederlands    | Engels             |
 |---------------|--------------------|
-|               |                    |
+| populatie              | population                   |
+| eenheden              | units                   |
+| variabelen              | variables                  |
+| verdeling              | distribution                   |
+| populatieparameters              | population parameters                   |
+| steekproef              | sample                   |
+| schatten              | to estimate                   |
+| schatter              | estimate                   |
+| steekproefvariabiliteit              | sample variability                   |
+| representatief              | representative                   |
+| meetfouten              | measurement errors                   |
+| precisie              | precision                   |
+| nauwkeurigheid              | accuracy                   |
+| precies              | precise                    |
+| nauwkeurig              | accurate                   |
+| toevallige fout              | random error                    |
+| systematische fout              | systematic error                   |
+| bias (of "vertekening" of "vooroordeel")              | bias                   |
+| zuiver              | ? unbiased                   |
+| eenvoudige aselecte steekproef              | simple random sampling                   |
+| gestratificeerde steekproef              |  stratified sample                  |
+| vrijwilligers-bias of zelfselectiebias              | volunteerbias or self selection bias                   |
+| non-respons-bias              | nonresponse bias                   |
+| overlevingsbias              | survival bias                   |
+| waarnemersbias              | observer bias                   |
 
-: Woordenlijst @sec-onzekerheid. {#tab-woorden-onzekerheid .striped .hover}
+: Woordenlijst @sec-onzekerheid. {#tbl-woorden-onzekerheid .striped .hover}
 
 ## Extra informatie
 

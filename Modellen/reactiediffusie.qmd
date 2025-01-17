@@ -3,15 +3,12 @@
 
 # Reacties en diffusie {#sec-diffusie}
 
-De individual-based modellen uit het vorige hoofdstuk laten zien hoe complex gedrag kan worden gemodelleerd met verrassend simpele regels. We hebben hierbij gezien dat systemen zich kunnen zelf-organiseren tot patronen die niet zijn voorgedefinieerd: de levensechte "beestjes" van particle life, aapjes die op een verrassende manier meer eten kunnen vinden, en mieren die prachtige foerageerpatronen vormen. Deze patronen zijn voorbeelden van **dynamische** patronen: er is sprake van constante verandering over de tijd. Zo zagen we predator en prooi prachtige staande golven vormen (*travelling waves*), of soms wat meer rommelige golven (*chaotic waves*). Misschien heb je tijdens het werkcollege zelfs wel een soort hypnotiserende spiralen gezien (*spiral waves*). Dergelijke patronen (zie @fig-dynpat) vinden we ook terug in de biologie, bijvoorbeeld in de vorming van biofilms in bacteriële kolonies. Dus, kennis van al deze intrigerende patronen die we zien in onze computersimulaties, kan bijdragen aan ons begrip van de biologie.
-
-
-
+De individual-based modellen uit het vorige hoofdstuk laten zien hoe complex gedrag kan worden gemodelleerd met verrassend simpele regels. We hebben hierbij gezien dat systemen zich kunnen zelf-organiseren tot patronen die niet zijn voorgedefinieerd: de levensechte "beestjes" van particle life, aapjes die op een verrassende manier meer eten kunnen vinden, en mieren die prachtige foerageerpatronen vormen. Deze patronen zijn voorbeelden van **dynamische** patronen: er is sprake van constante verandering over de tijd. Zo zagen we predator en prooi prachtige rollende golven vormen (*travelling waves*), of soms wat meer rommelige golven (*chaotic waves*). Misschien heb je tijdens het werkcollege zelfs wel een soort hypnotiserende spiralen gezien (*spiral waves*). Dergelijke patronen (zie @fig-dynpat) vinden we ook terug in de biologie, bijvoorbeeld in de vorming van biofilms in bacteriële kolonies. Dus, kennis van al deze intrigerende patronen die we zien in onze computersimulaties, kan bijdragen aan ons begrip van de biologie.
 
 
 ![In ruimtelijke modellen komen we verschillende dynamische patronen tegen.](figuren/waves.png){#fig-dynpat}
 
-In dit hoofdstuk gaan we verder op het thema van patroonformatie, door te leren hoe een zebra haar strepen heeft gekregen. De strepen van een zebra zijn echter niet constant aan het veranderen, maar vormen een *stabiel patroon*. Hoe wordt een dergelijk patroon aangelegd? Om dit te begrijpen, moeten we leren over reactie-diffusie vergelijkingen, waarbij (chemische) reacties in tijd en ruimte worden gemodelleerd. Om te beginnen gaan we eerst leren hoe we reactie-vergelijkingen kunnen omzetten naar ODEs. 
+In dit hoofdstuk gaan we verder op het thema van patroonformatie, door te leren hoe een zebra haar strepen heeft gekregen. De strepen van een zebra zijn echter niet constant aan het veranderen, maar vormen een *stabiel patroon*. Hoe wordt een dergelijk stabiel patroon aangelegd? We gaan dit bekijken in reactie-diffusie vergelijkingen, waarbij (chemische) reacties in tijd en ruimte worden gemodelleerd. Hoewel deze modelvorm ook dynamische patronen kan opleveren (zoals de eerder genoemde golven en spiralen, wat we in het volgende hoofdstuk zullen zien), kun je hiermee ook de stabiele patronen op de huid van een dier verklaren. Om te beginnen gaan we eerst leren hoe we reactie-vergelijkingen kunnen omzetten naar ODEs. 
 
 Leerdoelen:
 
@@ -96,6 +93,7 @@ Nu we een beeld hebben gekregen van hoe we simpele reacties kunnen modelleren me
 ```{r results='hide'}
 #| code-fold: true
 #| label: 'fig-diffhokjes'
+#| fig-cap: "Diffusie tussen hokjes van een concentratie van een hypothetisch stofje."
 #| fig-height: 7
 #| fig-width: 7
 
@@ -163,7 +161,7 @@ for (iter in 1:iterations) {
 }
 ```
 
-En zo eenvoudig kan het zijn: door de ruimte in hokjes op te delen kunnen we heel eenvoudig een diffusie-proces simuleren. Hoe kleiner de hokjes zijn, hoe preciezer we de lokale concentraties van de stofjes kunnen simuleren. Echter wordt het dan ook steeds zwaarder voor de computer om alle hokjes door te rekenen. Om deze beperking te omzeilen, kunnen partiële differentiaalvergelijkingen (PDEs) worden gebruikt, waarbij ruimte niet discreet maar continu is ("oneindig kleine hokjes"). PDEs lijken op ODEs, maar waar ODEs alleen tijd als onafhankelijke variabele gebruiken, hebben PDEs zowel tijd als ruimte als onafhankelijke variabelen. Deze vergelijkingen zijn echter niet eenvoudig om te analyseren, dus geen zorgen: we houden het bij deze cursus gewoon bij hokjes. Wanneer je dit netjes doet geeft dit een prima benadering van een PDE (net zoals Grind een benadering van ODEs voor je doorrekend!). In deze cursus (en ook in de literatuur) worden deze numerieke varianten ook vaak PDEs genoemd, ookal is dat technisch gezien niet helemaal correct.
+En zo eenvoudig kan het zijn: door de ruimte in hokjes op te delen kunnen we heel eenvoudig een diffusie-proces simuleren. Hoe kleiner de hokjes zijn, hoe preciezer we de lokale concentraties van de stofjes kunnen simuleren. Echter wordt het dan ook steeds zwaarder voor de computer om alle hokjes door te rekenen. Om deze beperking te omzeilen, kunnen partiële differentiaalvergelijkingen (PDEs) worden gebruikt, waarbij ruimte niet discreet maar continu is ("oneindig kleine hokjes"). PDEs lijken op ODEs, maar waar ODEs alleen tijd als onafhankelijke variabele gebruiken, hebben PDEs zowel tijd als ruimte als onafhankelijke variabelen. Met de computer benaderen we PDE door de hokjes voldoende klein te houden  (net zoals ODEs in grind tijd in kleine stapjes opdeelt). 
 
 De beste manier om het effect van diffusie weer te geven, is het toepassen op een afbeelding. In @fig-blurring zie je dat diffusie vooral het effect heeft dat de afbeelding minder en minder patroon bevat, totdat alle pixels dezelfde kleur hebben. Misschien verbaast het je niet dat het vervagen van foto's met Photoshop vaak precies op deze manier werkt!
 
@@ -247,16 +245,16 @@ text(-0.05,0.052,"Start\n trajectorie 2",cex=0.8)
 
 
 :::{.callout-note #tip-hysterese collapse=false}
-## Hysterese in ecosystemen
+## **Verdieping:** hysterese in ecosystemen
 
-Als een systeem meerdere evenwichten heeft, en je verandert langzaam de condities, dan kan er een punt zijn dat het van het ene naar het andere evenwicht omklapt. Dergelijke "tipping points" worden op alle schalen gezien: van de expressie van het lac-operon in E. coli, tot hele ecosystemen. In de onderstaande foto zie je bijvoorbeel twee bijna identieke meren, maar één van de meren is door eutroficatie omgeslagen naar een ongezonde vertroebelde toestand.Een dergelijke vertroebeling ongedaan maken blijkt erg lastig te zijn. Inderdaad weten we dankzij modellen dat deze systemen *bistabiel* zijn, zoals weergegeven met de twee kuilen waarin het balletje naar beneden kan rollen: als het balletje eenmaal in een ander minimum ligt, krijg je deze er niet zomaar meer uit! Dit fenomeen wordt *hysterese* genoemd.
+Als een systeem meerdere evenwichten heeft, en je verandert langzaam de condities, dan kan er een punt zijn dat het van het ene naar het andere evenwicht omklapt. Dergelijke "tipping points" worden op alle schalen gezien: van de expressie van het lac-operon in E. coli, tot hele ecosystemen. In de onderstaande foto zie je bijvoorbeel twee bijna identieke meren, maar één van de meren is door eutroficatie (aanwezigheid van te veel voedingsstoffen) omgeslagen naar een ongezonde vertroebelde toestand. Een dergelijke vertroebeling ongedaan maken blijkt erg lastig te zijn. Inderdaad weten we dankzij modellen dat deze systemen *bistabiel* zijn, zoals weergegeven met de twee kuilen waarin het balletje naar beneden kan rollen: als het balletje eenmaal in een ander minimum ligt, krijg je deze er niet zomaar meer uit! Dit fenomeen wordt *hysterese* genoemd.
 
 ![Bron foto: https://passel2.unl.edu/view/lesson/bcbd3f35f2e0/2](figuren/eutro_hyst.png){width="70%" fig-align="center"}
 :::
 
 ## Turing-patronen 
 
-Oke, we weten nu dus naar welke evenwichten de activators en inhibitors kunnen gaan. Laten we de variabelen $A$ en $I$ in hokjes stoppen, en hetzelfde lokale diffusieproces toepassen als eerder besproken. Elke tijdstap worden dus de ODEs zoals hierboven een klein stukje doorgerekend, dan een stapje diffusie, ODEs doorrekenen, diffusie, *etc.* We beginnen met een willekeurige hoeveelheid $A$ per hokje, en zonder $I$:
+Oke, we weten nu dus naar welke evenwichten de activators en inhibitors kunnen gaan. Laten we de variabelen $A$ en $I$ in hokjes stoppen, en hetzelfde lokale diffusieproces toepassen als eerder besproken. Elke tijdstap worden dus de differentiaalvergelijkingen zoals hierboven een klein stukje doorgerekend, dan een stapje diffusie, differentiaalvergelijkingen doorrekenen, diffusie, *etc.* We beginnen met een willekeurige hoeveelheid $A$ per hokje, en zonder $I$:
 
 ```{=html}
 <div class="interactive_content">
@@ -271,7 +269,7 @@ Als je de simulatie hierboven een tijdje laat lopen, zul je zien dat er iets int
 
 ![Turingpatronen gegenereerd met verschillende parameters van bovenstaand model.](figuren/turing_voorbeelden.png){#fig-turingvoorbeelden}
 
-Met de bovenstaande simulatie zul je ook kunnen zien dat niet elke simulatie Turing-patronen oplevert. Als je bijvoorbeeld de diffusie van de activator verhoogt krijg je geen patronen. Hoe het ook zij: Turing slaagde er in om een proces te vinden waarbij, met de juiste parameter-voorwaarden, diffusie niet patronen uitvaagt maar juist genereert! Als de diffusie niet in alle richtingen even snel is, kan je ook strepen krijgen die verdacht veel op de vacht van een zebra lijken:
+Met de bovenstaande simulatie zul je ook kunnen zien dat niet elke simulatie Turing-patronen oplevert. Als je bijvoorbeeld de diffusie van de activator verhoogt krijg je geen patronen. Hoe het ook zij: Turing slaagde er in om een proces te vinden waarbij, met de juiste parameter-voorwaarden, diffusie niet patronen uitvaagt maar juist genereert! Als de diffusie niet in alle richtingen even snel is (in di), kan je ook strepen krijgen die verdacht veel op de vacht van een zebra lijken:
 
 ```{=html}
 <div class="interactive_content">
@@ -301,10 +299,7 @@ Turing patronen zijn ook relevant voor morphologie en ontwikkeling!
 :::
 
 
-## Niet alle biologische patronen zijn Turing patronen 
-
-
-
+## Niet alle repetitieve biologische patronen zijn Turing patronen 
 
 Zoals we hierboven hebben gezien, ontstaan Turing-patronen door een combinatie van lokale activatie en inhibitie op afstand, wat niet alleen betrokken is bij vachtpatronen, maar ook bij de aanleg van het lichaam zelf. Heel recent is zelfs gevonden dat Turing-mechanismen een rol spelen bij de [ontwikkeling van vingerafdrukken](https://www.sciencedirect.com/science/article/pii/S0092867423000454?via\%3Dihub). 
 
@@ -312,12 +307,12 @@ Zoals we hierboven hebben gezien, ontstaan Turing-patronen door een combinatie v
 
 ![Patronen van struikgewas kun je goed met Turing-mechanismen verklaren](figuren/turing_2.png){width=60%}
 
-![Fruitvliegjes hebben tijdens de ontwikkeling ook "streepjes", maar dit is geen Turing-patroon!](figuren/notturing_3.png){width=56%}
+![Fruitvliegjes hebben tijdens de ontwikkeling ook "streepjes", maar dit is geen Turing-patroon! In plaats daarvan is er een specifieke cascade van genen die het lijf in steeds kleinere stukjes onderverdeelt](figuren/notturing_3.png){width=56%}
 
 Biologie heeft veel patronen, maar niet alles hoeft met een Turing-patroon verklaard te worden!
 :::
 
-Ook veel andere biologische processen ondergaan vergelijkbare interacties. In droge gebieden houden planten samen lokaal water vast, maar onttrekken daardoor water uit de omgeving op afstand. Ook dit levert patronen op die lijken op Turing-patronen. Maar **let op**: hoewel Turing-mechanismen veel patronen in de natuur *kunnen* verklaren, betekent dit niet dat deze patronen ook door Turing-mechanismen zijn ontstaan. Zo is er bijvoorbeeld veel onderzoek gedaan naar mogelijke Turing-mechanismen in de ontwikkeling van fruitvliegjes, maar dit patroon bleek op een geheel andere manier te vormen (@fig-turingornot). Kortom: hoewel Turing patronen een wederkerend principe lijken te zijn binnen de biologie, is niet ieder "vlekken-of-strepen-patroon" ontstaan door Turing mechanismen. Zo kan je bijvoorbeeld op een grid van struikgewas (groen) of droge aarde (lichtbruin) ook vergelijkbare patronen krijgen door een simpele "meerderheidsregel". Dat wil zeggen: als er meer planten in de buurt zijn dan verandert een grid-punt in een plant, en als er meer droge aarde in buurt is, dan verandert een grid-punt in droge aarde. Het resultaat is een patroon wat ook heel erg lijkt op het struikgewas in @fig-turingornot: 
+Ook veel andere biologische processen ondergaan vergelijkbare interacties. In droge gebieden houden planten samen lokaal water vast, maar onttrekken daardoor water uit de omgeving op afstand. Ook dit levert patronen op die lijken op Turing-patronen. Maar **let op**: hoewel Turing-mechanismen veel patronen in de natuur *kunnen* verklaren, betekent dit niet dat deze patronen ook door Turing-mechanismen zijn ontstaan. Zo is er bijvoorbeeld veel onderzoek gedaan naar mogelijke Turing-mechanismen in de ontwikkeling van fruitvliegjes, maar dit patroon bleek op een geheel andere manier te vormen (@fig-turingornot). Kortom: hoewel Turing patronen een terugkerend principe lijken te zijn binnen de biologie, is niet ieder "vlekken-of-strepen-patroon" ontstaan door Turing mechanismen. Zo kan je bijvoorbeeld op een grid van struikgewas (groen) of droge aarde (lichtbruin) ook vergelijkbare patronen krijgen door een simpele "meerderheidsregel". Dat wil zeggen: als er meer planten in de buurt zijn dan verandert een grid-punt in een plant, en als er meer droge aarde in buurt is, dan verandert een grid-punt in droge aarde. Het resultaat is een patroon wat ook heel erg lijkt op het struikgewas in @fig-turingornot: 
 
 ```{=html}
 <div class="interactive_content">
@@ -378,7 +373,7 @@ cat(paste("Er is in 1 stap",stapje["P"],"product ontstaan"))
 
 ::: {.pepexr #exr-diffusievraag}
 
-## Lokale diffusie simuleren
+## Diffusie simuleren
 
 <br>
 
@@ -400,7 +395,7 @@ c. Leg uit waar we dit probleem eerder hebben gezien, en waarom partiële differ
 
 <br>
 
-Bacteriën produceren tijdens hun metabolisme vaak bijproducten, zoals melkzuur, alcohol, en waterstofperoxide. Hoewel lage concentraties van deze metabolieten vaak niet schadelijk zijn, kan het op den duur opbouwen in de omgeving en zo de sterftekans van de bacteriën verhogen. We bestuderen in deze opgave een eenvoudig *individual-based model* (IBM), die de volgende regels volgt:
+Bacteriën produceren tijdens hun metabolisme vaak bijproducten, zoals melkzuur, alcohol, en waterstofperoxide. Hoewel lage concentraties van deze metabolieten vaak niet schadelijk zijn, kan het op den duur opbouwen in de omgeving en zo de sterftekans van de bacteriën verhogen. We bestuderen in deze opgave een eenvoudig *individual-based model* (IBM), dat de volgende regels volgt:
 
 1. Plaats een aantal individuen in het midden van een continue ruimte
 2. Voor elk individu:
@@ -425,7 +420,7 @@ Bacteriën produceren tijdens hun metabolisme vaak bijproducten, zoals melkzuur,
 Bestudeer de simulatie door deze een paar keer opnieuw te starten, zodat je goed kan zien wat er gebeurt. 
 
 a. Gebruik eerst de standaard parameter-waarden. Omschrijf wat hier gebeurt in termen van concepten uit dit hoofdstuk. 
-b. Controlleer of dit model vergelijkbare voorwaarden heeft voor patroonvorming als in het hoofdstuk besproken. 
+b. Controleer of dit model vergelijkbare voorwaarden heeft voor patroonvorming als in het hoofdstuk besproken. 
 c. Stel dat er ergens in de simulatie een virus uitbreekt. Kan het virus alle individuen besmetten?
 d. Tel hoeveel groepjes je ziet, en gebruik daarna je muis om een paar groepjes weg te halen (alsof er dus idd een ernstig virus is uitgebroken). Wat gebeurt er daarna? Waarom gebeurde dit niet voor de ziekteuitbraak?
 :::
@@ -438,7 +433,7 @@ d. Tel hoeveel groepjes je ziet, en gebruik daarna je muis om een paar groepjes 
 
 Je hebt in dit cursusonderdeel al over allerlei verschillende modellen geleerd. Zoals in het introductiehoofdtuk uitgelegd, is niet elk model geschikt voor elke situatie. Als je bijvoorbeeld een goed gemengde Erlenmeyer met miljoenen bacteriële cellen modelleert, is een *individual-based model* met de posities van elk individu misschien niet zo nuttig. Anderzijds kun je zwerm-patronen van slijmschimmels niet modelleren met ODEs, want met ODEs is "een ruimtelijk patroon" niet een van de mogelijke uitkomsten. 
 
-Om te oefenen met welk type model past bij welk vraagstuk, staan hieronder een aantal modelomschrijvingen. Omschrijf voor elke welk type model je zou gebruiken om deze te bestuderen, en motiveer je antwoord. Denk na over het type model (differen*tie*vergelijkingen, differen*tiaal*vergelijkingen (ODEs), individual-based models, reactie-diffusie vergelijkingen (PDEs)), maar ook over het type variabele waarmee je de toestand modelleert (discreet, continu, zie @fig-contdisc). 
+Om te oefenen met welk type model past bij welk vraagstuk, staan hieronder een aantal omschrijvingen van biologische systemen die we zouden willen modelleren. Omschrijf voor elk scenario welk type model je zou gebruiken om deze te bestuderen, en motiveer je antwoord. Denk na over het type model (differen*tie*vergelijkingen, differen*tiaal*vergelijkingen (ODEs), individual-based models, reactie-diffusie vergelijkingen (PDEs)), maar ook over het type variabele waarmee je de toestand modelleert (discreet, continu, zie @fig-contdisc). 
 
 a. Twee soorten bacteriën ondervinden competitie in een goed gemengde Erlenmeyer. 
 b. Twee druppels met fluorescente eiwitten worden op een agar plaat gepipetteerd, waarbij interessante patronen ontstaan.
@@ -452,3 +447,13 @@ i. De hoeveelheid paracetamol in het bloed na inname wordt langzaam afgebroken
 j. Na bevruchting ontstaat een calcium-golf op het membraan van de eicel
 k. Een populatie van zeehonden wordt vanuit verschillende hoeken (richtingen) door orca's belaagd
 :::
+
+
+## Terminologie
+
+| Nederlands              | Engels                    | Beschrijving|
+|----------------------|--------------------|-----------------------------------|
+| Reactie-diffusie vergelijkingen | Reaction-diffusion equations | Een type model waarbij variabelen in zowel tijd als ruimte kunnen worden gemodelleerd. Hiermee kunnen we goed onderzoek doen naar het ontstaan van patronen. |
+| Turing patronen | Turing patterns | Een zelforganiserend patroon in biologische systemen dat ontstaat door interacties tussen twee chemische stoffen die reageren en zich met verschillende snelheden verspreiden. Turing patronen ontstaan vaak door "remming op afstand" en "activatie van dichtbij". |
+| Hysterese | Hysteresis | Wanneer een systeem meerdere evenwichten heeft, kunnen er omslagpunten ("tipping points") zijn waarbij het systeem van de ene naar de andere staat overslaat. Dit fenomeen wordt hysterese genoemd. |
+:  {.striped .hover}
