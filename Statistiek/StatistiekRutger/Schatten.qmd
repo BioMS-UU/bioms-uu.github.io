@@ -373,7 +373,7 @@ Kunnen we iets zeggen over hoe groot die toevallige fout is?
 Om daar meer inzicht in te krijgen 
 gaan we het nemen van een steekproef simuleren.
 
-### Simulaties van het Normale Model
+### Simulaties van het Normale Model {#sec-sim-normale-model}
 
 Stel dat het populatiegemiddelde gelijk is aan $\mu_X = 100$,
 met standaarddeviatie $\sd{X} = 10$.
@@ -1307,56 +1307,211 @@ Bereken betrouwbaarheidsinterval van een dataset.
 
 ## Afwijkingen van het Normale Model
 
-Bij de afleiding van de formule voor het BHI
+Bij de afleiding van de formule voor het BHI (@eq-BHI-t)
   zijn we steeds uitgegaan van het Normale Model.
-In de praktijk is het Normale Model zelden precies van toepassen.
-Met name wijkt de verdeling van de variabele 
+In de praktijk is het Normale Model zelden exact van toepassen.
+Met name wijkt de verdeling van de variabele in de populatie
   vaak af van de normale verdeling.
 Kunnen we de formules die we geleerd hebben dan niet gebruiken?
-En zo niet, wat moeten we dan doen?
+Daar gaan we in deze paragraaf op in.
+
+Omdat het Normale Model niet altijd van toepassing is
+  is het essentieel om, 
+  voordat je een BHI uitrekent met @eq-BHI-t,
+  eerst zorgvuldig na te gaan of dat wel verstandig is.
+We zullen het daarom eerst hebben over manieren waarop 
+  je afwijkingen van het Normale Model kunt herkennen.
+Daarna laten we zien dat dat afwijkingen van het Normale Model
+  niet altijd een probleem zijn;
+  de formule voor het BHI is behoorlijk "robuust".
+  
+### Is het Normale Model bij voorbaat wel plausibel?
+
+Een eerste stap voordat je een BHI uitrekent 
+  is om te bedenken of de aannames van het Normale Model
+  bij voorbaat wel plausibel zijn.
+
+Een belangrijke aanname is dat de variabel in de populatie
+  normaal verdeeld is.
+Voor sommige variabelen is dat bij voorbaat niet aannemelijk.
+Dat kan verschillende redenen hebben; hier zijn er een paar:
+
+- **Het is bekend dat de verdeling van de variable scheef is.**
+Bijvoorbeeld, het is algemeen bekend
+  dat de verdeling van inkomen in Westerse landen
+  heel erg rechtsscheef is.
+Hieronder is als voorbeeld in @fig-CBS-persoonlijk-inkomen de verdeling 
+  van persoonlijk inkomen in Nederland weergegeven,
+  op basis van gegevens over 2022
+  van het Centraal Bureau voor de Statistiek.^[Bron: [CBS](https://longreads.cbs.nl/materiele-welvaart-in-nederland-2024/inkomen-van-personen/),
+  gedownload op 17 januari 2025.]
+Wanneer je een BHI wilt uitrekenen van zo'n variabele
+  heb je dus bij voorbaat redenen om op je hoede te zijn.
+
+  
+::: {#fig-CBS-persoonlijk-inkomen}
+::: {.todo-box}
+Maken. 
+In folder "data" staat het bestand "VerdelingPersoonlijkInkomen-CBS-2022.csv".
+Let op: de getallen gebruiken en komma en staan tussen aanhalingstekens.Gebruik readr,
+bijv.
+```{r}
+#| eval: false
+library(readr)
+VerdelingPersoonlijkInkomen_CBS_2022 <- read_csv("data/VerdelingPersoonlijkInkomen-CBS-2022.csv", 
+    locale = locale(decimal_mark = ","))
+```
+Plot alleen kolom `Totaal`.
+:::
+:::
+  
+- **De populatie bestaat uit meerdere subpopulaties
+  met vermoedelijk sterk verschillende gemiddelden.**
+  In dat geval zou de verdeling van de variabele multimodaal kunnen zijn
+  of anderszins kunnen afwijken van een normale verdeling.
+  
+- **De variabele kan alleen waarden aannemen in een bepaald interval.**
+  Een normaal-verdeelde variabele kan iedere mogelijke waarde hebben,
+  van $-\infty$ tot $\infty$. 
+  Vaak geldt dat niet voor biologische variabelen.
+  Concentraties kunnen bijvoorbeeld nooit negatief zijn,
+  en in veel toepassingen kunnen percentages 
+  alleen van 0 tot 100% lopen.
+  Een normale verdeling kan dan nog steeds
+  een goede benadering zijn, 
+  maar alleen als de bulk van de verdeling ver verwijderd is van de grenzen
+  van het toelaatbare interval.
+  
+- **De variabele is discreet.** 
+  Discrete variabelen *kunnen* bij benadering normaal verdeeld zijn
+  als ze gemiddeld grote waarden hebben. 
+  Denk bijvoorbeeld aan het aantal soorten bacteri\"en dat wordt aangetroffen
+  in iemands darm-microbioom (op basis van een ontlastingsmonster).
+  Typisch zijn dat er honderden,
+  en dan kan de verdeling er grofweg normaal uitzien.. 
+  Maar als de waarden van discrete variabelen klein zijn
+  is dat duidelijk niet het geval.
+  Bijvoorbeeld, de vink (*Fringilla Coelebs Africana*) legt 
+  typisch 3 of 4 eieren[^eggs]. 
+  Een normale verdeling is voor die variabele zeker niet plausibel.
+  
+::: {#fig-vink}
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Aantal eieren in 34 nesten van de vink *Fringilla Coelebs Africana*[^eggs]."
+#| fig-label: fig-vink
+#| fig.width: 5
+#| fig.height: 4
+
+dataVink <- data.frame(
+  aantal_eieren <- c(rep(1, 3), rep(2, 2), rep(3, 15), rep(4, 14))
+)
+
+ggplot(dataVink, aes(aantal_eieren)) +
+  geom_histogram(
+    binwidth = 1, 
+    color = "black", 
+    fill = "darkorange"
+    ) +
+  labs(x = "Aantal eieren per nest", y = "Frequentie") +
+  theme_minimal()
+
+```
+:::
+
+[^eggs]: Ramdani, K., M. Kouidri, M. L. Ouakid, and M. Houhamdi. “Breeding Biology of the Chaffinch *Fringilla Coelebs Africana* in the El Kala National Park (North East Algeria).” Arxius de Miscel·lània Zoològica, July 7, 2019, 109–21. [https://doi.org/10.32800/amz.2019.17.0109]([https://doi.org/10.32800/amz.2019.17.0109]).
+
+Een tweede aanname is dat iedere waarde onafhankelijk uit deze normale verdeling
+  is getrokken. 
+Ook over die aanname kun je vaak bij voorbaat sceptisch zijn,
+  op basis van de opzet van de steekproef 
+  of van het experiment.
+Voorbeelden:
+
+- **Pseudo-replicatie.** Over pseudoreplicatie zullen we het in @sec-? uitgebreider hebben.
+  In het kort verwijst pseudo-replicatie naar experimenten die meerdere keren zijn uitgevoerd
+  onder dezelfde omstandigheden, zoals in één batch, op dezelfde dag,
+  of met dezelfde materialen. Eventuele toevallige invloeden van die omstandigheden
+  zijn daardoor bij al die pseudo-replicaties gelijk en dus niet onafhankelijk.
+  De uitkomsten van zulke pseudo-replicaties zullen daardoor dichter bij elkaar 
+  liggen dan bij replicaties die daadwerkelijk onafhankelijk zijn uitgevoerd.
+  Dat leidt onterecht tot een smaller BHI.
+  
+- **Tijdseries.** Metingen over de tijd van dezelfde variabele, 
+  zoals de lichaamstemperatuur van één en dezelfde persoon
+  gemeten op opeenvolgende dagen,
+  zullen vaak niet onafhankelijk zijn.
+  Wie vandaag koorts heeft,
+  heeft dat vaak morgen ook.
+  Je kunt bij het berekenen van een tijdsgemiddelde
+  dus niet zomaar uitgaan van een model waarbij opeenvolgende metingen
+  onafhankelijk zijn.
+  
+  
+  
+
+
+Het is dus belangrijk dat je altijd goed nadenkt
+  of het Normale
+  
+  
+  
+
+
+
+
+
+### Afwijkingen van de normale verdeling herkennen
+
+Voordat je de formule voor het BHI toepast
+  moet je je dus altijd afvragen of het Normale Model wel redelijk is.
+
+
 
 ### De centrale limietstelling en de robuustheid van het Normale Model {#sec-centrale-limiet}
 
-Als de verdeling van de variabele in de populatie niet normaal is
-  gaat de afleiding van het BHI niet precies op.
+Als de verdeling van de variabele in de populatie niet normaal is,
+  gaat de afleiding van het BHI (@sec-BHI-sigma-niet-bekend) niet precies op.
 In deze paragraaf zullen we uitleggen
-  dat de formule for het BHI dan vaak nog steeds een heel goede benadering is.
+  dat de formule voor het BHI dan vaak toch nog een heel goede benadering is.
 
-Om dat te laten zien doen we weer een aantal simulaties.
-In @fig-robuust-1 is weer de verdeling van lichaamsgewicht (`Weight`)
+Om dat te laten zien, voeren we weer een aantal simulaties uit.
+In @fig-robuust-1 is de verdeling van lichaamsgewicht (`Weight`)
 uit de dataset NHANES weergegeven.
 We stellen ons voor dat deze verdeling de populatie voorstelt
 van personen uit de VS, waarvan wij het gemiddelde niet weten.
 Om iets te weten te komen over het gemiddelde van die populatie
 voeren we een steekproef uit.
 @Fig-robuust-2 laat een kleine steekproef zien van $n = 3$ personen, en 
-@fig-robuust-3 een iets grotere steekproef van $n = 30$,
-getrokken uit de populatie.
+@fig-robuust-3 een iets grotere steekproef van $n = 30$.
 Paarse lijntjes geven het steekproefgemiddelde aan.
-Wat zegt zo'n steekproefgemiddelde over het gemiddelde van de populatie?
 
-In @sec-? hebben we dat bestudeerd door ons voor te stellen
-dat we heel vaak een steekproef trekken en telkens
+
+Wat zegt zo'n steekproefgemiddelde over het gemiddelde van de populatie?
+In @sec-sim-normale-model hebben we dat bestudeerd door ons voor te stellen
+dat we *heel vaak* een steekproef trekken en telkens
 het steekproefgemiddelde uitrekenen.
 De verdeling van die steekproefgemiddelden vertelt ons
 hoe ver een steekproefgemiddelde typisch van het populatiegemiddelde afligt.
-Voor een variabele die normaal verdeeld is hadden we gezien
-  dat de verdeling van het steekproefgemiddelde ook een normale verdeling is.
-Dat feit hebben we gebruikt in de afleiding van de formule voor het BHI.
+Voor een variabele die in de populatie normaal verdeeld is,
+  hadden we gezien
+  dat het steekproefgemiddelde dat óók is.
+Dat feit hebben we gebruikt in de afleiding van de formule voor het BHI, @eq-BHI-t.
 
 De verdeling van lichaamsgewicht is echter bimodaal en bovendien scheef.
 De aannames van het Normale Model zijn dus niet van toepassing.
 Hoe zou de verdeling van het steekproefgemiddelde er in dit geval uitzien?
 
 Om dat te demonstreren
-  nemen we heel vaak een steekproef uit de NHANES dataset,
+  nemen we heel vaak een steekproef van gewichten uit de NHANES dataset,
   berekenen steeds het gemiddelde, 
   en tekenen een histogram van de steekproefgemiddelden.
 Het resultaat voor steekproeven met $n = 3$ is weergegeven in @fig-robuust-4,
   het resultaat voor $n = 30$ in @fig-robuust-5.
 Het resultaat is heel verrassend:
-  hoewel de populatie niet normaal verdeeld is,
-  ziet de verdeling van de steekproefgemiddelden er behoorlijk normaal uit!
+  hoewel de populatie *niet* normaal verdeeld is,
+  ziet de verdeling van de steekproefgemiddelden er *wel* behoorlijk normaal uit!
 Om dat te controleren
   is in de figuren in het paars een normale verdeling toegevoegd.
 
@@ -1575,19 +1730,22 @@ Steekproeven uit een populatie die niet normaal verdeeld is. We nemen steekproev
 
 :::
 
-Waar komt die normale verdeling vandaan?
+Waar komen die normale verdelingen vandaan?
 Intuitief kun je je misschien voorstellen dat de bimodaliteit
 van de populatie niet terug te zien is in de gemiddelden van de steekproeven.
 Als de steekproef groot genoeg is, 
   zal de steekproef typisch zowel kinderen bevatten 
   (uit de linkerpiek van de verdeling)
   als volwassenen (uit de rechterpiek van de verdeling).
-Het gemiddelde komt daarom meestal in het midden terecht.
+Het gemiddelde komt daardoor meestal in het midden terecht.
 
-Wiskundig kan bovendien worden aangetoond
-  dat de verdeling van de gemiddelden
+Wiskundig kan daadwerkelijk worden aangetoond
+  dat de verdeling van de steekproefgemiddelden
   meer op een normale verdeling gaat lijken
-  naarmate de steekproef groter wordt.
+  naarmate de steekproef groter wordt;
+  dat geldt ongeacht de verdeling van de populatie
+  (behalve in heel pathologische gevallen
+  waarover wij ons niet druk hoeven te maken).
 Dit volgt uit een wiskundige stelling 
   die de **centrale limietstelling** heet:
 
@@ -1602,18 +1760,24 @@ De kansverdeling van het gemiddelde $\mean{X}$ van die waarden
   als $n \rightarrow \infty$.
 :::
 
-Een consequentie is dat de afleiding van @sec-BHI-sigma-niet-bekend 
+Een consequentie van deze stelling is dat de afleiding 
+  van de formule voor het BHI (@sec-BHI-sigma-niet-bekend)
   bij goede benadering ook opgaat 
   als de verdeling van de variabele in de populatie 
   niet normaal is,
   mits $n$ groot genoeg is.
 Precies hoe groot $n$ moet zijn hangt af
-  van in hoeverre de populatie scheef is.
+  van de mate waarin de verdeling van de populatie afwijkt van de normale verdeling.
+Als de populatieverdeling heel erg scheef is
+  en/of extreme uitbijters kent,
+  dan is een grotere $n$ nodig.
 Als vuistregel kun je aannemen dat
   bij steekproeven van $n = 30$ of meer
   de formule voor het BHI ook van toepassing is
   als de populatie niet normaalverdeeld is.
-  
+In @exr-bhi-controleren hieronder zul je zien
+  dat zelfs bij behoorlijk vreemde verdelingen
+  het BHI al bij veel kleinere $n$ betrouwbaar is.
 
 ::: {#exr-bhi-controleren}
 
@@ -1700,12 +1864,15 @@ cat(
   g. Bij kleine steekproeven verwachten we dat het BHI zou kunnen afwijken. Voer het script opnieuw uit, maar dan met steekproeven van grootte 4. Wat concludeer je?
 :::
 
-
 ### Afwijkingen van de normale verdeling herkennen
+
+
 
 ### (On)afhankelijkheid van waarnemingen
 
-### Wat als het statistische model niet van toepassing is? {#sec-aannames}
+
+
+### Wat als het statistische model echt niet van toepassing is? {#sec-aannames}
 
 - 
 
