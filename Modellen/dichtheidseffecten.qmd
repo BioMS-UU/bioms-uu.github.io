@@ -1,6 +1,7 @@
-::: {.content-visible when-format="html"}
+
 {{< include ../_macros.tex >}}
-:::
+{{< include ../print_friendly.html >}}
+
 
 # Dichtheidseffecten {#sec-dichtheid}
 
@@ -12,7 +13,7 @@ Na dit hoofdstuk, moet je het volgende kunnen:
 
 - Uitleggen wat dichtheidsafhankelijke geboorte (*density dependent birth*) en dichtheidsafhankelijke sterfte (*density dependent death*) zijn, en deze herkennen in een ODE.
 - Een faseportret kunnen lezen, en corresponderende oplossing schetsen.
-- Uitleggen waarom het afschieten van dieren positieve effecten kan hebben op dierwelzijn.
+- Bediscussiëren wat de voor- en nadelen zijn van het afschieten van dieren in termen van welzijn op populatieniveau.
 
 ![(afbeelding gegenereerd met ChatGPT4-o)](figuren/heck_ai.png){fig-align="center" width="80%"}
 
@@ -23,11 +24,12 @@ In het vorige hoofdstuk hebben we dichtheidsafhankelijkheid ingebouwd zodat de p
 $$
 \frac{\dd N}{\dd t} = rN\left(1-\frac{N}{K}\right)
 $$
-Deze ODE voor logistische groei kom je veel tegen in biologische modellen. De parameter $r$ in deze vergelijking staat bekend als de **intrinsieke groeisnelheid** (*intrinsic growth rate*) van de populatie. Als $r$ positief is, is er groei (ook als $r=0.1$!). Als $r$ negatief is, is de groei negatief. Maar biologisch gezien is "negatieve groei" natuurlijk een beetje vreemd. Bedoelen we niet eigenlijk dat de hoeveelheid sterfte (hierna: *death*) hoger is dan geboorte (hierna: *birth*)? Een gebrek aan voedsel kan bijvoorbeeld een verhoogde death rate opleveren, terwijl birth rate gelijk blijft. Het zou ook zo kunnen zijn dat individuen met minder voedsel minder reproduceren (dus een verlaagde birth rate krijgen). Om deze verbale begrippen in onze ODE te verwerken, moeten we afstappen van de parameter $r$, en deze uitsplitsen in birth ($b$) en death ($d$). Bijvoorbeeld, neem ons model van exponentiële groei:
+Deze ODE voor logistische groei kom je veel tegen in biologische modellen. De parameter $r$ in deze vergelijking staat bekend als de **intrinsieke groeisnelheid** (*intrinsic growth rate*) van de populatie. Als $r$ positief is, is er groei (ook als $r=0.1$!). Als $r$ negatief is, is de groei negatief. Maar biologisch gezien is "negatieve groei" natuurlijk een beetje vreemd. Bedoelen we niet eigenlijk dat de hoeveelheid sterfte (hierna: *death*) hoger is dan geboorte (hierna: *birth*)? Een gebrek aan voedsel kan bijvoorbeeld een verhoogde death rate opleveren (zoals we eerder modelleerden d.m.v. een kwadratische death rate in de vorm $-dN^2$), terwijl birth rate per individu gelijk blijft ($bN$ is per individu één en dezelfde birth rate van $b$). Het zou ook zo kunnen zijn dat individuen met minder voedsel minder reproduceren (dus een verlaagde birth rate krijgen). Om deze verbale begrippen in onze ODE te verwerken, moeten we weer afstappen van de parameter $r$, en deze toch weer uitsplitsen in birth ($b$) en death ($d$), zoals we bij het eerste werkcollege ook hebben gedaan. Neem bijvoorbeeld weer ons model van exponentiële groei:
 
 $$
     \frac{\dd N}{\dd t} = rN 
 $$
+
 Nogmaals: in dit model is er exponentiele groei wanneer $r>0$, en exponentiele afname wanneer $r<0$. Als we r vervangen door het verschil in birth ($b$) en death ($d$), dan krijgen we:
 
 $$
@@ -37,7 +39,7 @@ $${#eq-rbd}
 ::: {.callout-caution}
 ## Let op! @eq-rbd geeft ook gewoon exponentiele groei (of afname)!
 
-Hoewel we twee nieuwe parameters hebben geintroduceerd, is er weinig veranderd aan ons model. Net als dat $r>0$ en $r<0$ respectievelijk leidde tot groei en afname, is er bij $b>d$ en $b<d$ ook sprake van exponentiële groei of afname: 
+Hoewel we de birth en death parameters hebben geintroduceerd, is er vooralsnog weinig veranderd aan ons model. Net als dat $r>0$ en $r<0$ respectievelijk leidde tot groei en afname, is er bij $b>d$ en $b<d$ ook sprake van exponentiële groei of afname: 
 
 ![](figuren/exponential_with_bd_vs_r.png){fig-align="center" width="50%"}
 :::
@@ -55,7 +57,7 @@ Waar we deze afname eerder in het algehele groei-process hadden verwerkt, gaan w
     \frac{\dd N}{\dd t} &= {\color{#2a53f7}b}N - {\color{red}d}N
 \end{align}
 
-Nu kunnen we ervoor kiezen om voor de geboorteterm met een **functionele respons** aan te passen:
+Nu kunnen we ervoor kiezen om de geboorteterm met een **functionele respons** aan te passen:
 
 \begin{align}
     {\color{#2a53f7}b} & \rightarrow {\color{#2a53f7}b} \cdot f(N)
@@ -77,21 +79,32 @@ Dat wil zeggen, de constante parameter $b$ wordt vervangen door een term die afn
 ## Andere functionele responsen
 <br>
 
-Hierboven gebruiken we de functionele respons $f(N)=1-\frac{N}{K}$ om geboorte af te laten nemen. Leg uit waarom de volgende functionele responsen wel/niet een vergelijkbaar effect zullen hebben:
+Hierboven vermenigvuldigen we de birth rate met de functionele respons $f(N)=1-\frac{N}{K}$, zodat de birth rate afneemt bij hogere populatiegroottes. Stel je in plaats daarvan voor dat we de birth met één van de onderstaande functionele responsen hadden aangepast. Beschrijf wat er dan met de birth zou gebeuren bij toenemende populatiegroottes. 
 
-a. $f(N)=\frac{N}{K} + 1$
-a. $f(N)= 1 - cN$
-a. $f(N)= 1 - cN^2$
+\begin{align}
+    {\color{#2a53f7}b} & \rightarrow {\color{#2a53f7}b} \cdot f(N)
+\end{align}
+
+a. $b \rightarrow b \cdot f(N) \quad \textrm{met} \quad f(N)=\frac{N}{K} + 1$
+a. $b \rightarrow b \cdot f(N) \quad \textrm{met} \quad f(N)= 1 - cN$
+a. $b \rightarrow b \cdot f(N) \quad \textrm{met} \quad f(N)= 1 - cN^2$
 
 :::
 
 ## Het faseportret
 
-Zoals je in het vorige hoofdstuk geleerd hebt, kunnen we ODEs eenvoudig analyseren door ons af te vragen: wanneer is er geen groei meer? Wanneer is $\dt{N}$ gelijk aan $0$? Deze relatief eenvoudige berekening word weergegeven in de linkerzijde van @fig-faseportret. De rechterzijde geeft visueel weer wat deze berekening nou eigenlijk heeft bepaald, door de groeisnelheid (dus: de ODE) als functie van de dichtheid van de populatie te schetsen. Als we de ODE uitvermenigvuldigen zien we een negatieve tweede-orde term ($-bN^2/k$) en twee eerste-orde termen ($bN$ en $dN$ zijn niet gekwadrateerd). Dit vormt een bergparabool^[Als je functies schetsen lastig vindt, kijk dan nog even naar [hoofdstuk 10](#section-schetsen). Je kan het ook altijd even controleren met de website [Desmos.com](https://www.desmos.com)], een functie die op twee punten gelijk is aan $0$. Op deze punten is de populatie in evenwicht: deze kan niet groeien of krimpen. 
+Zoals je in het vorige hoofdstuk geleerd hebt, kunnen we ODEs eenvoudig analyseren door ons af te vragen: wanneer is er geen groei meer? Wanneer is $\dt{N}$ gelijk aan $0$? Deze relatief eenvoudige berekening wordt weergegeven in de linkerzijde van @fig-faseportret. De rechterzijde geeft visueel weer wat deze berekening nou eigenlijk heeft bepaald, door de groeisnelheid (dus: de ODE) als functie van de dichtheid van de populatie te schetsen. Als we de ODE uitvermenigvuldigen zien we een negatieve tweede-orde term ($-bN^2/k$) en twee eerste-orde termen ($bN$ en $dN$ zijn niet gekwadrateerd). Dit vormt een bergparabool^[Als je functies schetsen toch nog lastig vindt, kijk dan nog even naar [hoofdstuk 10](#section-schetsen). Je kan het ook altijd even controleren met de website [Desmos.com](https://www.desmos.com)], een functie die op twee punten gelijk is aan $0$. Op deze punten is de populatie in evenwicht: deze kan niet groeien of krimpen. 
 
-![Rekenen aan evenwichten, of deze visualiseren in een faseportret](figuren/faseportret_logistische_groei.png){#fig-faseportret width="80%"}
+![Rekenen aan evenwichten, of deze visualiseren in een faseportret](figuren/faseportret_logistischegroei_c.jpeg){#fig-faseportret width="90%"}
 
 Er is nog iets wat je heel snel aan een faseportret af kan lezen. We weten dat er groei is als $\dt{N}$ groter is dan $0$ en dat de populatie afneemt als $\dt{N}$ kleiner is dan $0$ (en zoals gezegd: dat er een evenwicht is als $\dt{N}$ gelijk is aan $0$). In het figuur staan deze punten aangegeven op de x-as. Pijltjes naar rechts geven aan dat er groei is (pijltje wijst naar "meer N"), pijltjes naar links geven aan dat er afname is, en cirkels geven aan dat er een evenwicht is. Als de pijltjes naar dit evenwicht toewijzen, dan zal het systeem daar op ten duur naartoe gaan. Dit **stabiele evenwicht** (aangegeven met een ingevulde cirkel) vormt een zogeheten **attractor** voor het systeem: als je lang genoeg wacht zal de populatie hier uit komen. Het evenwicht bij $N=0$ heeft alleen pijltjes die ervan wegwijzen, en is dus een **instabiel evenwicht** (en is dus geen attractor). Deze worden vaak aangegeven met een open cirkel. Dankzij deze visualisatie is het relatief eenvoudig om te bedenken hoe het systeem zich over de tijd zal ontwikkelen. Voor specifieke begin-waarden, kunnen we dus *specifieke oplossingen* schetsen!
+
+:::{.callout-warning}
+
+## Negatieve populaties zijn biologisch niet interessant.
+
+Hoewel er links van het instabiele evenwicht in @fig-faseportret (voor negatieve $N$) sprake is van "afname naar min-oneindig", is dat biologisch gezien natuurlijk niet relevant. Dit kunnen we als bioloog daarom met een gerust hart negeren.
+:::
 
 ## Dichtheidsafhankelijke sterfte     
 
@@ -145,7 +158,7 @@ Deze vergelijking begint er aardig ingewikkeld uit te zien, maar doordat we het 
 
 ![Afbeelding gegenereerd met ChatGPT4-o](figuren/tandenpoetsen.png){width="80%"}
 
-Elke keer dat je je tanden poetst, komt er een kleine hoeveelheid bacteriën in je bloed. Omdat bloed een erg voedselrijke omgeving is voor bacteriën, zouden ze hier onmiddelijk exponentieel kunnen groeien. Gelukkig hebben we neutrofielen in ons bloed die de bacteriën snel opruimen. Hier zouden we een simpel ODE model voor opstellen:
+Elke keer dat je je tanden poetst, komt er een kleine hoeveelheid bacteriën in je bloed. Omdat bloed een erg voedselrijke omgeving is voor bacteriën, zouden ze hier onmiddelijk exponentieel kunnen groeien. Gelukkig hebben we neutrofielen in ons bloed die de bacteriën snel opruimen. Hier zouden we een simpel ODE model voor kunnen opstellen:
 
 $$\dt{B}=rB-kNB $$
 
@@ -163,7 +176,7 @@ e. Bepaal hoeveel neutrofielen je minimaal nodig hebt om de groei van de bacteri
 f. De $kNB$ term heet een *mass-action* term omdat de snelheid direct proportioneel is aan de dichtheden van $N$ en $B$. Wat moeten we doen als we willen weten hoeveel bacteriën er "per neutrofiel" opgeruimd worden? 
 g. Hoeveel bacteriën worden er per neutrofiel opgeruimd als er 0 bacteriën zijn? En als er oneindig veel bacteriën zijn? Is dit een redelijke aanname? 
 
-Bekijk devolgende uitbreiding van ons model $$\dt{B}=rB-\frac{kNB}{h+B}  $$
+Bekijk de volgende uitbreiding van ons model $$\dt{B}=rB-\frac{kNB}{h+B}  $$
 De vernieuwde (tweede) term ziet er misschien wat ingewikkeld uit. Om te begrijpen wat er gebeurt is het wederom handig om even na te gaan wat er gebeurt met 0 of heel veel bacterien. Als er 0 bacterien zijn is deze term 0, omdat boven de breuk een $B$ staat. 
 
   h. Als $B$ heel groot is, hoe belangrijk is $h$ dan nog in deze vergelijking? 
@@ -177,7 +190,7 @@ j. Bepaal opnieuw hoeveel neutrofielen je minimaal nodig hebt om de groei van ba
 ## Heckrunderen 
 <br>
 
-Heckrunderen zijn in de Oostvaardersplassen geintroduceerd als "semi-natuurlijke" grazers. Ze voorkomen dat het hele gebied begroeid raakt met bomen en struikgewas, wat belangrijk is voor het broeden van vogels in dit gebied. In 1983 zijn een kleine populatie heckrunderen vrijgelaten, en de populatie is na 20 jaar gestabiliseerd op 300-400 runderen. 
+Heckrunderen zijn in de Oostvaardersplassen geintroduceerd als "semi-natuurlijke" grazers. Ze voorkomen dat het hele gebied begroeid raakt met bomen en struikgewas, wat belangrijk is voor het broeden van vogels in dit gebied. In 1983 is een kleine populatie heckrunderen vrijgelaten, en de populatie is na 20 jaar gestabiliseerd op 300-400 runderen. 
 
 ![Heckrunderen op de Oostvaardersplassen](figuren/heck.png){#fig-heck}
 
@@ -260,11 +273,12 @@ i Als je de verwachte levensduur zo min mogelijk wil beinvloeden, wat voor belei
 
 | Nederlands                | Engels                | Beschrijving                                                                                                                                    |
 |------------------|--------------------|----------------------------------|
-| Intrinsieke groeisnelheid | Intrinsic growth rate | De snelheid waarmee een populatie groeit, weergegeven als $r$. Hierbij is niet gedefiniëerd wat de precieze geboorte- en sterftesnelheden zijn. |
-| Dichtheidsafhankelijk | Density dependent | Wanneer een process sneller of langzamer gaat als de dichtheid (of een andere soort variabele) verandert |
+| Intrinsieke groeisnelheid | Intrinsic growth rate | De netto snelheid waarmee een populatie groeit (bijvoorbeeld alle birth minus alle death). Voor deze parameter wordt meestal de letter $r$ gebruikt. Door groei te versimpelen als intrinsieke (netto) groei, is meestal niet gedefiniëerd wat de precieze geboorte- en sterftesnelheden zijn. |
+| Dichtheidsafhankelijk | Density dependent | Wanneer een process sneller of langzamer gaat als de dichtheid van de populatie verandert. In latere hoofdstukken gaan we ook modellen bestuderen waarbij de dichtheid van andere populaties ook een rol speelt.  |
 | Faseportret | Phase portrait | Een visuele manier om van een ODE weer te geven waar de eventuele evenwichten liggen, en of deze instabiel/stabiel zijn |
 | Evenwicht | Steady state | Een conditie waarbij een systeem niet verandert. Bijvoorbeeld, een populatiegrootte waarbij er geen groei/afname is. |
 | Stabiel evenwicht | Stable steady state | Een evenwicht waar het systeem naartoe beweegt, bijvoorbeeld wanneer de groeisnelheid toeneemt bij afname, en afneemt bij toename.  |
 | Instabiel evenwicht | Unstable steady state | Een evenwicht waar het systeem van weg beweegt, bijvoorbeeld wanneer de groeisnelheid toeneemt bij toename, en afneemt bij afname. Dit zijn dus weliswaar evenwichten, maar elk mogelijke verstoring zal het systeem ervandaan bewegen! |
-| Attractor | Attractor | Waar het systeem naartoe gaat als je lang genoeg wacht. Vaak is dit een stabiel evenwicht, maar er dit is niet altijd het geval! |
+| Attractor | Attractor | Waar het systeem naartoe gaat als je lang genoeg wacht. Vaak is dit een stabiel evenwichtspunt, maar er zijn ook andere soorten attractoren mogelijk. |
 | Massawerking | Mass action | Mass action (het Nederlandse begrip is ongebruikelijk) is een aanname dat interacties tussen individuen/moleculen direct proportioneel is aan de dichtheden/concentraties. |
+:  {.striped .hover}
