@@ -1,28 +1,27 @@
-
 {{< include ../_macros.tex >}}
 {{< include ../print_friendly.html >}}
 
 
 # Ruimtelijke groei {#sec-ruimtelijk}
 
-Zoals je nu wel hebt begrepen, modellen maken vaak vele aannames. Hoewel we tot nu toe veel aannames expliciet hebben benoemd (goed gemengd systeem, parameters zijn constant, *etc.*), zijn er soms ook aannames die je misschien niet onmiddellijk zijn opgevallen. Zo hebben we het bijvoorbeeld gehad over dichtheidsafhankelijke groei, maar daarbij altijd aangenomen dat alle individuen deze dichtheidseffecten op dezelfde manier ervaren. Maar een bos kan zich vooral aan de rand uitbreiden: daar hebben de individuen toegang tot lege plekjes met veel licht. Hetzelfde geldt voor bacteriën op een agarplaat (aan de rand zijn meer nutriënten beschikbaar) of een groeiende tumor (cellen in het midden schieten zuurstof en voedingsstoffen tekort).
+Zoals je nu wel hebt begrepen, modellen maken vaak vele aannames. Hoewel we tot nu toe veel aannames expliciet hebben benoemd (goed gemengd systeem, parameters zijn constant, *etc.*), zijn er soms ook aannames die je misschien niet onmiddellijk zijn opgevallen. Zo hebben we het bijvoorbeeld gehad over dichtheidsafhankelijke groei, maar daarbij altijd aangenomen dat alle individuen deze dichtheidseffecten op dezelfde manier ervaren. Maar een bos kan zich vooral aan de rand uitbreiden: daar hebben de individuen toegang tot lege plekjes met veel licht. Hetzelfde geldt voor bacteriën op een agarplaat (aan de rand zijn meer nutriënten beschikbaar) of een groeiende tumor (voor cellen in het midden schieten zuurstof en voedingsstoffen tekort).
 
-In de bovenstaande scenario's is het steeds geval dat de individuen/cellen aan de rand een lagere dichtheid ervaren dan individuen in het midden. Met andere woorden: niet ieder individu ondervindt dezelfde dichtheidseffecten, wat in onze eerdere modellen wel aangenomen werd! Sterker nog, tot nu toe spraken we helemaal niet over individuen, want we omschreven steeds slechts de totale populatiegrootte.
+In de bovenstaande scenario's is het steeds het geval dat de individuen/cellen aan de rand een lagere dichtheid ervaren dan individuen in het midden. Met andere woorden: niet ieder individu ondervindt dezelfde dichtheidseffecten, wat in onze eerdere modellen wel aangenomen werd! Sterker nog, tot nu toe spraken we helemaal niet over individuen, want we omschreven steeds slechts de totale populatiegrootte.
 
 ![Afbeelding gegenereerd met ChatGPT4-o](figuren/ai_spatial.png){fig-align="center" width="80%"}
 
 ## Leerdoelen
 
-In dit hoofdstuk, gaan we na denken over hoe populaties (of het nu bomen, bacteriën, of tumorcellen zijn) groeien in de ruimte. Dit doen we door kennis te maken met **individual-based modelling**, wat aanneemt dat organismen discrete individuen zijn, eventueel met hun eigen omgeving en eigen gedragsregels. Aan het eind van dit hoofdstuk, moet je begrijpen:
+In dit hoofdstuk, gaan we na denken over hoe populaties (of het nu bomen, bacteriën, of tumorcellen zijn) groeien in de ruimte. Dit doen we door kennis te maken met **individual-based modelling**, wat aanneemt dat organismen discrete individuen zijn, eventueel met hun eigen omgeving en gedrag. Aan het eind van dit hoofdstuk, moet je begrijpen:
 
 -   Wat er bedoelt wordt met 'omschrijvingsniveau'.
 -   Dat je naast populatiegroottes ook vanuit het individu kan denken.
 -   Dat interacties lokaal zijn, dus dat de posities van individuen ertoe kunnen doen.
--   Hoe het komt dat sommige ruimtelijke modellen een "ingebouwd" draagvlak hebben.
+-   Hoe het komt dat sommige ruimtelijke modellen een "ingebouwd" draagvermogen hebben.
 
 ## Wat is individual-based modelling?
 
-Individual-based modelling (IBMs, ook wel *agent-based modelling* of ABMs genoemd), is een modeltechniek waarbij organismen als discrete entiteiten (indivuen) worden beschouwd. Hierdoor kunnen we niet louter en alleen populatiegroottes bestuderen, maar ook de eigenschappen en gedragingen van individuen *binnen* de populatie. Formeler gezegd kunnen we stellen dat individual-based modellen een ander **omschrijvingsniveau** hebben dan ODEs/differentievergelijkingen. Dit omschrijvingsniveau bepaald ook welke **modeluitkomsten** we kunnen verwachten: als we alleen de populatiegroottes bestuderen, kunnen we geen inzichten over individuele verschillen verwachten. Laten we hiermee kennis maken door te denken aan een bacteriekolonie die zich over een agarplaat verspreidt.
+Individual-based modelling (IBMs, ook wel *agent-based modelling* of ABMs genoemd), is een modeltechniek waarbij organismen als discrete entiteiten (indivuen) worden beschouwd. Hierdoor kunnen we niet louter en alleen populatiegroottes bestuderen, maar ook de eigenschappen en gedragingen van individuen *binnen* de populatie. Formeler gezegd kunnen we stellen dat individual-based modellen een ander **omschrijvingsniveau** hebben dan ODEs/differentievergelijkingen. Dit omschrijvingsniveau bepaalt ook welke **modeluitkomsten** we kunnen verwachten: als we alleen de populatiegroottes bestuderen, kunnen we geen inzichten over individuele verschillen verwachten. Laten we hiermee kennis maken door te denken aan een bacteriekolonie die zich over een agarplaat verspreidt.
 
 ## Individuen en hun posities
 
@@ -30,7 +29,7 @@ Stel je voor dat in het midden van een agarplaat een enkele (paarse) bacteriecel
 
 ```{r ruimtelijkegroei}
 #| code-fold: true
-#| fig-cap: "Paarse stippen staan voor wildtye bacteriën, terwjil gele stippen bacteriën zijn met een mutatie. Door lokale celdeling onstaat er een \"taartpunt\" van mutanten, zoals waargenomen in [Fusco et. al (2016)](https://www.nature.com/articles/ncomms12760)"
+#| fig-cap: "Paarse stippen staan voor wildtype bacteriën, terwjil gele stippen bacteriën zijn met een mutatie. Door lokale celdeling onstaat er een \"taartpunt\" van mutanten, zoals waargenomen in [Fusco et. al (2016)](https://www.nature.com/articles/ncomms12760)"
 #| label: fig-colony
 #| code-summary: "Code (voor de leuk, dit is geen leerstof)"
 # Functie om het grid te visualiseren als punten
@@ -86,7 +85,7 @@ for (t in 1:75) {
 title("Een groeiende bacteriekolonie met (gele) mutanten", cex.main=2,line = -2, outer = TRUE)
 ```
 
-De ruimtelijke structuur die in de IBM van @fig-colony ontstaat is een geheel *nieuw* type model-resultaat, en staat ons toe om vele nieuwe vragen te stellen: hoe verspreiden mutaties zich in een bacteriekolonie? Hoe belangrijk is zuurstof-beperking voor de groei van een tumor? Hoe behouden we diverse ecosystemen wanneer bossen de heide overgroeien? Hoewel IBMs ook zonder ruimtelijke structuur gemodelleerd kunnen worden, is dergelijke structuur natuurlijk wel een belangrijk component van biologische systemen! Maar hoe pakken we dat dan aan, individuen in de ruimte modelleren?
+De ruimtelijke structuur die in de IBM van @fig-colony ontstaat is een geheel *nieuw* type model-resultaat, en staat ons toe om vele nieuwe vragen te stellen: hoe verspreiden mutaties zich in een bacteriekolonie? Hoe belangrijk is zuurstof-beperking voor de groei van een tumor? Hoe behouden we diverse ecosystemen wanneer bossen de heide overgroeien? Hoewel IBMs ook zonder ruimtelijke structuur gemodelleerd kunnen worden, is een dergelijke structuur natuurlijk wel een belangrijk component van biologische systemen! Maar hoe pakken we dat dan aan, individuen in de ruimte modelleren?
 
 ## Geboorte in "lege hokjes"
 
@@ -102,11 +101,11 @@ population <- rbind(individual1, individual2)
 population
 ```
 
-Om het extra simpel te houden, nemen we aan dat de x-y coordinaten altijd gehele getallen zijn ($x=1,2,3,\dots,S$ en $y=1,2,3,\dots,S$), zodat we ons volledige ruimte kunnen voorstellen als een simpel grid van hokjes (een soort schaakbord, maar dan zonder die oneindige berg rijst). Nu zouden we elk individu in deze lijst "regels" kunnen geven voor hun voortplanting. Elk individu zou bijvoorbeeld zich in een leeg buur-hokje kunnen voortplanten met een kans van 60%, en kunnen sterven met een kans van 5%. Laten we even stellen dat de kleur van het individu niet uitmaakt voor deze regels: deze is alleen voor de visualisatie. Als we dit simuleren in R, zouden we zoiets kunnen zien:
+Om het extra simpel te houden, nemen we aan dat de x-y coordinaten altijd gehele getallen zijn ($x=1,2,3,\dots,W$ en $y=1,2,3,\dots,H$), zodat we ons de volledige ruimte kunnen voorstellen als een simpel grid dat $W$ breed is en $H$ hoog (een soort schaakbord dus, maar dan zonder die oneindige berg rijst). Nu zouden we elk individu in deze lijst "regels" kunnen geven voor hun voortplanting. Elk individu zou bijvoorbeeld zich in een leeg buur-hokje kunnen voortplanten met een kans van 60%, en kunnen sterven met een kans van 5%. Laten we even stellen dat de kleur van het individu niet uitmaakt voor deze regels: deze is alleen voor de visualisatie. Als we dit simuleren in R, zouden we zoiets kunnen zien:
 
 ```{r ruimtesim2}
 #| code-fold: true
-#| code-summary: "Code (ook geen leerstof)"
+#| code-summary: "Code (geen leerstof!)"
 #| fig.width: 6
 #| fig.height: 3.5
 #| fig-cap: "Simulatie van groei op een grid, waarbij \"individuen\" kunnen reproduceren in lege buur-hokjes met een kans van 60%, en sterven met een vaste kans van 5%. De kleur heeft hier geen invloed op, en dient alleen ter illustratie. "
@@ -192,7 +191,7 @@ Als $b$ slechts een klein beetje groter is dan $d$ (@fig-stochasticity-3), zien 
 #| code-summary: "Code"
 #| fig.width: 10
 #| fig.height: 2.5
-#| fig-cap: "De simulatie wanneer birth veel waarschijnlijker is dan death."
+#| fig-cap: "Simulaties van groei op een grid met verschillende birth rates (en dezelfde death rates)."
 #| fig-subcap: 
 #|   - "Simulatie met b=0.6, d=0.1"
 #|   - "Simulatie met b=0.3, d=0.1"
@@ -313,7 +312,9 @@ Als we positieve dichtheidsafhankelijke effecten willen gebruiken in een IBM op 
 $$ \text{Geboortekans(\color{red}rood)} = b+c\cdot \left(\sum{\text{aantal \color{orange}oranje  buren}}\right)$$
 $$\text{Geboortekans(\color{orange}oranje)} = b+c\cdot \left(\sum{\text{aantal \color{red} rode  buren}}\right)$$
 
-Hieronder zie je een interactieve simulatie van dit systeem (je moet nog wel even op start drukken), waarbij je de parameters $b$, $c$, en $d$, en de begin-dichtheid kan instellen. De parameters zijn zo ingesteld dat $b$ maar een klein beetje groter is dan $d$, maar doordat de individuen elkaar helpen groeien ze toch prima uit totdat het hele grid vol is.
+Een voorbeeld van de bovenstaande regels zouden bacteriën kunnen zijn die van elkaar afhankelijk zijn voor de productie van essentiële aminozuren^[Dal Co, A., van Vliet, S., Kiviet, D.J. et al. Short-range interactions govern the dynamics and functions of microbial communities. Nat Ecol Evol 4, 366–375 (2020). https://doi.org/10.1038/s41559-019-1080-2]. Dergelijke *cross-feeding* komt veel voor in de microbiële wereld, maar ook dieren, planten, en andere organismen kunnen vergelijkbare afhankelijkheden hebben. 
+
+Hieronder zie je een interactieve simulatie van het systeem (je moet nog wel even op start drukken), waarbij je de parameters $b$, $c$, en $d$, en de begin-dichtheid kan instellen. De parameters zijn zo ingesteld dat $b$ maar een klein beetje groter is dan $d$, maar doordat de individuen elkaar helpen groeien ze toch prima uit totdat het hele grid vol is.
 
 ```{=html}
 <div class="interactive_content">
@@ -329,7 +330,7 @@ Wat opvalt aan de bovenstaande simulatie is dat de populatie uitgroeit, maar dat
 
 ## De parasiet
 
-Als we het hebben over samenwerking, kunnen we ons afvragen wat er zou gebeuren als iemand valsspeelt. Daarom gaan we de bovenstaande simulaties uitbreiden met een derde soort: een [parasiet]{style="color:#2a53f7; font-weight:bold"}. In het Engels worden samenwerkers vaak *cooperators* worden genoemd, en heten de parasieten vaak *cheaters* of *defectors*. We nemen aan dat deze cheater geen hulp geeft, en wel wordt geholpen door zowel de rode als oranje individuen:
+Als we het hebben over samenwerking, kunnen we ons afvragen wat er zou gebeuren als iemand valsspeelt. Wat nu als er bijvoorbeeld een derde bacteriesoort is die energieke kosten bespaart op de productie van aminozuren, maar daardoor afhankelijk is van de andere soorten? Laten we de bovenstaande simulaties eens uitbreiden met een derde soort: die we voor de eenvoud de [parasiet]{style="color:#2a53f7; font-weight:bold"} zullen noemen. In het Engels worden samenwerkers vaak *cooperators* worden genoemd, en heten de parasieten vaak *cheaters* of *defectors*. We nemen aan dat de parasiet geen hulp geeft, maar wordt geholpen door zowel de rode als oranje individuen:
 
 $$ \text{Geboortekans({\color{red}rood})} = b+c\cdot \left(\sum{\text{aantal {\color{orange}oranje}  buren}}\right)$$
 $$\text{Geboortekans({\color{orange}oranje})} = b+c\cdot \left(\sum{\text{aantal {\color{red} rode}  buren}}\right)$$
@@ -346,12 +347,13 @@ Dit levert de volgende dynamica op:
 </div>
 ```
 
-Zoals je ziet heeft deze verandering een enorme impact! Waar eerst de simulatie niet veel meer veranderde nadat het grid was volgegroeid, zien we nu het systeem alsmaar in beweging blijft. De cheaters overgroeien steeds de cooperators, maar omdat ze daarna zichzelf niet helpen sterven ze lokaal uit. Overgebleven cooperators kunnen de "lege ruimte" die daardoor is ontstaan weer veroveren, waarna er weer cheaters komen, *etc.*. Zo gaat de simulatie alsmaar door. Als je echter het systeem mengt, zul je zien dat ditzelfde niet gebeurt: de cheaters nemen de hele simulatie over en alles sterft uit. Nadat alles is uitgestorven, is het natuurlijk *game over*.
+Zoals je ziet heeft deze verandering een enorme impact! Waar eerst de simulatie niet veel meer veranderde nadat het grid was volgegroeid, zien we nu dat het systeem alsmaar in beweging blijft. De cheaters overgroeien steeds de cooperators, maar omdat ze daarna zichzelf niet helpen sterven ze lokaal uit. Overgebleven cooperators kunnen de "lege ruimte" die daardoor is ontstaan weer veroveren, waarna er weer cheaters komen, *etc.*. Zo gaat de simulatie alsmaar door. Als je echter na iedere stap alle individuen op een willekeurige plek plaatst (dat gebeurt met het vinkje 'mengen', je roert als het ware het systeem heel goed door), zul je zien dat er iets heel anders gebeurt: de cheaters nemen de hele simulatie over en daarna sterft alles uit. Als alles is uitgestorven, is het natuurlijk *game over*.
 
 ## De eindeloze mogelijkheden van IBMs
 
-Nu je een klein beetje een beeld hebt gekregen van individual-based modelling, kun je je misschien voorstellen dat de mogelijkheden eindeloos zijn. Hokjes kunnen namelijk niet alleen individuen bevatten, maar ook voedsel, antibiotica, andere organismen, uitgescheden eiwitten, windrichtingen en noem zo maar op. Bovendien hoeven individuen niet in hokjes te zitten, maar zouden ze vrij door een continue ruimte kunnen lopen, zoals de mieren in de simulatie hieronder:
+Nu je een klein beetje een beeld hebt gekregen van individual-based modelling, kun je je misschien voorstellen dat de mogelijkheden eindeloos zijn. Hokjes kunnen namelijk niet alleen individuen bevatten, maar ook voedsel, antibiotica, andere organismen, uitgescheiden eiwitten, windrichtingen en noem zo maar op. Bovendien hoeven individuen natuurlijk helemaal niet in hokjes te zitten, maar zouden ze vrij door een continue ruimte kunnen lopen, zoals de mieren in de simulatie hieronder:
 
+:::{.figure-caption}
 ```{=html}
 <div class="interactive_content">
 
@@ -359,6 +361,10 @@ Nu je een klein beetje een beeld hebt gekregen van individual-based modelling, k
 </div>
 
 ```
+
+Simulatie van mieren die foerageren voor voedsel. De witte cirkel is voedsel ("suiker"), en de grijze cirkel het nest waarin wordt weergegeven hoeveel suiker er is verzameld. De rode en blauwe paden zijn feromonen waarmee de mieren signaleren naar elkaar waar het nest en het voedsel te vinden is. We zullen deze simulatie in een later hoofdstuk ook nog bespreken. 
+
+:::
 
 Je begrijpt nu wellicht dat je met IBMs allerlei dingen simuleren: (*"the sky is the limit!"*)! Maar dat is misschien niet altijd even wenselijk. Met modellen proberen we natuurlijk (zoals in de introductie uitgelegd) de biologie enigszins te versimpelen, dus het is de kunst om de modellen niet te complex te maken. Aan de andere kant kunnen modellen die te simpel zijn de plank enorm misslaan. De balans tussen een simpel en een complex model is helemaal niet eenvoudig op te maken. Albert Einstein begreep dit ook:
 
@@ -427,7 +433,7 @@ Dit model lijkt erg op vergelijkingen die we al hebben gezien voor logistische g
 
 a. Schets de groeisnelheid $\dt{N}$ als een functie van $N$. Teken onder je schets een faseportret met pijltjes om aan te geven bij welke dichtheden de populatie kan groeien, en bij welke de populatie zal krimpen. 
 
-Nu nemen we aan dat $c=2$. De functie krijgt nu de vorm $bN^2 - \frac{bN^3}{k} - dN$, die wat lastiger schetsen is. We zouden de ABC-formule kunnen gebruiken om de nullpunten uit te rekenen, maar we kunnen ook een stukje R-code schrijven om de grafiek te maken, of de grafiek plotten in Desmos (beide opties staan hieronder weergegeven). 
+Nu nemen we aan dat $c=2$. De functie krijgt nu de vorm $bN^2 - \frac{bN^3}{k} - dN$, die wat lastiger te schetsen is. We kunnen de $N$ buiten haakjes halen, en dan de ABC-formule kunnen gebruiken om de nulpunten van het deel binnen de haakjes uit te rekenen... Maar we kunnen ook een stukje R-code schrijven om de grafiek te plotten, of de grafiek plotten in Desmos (beide opties staan hieronder weergegeven). 
 
 ```{=html}
 <div class="interactive_content">
@@ -453,7 +459,7 @@ curve(func,0,11,lwd=2,ylim=c(-0.1,3),
        main="dC/dt als een functie van C")
 abline(h=0)
 ```
-b. Neem de grafiek uit R of Desmos over op papier, en schets opnieuw een faseportret met pijltjes eronder. Geef met open of gesloten cirkel respectievelijk instabiele en stabiele evenwichten aan.
+b. Neem de grafiek uit R of Desmos over op papier, en schets opnieuw een faseportret met pijltjes eronder. Geef met open of gesloten cirkels respectievelijk instabiele en stabiele evenwichten aan.
 
 c. Schets in 1 figuur hoe de populatie door de tijd zal groeien voor verschillende begin-waarden van $N$. Schets elke kwalitatief verschillende oplossing (er zijn drie mogelijkheden).
 
@@ -487,8 +493,8 @@ Een simulatie met de bovenstaande interacties vind je hieronder.
 
 In de onderstaande simulatie zijn er niet 3, maar 6 soorten die elkaar in een vergelijkbare cyclus helpen met reproduceren. 
   
-  c. Omschrijf het patroon wat er ontstaat. 
-  d. Heeft mengen altijd een positieve invloed op een cyclus?  
+  b. Omschrijf het ruimtelijke patroon wat ontstaat en de dynamica van het aantal individuen per type.
+  c. Heeft mengen altijd een positieve invloed op een cyclus?  
   
 ```{=html}
 <div class="interactive_content">
@@ -504,6 +510,7 @@ In de onderstaande simulatie zijn er niet 3, maar 6 soorten die elkaar in een ve
 |----------------------|--------------------|-----------------------------------|
 | Individual-based modellen | Individual-based models | Modellen waarbij de eigenschappen en het gedrag van individuen wordt beschreven. |
 | Omschrijvingsniveau | Level of description | Het belangrijkste aspect dat een model omschrijft wordt vaak het omschrijvingsniveau genoemd. Voor modellen van groei (bijvoorbeeld ODEs) is vaak de populatiegrootte het omschrijvingsniveau, terwijl bij een individual-based model het individu het omschrijvingsniveau is. |
-| Modeluitkomsten | Model outcomes | Het omschrijvingsniveau bepaald sterk welke *uitkomsten* een model kan hebben: een model dat alleen populatiegroottes omschrijft, kan geen inzichten geven in individuele verschillen. |
+| Modeluitkomsten | Model outcomes | Het omschrijvingsniveau bepaalt sterk welke *uitkomsten* een model kan hebben: een model dat alleen populatiegroottes omschrijft, kan geen inzichten geven in individuele verschillen. |
 | Stochasticiteit | Stochasticity | Stochastischiteit verwijst naar de mate van willekeur of onzekerheid in een proces of in een systeem. Zodoende zijn de uitkomsten niet volledig voorspelbaar, maar variëren door toeval of willekeurige invloeden. In dit hoofdstuk gebruiken we geboorte- en sterfte-kansen, waardoor bijvoorbeeld groeiende populaties ook door domme pech uit kunnen sterven! |
 | Lokale interactie | Local interaction | Interacties tussen individuen die alleen plaatsvinden wanneer zij zich binnen een bepaalde nabije afstand van elkaar bevinden. |
+:  {.striped .hover}

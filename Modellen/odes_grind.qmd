@@ -1,26 +1,25 @@
-::: {.content-visible when-format="html"}
 {{< include ../_macros.tex >}}
-:::
+{{< include ../print_friendly.html >}}
 
-# Complexe ODEs in R {#sec-grind .unnumbered}
+# ODEs modelleren in R {#sec-grind .unnumbered}
 
 In @sec-meerdere hebben we een heel beroemd model uit de biologie geanalyseerd: het *Lotka-Volterra predator-prooi model*. Dit model gaat natuurlijk niet specifiek over konijnen en vossen, maar zou op allerlei systemen toegepast kunnen worden: bacteriofagen die bacteriën infecteren, protozoa die bacteriën eten, lieveheersbeestjes die bladluizen eten, vleermuizen die motjes eten, *etc.* Naast het predator-prooi model bestaat er ook het *Lotka-Volterra competitie model* (waar we in het volgende hoofdstuk naar gaan kijken). Zodoende is het Lotka-Volterra model uitgegroeid tot één van de meest veelzijdige modellen in de biologie, waarmee voorspellingen gedaan kunnen worden over welke soorten wel/niet kunnen samenleven. 
 
-We hebben gezien hoe met behulp van faseruimtes het best eenvoudig kan zijn om inzicht in een biologisch proces te vergaten. Maar de eenvoud van deze eerdere analyses is deels te verklaren door de eenvoud van het model dat we hebben gebruikt. Hoe meer interacties we willen begrijpen, hoe moeilijker het zal worden om met pen en papier te werk te gaan. Daarom gaan we leren om ODEs door te rekenen met het Rscript `Grind.R`, waarmee je eenvoudig faseruimtes en grafiekjes door de tijd mee kan produceren. 
+We hebben gezien hoe met behulp van faseruimtes het best eenvoudig kan zijn om inzicht in een biologisch proces te vergaten. Maar de eenvoud van deze eerdere analyses is deels te verklaren door de eenvoud van het model dat we hebben gebruikt. Hoe meer interacties we willen begrijpen, hoe moeilijker het zal worden om met pen en papier te werk te gaan. Daarom gaan we leren om ODEs door te rekenen met het Rscript `Grind.R`, waarmee je eenvoudig faseruimtes en grafiekjes van de dynamica van variabelen kan plotten. 
 
-![Een faseruimte (links) en oplossing (rechts) gegenereerd met het Rscript 'Grind.R'. De zwarte lijnen links tonen trajectories voor verschillende intiële condities. De oplossing (rechts) correspondeert met een mogelijke trajectorie als functie van tijd. ](figuren/odes_grind.png){fig-align="center" width="90%"}
+![Een faseruimte (links) en oplossing (rechts) gegenereerd met het Rscript 'Grind.R'. De zwarte lijnen links tonen trajectories (de dynamica vanaf specifieke initiële condities). De oplossing (rechts) geeft deze trajectorie weer als functie van tijd, met de twee variabelen op de y-as. ](figuren/odes_grind.png){fig-align="center" width="90%"}
 
 ## Leerdoelen 
 
-De leerdoelen voor dit hoofdstuk zijn: 
+Misschien is het je opgevallen dat dit hoofdstuk geen nummer heeft. Dit hoofdstuk is inhoudelijk namelijk wat korter, en is vooral bedoeld om kennis te maken met het R-script `Grind.R`. De overige leerdoelen zijn:
 
-  * Begrijpen hoe een simpel model (zoals het Lotka-Volterra model) kan worden uitgebreid door extra details in te voegen (bijvoorbeeld een predator die verzadigd).
+  * Begrijpen hoe een simpel model (zoals het Lotka-Volterra model) kan worden uitgebreid door extra details toe te voegen (bijvoorbeeld een predator die verzadigd).
   * Een Hill-functie herkennen, en de kenmerken kunnen benoemen (initiële helling, half-waarde, maximum).
   * R kunnen gebruiken om faseruimtes met nullclines en trajectories te tekenen, en de daarbij horende oplossingen.
   
 ## De verzadigde predator
 
-In ons eerdere Lotka-Volterra model namen we aan dat predatie lineair proportioneel is aan de dichtheden predator en prooi door gebruik te maken van de predatieterm $aRN$. Mede dankzij deze eenvoud waren de nullclines zo eenvoudig: een stel rechte lijnen waarvan het makkelijk te bepalen is waar/of ze snijden. Echter heeft deze eenvoud ook zijn beperkingen. Dit lineaire verband betekent dat per predator (ookwel: *per capita*) in totaal $aR$ prooi gegeten kan worden (nogmaals, "per"  kun je lezen als "gedeeld door", dus $\frac{aRN}{N} = aR$). Bij oneindig hoge prooi dichtheden, kan elke predator dus oneindig veel prooi eten. In het echt zal een predator eigenlijk een tijd bezig zijn met het verwerken en verteren van de prooi. Zodoende zal de predatie-term bij hele hoge prooi-dichtheden eigenlijk moeten verzadigen. Om dit te verwerken, zouden we de predatie-term aan kunnen passen:
+In ons eerdere Lotka-Volterra model namen we aan dat predatie lineair proportioneel is aan de dichtheden van de predator en prooi. Dit deden we door gebruik te maken van een simpele predatieterm: $aRN$. Mede dankzij deze eenvoud waren de nullclines zo eenvoudig: een stel rechte lijnen waarvan het makkelijk te bepalen is waar/of ze snijden. Echter heeft deze eenvoud ook zijn beperkingen. Dit lineaire verband betekent dat per predator (ookwel: *per capita*) in totaal $aR$ prooi gegeten kan worden (nogmaals, "per"  kun je lezen als "gedeeld door", dus $\frac{aRN}{N} = aR$). Bij oneindig hoge prooi dichtheden, kan elke predator dus oneindig veel prooi eten. In het echt zal een predator eigenlijk een tijd bezig zijn met het verwerken en verteren van de prooi. Zodoende zal de predatie-term bij hele hoge prooi-dichtheden eigenlijk moeten verzadigen. Om dit te verwerken, zouden we de predatie-term aan kunnen passen:
 
 \begin{align*}
 \frac{\dd \color{#2a53f7}R}{\dd t} &= \underbrace{b(1-\frac{\color{#2a53f7}R}{K})\color{#2a53f7}R}_{\text{geboorte prooi}} - \underbrace{d\color{#2a53f7}R}_{\text{sterfte prooi}} - \underbrace{\frac{\color{black}a\color{#2a53f7}R\color{orange}N}{h+\color{#2a53f7}R}}_{\text{nieuwe predatieterm}}\\
@@ -35,7 +34,7 @@ Laten we eerst even naar de noemer te kijken, en vooral naarde balans tussen $h$
 
 ## Hill-functies
 
-Functies van deze vorm worden "Hill-functies" genoemd (vernoemd naar Archibald Hill, niet naar het feit dat het een soort heuveltje is). Met een kleine aanpassing aan deze Hill-functie ($\frac{aR^2}{h^2+R^2}$), kun je deze response ook sigmoide (S-vormig) laten verlopen (@fig-predatieterm-2). 
+Functies van deze vorm worden "Hill-functies" genoemd (vernoemd naar Archibald Hill, niet naar het feit dat het een soort heuveltje is). Met een kleine aanpassing aan deze Hill-functie ($\frac{aR^2}{h^2+R^2}$), kun je deze respons ook sigmoide (S-vormig) laten verlopen (@fig-predatieterm-2). 
 
 ```{r}
 #| fig-cap: ""
@@ -87,34 +86,38 @@ text(-0.5,1,"a",xpd=NA)
 ```
 
 
-::: {#exr-hillfuncties}
+<!-- ::: {#exr-hillfuncties} -->
 
-## Hill-functies
+<!-- ## Hill-functies  -->
+<!-- <br><br> -->
+<!-- De bovengenoemde Hill-functies zijn zeer veelzijdig, en met kleine aanpassingen kun je de vorm goed aanpassen. Vaak willen we bijvoorbeeld kunnen wisselen tussen geen interactie (0) en volledige interactie (1), of geen genexpressie (0) en volledige genexpressie (1), *etc.* Om dit te doen kunnen we de parameter $a$ op 1 zetten, waardoor we deze volledig weg kunnen laten uit de hill-functie. -->
 
-De bovengenoemde Hill-functies zijn zeer veelzijdig, en met kleine aanpassingen kun je de vorm goed aanpassen. Vaak willen we kunnen wisselen tussen geen interactie (0) en volledige interactie (1), of geen genexpressie (0) en volledige genexpressie (1), *etc.*. Zodoende kunnen we de parameter $a$ op 1 veronderstellen, en deze dus weglaten. Neem de onderstaande code over in R: 
+<!-- Neem de onderstaande code over in R: -->
 
-```{r}
-#| eval: false
+<!-- ```{r} -->
+<!-- #| eval: false -->
 
-h=1
-n=2
+<!-- h=1 -->
+<!-- n=2 -->
 
-func <- function(x){
-  return(x^n/(x^n+h^n))
-}
+<!-- func <- function(x){ -->
+<!--   return(x^n/(x^n+h^n)) -->
+<!-- } -->
 
-curve(func,0,3,lwd=2.5,ylim=c(0,1.), 
-      ylab="f(x)",xlab="x",col="seagreen")
-```
+<!-- curve(func,0,3,lwd=2.5,ylim=c(0,1.),  -->
+<!--       ylab="f(x)",xlab="x",col="seagreen") -->
+<!-- ``` -->
 
-Stel dat we in de interacties tussen genen bestuderen die elkaars expressie beinvloeden. Hoewel de bovengenoemde Hill-functies een graduele overgang beschrijven, zien we in dit hypothetische scenario iets anders. We zien dat de expressie van gen 1 bij lage concentraties geen invloed heeft op gen 2. Bij een bepaalde kritische concentratie van gen 1, zien we plotseling volledige expressie van gen 2. Een nog hogere concentratie van gen 1 heeft geen invloed meer op de expressie van gen 2. 
+<!-- Stel dat we de interacties tussen genen bestuderen die elkaars expressie beïnvloeden. Hoewel de bovengenoemde Hill-functies een graduele overgang beschrijven, zien we in dit (hypothetische) scenario iets anders. We zien dat een klein beetje expressie van gen 1 geen invloed heeft op gen 2, maar dat er bij een bepaalde kritische expressie van gen 1 plotseling maximale expressie van gen 2 is. Nog meer expressie van gen 1 heeft geen verdere invloed op de expressie van gen 2. -->
 
-  a. Bestudeer hoe je de Hill-functie kan aanpassen om het bovengenoemde scenario te vinden. In ons geval is f(x) de hoeveelheid invloed van gen 1 ($x$) op de expressie van gen 2 ($f(x)$)  
-We zien dat gen 2 ook een effect heeft op gen 1. Dit effect is wél gradueel, maar er vindt juist remming plaats. 
-  b. Hoe kun je de Hill-functie omkeren zodat deze niet van 0 naar 1 gaat, maar van 1 naar 0 gaat? Schrijf de vergelijking op, en test het met je R script. 
-  c. Kun je de vergelijking die je hebt opgeschreven in b nog versimpelen? (je kunt je algebra checken met R) 
-  d. Wat moet je doen als je toch wil dat de maximale genexpressie $a$ is, en niet 1? 
-:::
+<!--   a. Bestudeer hoe je de Hill-functie in de R-code hierboven zou kunnen aanpassen om het bovengenoemde scenario met een plotseling overgang te modelleren (neem aan dat $x$ de expressie van gen 1 is, en dat op de y-as de expressie van gen 2 staat). -->
+
+<!-- We zien dat gen 2 ook een effect heeft op gen 1. Dit effect is wél gradueel, maar er vindt juist remming plaats.  -->
+
+<!--   b. Hoe kun je de Hill-functie omkeren zodat deze niet van 0 naar 1 gaat, maar van 1 naar 0 gaat? Schrijf de vergelijking op, en test het met je R script.  -->
+<!--   c. Kun je de vergelijking die je hebt opgeschreven in b nog versimpelen? (je kunt je algebra altijd even controleren met het R-script!)  -->
+<!--   d. Wat moet je doen als je toch wil dat de maximale genexpressie $a$ is, en niet 1?  -->
+<!-- ::: -->
 
 Nu we kennis hebben gemaakt met Hill-functies (zie ook @tip-hillfuncties), gaan we terug naar het Lotka-Volterra model. Omdat het Lotka-Volterra model is uitgebreid met deze verzadigingsterm, moeten we opnieuw de nullclines uitrekenen en schetsen (ook die zijn veranderd!). Maar zoals je je wellicht kan voorstellen worden de nullclines iets ingewikkelder door deze non-lineaire term in onze vergelijkingen. Naar mate we onze modellen meer en meer uitbreiden, wordt het natuurlijk steeds lastiger om alles met de hand te doen. Daarom gaan we in dit hoofdstuk de faseruimte en het vectorveld laten tekenen door Grind.R, een Rscript dat deze analyses een fluitje van een cent maakt!
 
@@ -151,7 +154,7 @@ curve(func,0,3,lwd=3.5,ylim=c(0,1.), xaxt="n", yaxt="n",
 
 ## Grind tutorial
 
-Grind (*GReat INtegrator Differential equations*) is een Rscript geschreven door Rob de Boer (<https://tbb.bio.uu.nl/rdb>), wat het heel makkelijk maakt om faseruimtes, vectorvelden, en oplossingen te maken van ODE systemen. Ook kun je Grind gebruiken om modellen te fitten aan experimentele data, zodat je op basis van metingen in het veld parameters als $b$, $d$, $K$, en $h$ zou kunnen schatten. Dat laatste is heel relevant wanneer modellen gebruikt worden voor (bijvoorbeeld) belangrijke beleidsbeslissingen, maar in deze cursus gaan we het vooral gebruiken om gemakkelijk faseruimtes met nullclines te schetsen, en oplossingen te bestuderen. De volledige handleiding en introductie tot Grind vind je [hier](https://tbb.bio.uu.nl/rdb/grindR/basics.html).
+Grind (*GReat INtegrator Differential equations*) is een Rscript geschreven door Rob de Boer (<https://tbb.bio.uu.nl/rdb>), wat het heel makkelijk maakt om faseruimtes, vectorvelden, en oplossingen te berekenen en plotten. Ook kun je Grind gebruiken om modellen te fitten aan experimentele data, zodat je op basis van metingen in het veld parameters als $b$, $d$, $K$, en $h$ zou kunnen schatten. Dat laatste is heel relevant wanneer modellen gebruikt worden voor (bijvoorbeeld) belangrijke beleidsbeslissingen, maar in deze cursus gaan we het vooral gebruiken om gemakkelijk faseruimtes met nullclines te schetsen, en oplossingen te bestuderen. De volledige handleiding en introductie tot Grind vind je [hier](https://tbb.bio.uu.nl/rdb/grindR/basics.html).
 
 Voordat je Grind kan gebruiken, moet je eenmalig een paar "packages" in R installeren:
 
@@ -272,7 +275,7 @@ args(plane)
 Zo zie je bijvoorbeeld dat je de legenda zou kunnen verbergen met de `legend` optie, of de lijndikte (`lwd`) zou kunnen aanpassen. Met andere woorden: met R kunnen we zonder al te veel rekenwerk prachtige figuren genereren en wiskundige modellen doorrekenen! 
 
 ## Lotka-Volterra in Grind
-Als je de bovenstaande tutorial hebt gevolgd (en de packages hebt geïnstalleerd), kun je nu het volgende script overnemen en aan de slag met het vernieuwde Lotka-Volterra model, waar de predatieterm verzadigd:
+Als je de bovenstaande tutorial hebt gevolgd (en de packages hebt geïnstalleerd), kun je nu het volgende script overnemen en aan de slag met het vernieuwde Lotka-Volterra model, waar de predatieterm verzadigt:
 
 ```{r}
 #| code-fold: false
@@ -297,7 +300,7 @@ plane(xmax=3,ymax=2)
 run(tstep=0.5, legend=F)
 ```
 
-Door te oefenen met dit R-script, naast de pen en papier opgaven, is het de bedoeling dat je een goed gevoel ontwikkeld voor ODEs: simpele, wiskundige modellen, die veel in de biologische literatuur voorkomen. Hieronder volgt een korte vraag, om met zowel pen en papier als Grind te oefenen.
+Door te oefenen met dit R-script, naast de pen en papier opgaven, is het de bedoeling dat je een goed gevoel ontwikkelt voor ODEs: simpele, wiskundige modellen, die veel in de biologische literatuur voorkomen. Hieronder volgt een korte vraag, om met zowel pen en papier als Grind te oefenen.
 
 ::: {#exr-paraboollv}
 
@@ -313,7 +316,7 @@ Hierboven hebben we nullclines gegenereerd van het vernieuwde Lotka-Volterra mod
 
 ## Bifurcaties van evenwichten
 
-Het bovenstaande Lotka-Volterra model heeft een interessant eigenschap: afhankelijk van de parameters kan het type evenwicht veranderen. Iets dergelijks zagen we ook al eerder terug: de predator kon alleen samenleven met de prooi als de parameters dat toelieten. Deze transitie zien we ook terug in dit vernieuwde model (van @fig-lvvoort-1 naar @fig-lvvoort-2). Deze bifurcatie (van geen samenleving naar wél samenleving) wordt een **critische transitie** genoemd. Echter is er met dit vernieuwde model een tweede bifurcatie mogelijk: de predator-nullcline kan de prooi-nulllcine links of rechts van de top van de parabool snijden (van @fig-lvvoort-2 naar @fig-lvvoort-3). Als het snijpunt links van de top van de parabool ligt, zien we voortdurende oscillaties van predator en prooi. Deze specifieke bifurcatie staat bekend als de **Hopf-bifurcatie**.
+Het bovenstaande Lotka-Volterra model heeft een interessant eigenschap: afhankelijk van de parameters kan het type evenwicht veranderen. Iets dergelijks zagen we ook al eerder terug: de predator kon alleen samenleven met de prooi als de parameters dat toelieten. Deze transitie zien we ook terug in dit vernieuwde model (van @fig-lvvoort-1 naar @fig-lvvoort-2). Deze bifurcatie (van geen samenleving naar wél samenleving) wordt een **kritische transitie** genoemd. Echter is er met dit vernieuwde model een tweede bifurcatie mogelijk: de predator-nullcline kan de prooi-nullcine links of rechts van de top van de parabool snijden (van @fig-lvvoort-2 naar @fig-lvvoort-3). Als het snijpunt links van de top van de parabool ligt, zien we voortdurende oscillaties van predator en prooi, waarbij de populaties om het instabiele evenwicht heen blijven draaien. Eerder hadden we al gezegd dat attractoren niet altijd hetzelfde zijn als het evenwichtspunt, en hier zie je dat heel goed! Deze **attractor**, waarbij de populaties constant om het evenwicht heen blijven draaien, heet de limietcyclus. De overgang van de stabiele spiraal (snijpunt rechts van de parabool) naar de instabiele spiraal (snijpunt links van de parabool) staat bekend als de **Hopf-bifurcatie**.
 
 ```{r results='hide'}
 #| code-fold: true
@@ -321,10 +324,10 @@ Het bovenstaande Lotka-Volterra model heeft een interessant eigenschap: afhankel
 #| code-line-numbers: false
 #| fig.width: 4
 #| fig.height: 4
-#| fig-cap: ""
+#| fig-cap: "Verschillende faseruimtes voor het Lotka-Volterra systeem met een verzadigbare predator."
 #| fig-subcap: 
 #|   - "Als de nullclines niet snijden, is er geen evenwicht."
-#|   - "Vertrouwde inwaarde spiraal die naar een stabiel evenwicht gaat."
+#|   - "Vertrouwde inwaartse spiraal die naar een stabiel evenwicht gaat."
 #|   - "Voortdurende oscillaties rond een instabiel evenwicht."
 #| label: "fig-lvvoort"
 #| layout-ncol: 3
@@ -359,11 +362,11 @@ run(tstep=0.5, traject=T,col="grey")
 newton(state=c(R=0.5,N=0.5),plot=T)
 ```
 
-Voortdurende oscillaties tussen prooi en predator worden inderdaad waargenomen, bijvoorbeeld de oscillaties tussen hazen en lynxen in Noord Amerika (@fig-hazenenlynxen). Ook experimenteel zijn dergelijke oscillaties waargenomen, bijvoorbeeld door *Paramecium* (een-cellige protist, prooi) en *Didinium* (eencellige protist, predator) samen te groeien in een Erlenmeyer (Xia *et al.*, 1992).
+Voortdurende oscillaties tussen prooi en predator worden inderdaad waargenomen, bijvoorbeeld de oscillaties tussen hazen en lynxen in Noord Amerika (@fig-hazenenlynxen). Ook in experimenten zijn dergelijke oscillaties waargenomen, bijvoorbeeld door *Paramecium* (een-cellige protist, prooi) en *Didinium* (eencellige protist, predator) samen te groeien in een Erlenmeyer (Xia *et al.*, 1992).
 
-![Populatieaantallen hazen en lynxen in Noord Amerika van medio 19e eeuw tot medio 20e eeuw (bepaald op basis van de vachten-verkoop)](figuren/hazen_en_lynxen.png){#fig-hazenenlynxen}
+![Populatieaantallen hazen en lynxen in Noord Amerika van medio 19e eeuw tot medio 20e eeuw (bepaald op basis van de vachtenverkoop)](figuren/hazen_en_lynxen.png){#fig-hazenenlynxen}
 
-Bifurcaties kun je weergeven in een bifurcatiediagram, waarbij we de parameter die het evenwicht beinvloed op de x-as zetten, en de populatiegroottes in evenwicht op de y-as. Als we dit doen voor de bovenstaande bifurcaties, krijgen we dit: 
+Bifurcaties kun je weergeven in een bifurcatiediagram, waarbij we de parameter die het evenwicht beïnvloedt op de x-as zetten, en de populatiegroottes in evenwicht op de y-as. Als we dit doen voor de bovenstaande bifurcaties, krijgen we dit: 
 
 ```{r results='hide'}
 #| echo: false
@@ -435,7 +438,7 @@ bifurcation_data %>%
 
 ```
 
-Omdat er bij hoge waarden van $K$ oscillaties zijn, geven de lijnen de minimale en maximale waarde van deze oscillaties aan. Omdat de parameter $K$ het draagvlak van de prooi beinvloed, geeft dit diagram dus weer wat er bijvoorbeeld zou gebeuren als we konijnen op de Veluw gaan bijvoeren: eerst krijgen we meer konijnen, dan krijgen we alleen meer predatoren, en daarna begint het systeem harder en harder te schommelen! Zo zie je: het behoud van biodiversiteit is zelfs in dit simplistische "ecosysteem" niet triviaal!
+Omdat er bij hoge waarden van $K$ oscillaties zijn, geven de lijnen de minimale en maximale waarde van deze oscillaties aan. Omdat de parameter $K$ het draagvlak van de prooi beinvloed, geeft dit diagram dus weer wat er bijvoorbeeld zou gebeuren als we konijnen op de Veluwe gaan bijvoeren: eerst krijgen we meer konijnen, dan krijgen we alleen meer predatoren, en daarna begint het systeem harder en harder te schommelen! Zo zie je: het behoud van biodiversiteit is zelfs in dit simplistische "ecosysteem" niet triviaal!
 
 ## Grind.R kan nog veel meer
 
@@ -469,8 +472,10 @@ run(tmax=300,legend=F)
 
 ## Terminologie
 
-| Nederlands                | Engels                | Beschrijving                                                                                                                                    |
+
+| Nederlands                | Engels                | Beschrijving                                                                                                                                  |
 |------------------|--------------------|----------------------------------|
-| Hill-functies | Hill functions | Een set wiskundige functies die verzadigen bij grote waarden hoge waarden (ze hebben een horizontale assymptoot). |
-| Critische-transitie | Critical Transition | Het punt waarna twee populaties samen kunnen leven zonder dat een of beide volledig uitsterft. Hier is meestal een minimale "prooi" populatie aan verbonden met een bepaalde carrying capacity. |
-| Hopf-bifurcatie | Hopf-bifurcation | Het punt waarna twee populaties niet meer met constante populaties in evenwicht zijn, maar blijven schommelen. |
+| Hill-functies | Hill functions | Een set wiskundige functies die verzadigen bij grote waarden (ze hebben een horizontale assymptoot). |
+| Kritische-transitie | Critical Transition | Een punt waarbij een parameter-verandering het gedrag van een model fundamenteel verandert, bijvoorbeeld doordat het aantal of de stabiliteit van de evenwichten verandert. In dit hoofdstuk zien we bijvoorbeeld dat er alleen samenleving mogelijk is als $K$ hoog genoeg is. Er is dus een waarde van $K$ waarbij er een kritische transitie is. |
+| Hopf-bifurcatie | Hopf-bifurcation | Een omslagpunt waar, als je een bepaalde parameter verandert, een stabiel evenwicht overgaat in periodiek gedrag. In dit hoofdstuk zagen we dit terug doordat het verhogen van $K$ de stabiele samenleving van predator en prooi kan veranderen in periodieke oscillaties van de populatiegroottes. |
+:  {.striped .hover}

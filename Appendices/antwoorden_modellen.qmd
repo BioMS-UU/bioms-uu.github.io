@@ -1,6 +1,8 @@
-::: {.content-visible when-format="html"}
+
+
 {{< include ../_macros.tex >}}
-:::
+
+
 
 # Antwoorden modellen {.unnumbered}
 
@@ -98,7 +100,9 @@ N[t+1] <- 2*N[t]
 plot(N , type='l', col="seagreen", lwd=2, log="y")
 ```
 
-Met een logaritmische schaal op de y-as krijgen we een rechte lijn en weten we nu zeker dat we met exponentiële groei te maken hebben.
+Met een logaritmische schaal op de y-as krijgen we een rechte lijn en weten we nu zeker dat we met exponentiële groei te maken hebben. 
+
+Wanneer $r<1$ (bijvoorbeeld $r=0.9$) zien we juist exponentiële afname van de konijnen populatie. 
 
 **c.**
 ```{r}
@@ -136,7 +140,7 @@ for (t in 1:30){
 plot(N, type='l', col="seagreen", lwd=2)
 ```
 
-Bij $d=1.1$ neemt de populatiegrootte af, totdat ze uiteindelijk uitsterven. Hoewel er elke tijdstap een toenname is van 100%, is er ook een afname van 110%! De konijnen gaan dus sneller dood dan dat ze zich voort kunnen planten.
+Dit is hetzelfde resultaat als bij vraag b met $r<1$!. Nu kunnen we dit echter uitdrukken in termen van geboorte- en sterfte. Hoewel er elke tijdstap een toenname is van 100%, is er ook een afname van 110%! De konijnen gaan dus sneller dood dan dat ze zich voort kunnen planten, en is er exponentiële afname. 
 
 **e.**
 Invullen van $K(t)=24$, $b=2$ en $d=0.001$ geeft:
@@ -334,7 +338,7 @@ Doordat $B$ hier gelijk is aan de evenwichtswaarde is er geen verandering ($\dt{
 
 **h.** Te grote tijdstappen kunnen soms problemen geven, zoals we eerder in dit hoofdstuk al hebben gelezen. Dat komt doordat je de verandering per tijdstap uitrekent op basis van de huidige populatiegrootte. Dus als je net bloed hebt gedoneerd en op basis van het aantal rode bloedcellen nu wilt uitrekenen hoeveel rode bloedcellen je over één jaar hebt, dan zal dat veel te hoog uitvallen. Dat komt doordat het aantal rode bloedcellen meteen na een bloedtransfusie stijgt. Zoals je in de grafieken hierboven hebt gezien vlakt deze stijging na een tijdje echter af. Bij een te grote tijdstap kan het zo zijn dat je de aanvankelijke stijging "overschat". Hierdoor kan je een situatie krijgen zoals in @sec-exp waarbij er chaos ontstaat, doordat de populatiegrootte na één tijdstip boven of onder het evenwicht uitkomt. 
 
-![Schets van de hoeveelheid rode bloedcellen na het doneren van bloed. In groen de verandering van het aantal rode bloedcellen over tijd als we hele kleine tijdstapjes nemen. In rood zie je het effect van te grote tijdstappen.](figuren/mod_ant_exr_rodebloedcellen_i.png){width="50%"}
+![Schets van de hoeveelheid rode bloedcellen na het doneren van bloed. In rood de verandering van het aantal rode bloedcellen over tijd als we hele kleine tijdstapjes nemen. In blauw zie je het effect van "te grote" tijdstappen.](figuren/mod_ant_exr_rodebloedcellen_i.jpg){width="80%"}
 
 **i.** Als je de code van g runt krijg je een grafiek te zien die helpt bij het beantwoorden van deze vraag.
 
@@ -416,6 +420,7 @@ Het duurt nog steeds even lang om van de helft van het bloedverlies te herstelle
 #|   - "Originele parameterwaarden."
 #|   - "Grotere waarde voor p (snellere productie)."
 #|   - "Kleinere waarde voor d (minder sterfte)."
+#| fig-width: 5
 #| layout-ncol: 3
 
 # Originele parameterwaarden
@@ -577,6 +582,7 @@ plot(N,type="o",xlab="Tijd (jaren)", ylab="Aantal konijnen",
 ```{r}
 #| label: fig-diffvsdiffing-b
 #| fig-cap: "Differentiaalvergelijking."
+#| fig-width: 5
 #| fig-subcap: 
 #|   - "r = 0.8"
 #|   - "r = 2"
@@ -664,7 +670,7 @@ K <- 10^9
 
 # Stap 2, definieer tijdstappen en maak een dataframe aan
 delta_t <- 0.01 # grootte van de tijdstap
-tijdstapjes <- seq(0,20,by=delta_t)
+tijdstapjes <- seq(0,0.7,by=delta_t)
 tijdserie <- data.frame(t=tijdstapjes,konijnen=N)
 
 # Stap 3: Reken in kleine stapjes de volgende N uit
@@ -710,11 +716,11 @@ plot(tijdserie$t, tijdserie$konijnen, type="l",xlab="Tijd (jaren)", ylab="Aantal
 
 @exr-functioneleresponses
 
-**a.** $\frac{N}{K} + 1$ zal geen vergelijkbaar effect hebben, omdat de term met $N$ erin nu positief is. Hierdoor zal deze functionele respons de geboorte juist toe laten nemen als de populatie groter wordt!
+**a.** Als we de birth ($b$) vermenigvuldigen met de functionele respons $\frac{N}{K} + 1$, zal dit birth juist verhogen omdat $N$ een positieve term is. Als de populatie ($N$) heel klein is, is de functie gelijk aan 1 en is de uiteindelijke (minimale) birth dus gelijk aan $b$. Als $N$ heel groot is, neemt de birth alsmaar toe! (biologisch gezien is dit natuurlijk vreemd!)
 
-**b.** $1-cN$ zal wel een vergelijkbaar effect hebben. Deze functie heeft dezelfde vorm als $f(N)=1-\frac NK$, maar nu is $\frac 1K$ vervangen door de constante $c$.
+**b.** Als we de birth ($b$) vermenigvuldigen met de functionele respons $1-cN$, zal er een zeer vergelijkbaar effect zijn als met $f(N)=1-\frac NK$ (zoals gebruikt in het hoofdstuk). Het enige verschil is dat we het negatieve effect niet delen door $K$, maar vermenigvuldigen met $c$. Maar, als ${1 \over K}=c$, dan staat er precies hetzelfde! We hebben dus wederom een maximale geboorte voor kleine populaties (kleine $N$).
 
-**c.** $1-cN^2$ zal niet een vergelijkbaar effect hebben. Met deze functionele respons neemt de geboorte nog sneller af door de kwadratische term ($N^2$). De geboorte zal echter nog steeds af blijven nemen als de populatie groter wordt.
+**c.** Als we de birth ($b$) vermenigvuldigen met de functionele respons $1-cN^2$, zien we dat de birth rate zal afnemen met toenemende populatiegrootte. Echter is deze respons niet lineair, maar kwadratisch. De maximale birth rate is dus nogsteeds gelijk aan $b$ (wanneer $N$ klein is), voor kleine populaties zal de birth slechts langzaam afnemen (want kleine getallen kwadrateren geeft extra kleine getallen), maar voor grote populaties zal birth juist heel snel afnemen!
 
 @exr-dddportrait
 
@@ -915,7 +921,7 @@ Er zijn drie mogelijke opties voor de oplossingen:
 
 **a.** In dit systeem hebben alle drie de soorten er wat aan als er meer gemengd wordt. Ze hebben namelijk allemaal iemand anders nodig om zich voort te planten, en als er niet gemengd wordt zullen ze vooral bij hun eigen soort in de buurt zitten. Bovendien is hier ook geen mogelijkheid voor 1 soort om de anderen uit te roeien, omdat er altijd een andere is die deze groei weer tegen kan gaan.
 
-**b.** Spiralen/Golven
+**b.** Er onstaan een soort golven die omzichzelf heen krullen, en zo spiralen vormen. Je ziet de populatiegroottes elkaar steeds opvolgen. 
 
 **c.** Mengen+ zorgt voor te grote fluctuaties, waardoor 1 soort volledig uit kan sterven. Hierdoor valt de hele cyclus uit elkaar en gaat uiteindelijk iedereen dood. Mengen kan dus zowel goede als slechte effecten hebben op samenwerking, wat vooral afhangt van de specifieke tijdschalen.
 
@@ -1192,10 +1198,10 @@ De eenheid van $\dt{I}$ is $I$ per tijdseenheid. Dus: $\delta I = \frac It$ en $
 De eerste piek van geïnfecteerden is het hoogst, omdat de er aan het begin erg veel varbare individuen (susceptibles) zijn. Daardoor is het relatief voor het virus om vatbare individuen te vinden die geïnfecteerd kunnen worden, en is er een enorme piek in het aantal infecties.
 
 **d.**
-Onder gemengde omstandigheden gedraagd het ruimtelijke model zich heel vergelijkbaar met het ODE model.
+Onder gemengde omstandigheden gedraagd het ruimtelijke model zich bij benadering vergelijkbaar met het ODE model, maar niet precies. Het aantal geïnfecteerde indivuden lijkt bijvoorbeeld wat lager uit te komen. Dit heeft wellicht te maken met het feit dat een geïnfecteerd individu, ondanks het mengen, in 1 tijdstap alleen nabij gelegen individuen kan aansteken. Zo zie je dat een gemengde simulatie niet altijd precies hetzelfde doet als een ODE, omdat er stiekem nog andere subtiele verschillen kunnen izjn. 
 
 **e.**
-Het is meer vergelijkbaar met *contactbeperkingen*, want de pixels houden dezelfde afstand tot elkaar, maar zonder mengen heeft elke pixel alleen contact met de aangrenzende pixels. 
+Het is meer vergelijkbaar met *contactbeperkingen*, want de pixels houden dezelfde afstand tot elkaar (er is dus geen "social distancing"). Echter heeft elke pixel alleen contact met de aangrenzende pixels, dus 1 individu kan per tijdstap hoogstends de 8 buren infecteren, en niet meer dan dat. 
 
 **f.**
 In het ongemengde systeem zie je dat het virus uitsterft, omdat het zich te snel verspreidt en daardoor alle vatbare individuen uitroeit. Kleine populaties vatbare individuen blijven echter achter en groeien uiteindelijk weer terug; maar het virus is al weg! In het gemengde systeem daarentegen sterft de gehele populatie uit: het agressieve virus kan altijd een nieuw slachtoffer vinden, waardoor er geen overlevenden zijn.
@@ -1463,58 +1469,63 @@ De resultaten zijn nagenoeg hetzelfde met slechts kleine verschillen als je in *
 
 ## Antwoorden @sec-zwermen {.unnumbered}
 
-@exr-pseudo
+<!-- @exr-pseudo -->
 
-**a.**
-Er zijn verschillende antwoorden mogelijk.
-Bijvoorbeeld: <br>
-1. Kijk voor elke predator met coördinaten (x = i, y = j) of er een prooi in de omgeving is. 
-2. Ga langs alle mogelijke coördinaten rondom de predator op (i, j) door telkens i$\pm 1$ en/of j$\pm 1$ te doen en kijk in elk vakje of er een prooi aanwezig is.
-<br>
-Of iets technischer:
-1. Voor elke predator neem de coördinaten (x = i, y = j)
-2. Voor dx in c(-1, 0, 1):
-    - Voor dy in c(-1, 0, 1):
-      - Check status van hokje met coördinaten (i + dx, j + dy), behalve als dx = dy = 0 (want dan heb je het vakje van de predator te pakken)
-<br>
-Of een oplossing waarbij je niet diagonaal kijkt kan ook:
-1. Voor elke predator neem de coördinaten (x = i, y = j)
-2. Check de status van de hokjes met coördinaten (i, j $\pm 1$)
-3. Check de status van de hokjes met coördinaten (i $\pm 1$, j)
+<!-- **a.** -->
+<!-- Er zijn verschillende antwoorden mogelijk. -->
+<!-- Bijvoorbeeld: <br> -->
+<!-- 1. Kijk voor elke predator met coördinaten (x = i, y = j) of er een prooi in de omgeving is.  -->
+<!-- 2. Ga langs alle mogelijke coördinaten rondom de predator op (i, j) door telkens i$\pm 1$ en/of j$\pm 1$ te doen en kijk in elk vakje of er een prooi aanwezig is. -->
+<!-- <br> -->
+<!-- Of iets technischer: -->
+<!-- 1. Voor elke predator neem de coördinaten (x = i, y = j) -->
+<!-- 2. Voor dx in c(-1, 0, 1): -->
+<!--     - Voor dy in c(-1, 0, 1): -->
+<!--       - Check status van hokje met coördinaten (i + dx, j + dy), behalve als dx = dy = 0 (want dan heb je het vakje van de predator zelf te pakken) -->
+<!-- <br> -->
+<!-- Of een oplossing waarbij je niet diagonaal kijkt kan ook: -->
+<!-- 1. Voor elke predator neem de coördinaten (x = i, y = j) -->
+<!-- 2. Check de status van de hokjes met coördinaten (i, j $\pm 1$) -->
+<!-- 3. Check de status van de hokjes met coördinaten (i $\pm 1$, j) -->
 
-**b.**
-Welke vakjes check jij allemaal? Welke vakjes bekijken je medestudenten?
+<!-- **b.** -->
+<!-- Welke vakjes check jij allemaal? Welke vakjes bekijken je medestudenten? -->
 
-![Er zijn verschillende manieren om een buurt (*neighbourhood*) te definiëren.](figuren/grid-types.png){width="70%" fig-align="center"}
+<!-- ![Er zijn verschillende manieren om een buurt (*neighbourhood*) te definiëren.](figuren/grid-types.png){width="70%" fig-align="center"} -->
 
-Het is belangrijk om na te denken welke hokjes je als buren beschouwt. Zijn bij jou de diagonale vakjes ook buren? 
+<!-- Het is belangrijk om na te denken welke hokjes je als buren beschouwt. Zijn bij jou de diagonale vakjes ook buren?  -->
 
-**c.**
-1. Voor elke predator neem de coördinaten (x = i, y = j).
-2. Reken de afstand tot elke prooi (x, y) uit door:
-  - eerst de afstanden op de x- en y-as apart uit te rekenen: $dx = \abs{i - x}$ en $dy = \abs{j - y}$
-  - vervolgens met behulp van de stelling van Pythogaros de totale afstand uit te rekenen.
-3. Als de afstand kleiner is dan 1, kan de predator de prooi aanvallen.
-  
-![Schematische weergave van het berekenen van afstand tussen twee punten.](figuren/grid-distance-continu.png){width="90%" fig-align="center"}
+<!-- **c.** -->
 
-**d.**
-De grid is sneller, omdat je dan alleen maar de punten rondom de predator hoeft te bekijken om te zien of er een prooi dichtbij genoeg is. Bij continue ruimte (in de bovenstaande pseudocode in ieder geval) rekenen we voor elke prooi uit of deze dichtbij genoeg is. Daarnaast gaat het uitrekenen in meerdere stappen, waardoor het ook langzamer is.
+<!-- 1. Voor elke predator neem de coördinaten (x = i, y = j). -->
 
-@exr-gol
+<!-- 2. Reken de afstand tot elke prooi (x, y) uit door: -->
 
-**a.**
-Het gaat hierbij om een verwachting dus er zijn meerdere goede antwoorden mogelijk.
+<!--   - eerst de afstanden op de x- en y-as apart uit te rekenen: $dx = |i - x|$ en $dy = |j - y|$ <br> -->
+<!--   *(het rechtop staande streepje betekent dat je de absolute waarde neemt, want een afstand is natuurlijk nooit negatief)* -->
 
-**b.**
-Dan zou je voor elk hokje apart moeten bepalen of het dood gaat of blijft leven, of dat er een geboorte plaatsvindt. Dit moet je dan herhalen voor elke tijdstap (heel veel werk dus, vooral voor een grotere grid).
+<!--   - vervolgens met behulp van de stelling van Pythogaros (zie onderstaand figuur) de totale afstand uit te rekenen. -->
 
-**c.**
-Hierbij gaat het om een verwachting dus er zijn meerdere goede antwoorden.
+<!-- 3. Als de afstand kleiner is dan 1, kan de predator de prooi aanvallen. -->
 
-**d.**
-Kun je nog steeds niet altijd precies voorspellen wat er gaat gebeuren. 
-De game of life is gebaseerd op drie eenvoudige regels en nog steeds is de enige manier om erachter te komen wat er gaat gebeuren het uitspelen van de simulatie. Het is dus niet altijd makkelijk om één oplossing te maken voor een systeem, ook als je de regels kent.
+<!-- ![Schematische weergave van het berekenen van afstand tussen twee punten.](figuren/grid-distance-continu.png){width="90%" fig-align="center"} -->
+
+<!-- **d.** -->
+<!-- Het grid is sneller, omdat je dan alleen maar de punten rondom de predator hoeft te bekijken om te zien of er een prooi dichtbij genoeg is. Bij continue ruimte (in de bovenstaande pseudocode in ieder geval) rekenen we voor elke prooi uit of deze dichtbij genoeg is. Daarnaast gaat het uitrekenen in meerdere stappen, waardoor het ook langzamer is. -->
+
+<!-- @exr-gol -->
+
+<!-- **a.** -->
+<!-- Het gaat hierbij om een verwachting dus er zijn meerdere goede antwoorden mogelijk. Eigenlijk is "ik heb geen idee wat er gaat gebeuren" hier een heel goed antwoord. -->
+
+<!-- **b.** -->
+<!-- Dan zou je voor elk hokje apart moeten bepalen of het dood gaat of blijft leven, of dat er een geboorte plaatsvindt. Dit moet je dan herhalen voor elke tijdstap (heel veel werk dus, vooral voor een grotere grid). -->
+
+<!-- **c.** -->
+<!-- Hierbij gaat het om een verwachting dus er zijn meerdere goede antwoorden. Echter zou het een wonder zijn als je het goed had gegokt (tenzij je de simulatie al kende).  -->
+
+<!-- **d.** -->
+<!-- ...kun je nog steeds niet altijd precies voorspellen wat er gaat gebeuren. Game of life is gebaseerd op drie eenvoudige regels en nog steeds is de enige manier om erachter te komen wat er gaat gebeuren het uitvoeren van de simulatie. Het is dus niet altijd makkelijk om één oplossing te maken voor een systeem, ook als je de regels kent. -->
 
 @exr-aapjes
 
@@ -1531,7 +1542,7 @@ Zorg dat je de uitkomsten met je groepje bespreekt en dat je begrijpt wat er geb
 Bij een maximale eetsnelheid maakt de groep een soort pulserende bewegingen. 
 Het lijkt erop dat ze minder fruit vinden dan de aapjes uit de eerste simulatie.
 Bij een minimale eetsnelheid lijkt het erop dat de aapjes meer fruit vinden. 
-Doordat de aapjes langer aan het eten zijn beweegt de groep zich meer in één richting (de kant waar de meeste aapjes aan het eten zijn). Hierdoor kan de groep verder bewegen over het veld en meer fruit vinden.
+Doordat de aapjes langer aan het eten zijn beweegt de groep zich meer in één richting (de kant waar de meeste aapjes aan het eten zijn). Hierdoor kan de groep verder bewegen over het veld, en wel in de richting waar kennelijk fruit te vinden is!
 
 **e.**
 Bewaar je antwoorden goed, deze ga je later in de cursus nog nodig hebben! 
@@ -1546,20 +1557,30 @@ De parameters zijn de evenwichtsconstantes $k_1$, $k_2$ en $k_{cat}$. Deze zijn 
 
 **b.**
 Er wijst maar één pijltje naar $c_{ES}$, dus dit wordt alleen gemaakt door de combinatie van $E$ en $S$. 
+
 Er zijn echter ook twee pijltjes die van $c_{ES}$ afwijzen:
+
 1. Het complex valt uit elkaar en het substraat is omgezet naar product: $- c_{ES} \cdot k_{cat}$
 2. Het complex valt uit elkaar zonder dat er product is gevormd: $- c_{ES} \cdot k_2$
 
 **c.**
+
+Zoals je in a/b hebt gezien komt dit neer op elk pijltje omzetten naar een wiskundige term. Bijvoorbeeld: omdat $P$ (product) alleen een pijltje naar zich toe heeft, is er alleen een reactie waarmee deze *ontstaat*. De volledige ODEs zijn:
+
+$$
 \begin{align*}
-  \dt{C_{ES}} &= E \cdot S \cdot k_1 - c_{ES} \cdot k_2 - c_{ES} \cdot k_{cat}
-  \dt{E} &= c_{ES} \cdot k_2 + c_{ES} \cdot k_{cat} - E \cdot S \cdot k_1
-  \dt{S} &= c_{ES} \cdot k_2 - E \cdot S \cdot k_1
+  \dt{C_{ES}} &= E \cdot S \cdot k_1 - c_{ES} \cdot k_2 - c_{ES} \cdot k_{cat} \\
+  \dt{E} &= c_{ES} \cdot k_2 + c_{ES} \cdot k_{cat} - E \cdot S \cdot k_1 \\
+  \dt{S} &= c_{ES} \cdot k_2 - E \cdot S \cdot k_1 \\
   \dt{P} &= c_{ES} \cdot k_{cat}
 \end{align*}
+$$
+
+De vermenigvuldigingstekens zou je natuurlijk weer weg kunnen laten. 
 
 **d.**
-Als er meer substraat ($S$) is, kan er meer complex ($C_{ES}$) ontstaan, waardoor er uiteindelijk meer product gevormd wordt. Toch zijn er ook grenzen aan de hoeveelheid product die in één tijdstap gevormd kan worden. De hoeveelheid enzym verandert namelijk niet, en die is ook nodig om de vorming van het product te katalyseren. Als alle enzymen al "bezet" zijn, heeft het geen zin dat er meer substraat beschikbaar is.
+Als er meer substraat ($S$) is, kan er meer complex ($C_{ES}$) ontstaan, waardoor er uiteindelijk meer product gevormd wordt. Toch zijn er ook grenzen aan de hoeveelheid product die in één tijdstap gevormd kan worden. De hoeveelheid enzym verandert namelijk niet, en die is ook nodig om de vorming van het product te katalyseren. Als alle enzymen al "bezet" zijn, heeft het geen zin dat er meer substraat beschikbaar is. We verwachten dus dat de snelheid zal verzadigen. Inderdaad, als we de (initiële) reactie-snelheid voor heel veel hoeveelheden substraat berekenen, krijgen we een verzadigde curve:
+
 
 ```{r}
 #| fig-cap: "De hoeveelheid product die in één tijdstap gevormd wordt, verzadigd met substraatconcentratie."
@@ -1592,85 +1613,105 @@ plot(y = prod, x = seq(100), col = colors[4], xlab = "Beginconcentratie substraa
 @exr-diffusievraag
 
 **a.**
+
 ![Een diffusieconstante van 0.2. Hierbij bevatten alle vakjes rondom het midden na één tijdstap een gelijke concentratie.](figuren/dif_ant_exr_diffusie_a1.png)
 
-[Een diffusieconstante van 0.3. Hierbij gaat het mis: er diffundeert meer dan 100% uit het midden, waardoor er een negatieve concentratie overblijft. Oftewel: er komt op magische wijze iets van de stof bij. Dit kan natuurlijk niet!](figuren/dif_ant_exr_diffusie_a2.png)
+
+![Een diffusieconstante van 0.3. Hierbij gaat het mis: er diffundeert meer dan 100% uit het midden, waardoor er een negatieve concentratie overblijft. Dit kan natuurlijk niet!](figuren/dif_ant_exr_diffusie_a2.png)
 
 **b.**
-Per stap kan de stof maximaal één hokje opschuiven. 
-Daarnaast is er een maximum op het percentage dat in één stap kan diffunderen, zoals we in vraag a hebben gezien.
-De beste oplossing zou daarom zijn om meerdere diffusiestappen in één minuut te doen.
+
+Zelfs met een hoge diffusiesnelheid kan een stofje per stap maar één hokje opschuiven. We zouden dit bereik kunnen vergroten zodat stofjes sneller diffunderen. Een andere (eenvoudige) oplossing is om meerdere diffusiestappen in één minuut te doen, zodat het stofje meer kan verspreiden. Dit betekent dus dat je kleinere tijdstapjes maakt.
 
 **c.**
-Dit probleem hebben we eerder gezien in het begin van het onderdeel Modelleren, bij differentievergelijkingen.
-Destijds zagen we dat de discrete tijdstappen van differentievergelijkingen soms voor problemen kunnen zorgen.
-Dit kon worden opgelost door het gebruiken van ODEs, met continue tijd (=oneindig kleine tijdstapjes).
-Nu zien we eenzelfde soort probleem, maar dan in de ruimte in plaats van met tijd. Doordat we de de ruimte opdelen in hokjes kunnen we voorbij een evenwicht schieten, zoals je in vraag a hebt gezien.
-Dit probleem kan opgelost worden met behulp van PDEs. PDEs hebben niet alleen continue tijd, maar ook continue ruimte. Dit betekent dat ze de ruimte opdelen in oneindig kleine hokjes. Hierdoor kunnen ze nooit voorbij een evenwicht schieten, ook als we de diffusieconstante heel hoog maken. 
+Dit probleem hebben we eerder gezien bij populatiegroei met differentievergelijkingen.
+Destijds zagen we dat de discrete tijdstappen van differentievergelijkingen soms voor problemen kunnen zorgen. Dit kon worden opgelost door het gebruiken van ODEs, met continue tijd (=oneindig kleine tijdstapjes).
+
+Nu zien we eenzelfde soort probleem, maar dan in de ruimte in plaats van met tijd. Doordat we de de ruimte opdelen in hokjes kunnen we "voorbij het evenwicht schieten", zoals je in vraag a hebt gezien. Dit probleem kan opgelost worden met behulp van PDEs. PDEs hebben niet alleen continue tijd, maar ook continue ruimte. Hierdoor kunnen ze nooit voorbij een evenwicht schieten, ook als we de diffusieconstante heel hoog maken. 
+
 PDEs zijn dus voor diffusie in hokjes wat ODEs zijn voor differentievergelijkingen.
 
 @exr-bijproducten
 
-::: todo
-Misschien moet hier iets meer informatie over het model bij komen? En hoe de begrippen van het hoofdstuk terug moeten komen?
-:::
 
 **a.**
+
 De bacteriën bevinden zich eerst in één enkele kolonie, waarna ze zich opsplitsen in kleinere groepen. De schadelijke metabolieten diffunderen rondom de bacteriën (afhankelijk van de gekozen radius). Het is ongunstig voor de bacteriën om in hele grote groepen te leven, omdat er dan heel veel bacteriën in de groep last hebben van de toxiciteit. 
-Dit lijkt erg op het systeem van Turing-patronen. Er is één stof die zichzelf activeert: bacteriën kunnen zorgen voor meer bacteriën door zich te delen. En er is één stof die de andere stof inhibeert: de toxinen zorgen ervoor dat er minder bacteriën zijn. Met gemiddelde parameters (toxiciteit = 0,002 en radius = 40) zorgt dit ervoor dat er patronen ontstaan (verschillende groepjes bacteriën).
+
+Dit lijkt erg op het systeem van Turing-patronen. De gekozen namen parameter-namen in de modelomschrijving ($a$ en $i$) zijn dan ook geen toeval: deze staan voor 'activator' en 'inhibitor'. Het activerende process is reproductie van bacteriën, die lokaal de 'concentratie' verhoogt. Het inhiberende process is de *toxiciteit*. Dit inhiberende process wordt bepaald binnen een grotere radius, zoals bij de Turing patronen de inhibitor meer diffundeerde (en zo een hogere 'radius' heeft!). Hierdoor krijg je een "vlekkenpatroon" van verschillende groepjes bacteriën.
 
 **b.**
-Doordat er meerdere groepjes bacteriën zijn ontstaan, kan een virus niet gemakkelijk overspringen naar de andere groepen. Hierdoor is het onwaarschijnlijk dat alle individuen besmet worden.
+
+De radii van birth/toxiciteit zijn vergelijkbaar met hogere/lagere diffusiesnelheid van de activator en inhibitor. Inderdaad, als je de radii gelijk maakt, ontstaat er geen patroon en blijft er alleen het (willekeurige) diffusieproces over.
 
 **c.**
-De andere groepjes kunnen zich uitbreiden in de richting van het weggehaalde groepje. Soms splitsen ze zich weer op. Voor de virusuitbraak kon dit niet, omdat er giftige stoffen op de plekken van de andere groepen zaten.
+Doordat er meerdere groepjes bacteriën zijn ontstaan, kan een virus niet gemakkelijk overspringen naar de andere groepen. Hierdoor is het onwaarschijnlijk dat alle individuen besmet worden.
+
+**d.**
+De andere groepjes kunnen zich uitbreiden in de richting van weggehaalde groepjes. Vaak zie je daarbij dat ze zich "vanzelf" weer opsplitsen. Na een verstoring zullen er dus dankzij zelf-organistatie keer op keer ongeveer hetzelfde aantal groepjes ontstaan!
 
 @exr-modelkeuzes
 
 **a.**
-ODE:
-De bacteriepopulaties kunnen praktisch gezien als continu worden beschouwd, omdat er zo
-veel individuen zijn. Er is ook geen ruimtelijk patroon omdat de erlenmeyer gemixt is.
+Differentiaalvergelijkingen (ODEs):
+De grootte van de bacteriepopulaties kan prima als continu worden beschouwd, omdat er heel veel individuen zijn (het verschil tussen 1 miljoen en 1 miljoen en een half, is niet belangrijk). Er is ook geen ruimtelijk patroon omdat de Erlenmeyer gemengt is. De populaties delen alle voedselbronnen, dus groei kan goed met een gedeelde carrying capacity ($1-\frac{N_1+N_2}{K}$) gemodelleerd worden. 
 
 **b.**
-PDE:
-Er zijn ruimtelijke patronen, dus we moeten zeker voor een ruimtelijk model gaan.
-Een PDE zorgt er ook voor (in tegenstelling tot een model met discrete hokjes) dat we nooit voorbij een evenwicht kunnen schieten (zie @exr-diffusievraag d) door te hoge diffusiesnelheden.
+
+Reactie-diffusie systeem (PDE):
+Er zijn ruimtelijke patronen, dus we moeten zeker voor een ruimtelijk model gaan. Omdat het hier om concentraties gaat (en niet discrete individuen met birth/death processen) is een reactie-diffusie systeem een goed modelformalisme.  
 
 **c.**
-Individual based model:
-Er is een ruimtelijk patroon met individuen (planten).
+
+Individual based model (IBM):
+
+Er is een ruimtelijk patroon met individuen (planten). Omdat er sprake is van "bezette" en "onbezette" plekjes, is een grid de meest eenvoudige manier om dit te bestuderen. Echter zou je ook kunnen kiezen voor een continue ruimte, waarbij je binnen een radius bekijkt of de ruimte 'vol' is. 
 
 **d.**
-ODE:
-De populatie is goed gemengd, dus we hoeven geen ruimtelijk model te gebruiken. Zoöplankton deelt zich snel, dus het is belangrijk om continue tijd te gebruiken.
+Differentiaalvergelijkingen (ODEs):
+
+Hoewel in het hoofdstuk staat dat zelfs de oceaan niet *altijd* goed gemengd is, geeft deze modelomschrijving duidelijk aan dat dit hierbij wel het geval is. We hoeven dus eigenlijk geen ruimtelijk model te gebruiken. Zoöplankton deelt zich constant (en niet 1 keer per week/maand/jaar), dus is continue tijd geschikt. We gebruiken daarom niet een differentievergelijking, maar ODEs.  
 
 **e.**
-PDE:
-We willen hier een ruimtelijk patroon bestuderen. Als het gaat om individuele cellen zouden we ook een grid kunnen gebruiken. Als de stoffen echter door de celmembranen kunnen diffunderen zou een PDE wellicht meer geschikt zijn.
+
+Reactie-diffusie systeem (PDE):
+
+We willen hier een ruimtelijk patroon bestuderen. Als het gaat om individuele cellen zouden we een grof grid kunnen gebruiken. Als de stoffen echter ook door de extracellulaire matrix diffunderen, kunnen er misschien fijnere patronen ontstaan en moet een veel fijner grid (of een 'echte' PDE!) gebruikt worden. 
 
 **f.**
+
 ODE of individual based model:
+
 We zouden een ODE kunnen gebruiken met verschillende vergelijkingen voor elke kleur konijnen. Er kan echter een probleem ontstaan op het moment dat de konijnen- en/of havikkenpopulatie(s) erg klein worden (zie @nte-atto). Een individual based model is computationeel waarschijnlijk langzamer, maar kan wel voorkomen dat we hele gekke (en onwaarschijnlijke) resultaten krijgen als er hele kleine populaties zijn.
 
 **g.**
+
 Individual based model:
-De bacteriën groeien op een agarplaat, dus om het systeem goed weer te geven zou een ruimtelijk model het meest geschikt zijn. Gemuteerde bacteriën delen dan lokaal en kunnen zo zorgen voor een lokaal groepje gemuteerde bacteriën. Daarnaast hebben we te maken met discrete individuen, wat een PDE minder geschikt maakt.
+
+De bacteriën groeien op een agarplaat, dus om het systeem goed weer te geven zou een ruimtelijk model het meest geschikt zijn. Gemuteerde bacteriën delen dan lokaal en kunnen zo zorgen voor een lokaal groepje gemuteerde bacteriën. Vaak worden deze systemen op een grid gemodelleerd, maar meer moderne simulaties gebruiken biofysische modellen met continue ruimte, waarbij cellen elkaar weg kunnen duwen (*cell shoving*). 
 
 **h.**
-PDE:
-Het morfogen diffundeert, dus die zou het best met continue ruimte gemodelleerd kunnen worden. De individuele cellen zouden eventueel wel discreet gemodelleerd kunnen worden.
+
+Reactie-diffusie systeem (PDE):
+
+Het morfogen diffundeert, dus die zou het best met continue ruimte (of in ieder geval kleine hokjes) gemodelleerd kunnen worden. De individuele cellen zouden eventueel wel discreet gemodelleerd kunnen worden (al dan niet op een grid). 
 
 **i.**
+
 ODE:
-De paracetamol bevindt zich in het bloed, dus we kunnen aannemen dat het goed gemengd is. Hierom gebruiken we continue tijd en ruimte.
+
+De paracetamol bevindt zich in het bloed, waarvan we over het algemeen aannemen dat het goed gemengd wordt. Ook hoeven we ons bij moleculaire concentraties niet druk te maken over individuele verschillen en is het modelleren van de dichtheid paracetamol een goed genoege benadering. 
 
 **j.**
-PDE:
-We hebben een ruimtelijk model nodig, en we hebben te maken met concentraties, dus een PDE is het meest geschikt.
+
+Reactie-diffusie systemen (PDEs):
+
+We hebben een ruimtelijk model nodig, en we hebben te maken met concentraties. Daarom  zijn reactie-diffusie systemen het meest geschikt. De individuele calcium-atomen gaan we natuurlijk niet modelleren. 
 
 **k.**
-Individual based model:
+
+Individual based model (IBM):
+
 Het is belangrijk om de zeehonden en orca's als individuen weer te geven, omdat ze elk een andere kant op zullen bewegen. Daarnaast is er een ruimtelijk patroon, doordat de zeehonden vanuit verschillende hoeken worden belaagd.
 
 
@@ -1679,7 +1720,7 @@ Het is belangrijk om de zeehonden en orca's als individuen weer te geven, omdat 
 @exr-drempelwaardefh
 
 **a.**
-In @sec-evolutie zagen we in @fig-coopphase dat de coöperators pas konden groeien als ze een bepaalde minimale dichtheid hadden overschreden.
+We hebben dit concept vaker terug zien komen, bijvoorbeeld in @exr-loggroeisex over sexuele reproductie. Hier zagen we een vergelijkbaar faseportret waar met kleine dichtheden geen groei mogelijk is, met grotere dichtheden wel groei mogelijk is, en met nóg grotere dichtheden de groei weer daalt. Hierdoor zagen we logistische groei, maar dan met wat "opstartproblemen". Hoewel het Fitzhugh-Nagumo model natuurlijk geen populatiegroei beschrijft, is het principe hetzelfde.
 
 **b.**
 ```{r}
@@ -1696,16 +1737,21 @@ abline(h=0,lty=1,col="black")
 abline(v=1,lty=3,col="grey")
 abline(v=a,lty=3,col="grey")
 ```
-Nu is de functie positief vanaf $V=0$, dus vanaf die waarde verwachten we activatie van een actiepotentiaal.
+
+Nu is de functie positief vanaf $V=0$, dus vanaf die waarde verwachten we activatie van een actiepotentiaal. 
 
 **c.**
+
+Deze is super makkelijk: je hoeft alleen de min in een =-teken te veranderen:
+
 \begin{align*}
 \dt{V} = -V(V-a)(V-1) - W &= 0 \quad \text{ als...}\\
 W &=  -V(V-a)(V-1)\\
 \end{align*}
 
 **d.**
-Het is dezelfde curve als in vraag b! Als we oplossen voor $W$ hoeven we deze alleen maar aan de andere kant van het = teken te zetten.
+
+Het is dezelfde curve als in vraag b! (nogmaals, als we oplossen voor $W$ hoeven we deze alleen maar aan de andere kant van het = teken te zetten)
 
 ```{r}
 a=-0.2
@@ -1723,6 +1769,7 @@ abline(v=a,lty=3,col="grey")
 ```
 
 **e.**
+
 \begin{align*}
 \dt{W} = \epsilon(V-bW) &= 0 \quad \text{ als...}\\
 V - bW &= 0\\
@@ -1730,7 +1777,7 @@ bW &= V\\
 W &= \frac{V}{b}\\
 \end{align*}
 
-```{r}
+```{r results='hide'}
 # source the grind script
 source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
 
@@ -1746,12 +1793,14 @@ model <- function(t, state, parms) {
 # initial values of V and W (a bit above rest potential)
 s <- c(V=0.2,W=0)         
 p <- c(e=0.001,b=1,a=-0.2)
+par(mfrow=c(1,2))
 plane(xmin=-0.3,ymin=-0.05,ymax=0.2,xmax=1.05,portrait=F,vector=T,grid=3)
 newton(plot=T)
+run(tmax=5000)
 ```
 
 **f.**
-Er is nu nog maar één evenwicht, en de pijlen wijzen er niet meer naar toe, dus het is een instabiel evenwicht. Er is dus ook geen 'drempelwaarde' meer, omdat er geen stabiel evenwicht (rustpotentiaal) is. In plaats daarvan blijft dit systeem oscilleren.
+Er is nu nog maar één evenwicht, en de pijlen wijzen er niet meer naar toe, dus het is een instabiel evenwicht (`Grind.R` bevestigd dit ook). Er is dus ook geen 'drempelwaarde' meer, omdat er geen stabiel evenwicht (rustpotentiaal) is. In plaats daarvan blijft dit systeem oscilleren.
 
 **g.**
 De sinusknoop van het hart zou een voorbeeld kunnen zijn. De sinusknoop genereert continu actiepotentialen.
@@ -1765,11 +1814,12 @@ Elke 250 tijdstappen ontstaat er een nieuwe golf in de 'sinusknoop' (hokje links
 Als we op de 'boe-knop' drukken zien we dat er ruis ontstaat: er vormt zich een actiepotentiaal tussen twee golven in. Hierdoor zijn er soms twee hartslagen kort na elkaar, of is de tijd tussen twee hartslagen juist wat langer. Er is echter geen blijvend effect: na een korte tijd is het hartritme weer stabiel.
 
 **c.**
-Het tekenen van een lijn door een golf heen zorgt ervoor dat de golf een spiraal vormt (zoals we in @sec-spiral zagen). Hierdoor wordt het hartritme verstoord en in de simulatie leidt dit tot een blijvend effect.
+Het tekenen van een lijn door een golf heen zorgt ervoor dat de golf een spiraal vormt (zoals we in @sec-spiral zagen). Hierdoor wordt het hartritme versneld, wat een blijvend effect is.
 
 **d.**
-Het herstellen van het ritme door delen van de golf weg te halen met de muis is erg moeilijk en zorgt voor alleen maar meer chaos in het hartritme.
-De 'Clear!' knop daarentegen werkt een stuk beter, omdat hiermee het hele hart in één keer geactiveerd wordt. Dit zorgt ervoor dat het hele hart refractair is (dat betekent dat er dus tijdelijk geen actiepotentiaal gevormd kan worden). Na deze refractaire periode kan het hart weer normaal gaan kloppen met actiepotentialen die beginnen in de sinusknoop (linksboven).
+Het herstellen van het ritme door delen van de golf weg te halen met de muis is erg moeilijk en zorgt voor alleen maar meer spiralen.
+
+De 'Clear!' knop daarentegen werkt een stuk beter, omdat hiermee het hele hart in één keer geactiveerd wordt. Dit zorgt ervoor dat het hele hart refractair is (dat betekent dat er dus tijdelijk geen actiepotentiaal gevormd kan worden). Na deze refractaire periode kan het hart weer normaal gaan kloppen met het ritme van de sinusknoop (linksboven).
 
 @exr-epidemievraag
 
@@ -1780,19 +1830,21 @@ Er gebeurt niks, omdat iedereen in het dorp nog immuun is. Ze zijn tenslotte kor
 Als we alle vatbare individuen tegelijkertijd infecteren, zijn er hierna geen vatbare individuen meer over, waardoor de ziekte zich niet verder kan verspreiden. Het zou dus inderdaad een succesvolle methode kunnen zijn. Aan de andere kant is het natuurlijk niet heel ethisch verantwoord om allemaal mensen moedwillig te infecteren met dit virus.
 
 **c.**
-Als er genoeg mensen gevaccineerd zijn (80% of meer) kan de infectie zich niet snel genoeg verspreiden om (veel) ongevaccineerde mensen te bereiken. Er zijn dan namelijk maar weinig vatbare individuen in de buurt. Oftewel: de de infectiegolf gaat zo langzaam door de populatie dat deze door de immunisatie-golf wordt ingehaald en uitdooft.
-Als minder dan 80% gevaccineerd is, kan er nog wel een infectiegolf ontstaan, blijkbaar zijn er dan nog net genoeg vatbare individuen.
+Als er genoeg mensen gevaccineerd zijn (30% of hoger) kan de infectie zich niet snel genoeg verspreiden om (veel) ongevaccineerde mensen te bereiken. Er zijn dan namelijk maar weinig vatbare individuen in de buurt. 
 
 **d.**
-Als de vaccinatiegraad hoog genoeg is (80% of hoger) zal de ongevaccineerde toerist waarschijnlijk niet geïnfecteerd worden. Bij een lagere vaccinatiegraad is er echter wel een risico voor de ongevaccineerde toerist.
+Als de vaccinatiegraad hoog genoeg is (30% of hoger) zal de ongevaccineerde toerist waarschijnlijk niet geïnfecteerd worden. Hoewel er kleine lokale uitbraken kunnen zijn, wordt dit nooit endemisch. Bij een lagere vaccinatiegraad is er echter wel een risico voor de ongevaccineerde toerist, want er kunnen constante golven in het dorp blijven rondgaan!
+
+**e.**
+Echt populatie mensen bewegen ook nog veel. Hierdoor krijgt een infectie meer kans om zich te verspreiden dan in deze enorm versimpelde simulatie!
 
 @exr-bosbranden
 
 **a.**
-Er zit veel variatie in de fractie afgebrande bomen. Meestal is het ergens tussen de 1 en 20%. Als je de simulatie vaak genoeg afspeelt zul je ook gevallen tegenkomen waarbij een veel groter deel van de bomen afbrandt. Dit kan gebeuren doordat bomen rondom de brandhaard toevallig allemaal dicht bij elkaar staan.
+Er zit veel variatie in de fractie afgebrande bomen. Meestal is het ergens tussen de 1% en 20%. Als je de simulatie vaak genoeg afspeelt zul je ook gevallen tegenkomen waarbij een veel groter deel van de bomen afbrandt. Dit kan gebeuren doordat bomen rondom de brandhaard toevallig allemaal dicht bij elkaar staan.
 
 **b.**
-Bij een dichtheid van 0.2 en 0.3 brandt er telkens maar een hele kleine fractie van de bomen af. Er is weinig variatie. Bij een bomen-dichtheid van 0.5 branden bijna alle bomen af, al blijven er vaak een paar kleine eilandjes van bomen ongedeerd. Bij een bomen-dichtheid van 0.6 zie je deze eilandjes van overlevende bomen ook, maar zijn ze nog kleiner en het zijn er minder.
+Bij een dichtheid van 0.2 en 0.3 brandt er telkens maar een hele kleine fractie van de bomen af. Er is weinig variatie. Bij een bomen-dichtheid van 0.5 branden bijna alle bomen af, al blijven er vaak een paar kleine eilandjes van bomen ongedeerd. Ook bij deze aantallen is er weinig variatie. Bij een bomen-dichtheid van 0.6 zie je dat eigenlijk alles altijd afbrand (met eventueel een heel klein eilandje van gelukkige bomen). 
 
 **c.**
 ```{r}
@@ -1812,7 +1864,7 @@ De fractie afgebrand bos zou er per bomen-dichtheid ongeveer zo uit kunnen zien.
 Het is een goed idee om de bomen-dichtheid niet te hoog te laten worden. Een klein verschil in dichtheid (0.4 en 0.5 bijvoorbeeld) kan al een heel groot verschil maken voor de fractie afgebrand bos. Daarnaast zou je bijvoorbeeld een strook met wat minder bomen kunnen gebruiken om het verspreiden van de bosbrand te voorkomen (waar in het hoofdstuk hebben we eerder zoiets gezien?).
 
 **e.**
-Dan kan er in dat gebied weer een nieuwe 'golf' van bosbranden ontstaan, zo is het bos dus eigenlijk ook een exciteerbaar medium.
+Dan kan er, nadat dit een tijdje onmogelijk was, in dat gebied weer een nieuwe 'golf' van bosbranden ontstaan. Met andere woorden: het bos wordt een exciteerbaar medium!
 
 **f.**
 Juist als bomen zich snel voortplanten, is brand een groter probleem. Er komen dan telkens nieuwe bomen bij, die weer in de brand kunnen vliegen doordat de brand nog niet weg is uit dat gebied. Als de bomen zich heel langzaam voortplanten is de brand al uit dat gebied verdwenen (er waren immers geen bomen meer over) voordat er nieuwe bomen ontstaan. Zo heeft de bosbrand niet genoeg 'vatbaar' weefsel meer om te 'infecteren' (lees: geen bomen om te verbranden). Op die manier kan de brand zelfs helemaal weg gaan als bomen zich langzaam genoeg voortplanten!
