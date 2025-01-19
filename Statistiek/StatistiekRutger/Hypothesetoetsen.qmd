@@ -2,6 +2,74 @@
 
 # Het toetsen van hypotheses {#sec-hypothesetoetsen}
 
+In het jaar 1710 deed de Schotse arts en schrijver John Arbuthnot 
+een interesssante ontdekking
+toen hij de geboortecijfers van Londen over de periode 1667--1735 bestudeerde.[^arbuthnot]
+Tot zijn verbazing waren er over de gehele periode ieder jaar meer jongetjes geboren dan meisjes.
+@Fig-arbuthnot laat de cijfers zien die destijds op zijn bureau lagen.
+
+Als ieder kind met precies kans 0,5 
+
+
+```{r}
+#| code-fold: true
+#| fig-cap: ""
+#| label: fig-arbuthnot
+#| fig.height: 3.5
+
+# Installeer en laad de benodigde pakketten
+if (!requireNamespace("HistData", quietly = TRUE)) { 
+  install.packages("HistData") 
+}
+if (!requireNamespace("ggplot2", quietly = TRUE)) { 
+  install.packages("ggplot2") 
+}
+if (!requireNamespace("tidyr", quietly = TRUE)) { 
+  install.packages("tidyr") 
+}
+
+library(HistData)
+library(ggplot2)
+library(tidyr)
+
+# Laad de Arbuthnot-data
+data("Arbuthnot")
+
+# Zet de data om in lang formaat voor ggplot2
+arbuthnot_lang <- pivot_longer(
+  Arbuthnot,
+  cols = c("Males", "Females"),
+  names_to = "Geslacht",
+  values_to = "Geboorten"
+)
+
+# Maak de plot
+ggplot(arbuthnot_lang, aes(
+  x = Year, 
+  y = Geboorten, 
+  color = Geslacht
+)) +
+  geom_point() +  # Voeg punten toe voor ruwe data
+  geom_line() +   # Voeg lijnen toe om trends te laten zien
+  labs(
+    title = NULL,
+    x = "Jaar",
+    y = "Aantal geboorten volgens doopregister",
+    color = "Geslacht"
+  ) +
+  scale_color_manual(
+    values = c("Males" = "DarkOrchid", "Females" = "darkorange"),
+    labels = c("Males" = "Jongens", "Females" = "Meisjes")
+  ) +
+  theme_minimal()
+
+```
+
+[^arbuthnot]: Arbuthnot, J. (1710). *An argument for divine providence, taken from the constant regularity observ’d in the births of both sexes.* Philosophical Transactions of the Royal Society of London, 27, 186–190. https://doi.org/10.1098/rstl.1710.0011
+
+
+
+
 ## Rechtzaak
 
 Toeval? Of is er meer aan de hand.
