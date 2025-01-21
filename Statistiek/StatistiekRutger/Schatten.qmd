@@ -1348,23 +1348,22 @@ Hieronder is als voorbeeld in @fig-CBS-persoonlijk-inkomen de verdeling
 Wanneer je een BHI wilt uitrekenen van zo'n variabele
   heb je dus bij voorbaat redenen om op je hoede te zijn.
 
-  
-::: {#fig-CBS-persoonlijk-inkomen}
-::: {.todo-box}
-Maken. 
-In folder "data" staat het bestand "VerdelingPersoonlijkInkomen-CBS-2022.csv".
-Let op: de getallen gebruiken en komma en staan tussen aanhalingstekens.Gebruik readr,
-bijv.
 ```{r}
-#| eval: false
+#| code-fold: true
+#| label: fig-CBS-persoonlijk-inkomen
+#| fig-cap: "Verdeling van persoonlijk inkomen in Nederland, 2022"
+#| warning: false
 library(readr)
 VerdelingPersoonlijkInkomen_CBS_2022 <- read_csv("data/VerdelingPersoonlijkInkomen-CBS-2022.csv", 
     locale = locale(decimal_mark = ","))
+
+ggplot(VerdelingPersoonlijkInkomen_CBS_2022, 
+       aes(y = Totaal, x = `persoonlijk inkomen (1000 euro)`)) +
+  geom_line(color = "darkorange", size = 1) +
+  labs(x = "Persoonlijk inkomen (1000 euro)", y = "Aantal personen (x 1000)") +
+  theme_minimal()
 ```
-Plot alleen kolom `Totaal`.
-:::
-:::
-  
+
 - **De populatie bestaat uit meerdere subpopulaties
   met vermoedelijk sterk verschillende gemiddelden.**
   In dat geval zou de verdeling van de variabele multimodaal kunnen zijn
@@ -1395,7 +1394,6 @@ Plot alleen kolom `Totaal`.
   typisch 3 of 4 eieren[^eggs]. 
   Een normale verdeling is voor die variabele zeker niet plausibel.
   
-::: {#fig-vink}
 ```{r}
 #| code-fold: true
 #| warning: false
@@ -1418,9 +1416,8 @@ ggplot(dataVink, aes(aantal_eieren)) +
   theme_minimal()
 
 ```
-:::
 
-[^eggs]: Ramdani, K., M. Kouidri, M. L. Ouakid, and M. Houhamdi. “Breeding Biology of the Chaffinch *Fringilla Coelebs Africana* in the El Kala National Park (North East Algeria).” Arxius de Miscel·lània Zoològica, July 7, 2019, 109–21. [https://doi.org/10.32800/amz.2019.17.0109]([https://doi.org/10.32800/amz.2019.17.0109]).
+[^eggs]: Ramdani, K., M. Kouidri, M. L. Ouakid, and M. Houhamdi. “Breeding Biology of the Chaffinch *Fringilla Coelebs Africana* in the El Kala National Park (North East Algeria).” Arxius de Miscel·lània Zoològica, July 7, 2019, 109–21. [Breeding biology](https://doi.org/10.32800/amz.2019.17.0109).
 
 Een tweede aanname is dat iedere waarde onafhankelijk uit deze normale verdeling
   is getrokken. 
