@@ -1,5 +1,19 @@
 {{< include _macros.tex >}}
 
+```{r}
+#| eval: true
+#| echo: false
+#| output: false
+
+library(ggplot2)
+
+opvulkleur <- "darkorange"
+lijnkleur1 <- "DarkOrchid"
+lijnkleur2 <- "red"
+lijnkleur3 <- "blue"
+
+```
+
 # Toetsen van gemiddelden
 
 Veelvoorkomende situatie: continue variabele, vragen over het gemiddelde
@@ -72,11 +86,290 @@ het resultaat meestal niet als significant gezien.
 
 ## Voorbeeld van de $t$-toets voor één steekproef
 
+```{r}
+#| code-fold: true
+#| warning: false
+#| echo: false
+#| fig-cap: "Met behulp van een $t$-toets kunnen we onderzoeken of het gemiddelde van een steekproef (bijvoorbeeld n = 10) significant verschilt van een verwachte waarde. De $t$-toets gaat ervan uit dat de data normaal verdeeld zijn."
+#| label: fig-t-toets-1-var
+
+library(ggplot2)
+
+# Trek 10 getallen uit een normaalverdeling met gemiddelde mu en sd sigma
+mu <- 6.5 # Gemiddelde van de normaalverdeling
+sigma <- 1.5 # Standaarddeviatie van de normaalverdeling
+x <- rnorm(10, mu, sigma)
+data <- data.frame(y = x,
+                   x = seq(10))
+m <- mean(x) # Steekproefgemiddelde
+
+ggplot(data, aes(x = x, y = y)) +
+  # Verticale lijnen naar het gemiddelde
+  geom_segment(
+    aes(
+      x = x, xend = x, 
+      y = y, yend = m
+    ),
+    color = "SlateGray",
+    linetype = "solid",
+    size = 1
+  ) +
+  # Punten
+  geom_point(
+    shape = 21, 
+    fill = "SlateGray", 
+    size = 5
+  ) +
+  # Gemiddelde lijn
+  annotate(
+    "segment",
+    x = 0.5, xend = 10.5, 
+    y = m, 
+    color = opvulkleur,
+    size = 1
+  ) +
+  # Label bij de gemiddelde lijn
+  annotate(
+    "text",
+    x = 10.2, 
+    y = m + 0.2,
+    label = expression(bar(italic(x))),
+    color = opvulkleur,
+    hjust = 0,
+    size = 6
+  ) +
+  # Y-as instellen
+  scale_y_continuous(
+    breaks = x, 
+    limits = c(min(x), max(x)),
+    labels = scales::number_format(accuracy = 0.1)
+  ) +
+  ylab("Tentamencijfers") +
+  # Geen x-as, geen gridlijnen
+  theme_classic() +
+  theme(
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.line.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  )
+```
+
 ## De $t$-toets voor twee onafhankelijke steekproeven
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Met een $t$-toets voor twee steekproeven kun je testen of het gemiddelde van twee groepen significant van elkaar verschilt. Dit is nuttig wanneer je bijvoorbeeld wilt weten of een bepaalde behandeling een meetbaar effect heeft in vergelijking met een controlegroep."
+#| label: fig-t-toets-2-var
+
+set.seed(125)
+
+mu <- 330 # Gemiddelde van de normaalverdeling
+sigma <- 20 # Standaarddeviatie van de normaalverdeling
+n <- 10 # Steekproefgrootte
+
+# Steekproef 1
+x1 <- rnorm(n, mu, sigma)
+m1 <- mean(x1) # Steekproefgemiddelde
+
+# Steekproef 2
+x2 <- rnorm(n, mu, sigma)
+m2 <- mean(x2) # Steekproefgemiddelde
+
+# Maak dataframe met beide steekproeven
+data <- data.frame(y = c(x1, x2),
+                   x = seq(2*n),
+                   z = c(rep(1, n), rep(2, n)),
+                   m = c(rep(m1, n), rep(m2, n)))
+
+ggplot(data, aes(x = x, y = y)) +
+  # Verticale lijnen naar het gemiddelde
+  geom_segment(
+    aes(
+      x = x, xend = x, 
+      y = y, yend = m
+    ),
+    color = "SlateGray",
+    linetype = "solid",
+    size = 1
+  ) +
+  # Punten
+  geom_point(
+    shape = 21, 
+    fill = "SlateGray", 
+    size = 5
+  ) +
+  # Gemiddelde lijn voor steekproef 1
+  annotate(
+    "segment",
+    x = 0.75, xend = 10.25, 
+    y = m1, 
+    color = opvulkleur,
+    size = 1
+  ) +
+  # Label bij de gemiddelde lijn
+  annotate(
+    "text",
+    x = 10.25, 
+    y = m1,
+    label = expression(bar(italic(`x`))[1]),
+    color = opvulkleur,
+    hjust = 0,
+    size = 6
+  ) +  
+  # Gemiddelde lijn voor steekproef 2
+  annotate(
+    "segment",
+    x = 10.75, xend = 20.25, 
+    y = m2, 
+    color = opvulkleur,
+    size = 1
+  ) +
+  # Label bij de gemiddelde lijn
+  annotate(
+    "text",
+    x = 20.25, 
+    y = m2,
+    label = expression(bar(italic(`x`))[2]),
+    color = opvulkleur,
+    hjust = 0,
+    size = 6
+  ) +
+  # Y-as instellen
+  scale_y_continuous(
+   # breaks = data$y, 
+    limits = c(min(data$y), max(data$y)),
+    labels = scales::number_format(accuracy = 1)
+  ) +
+  ylab("Vleugelspanwijdte van de Grote albatros (cm)") +
+  # Geen x-as, geen gridlijnen
+  theme_classic() +
+  theme(
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.line.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  )
+```
 
 ### Stap 1: De nulhypothese
 
 ### Stap 2: Het statistische model
+
+```{r}
+#| label: fig-model-t-test-2-var
+#| fig-cap: "CAPTION"
+#| echo: false
+#| code-fold: true
+#| warning: false
+
+# Controleer of ggplot2 geladen is, zo niet, laad het pakket
+if (!("ggplot2" %in% .packages())) {
+  library(ggplot2)
+}
+
+verschil <- 2.2 # Verschuiving t.o.v. normaalverdeling 1
+
+# Definieer de standaardnormale verdeling
+x1 <- seq(-3.5, 3.5, length.out = 350)
+data1 <- data.frame(x1 = x1, y1 = dnorm(x1))
+
+# Definieer de standaardnormale verdeling
+x2 <- seq(-3.5, 3.5, length.out = 350)
+data2 <- data.frame(x2 = x2 + verschil, y2 = dnorm(x2))
+
+normaalGeneriek <- 
+  # Plot maken
+  ggplot() +
+  geom_line(data = data1, aes(x1, y1), color = "darkorange", linewidth = 1) + # Curve van de standaardnormale verdeling
+  geom_area(data = data1, aes(x1, y1), fill = "darkorange", alpha = 0.4) +
+  geom_line(data = data2, aes(x2, y2), color = "darkorchid", linewidth = 1) + # Curve van de standaardnormale verdeling
+  geom_area(data = data2, aes(x2, y2), fill = "darkorchid", alpha = 0.4) +
+  scale_y_continuous(labels = NULL) + # getallen van y-as weglaten
+  scale_x_continuous(labels = NULL) + # getallen van x-as weglaten
+  labs(
+    y = "Kansdichtheid", 
+    x = expression(italic(X))
+  ) + # Labels voor de assen
+  theme_minimal()
+
+# Hoogte van de pijl bepalen
+h <- exp(-0.5) / sqrt(2 * pi)
+
+pijl1 <- geom_segment(
+    aes(x = 0, xend = 1, y = h, yend = h), 
+    arrow = arrow(length = unit(0.2, "cm")), 
+    color = "black", 
+    linewidth = 0.7
+  ) # Pijl voor standaarddeviatie verdeling 1
+pijl2 <- geom_segment(
+    aes(x = verschil, xend = verschil + 1, y = h, yend = h), 
+    arrow = arrow(length = unit(0.2, "cm")), 
+    color = "black", 
+    linewidth = 0.7
+  ) # Pijl voor standaarddeviatie verdeling 2
+
+normaalGeneriek + pijl1 + pijl2 +
+  annotate(
+    "text", 
+    x = 0.5, 
+    y = 0.95 * h, # Use the variable h to scale the y-coordinate
+    label = expression(italic(sigma)[1]), # Use expression() for mathematical notation
+    color = "black", 
+    size = 5, 
+    hjust = 0.5, 
+    vjust = 0.5
+  ) +
+  annotate(
+    "text", 
+    x = verschil + 0.5, 
+    y = 0.95 * h, # Use the variable h to scale the y-coordinate
+    label = expression(italic(sigma)[2]), # Use expression() for mathematical notation
+    color = "black", 
+    size = 5, 
+    hjust = 0.5, 
+    vjust = 0.5
+  ) +
+  annotate(
+    "text",
+    x = 0,
+    y = -0.01,
+    label = expression(mu[1]),
+    color = "black",
+    size = 5
+  ) +
+  annotate(
+    "text",
+    x = verschil,
+    y = -0.01,
+    label = expression(mu[2]),
+    color = "black",
+    size = 5
+  ) +
+  annotate(
+    "segment",
+    x = 0,
+    y = 0,
+    yend = max(data1$y1),
+    color = "black",
+    linetype = 2
+  ) +
+  annotate(
+    "segment",
+    x = verschil,
+    y = 0,
+    yend = max(data2$y2),
+    color = "black",
+    linetype = 2
+  )
+  
+```
+
 
 ### Stap 3: De toetsingsgrootheid
 

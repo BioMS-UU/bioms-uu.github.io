@@ -2256,7 +2256,7 @@ De frequentietabel van gezondheidsstatus ziet er als volgt uit:
 ```{r}
 #| echo: false
 #| label: tbl-gezondheid
-#| caption: "Frequentietabel van gezondheidsstatus in de NHANES-gegevens."
+#| tbl-cap: "Frequentietabel van gezondheidsstatus in de NHANES-gegevens."
 
 data <- data.frame(
   "Gezondheidsstatus" = c("Slecht", "Matig", "Goed", "Zeer Goed", "Uitstekend"),
@@ -2346,6 +2346,7 @@ breed. Kunnen we de breedte vastleggen op een fatsoenlijke waarde?
 ```{r}
 #| echo: false
 #| label: tbl-gewicht
+#| tbl-cap: "Frequentietabel van de lichaamsgewichten in de NHANES dataset"
 
 gewicht_data <- data.frame(
   "Lichaamsgewicht (kg)" = c(
@@ -2365,9 +2366,16 @@ gewicht_data <- data.frame(
 
 knitr::kable(
   gewicht_data, 
-  col.names = c("Lichaamsgewicht (kg)", "Absolute frequentie"), 
-  caption = "Frequentietabel van de lichaamsgewichten in de NHANES dataset"
-  )
+  col.names = c("Lichaamsgewicht (kg)", "Absolute frequentie"),
+  escape = FALSE,
+  format = "html",
+  table.attr = "style='width:30%;'"
+) %>% 
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover"), 
+    full_width = FALSE,
+    position = "center"
+  ) 
 
 ```
 
@@ -2692,7 +2700,7 @@ wel een stapeldiagram worden gebruikt:
 #| fig.width: 4.5
 #| fig.height: 3.5
 
-freq_df <-data.frame(
+freq_df <- data.frame(
   freq_table
 )
 colnames(freq_df) <- c("Gezondheidsstatus", "Frequentie")
