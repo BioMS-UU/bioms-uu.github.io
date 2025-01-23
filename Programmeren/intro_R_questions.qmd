@@ -1,56 +1,10 @@
 # Extra R oefeningen {#sec-Rquestions .unnumbered}
 
-::: {.Rexr #exr-R-1} 
-## Kennis-vraagjes
-<br><br>
-**a.**Wat is het verschil tussen een matrix en een data frame?
-
-**b.** Als je de code `x <- seq(1,10,by=0.5)` uitvoert, wat is dan de waarde van `x[2]`? 
-
-**c.** Als je de code `x <- 10:1` uitvoert, wat is dan de waarde van `x[1]`?
-
-**d.** Als je de code `x <- runif(10)` uitvoert, wat is dan de waarde van `x[1]`? En wat geeft `x[11]` dan?
-
-**e.** Beschouw het volgende data frame:
-```{r}
-#| eval: false
-#| echo: true
-#| code-fold: false
-
-df <- data.frame(naam = c("Jaap", "Alina", "Xin"),
-                 minuten = c(12, 19, 11), 
-                 score = c(85, 90, 95))
-```
-  
-Stel we willen een nieuwe kolom toevoegen die de score per minuut geeft, wat moeten we daarvoor doen? 
-
-**f.** Een student leest de volgende csv in van dieren in het asiel onder de naam "dieren":
-
-    Naam, Leeftijd, Vachtkleur, Temperament
-    Joey, 8, zwart, rustig
-    Roos, 2, wit, energiek
-    Bob, 4, bruin, vriendelijk
-    Saartje, 2, gevlekt, verlegen
-  
-  Wat geeft de selectie `dieren[2,3:4]` terug?
-  
-**g.**  Bekijk de onderstaande for-loop. Wat wordt er na de for-loop geprint? 
-
-```{r}
-#| eval: false
-#| echo: true
-
-a <- 1
-for(i in 1:3){
-  a <- a + i
-}
-cat("De waarde van a is:",a)
-```
-
-:::
+## Meer ervaring opdoen met R
 
 ::: {.Rexr #exr-R-2}
 ## Volgorde
+<br>
 <br> Onder deze tekst staat een stukje code. Neem deze over in Rstudio (tip: je kan de hele code in 1 keer kopiëren met het knopje rechtsboven).
 
 ```{r}
@@ -74,9 +28,46 @@ uitkomst <- a/b+a*(c+a)
 
 :::
 
+::: {.Rexr #exr-R-rekenen}
+## Rekenen in een loop
+<br>
+
+**a.** Schrijf een stukje R-code die een variabele `x` op 14 laat beginnen, en er daarna 2,3 bij optelt. 
+
+**b.** In plaats van slechts één keer 2,3 bij `x` op te tellen, gaan we dit een groot aantal keren doen. Breid je script uit door een for-loop te schrijven die 100 keer 2,3 bij `x` optelt. 
+
+**c.** Definieer een variabele `n <- 50`, en zorg dat de loop niet 100 keer, maar `n` keer 2,3 bij 100 optelt. 
+
+**d.** Deel na het optellen ook `x` door 1,5. Als je `n` op 50 laat staan, hoe groot is `x` dan na het uitvoeren van je loop?
+
+**e.** Zet `n` nu op 100. Welke waarde heeft `x` nu? 
+
+**f.** Print elke stap de waarde van x, en vergelijk hiermee de antwoorden van vraag **d** en **e** met elkaar. (hint: gebruik `cat('In stap', i, 'is de waarde van x', x, '\n')`, ervanuit gaande dat je `i` als teller gebruikt in je for-loop) 
+
+Stel dat we het bovenstaande experiment van 12 keer een dobbelsteen rollen 100 keer uit willen voeren (honderd replicas). Om dit te doen kunnen we de bestaande `for-loop` zelf in een `for-loop` zetten. Dit heet het `nesten` van code. Zo kunnen we bijvoorbeeld bijhouden hoe vaak we precies 1 keer zes gooien, als we herhaaldelijk 12 keer een dobbelsteen rollen (zie code hieronder)
+
+```{r}
+#| eval: false
+#| echo: true
+#| code-fold: false
+#| code-summary: "Klik hier voor het antwoord"
+
+
+for(e in 1:100){
+  aantal_keren_6 <- 0
+  for(i in 1:12){
+    dobbelsteen <- sample(1:6,1) # getal van 1 t/m 6 (dobbelsteen worp)
+    if(dobbelsteen ==6) aantal_keren_6 <- aantal_keren_6 + 1
+  }
+}
+```
+
+**b.** Pas de bovenstaande code aan, zodat er **aan het einde van elk experiment** "Hoera!" wordt geprint als er **precies 1 keer 6 is gegooid**. Kun je de code aanpassen zodat je kan bijhouden hoe vaak dit is gebeurd?
+:::
+
 ::: {.Rexr #exr-R-3}
 ## Tabellen inlezen en plotten
-<br>
+<br><br>
 **a.** Ga naar <https://tbb.bio.uu.nl/bvd/bms/data>, en klik op txt-bestand `covid.txt`. Bekijk de inhoud van dit **plain text** bestand. Hoeveel kolommen bevat deze data? Is dit een CSV file? (hint: zoek op waar CSV voor staat). 
 
 **b.** Bekijk de onderstaande code, en neem deze over. Tel het aantal rijen met `nrow`. Zijn dit er 52 zoals in het bestand? Tel ook het aantal kolommen met `ncol`. Klopt dit? <!-- de data bestaat niet uit 5 kolommen. het is niet goed ingelezen --> 
@@ -112,6 +103,8 @@ covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/data/covid.txt")
 
 # Lees het bestand covid.txt op de website in met 'read.table' en header=T
 covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/data/covid.txt",header=T)
+head(covid)
+
 ```
 
 **e.** De laatste regel van bovenstaande code gebruikt `head` om de eerste 5 regels van de covid-tabel te laten zien. Gebruik de hulpfunctie van Rstudio (`?head`) en pas de code aan zodat het de eerste 12 rijen van de dataframe laat zien.  
@@ -201,3 +194,113 @@ for(e in 1:100){
 
 **b.** Pas de bovenstaande code aan, zodat er **aan het einde van elk experiment** "Hoera!" wordt geprint als er **precies 1 keer 6 is gegooid**. Kun je de code aanpassen zodat je kan bijhouden hoe vaak dit is gebeurd?
 :::
+
+## Oefentoets R
+
+::: {#exr-R-1}
+
+<br><br>
+**a.**Wat is het verschil tussen een matrix en een data frame?
+
+**b.** Welk type variabele is `x` in de code `x <- "123"`?
+
+**c.** Als je de code `x <- seq(1,10,by=0.5)` uitvoert, wat is dan de waarde van `x[2]`?
+
+**d.** Als je de code `x <- 10:1` uitvoert, wat is dan de waarde van `x[1]`?
+
+**e.** Als je de code `x <- runif(10)` uitvoert, wat is dan de waarde van `x[1]`? En wat geeft `x[11]` dan?
+
+**f.** Beschouw het volgende data frame:
+```{r}
+#| eval: false
+#| echo: true
+#| code-fold: false
+
+df <- data.frame(naam = c("Jaap", "Alina", "Xin"),
+                 minuten = c(12, 19, 11), 
+                 score = c(85, 90, 95))
+```
+  
+Stel we willen een nieuwe kolom toevoegen die de score per minuut geeft, wat moeten we daarvoor doen? 
+
+**g.** Een student leest de volgende csv in van dieren in het asiel onder de naam "dieren":
+
+    Naam, Leeftijd, Vachtkleur, Temperament
+    Joey, 8, zwart, rustig
+    Roos, 2, wit, energiek
+    Bob, 4, bruin, vriendelijk
+    Saartje, 2, gevlekt, verlegen
+  
+  Wat geeft de selectie `dieren[2,3:4]` terug?
+  
+**h.**  Bekijk de onderstaande for-loop. Wat wordt er na de for-loop geprint? 
+
+```{r}
+#| eval: false
+#| echo: true
+
+a <- 1
+for(i in 1:3){
+  a <- a + i
+}
+cat("De waarde van a is:",a)
+```
+
+**i.** Match de onderstaande variabelen of datastructuren met hun omschrijving
+
+a) Numeric
+b) String
+c) Logical
+d) Vector
+e) Matrix
+f) Data frame
+
+A) Een lijst van variabelen van hetzelfde type
+B) Eén of meerdere letters, bijvoorbeeld 'ATAGAC' of 'groen'
+C) Een getal
+D) Een tabel van variabelen van hetzelfde type
+E) Of iets waar/onwaar is (TRUE/FALSE, 1/0)
+F) Een tabel van variabelen met voor elke kolom (mogelijk) een ander type
+
+**j.** Welk van de onderstaande stukjes code maakt **niet** een vector van getallen van 1:10?
+
+a) `c(1:10)`  
+b) `seq(1, 10)`  
+c) `1:10`  
+d) `c(1,10)`
+
+**k.*** Als je een vector hebt `x <- c(2, 4, 6, 8)`, hoe haal je het derde element op?  
+a) `x(3)`  
+b) `x[3]`  
+c) `x[3,]`
+d) `x[,3]`
+
+**l.** Wat is het resultaat van `3 > 5` in R?  
+a) `TRUE`  
+b) `FALSE`  
+c) `NA`  
+d) `NULL`  
+
+**m.** Als `x <- c(10, 20, 30, 40)`, wat geeft `x >= 20` dan terug?
+
+a) FALSE FALSE TRUE TRUE
+b) TRUE TRUE FALSE FALSE
+c) TRUE FALSE FALSE FALSE 
+d) FALSE TRUE TRUE TRUE
+e) 30, 40
+f) 10, 20
+g) 10
+h) 20, 30, 40
+
+**n.** Als `x <- c(10, 20, 30, 40)`, wat geeft `x[x >= 20]` dan terug?  
+
+a) FALSE FALSE TRUE TRUE
+b) TRUE TRUE FALSE FALSE
+c) TRUE FALSE FALSE FALSE 
+d) FALSE TRUE TRUE TRUE
+e) 30, 40
+f) 10, 20
+g) 10
+h) 20, 30, 40
+
+

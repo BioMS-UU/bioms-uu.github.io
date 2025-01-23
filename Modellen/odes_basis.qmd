@@ -14,17 +14,17 @@ De leerdoelen voor dit hoofdstuk zijn:
 * Begrijpen dat ODEs geschreven worden in termen van "x per tijdseenheid",
 en wat dit zegt over de individuele termen en parameters.
 * Begrijpen wanneer er in een ODE sprake is van een evenwicht.
-* Het in verband kunnen brengen van ODEs en hun oplossing.
+* ODEs verband kunnen brengen met hun oplossing.
 
 ![(afbeelding gegenereerd met ChatGPT4-o)](figuren/discr_vs_cont_ai_text.png){fig-align="center" width="70%"}
 
 ## Chaotische konijnen
 
-In @sec-exp hebben we gezien wat de consequenties zijn van 24 konijnen vrijlaten in een land waar geen natuurlijke predator voor konijnen bestaat. In de opgaven hebben we deze groei gemodelleerd in R, en hebben we geprobeerde de populatie te laten stabiliseren bij 500 miljoen konijnen. Met een lage groeisnelheid zagen we dat ons model een prachtige logistische groeicurve gaf, maar dat de groei veel langzamer was dan waargenomen in Australië. Het verhogen van de groeisnelheid gaf echter vreemde grafieken (@fig-chaos-1). Deze vreemde grafieken zijn een beroemde eigenschap van differentievergelijkingen met logistische groei. De meest beroemde vorm van deze differentievergelijking, is:
+In @sec-exp hebben we gezien wat de consequenties zijn van 24 konijnen vrijlaten in een land waar geen natuurlijke predator voor konijnen bestaat. In de opgaven hebben we deze groei gemodelleerd in R, en hebben we geprobeerde de populatie te laten stabiliseren bij 500 miljoen konijnen. Met een lage groeisnelheid zagen we dat ons model een prachtige logistische groeicurve gaf, maar dat de groei veel langzamer was dan waargenomen in Australië. Het verhogen van de groeisnelheid gaf echter vreemde grafieken (@fig-chaos-1). Deze vreemde grafieken zijn een beroemde eigenschap van differentievergelijkingen voor logistische groei. De meest beroemde vorm van deze differentievergelijking is:
 
 $$
 \begin{align}
- N(t+1) &= rN(1-\frac{N}{K})
+ N(t+1) &= rN(t)(1-\frac{N(t)}{K})
  \end{align}
 $$ {#eq-logisticmap}
 
@@ -38,17 +38,17 @@ Waarbij niet $b$ (birth) en $d$ (death) zijn gebruikt (zoals in het werkcollege)
 #| warning: false
 #| fig.width: 6
 #| fig.height: 4
-#| fig-cap: "Snel-groeiende konijnenpopulatie gemodelleerd met een differentievergelijking, beginnende met 24 konijnen"
+#| fig-cap: "Snel-groeiende konijnenpopulatie gemodelleerd met een differentievergelijking, beginnende met 24 konijnen (r=4, K=10e8)"
 #| label: fig-chaos-1
 
 library(ggplot2)
 library(dplyr)
-r = 2        # intrinsic growth rate
+r = 4        # intrinsic growth rate
 K = 10^8
 init_R = 24    # start with 24
 
 R_series <- data.frame()
-for(r in c(4)){
+for(r in c(r)){
   for(s in c(24:26)){ 
     R = s
     myR = R
@@ -80,7 +80,7 @@ R_series %>% filter(initR==24,time>1,time<=40,r==4) %>%
 #| warning: false
 #| fig.width: 6
 #| fig.height: 4
-#| fig-cap: "Dezelfde differentievergelijking beginnende met 24 (groen), 25 (rood), en 26 (paars) konijnen"
+#| fig-cap: "Dezelfde differentievergelijking beginnende met 24 (groen), 25 (rood), en 26 (paars) konijnen. (r=4, K=10e8)"
 #| label: fig-chaos-2
 
 R_series %>% filter(time>1,time <40,r==4) %>% 
@@ -101,7 +101,7 @@ R_series %>% filter(time>1,time <40,r==4) %>%
 Kleine initiële verschillen in het aantal konijnen kunnen na verloop van tijd een groot effect hebben in een chaotisch systeem.
 :::
 
-![](https://upload.wikimedia.org/wikipedia/commons/6/65/Trajektorie_eines_Doppelpendels.gif){style="width:20%; float: right; margin: 5px;"} Het vreemde gedrag in @fig-chaos wordt formeel **deterministische chaos** genoemd. Hiermee bedoelen we niet het type chaos dat men in spreektaal gebruikt om een rommelige kamer te omschrijven, maar de onvoorspelbare fluctuaties die bovendien extreem gevoelig zijn voor de begin-toestand. Een andere beroemd voorbeeld uit de natuurkunde
+![](https://upload.wikimedia.org/wikipedia/commons/6/65/Trajektorie_eines_Doppelpendels.gif){style="width:20%; float: right; margin: 5px;"} Het vreemde gedrag in @fig-chaos wordt formeel **deterministische chaos** genoemd. Hiermee bedoelen we niet het type chaos dat men in spreektaal gebruikt om een rommelige kamer te omschrijven, maar fluctuaties die onvoorspelbaar zijn omdat ze zeer gevoelig zijn voor de begin-toestand. Een andere beroemd voorbeeld uit de natuurkunde
 is de [dubbele slinger](https://nl.wikipedia.org/wiki/Dubbele_slinger) (zie ook de animatie rechts). 
 
 Hoewel je op korte termijn vaak nog enigszins kan aanvoelen in welke richting de slinger beweegt, is het op lange termijn onmogelijk in te schatten waar de slinger zich zal bevinden. Kennelijk kunnen zelfs simpele systemen zich enorm vreemd en
@@ -137,7 +137,7 @@ for (t in 1:40){
   N[t+1] <- r*N[t]*(1-(N[t]/10^9))
 }
 N[21] # Aantal na 20 halve jaren (N[1] is de nulde tijdstap!)
-plot(konijnen,type="o",xlab="Tijd",ylab="Aantal konijnen")
+plot(N,type="o",xlab="Tijd",ylab="Aantal konijnen")
 ```
 
 Als je de code hierboven uitvoert zul je zien dat er na 20 halve jaren 12,425,902 konijnen zijn, en dat we gewoon een mooie sigmoïde groeicurve krijgen. Dit is ook niet raar, want eigenlijk hebben we niets aangepast: alleen onze interpretatie van "tijdstappen" is anders. Door aan te nemen dat de tijdstap kleiner is (een half jaar in plaats van een jaar), zijn we het vreemde chaotische gedrag kwijt. Kennelijk ontstaat dit probleem alleen als de tijdstap "te groot" is. 
@@ -216,7 +216,7 @@ De bovenstaande grafiekjes van $H(t)$ zijn niet geldig voor onze ODE van het her
 
 Maar stel dat we beginnen met een ODE zonder vooraf een specifieke oplossing te kennen. Hoe weten we dan de oplossing van die ODE? Het zijn natuurlijk vooral de oplossingen die ons inzicht geven in de dynamiek van het systeem! Maar oplossingen vinden, is lang niet altijd eenvoudig. 
 
-Stel bijvoorbeeld dat de herten ook dood kunnen gaan. Omdat ieder hert dood kan gaan, hangt de snelheid waarmee dit de populatiegrootte beinvloedt dus af van de huidige hoeveelheid herten ($H(t)$). De ODE wordt dan dus:
+Stel bijvoorbeeld dat de herten ook naar huis kunnen gaan. Omdat alleen herten die in het bos aanwezig zijn naar huis kunnen gaan, hangt deze snelheid af van de huigide hoeveelheid herten ($H(t)$). De ODE wordt dan dus:
 
 $$
 \dt{H(t)} = m - d \cdot H(t)
@@ -225,7 +225,7 @@ $$ {#eq-ht2}
 ::: {.callout-important}
 ## Let op! $\mathrm{d}$ en $d$ zijn niet hetzelfde!
 
-De bovenstaande vergelijking heeft twee verschillende d's. De d aan de linkerkant van de vergelijking is de d van differentiaal, en geeft dus aan dat we het over de afgeleide hebben. De $d$ aan de rechterkant van de vergelijking staat voor *death rate*, en is een model-parameter. Je kunt deze twee dus niet tegen elkaar wegdelen! We hadden deze parameter ook $q$ kunnen noemen, maar het is wel zo prettig als de letter enigzins aangeeft over welk proces we het hebben. 
+De bovenstaande vergelijking heeft twee verschillende d's. De d aan de linkerkant van de vergelijking is de d van differentiaal, en geeft dus aan dat we het over de afgeleide hebben. De $d$ aan de rechterkant van de vergelijking zou kunnen staan voor *depart* (vertrekken), en is een model-parameter (in andere modellen zou je $d$ kunnen tegenkomen als *death rate* of *decay*). Je kunt deze twee d's dus niet tegen elkaar wegdelen! We hadden deze parameter ook $v$ voor vertrekken kunnen noemen, of $q$ voor kukelekuu (die laatste keuze is om meerdere reden misschien niet zo handig ;)). 
 :::
 
 Welke algemene oplossing ($H(t)=\dots$) voldoet nu aan deze vergelijking? Oftewel: welke functie $H(t)$ heeft altijd een afgeleide die aan deze ODE voldoet? Wat in ons eerste model eenvoudig uit ons hoofd te doen was, is nu ineens wat lastiger geworden. Om de oplossing te vinden, moeten we differentiaalvergelijkingen integreren, wat niet altijd eenvoudig is. Gelukkig hoeven jullie dit niet handmatig te doen, en wel om de volgende redenen:
@@ -238,7 +238,7 @@ Welke algemene oplossing ($H(t)=\dots$) voldoet nu aan deze vergelijking? Oftewe
 
 Later in de cursus gaan we R-scripts gebruiken om specifieke oplossingen te laten uitrekenen, maar zoals gezegd kun je met pen en papier ook al veel voor elkaar krijgen. Hiermee oefenenen is belangrijk, want zo krijgen we een beter gevoel voor ODEs, zodat we eerder doorhebben wanneer de computer (wellicht door een typefoutje) rare resultaten geeft. Laten we beginnen met waar al het rekenwerk begint: zorgen dat we appels met appels vergelijken.
 
-Laten we nog even doorgaan met het model van herten-migratie met sterfte:
+Laten we nog even doorgaan met het model van herten-migratie met herten die naar huis vetrekken:
 
 \begin{align}
 \dt{H(t)} = m - d \cdot H(t)
@@ -260,14 +260,14 @@ Aan de linkerkant staat dus iets in termen van van "verandering in aantal herten
 
 Hieruit kunnen we dus onmiddelijk concluderen dat de migratieparameter ($m$) ook in termen van "herten per uur" uitgedrukt moet worden. Wiskundig stellen we dan dat de eenheid (soms ook dimensie genoemd) van $m$ "herten per uur" is. Als we dus in het veld de migratie gaan meten, weten we wat ons te doen staat. 
 
-Maar wat zijn de eenheden van de parameter $d$, die de sterfte bepaalt? Hiervoor moeten we deze term gelijk stellen aan $H/t$, en oplossen voor $d$:
+Maar wat zijn de eenheden van de parameter $d$, die het vertrek bepaalt? Hiervoor moeten we deze term gelijk stellen aan $H/t$, en oplossen voor $d$:
 
 \begin{align*}
     dH = H/t \\
     d = 1/t
 \end{align*}
 
-Nu weten we dus dat de sterfteparameter de eenheid/dimensie $1 \over t$ heeft, met andere woorden "per tijdseenheid" of "per uur". Omdat we het aantal herten hebben weggedeeld, beschrijft deze parameter dus de niet de sterfte op populatieniveau, maar de sterfte per individueel (dat laaste wordt ook wel *per capita* genoemd). Als we deze parameter in het veld zouden willen meten, zouden we het aantal gestorven herten per uur moeten meten *gedeeld door het totaal aantal herten*. 
+Nu weten we dus dat de vertrekparameter de eenheid/dimensie $1 \over t$ heeft, met andere woorden "per tijdseenheid" of "per uur". Omdat we het aantal herten hebben weggedeeld, beschrijft deze parameter dus de niet het vertrek op populatieniveau, maar de vertreksnelheid per individu (dat laaste wordt ook wel *per capita* genoemd). Als we deze parameter in het veld zouden willen meten, zouden we het aantal vertrekkende herten per uur moeten meten *gedeeld door het totaal aantal herten*. 
 
 ::: {.callout-tip collapse='false'} 
 ## ODEs doen belangrijke aannames
@@ -275,7 +275,7 @@ Nu weten we dus dat de sterfteparameter de eenheid/dimensie $1 \over t$ heeft, m
 Zoals in de introductie uitgelegd, maken alle modellen aannames. Bij ODEs maken we ook een paar stevige aannames, namelijk:
 
 * Populatiegroottes zijn continu. <br>*Daarom worden ze meestal als dichtheden (en niet aantallen individuen) geïnterpreteerd. *
-* Er is geen variatie binnen de populatie <br> *Elk hert is gelijk, dus dezelfde sterftekans ongeacht leeftijd, geslacht, etc.*
+* Er is geen variatie binnen de populatie <br> *Elk hert is gelijk, dus dezelfde migratiesnelheid en vertrekkans, ongeacht leeftijd, geslacht, etc.*
 * De populatie is goed gemengd (*well-mixed assumption*)<br>*Er is dus niet zoiets als een ruimtelijk patroon, waarbij bijvoorbeeld herten aan de rand van een bos meer kans hebben op sterfte door predatie dan herten in het midden van het bos.*
 :::
 
@@ -292,7 +292,7 @@ We omschrijven hoe de hoeveelheid plastic in de oceaan verandert (kilo's per jaa
 a. Welke twee processen worden beschreven met de twee individuele termen? Beschrijf in je eigen woorden. 
 a. Bepaal de eenheid van de parameter $k$
 a. Bepaal de eenheid van de parameter $\delta$?
-a. Welke parameter ($k$ of $\delta$) denk je dat groter is?
+a. Welk van de twee termen ($k$ of $\delta P$) denk je dat groter is, gegeven het huidige gedrag van mensen?
 
 :::
 
@@ -318,9 +318,43 @@ De rechterzijde van deze vergelijking lijkt heel erg op de differentievergelijki
     \frac{\dd N}{\dd t} = rN \cdot f(N)
 \end{equation}
 
-De functie $f(N)$ noemen we een functionele respons. Met een functionele respons kun je een ODE uitbreiden, bijvoorbeeld door de groeisnelheid van een populatie afhankelijk te maken van de huidige populatiedichtheid. 
+Met de functie $f(N)$ kunnen we de ODE uitbreiden, bijvoorbeeld door de groeisnelheid van een populatie afhankelijk te maken van de huidige populatiedichtheid. 
 
-Als $f(N)$ bijvoorbeeld afneemt bij toenemende $N$, zal de groeisnelheid van de populatie ook afnemen naarmate $N$ groter wordt. Stel dat we $f(N) = 1 - \frac{N}{100}$ kiezen. Deze functie wordt gelijk aan $0$ als $N = 100$. Als we onze ODE vermenigvuldigen met deze functionele respons, betekent dit dat de snelheid van verandering $0$ wordt wanneer er $100$ konijnen zijn. Dit model impliceert dat de populatie niet meer kan groeien als $N \geq 100$, omdat de groeisnelheid dan $0$ of zelfs negatief is. Simpel gezegd: er is een limiet aan de groei (en dus de grootte) van de populatie. Algemener kunnen we het getal $100$ vervangen door een parameter die we het draagvermogen (carrying capacity, $K$) noemen. Het draagvermogen stelt de maximale populatiegrootte voor die de omgeving kan ondersteunen. Onze uiteindelijke ODE wordt dan:
+Als $f(N)$ bijvoorbeeld afneemt bij toenemende $N$, zal de groeisnelheid van de populatie ook afnemen naarmate $N$ groter wordt. Stel dat we $f(N) = 1 - \frac{N}{100}$ kiezen. Deze functie wordt gelijk aan $0$ als $N = 100$:
+
+```{r}
+# Define the function
+f <- function(N) {
+  1 - N / 100
+}
+
+# Generate a sequence of N values
+N_values <- seq(0, 120, by = 1)  # Extended range to visualize the function around 100
+
+# Compute f(N)
+f_values <- f(N_values)
+par(mar=c(2,2,2,2))
+# Plot the function
+plot(
+  N_values, f_values, type = "l", col = "blue", lwd = 2,
+  xlab = "N", ylab = "f(N)", main = "Plot van f(N) = 1 - N/100",
+  ylim = c(-0.2, 1.4), xlim = c(-10, 140), axes=F
+)
+abline(v=0,lwd=2)
+abline(h=0,lwd=2)
+# Add the vertical line below the x-axis
+segments(
+  x0 = 100, y0 = par("usr")[3],  # par("usr")[3] gives the lower limit of the y-axis
+  x1 = 100, y1 = 0, col = "grey", lty = 3,lwd=1.2
+)
+# Annotate the points (100, 0) and (0, 1)
+text(100, -0.37, labels = "100", col = "black", cex=0.7, xpd=T)
+text(-10, 1, labels = "1", col = "black")
+text(-15, 1.3, labels = "f(N)", col = "grey", cex=0.9, xpd=T)
+text(140, -0.15, labels = "N", col = "grey", cex=0.9, xpd=T)
+```
+
+Als we onze ODE vermenigvuldigen met deze functie, betekent dit dat de snelheid van verandering $0$ wordt wanneer er $100$ konijnen zijn. Dit model impliceert dat de populatie niet meer kan groeien als $N \geq 100$, omdat de groeisnelheid dan $0$ of zelfs negatief is. Simpel gezegd: er is een limiet aan de groei (en dus de grootte) van de populatie. Algemener kunnen we het getal $100$ vervangen door een parameter die we het draagvermogen (carrying capacity, $K$) noemen. Het draagvermogen stelt de maximale populatiegrootte voor die de omgeving kan ondersteunen. Onze uiteindelijke ODE wordt dan:
 
 $$
 \begin{equation}
@@ -371,7 +405,7 @@ Laten we ook kijken of ons hertenfeestje evenwichten heeft:
     \dt{H} &= m = 0 \quad \text{ als...}\\
 \end{align*}
 
-Zoals uitgelegd in @tip-parsnul nemen we aan dat parameters niet $0$ zijn (een model van hertenmigratie zonder migratie is geen model), en zijn we dus vooral geïnteresseerd in welke waarden voor $H$ een  evenwicht geven. Voor deze vergelijking bestaat er dus geen evenwicht, want welke waarde voor $H$ je ook invult, de populatie blijft met een constante snelheid $m$ veranderen. Voor het onfortuinlijke feestje met sterfte, ligt dat net anders:
+Zoals uitgelegd in @tip-parsnul nemen we aan dat parameters niet $0$ zijn (een model van hertenmigratie zonder migratie is geen model), en zijn we dus vooral geïnteresseerd in welke waarden voor $H$ een  evenwicht geven. Voor deze vergelijking bestaat er dus geen evenwicht, want welke waarde voor $H$ je ook invult, de populatie blijft met een constante snelheid $m$ veranderen. Voor het feestje waarbij ook herten vertrekken, ligt dat net anders:
 
 \begin{align*}
     \dt{H} &= m - dH = 0 \quad \text{ als...}\\
@@ -437,7 +471,7 @@ verandering <- function (B, p, d){
 # Stap 4: een test of de functie werkt
 verandering(B=p/d, p=p, d=d) 
 
-# Stap 5: maak een lege lijst met begin-aantal erin
+# Stap 5: maak een vector van 1 lang met het begin-aantal erin
 B <- c(0.9*p/d)
 
 # Stap 6: reken 500 keer de volgende hoeveelheid B uit
@@ -449,7 +483,7 @@ for (t in 1:500) {
 plot(B, xlab="Tijd in dagen", ylab="Aantal rode bloedcellen", type="l", col="seagreen", lwd=2)
 ```
 
-  g. In regel 15 rekent het script de hoeveelheid verandering in $B$ uit. Waarom geeft de functie $0$ terug? 
+  g. In 'Stap 4' rekent het script de hoeveelheid verandering in $B$ uit. Waarom geeft de functie $0$ terug? 
   h. De code in de for-loop produceert een specifieke oplossing, dat wil zeggen het rekent één van de mogelijke tijd-series uit voor $B(t)$. Dit gebeurt op een zeer grove manier door in stappen de integraal (de opsomming van kleine veranderingen) door te rekenen. Om dit netjes te doen, gebruik je normaal gesproken integrators die automatisch zorgen dat de tijdstap niet te groot is^[Hiervoor gaan we later in de cursus een R-script genaamd Grind.R inladen]. Leg uit waarom dat belangrijk kan zijn (hint: denk aan het vorige hoofdstuk). 
   i. Schat met behulp van de grafiek in hoe lang het duurt om de helft van het bloedverlies te herstellen.
   j. Stel dat je slechts een beetje bloed verliest (0.1%). Hoe lang duurt het om hiervan de helft te herstellen? 
@@ -469,7 +503,7 @@ We hebben eerder een R-script bekeken die een tijdserie produceert van een  diff
 # SIMPEL SCRIPT VOOR DIFFERENTIEVERGELIJKING
 # Stap 1, definieer beginaantal konijnen en parameters
 N <- 24    # aantal konijnen
-r <- 2     # intrinsieke groeisnelheid
+r <- 2     # groei per jaar
 K <- 10^9  # schaalt de dichtheidsafhankelijkheid
 
 # Stap 2: bereken het aantal konijnen in [t+1] 40 keer
@@ -478,7 +512,7 @@ for (t in 1:40){
 }
 
 # Stap 3: bekijk resultaten
-N[20] # Aantal na 20 halve jaren
+N[20] # Aantal na 20 jaren
 plot(N,type="o",xlab="Tijd (jaren)", ylab="Aantal konijnen")
 ```
 
@@ -493,7 +527,7 @@ r <- 2
 K <- 10^9
 
 # Stap 2, definieer tijdstappen en maak een dataframe aan
-delta_t <- 0.01 # grootte van de tijdstap
+delta_t <- 0.01 # grootte van de tijdstap 
 tijdstapjes <- seq(0,20,by=delta_t)
 tijdserie <- data.frame(t=tijdstapjes,konijnen=N)
 
@@ -527,7 +561,6 @@ c. Maak de tijdstap voor de differentiaalvergelijking heel klein (bijv `delta_t 
 | Discrete variabelen | Discrete variables | Variabelen die een beperkt aantal (specifieke) waarden kunnen aannemen. Vaak zijn dit gehele getallen (denk aan een aantal cellen of een aantal mutaties) |
 | Specifieke oplossing van een ODE | Specific solution of an ODE | Eén van de vele mogelijke oplossingen van een ODE, bijvoorbeeld door specifieke parameters / begin-hoeveelheden in te vullen |
 | Algemene oplossing | General solution | De wiskundige vergelijking waar alle specifieke oplossingen aan voldoen. Meestal moeilijk te verkrijgen. |
-| Functionele respons | Functional respons | Een (meestal eenvoudige) wiskundige functie die de relatie omschrijft tussen de snelheid waarmee een proces verloopt, en de grootte van een variabele |
 | Evenwicht | Equilibrium / steady state | We spreken van een evenwichtssituatie als alle processen elkaar opheffen, zodat de variabelen van het systeem niet meer veranderen. |
 | Triviaal evenwicht | Trivial equilibrium | Een evenwichts-situatie die biologisch gezien niet interessant is, bijvoorbeeld een evenwicht bij $0$ konijnen.  |
 :  {.striped .hover}

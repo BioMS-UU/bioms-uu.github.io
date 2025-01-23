@@ -254,49 +254,7 @@ for (l in lengtes) {
 }
 ```
 
-## @sec-Rquestions
-
-@exr-R-1
-
-**a.**
-Een matrix is een tabel met allemaal dezelfde type waarden, terwijl een dataframe voor elke kolom een ander type data kan bevatten.
-
-**b.**
-De tweede waarde van de vector x is 1.5.
-```{r}
-#| echo: true
-#| eval: false
-x <- seq(1,10,by=0.5)
-x[2]
-```
-
-**c.**
-De vector x bevat nu alle gehele getallen van 10 tot en met 1. De eerste waarde van deze vector is 10.
-```{r}
-#| echo: true
-#| eval: false
-x <- 10:1
-x[1] 
-```
-
-**d.**
-x[1] weet je niet, want runif geeft willekeurig getallen. Je weet wél dat het getal tussen 0 en 1 zal liggen. x[11] bestaat niet, want er zijn maar 10 getallen gegenereerd R geeft in dit geval 'NA' (not available).
-
-**e.**
-Om voor ieder persoon de score "per minuut" te berekenen, moeten we de score door het aantal minuten delen ("per" kun je eigenlijk altijd lezen als "gedeeld door"). Dit kunnen we doen door met het dollar-teken de kolommen te pakken, en deze door elkaar te delen. Deze nieuwe vector (hieronder 'spm') kan je dan ook als nieuwe kolom aan de dataframe toevoegen:
-```{r}
-#| echo: true
-#| eval: false
-spm <- df$score/df$minuten
-df$score_per_minuut <- spm
-```
-
-**f.**
-dieren[2,3:4] geeft rij 2, kolom 3 en 4 terug. 
-Let op: de eerste regel zijn de kolomnamen, dus de 2e rij is niet Joey, maar Roos! Daarom geeft dieren[2,3:4] de waarden "wit" en "energiek".
-
-**g.**
-De waarde begint op 1, en dan loopt de for-loop over de waarden 1, 2 en 3. Deze waarden worden steeds aan a toegevoegd. Dus er wordt eerst 1, dan 2, en dan nog een keer 3 bij a opgeteld. Aan het einde is a dus 1+1+2+3 = 7.
+## [Extra R oefeningen en oefentoets](../Programmeren/intro_R_questions.qmd)
 
 @exr-R-2
 
@@ -321,6 +279,84 @@ Bij het berekenen van uitkomst worden de parameters a, b, en c
 gebruikt om iets te berekenen. Dit komt neer op pasta, groente,
 en pesto combineren in een gerecht. Dat je daarna de pesto aanpast
 verandert niet je gerecht: die was al klaar.
+
+@exr-R-rekenen
+
+Na het maken van deze vraag, zou je script er ongeveer zo uit kunnen zien:
+
+**a.**
+
+```{r}
+x <- 14
+x <- x + 2.3
+```
+
+**b.**
+
+```{r}
+x <- 14
+
+for(i in 1:100){
+  x <- x + 2.3
+}
+```
+
+**c.**
+
+```{r}
+x <- 14
+n <- 50
+
+for(i in 1:n){
+  x <- x + 2.3
+}
+```
+
+**c.**
+
+```{r}
+x <- 14
+n <- 50
+
+for(i in 1:n){
+  x <- x + 2.3
+  x <- x / 1.5
+}
+print(x)
+```
+
+Aan het einde van de loop is `x` gelijk aan `4.6`.
+
+**e** 
+
+```{r}
+x <- 14
+n <- 100
+
+for(i in 1:n){
+  x <- x + 2.3
+  x <- x / 1.5
+}
+print(x)
+```
+
+Aan het einde van deze loop is `x` ook gelijk aan `4.6`! 
+
+**f.** Als we de waarde van `x` elke stap printen, zien we daarom **d** en **e** hetzelfde antwoord geven:
+
+```{r}
+x <- 14
+n <- 100
+
+for(i in 1:n){
+  x <- x + 2.3
+  x <- x / 1.5
+  cat('In stap', i, 'is de waarde van x', x, '\n')
+}
+```
+
+De waarde van `x` in deze berekening geconvergeerd in 41 stappen al naar 4.6. Daarom is na zowel 50 als na 100 stappen het antwoord `4.6`. Echter zijn dit wel afrondingen, want als je het aantaal decimalen in R op 20 zet met `options(digits=20)`, dan zie je dat de waarden eigenlijk `4.6000000147422879238` en `4.6000000000000005329` zijn. 
+
 
 @exr-R-3
 
@@ -452,3 +488,80 @@ for(e in 1:100){
 }
 cat("Er is in totaal", aantal_keren_hoera, "keer 'Hoera!' geprint\n")
 ```
+
+## Oefentoetsje R
+
+
+@exr-R-1
+
+**a.**
+Een matrix is een tabel met allemaal dezelfde type waarden, terwijl een dataframe voor elke kolom een ander type data kan bevatten.
+
+**b.**
+Hoewel er een nummer staat, is `x` een string omdat het tussen aanhalingstekens staat. 
+
+**c.**
+De tweede waarde van de vector x is 1.5.
+```{r}
+#| echo: true
+#| eval: false
+x <- seq(1,10,by=0.5)
+x[2]
+```
+
+**d.**
+De vector x bevat nu alle gehele getallen van 10 tot en met 1. De eerste waarde van deze vector is 10.
+```{r}
+#| echo: true
+#| eval: false
+x <- 10:1
+x[1] 
+```
+
+**e.**
+x[1] weet je niet, want runif geeft willekeurig getallen. Je weet wél dat het getal tussen 0 en 1 zal liggen. x[11] bestaat niet, want er zijn maar 10 getallen gegenereerd R geeft in dit geval 'NA' (not available).
+
+**f.**
+Om voor ieder persoon de score "per minuut" te berekenen, moeten we de score door het aantal minuten delen ("per" kun je eigenlijk altijd lezen als "gedeeld door"). Dit kunnen we doen door met het dollar-teken de kolommen te pakken, en deze door elkaar te delen. Deze nieuwe vector (hieronder 'spm') kan je dan ook als nieuwe kolom aan de dataframe toevoegen:
+```{r}
+#| echo: true
+#| eval: false
+spm <- df$score/df$minuten
+df$score_per_minuut <- spm
+```
+
+**g.**
+dieren[2,3:4] geeft rij 2, kolom 3 en 4 terug. 
+Let op: de eerste regel zijn de kolomnamen, dus de 2e rij is niet Joey, maar Roos! Daarom geeft dieren[2,3:4] de waarden "wit" en "energiek".
+
+**h.**
+De waarde begint op 1, en dan loopt de for-loop over de waarden 1, 2 en 3. Deze waarden worden steeds aan a toegevoegd. Dus er wordt eerst 1, dan 2, en dan nog een keer 3 bij a opgeteld. Aan het einde is a dus 1+1+2+3 = 7.
+
+**i.**
+
+a -> C
+
+b -> B
+
+c -> E
+
+d -> A
+
+e -> D
+
+f -> F
+
+
+**j.** Optie d geeft geen serie van 1 t/m 10, maar een vector met daarin alleen 1 en 10.
+
+**k.**
+Optie b. In R gebruik je vierkante haken om te 'indexeren'. Omdat het een vector is heb je geen komma's nodig om onderscheid te maken tussen rijen en kolommen. 
+
+**l.**
+Optie b. Drie is niet groter dan vijf, dus zal R 'FALSE' teruggeven. 
+
+**m.** 
+Optie d. Vanaf de tweede waarde (20) zijn alle getallen groter dan óf gelijk aan 20. Let op: hier worden deze waarden (nog) niet geselecteerd!
+
+**n.**
+Optie h. Vanaf de tweede waarde (20) zijn alle getallen groter dan óf gelijk aan 20. Anders dan de vorige vraag, selecteren we hier deze opties, en krijgen we 20, 30, 40 terug. 
