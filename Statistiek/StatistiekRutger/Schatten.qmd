@@ -779,7 +779,7 @@ $$
 &= \frac{n \sd{X}^2}{n^2} \\ 
 &= \frac{\sd{X}^2}{n}.
 \end{aligned}
-$$
+$$ {#eq-steekproefvariantie}
 De volgende tips helpen misschien bij het begrijpen van deze afleiding: 
 
 - In de eerste stap vullen we de definitie van het steekproefgemiddelde in, @eq-steekproefgemiddelde.
@@ -973,7 +973,7 @@ door voor $\sd{X}$ de waarde van $s_X$ in te vullen.
 Het resultaat wordt de **standaardfout van het gemiddelde** genoemd:
 $$
 \se{\mean{X}} = \frac{s}{\sqrt{n}}.
-$$
+$$ {#eq-standaardfout-gemiddelde}
 Hier gebruiken we de notatie $\se{\mean{X}}$;
 in de literatuur kom je ook de afkorting SEM tegen,
 wat staat voor *Standard Error of the Mean*.
@@ -1004,6 +1004,12 @@ maar $t$:
 $$
 t = \frac{\mean{X} - \mu_X}{\se{\mean{X}}}.
 $$ {#eq-t}
+
+::: {.todo-box}
+*Ik had best weer even moeite om op te halen waar de $t$ nou precies voor stond, want als ik puur de text las dacht ik dat het om een verdeling zou gaan, maar het is toch echt maar 1 getal. Misschien dat het stukje hieronder toegevoegd kan worden? ~Yannick*
+
+Het getal $t$ dat je uit deze formule krijgt geeft aan hoe groot de kans is dat je een steekproefgemiddelde $\mean{X}$ vond uit de hele populatie $\mu_X$. De kans is dus groot dat je een $t$ vind rond de 0, want daar ligt de piek van de t-verdeling. Als je een hele hoge of lage $t$ waarde vind kan je concluderen dat je of een onwaarschijnlijke steekproef hebt gedaan (wat altijd mogelijk is), of dat je populatiegemiddelde ($\mu_X$) toch niet de waarde heeft die je dacht dat deze had. Deze informatie gaan we in de volgende paragraaf gebruiken om een betrouwbaarheidsinterval te berekenen. 
+:::
 
 De keuze voor $t$ als de naam van deze getransformeerde variabele is niet willekurig.
 Er kan namelijk worden aangetoond
@@ -1348,23 +1354,22 @@ Hieronder is als voorbeeld in @fig-CBS-persoonlijk-inkomen de verdeling
 Wanneer je een BHI wilt uitrekenen van zo'n variabele
   heb je dus bij voorbaat redenen om op je hoede te zijn.
 
-  
-::: {#fig-CBS-persoonlijk-inkomen}
-::: {.todo-box}
-Maken. 
-In folder "data" staat het bestand "VerdelingPersoonlijkInkomen-CBS-2022.csv".
-Let op: de getallen gebruiken en komma en staan tussen aanhalingstekens.Gebruik readr,
-bijv.
 ```{r}
-#| eval: false
+#| code-fold: true
+#| label: fig-CBS-persoonlijk-inkomen
+#| fig-cap: "Verdeling van persoonlijk inkomen in Nederland, 2022"
+#| warning: false
 library(readr)
 VerdelingPersoonlijkInkomen_CBS_2022 <- read_csv("data/VerdelingPersoonlijkInkomen-CBS-2022.csv", 
     locale = locale(decimal_mark = ","))
+
+ggplot(VerdelingPersoonlijkInkomen_CBS_2022, 
+       aes(y = Totaal, x = `persoonlijk inkomen (1000 euro)`)) +
+  geom_line(color = "darkorange", size = 1) +
+  labs(x = "Persoonlijk inkomen (1000 euro)", y = "Aantal personen (x 1000)") +
+  theme_minimal()
 ```
-Plot alleen kolom `Totaal`.
-:::
-:::
-  
+
 - **De populatie bestaat uit meerdere subpopulaties
   met vermoedelijk sterk verschillende gemiddelden.**
   In dat geval zou de verdeling van de variabele multimodaal kunnen zijn
@@ -1395,7 +1400,6 @@ Plot alleen kolom `Totaal`.
   typisch 3 of 4 eieren[^eggs]. 
   Een normale verdeling is voor die variabele zeker niet plausibel.
   
-::: {#fig-vink}
 ```{r}
 #| code-fold: true
 #| warning: false
@@ -1418,9 +1422,8 @@ ggplot(dataVink, aes(aantal_eieren)) +
   theme_minimal()
 
 ```
-:::
 
-[^eggs]: Ramdani, K., M. Kouidri, M. L. Ouakid, and M. Houhamdi. “Breeding Biology of the Chaffinch *Fringilla Coelebs Africana* in the El Kala National Park (North East Algeria).” Arxius de Miscel·lània Zoològica, July 7, 2019, 109–21. [https://doi.org/10.32800/amz.2019.17.0109]([https://doi.org/10.32800/amz.2019.17.0109]).
+[^eggs]: Ramdani, K., M. Kouidri, M. L. Ouakid, and M. Houhamdi. “Breeding Biology of the Chaffinch *Fringilla Coelebs Africana* in the El Kala National Park (North East Algeria).” Arxius de Miscel·lània Zoològica, July 7, 2019, 109–21. [Breeding biology](https://doi.org/10.32800/amz.2019.17.0109).
 
 Een tweede aanname is dat iedere waarde onafhankelijk uit deze normale verdeling
   is getrokken. 
@@ -1862,7 +1865,7 @@ data <- NHANES[ !is.na( NHANES$Weight ), ]
 # Maak de drie histogrammen
 boven_plot <- maak_histogram(
   data, "Weight", x_label_boven_midden, binbreedte, x_bereik
-)
+) 
 midden_plot <- maak_steekproef_histogram(
   data, "Weight", steekproefgrootte, x_label_boven_midden, 
   binbreedte, x_bereik
@@ -2094,12 +2097,49 @@ cat(
 ::: {.todo-box}
 
 Schrijven.
+De variantie van de steekproevenverdeling: (@eq-steekproefvariantie)
+$$\var{\overline{X}} = \frac{\sd{X}^2}{n}.$$
+$\var{\overline{X}}$ is variantie in de gevonden steekproefgemiddelden, $\sigma^2_X$ is de standaarddeviatie van de populatie en $n$ is de steekproefgrootte. 
+
+De standaarddeviatie van de steekproevenverdeling van het gemiddelde: (@eq-sigmaM)
+$$
+\sigma_\overline{X} = \frac{\sd{X}}{\sqrt{n}}.
+$$ 
+$\sigma_X$ is de standaardeviatie van de steekproevenverdeling van het gemiddelde, $\sd{X}$ is de standaardeviatie van de populatie en $n$ is de steekproefgrootte. 
+
+Standaardfout van het gemiddelde: (@eq-standaardfout-gemiddelde)
+$$
+\se{\mean{X}} = \frac{s}{\sqrt{n}}.
+$$ 
+
+$\se{\mean{X}}$ staat voor de standaardfout van het steekproefgemiddelde, $s$ staat voor de standaarddeviatie van de steekproef en $n$ is de steekproefgrootte. 
+
+De t-verdeling: (@eq-def-t) 
+$$
+t = \frac{\mean{X} - \mu_X}{\se{\mean{X}}}
+$$ 
+$t$ is de waarde in de t-verdeling met $n-1$ vrijheidsgraden, $\mean{X}$ is het gemiddelde van de steekproef, $\mu_X$ is het gemiddelde van de populatie en $\se{\mean{X}}$ is de standaardfout van het steekproefgemiddelde.
+
+Het gemiddelde van de populatie met een BHI aan de hand van een steekproef: (@eq-BHI)
+$$\mu_X = \mean{X} \pm t_{0,05(2)(n-1)}\se{\mean{X}}$$
+$\mu_X$ is het gemiddelde van de populatie, $\mean{X}$ is het gemiddelde van de genomen steekproef, $t_{0,05(2)(n-1)}$ is de waarde van de tweezijdige t-toets, $\se{\mean{X}}$ is de standaardfout van het steekproefgemiddelde. 
+
+
 
 :::
 
 ## Terminologie
 
-Standard error of the mean: SEM.
+| Nederlands                  | Engels                        | Betekenis |
+|---------------              |--------------------           |-------------------     |
+| betrouwbaarheidsinterval (BHI)        | confidence interval (CI)| Het interval rondom een punt waarbinnen een waarde zou kunnen vallen als je deze waarde niet exact weet. Een 95%-BHI is de interval waartussen de waarde in 95% van de gevallen zou vallen.           |
+| centrale limietstelling               | central limit theorem   | Trek onafhankelijk $n$ waarden uit een kansverdeling. De kansverdeling van het gemiddelde $\mean{X}$ van die waarden convergeert naar een normale verdeling |
+| gerepliceerd                          | replicated              | Herhaald (van een steekproef) |
+| pseudoreplicatie                      | pseudoreplication       | Een herhaalde steekproef waarin (onbewust) niet elke meting onafhankelijk van elkaar zijn uitgevoerd |
+| puntschatting                         | piont estimate          | Een schatting zonder betrouwbaarheidsinterval |
+| standaardfout van het gemiddelde  (SE)    | Standard Error of the Mean (SEM) | De schatting van de standaarddeviatie van het gemiddelde aan de hand van een steekproef. |
+| statistische modellen                 | statistical models      | Modellen die voornamelijk aannamens maken over de kansprocessen die achter de onzekerheid van de gegevens liggen. |
+| steekproevenverdeling van het steekproefgemiddelde | sampling distribution of the sample mean | Een verdeling van het gemiddelde van meerdere steekproeven, deze is altijd normaal verdeeld. Grotere steekproeven zorgen voor een kleinere spreiding van de steekproefgemiddeldes en dus ook voor een preciezere schatting |
 
-
+: Woordenlijst @sec-schatten . {#tbl-woorden-schatten .striped .hover}
 

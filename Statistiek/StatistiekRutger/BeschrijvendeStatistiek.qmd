@@ -270,58 +270,18 @@ levels(klassement)
 
 We willen op een andere manier naar de data kijken door Brons en Zilver de nieuwe naam "Laag" te geven en Goud de nieuwe naam "Hoog" te geven. 
 
-**e.** Gebruik de `levels` functie om een nieuwe vector aan de dataframe toe te voegen genaamd `niveau`. De `niveau` vector is precies hetzelfde als de `klassement` vector, maar dan zijn Zilver en Brons vervangen door Laag en Goud door hoog. 
-
-*antwoord*
+**e.** Voeg de onderstaande regels toe aan je code, beschrijf wat er is veranderd in de dataset.  
 ```{r}
-naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
-level <- c(8, 1, 3, 2, 10)
-totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
-klassement <- factor(c("Goud", "Brons", "Zilver", "Zilver", "Goud"))
-console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
-
-df <- data.frame(naam, level, totale_speeltijd, klassement, console)
-
-#We voegen de kolom toe
-df$niveau <- klassement
-
-#Eerst bekijken we weer wat de levels zijn. 
-levels(df$niveau)
-
-#Daarna maken we een nieuwe vector waarin we de levels een nieuwe naam geven. 
-levels(df$niveau) <- c("Laag", "Hoog", "Laag")
-
-levels(df$niveau)
+levels(df$klassement) <- c("Laag", "Hoog", "Laag")
+levels(df$klassement)
 ```
-*We zien dat er nu maar 2 levels zijn*
 
-**f.** Gebruik de `boxplot` functie om twee figuren te maken. Een die het klassement tegen de speeltijd uit zet en een die het niveau tegen de speeltijd uitzet. Zijn de veranderingen in de levels terug te zien? 
+*Antwoord: de eerste en laatste klassementen, brons en zilver, zijn nu allebei hetzelfde level "Laag". Goud heet nu "Hoog". *
 
-*Antwoord: De veranderingen zijn duidelijk terug te zien. Er staan nu maar 2 categorien op de x as in plaats van 3.*
-
-```{r}
-naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
-level <- c(8, 1, 3, 2, 10)
-totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
-klassement <- factor(c("Goud", "Brons", "Zilver", "Zilver", "Goud"))
-console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
-
-df <- data.frame(naam, level, totale_speeltijd, klassement, console)
-
-#We voegen de kolom toe
-df$niveau <- klassement
-
-#Daarna maken we een nieuwe vector waarin we de levels een nieuwe naam geven. 
-levels(df$niveau) <- c("Laag", "Hoog", "Laag")
-
-
-par(mfrow = c(1, 2))
-
-boxplot(totale_speeltijd ~ klassement, data=df)
-
-boxplot(totale_speeltijd ~ niveau, data=df)
-
-```
+**f.** Bedenk een scenario waarin het mogelijk handig is om levels nieuwe namen te geven tijdens een onderzoek. 
+*Antwoord: Bijvoorbeeld:* 
+*- Data van verschillende soorten die je op familie/orde in wilt delen*
+*- Datums die je in wilt delen op seizoen/maand/week*
 
 :::
 
@@ -1726,6 +1686,7 @@ cumulplot +
 if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
 if (!("dplyr" %in% loadedNamespaces())) { library(dplyr) }
 if (!("NHANES" %in% loadedNamespaces())) { library(NHANES) }
+if (!("dplyr" %in% loadedNamespaces())) { library(dplyr) }
 
 # Gebruik de Weight-variabele uit de NHANES dataset
 data <- NHANES %>%
@@ -2256,7 +2217,7 @@ De frequentietabel van gezondheidsstatus ziet er als volgt uit:
 ```{r}
 #| echo: false
 #| label: tbl-gezondheid
-#| caption: "Frequentietabel van gezondheidsstatus in de NHANES-gegevens."
+#| tbl-cap: "Frequentietabel van gezondheidsstatus in de NHANES-gegevens."
 
 data <- data.frame(
   "Gezondheidsstatus" = c("Slecht", "Matig", "Goed", "Zeer Goed", "Uitstekend"),
@@ -2338,15 +2299,12 @@ zo:
 
 Als we deze stappen toepassen op het voorbeeld, is dit het resultaat:
 
-::: todo-box
-De tabel hieronder wordt zo breed als de tekstcolom. Dat is vaak te
-breed. Kunnen we de breedte vastleggen op een fatsoenlijke waarde?
-:::
 
 ```{r}
 #| echo: false
 #| label: tbl-gewicht
-
+#| tbl-cap: "Frequentietabel van de lichaamsgewichten in de NHANES dataset"
+library(magrittr)
 gewicht_data <- data.frame(
   "Lichaamsgewicht (kg)" = c(
     "[0,10)", "[10,20)", "[20,30)", "[30,40)", "[40,50)", 
@@ -2363,13 +2321,32 @@ gewicht_data <- data.frame(
       )
 )
 
+gewicht_data_transposed <- data.frame(
+  "Categorie" = c("Lichaamsgewicht (kg)", "Absolute frequentie"),
+  t(gewicht_data), 
+  row.names=NULL
+)
+
+
+# Create the horizontal table
 knitr::kable(
-  gewicht_data, 
-  col.names = c("Lichaamsgewicht (kg)", "Absolute frequentie"), 
-  caption = "Frequentietabel van de lichaamsgewichten in de NHANES dataset"
+  gewicht_data_transposed, 
+  col.names = NULL, # No column names needed for the transposed table
+  escape = FALSE,
+  format = "html",
+  table.attr = "style='width:50%; margin:auto;'", # Adjusted width to 50% and added margin:auto
+  align = "c"
+) %>% 
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover"), 
+    full_width = FALSE,
+    position = "center"
   )
 
+
 ```
+
+
 
 Uit deze tabel kun je gemakkelijk aflezen dat de meest voorkomende
 gewichten zo tussen 50 en 100 kg liggen.
@@ -2692,7 +2669,7 @@ wel een stapeldiagram worden gebruikt:
 #| fig.width: 4.5
 #| fig.height: 3.5
 
-freq_df <-data.frame(
+freq_df <- data.frame(
   freq_table
 )
 colnames(freq_df) <- c("Gezondheidsstatus", "Frequentie")
