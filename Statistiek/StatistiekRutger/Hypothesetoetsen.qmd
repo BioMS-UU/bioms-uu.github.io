@@ -80,13 +80,22 @@ maar zag ook in dat het wel héél erg toevallig zou zijn
 als de balans 84 jaar achter elkaar dezelfde kant op zou zou doorslaan.
 Hij berekende daarom de kans dat dat zou gebeuren.
 Die is gelijk aan de kans om met een muntje 84 keer achter elkaar "kop" te gooien,
-oftewel, $(1/2)^{84} = 5 \times 10^{-26}$.
+oftewel, $(1/2)^{84} = 5 \times 10^{-26}$.[^verwaarlozen]
 Als je nu begint met muntjes gooien
 en dat iedere seconde blijft volhouden, 
 zul je gemiddeld $6\times 10^17 jaar moeten wachten op zo'n \emph{lucky streak}.
 (Dat is zo'n 100 miljoen keer langer dan de huidige leeftijd van het heelal.)
 
-Onder de aanname dat de kans op een meisje $p\ped{M}$ gelijk is aan 0,5 
+[^verwaarlozen]: We verwaarlozen in deze berekening de kans dat er in een jaar exact 
+    evenveel jongetjes als meisje geboren worden. Zouden we die kans meenemen, 
+    dan zou de kans op meer jongetjes dan meisjes niet $\frac{1}{2}$ zijn, 
+    meer net iets kleiner.
+    Arbuthnot verwaarloost dat effect ook,
+    maar merkt op dat dit betekent dat de échte kans alleen maar *kleiner* zal zijn
+    dan de kans die hij voorrekent. 
+    Dat zou het argument tegen toeval alleen maar sterker maken. 
+
+Onder de aanname dat de kans op een meisje $p\ped{M}$ gelijk is aan $\frac{1}{2}$ 
 is de kans op de waargenomen geboortecijfers dus uiterst klein. 
 Dat deze kans zo klein is, geeft aan dat "toeval" geen geloofwaardige verklaring is. 
 Zo toonde Arbuthnot aan dat er iets anders aan de hand moest zijn.
@@ -109,29 +118,136 @@ experimenten of observaties.
 Vaak vormt een hypothese de basis voor wetenschappelijke studies en kan worden bevestigd, verworpen of aangepast afhankelijk van de uitkomsten van het onderzoek.
 
 De redenering van Arbuthnot gaat over de hypothese
-dat $p\ped{M} = 0{,}5$.
+dat $p\ped{M} = \frac{1}{2}$.
 De berekeningen van Arbuthnot laten zien:
 *als* die hypothese waar is,
-dat zijn de waargenomen geboortecijfers zeer onwaarschijnlijk.
+dan zijn de waargenomen geboortecijfers zeer onwaarschijnlijk.
 Dat gegeven wordt vervolgens geïnterpreteerd als bewijsmateriaal tegen die hypothese.
-
 In het algemeen is een **hypothesetoets** een methode
-die evalueert in hoeverre een reeks waarnemingen
+die gebruikt wordt om te evalueren in hoeverre een reeks waarnemingen
 ---bijvoorbeeld meetgegevens of een steekproef---
 bewijs levert tegen een hypothese.
 
-### Hypothese $\HO$
+::: {.callout-imporant icon=false}
+
+Een **hypothesetoets** is een methode
+die gebruikt wordt om te evalueren in hoeverre een verzameling waarnemingen
+---bijvoorbeeld meetresultaten of gegevens uit een steekproef---
+bewijs levert tegen een specifieke hypothese.
+
+:::
+
+## De nulhypothese $\HO$ en de alternatieve hypothese $\HA$
+
+Arbuthnot wilde aantonen dat $p\ped{M}$ *niet* gelijk is aan $\frac{1}{2}$.
+Hij deed dat door bewijs te verzamelen tegen de hypothese dat dat *wel* zo was.
+Die hypothese dat $p\ped{M} = \frac{1}{2}$ is de hypothese van een scepticus^[Een **scepticus**
+is een persoon die de waarheid van beweringen in twijfel trekt totdat overtuigend bewijs geleverd is.]
+die niet zomaar bereid is te geloven dat het bewijsmateriaal voldoende is
+om conclusies te trekken.
+Zo'n sceptische hypothese wordt een **nulhypothese** genoemd.
+Deze wordt vaak genoteerd als $\HO$.
+Het doel van een hypothesetoets is om te zien in hoeverre
+de gegevens bewijs leveren tegen de $\HO$.
+
+Tegenover de nulhypothese staat de **alternatieve hypothese**, $\HA$.
+$\HA$ is de ontkenning van $\HO$.
+Als $\HO$ de hypothese is dat $p\ped{M} = \frac{1}{2}$,
+dan is $\HA$ de hypothese dat $p\ped{M} \neq \frac{1}{2}$.
+Bewijs *tegen* $\HO$ geldt als bewijs *vóór* $\HA$.[^bewijs]
+
+[^bewijs]: Je kunt met recht kanttekeningen plaatsen bij deze redenering;
+zie bijvoorbeeld: 
+
+    Cohen, Jacob. “The Earth Is Round ($p<.05$).” American Psychologist 49, no. 12 (1994): 997–1003.
+    
+    We gaan daar hier niet verder op in om verwarring te voorkomen.
+
+## De kansverdeling "onder $\HO$"
+
+Arbuthnot had toegang tot geboortecijfers voor 82 jaar. 
+In alle 82 jaar werden er meer jongetjes geboren dan meisjes.
+Stel nu dat het er maar 48 waren 
+(en dus 34 waarin de meisjes in de meerderheid waren).
+Hoe sterk hadden we het bewijs tegen $\HO$ dan gevonden?
+Natuurlijk is 48 nog steeds meer dan de helft van de jaren ($82/2 = 41$),
+maar het is een stuk beter voor te stellen dat deze afwijking 
+puur toevallig tot stand is gekomen.
+
+Laten we het aantal jaren waarin jongetjes in de meerderheid waren $X$ noemen.
+Als we uitgaan van de $\HO$,
+dan kunnen we de kans op $X$ voor iedere mogelijke waarde van 0 tot 82 uitrekenen.[^binomiaal]
+Het resultaat is weergegeven in @fig-binomiale-kans. 
+De kansen voor $X < 23$ of $X > 59$ worden niet weergegeven
+omdat die erg klein zijn.
+
+[^binomiaal]: De berekening van deze kansen is niet moeilijk,
+    maar voert te ver voor deze cursus. 
+    De verdeling (@fig-binomiale-kans) heeft een naam: de **binomiale verdeling**. 
+    Deze verdeling kom je altijd tegen als je $n$ keer iets probeert,
+    steeds met een vaste kans $p$ op "succes",
+    en geinteresseert bent in het totaal aantal keren succes, $X$.
+    Meer informatie kun je [hier](https://nl.wikipedia.org/wiki/Binomiale_verdeling) vinden.
+
+```{r}
+#| code-fold: true
+#| fig-cap: "De kansverdeling onder $\\HO$ van het aantal jaren (van in totaal 82 jaren) waarin meer jongens dan meisjes geboren worden."
+#| label: fig-binomiale-kans
+#| fig.height: 3.5
+#| fig.width: 7
+
+# Controleer of de benodigde pakketten zijn geladen
+if (!("ggplot2" %in% .packages())) {
+  library("ggplot2")
+}
+
+# Parameters definiëren voor de binomiale verdeling
+n <- 82
+p <- 0.5
+mean <- n * p
+sd <- sqrt(n * p * (1 - p))
+standaard_deviaties <- 4  # Aantal standaarddeviaties als parameter
+
+# Limieten voor de x-as bepalen (ongeveer 3 standaarddeviaties rond het gemiddelde)
+x_min <- ceiling(mean - standaard_deviaties * sd)
+x_max <- floor(mean + standaard_deviaties * sd)
+
+# Mogelijke uitkomsten en kansen berekenen
+uitkomsten <- seq(x_min, x_max)
+kansen <- dbinom(uitkomsten, size = n, prob = p)
+
+# Data frame maken met de uitkomsten en kansen
+kansen_binomiaal <- data.frame(
+  uitkomsten = factor(uitkomsten),
+  kansen = kansen
+)
+
+# Maak de plot
+verdelingBinomiaal <- function(kleur) {
+  ggplot(kansen_binomiaal, aes(x = uitkomsten, y = kansen)) +
+    geom_bar(
+      stat = "identity",     # Balken representeren kanswaarden direct
+      width = 1,              # Volledige breedte van de categorie
+      fill = kleur,           # Kleur voor de balken
+      color = "black"         # Randkleur voor de balken
+    ) +
+    labs(
+      title = "",
+      x = expression(Aantal~jaren~met~meer~jongetjes~dan~meisjes~italic(X)), # Titel voor de x-as
+      y = "Kans"              # Titel voor de y-as
+    ) +
+    theme_minimal()           # Minimalistisch thema voor de plot
+}
+
+# Kleur voor de balken
+kleur <- "darkorange"
+
+# Plot de binomiale verdeling
+verdelingBinomiaal(kleur)
+
+```
 
 
-
-
-## Geven de gegevens aanleiding om aan $\HO$ te twijfelen
-
-Voorbeeld: steekproef uit populatie.
-
-## De toetsingsgrootheid
-
-Voorbeeld: het gemiddelde. 
 
 ## De $P$-waarde
 
