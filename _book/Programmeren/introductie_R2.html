@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Programmeren in R – Biologische Modellen en Statistiek</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Programmeren/intro_R_questions.html" rel="next">
+<link href="../Programmeren/introductie_R.html" rel="prev">
+<link href="../figuren/favicon/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+<link href="../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="../site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="../site_libs/datatables-binding-0.33/datatables.js"></script>
+<script src="../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="../site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="../site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="../site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="../site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="../site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Programmeren/introductie_R.html">Basisprincipes van R</a></li><li class="breadcrumb-item"><a href="../Programmeren/introductie_R2.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Programmeren in R</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../figuren/favicon/android-chrome-512x512.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Biologische <br>Modellen en Statistiek</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Schakel donkere modus"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Cursusinformatie</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inleiding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../cursusinformatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Algemene cursusinformatie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../planning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Studieplanning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../links.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Handige links</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Basisprincipes van R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/introductie_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie en installatie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/introductie_R2.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Programmeren in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/intro_R_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Extra R oefeningen</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Basiswiskunde</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/inleiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inleiding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/algebra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Algebra</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/breuken.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Breuken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/exponenten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Exponenten &amp; Logaritmen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/limieten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Asymptoten &amp; Limieten</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/afgeleiden.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Afgeleiden</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/schetsen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Functies schetsen</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Biologische modellen</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/intro_modellen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introductie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/exponentielegroei.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Exponentiële groei</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/odes_basis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelleren met ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/dichtheidseffecten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Dichtheidseffecten</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/ruimtelijkegroei.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Ruimtelijke groei</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/predatorprooi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Predator-prooi interacties</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/odes_grind.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs modelleren in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/competitie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Competitie en evolutie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/zwermen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Zwermen en foerageren</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/reactiediffusie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reacties en diffusie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/exciteerbaremedia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Exciteerbare media</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mini-project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Statistiek</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/wat_is_statistiek.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wat is statistiek?</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Bijlagen</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_wiskunde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden wiskunde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_modellen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden modellen</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/spiekbriefjes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spiekbriefjes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/dankwoord.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dankwoord</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="-1">
+    <h2 id="toc-title">Inhoudsopgave</h2>
+   
+  <ul class="collapse">
+  <li><a href="#typen-variabelen" id="toc-typen-variabelen" class="nav-link active" data-scroll-target="#typen-variabelen"><span class="header-section-number">2.1</span> Typen variabelen</a></li>
+  <li><a href="#geen-appels-met-peren-vergelijken" id="toc-geen-appels-met-peren-vergelijken" class="nav-link" data-scroll-target="#geen-appels-met-peren-vergelijken"><span class="header-section-number">2.2</span> Geen appels met peren vergelijken</a></li>
+  <li><a href="#condities" id="toc-condities" class="nav-link" data-scroll-target="#condities"><span class="header-section-number">2.3</span> Condities</a></li>
+  <li><a href="#data-structuren" id="toc-data-structuren" class="nav-link" data-scroll-target="#data-structuren"><span class="header-section-number">2.4</span> Data structuren</a></li>
+  <li><a href="#indexing" id="toc-indexing" class="nav-link" data-scroll-target="#indexing"><span class="header-section-number">2.5</span> Indexing</a></li>
+  <li><a href="#selecteren-uit-een-dataframe" id="toc-selecteren-uit-een-dataframe" class="nav-link" data-scroll-target="#selecteren-uit-een-dataframe"><span class="header-section-number">2.6</span> Selecteren uit een dataframe</a></li>
+  <li><a href="#files-paden-en-de-working-directory" id="toc-files-paden-en-de-working-directory" class="nav-link" data-scroll-target="#files-paden-en-de-working-directory"><span class="header-section-number">2.7</span> Files, paden, en de ‘working directory’</a></li>
+  <li><a href="#functies" id="toc-functies" class="nav-link" data-scroll-target="#functies"><span class="header-section-number">2.8</span> Functies</a></li>
+  <li><a href="#loops" id="toc-loops" class="nav-link" data-scroll-target="#loops"><span class="header-section-number">2.9</span> Loops</a></li>
+  <li><a href="#grafieken-plotten-met-r" id="toc-grafieken-plotten-met-r" class="nav-link" data-scroll-target="#grafieken-plotten-met-r"><span class="header-section-number">2.10</span> Grafieken plotten met R</a></li>
+  <li><a href="#opgaven" id="toc-opgaven" class="nav-link" data-scroll-target="#opgaven"><span class="header-section-number">2.11</span> Opgaven</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Programmeren/introductie_R.html">Basisprincipes van R</a></li><li class="breadcrumb-item"><a href="../Programmeren/introductie_R2.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Programmeren in R</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-Rprogrammeren" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Programmeren in R</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="typen-variabelen" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="typen-variabelen"><span class="header-section-number">2.1</span> Typen variabelen</h2>
+<p>We hebben in het eerste onderdeel al een beetje kennis gemaakt met variabelen, door letters bepaalde numerieke waarden te geven (<code>a &lt;- 2</code>, <code>b &lt;- 9.5</code>, <em>etc</em>). Maar je kan in variabelen niet alleen nummers opslaan, maar ook een heleboel andere type gegevens. De meest belangrijke variabelen zijn:</p>
+<ul>
+<li><p><em>Numerics</em> (<code>1</code>, <code>2</code>, <code>3</code>, maar ook <code>2.158196</code> zijn <em>numeric</em>)</p></li>
+<li><p><em>Logicals</em> (<code>TRUE</code> en <code>FALSE</code>, ook wel <code>T</code>/<code>F</code> of <code>1</code>/<code>0</code>)</p></li>
+<li><p><em>Strings</em> (<code>"a"</code>, <code>"Hoi"</code>, <code>"ATGCTAT"</code>, of <code>"Dit is een zin"</code>)</p></li>
+</ul>
+</section>
+<section id="geen-appels-met-peren-vergelijken" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="geen-appels-met-peren-vergelijken"><span class="header-section-number">2.2</span> Geen appels met peren vergelijken</h2>
+<p>In R kun je berekeningen uitvoeren, maar je kan natuurlijk geen appels met peren vergelijken. Bekijk bijvoorbeeld de volgende code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>appels <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>peren <span class="ot">&lt;-</span> <span class="st">"groen"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>appels <span class="sc">+</span> peren</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Als je de bovenstaande code probeert uit te voeren, geeft R een foutmelding:</p>
+<p><code>Error in appels + peren : non-numeric argument to binary operator</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>Het is erg prettig dat R deze foutmelding geeft. Hoewel dit een overduidelijk onzinnige som is, kan het ook zijn dat je met de beste intenties een foutje maakt!</p>
+<p>We moeten dus wel dezelfde type dingen bij elkaar optellen. Echter kan je natuurlijk ook niet alles bij elkaar optellen. Als we bijvoorbeeld zowel appels als peren een kleur geven (rood en groen), krijgen we dezelfde error:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>appels <span class="ot">&lt;-</span> <span class="st">"rood"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>peren <span class="ot">&lt;-</span> <span class="st">"groen"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>appels <span class="sc">+</span> peren</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>Error in appels + peren : non-numeric argument to binary operator</code></p>
+<p>Je kunt woorden namelijk helemaal niet optellen. Wel zou je natuurlijk de totale lengte van de woorden bij elkaar op kunnen tellen (<code>4+5=9</code>), of de woorden aan elkaar kunnen plakken waardoor we <code>"rood groen"</code> krijgen<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+</section>
+<section id="condities" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="condities"><span class="header-section-number">2.3</span> Condities</h2>
+<p>Vaak is het handig om in een script te controleren of aan een bepaalde voorwaarde wordt voldaan. Hiervoor kun je <code>if</code>, <code>else</code>, en <code>else if</code> gebruiken. Ook kunnen we met <code>print()</code> een resultaat weergeven in de console<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Als we deze dingen combineren, krijgen we:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>leeftijd_student <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">16</span><span class="sc">:</span><span class="dv">19</span>,<span class="dv">1</span>) <span class="co"># genereer willekeurige leeftijd tussen 16 en 19</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(leeftijd_student <span class="sc">&gt;=</span> <span class="dv">18</span>){</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Student is volwassen"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span>{</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Student is niet volwassen"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Om voorwaarden te controleren, gebruik je zogeheten <strong>conditionals</strong>, die teruggeven of iets waar (<code>TRUE</code>) of niet waar (<code>FALSE</code>) is. De gekrulde haakjes <code>{</code> en <code>}</code> geven de zogenoemde <em>scope</em> aan. Alles wat tussen deze gekrulde haakjes staat wordt alleen uitgevoerd als aan de conditie wordt voldaan. In het voorbeeld hierboven gebruiken we <code>&gt;=</code> (groter dan of gelijk aan) om te controleren of de student minstens 18 jaar oud is. Veelgebruikte conditionals zijn:</p>
+<ul>
+<li><code>a == b</code> : TRUE als a gelijk is aan b</li>
+<li><code>a != b</code> : TRUE als a niet gelijk is aan b</li>
+<li><code>a &gt; b</code> : TRUE als a is groter is dan b</li>
+<li><code>a &lt; b</code> : TRUE als a is kleiner is dan b</li>
+<li><code>a &gt;= b</code> : TRUE als a is groter is dan of gelijk is aan b</li>
+<li><code>a &lt;= b</code> : TRUE als a is kleiner is dan of gelijk is aan b</li>
+</ul>
+<p>Daarnaast kun je eventueel meerdere condities combineren:</p>
+<ul>
+<li><code>a==b &amp; b!=c</code> : TRUE als a gelijk is aan b én b <strong>niet</strong> gelijk is aan c</li>
+<li><code>a&lt;b | b&gt;c</code> : TRUE als a kleiner is dan b óf b groter is dan c</li>
+</ul>
+<p>Als laatste kun je nog veel meer combinaties controleren door <code>if</code> en <code>else</code> in elkaars <em>scope</em> terug te laten komen (dit wordt ook wel het “nesten” van condities genoemd). Zo kunnen we binnen het ene <code>if</code> statement weer andere condities controleren. Als we bijvoorbeeld twee dobbelsteenworpen simuleren, kunnen we precies controleren welke dobbelsteen hoger is dan 4:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>,<span class="dv">1</span>) <span class="co"># dobbelsteen 1</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>,<span class="dv">1</span>) <span class="co"># dobbelsteen 2</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (d1 <span class="sc">&gt;</span> <span class="dv">4</span>) {</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (d2 <span class="sc">&gt;</span> <span class="dv">4</span>) {</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">"d1 en d2 zijn hoger dan 4"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">"d1 is hoger dan 4, maar d2 niet"</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span>(d2 <span class="sc">&gt;</span> <span class="dv">4</span>) {</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"d1 is niet hoger dan 4, maar d2 wel"</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>} </span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let op: als je de bovenstaande code goed leest, zie je dat er helemaal <strong>niets</strong> wordt geprint als geen van beide dobbelstenen groter dan 4 is.</p>
+</section>
+<section id="data-structuren" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="data-structuren"><span class="header-section-number">2.4</span> Data structuren</h2>
+<p>Het is vaak heel handig om je variabelen in lijsten of tabellen op te slaan. Dergelijke lijsten of tabellen worden meestal <em>data structures</em> genoemd. De meest belangrijke data structures in R zijn:</p>
+<ul>
+<li><p><em>Vectors</em> (lijst van elementen van hetzelfde type)</p></li>
+<li><p><em>Matrices</em> (tabel van elementen van hetzelfde type)</p></li>
+<li><p><em>Dataframes</em> (tabel waarin elke kolom een ander type data kan zijn)</p></li>
+</ul>
+<div id="fig-datastructures" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-datastructures-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figuren/datastructs.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figuur&nbsp;2.1: Belangrijkste data structuren in R"><img src="figuren/datastructs.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-datastructures-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;2.1: Belangrijkste data structuren in R
+</figcaption>
+</figure>
+</div>
+<section id="sec-vectoren" class="level3">
+<h3 class="anchored" data-anchor-id="sec-vectoren">Vectoren</h3>
+<p>Om een vector te maken, kunnen we deze handmatig intypen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mijnvector <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="sc">-</span><span class="dv">5</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mijnvector[<span class="dv">1</span>] <span class="co"># geeft het eerste getal</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>mijnvector[<span class="dv">2</span>] <span class="co"># geeft het tweede getal, etc</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Maar handmatig getallen invoeren is niet altijd handig. Gelukkig kun je met R een boel lijstjes op een snellere manier automatisch genereren:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>                <span class="co"># 1, 2, 3, 4</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span><span class="sc">:</span><span class="dv">2</span>                <span class="co"># 5, 4, 3, 2</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">4</span>)           <span class="co"># 2, 2, 2, 2</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">0</span>,<span class="fl">4.5</span>,<span class="fl">1.5</span>)     <span class="co"># 0.0, 1.5, 3.0, 4.5</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>,<span class="dv">4</span>)      <span class="co"># 4, 6, 3, 5 (iedere keer anders!)</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(letters,<span class="dv">4</span>)  <span class="co"># "f", "j", "o", "y" (iedere keer anders!)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">runif</span>(<span class="dv">2</span>)           <span class="co"># 0.9965360 0.8978062 (iedere keer anders!)</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>De laatste vijf regels van het bovenstaande script zijn voorbeelden van “functies”. Een functie is een herhaalbaar blokje code die je aanroept met de naam (rep, seq, sample), gevolgd door haakjes met daartussen eventuele <em>argumenten</em>. De functie zet deze argumenten om in een zogeheete <em>return</em>-waarde, wat bijvoorbeeld een getal of een lijst getallen is. Je leert meer over functies in het onderdeel <a href="#sec-functies" class="quarto-xref"><span>Paragraaf 2.8.1</span></a>.</p>
+<p>Je kan met vectoren ook rekenen. Zo kan je bijvoorbeeld twee vectoren bij elkaar optellen, of één en hetzelfde getal bij alle elementen van een vector optellen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rekenen met vectoren</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>           <span class="co"># 1, 2, 3</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>x <span class="sc">+</span> <span class="dv">10</span>             <span class="co"># 11 12 13</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>x <span class="sc">+</span> <span class="dv">10</span>             <span class="co"># 11 12 13</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">4</span>)   <span class="co"># 1 10 4</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>x <span class="sc">+</span> y              <span class="co"># 2 12  7</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>x <span class="sc">*</span> y              <span class="co"># 1 20 12</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>x <span class="sc">+</span> y <span class="sc">/</span> <span class="dv">100</span>        <span class="co"># 1.01 2.10 3.04</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>(x <span class="sc">+</span> y) <span class="sc">/</span> <span class="dv">100</span>      <span class="co"># 0.02 0.12 0.07</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let op! Zoals je ziet staat er twee keer <code>x + 10</code>. Hoewel we de eerste keer al <code>10</code> bij <code>x</code> hebben opgeteld, is de waarde van <code>x</code> niet aangepast. De tweede keer is het antwoord dus precies hetzelfde, want <code>x</code> is niet veranderd. Als we in plaats hiervan <code>x &lt;- x + 10</code> hadden gebruikt, zou de waarde van <code>x</code> wel aangepast worden:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="dv">10</span>             <span class="co"># x bevat nu 11, 12, 13</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="dv">10</span>             <span class="co"># x bevat nu 21, 22, 23</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> x <span class="sc">/</span> <span class="dv">10</span>             <span class="co"># x bevat nu 2.1, 2.2, 2.3</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let ook op het subtiele verschil tussen de regels <code>x + y / 100</code> en <code>(x + y) / 100</code>. Net als bij wiskunde gaan haakjes voor delen en vermedigvuldigen, dus het resultaat van deze twee regels is anders. Soms moet je dus goed aangeven in welke volgorde je de berekeninng wil uitvoeren!</p>
+<p>Als laatste is het belangrijk om te weten dat spaties in R meestal niets betekenen (dit geldt voor de meeste programmeertalen). Zodoende is <code>x&lt;-x+10</code> hetzelfde als <code>x &lt;- x + 10</code>, en <code>rep(2,1)</code> hetzelfde als <code>rep(2, 1)</code>. Een paar uitzonderingen is dat spaties in het pijltje om variabele toe te kennen niet kunnen (<code>x &lt; - 1</code> werkt niet). Ook doen spaties in <em>strings</em> er wel toe, want daar telt spatie als een karakter. Zodoende zijn <code>"appels"</code>, <code>" appels"</code> en <code>"appels "</code> niet hetzelfde:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="st">"appels"</span> <span class="sc">==</span> <span class="st">"appels"</span>  <span class="co"># TRUE</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="st">"appels"</span> <span class="sc">==</span> <span class="st">"appels "</span> <span class="co"># FALSE</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="st">"appels"</span> <span class="sc">==</span> <span class="st">" appels"</span> <span class="co"># FALSE</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>De bovenstaande situatie lijkt misschien een beetje vreemd, maar komt vaak voor omdat er per ongeluk ergens een spatie in je data staat (een spatie valt niet zo snel op!). Het is dus goed om hierop attent te blijven.</p>
+</section>
+<section id="matrices" class="level3">
+<h3 class="anchored" data-anchor-id="matrices">Matrices</h3>
+<p>Matrices in R kun je maken door de functie <code>matrix</code> aan te roepen, die je waarden van de matrix en het aantal rijen als argumenten geeft:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>,<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>), <span class="at">nrow=</span><span class="dv">3</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>,<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>), <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">byrow=</span>T)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Zoals je ziet zijn er geen comments geplaatst bij deze twee regels. Voer de bovenstaande code zelf uit, en kijk naar de verschillende uitkomsten van de eerste en de tweede regel. Je kan de matrix ook vullen met andere waarden:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>kansen_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(<span class="dv">9</span>), <span class="at">nrow=</span><span class="dv">3</span>) <span class="co"># willekeurige getallen tussen 0 en 1</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>percentage_matrix <span class="ot">&lt;-</span> kansen_matrix<span class="sc">*</span><span class="dv">100</span>   <span class="co"># de kansen matrix keer 100, dus percentages</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>letter_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">sample</span>(letters,<span class="dv">9</span>), <span class="at">nrow=</span><span class="dv">3</span>) <span class="co"># willekeurige letters</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="data-frames" class="level3">
+<h3 class="anchored" data-anchor-id="data-frames">Data frames</h3>
+<p>De laatste (en voor biologen meest belangrijke) data structuur in R is de data frame. In een dataframe bevat elke kolom een ander gegeven (naam, leeftijd, haarkleur), en is elke rij een apart observatie. Een dergelijke structuur is heel handig om wetenschappelijke data te verzamelen. Ook deze kun je weer handmatig invoeren:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>biologen <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">naam=</span><span class="fu">c</span>(<span class="st">"Lina"</span>,<span class="st">"Yassin"</span>,<span class="st">"Bram"</span>),</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">leeftijd=</span><span class="fu">c</span>(<span class="dv">19</span>,<span class="dv">18</span>,<span class="dv">80</span>), </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">haarkleur=</span><span class="fu">c</span>(<span class="st">"Blauw"</span>,<span class="st">"Groen"</span>, <span class="st">"Paars"</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-797dcc675ffc012c6af6" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-797dcc675ffc012c6af6">{"x":{"filter":"none","vertical":false,"data":[["1","2","3"],["Lina","Yassin","Bram"],[19,18,80],["Blauw","Groen","Paars"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>naam<\/th>\n      <th>leeftijd<\/th>\n      <th>haarkleur<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"pageLength":3,"lengthChange":false,"info":false,"paging":false,"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"naam","targets":1},{"name":"leeftijd","targets":2},{"name":"haarkleur","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p><br>Als je deze dataset wil bekijken in Rstudio, kun je <code>View(biologen)</code> typen. Dit opent een tabblad waarin je de data kan verkennen en sorteren (voor grotere datasets is dit natuurlijk erg handig!).</p>
+<p>Het is natuurlijk meestal niet handig om handmatig data frames in te typen in R. In plaats daarvan kun je grote datasets vaak opslaan of downloaden in een groot tekstbestand, bijvoorbeeld in een <em>comma-seperated-value</em> (csv) bestand. Een voorbeeld van de eerste paar regels van een dergelijk csv-bestand, zie je hieronder.</p>
+<pre><code>datapunt,week,maand,jaar,positieve_testen
+1,1,10,2021,221
+2,2,10,2021,271
+3,3,10,2021,344
+4,4,10,2021,507
+5,5,10,2021,514</code></pre>
+<p>Als je een dergelijk tekstbestand op je computer hebt opgeslagen, kun je deze inlezen met de functie <code>read.table</code> of <code>read.csv</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"E:/Files/covid.csv"</span>) <span class="co"># waar het bestand staat</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(covid_data) <span class="co"># bekijk de eerste 6 rijen</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(covid_data) <span class="co"># bekijk de hele tabel in Rstudio</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="indexing" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="indexing"><span class="header-section-number">2.5</span> Indexing</h2>
+<p>Nu je weet hoe je tabellen in kan lezen, is het belangrijk om te leren over “indexing”. Indexing is het selecteren van specifieke waarden uit een vector, matrix, of dataframe. Dit doe je door de positie (index) van deze elementen tussen vierkante haakjes aan te geven:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>jaartallen <span class="ot">&lt;-</span> <span class="dv">2009</span><span class="sc">:</span><span class="dv">2024</span>         <span class="co"># Jaren dat ik biologie "studeer"</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>jaartallen[<span class="dv">6</span><span class="sc">:</span><span class="dv">9</span>]                 <span class="co"># 2014 2015 2016 2017</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(<span class="dv">9</span>),<span class="at">nrow=</span><span class="dv">3</span>)    <span class="co"># Willekeurige getallen in een matrix</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>m[<span class="dv">1</span>,<span class="dv">2</span>]    <span class="co"># rij 1, kolom 2</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>m[<span class="dv">1</span>,]     <span class="co"># rij 1 volledig</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>m[,<span class="dv">2</span>]     <span class="co"># kolom 2 volledig</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>m[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,<span class="dv">3</span>]  <span class="co"># van rij 1 t/m 2, alleen de 3e kolom</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>biologen <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">naam=</span><span class="fu">c</span>(<span class="st">"Lina"</span>,<span class="st">"Yassin"</span>,<span class="st">"Bram"</span>),</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">leeftijd=</span><span class="fu">c</span>(<span class="dv">19</span>,<span class="dv">18</span>,<span class="dv">80</span>), </span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">haarkleur=</span><span class="fu">c</span>(<span class="st">"Blauw"</span>,<span class="st">"Groen"</span>, <span class="st">"Paars"</span>))</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>biologen[<span class="dv">1</span>,<span class="dv">2</span>] <span class="co"># eerste rij, tweede kolom (leeftijd: 19)</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Omdat in data frames de kolommen namen hebben, kun je ook deze gebruiken om specifieke datapunten te selecteren:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>biologen[<span class="dv">1</span>,<span class="st">"leeftijd"</span>] <span class="co">#identiek aan biologen[1,2], maar het is wat duidelijker wat je selecteert</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Je kunt met dataframes ook met het dollar-teken een gehele kolom opvragen, een kolom bewerken, of een kolom toevoegen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>biologen<span class="sc">$</span>leeftijd</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>biologen<span class="sc">$</span>leeftijd <span class="ot">&lt;-</span> biologen<span class="sc">$</span>leeftijd <span class="sc">+</span> <span class="dv">1</span>  <span class="co"># De leeftijd van alle biologen wordt met 1 verhoogd</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>biologen<span class="sc">$</span>rol <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"student"</span>,<span class="st">"assistent"</span>,<span class="st">"docent"</span>) <span class="co"># Een nieuwe kolom genaamd 'rol'</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-710ef69d45547472be39" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-710ef69d45547472be39">{"x":{"filter":"none","vertical":false,"data":[["1","2","3"],["Lina","Yassin","Bram"],[20,19,81],["Blauw","Groen","Paars"],["student","assistent","docent"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>naam<\/th>\n      <th>leeftijd<\/th>\n      <th>haarkleur<\/th>\n      <th>rol<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"pageLength":3,"lengthChange":false,"info":false,"paging":false,"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"naam","targets":1},{"name":"leeftijd","targets":2},{"name":"haarkleur","targets":3},{"name":"rol","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="selecteren-uit-een-dataframe" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="selecteren-uit-een-dataframe"><span class="header-section-number">2.6</span> Selecteren uit een dataframe</h2>
+<p>Je kunt ook bovengenoemde <em>conditionals</em> (groter dan, gelijk aan, <em>etc.</em>) gebruiken op vectoren. Dit geeft dan een vector van dezelfde lengte, met voor elke positie of aan de conditie voldaan wordt. Als we bijvoorbeeld de zelf-gemaakte biologen-dataframe nog eens bekijken, dan kunnen we een vector maken die voor de leeftijd-kolom zegt wie er jonger is dan 20:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>biologen <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">naam=</span><span class="fu">c</span>(<span class="st">"Lina"</span>,<span class="st">"Yassin"</span>,<span class="st">"Bram"</span>),</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">leeftijd=</span><span class="fu">c</span>(<span class="dv">19</span>,<span class="dv">18</span>,<span class="dv">80</span>), </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">haarkleur=</span><span class="fu">c</span>(<span class="st">"Blauw"</span>,<span class="st">"Groen"</span>, <span class="st">"Paars"</span>)) </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>jong <span class="ot">&lt;-</span> biologen<span class="sc">$</span>leeftijd <span class="sc">&lt;</span> <span class="dv">20</span> <span class="co"># geeft TRUE TRUE FALSE</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Met deze vector kunnen we dan een selectie maken uit een dataframe. Weet je nog dat we hierboven zeiden dat je uit dataframe kan selecteren door <code>[rijen,kolommen]</code> aan te geven? Met onze nieuwe <code>jong</code>-vector, kunnen we dus de juiste rijen pakken:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>biologen[jong,] <span class="co"># alleen biologen jonger dan 20</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Dit is natuurlijk vooral handig als je een grotere dataset hebt, zoals de bovengenoemde covid-data. Met een dergelijke dataset is het niet handig om handmatig aan te geven welke rijen je wil behouden!</p>
+</section>
+<section id="files-paden-en-de-working-directory" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="files-paden-en-de-working-directory"><span class="header-section-number">2.7</span> Files, paden, en de ‘working directory’</h2>
+<p>Om (zoals hierboven) een bestand in te kunnen lezen, moet Rstudio wel weten waar het bestand staat. Op computers staan alle bestanden in een hierachische structuur (zie bijvoorbeeld onderstaande Figuur). Hoewel je misschien gewend bent om door deze structuur van “mappen” te klikken met de muis, moet je in een script altijd precies vertellen waar het bestand staat. Standaard zoekt Rstudio vaak in de home directory van je besturingsysteem (<code>/Users/Naam</code> in MacOs, <code>C:/Users/UserName/Documents</code> in Windows). De directory vanuit waar Rstudio naar het bestand zoekt, heet de <em>Working Directory</em> (rood omlijnd in de figuur). Door de Working Directory goed in te stellen, hoef je niet elke keer een heel lang pad (dit heet het absolute pad) naar het bestand in te typen, maar kun je met een korter pad omschrijven waar het bestand staat (dit heet het relatieve pad). Vaak is het dus handig om je Working Directory aan te passen naar dezelfde map waar je het script hebt opgeslagen, zodat je alle data, scripts, en grafieken een beetje bij elkaar kan houden. Dit kan je doen door, nadat je je script ergens hebt opgeslagen, te navigeren naar <code>Session &gt; Set Working Directory &gt; To Source File Location</code>, of door rechts te klikken op je script-naam bovenin het script-venster, en <code>Set Working Directory</code> te kiezen.</p>
+<div id="fig-filesandpaths" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-filesandpaths-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figuren/file_tree.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figuur&nbsp;2.2: Om te programmeren moet je weten waar bestanden (files) staan opgeslagen. Je kunt deze files vinden door het juiste pad (paths) te typens"><img src="figuren/file_tree.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-filesandpaths-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;2.2: Om te programmeren moet je weten waar bestanden (<em>files</em>) staan opgeslagen. Je kunt deze files vinden door het juiste pad (<em>paths</em>) te typens
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="functies" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="functies"><span class="header-section-number">2.8</span> Functies</h2>
+<section id="sec-functies" class="level3">
+<h3 class="anchored" data-anchor-id="sec-functies">Voorbeelden van functies en ‘help’</h3>
+<p>In het onderdeel <a href="#sec-vectoren" class="quarto-xref"><span>Paragraaf 2.4.1</span></a> heb je al een aantal voorbeelden gezien van functies, herhaalbare blokjes code die je gemakkelijk kan aanroepen. Functies hebben een <code>input</code> (waarde(n) die je meegeeft als zogeheten <em>argumenten</em>), en <code>output</code> (waarde(n) die het terug geeft, de <em>return</em>-waarde). Er bestaan standaard in R een heleboel functies, waarvan je een aantal in deze cursus nog veel zal tegenkomen:</p>
+<ul>
+<li><code>read.csv</code>, leest comma-separated-values bestand in als dataframe</li>
+<li><code>print</code> of <code>cat</code>, geeft iets (variabelen of tekst) weer in de console</li>
+<li><code>plot</code>, om data te plotten in een grafiek</li>
+<li><code>length</code> geeft de lengte van een vector</li>
+<li><code>mean</code>, gemiddelde van een vector</li>
+<li><code>sd</code>, standaarddeviatie van een vector</li>
+<li><code>sum</code>, som van een vector</li>
+<li><code>min</code> geeft de kleinste waarde in een vector</li>
+<li><code>max</code> geeft de grootste waarde in een vector</li>
+<li><code>sort</code>, sorteert een vector</li>
+</ul>
+<p>Als je graag meer wil weten over hoe een functie werkt, kun je de naam van de functie typen met een <code>?</code> ervoor:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>?mean</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Dit geeft extra uitleg over deze functie in het “Help” venster (rechtsonderin <a href="introductie_R.html#fig-rstudiolayout" class="quarto-xref">Figuur&nbsp;<span>1.2</span></a>).</p>
+</section>
+<section id="zelf-functies-maken" class="level3">
+<h3 class="anchored" data-anchor-id="zelf-functies-maken">Zelf functies maken</h3>
+<p>Je kan ook zelf functies maken. Dit is handig als je meerdere keren dezelfde specifieke berekening wil uitvoeren. Je moet hiervoor aangeven wat de argumenten zijn, welke berekening op basis van deze argumenten wordt uitgevoerd, en wat er door de functie wordt teruggegeven (de return-waarde). Hier is een voorbeeld:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definitie van de functie</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>som_kwadraten <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) {</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  resultaat <span class="ot">&lt;-</span> a<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> b<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(resultaat)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Voorbeeld gebruik van de functie</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">som_kwadraten</span>(<span class="dv">1</span>,<span class="dv">2</span>)            <span class="co"># 5</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">som_kwadraten</span>(<span class="dv">3</span>, <span class="dv">4</span>)           <span class="co"># 25</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="fu">som_kwadraten</span>(<span class="fl">0.5</span>, <span class="fl">0.1</span>)       <span class="co"># 0.26</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Bij het definieren van de functie geven de gekrulde haken aan wat de zogeheten <code>scope</code> van de functie is: dit blokje code behoort alleen deze functie toe. Je ziet deze <code>scopes</code> ook terug wanneer je op bepaalde voorwaarden gaat toetsen, als je ‘loops’ gaat gebruiken, wat in het volgende deel uitgelegd wordt.</p>
+</section>
+</section>
+<section id="loops" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="loops"><span class="header-section-number">2.9</span> Loops</h2>
+<p>Hoewel functies het makkelijker maken om dezelfde berekening meerdere keren uit te voeren, wat nu als je een functie 100 keer wil aanroepen? Hebben we dan 100 regels nodig? Het antwoord is nee, want elke programmeertaal (dus ook <code>R</code>) heeft manieren om stukken code gemakkelijk te herhalen. In R bestaan veel verschillende manieren om dit te doen (<code>repeat</code>, <code>apply</code>, <code>while</code>), maar in deze introductie maken we vooral kennis met de meest-gebruikte loop in de programmeer-wereld: de for-loop.</p>
+<p>Laten we bijvoorbeeld de exponentiele afname van paracetamol in het bloed beschrijven met een simpele “simulatie”. Iemand neemt 400 milligram paracetamol in, wat ieder uur (ongeveer) met 70% afneemt:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">400</span> <span class="co"># hoeveelheid paracetamol</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fl">0.7</span> <span class="co"># afname (d van decay)</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Herhaal iets 10 keer, waarbij 'i' steeds met 1 toeneemt</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>){</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> p<span class="sc">*</span>d</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">'Na 10 uur is er'</span>,p,<span class="st">'milligram paracetamol in het bloed'</span>) <span class="co"># 11.299 mg</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Aan het einde van deze <code>for</code>-loop kunnen we kijken wat de waarde van p is door in de console <code>p</code> te typen.</p>
+<pre><code>&gt; p
+[1] 11.29901</code></pre>
+<p>Zoals we eerder hadden besproken, staat de <code>[1]</code> voor het feit dat dit de eerste en enige waarde is die in de variable <code>p</code> is opgeslagen. We hebben nu dus alleen de <strong>laatste</strong> waarde bewaard. Wellicht willen we echter graag bijhouden hoeveel paracetamol er in elke stap aanwezig was, zodat we dat na onze loop kunnen plotten. Om dit te doen, kunnen we de <code>i</code> als index gebruiken om een vector te vullen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">400</span> <span class="co"># hoeveelheid paracetamol</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fl">0.7</span> <span class="co"># afname (d van decay)</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Herhaal iets 10 keer, waarbij 'i' steeds met 1 toeneemt</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>){</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  p[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> p[i]<span class="sc">*</span>d</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, <span class="at">type=</span><span class="st">'o'</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="introductie_R2_files/figure-html/unnamed-chunk-25-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="introductie_R2_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Omdat dit voorbeeld om simpele exponentiele afname gaat, hadden we de bovenstaande berekening ook “in één keer” kunnen uitrekenen door <span class="math inline">\(p \cdot d^{10}\)</span> uit te rekenen. Laten we dat even controleren:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">400</span> <span class="co"># hoeveelheid paracetamol</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fl">0.7</span> <span class="co"># afname (d van decay)</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>p<span class="sc">*</span>d<span class="sc">^</span><span class="dv">10</span> <span class="co"># 11.299 mg, dat klopt dus!</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Dit antwoord komt inderdaad overeen met onze berekening met de <code>for</code>-loop. Hoewel deze loop dus misschien wat onnodig lijkt, hebben we niet altijd zo’n simpele formule beschikbaar. Bovendien willen we wellicht iets veel specifiekers simuleren, bijvoorbeeld dat de persoon gedurende een periode van 100 uur elke 10 uur opnieuw paracetamol inneemt:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">400</span> <span class="co"># hoeveelheid paracetamol</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fl">0.7</span> <span class="co"># afname (d van decay)</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>){</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(i<span class="sc">%%</span><span class="dv">10</span><span class="sc">==</span><span class="dv">0</span>){ <span class="co"># is i precies deelbaar door 12?</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    p[i] <span class="ot">&lt;-</span> p[i] <span class="sc">+</span> <span class="dv">400</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  } </span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  p[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> p[i]<span class="sc">*</span>d</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, <span class="at">type=</span><span class="st">'o'</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="introductie_R2_files/figure-html/unnamed-chunk-27-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="introductie_R2_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Of dat de persoon met 10% kans elk uur een paracetamol inneemt:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">400</span> <span class="co"># hoeveelheid paracetamol</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fl">0.7</span> <span class="co"># afname (d van decay)</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>){</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">runif</span>(<span class="dv">1</span>)<span class="sc">&lt;</span><span class="fl">0.1</span>){ <span class="co"># is willekeurig getal (tussen 0 en 1) kleiner dan 0.1?</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    p[i] <span class="ot">&lt;-</span> p[i] <span class="sc">+</span> <span class="dv">400</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  } </span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  p[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> p[i]<span class="sc">*</span>d</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, <span class="at">type=</span><span class="st">'o'</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="introductie_R2_files/figure-html/unnamed-chunk-28-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="introductie_R2_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="grafieken-plotten-met-r" class="level2" data-number="2.10">
+<h2 data-number="2.10" class="anchored" data-anchor-id="grafieken-plotten-met-r"><span class="header-section-number">2.10</span> Grafieken plotten met R</h2>
+<p>Om de bovenstaande plot van de paracetamol afname iets vollediger en mooier te maken, kunnen we meer argumenten aan de plotfunctie toevoegen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">400</span> <span class="co"># hoeveelheid paracetamol</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fl">0.7</span> <span class="co"># afname (d van decay)</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>){</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">runif</span>(<span class="dv">1</span>)<span class="sc">&lt;</span><span class="fl">0.1</span>){ <span class="co"># is willekeurig getal (tussen 0 en 1) kleiner dan 0.1?</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    p[i] <span class="ot">&lt;-</span> p[i] <span class="sc">+</span> <span class="dv">400</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  } </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  p[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> p[i]<span class="sc">*</span>d</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, <span class="at">type=</span><span class="st">'l'</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">col=</span><span class="st">"purple"</span>, <span class="at">xlab=</span><span class="st">"Tijd (uren)"</span>, <span class="at">ylab=</span><span class="st">"Paracetamol in bloed"</span>)</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="dv">70</span>, <span class="fu">max</span>(p), <span class="at">legend=</span><span class="fu">c</span>(<span class="st">"Paracetamol"</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">"purple"</span>),<span class="at">lty=</span><span class="dv">1</span>,<span class="at">lwd=</span><span class="dv">2</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="introductie_R2_files/figure-html/unnamed-chunk-29-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="introductie_R2_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Er zijn binnen R nog veel meer manieren om data te plotten, zoals bijvoorbeeld de <code>boxplot</code> die je bij het onderdeel statistiek zeker nog tegen zal komen. Daarnaast zijn er in R veel packages beschikbaar die kunnen helpen bij het maken van mooie grafieken, zoals <a href="https://ggplot2.tidyverse.org/">ggplot</a>, maar daar gaan we in deze cursus niet dieper op in.</p>
+</section>
+<section id="opgaven" class="level2" data-number="2.11">
+<h2 data-number="2.11" class="anchored" data-anchor-id="opgaven"><span class="header-section-number">2.11</span> Opgaven</h2>
+<div id="exr-packages" class="Rexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 2.1 (Packages)</strong></span> <br></p>
+<p>R wordt wereldwijd door veel biologen gebruikt. Daarom kun je vaak online veel hulp vinden als je een bepaalde analyse wil uitvoeren met R. Er zijn bijvoorbeeld heel veel <code>packages</code> en Rscripts beschikbaar om data te visualiseren, fylogenetische bomen te analyseren, diversiteitsanalyses uit te voeren, <em>etc.</em>. Een <code>package</code> moet je één keer installeren, en kan je daarna eenvoudig inladen.</p>
+<p><strong>a.</strong> Voer in R de functie <code>rtree(10)</code> uit. Wat is je resultaat?</p>
+<p>We installeren het package ‘ape’ met de onderstaande code en laden deze in (installeren hoeft maar één keer, inladen moet iedere keer dat je Rstudio opnieuw opstart).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ape"</span>) <span class="co"># Installatie. Hoeft maar 1 keer!</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ape) <span class="co"># inladen van het package</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>b.</strong> Voer nogmaals <code>rtree(10)</code> uit. Wat is het resultaat?</p>
+<p>We kunnen de uitkomst uit vraag b ook plotten met R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># installeren hoeft niet meer :)</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ape) <span class="co"># inladen</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">rtree</span>(<span class="dv">10</span>)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tree)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>c.</strong> Voer het script een aantal keren uit. Is het resultaat iedere keer hetzelfde? Waar denk je dat de ‘r’ in rtree voor staat?</p>
+<p><strong>d.</strong> Bestudeer wat het argument <code>10</code> doet.</p>
+<p><strong>e.</strong> Bestudeer welke andere argumenten deze functie heeft.</p>
+<p>Naast packages kan je ook een Rscript inlezen. Dit doet je met de functie <code>source()</code>, waar je tussen haakjes aangeeft waar het script te vinden is (dit kan zowel op je computer staan als online). Zo kan je bijvoorbeeld een eerder-gebruikt script in je nieuwe script inladen, of een groot script geschreven door iemand inlezen. Later in de cursus ga je bijvoorbeeld het <code>Grind.R</code> script inlezen vanaf de website van Rob de Boer, maar hier komen we later in de cursus op terug.</p>
+</div>
+<div id="exr-penguins" class="Rexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 2.2 (Pinguïns)</strong></span> <br></p>
+<p>Sommige packages zijn er vooral om voorbeeld-datasets te verkrijgen. Een daarvan is <code>palmerpenguins</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"palmerpenguins"</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Voer de code hierboven uit. Je hebt nu de dataframe <code>penguins</code> tot je beschikking.</p>
+<p><strong>a.</strong> Hoeveel soorten pinguïns staan er in de data set?</p>
+<p>De kolom <code>penguins$flipper_length_mm</code> geeft de flipper lengtes van de pinguïns. Echter is er bij enkele metingen iets misgegaan, waardoor deze de waarde <code>NA</code> (Not Available) heeft.</p>
+<p><strong>b.</strong> De functies <code>min</code>, <code>max</code> en <code>mean</code> geven respectievelijk de kleinste, grootste, en gemiddelde waarde van een lijst. Bereken deze waarden voor de flipper lengtes (hint: je kunt deze functies een tweede argument <code>na.rm=TRUE</code> meegeven om de NA’s te verwijderen).</p>
+<p><strong>c.</strong> Gebruik de functie <code>summary</code> om te berekenen voor welk percentage van de pinguïns de sekse <em>niet</em> is bepaald.</p>
+</div>
+<div id="exr-bacterienR" class="Rexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 2.3 (Bacteriegroei)</strong></span> <br></p>
+<p>Een bioloog heeft een experiment uitgevoerd waarin hij de groeisnelheid van bacteriën heeft gemeten bij verschillende temperaturen. De data is als volgt:</p>
+<ul>
+<li>Temperatuur: 20, 25, 30, 35, 40 graden Celcius</li>
+<li>Groeisnelheid: 2.0, 2.25, 2.65, 2.35, 2.2 per uur</li>
+</ul>
+<ol type="a">
+<li>Stel een dataframe samen met twee kolommen, één voor temperatuur en één voor groeisnelheid</li>
+<li>Bepaal bij welke temperatuur de groeisnelheid maximaal is (tip: gebruik de functie <code>which.max()</code> om de index met de hoogste waarde te vinden)</li>
+</ol>
+<p>Een groeisnelheid van 2 betekent dat de bacteriën elk uur verdubbelen. Na 2 uur zijn er dus 4 keer zoveel bacteriën, na 3 uur 8 keer, en uiteindelijk na tien uur 1024 keer meer.</p>
+<ol start="3" type="a">
+<li><p>Bepaal voor elke temperatuur hoeveel keer meer bacteriën er zijn na 10 uur. Voeg dit toe als nieuwe kolom ‘totaalgroei’ in je dataframe.</p></li>
+<li><p>Controlleer <em>met R</em> of de totaalgroei met een groeisnelheid van 2 inderdaad uitkomt op 1024.</p></li>
+</ol>
+<p>Met <code>plot()</code> kun je de waarden van twee kolommen tegen elkaar plotten. Als eerste eerste argument geef je de waarden op de x-as, en als tweede de waarden op de y-as.</p>
+<ol start="5" type="a">
+<li>Plot de groeisnelheid tegen de temperatuur. Geef je grafiek een kleur, een titel, en label de assen.</li>
+</ol>
+</div>
+<div id="exr-vislengtes" class="Rexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 2.4 (Vissen vrijlaten)</strong></span> <br></p>
+<p>Een ecoloog heeft data verzameld over de lengte van vissen in een vijver, omdat hij vissen langer dan 15 cm wil uitzetten in een natuurlijk meer. De data staat in de volgende vector:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># De dataset met lengtes van vissen (in cm):</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>lengtes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">18</span>, <span class="dv">7</span>, <span class="dv">21</span>, <span class="dv">15</span>, <span class="dv">16</span>, <span class="dv">14</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">17</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Door een vector te controleren op een bepaalde voorwaarde krijg je een nieuwe vector terug, met voor elke meting of dit waar is of niet. Omdat <code>TRUE</code> gelijk staat aan 1, en <code>FALSE</code> gelijk staat aan 0, kun je met de functie <code>sum</code> vervolgens bepalen hoeveel metingen aan een bepaalde voorwaarde voldoen.</p>
+<p><strong>a.</strong> Gebruik de bovenstaande informatie om de tellen hoeveel vissen groter of gelijk aan 15 cm zijn.</p>
+<p><strong>b.</strong> Bereken het <em>percentage</em> vissen dat te klein zijn om uit te zetten.</p>
+<p>In plaats van specifieke waardes als index te gebruiken, kun je ook een <code>TRUE</code>/<code>FALSE</code>-vector gebruiken om data uit een lijst te selecteren.</p>
+<p><strong>c.</strong> Selecteer alle lengtes van vissen die groot genoeg zijn (&gt;=15 cm).</p>
+<p><strong>d.</strong> Gebruik een for-loop om vissen stuk voor stuk te beoordelen, en print voor elke vis of ze groot genoeg zijn.</p>
+</div>
+
+
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Wat deze error precies betekent is niet belangrijk<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>De lengtes optellen kan met <code>nchar(appels)+nchar(peren)</code>. De woorden aan elkaar plakken kan met <code>paste(appels,peren)</code>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>In dit geval betekent printen dus niet iets met printers te maken, maar slaat het alleen op ‘tekst weergeven op je scherm’.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Gekopieerd!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Gekopieerd!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+          // default icon
+          link.classList.add("external");
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../Programmeren/introductie_R.html" class="pagination-link" aria-label="Introductie en installatie">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie en installatie</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../Programmeren/intro_R_questions.html" class="pagination-link" aria-label="Extra R oefeningen">
+        <span class="nav-page-text">Extra R oefeningen</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Vakgroep Theoretische Biologie, Universiteit Utrecht.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Dit boek is gemaakt met <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","descPosition":"bottom","loop":false,"selector":".lightbox","closeEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
