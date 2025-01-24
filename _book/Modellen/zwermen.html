@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>16&nbsp; Zwermen en foerageren – Biologische Modellen en Statistiek</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Modellen/reactiediffusie.html" rel="next">
+<link href="../Modellen/competitie.html" rel="prev">
+<link href="../figuren/favicon/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Modellen/intro_modellen.html">Biologische modellen</a></li><li class="breadcrumb-item"><a href="../Modellen/zwermen.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Zwermen en foerageren</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../figuren/favicon/android-chrome-512x512.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Biologische <br>Modellen en Statistiek</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Schakel donkere modus"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Cursusinformatie</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inleiding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../cursusinformatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Algemene cursusinformatie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../planning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Studieplanning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../links.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Handige links</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Basisprincipes van R</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/introductie_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie en installatie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/introductie_R2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Programmeren in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/intro_R_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Extra R oefeningen</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Basiswiskunde</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/inleiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inleiding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/algebra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Algebra</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/breuken.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Breuken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/exponenten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Exponenten &amp; Logaritmen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/limieten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Asymptoten &amp; Limieten</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/afgeleiden.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Afgeleiden</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/schetsen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Functies schetsen</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Biologische modellen</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/intro_modellen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introductie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/exponentielegroei.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Exponentiële groei</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/odes_basis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelleren met ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/dichtheidseffecten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Dichtheidseffecten</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/ruimtelijkegroei.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Ruimtelijke groei</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/predatorprooi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Predator-prooi interacties</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/odes_grind.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs modelleren in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/competitie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Competitie en evolutie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/zwermen.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Zwermen en foerageren</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/reactiediffusie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reacties en diffusie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/exciteerbaremedia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Exciteerbare media</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mini-project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Statistiek</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/wat_is_statistiek.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wat is statistiek?</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Bijlagen</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_wiskunde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden wiskunde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_modellen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden modellen</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/spiekbriefjes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spiekbriefjes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/dankwoord.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dankwoord</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="-1">
+    <h2 id="toc-title">Inhoudsopgave</h2>
+   
+  <ul class="collapse">
+  <li><a href="#modelkeuzes-met-continue-en-discrete-variabelen" id="toc-modelkeuzes-met-continue-en-discrete-variabelen" class="nav-link active" data-scroll-target="#modelkeuzes-met-continue-en-discrete-variabelen"><span class="header-section-number">16.1</span> Modelkeuzes met continue en discrete variabelen</a></li>
+  <li><a href="#particle-life" id="toc-particle-life" class="nav-link" data-scroll-target="#particle-life"><span class="header-section-number">16.2</span> Particle life</a></li>
+  <li><a href="#zwermpatronen-in-boids" id="toc-zwermpatronen-in-boids" class="nav-link" data-scroll-target="#zwermpatronen-in-boids"><span class="header-section-number">16.3</span> Zwermpatronen in boids</a></li>
+  <li><a href="#aapjes-met-gedrag" id="toc-aapjes-met-gedrag" class="nav-link" data-scroll-target="#aapjes-met-gedrag"><span class="header-section-number">16.4</span> Aapjes met gedrag</a></li>
+  <li><a href="#parameter-sweeps" id="toc-parameter-sweeps" class="nav-link" data-scroll-target="#parameter-sweeps"><span class="header-section-number">16.5</span> Parameter-sweeps</a></li>
+  <li><a href="#foeragerende-mieren" id="toc-foeragerende-mieren" class="nav-link" data-scroll-target="#foeragerende-mieren"><span class="header-section-number">16.6</span> Foeragerende mieren</a></li>
+  <li><a href="#opgaven" id="toc-opgaven" class="nav-link" data-scroll-target="#opgaven"><span class="header-section-number">16.7</span> Opgaven</a></li>
+  <li><a href="#terminologie" id="toc-terminologie" class="nav-link" data-scroll-target="#terminologie"><span class="header-section-number">16.8</span> Terminologie</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Modellen/intro_modellen.html">Biologische modellen</a></li><li class="breadcrumb-item"><a href="../Modellen/zwermen.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Zwermen en foerageren</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-zwermen" class="quarto-section-identifier"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Zwermen en foerageren</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<script>
+  window.onbeforeprint = () => {
+    const images = document.querySelectorAll('img#subset')
+    images.forEach((img) => { img.style.width = "60%"; });
+    const imagesShow = document.querySelectorAll('img#imgToShow')
+    imagesShow.forEach((img) => { img.style.display = "block"; });
+    
+    const videos = document.querySelectorAll('img#imgToShow')
+    imagesShow.forEach((img) => { img.style.display = "block"; });
+    
+    //document.body.style.fontFamily= "Georgia";
+    const iframes = document.querySelectorAll("iframe#iframeToReplace");
+    iframes.forEach((iframe, index) => {
+                // Create a placeholder element with text
+                const placeholder = document.createElement('div');
+                placeholder.innerHTML += "<br><center><font size=2>(Deze interactieve content vind je op <a href='" + iframe.src + "'> " + iframe.src + " </a>)</font></center><br>"
+                iframe.parentNode.replaceChild(placeholder, iframe);
+            });
+  };
+  window.onafterprint = () => {
+      window.location.reload(true);
+    }
+    
+  
+  
+  
+  //const iframeContainer =           document.getElementById('iframeContainer');
+  //const iframe = document.getElementById('printIframe');
+  //window.onbeforeprint = () => {
+  // Replace the iframe with a link
+  //  iframeContainer.innerHTML = `<p>Deze simulatie kun je bekijken op: <a href="${iframe.src}" target="_blank">${iframe.src}</a></p>`;
+  //  document.body.style.fontFamily= "Georgia";
+  //};
+  //window.onafterprint = () => {
+    //  window.location.reload(true);
+   // }
+</script>
+<p>In <a href="ruimtelijkegroei.html" class="quarto-xref"><span>Hoofdstuk 13</span></a> hebben jullie kennis gemaakt met individual-based models, en met name het belang van ruimtelijke structuur in biologische populaties. Voor het gemak namen we in dit eerdere hoofdstuk aan dat individuen posities innamen op een grid, maar in werkelijkheid is ruimte natuurlijk niet in hokjes opgedeeld. In dit hoofdstuk gaan we een aantal individual-based modellen bekijken waar individuen vrij kunnen bewegen in een continue ruimte. Hiervoor zullen we eerst leren wat er eigenlijk wordt bedoeld met een “continue” ruimte. Daarna bekijken we eerst wat conceptuele voorbeelden, en gaan dan naar meer biologisch relevante scenarios kijken.</p>
+<p>Aan het eind van dit hoofdstuk, word je geacht hetvolgende te kunnen:</p>
+<ul>
+<li>Uitleggen wat het verschil is tussen discrete en continue variabelen, en modelaspecten kunnen benoemen waarbij deze keuze relevant is</li>
+<li>Begrijpen dat simpele regels complexe patronen en gedrag kunnen opleveren</li>
+<li>Uitleggen wat de voordelen zijn van het virtuele experimenteren / het virtueeel bestuderen van gedrag</li>
+<li>Uitleggen wat een <em>parameter-sweep</em> is, en hoe dit zich verhoud tot bifurcatie analyse van wiskundige modellen</li>
+</ul>
+<section id="modelkeuzes-met-continue-en-discrete-variabelen" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="modelkeuzes-met-continue-en-discrete-variabelen"><span class="header-section-number">16.1</span> Modelkeuzes met continue en discrete variabelen</h2>
+<p>Eerder in dit cursusonderdeel heb je al kennisgemaakt met discrete tijdstappen. Zo zagen we bijvoorbeeld bij de differentievergelijkingen dat je alleen in één keer van <span class="math inline">\(t=1\)</span> naar <span class="math inline">\(t=2\)</span> kan gaan. Met differentiaalvergelijkingen is tijd continu, en is de tijd tussen <span class="math inline">\(t=1\)</span> en <span class="math inline">\(t=2\)</span> in oneindig kleine stapjes is opgedeeld. Ook bij andere facetten van een model moeten we kiezen tussen discrete en continue waarden: modelleren we het daadwerkelijke (discrete) aantal konijnen, of versimpelen we hun aantal tot een (continue) dichtheid? Met ODEs, en zo ook met het predator-prooi model, nemen we aan dat populatiegrootes continu zijn. Zelfs als de dichtheid vossen kleiner is dan 1, kan dit nog steeds een biologisch relevant aantal vossen omschrijven (want <span class="math inline">\(1 \over 10\)</span> vossen per vierkante meter is nogsteeds een behoorlijk druk bos!). Maar hoe klein kan de dichtheid zijn voordat we ons zorgen moeten maken of we het nog over “hele vossen” hebben? Om te illustreren hoe belangrijk dit is, kun je in <a href="#tip-atto" class="quarto-xref">Tip&nbsp;<span>16.1</span></a> lezen over het probleem van “de atto-vos”.</p>
+<div id="tip-atto" class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip&nbsp;16.1: De atto-vos
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>In 1991, tijdens het graven van de kanaaltunnel tussen Engeland en Frankrijk, waren er veel zorgen dat vossen met rabiës (hondsdolheid) de vossen in het Verenigd Koninkrijk zouden besmetten. Echter is het VK tot op de dag van vandaag volledig rabiës-vrij gebleven. De voorspelling was gedaan met een ODE-model, maar de dichtheid van de vossenpopulatie die succesvol door de kanaal-tunnel zou migreren was zeer laag (<span class="math inline">\(10^{-18}\)</span>). Een hoeveelheid in de ordegrootte <span class="math inline">\(10^{-18}\)</span> wordt ook wel “atto” genoemd (net zoals micro <span class="math inline">\(10^{-6}\)</span> is en nano <span class="math inline">\(10^{-9}\)</span> heet). Daarom kunnen we dit artefact van modelleren het “atto-vos”-probleem noemen. Want laten we eerlijk zijn: een heel klein stukje vos kan niet door een tunnel migreren, en dus ook geen ziektes verspreiden!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/atto-vos.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="figuren/atto-vos.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Het probleem van discrete tijdstappen uit <a href="exponentielegroei.html" class="quarto-xref"><span>Hoofdstuk 10</span></a> en de anekdote van de atto-vos zijn niet de enige momenten dat het belangrijk is om stil te staan bij wat voor variabelen we gebruiken, en wat ze precies betekenen. Bij elk model is het belangrijk om na te gaan welke keuze het meest logisch is: zijn de variabelen (toestand, tijd, en ruimte) discreet of continu (<a href="#fig-contdisc" class="quarto-xref">Figuur&nbsp;<span>16.1</span></a>)? Natuurlijk zijn modellen altijd doelbewuste versimpelingen, maar in het geval van de atto-vos schepte het model een heel verkeerd beeld van het probleem! Toch is experimenteren met infectieziektes zeer onwenselijk, dus zijn deze modellen natuurlijk wel een zeer belangrijk stuk gereedschap! Laten we onze eerdere aanname dat ruimte in “hokjes” is opgedeeld dus ook eens onder de loep nemen.</p>
+<div id="fig-contdisc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-contdisc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figuren/continuous_discrete_choices.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figuur&nbsp;16.1: Bij het opzetten van een model moeten we voor veel verschillende variabelen kiezen of deze continu of discreet gemodelleerd gaan worden."><img src="figuren/continuous_discrete_choices.png" class="img-fluid figure-img" style="width:92.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-contdisc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;16.1: Bij het opzetten van een model moeten we voor veel verschillende variabelen kiezen of deze continu of discreet gemodelleerd gaan worden.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="particle-life" class="level2" data-number="16.2">
+<h2 data-number="16.2" class="anchored" data-anchor-id="particle-life"><span class="header-section-number">16.2</span> Particle life</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuren/particle_life.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption>From https://youtu.be/p4YirERTVF0</figcaption>
+</figure>
+</div>
+<p>Hoewel biologie zeer complex is, bestaat het fundamenteel niet uit andere deeltjes dan niet-levende systemen. Deeltjes trekken elkaar aan, stoten elkaar af, en ondergaan interacties. Laten we zoiets in R modelleren, en kijken wat er gebeurt. Stel je voor dat we 100 punten in een ruimte verspreiden, allemaal met een x- en y-coördinaat. Zoals hierboven besproken kiezen we er dit keer niet voor om de coördinaten als gehele getallen (1, 2, 3, ) uit te drukken, maar drukken we ze uit als decimale getallen (2.159, 0.156, ). We geven de 100 punten allereerst een willekeurige plek in de ruimte, en nemen dan aan dat ze elkaar van een afstand aantrekken, terwijl ze op kleine schaal elkaar juist afstoten. Hoewel de code hiervoor niet super ingewikkeld is, is <strong>de code geen leerstof</strong>. In plaats daarvan, kunnen we onze <strong>regels uitdrukken in “pseudocode”</strong>, waarin we verbaal omschrijven wat er moet gebeuren:</p>
+<ol type="1">
+<li>Verspreid 100 punten in een 2D ruimte met willekeurige coördinaten tussen 0 en 1</li>
+<li>Voor elk punt, bereken de afstand tot alle andere punten, en zet een stapje in hun gemiddelde richting (dus naar het midden van de groep)</li>
+<li>Wanneer twee punten overlappen, zet juist dan een stapje weg van dit punt.</li>
+<li>(elke 10e tijdstap, geef de punten weer in een plot)</li>
+<li>Ga terug naar stap 2</li>
+</ol>
+<p>Zoals gezegd, de R code hoeven jullie niet te begrijpen, maar voor de geïnteresserde student staat deze hier:</p>
+<div class="cell" data-freeze="false">
+<details class="code-fold">
+<summary>Code voor geïnteresseerde student</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Aantal tijdstappen</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">4</span>), <span class="at">bg =</span> <span class="st">"black"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>aantal_tijdstappen <span class="ot">&lt;-</span> <span class="dv">150</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Aantal punten</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>aantal_punten <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Startcoördinaten</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>alle_posities <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">runif</span>(aantal_punten),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">runif</span>(aantal_punten)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters voor gedrag van punten</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>minimale_afstand <span class="ot">&lt;-</span> <span class="fl">0.4</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>aantrekkingsfactor <span class="ot">&lt;-</span> <span class="fl">0.001</span>  <span class="co"># Factor voor de (globale) aantrekkingskracht</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>botsingsfactor <span class="ot">&lt;-</span> <span class="fl">0.003</span>   <span class="co"># Factor voor de (lokale) afstotingskracht</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Functie om, per punt, de aantrekkingskracht en botsingsdetectie te berekenen</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>update_positie <span class="ot">&lt;-</span> <span class="cf">function</span>(alle_posities, i) {</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  dx <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co">#verandering in x voor dit punt</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  dy <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co">#verandering in y voor dit punt</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>aantal_punten) {</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i <span class="sc">!=</span> j) { <span class="co">#niet met jezelf botsen / naar je zelf toe bewegen</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>      afstand_x <span class="ot">&lt;-</span> alle_posities<span class="sc">$</span>x[j] <span class="sc">-</span> alle_posities<span class="sc">$</span>x[i]</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>      afstand_y <span class="ot">&lt;-</span> alle_posities<span class="sc">$</span>y[j] <span class="sc">-</span> alle_posities<span class="sc">$</span>y[i]</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>      afstand <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(afstand_x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> afstand_y<span class="sc">^</span><span class="dv">2</span>) <span class="co">#stelling van pythagoras</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Aantrekkingskracht</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>      dx <span class="ot">&lt;-</span> dx <span class="sc">+</span> aantrekkingsfactor <span class="sc">*</span> afstand_x <span class="sc">/</span> afstand</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>      dy <span class="ot">&lt;-</span> dy <span class="sc">+</span> aantrekkingsfactor <span class="sc">*</span> afstand_y <span class="sc">/</span> afstand</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Afstotingskracht voor botsingsdetectie</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (afstand <span class="sc">&lt;</span> minimale_afstand) {</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>        dx <span class="ot">&lt;-</span> dx <span class="sc">-</span> botsingsfactor <span class="sc">*</span> afstand_x <span class="sc">/</span> afstand</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        dy <span class="ot">&lt;-</span> dy <span class="sc">-</span> botsingsfactor <span class="sc">*</span> afstand_y <span class="sc">/</span> afstand</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">c</span>(dx, dy))</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">5</span>))</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Simuleer de diffusie en toon de resultaten stap voor stap</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>aantal_tijdstappen) {</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Maak (leeg) dataframe voor posities in volgende tijdstap</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  nieuwe_positie <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">numeric</span>(aantal_punten), <span class="at">y =</span> <span class="fu">numeric</span>(aantal_punten))</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Bereken de verplaatsingen op basis van huidige posities</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>aantal_punten) {</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    verplaatsing <span class="ot">&lt;-</span> <span class="fu">update_positie</span>(alle_posities, i)</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    nieuwe_positie<span class="sc">$</span>x[i] <span class="ot">&lt;-</span> alle_posities<span class="sc">$</span>x[i] <span class="sc">+</span> verplaatsing[<span class="dv">1</span>]</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    nieuwe_positie<span class="sc">$</span>y[i] <span class="ot">&lt;-</span> alle_posities<span class="sc">$</span>y[i] <span class="sc">+</span> verplaatsing[<span class="dv">2</span>]</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Update alle posities </span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>  alle_posities <span class="ot">&lt;-</span> nieuwe_positie</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Plot de huidige posities van de punten</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(t<span class="sc">%%</span><span class="dv">10</span><span class="sc">==</span><span class="dv">1</span>){</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot</span>(alle_posities<span class="sc">$</span>x, alle_posities<span class="sc">$</span>y, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">col =</span> <span class="st">"orange"</span>, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">cex =</span> <span class="fl">0.5</span>,</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">"X"</span>, <span class="at">ylab =</span> <span class="st">"Y"</span>)</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">title</span>(<span class="fu">sprintf</span>(<span class="st">"Tijdstip: %d"</span>, t<span class="dv">-1</span>),<span class="at">col.main=</span><span class="st">"white"</span>)</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="zwermen_files/figure-html/unnamed-chunk-1-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="zwermen_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Zoals je ziet onstaat er na een tijdje een zeer specifiek patroon. Als je dit patroon nog niet erg spannend vindt, zouden we ook kunnen kijken wat er met meerdere deeltjes (kleuren) gebeurt, die naast de aantrekkingskracht op henzelf ook elkaar aantrekken. Bijvoorbeeld: oranje is aangetrokken tot rood, rood tot paars, <em>etc.</em> Dan gebeurt er hetvolgende:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Klik hier voor de R-code. De browser-simulatie hieronder is geïmplementeerd met Javascript</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up the plot area</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">4</span>), <span class="at">bg =</span> <span class="st">"black"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Define global parameters</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>num_colors <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>dots_per_color <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>total_particles <span class="ot">&lt;-</span> num_colors <span class="sc">*</span> dots_per_color</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"#E40303"</span>, <span class="st">"#FF8C00"</span>, <span class="st">"#FFED00"</span>, <span class="st">"#008026"</span>, <span class="st">"#24408E"</span>, <span class="st">"#732982"</span>), <span class="at">each =</span> dots_per_color)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>movement_rate <span class="ot">&lt;-</span> <span class="fl">0.0003</span>  <span class="co"># Control the influence of the attraction/repulsion</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>self_attraction_rate <span class="ot">&lt;-</span> <span class="fl">0.0005</span>  <span class="co"># Mild attraction to particles of the same color</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>repulsion_distance <span class="ot">&lt;-</span> <span class="fl">3.5</span>  <span class="co"># Distance threshold for repulsion</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>speed <span class="ot">&lt;-</span> <span class="fl">0.1</span>  <span class="co"># Control the delay between frames (R-studio wont keep up otherwise!)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>noise_level <span class="ot">&lt;-</span> <span class="fl">0.01</span>  <span class="co"># Define the level of noise to add to the directions</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize positions of the particles in distinct regions</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>positions <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> total_particles, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>num_colors) {</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  start_index <span class="ot">&lt;-</span> (i <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> dots_per_color <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  end_index <span class="ot">&lt;-</span> i <span class="sc">*</span> dots_per_color</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  positions[start_index<span class="sc">:</span>end_index, ] <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(dots_per_color <span class="sc">*</span> <span class="dv">2</span>, <span class="at">min =</span> (i <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">1</span> <span class="sc">-</span> <span class="dv">10</span>, <span class="at">max =</span> i <span class="sc">*</span> <span class="dv">1</span> <span class="sc">-</span> <span class="dv">10</span>), <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>directions <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(total_particles <span class="sc">*</span> <span class="dv">2</span>, <span class="at">min =</span> <span class="sc">-</span><span class="fl">0.1</span>, <span class="at">max =</span> <span class="fl">0.1</span>), <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to get the next color in the sequence</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>next_color <span class="ot">&lt;-</span> <span class="cf">function</span>(color) {</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  color_order <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"orange"</span>, <span class="st">"purple"</span>)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(color_order[(<span class="fu">match</span>(color, color_order) <span class="sc">%%</span> num_colors) <span class="sc">+</span> <span class="dv">1</span>])</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to update positions</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>update_positions <span class="ot">&lt;-</span> <span class="cf">function</span>(positions, directions, movement_rate, self_attraction_rate, repulsion_distance) {</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>total_particles) {</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    attraction_force <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    repulsion_force <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    self_attraction_force <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate attraction, self-attraction, and repulsion forces</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>total_particles) {</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (i <span class="sc">!=</span> j) {</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        diff <span class="ot">&lt;-</span> positions[j, ] <span class="sc">-</span> positions[i, ]</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        distance <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(diff<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Attraction to particles of the next color in sequence</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (colors[j] <span class="sc">==</span> <span class="fu">next_color</span>(colors[i]) <span class="sc">&amp;&amp;</span> colors[i] <span class="sc">!=</span> <span class="st">"purple"</span>) {</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>          attraction_force <span class="ot">&lt;-</span> attraction_force <span class="sc">+</span> movement_rate <span class="sc">*</span> diff</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Mild attraction to particles of the same color</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (colors[j] <span class="sc">==</span> colors[i]) {</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>          self_attraction_force <span class="ot">&lt;-</span> self_attraction_force <span class="sc">+</span> self_attraction_rate <span class="sc">*</span> diff</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Repulsion from particles that are too close</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (distance <span class="sc">&lt;</span> repulsion_distance) {</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>          repulsion_force <span class="ot">&lt;-</span> repulsion_force <span class="sc">-</span> movement_rate <span class="sc">*</span> (repulsion_distance <span class="sc">-</span> distance) <span class="sc">*</span> diff <span class="sc">/</span> distance</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add noise to the direction</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>    noise <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">2</span>, <span class="at">min =</span> <span class="sc">-</span>noise_level, <span class="at">max =</span> noise_level)</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>    directions[i, ] <span class="ot">&lt;-</span> noise</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    positions[i, ] <span class="ot">&lt;-</span> positions[i, ] <span class="sc">+</span> directions[i, ]</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Combine forces</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>    total_force <span class="ot">&lt;-</span> attraction_force <span class="sc">+</span> self_attraction_force <span class="sc">+</span> repulsion_force</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>    directions[i, ] <span class="ot">&lt;-</span> total_force</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>    positions[i, ] <span class="ot">&lt;-</span> positions[i, ] <span class="sc">+</span> directions[i, ]</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">positions =</span> positions, <span class="at">directions =</span> directions))</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a directory to save the frames</span></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="co">#dir.create("frames")</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">bg =</span> <span class="st">'black'</span>)</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a><span class="co"># Update and animate the particles</span></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>) {</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>  <span class="co">#png(filename = sprintf("frames/frame_%04d.png", i), width = 1280, height = 720, bg = "black")</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Initialize plot</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Update positions and directions</span></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>  updated <span class="ot">&lt;-</span> <span class="fu">update_positions</span>(positions, directions, movement_rate, self_attraction_rate, repulsion_distance)</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>  positions <span class="ot">&lt;-</span> updated<span class="sc">$</span>positions</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>  directions <span class="ot">&lt;-</span> updated<span class="sc">$</span>directions</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="cn">NULL</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>), <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">xaxt =</span> <span class="st">'n'</span>, <span class="at">yaxt =</span> <span class="st">'n'</span>, <span class="at">asp =</span> <span class="dv">1</span>, <span class="at">axes=</span>F)</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add a semi-transparent black background</span></span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rect</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="sc">-</span><span class="dv">100</span>, <span class="dv">100</span>, <span class="dv">100</span>, <span class="at">col =</span> <span class="fu">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.05</span>), <span class="at">border =</span> <span class="cn">NA</span>)</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Draw the particles</span></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(positions[, <span class="dv">1</span>], positions[, <span class="dv">2</span>], <span class="at">col =</span> colors, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.4</span>)</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Pause for a moment to create animation effect</span></span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Sys.sleep</span>(speed)</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="interactive_content">
+<iframe id="iframeToReplace" width="100%" height="550" src="https://tbb.bio.uu.nl/bvd/bms/simulations/plife/" title="Simulation"></iframe>
+<center><img src="figuren/interactive_plife.png" id="imgToShow" style="display:none;padding-bottom:30px;">
+</center>
+</div><br>
+<p>Zoals je ziet vormen de deeltjes nu niet meer een stabiel patroon, maar blijven de deeltjes constant rondjes om elkaar heen draaien. Als we één van deze 6 kleuren (rood) juist geen aantrekking geven tot een andere kleur, dan gebeurt er werkelijk iets opmerkelijks:</p>
+<div class="interactive_content">
+<iframe id="iframeToReplace" width="100%" height="550" src="https://tbb.bio.uu.nl/bvd/bms/simulations/plife2/" title="Simulation"></iframe>
+<center><img src="figuren/interactive_plife2.png" id="imgToShow" style="display:none;padding-bottom:30px;">
+</center>
+</div><br>
+<p>Zoals je je kan voorstellen, kunnen variaties op deze simpele regels enorm veel verschillende patronen opleveren. Het systeem wat je hier bekijkt is <em>particle life</em> genoemd. Als je hier meer over wil weten, vind je <a href="https://www.youtube.com/watch?v=p4YirERTVF0">hier</a> een uitgebreide video, en <a href="https://webgl-particle-life.netlify.app/">hier</a> een app die je zelf kan downloaden om met deze systemen te spelen.</p>
+<p>Als je de bovenstaande video’s en simulaties bekijkt zou je bijna denken dat je naar echte beestjes kijkt. Het lijkt bijvoorbeeld bijna alsof de bovenstaande worm “beslissingen” maakt wanneer deze zich plotseling omdraait. Maar alles gaat alleen maar om het aantrekken en wegduwen van stipjes. Een enkele stip zou natuurlijk niet dergelijk complex gedrag ontwikkelen, dat gebeurt alleen in de aanwezigheid van anderen. Als simpele onderdelen bij elkaar komen en daardoor complexe dynamica of patronen genereren, spreken we van een <em>emergente eigenschap/emergente eigenschappen</em>. Emergente eigenschappen komen we overal tegen in de biologie: van vetzuren die zich organiseren tot dubbele membranen, tot microben die doolhof-achtige patronen vormen (<a href="#fig-maze" class="quarto-xref">Figuur&nbsp;<span>16.2</span></a>), tot de strepen op een zebra, tot chimpansees en mensen die complexe politieke structuren vormen. Hoewel al deze structuren erg complex lijken, is het in de kern wellicht gedreven door hele simpele regels.</p>
+<div id="fig-maze" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-maze-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figuren/mazepattern.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figuur&nbsp;16.2: Foto door Lars Dietrich (Columbia University)"><img src="figuren/mazepattern.jpg" class="img-fluid figure-img" style="width:60.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-maze-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;16.2: Foto door Lars Dietrich (Columbia University)
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="zwermpatronen-in-boids" class="level2" data-number="16.3">
+<h2 data-number="16.3" class="anchored" data-anchor-id="zwermpatronen-in-boids"><span class="header-section-number">16.3</span> Zwermpatronen in boids</h2>
+<p>Particle life is een zogenaamd <em>toy model</em>. Dat wil zeggen: het laat bepaalde principes heel goed zien, maar het is niet per se een model van een specifiek biologisch systeem. Maar het illustreert wel heel goed dat complex (emergent) gedrag uit hele simpele regels kan ontstaan. Hier en daar doet het zelfs wel wat denken aan de zwermpatronen die je ziet in bijvoorbeeld insecten, vissen en vogels. Wellicht kunnen we dit model aanpassen om specifieker naar dit gedrag te kijken: hoe spreeuwen zogenaamde “murmuraties” vormen.</p>
+<p>Laten we er allereerst vanuit gaan dat de vogels alleen andere vogels kunnen zien wanneer die in hun buurt zijn. Dat wil zeggen, hun gedrag wordt alleen bepaald door nabije buren. In pseudocode, volgt elke vogel de volgende regels:</p>
+<ul>
+<li>Probeer je richting uit te lijnen met de groep</li>
+<li>Beweeg je naar het midden van de groep toe</li>
+<li>Probeer te voorkomen dat je met anderen botst</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/boid_rules.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="De drie simpele regels van Boids: een model dat prachtige “murmuraties” op kan leveren."><img src="figuren/boid_rules.png" class="img-fluid figure-img" alt="De drie simpele regels van Boids: een model dat prachtige “murmuraties” op kan leveren."></a></p>
+<figcaption>De drie simpele regels van Boids: een model dat prachtige “murmuraties” op kan leveren.</figcaption>
+</figure>
+</div>
+<p>Als je deze drie regels samenvoegt, zul je zien dat je onmiddelijk prachtige murmuraties ziet:</p>
+<iframe width="100%" height="550" src="https://tbb.bio.uu.nl/bvd/bms/simulations/murmuraties/" title="Simulation"></iframe>
+<p>Dit model is door de bedenker, Craig Reynolds, “boids” genoemd, omdat hij het grappig vond hoe mensen in New York het woord <em>birds</em> uitspraken. Anders dan particle life, kunnen we met een dergelijk model weldegelijk biologisch onderzoek doen. Het wordt bijvoorbeeld door de onderzoeksgroep van Charlotte Hemelrijk (Emeritus professor aan de Rijksuniversiteit Groningen) gebruikt om te onderzoeken hoe zwermen van spreeuwen reageren op <a href="https://www.sciencedirect.com/science/article/abs/pii/S0003347211002867">predatie door haviken</a>. Met dergelijk onderzoek kunnen we observaties uit het veld goed aanvullen, want dergelijk veldwerk is natuurlijk heel pittig en tijdrovend! Dat gezegd hebbende, is er natuurlijk niets zo indrukwekkend als echte beelden van dit prachtige fenomeen:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/3w90X92pDSs" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</section>
+<section id="aapjes-met-gedrag" class="level2" data-number="16.4">
+<h2 data-number="16.4" class="anchored" data-anchor-id="aapjes-met-gedrag"><span class="header-section-number">16.4</span> Aapjes met gedrag</h2>
+<p>In hoofdstuk <a href="ruimtelijkegroei.html" class="quarto-xref"><span>Hoofdstuk 13</span></a> hebben we de basis geleerd van individual-based modellen, maar hebben we vooral gekeken naar groeiende populaties op een grid. Hoewel dergelijke grids veel technische voordelen hebben (een grid is heel handig als je snel wilt bepalen wie er “naast” iemand zit), is een echt ecosysteem natuurlijk niet in hokjes opgedeeld. Nu we hierboven individuen iets meer vrijheid hebben gegeven, kunnen we wellicht ook meer “gedragsregels” toevoegen. Laten we dit eerst doen met een simpel model van aapjes die naar fruit zoeken.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/aapjes.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Overzicht van een individual based model van aapjes die naar eten zoeken."><img src="figuren/aapjes.png" class="img-fluid figure-img" alt="Overzicht van een individual based model van aapjes die naar eten zoeken."></a></p>
+<figcaption>Overzicht van een individual based model van aapjes die naar eten zoeken.</figcaption>
+</figure>
+</div>
+<p>Laten we een groot grasveld voorstellen, waarin zich individuele aapjes bevinden. Wederom schrijven we het systeem op in pseudocode:</p>
+<p>Voor elke aap in de simulatie:</p>
+<ul>
+<li>Als er minder dan 10 apen in de buurt zijn, en de aap heeft geen enorme honger, dan rent deze terug naar de groep.</li>
+<li>Als een aap honger heeft, en er zijn genoeg apen in de buurt, loopt deze een willekeurige kant op om te zoeken naar fruit.</li>
+<li>Als een aap 6 stukken fruit heeft gevonden, blijft de aap zitten en gaat eten. Zolang de aap aan het eten is, gaat deze niet op zoek naar de groep of naar meer eten.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Opmerking
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Nu je een paar keer pseudocode hebt gezien, begrijp je misschien waarom dit handig is. Als wetenschapper is het belangrijk om goed te communiceren hoe je onderzoek precies is opgezet, maar we willen niet altijd door hele stukken code moeten lezen. Het doel van pseudocode is om deze precies genoeg te maken, zodat iemand anders het zou kunnen reproduceren (eventueel in een andere programmeertaal!). De resultaten van zo’n computermodel zouden namelijk niet van de programmeertaal moeten afhangen, maar van de aannames die gedaan worden.</p>
+</div>
+</div>
+<p>Zoals je in de bovenstaande omschrijving kan lezen, zal niet elk aapje hetzelfde doen. Aapje 1 t/m 5 hebben veel buur-aapjes en voelen zich veilig. Omdat ze ook geen honger hebben, blijven ze zitten. Aapje 6 heeft ook geen honger, maar voelt zich niet veilig, en rent terug naar de groep. Aapje 7 heeft echter veel honger, en zal dus (eventueel met gevaar voor eigen leven) naar eten blijven zoeken. Door deze gedragsregels een lange tijd te herhalen, kunnen we onderzoeken hoe onze virtuele aapjes naar eten zoeken, en hoe ze groepjes vormen.</p>
+<div class="interactive_content">
+<iframe id="iframeToReplace" width="100%" height="330" src="https://tbb.bio.uu.nl/bvd/bms/simulations/aapjes_min/" title="Simulation"></iframe>
+<center><img src="figuren/interactive_aapjes.png" id="imgToShow" style="display:none;padding-bottom:30px;">
+</center>
+</div><br>
+<p>Met een dergelijk model kun je heel goed biologisch onderzoek doen (je kan heel veel simulaties tegelijk runnen, en je verstoord alleen virtuele apen!). Heel leuk onderzoek is bijvoorbeeld gedaan door Daniel van der Post, die heeft laten zien dat verschillende apengroepen in dezelfde omgeving hele andere voedselculturen kunnen ontwikkelen<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. In het werkcollege gaan jullie <a href="https://tbb.bio.uu.nl/bvd/bms/simulations/aapjes/">met deze simulatie</a> aan de slag, en bestuderen hoe emergente eigenschappen bepalen hoe veel fruit deze aapjes vinden. Natuurlijk kan je allerlei gedrag aan een dergelijk model toevoegen: vlooien, vechten, opvoeden, en ga zo maar door. Deze modellen kunnen dus een hele efficiënte (snel, goedkoop) en niet-verstorende manier zicajn om gedrag te bestuderen.</p>
+</section>
+<section id="parameter-sweeps" class="level2" data-number="16.5">
+<h2 data-number="16.5" class="anchored" data-anchor-id="parameter-sweeps"><span class="header-section-number">16.5</span> Parameter-sweeps</h2>
+<p>In de hoofdstukken over het Lotka-Volterra predator-prooi model heb je kennis gemaakt een bifurcatie-diagram (<a href="odes_grind.html#fig-lvbif" class="quarto-xref">Figuur&nbsp;<span>4</span></a>). Door de parameter <span class="math inline">\(K\)</span> te varieren, zagen we twee belangrijke overgangen (bifurcaties): eerst een overgang van alleen prooi naar een stabiele samenleving van predator en prooi, en dan een tweede overgang naar oscillerende predator-prooi populaties (Hopf bifurcatie). Computermodellen zoals de IBM van de aapjes hierboven bevatten vaak erg veel parameters: hoe snel eten de aapjes, hoeveel aapjes moeten er in de buurt zijn zodat een aapje zich veilig voelt, hoeveel eten ligt er in de omgeving, <em>etc.</em> Zodoende is het vaak belangrijk om een zogeheten <em>parameter-sweep</em> te doen, waarbij je vele parameters systematisch bestudeert en de uitkomst classificeert. Op deze manier kun je enerzijds bepalen of het gedrag van je model niet maar alleen voorkomt voor hele specifieke parameters (en dus wellicht in werkelijkheid nauwelijks voorkomt) en andererzijds bepalen welke parameters het meest belangrijk zijn voor hoe het model zich gedraag. Als je bijvoorbeeld twee parameters varieert, kun je deze uitkomsten bijvoorbeeld opslaan in een grote tabel waarbij de rijen de ene parameter zijn, en de kolommen de andere (<a href="#fig-parsweep" class="quarto-xref">Figuur&nbsp;<span>16.3</span></a>).</p>
+<div id="fig-parsweep" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-parsweep-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figuren/parsweep.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figuur&nbsp;16.3: Een hypothetisch voorbeeld van een parameter sweep van 2 parameters, en een heatmap visualisatie van de resultaten."><img src="figuren/parsweep.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-parsweep-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;16.3: Een hypothetisch voorbeeld van een parameter sweep van 2 parameters, en een <em>heatmap</em> visualisatie van de resultaten.
+</figcaption>
+</figure>
+</div>
+<!-- ```{r} -->
+<!-- #| code-fold: true -->
+<!-- #| label: 'fig-parsweep' -->
+<!-- #| fig-width: 5 -->
+<!-- #| out-width: "50%" -->
+<!-- #| fig-height: 5 -->
+<!-- # Set up an empty plot with specified x and y limits -->
+<!-- plot(1, type="n", xlim=c(1,10), ylim=c(1,10), -->
+<!--      xlab="veilig aantal", ylab="eetsnelheid", -->
+<!--      xaxt="n", yaxt="n") -->
+<!-- # Add custom axes with ticks from 1 to 10 -->
+<!-- axis(1, at=1:10) -->
+<!-- axis(2, at=1:10) -->
+<!-- # Add grid lines to create a 10x10 grid -->
+<!-- grid(nx=10, ny=10) -->
+<!-- # Optionally, add a title to the plot -->
+<!-- title("10x10 sweep: eetsnelheid vs. veilig aantal") -->
+<!-- ``` -->
+</section>
+<section id="foeragerende-mieren" class="level2" data-number="16.6">
+<h2 data-number="16.6" class="anchored" data-anchor-id="foeragerende-mieren"><span class="header-section-number">16.6</span> Foeragerende mieren</h2>
+<p>Als het gaat om foerageren, lijken mieren een stuk georganiseerder dan de aapjes uit de bovenstaande simulatie. Ze rennen niet maar zo een kant op, maar volgen elkaar netjes van/naar een voedselbron. Echter doen mieren dat niet altijd door elkaar te zien (sterker nog, sommige mieren zijn volledig blind!). In plaats daarvan ruiken ze elkaars feromonen, die bijvoorbeeld aangeven waar het voedsel ligt, waar het nest is, of waar er gevaar dreigt. Hoewel dit meestal heel goed werkt, kun je ook een zogeheten “mierenkringen” <em>ant mills</em> krijgen, waar mieren voor eeuwig in rondjes achter elkaar aan lopen (soms net zo lang tot ze van uitputting dood gaan!).</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/ant_trail.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Mieren vormen paadjes naar/van het eten door elkaars feromonen te volgen…"><img src="figuren/ant_trail.png" class="img-fluid figure-img" style="width:80.0%" alt="Mieren vormen paadjes naar/van het eten door elkaars feromonen te volgen…"></a></p>
+<figcaption>Mieren vormen paadjes naar/van het eten door elkaars feromonen te volgen…</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/mosh_ants.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title=".. maar kunnen daardoor ook in een zogeheten ant-mill terecht komen!"><img src="figuren/mosh_ants.png" class="img-fluid figure-img" style="width:95.0%" alt=".. maar kunnen daardoor ook in een zogeheten ant-mill terecht komen!"></a></p>
+<figcaption>.. maar kunnen daardoor ook in een zogeheten <em>ant-mill</em> terecht komen!</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Dus, een belangrijke verschil met de aapjes is dat de mieren niet direct <em>elkaar</em> zien, maar feromonen. Mieren laten deze feromonen achter, maar deze feromonen worden ook afgebroken of verdunnen. Zo onstaat er dus een interessante interactie van de mieren naar de omgeving, en van de omgeving naar de mieren. Diffusie van stofjes is een concept waar we in het volgende hoofdstuk nog meer naar zullen kijken. Maar voor nu, als we deze componenten samenbrengen in een simulatie, zien we inderdaad dat mieren niet alleen prachtige sporen vormen, maar ook de bovengenoemde mierenkringen kunnen vormen:</p>
+<div class="interactive_content">
+<iframe id="iframeToReplace" width="100%" height="650" src="https://tbb.bio.uu.nl/bvd/bms/simulations/ants/" title="Simulation"></iframe>
+<center><img src="figuren/interactive_ants.png" id="imgToShow" style="display:none;padding-bottom:30px;">
+</center>
+</div><br>
+</section>
+<section id="opgaven" class="level2" data-number="16.7">
+<h2 data-number="16.7" class="anchored" data-anchor-id="opgaven"><span class="header-section-number">16.7</span> Opgaven</h2>
+<!-- ::: {.pepexr #exr-pseudo} -->
+<!-- ## Pseudocode  -->
+<!-- <br> -->
+<!-- Stel, we maken een model van predatoren en prooien in de ruimte. We geven de predatoren weer als rode stippen, en de prooien als blauwe stippen, en nemen daarbij aan dat predatoren alleen een prooi kunnen vangen wanneer deze in de buurt is. Hieronder zie je een mogelijke configuratie van die model met discrete ruimte, en een met continue ruimte: -->
+<!-- ```{r} -->
+<!-- #| code-fold: true -->
+<!-- #| fig-height: 4 -->
+<!-- #| fig-width: 8 -->
+<!-- # Set up for two plots side by side -->
+<!-- par(mfrow=c(1, 2),mar=c(2,2,2,2)) -->
+<!-- # First plot: 7x7 grid with 1 red dot in the center and 7 blue dots, with at least 4 nearby -->
+<!-- plot(1:7, 1:7, type="n", xlab="X", ylab="Y", xlim=c(0.7, 7.3), ylim=c(0.7, 7.3), xaxt="n", yaxt="n", bty="n") -->
+<!-- # Add grid lines -->
+<!-- grid(nx=7, ny=7, col="grey",lwd=3) -->
+<!-- # Coordinates for blue dots ensuring 4 are adjacent to the red dot -->
+<!-- blue_dots <- matrix(c(3, 3,  # Nearby -->
+<!--                       3, 4,  # Nearby -->
+<!--                       4, 3,  # Nearby -->
+<!--                       5, 4,  # Nearby -->
+<!--                       1, 1,  # Distant -->
+<!--                       6, 5,  # Distant -->
+<!--                       7, 3), ncol=2, byrow=TRUE) -->
+<!-- # Add blue dots to the plot -->
+<!-- points(blue_dots, pch=19, col="blue", cex=2) -->
+<!-- # Coordinates for red dot (middle of 7x7 grid) -->
+<!-- red_dot <- c(4, 4) -->
+<!-- # Add red dot to the plot -->
+<!-- points(red_dot[1], red_dot[2], pch=19, col="red", cex=2) -->
+<!-- # Second plot: Continuous space with irregular distances and red dot near the middle -->
+<!-- plot(NA, xlim=c(0, 7), ylim=c(0, 7), xlab="X", ylab="Y", bty="n") -->
+<!-- # Coordinates for blue dots in continuous space -->
+<!-- blue_dots_cont <- matrix(c(1, 1,  -->
+<!--                            3, 2, -->
+<!--                            4.5, 1.5, -->
+<!--                            3.5, 4, -->
+<!--                            3.8, 5.5,  # Nearby blue dot 1 -->
+<!--                            3.5, 3.3,  # Nearby blue dot 2 -->
+<!--                            3.2, 4.5), ncol=2, byrow=TRUE)  # Nearby blue dot 3 -->
+<!-- # Add blue dots to the plot -->
+<!-- points(blue_dots_cont, pch=19, col="blue", cex=2) -->
+<!-- # Coordinates for red dot near the middle -->
+<!-- red_dot_cont <- c(3, 3.5) -->
+<!-- # Add red dot to the plot -->
+<!-- points(red_dot_cont[1], red_dot_cont[2], pch=19, col="red", cex=2) -->
+<!-- ``` -->
+<!-- De predator in het discrete scenario links zit op positie (x=4, y=4). De x-y-coördinaten van de prooidieren zijn: -->
+<!--   * 3, 3 -->
+<!--   * 3, 4 -->
+<!--   * 4, 3 -->
+<!--   * 5, 4 -->
+<!--   * 1, 1 -->
+<!--   * 6, 5 -->
+<!--   * 7, 3 -->
+<!-- a. Stel je voor dat de predator alleen prooi kan vangen binnen een afstand van 1 hokje. Leg in "pseudocode" uit hoe je kan bepalen welke prooidieren dichtbij genoeg zijn voor de predator. Let op: je hoeft hierbij geen afstanden te berekenen! -->
+<!-- b. Bespreek met je medestudenten of jullie antwoorden hetzelfde zijn (let op: zelfs als jullie antwoorden verschillen, dat betekent niet dat één van jullie het fout heeft!) -->
+<!-- Kijk nu naar het rechter scenario, waar de ruimte continu is. De prooi zit dan ook op positie x=2.9, y=3.5. De x-y-coördinaten van de prooien zijn nu:  -->
+<!--     * 1, 1 -->
+<!--     * 3, 2 -->
+<!--     * 4.5, 1.5 -->
+<!--     * 3.5, 4 -->
+<!--     * 3.8, 5.5 -->
+<!--     * 3.5, 3.3 -->
+<!--     * 3.2, 4.5 -->
+<!-- c. Leg opnieuw in pseudocode uit hoe je bepaalt welke prooidieren binnen een interactie-afstand van 1 zitten. Dit keer moet je wél afstanden berekenen. Hoeveel prooidieren heb je nu gevonden? Vergelijk je antwoord weer met een medestudent. -->
+<!-- d. Hierboven heb je twee algoritmes bedacht. Stel dat er veel meer prooidieren aanwezig zijn (bijvoorbeeld 1000). Met welk van de twee algoritmen kun je sneller bepalen welke prooien er "in de buurt" van de predator zijn?  -->
+<!-- ::: -->
+<!-- ::: {.Rexr #exr-gol} -->
+<!-- ## Game of life  -->
+<!-- <br> -->
+<!-- ![Afbeelding gegenereerd met ChatGPT4-o, November 2024](figuren/golgo.png){width="70%" fig-align="center"} -->
+<!-- Stel we modelleren slechts 1 type individu op een heel groot grid. Dit individu is "levend", en alle andere hokjes zijn "dood". Neem aan dat elke tijdstap, ieder hokje de volgende regels volgt: -->
+<!--   * Een levend individu met meer dan drie buren gaat dood ("overpopulatie") -->
+<!--   * Een levend individu met minder dan twee buren gaat dood ("onderpopulatie") -->
+<!--   * Een dood hokje wordt levend als er exact drie levende buren zijn -->
+<!-- a. Stel je begint met een willkeurige configuratie van levende individuen (bijvoorbeeld: 50\% van de hokjes is levend). Wat denk je dat er gaat gebeuren? Bespreek ook met je medestudenten (mits die deze deze vraag nog niet gedaan hebben!) -->
+<!-- b. Wat zou je moeten doen als je *zonder computer* zou willen weten wat er precies gaat gebeuren? -->
+<!-- c. Bekijk [de volgende simulatie](https://tbb.bio.uu.nl/bvd/bms/simulations/gol/). Was je voorspelling in de goede richting?  -->
+<!-- d. Maak de volgende zin af: "Als je precies de regels van een systeem weet..."  -->
+<!-- ::: -->
+<p><strong>Let op:</strong> dit hoofdstuk heeft slechts 1 opgave. Echter is het wel belangrijk dat je de vraag maakt, want de resultaten sla je op in een tabel die je bij het onderdeel Statistiek verder zal analyseren.</p>
+<p>Daarnaast begin je vandaag ook aan het <a href="../Modellen/project.html">mini-project</a>, waarbij je met een groep samenwerkt om zorgvuldig verslag te doen van een uitgebreide werkcollegevraag. Hiervoor schrijf je een korte introductie, maak en beschrijf je zorgvuldig figuren, en schrijf je vervolgens een wetenschappelijke conclusie. Zorg er dus voor dat je tijdens dit werkcollege met je groepsgenoten het project bespreken en nadenkt over de taakverdeling.</p>
+<div id="exr-aapjes" class="Rexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 16.1 (Aapjes die gele pixels eten)</strong></span> <br></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/aapjes_pixels.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Afbeelding gegenereerd met ChatGPT4-o, November 2024"><img src="figuren/aapjes_pixels.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Afbeelding gegenereerd met ChatGPT4-o, November 2024"></a></p>
+</figure>
+</div>
+<figcaption>Afbeelding gegenereerd met ChatGPT4-o, November 2024</figcaption>
+</figure>
+</div>
+<p>In deze opgaven kijken we naar het individual-based model van <a href="https://tbb.bio.uu.nl/bvd/bms/simulations/aapjes/">aapjes die naar fruit zoeken</a>, zoals besproken in dit hoofdstuk. De aapjes volgen de volgende regels:</p>
+<ul>
+<li>Als er minder dan 10 apen in de buurt zijn, ren terug naar de groep</li>
+<li>Als er genoeg apen in de buurt zijn, loop een willekeurige kant op om te zoeken naar fruit</li>
+<li>Als je 6 stukken fruit hebt gevonden, blijf zitten waar je zit en ga eten. Eet per tijdstap een x-aantal stukken fruit, gegeven door de parameter “eet-snelheid”. Pas als je klaar bent met eten ga je weer terug naar de groep.</li>
+</ul>
+<p>In de simulatie wordt bijgehouden hoeveel fruit de aapjes (in totaal) hebben gevonden. De aapjes eten standaard 3 stukken fruit per tijdstap, (dus eten voor 2 tijdstappen).</p>
+<ol type="a">
+<li>Wacht 1000 tijdstappen. Waarom neemt de totale hoeveelheid gevonden fruit na een tijdje niet meer toe?</li>
+<li>Vorm met andere studenten groepjes van 2. Kies een hogere óf lagere eetsnelheid. Herhaal je experiment 5 keer en schrijf iedere keer op hoeveel fruit er is gevonden na 1000 tijdstappen. Bekijk ook goed hoe de aapjes zich over het veld bewegen.</li>
+<li>Kies een andere eetsnelheid, en herhaal weer 5 keer je experiment. Zie je verschillen? Had je dit resultaat verwacht?</li>
+<li>Vergelijk je resultaten ook met een ander groepje. Probeer je ondervindingen biologisch uit te leggen.</li>
+<li>Bewaar je resultaten in een tabel. Deze ga je in het onderdeel ‘Statistiek’ bestuderen om te kijken of je resultaten betrouwbaar zijn, of dat het misschien toch toeval is.</li>
+</ol>
+<!-- eetsnelheid_min <- c(2552,2190,2590,2511,2186) -->
+<!-- eetsnelheid_max <- c(781,926,785,848,979) -->
+<!-- test_verschil <- t.test(eetsnelheid_min,eetsnelheid_max) -->
+<!-- print(test_verschil) -->
+</div>
+</section>
+<section id="terminologie" class="level2" data-number="16.8">
+<h2 data-number="16.8" class="anchored" data-anchor-id="terminologie"><span class="header-section-number">16.8</span> Terminologie</h2>
+<table class="table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 27%">
+<col style="width: 47%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Nederlands</th>
+<th>Engels</th>
+<th>Beschrijving</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Discrete variabelen</td>
+<td>Discrete variables</td>
+<td>Variabelen die niet alle waarden kunnen innemen, maar alleen waarden met een vaste afstand. Meestal heeft dit simpelweg de vorm 1,2,3, <em>etc.</em>, maar je zou er ook voor kunnen kiezen om alleen met tienvouden te werken ( 1,10,100,1000) of om ook negatieve getallen te gebruiken (-10,-9,-8)</td>
+</tr>
+<tr class="even">
+<td>Continue variabelen</td>
+<td>Continuous variables</td>
+<td>Variabelen die alle numerieke waarden in een bepaald bereik kunnen innemen. Bijvoorbeeld alle waarden tussen 0 en 1 of alle waarden tussen <span class="math inline">\(-\infty\)</span> en <span class="math inline">\(\infty\)</span>. Tussen 0 en 1 zitten oneindig veel waarden, en tussen <span class="math inline">\(-\infty\)</span> en <span class="math inline">\(\infty\)</span> zitten ook oneindig veel waarden. (eigenlijk zou je dus kunnen stellen dat sommige oneindigheden groter zijn dan andere oneindigheden!)</td>
+</tr>
+<tr class="odd">
+<td>Discrete ruimte</td>
+<td>Discrete space</td>
+<td>De gemodelleerde ruimte is opgedeeld in vaste afstanden, zoals bijvoorbeeld op een grid van vierkanten waar ieder punt 4 of 8 buren heeft (afhankelijk van of je de diagonale buren meetelt). Ook een hexagonaal patroon (zoals een bijenkorf) is een discrete ruimte, waarbij iedere hexagon 6 buren heeft.</td>
+</tr>
+<tr class="even">
+<td>Continue ruimte</td>
+<td>Continuous space</td>
+<td>De gemodelleerde ruimte heeft geen vaste posities, waardoor punten, eiwitten, individuen, <em>etc.</em> elke positie in kunnen nemen. Dit geeft vaak vloeiende bewegingen, maar is een stuk moeilijker voor je computer om door te rekenen!</td>
+</tr>
+<tr class="odd">
+<td>Pseudocode</td>
+<td>Pseudocode</td>
+<td>Een verbale omschrijving van wat een computerprogramma doet (en hoe deze dat doet!), zonder ons druk te maken over de technische aspecten zoals het gebruik van de juiste syntax, de functienamen, of alle komma’s op de goede plek staan, <em>etc.</em></td>
+</tr>
+<tr class="even">
+<td>Emergente eigenschappen</td>
+<td>Emergent properties</td>
+<td>Een eigenschap van een systeem die ontstaat door de interactie tussen de onderdelen, en die niet zichtbaar is in de losse onderdelen zelf. Bijvoorbeeld: individuele neuronen kunnen niet “denken”, maar een groot aantal neuronen met de juiste verbindingen kunnen deze zin interpreteren ook al is de zin veel te lang en staat er te weinig interpunctie in.</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Van der Post, D. J., &amp; Hogeweg, P. (2008). Diet traditions and cumulative cultural processes as side-effects of grouping. Animal Behaviour, 75(1), 133-144.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Gekopieerd!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Gekopieerd!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+          // default icon
+          link.classList.add("external");
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../Modellen/competitie.html" class="pagination-link" aria-label="Competitie en evolutie">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Competitie en evolutie</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../Modellen/reactiediffusie.html" class="pagination-link" aria-label="Reacties en diffusie">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reacties en diffusie</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Vakgroep Theoretische Biologie, Universiteit Utrecht.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Dit boek is gemaakt met <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","loop":false,"descPosition":"bottom","closeEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>

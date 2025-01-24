@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>11&nbsp; Modelleren met ODEs – Biologische Modellen en Statistiek</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Modellen/dichtheidseffecten.html" rel="next">
+<link href="../Modellen/exponentielegroei.html" rel="prev">
+<link href="../figuren/favicon/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Modellen/intro_modellen.html">Biologische modellen</a></li><li class="breadcrumb-item"><a href="../Modellen/odes_basis.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelleren met ODEs</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../figuren/favicon/android-chrome-512x512.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Biologische <br>Modellen en Statistiek</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Schakel donkere modus"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Cursusinformatie</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inleiding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../cursusinformatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Algemene cursusinformatie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../planning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Studieplanning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../links.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Handige links</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Basisprincipes van R</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/introductie_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie en installatie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/introductie_R2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Programmeren in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/intro_R_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Extra R oefeningen</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Basiswiskunde</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/inleiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inleiding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/algebra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Algebra</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/breuken.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Breuken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/exponenten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Exponenten &amp; Logaritmen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/limieten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Asymptoten &amp; Limieten</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/afgeleiden.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Afgeleiden</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/schetsen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Functies schetsen</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Biologische modellen</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/intro_modellen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introductie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/exponentielegroei.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Exponentiële groei</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/odes_basis.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelleren met ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/dichtheidseffecten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Dichtheidseffecten</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/ruimtelijkegroei.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Ruimtelijke groei</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/predatorprooi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Predator-prooi interacties</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/odes_grind.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs modelleren in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/competitie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Competitie en evolutie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/zwermen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Zwermen en foerageren</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/reactiediffusie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reacties en diffusie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/exciteerbaremedia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Exciteerbare media</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mini-project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Statistiek</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/wat_is_statistiek.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wat is statistiek?</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Bijlagen</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_wiskunde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden wiskunde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_modellen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden modellen</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/spiekbriefjes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spiekbriefjes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/dankwoord.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dankwoord</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="-1">
+    <h2 id="toc-title">Inhoudsopgave</h2>
+   
+  <ul class="collapse">
+  <li><a href="#leerdoelen" id="toc-leerdoelen" class="nav-link active" data-scroll-target="#leerdoelen"><span class="header-section-number">11.1</span> Leerdoelen</a></li>
+  <li><a href="#chaotische-konijnen" id="toc-chaotische-konijnen" class="nav-link" data-scroll-target="#chaotische-konijnen"><span class="header-section-number">11.2</span> Chaotische konijnen</a></li>
+  <li><a href="#het-probleem-van-tijdstappen" id="toc-het-probleem-van-tijdstappen" class="nav-link" data-scroll-target="#het-probleem-van-tijdstappen"><span class="header-section-number">11.3</span> Het probleem van “tijdstappen”</a></li>
+  <li><a href="#odes-hebben-geen-tijdstappen" id="toc-odes-hebben-geen-tijdstappen" class="nav-link" data-scroll-target="#odes-hebben-geen-tijdstappen"><span class="header-section-number">11.4</span> ODEs hebben geen tijdstappen</a></li>
+  <li><a href="#een-hertenfeestje-in-wiskundige-termen" id="toc-een-hertenfeestje-in-wiskundige-termen" class="nav-link" data-scroll-target="#een-hertenfeestje-in-wiskundige-termen"><span class="header-section-number">11.5</span> Een hertenfeestje in wiskundige termen</a></li>
+  <li><a href="#een-ode-van-hertenmigratie" id="toc-een-ode-van-hertenmigratie" class="nav-link" data-scroll-target="#een-ode-van-hertenmigratie"><span class="header-section-number">11.6</span> Een ODE van hertenmigratie</a></li>
+  <li><a href="#functies-als-oplossingen" id="toc-functies-als-oplossingen" class="nav-link" data-scroll-target="#functies-als-oplossingen"><span class="header-section-number">11.7</span> Functies als oplossingen</a></li>
+  <li><a href="#sec-odes-eenheden" id="toc-sec-odes-eenheden" class="nav-link" data-scroll-target="#sec-odes-eenheden"><span class="header-section-number">11.8</span> Rekenen aan eenheden</a></li>
+  <li><a href="#evenwichten" id="toc-evenwichten" class="nav-link" data-scroll-target="#evenwichten"><span class="header-section-number">11.9</span> Evenwichten</a></li>
+  <li><a href="#opgaven" id="toc-opgaven" class="nav-link" data-scroll-target="#opgaven"><span class="header-section-number">11.10</span> Opgaven</a></li>
+  <li><a href="#terminologie" id="toc-terminologie" class="nav-link" data-scroll-target="#terminologie"><span class="header-section-number">11.11</span> Terminologie</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Modellen/intro_modellen.html">Biologische modellen</a></li><li class="breadcrumb-item"><a href="../Modellen/odes_basis.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelleren met ODEs</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-odes" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelleren met ODEs</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<script>
+  window.onbeforeprint = () => {
+    const images = document.querySelectorAll('img#subset')
+    images.forEach((img) => { img.style.width = "60%"; });
+    const imagesShow = document.querySelectorAll('img#imgToShow')
+    imagesShow.forEach((img) => { img.style.display = "block"; });
+    
+    const videos = document.querySelectorAll('img#imgToShow')
+    imagesShow.forEach((img) => { img.style.display = "block"; });
+    
+    //document.body.style.fontFamily= "Georgia";
+    const iframes = document.querySelectorAll("iframe#iframeToReplace");
+    iframes.forEach((iframe, index) => {
+                // Create a placeholder element with text
+                const placeholder = document.createElement('div');
+                placeholder.innerHTML += "<br><center><font size=2>(Deze interactieve content vind je op <a href='" + iframe.src + "'> " + iframe.src + " </a>)</font></center><br>"
+                iframe.parentNode.replaceChild(placeholder, iframe);
+            });
+  };
+  window.onafterprint = () => {
+      window.location.reload(true);
+    }
+    
+  
+  
+  
+  //const iframeContainer =           document.getElementById('iframeContainer');
+  //const iframe = document.getElementById('printIframe');
+  //window.onbeforeprint = () => {
+  // Replace the iframe with a link
+  //  iframeContainer.innerHTML = `<p>Deze simulatie kun je bekijken op: <a href="${iframe.src}" target="_blank">${iframe.src}</a></p>`;
+  //  document.body.style.fontFamily= "Georgia";
+  //};
+  //window.onafterprint = () => {
+    //  window.location.reload(true);
+   // }
+</script>
+<p>In dit onderdeel bouwen we voort op de kennis van exponentiële groei, logistische groei, en draagvermogen, maar stappen we af van de differentievergelijking. We gaan kennis maken met differen<em>tiaal</em>vergelijkingen (ordinary differential equations/ODEs). ODEs zijn binnen de biologie – en ook in andere wetenschappen – een zeer populaire manier om systemen te modelleren, omdat ze relatief simpel en intuïtief zijn.</p>
+<section id="leerdoelen" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="leerdoelen"><span class="header-section-number">11.1</span> Leerdoelen</h2>
+<p>De leerdoelen voor dit hoofdstuk zijn:</p>
+<ul>
+<li>Begrijpen dat biologie modelleren met discrete tijdstappen soms vreemde effecten op kan leveren.</li>
+<li>Begrijpen dat ODEs geen “tijdstappen” hebben.</li>
+<li>Begrijpen dat ODEs geschreven worden in termen van “x per tijdseenheid”, en wat dit zegt over de individuele termen en parameters.</li>
+<li>Begrijpen wanneer er in een ODE sprake is van een evenwicht.</li>
+<li>ODEs verband kunnen brengen met hun oplossing.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/discr_vs_cont_ai_text.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="(afbeelding gegenereerd met ChatGPT4-o)"><img src="figuren/discr_vs_cont_ai_text.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="(afbeelding gegenereerd met ChatGPT4-o)"></a></p>
+</figure>
+</div>
+<figcaption>(afbeelding gegenereerd met ChatGPT4-o)</figcaption>
+</figure>
+</div>
+</section>
+<section id="chaotische-konijnen" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="chaotische-konijnen"><span class="header-section-number">11.2</span> Chaotische konijnen</h2>
+<p>In <a href="exponentielegroei.html" class="quarto-xref"><span>Hoofdstuk 10</span></a> hebben we gezien wat de consequenties zijn van 24 konijnen vrijlaten in een land waar geen natuurlijke predator voor konijnen bestaat. In de opgaven hebben we deze groei gemodelleerd in R, en hebben we geprobeerde de populatie te laten stabiliseren bij 500 miljoen konijnen. Met een lage groeisnelheid zagen we dat ons model een prachtige logistische groeicurve gaf, maar dat de groei veel langzamer was dan waargenomen in Australië. Het verhogen van de groeisnelheid gaf echter vreemde grafieken (<a href="#fig-chaos-1" class="quarto-xref">Figuur&nbsp;<span>11.1 (a)</span></a>). Deze vreemde grafieken zijn een beroemde eigenschap van differentievergelijkingen voor logistische groei. De meest beroemde vorm van deze differentievergelijking is:</p>
+<p><span id="eq-logisticmap"><span class="math display">\[
+\begin{align}
+N(t+1) &amp;= rN(t)(1-\frac{N(t)}{K})
+\end{align}
+\tag{11.1}\]</span></span></p>
+<p>Waarbij niet <span class="math inline">\(b\)</span> (birth) en <span class="math inline">\(d\)</span> (death) zijn gebruikt (zoals in het werkcollege), maar een intrinsieke (netto) groei parameter (<span class="math inline">\(r\)</span>) en daarnaast een parameter die het draagvlak bepaalt (<span class="math inline">\(K\)</span>). Anders dan dit verschil, laat <a href="#eq-logisticmap" class="quarto-xref">Vergelijking&nbsp;<span>11.1</span></a> dezelfde vreemde grafieken zien wanneer <span class="math inline">\(r \geq 3.7\)</span> (zie <a href="#fig-chaos-1" class="quarto-xref">Figuur&nbsp;<span>11.1 (a)</span></a>). Van het één op het andere jaar springen we heen en weer van honderden miljoenen konijnen naar een heel klein aantal konijnen, en dit gaat over de jaren heen steeds maar door. Sterker nog, als we Thomas Austin’s experiment herhalen met een ander aantal konijnen (<a href="#fig-chaos-2" class="quarto-xref">Figuur&nbsp;<span>11.1 (b)</span></a>) zien we dat deze fluctuaties iedere keer heel anders zijn! Met andere woorden: als we met behulp van dit model zouden willen voorspellen hoeveel konijnen er na 20 jaar zouden zijn, dan moeten we wel héél zeker weten met hoeveel konijnen we precies begonnen! Bovendien hebben we niet bereikt wat we wilden: probeerden we niet juist een stabiel evenwicht te modelleren?</p>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>r <span class="ot">=</span> <span class="dv">4</span>        <span class="co"># intrinsic growth rate</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>K <span class="ot">=</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">8</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>init_R <span class="ot">=</span> <span class="dv">24</span>    <span class="co"># start with 24</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>R_series <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(r <span class="cf">in</span> <span class="fu">c</span>(r)){</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(s <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">24</span><span class="sc">:</span><span class="dv">26</span>)){ </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    R <span class="ot">=</span> s</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    myR <span class="ot">=</span> R</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    R_series <span class="ot">&lt;-</span> <span class="fu">rbind</span>(R_series, <span class="fu">data.frame</span>(<span class="at">time=</span><span class="dv">0</span>, <span class="at">r=</span>r, <span class="at">R=</span>R,<span class="at">s=</span>s,<span class="at">initR=</span>myR))</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>      R <span class="ot">&lt;-</span> r<span class="sc">*</span>R<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>R<span class="sc">/</span>K)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>      R_series <span class="ot">&lt;-</span> <span class="fu">rbind</span>(R_series, <span class="fu">data.frame</span>(<span class="at">time=</span>i,<span class="at">r=</span>r,<span class="at">R=</span>R,<span class="at">s=</span>s,<span class="at">initR=</span>myR))</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>R_series <span class="sc">%&gt;%</span> <span class="fu">filter</span>(initR<span class="sc">==</span><span class="dv">24</span>,time<span class="sc">&gt;</span><span class="dv">1</span>,time<span class="sc">&lt;=</span><span class="dv">40</span>,r<span class="sc">==</span><span class="dv">4</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>time,<span class="at">y=</span>R,<span class="at">group=</span>s,<span class="at">col=</span><span class="fu">as.factor</span>(initR))) <span class="sc">+</span> </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size=</span><span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="co">#facet_wrap(~r, scale="free_y",ncol=1) + </span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">type=</span><span class="st">"qual"</span>, <span class="at">palette =</span> <span class="st">"Dark2"</span>, <span class="at">name=</span><span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color=</span><span class="st">"none"</span>)<span class="sc">+</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Aantal konijnen"</span>) <span class="sc">+</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Tijd (jaren)"</span>) <span class="sc">+</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size=</span><span class="dv">16</span>)<span class="sc">+</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="st">"cm"</span>))</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>R_series <span class="sc">%&gt;%</span> <span class="fu">filter</span>(time<span class="sc">&gt;</span><span class="dv">1</span>,time <span class="sc">&lt;</span><span class="dv">40</span>,r<span class="sc">==</span><span class="dv">4</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>time,<span class="at">y=</span>R,<span class="at">group=</span>s,<span class="at">col=</span><span class="fu">as.factor</span>(initR))) <span class="sc">+</span> </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size=</span><span class="fl">1.2</span>) <span class="sc">+</span> </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="co">#facet_wrap(~r, scale="free_y",ncol=1) + </span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color=</span><span class="st">"none"</span>)<span class="sc">+</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">type=</span><span class="st">"qual"</span>, <span class="at">palette =</span> <span class="st">"Dark2"</span>, <span class="at">name=</span><span class="st">"Begin aantal</span><span class="sc">\n</span><span class="st">konijnen"</span>) <span class="sc">+</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">alpha=</span><span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Aantal konijnen"</span>) <span class="sc">+</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Tijd (jaren)"</span>) <span class="sc">+</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size=</span><span class="dv">16</span>)<span class="sc">+</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="st">"cm"</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="fig-chaos" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chaos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-chaos" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display quarto-layout-cell-subref" data-ref-parent="fig-chaos">
+<div id="fig-chaos-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-chaos-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="odes_basis_files/figure-html/fig-chaos-1-1.png" class="lightbox" data-gallery="fig-chaos" title="Figuur&nbsp;11.1&nbsp;(a): Snel-groeiende konijnenpopulatie gemodelleerd met een differentievergelijking, beginnende met 24 konijnen (r=4, K=10e8)"><img src="odes_basis_files/figure-html/fig-chaos-1-1.png" class="img-fluid figure-img" data-ref-parent="fig-chaos" width="576"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-chaos-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Snel-groeiende konijnenpopulatie gemodelleerd met een differentievergelijking, beginnende met 24 konijnen (r=4, K=10e8)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-chaos" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display quarto-layout-cell-subref" data-ref-parent="fig-chaos">
+<div id="fig-chaos-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-chaos-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="odes_basis_files/figure-html/fig-chaos-2-1.png" class="lightbox" data-gallery="fig-chaos" title="Figuur&nbsp;11.1&nbsp;(b): Dezelfde differentievergelijking beginnende met 24 (groen), 25 (rood), en 26 (paars) konijnen. (r=4, K=10e8)"><img src="odes_basis_files/figure-html/fig-chaos-2-1.png" class="img-fluid figure-img" data-ref-parent="fig-chaos" width="576"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-chaos-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Dezelfde differentievergelijking beginnende met 24 (groen), 25 (rood), en 26 (paars) konijnen. (r=4, K=10e8)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chaos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;11.1: Kleine initiële verschillen in het aantal konijnen kunnen na verloop van tijd een groot effect hebben in een chaotisch systeem.
+</figcaption>
+</figure>
+</div>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/6/65/Trajektorie_eines_Doppelpendels.gif" class="img-fluid" style="width:20%; float: right; margin: 5px;"> Het vreemde gedrag in <a href="#fig-chaos" class="quarto-xref">Figuur&nbsp;<span>11.1</span></a> wordt formeel <strong>deterministische chaos</strong> genoemd. Hiermee bedoelen we niet het type chaos dat men in spreektaal gebruikt om een rommelige kamer te omschrijven, maar fluctuaties die onvoorspelbaar zijn omdat ze zeer gevoelig zijn voor de begin-toestand. Een andere beroemd voorbeeld uit de natuurkunde is de <a href="https://nl.wikipedia.org/wiki/Dubbele_slinger">dubbele slinger</a> (zie ook de animatie rechts).</p>
+<p>Hoewel je op korte termijn vaak nog enigszins kan aanvoelen in welke richting de slinger beweegt, is het op lange termijn onmogelijk in te schatten waar de slinger zich zal bevinden. Kennelijk kunnen zelfs simpele systemen zich enorm vreemd en onvoorspelbaar gedragen. Geen wonder dat meer complexe systemen zoals biologische populaties en het weer zo moeilijk te voorspellen zijn!</p>
+<div id="tip-detchaos" class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip&nbsp;11.1: Meer over “deterministische chaos” (verdieping)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Een systeem is deterministisch als de regels niet willekeurig zijn. Met andere woorden, er worden geen dobbelstenen gerold om te bepalen wat er gebeurt. De meeste chemische en biologische principes volgen zulke deterministische regeltjes, maar toch zijn ze moeilijk te voorspellen. Dit komt doordat ze ondanks het gebrek aan willekeur zeer gevoelig zijn voor de precisie van de metingen. Deze gevoeligheid ken je misschien van het concept the <em>butterfly effect</em>, waar een vleugelslag van een vlinder uiteindelijk (na lange tijd) de oorzaak kan zijn van een orkaan. Zo zie je bijvoorbeeld dat als Thomas Austin 25 in plaats van 24 konijnen had vrijgelaten, het precieze aantal konijnen na 20 jaar maximaal verschillend kan zijn!</p>
+</div>
+</div>
+</div>
+<p>Hoewel deterministische chaos een interessant fenomeen is (en zeer zeker niet zomaar “willekeur”, zie <a href="#tip-detchaos" class="quarto-xref">Tip&nbsp;<span>11.1</span></a>), kunnen we ons afvragen of de groei van biologische populaties ook daadwerkelijk chaotisch is. Als we bijvoorbeeld bacteriën in het lab groeien, krijgen we meestal een logistische (sigmoïde) groeicurve, en niet een populatie die lukraak fluctueert. Wat is nou eigenlijk de oorzaak van deze chaos, en kunnen we hier misschien ook vanaf komen?</p>
+</section>
+<section id="het-probleem-van-tijdstappen" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="het-probleem-van-tijdstappen"><span class="header-section-number">11.3</span> Het probleem van “tijdstappen”</h2>
+<p>Tot nu toe namen we aan dat elke “tijdstap” van de konijnenpopulatie een jaar is, en hebben we de groeisnelheid geprobeerd aan te passen om ons model overeen te laten komen met de data uit Australië. Helaas zagen we dat dit niet de gewenste resultaten heeft. Wat kunnen we doen om toch “snellere groei” te krijgen?</p>
+<p>We zouden kunnen overwegen om niet de groeisnelheid aan te passen, maar in plaats daarvan te heroverwegen wat “een tijdstap” is. Dat wil zeggen, hoeveel tijd zit er eigenlijk tussen <span class="math inline">\(R(t)\)</span> en <span class="math inline">\(R(t+1)\)</span>? Als elke tijdstap een half jaar is, is er na 20 tijdstappen slechts 10 jaar voorbij. Dat betekent dat er nu na 10 jaar, 20 stappen groei hebben kunnen plaatsvinden. Als elke tijdstap een maand is (<span class="math inline">\(1 \over 12\)</span> jaar), is er na 20 tijdstappen nog geen twee jaar voorbij. In plaats van de groeisnelheid aan te passen, zouden we dus ook de grootte van “de tijdstap” aan kunnen passen!</p>
+<p>Om de grootte van onze tijdstap aan te passen, kunnen we het R-script uit de opgaven van het vorige onderdeel hergebruiken:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># definieren van begin aantal konijnen</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">24</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># herhaal 40 keer de groei-vergelkijking, waarbij elke stap staat voor een HALF jaar</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>){</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  N[t<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> r<span class="sc">*</span>N[t]<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>(N[t]<span class="sc">/</span><span class="dv">10</span><span class="sc">^</span><span class="dv">9</span>))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>N[<span class="dv">21</span>] <span class="co"># Aantal na 20 halve jaren (N[1] is de nulde tijdstap!)</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(N,<span class="at">type=</span><span class="st">"o"</span>,<span class="at">xlab=</span><span class="st">"Tijd"</span>,<span class="at">ylab=</span><span class="st">"Aantal konijnen"</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Als je de code hierboven uitvoert zul je zien dat er na 20 halve jaren 12,425,902 konijnen zijn, en dat we gewoon een mooie sigmoïde groeicurve krijgen. Dit is ook niet raar, want eigenlijk hebben we niets aangepast: alleen onze interpretatie van “tijdstappen” is anders. Door aan te nemen dat de tijdstap kleiner is (een half jaar in plaats van een jaar), zijn we het vreemde chaotische gedrag kwijt. Kennelijk ontstaat dit probleem alleen als de tijdstap “te groot” is.</p>
+<p>Dit kunnen we ook intuïtief begrijpen. Als je alleen kijkt naar hoeveel konijnen er aan het begin en aan het eind van het jaar zijn, mis je alle tussenstappen van hoe de konijnen zich tijdens het jaar voortplanten. De tussentijdse veranderingen zouden de groei kunnen aanpassen, zodat je bijvoorbeeld niet doorschiet tot onder of boven het evenwicht, maar voorzichtig het evenwicht nadert. Kleinere stapjes nemen maakt het groeiprocess simpelweg gelijkmatiger.</p>
+<p>Hoewel we nu een oplossing voor ons fluctuatie-probleem hebben, is dit eigenlijk geen houdbare oplossing. Moeten we de hele tijd blijven controleren of de tijdstap van ons model wel “klein genoeg” is? Het antwoord op deze vraag is nee, omdat we gebruik kunnen maken van een wiskundig modelformalisme dat oneindig kleine tijdstapjes aanneemt. We stappen over van de differen<strong>tie</strong>vergelijkingen, naar de differen<strong>tiaal</strong>vergelijkingen. Deze worden ook wel <em>ordinary differential equations</em> (ODEs) genoemd.</p>
+</section>
+<section id="odes-hebben-geen-tijdstappen" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="odes-hebben-geen-tijdstappen"><span class="header-section-number">11.4</span> ODEs hebben geen tijdstappen</h2>
+<p>We gaan in dit onderdeel leren over <strong>differentiaalvergelijkingen</strong> (ODEs). Anders dan de eerdere vergelijkingen, beschrijven ODEs niet de populatiegrootte zelf, maar de <em>snelheid</em> waarmee deze verandert. Deze modelvorm is zeer populair binnen de biologie omdat denken in termen van snelheden vaak heel intuïtief is. Maar wat <em>is</em> een differentiaalvergelijking eigenlijk?</p>
+<p>Zoals jullie op de middelbare school (en in het <a href="@sec-algebra">onderdeel basiswiskunde</a>) hebben geleerd, ziet een normale algebraïsche vergelijking er zo uit:</p>
+<p><span class="math display">\[\begin{align}
+    6x=3
+\end{align}\]</span></p>
+<p>Waarbij (in dit geval) <span class="math inline">\(x\)</span> de onbekende is. Omdat er verder geen andere onbekenden zijn, kunnen we de vergelijking oplossen door beide kanten door <span class="math inline">\(6\)</span> te delen:</p>
+<p><span class="math display">\[\begin{align}
+    x=\frac{3}{6}=\frac{1}{2}
+\end{align}\]</span></p>
+<p>Voor deze simpele algebraïsche vergelijking is de onbekende dus <span class="math inline">\(x\)</span>, en de oplossing een getal (<span class="math inline">\(\frac{1}{2}\)</span>). Bij <em>differentiaal</em>vergelijkingen is de relatie tussen de onbekende en de oplossing net een beetje anders. Om dit goed te begrijpen, gaan we een simpel biologisch scenario omschrijven.</p>
+</section>
+<section id="een-hertenfeestje-in-wiskundige-termen" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="een-hertenfeestje-in-wiskundige-termen"><span class="header-section-number">11.5</span> Een hertenfeestje in wiskundige termen</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/hertenscenario.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="(Afbeelding gegenereerd met ChatGPT4-o)"><img src="figuren/hertenscenario.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%" alt="(Afbeelding gegenereerd met ChatGPT4-o)"></a></p>
+</figure>
+</div>
+<figcaption>(Afbeelding gegenereerd met ChatGPT4-o)</figcaption>
+</figure>
+</div>
+<p>Stel, er zijn 100 herten in een bos, en er migreren ieder uur 3 herten naar dit bos toe (misschien is er een feestje). We nemen voor nu even aan dat de herten op deze korte tijdschaal niet voortplanten of dood gaan. Onder deze simpele aannames, kunnen we een wiskundige functie bepalen, <span class="math inline">\(H(t)\)</span>, die het aantal herten in het bos over de tijd omschrijft:</p>
+<p><span class="math display">\[
+    H(t) = 100 + 3 \cdot t
+\]</span></p>
+<p>Algemener kunnen we stellen dat voor een begin-aantal herten van <span class="math inline">\(H_0\)</span> met een migratiesnelheid van <span class="math inline">\(m\)</span>, de functie er zo uit ziet:</p>
+<p><span id="eq-ht"><span class="math display">\[
+    H(t) = H_0 + m \cdot t
+\tag{11.2}\]</span></span></p>
+<p>Hier is tijd (<span class="math inline">\(t\)</span>) de onafhankelijke variabele, wat betekent dat de waarde vrij kan variëren. We kunnen dus uitrekenen hoeveel herten er na 1, 2, of 10 uur aanwezig zullen zijn. We kunnen zelfs uitrekenen hoeveel herten er na 1.4852 uur zullen zijn. Met andere woorden: tijd is een <strong>continue variabele</strong> geworden (zie <a href="#tip-contdisc" class="quarto-xref">Tip&nbsp;<span>11.2</span></a>), en hoeft niet meer in vaste stapjes te worden opgedeeld. Met deze omschrijving is er dus geen sprake van “tijdstappen”.</p>
+<div id="tip-contdisc" class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip&nbsp;11.2: Continue en discrete variabelen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Biologische variabelen kunnen continu of discreet zijn. Continue variabelen zijn eigenschappen zoals lengte, gewicht of temperatuur, die elke waarde op een schaal kunnen aannemen, inclusief niet-gehele getallen met decimalen. Tussen twee gegeven waarden zijn altijd tussenliggende waarden mogelijk. Dit maakt continue variabelen zeer geschikt voor processen met vloeiende overgangen, zeker wanneer ook tijd continu wordt verondersteld. Discrete variabelen hebben alleen specifieke waarden (vaak gehele getallen). Er bestaan geen tussenliggende waarden, omdat ze gebaseerd zijn op tellingen.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="een-ode-van-hertenmigratie" class="level2" data-number="11.6">
+<h2 data-number="11.6" class="anchored" data-anchor-id="een-ode-van-hertenmigratie"><span class="header-section-number">11.6</span> Een ODE van hertenmigratie</h2>
+<p>We kunnen van het bovengenoemde hertenfeestje ook een ODE (een differentiaalvergelijking) opschrijven. In tegenstelling tot <a href="#eq-ht" class="quarto-xref">Vergelijking&nbsp;<span>11.2</span></a>, beschrijft een ODE niet het aantal herten zelf, maar de snelheid waarmee dat aantal verandert. Voor ons scenario ziet dit er zo uit:</p>
+<p><span id="eq-odeherten"><span class="math display">\[
+    
+\mathchoice{\frac{\mathrm{d}H(t)}
+{\mathrm{d}t}}{\mathrm{d}H(t)/\mathrm{d}t}
+{\mathrm{d}H(t)/\mathrm{d}t}
+{\mathrm{d}H(t)/\mathrm{d}t}
+= m
+\tag{11.3}\]</span></span></p>
+<p>Formeel staat hier: de afgeleide van <span class="math inline">\(H(t)\)</span> over de tijd (dat wil zeggen de snelheid van verandering) is gelijk aan <span class="math inline">\(m\)</span>. Inderdaad, als we <span class="math inline">\(H(t)\)</span> uit <a href="#eq-ht" class="quarto-xref">Vergelijking&nbsp;<span>11.2</span></a> zouden differentiëren voor <span class="math inline">\(t\)</span> (tijd), dan krijgen we <span class="math inline">\(m\)</span>. <em>So far so good</em>.</p>
+<p>Stel je echter voor dat we niet weten met hoeveel herten we begonnen maar alleen weten dat er ieder uur <span class="math inline">\(m\)</span> herten bijkomen. In dat geval kunnen dus we alleen <a href="#eq-odeherten" class="quarto-xref">Vergelijking&nbsp;<span>11.3</span></a> opschrijven, zonder dat we de specifieke vorm van <span class="math inline">\(H(t)\)</span> weten. In dat geval is <span class="math inline">\(H(t)\)</span> dus een <strong>onbekende functie</strong> (zoals in een algebraïsche vergelijking <span class="math inline">\(x\)</span> een onbekende waarde is). De oplossing van deze ODE is dus een wiskundige functie <span class="math inline">\(H(t)\)</span>, waarvan de afgeleide altijd <span class="math inline">\(m\)</span> is. Hoe vinden we dan deze oplossing?</p>
+</section>
+<section id="functies-als-oplossingen" class="level2" data-number="11.7">
+<h2 data-number="11.7" class="anchored" data-anchor-id="functies-als-oplossingen"><span class="header-section-number">11.7</span> Functies als oplossingen</h2>
+<p>Omdat <a href="#eq-odeherten" class="quarto-xref">Vergelijking&nbsp;<span>11.3</span></a> heel erg simpel is, kunnen we wel bedenken hoe mogelijke oplossingen er uit zouden kunnen zien:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/solutions_herten_geldig.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="figuren/solutions_herten_geldig.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></a></p>
+</figure>
+</div>
+<p>De oplossing voor een ODE is dus niet een enkel getal (zoals bij de algebraïsche vergelijking de oplossing <span class="math inline">\(x=6\)</span> was), maar een functie van tijd (“een grafiekje door de tijd”). Sterker nog, omdat <span class="math inline">\(m\)</span> en de beginwaarde van <span class="math inline">\(H\)</span> niet vast staat, is de oplossing een hele familie van functies. Maar er zijn natuurlijk ook een heleboel functies die <em>niet</em> aansluiten bij onze ODE:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/solutions_herten_ongeldig.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="figuren/solutions_herten_ongeldig.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:78.0%"></a></p>
+</figure>
+</div>
+<p>De bovenstaande grafiekjes van <span class="math inline">\(H(t)\)</span> zijn niet geldig voor onze ODE van het hertenfeestje, omdat niet op elk punt de helingshoek hetzelfde is (terwijl de ODE zegt dat deze altijd gelijk is aan <span class="math inline">\(m\)</span>!). Geldige grafiekjes worden <em>specifieke oplossingen</em> genoemd: ze gelden alleen voor specifieke beginwaarden van <span class="math inline">\(H\)</span> en een specifieke waarde van parameter <span class="math inline">\(m\)</span>. Er bestaan ook <strong>algemene oplossingen</strong> voor ODEs. Dat zijn formules waaraan alle specifieke oplossingen voldoen. Voor ons hertenfeestje waren we daarmee begonnen: <a href="#eq-ht" class="quarto-xref">Vergelijking&nbsp;<span>11.2</span></a>.</p>
+<p>Maar stel dat we beginnen met een ODE zonder vooraf een specifieke oplossing te kennen. Hoe weten we dan de oplossing van die ODE? Het zijn natuurlijk vooral de oplossingen die ons inzicht geven in de dynamiek van het systeem! Maar oplossingen vinden, is lang niet altijd eenvoudig.</p>
+<p>Stel bijvoorbeeld dat de herten ook naar huis kunnen gaan. Omdat alleen herten die in het bos aanwezig zijn naar huis kunnen gaan, hangt deze snelheid af van de huigide hoeveelheid herten (<span class="math inline">\(H(t)\)</span>). De ODE wordt dan dus:</p>
+<p><span id="eq-ht2"><span class="math display">\[
+
+\mathchoice{\frac{\mathrm{d}H(t)}
+{\mathrm{d}t}}{\mathrm{d}H(t)/\mathrm{d}t}
+{\mathrm{d}H(t)/\mathrm{d}t}
+{\mathrm{d}H(t)/\mathrm{d}t}
+= m - d \cdot H(t)
+\tag{11.4}\]</span></span></p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Let op! <span class="math inline">\(\mathrm{d}\)</span> en <span class="math inline">\(d\)</span> zijn niet hetzelfde!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>De bovenstaande vergelijking heeft twee verschillende d’s. De d aan de linkerkant van de vergelijking is de d van differentiaal, en geeft dus aan dat we het over de afgeleide hebben. De <span class="math inline">\(d\)</span> aan de rechterkant van de vergelijking zou kunnen staan voor <em>depart</em> (vertrekken), en is een model-parameter (in andere modellen zou je <span class="math inline">\(d\)</span> kunnen tegenkomen als <em>death rate</em> of <em>decay</em>). Je kunt deze twee d’s dus niet tegen elkaar wegdelen! We hadden deze parameter ook <span class="math inline">\(v\)</span> voor vertrekken kunnen noemen, of <span class="math inline">\(q\)</span> voor kukelekuu (die laatste keuze is om meerdere reden misschien niet zo handig ;)).</p>
+</div>
+</div>
+<p>Welke algemene oplossing (<span class="math inline">\(H(t)=\dots\)</span>) voldoet nu aan deze vergelijking? Oftewel: welke functie <span class="math inline">\(H(t)\)</span> heeft altijd een afgeleide die aan deze ODE voldoet? Wat in ons eerste model eenvoudig uit ons hoofd te doen was, is nu ineens wat lastiger geworden. Om de oplossing te vinden, moeten we differentiaalvergelijkingen integreren, wat niet altijd eenvoudig is. Gelukkig hoeven jullie dit niet handmatig te doen, en wel om de volgende redenen:</p>
+<ol type="1">
+<li>Zelfs voor relatief eenvoudige ODEs kan het vinden van de <strong>algemene</strong> oplossing <em>onmogelijk</em> zijn (niet alleen moeilijk, maar écht onmogelijk).</li>
+<li>Met behulp van een computer (bijvoorbeeld in R) kun je eenvoudig specifieke oplossingen (grafiekjes over de tijd) berekenen.</li>
+<li>Je kunt met pen en papier veel inzicht uit ODEs krijgen zonder de algemene oplossing te bepalen.</li>
+</ol>
+</section>
+<section id="sec-odes-eenheden" class="level2" data-number="11.8">
+<h2 data-number="11.8" class="anchored" data-anchor-id="sec-odes-eenheden"><span class="header-section-number">11.8</span> Rekenen aan eenheden</h2>
+<p>Later in de cursus gaan we R-scripts gebruiken om specifieke oplossingen te laten uitrekenen, maar zoals gezegd kun je met pen en papier ook al veel voor elkaar krijgen. Hiermee oefenenen is belangrijk, want zo krijgen we een beter gevoel voor ODEs, zodat we eerder doorhebben wanneer de computer (wellicht door een typefoutje) rare resultaten geeft. Laten we beginnen met waar al het rekenwerk begint: zorgen dat we appels met appels vergelijken.</p>
+<p>Laten we nog even doorgaan met het model van herten-migratie met herten die naar huis vetrekken:</p>
+<p><span class="math display">\[\begin{align}
+
+\mathchoice{\frac{\mathrm{d}H(t)}
+{\mathrm{d}t}}{\mathrm{d}H(t)/\mathrm{d}t}
+{\mathrm{d}H(t)/\mathrm{d}t}
+{\mathrm{d}H(t)/\mathrm{d}t}
+= m - d \cdot H(t)
+\end{align}\]</span></p>
+<p>Om het allemaal wat overzichtelijker te houden kunnen we het vermenigvuldigingsteken (<span class="math inline">\(\cdot\)</span>) weglaten, en <span class="math inline">\(H(t)\)</span> opschrijven als <span class="math inline">\(H\)</span>:</p>
+<p><span class="math display">\[\begin{align}
+
+\mathchoice{\frac{\mathrm{d}H}
+{\mathrm{d}t}}{\mathrm{d}H/\mathrm{d}t}
+{\mathrm{d}H/\mathrm{d}t}
+{\mathrm{d}H/\mathrm{d}t}
+= m - dH
+\end{align}\]</span></p>
+<p>Laten we nogmaals omschrijven wat hier staat. Aan de linkerzijde staat de verandering in de hoeveelheid herten per tijdseenheid (in het hertenscenario hadden we het over tijd in uren). De verbale omschrijving “per tijdseenheid” kunnen we wiskundig opschrijven als <span class="math inline">\(\frac{1}{t}\)</span> (of <span class="math inline">\(t^{-1}\)</span>, dat is hetzelfde). Hetzelfde geldt overigens voor “per hert”, wat zou vertalen naar <span class="math inline">\(\frac{1}{H}\)</span> of <span class="math inline">\(H^{-1}\)</span>. Je kunt het woord “per” dus vertalen naar “gedeeld door”. Dus: “herten per uur” kunnen we opschrijven als <span class="math inline">\(\frac{H}{t}\)</span>.</p>
+<p>Aan de linkerkant staat dus iets in termen van van “verandering in aantal herten per tijdsinterval in uren”, wat we voor het gemak afkorten naar “herten per uur”, dus <span class="math inline">\(H \over t\)</span>. Aan de rechterzijde staan twee individuele termen, namelijk <span class="math inline">\(m\)</span> en <span class="math inline">\(dH\)</span>. Om de differentiaalvergelijking geldig te houden moeten deze individuele termen dezelfde eenheden van “herten per uur” hebben, want je kan immers geen appels en peren bij elkaar optellen.</p>
+<p><span class="math display">\[\begin{align}
+\underbrace{
+\mathchoice{\frac{\mathrm{d}H}
+{\mathrm{d}t}}{\mathrm{d}H/\mathrm{d}t}
+{\mathrm{d}H/\mathrm{d}t}
+{\mathrm{d}H/\mathrm{d}t}
+}_{\text{herten per uur}} = \underbrace{m}_{\text{herten per uur}} - \underbrace{dH}_{\text{herten per uur}}
+\end{align}\]</span></p>
+<p>Hieruit kunnen we dus onmiddelijk concluderen dat de migratieparameter (<span class="math inline">\(m\)</span>) ook in termen van “herten per uur” uitgedrukt moet worden. Wiskundig stellen we dan dat de eenheid (soms ook dimensie genoemd) van <span class="math inline">\(m\)</span> “herten per uur” is. Als we dus in het veld de migratie gaan meten, weten we wat ons te doen staat.</p>
+<p>Maar wat zijn de eenheden van de parameter <span class="math inline">\(d\)</span>, die het vertrek bepaalt? Hiervoor moeten we deze term gelijk stellen aan <span class="math inline">\(H/t\)</span>, en oplossen voor <span class="math inline">\(d\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+    dH = H/t \\
+    d = 1/t
+\end{align*}\]</span></p>
+<p>Nu weten we dus dat de vertrekparameter de eenheid/dimensie <span class="math inline">\(1 \over t\)</span> heeft, met andere woorden “per tijdseenheid” of “per uur”. Omdat we het aantal herten hebben weggedeeld, beschrijft deze parameter dus de niet het vertrek op populatieniveau, maar de vertreksnelheid per individu (dat laaste wordt ook wel <em>per capita</em> genoemd). Als we deze parameter in het veld zouden willen meten, zouden we het aantal vertrekkende herten per uur moeten meten <em>gedeeld door het totaal aantal herten</em>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+ODEs doen belangrijke aannames
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Zoals in de introductie uitgelegd, maken alle modellen aannames. Bij ODEs maken we ook een paar stevige aannames, namelijk:</p>
+<ul>
+<li>Populatiegroottes zijn continu. <br><em>Daarom worden ze meestal als dichtheden (en niet aantallen individuen) geïnterpreteerd. </em></li>
+<li>Er is geen variatie binnen de populatie <br> <em>Elk hert is gelijk, dus dezelfde migratiesnelheid en vertrekkans, ongeacht leeftijd, geslacht, etc.</em></li>
+<li>De populatie is goed gemengd (<em>well-mixed assumption</em>)<br><em>Er is dus niet zoiets als een ruimtelijk patroon, waarbij bijvoorbeeld herten aan de rand van een bos meer kans hebben op sterfte door predatie dan herten in het midden van het bos.</em></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="exr-eenheden-tussen" class="theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 11.1 (Plastic in de oceaan)</strong></span> <br></p>
+<p>We omschrijven hoe de hoeveelheid plastic in de oceaan verandert (kilo’s per jaar) met de volgende vergelijking:</p>
+<p><span class="math display">\[\begin{align}
+
+\mathchoice{\frac{\mathrm{d}P}
+{\mathrm{d}t}}{\mathrm{d}P/\mathrm{d}t}
+{\mathrm{d}P/\mathrm{d}t}
+{\mathrm{d}P/\mathrm{d}t}
+= k - \delta P
+\end{align}\]</span></p>
+<ol type="a">
+<li>Welke twee processen worden beschreven met de twee individuele termen? Beschrijf in je eigen woorden.</li>
+<li>Bepaal de eenheid van de parameter <span class="math inline">\(k\)</span></li>
+<li>Bepaal de eenheid van de parameter <span class="math inline">\(\delta\)</span>?</li>
+<li>Welk van de twee termen (<span class="math inline">\(k\)</span> of <span class="math inline">\(\delta P\)</span>) denk je dat groter is, gegeven het huidige gedrag van mensen?</li>
+</ol>
+</div>
+</section>
+<section id="evenwichten" class="level2" data-number="11.9">
+<h2 data-number="11.9" class="anchored" data-anchor-id="evenwichten"><span class="header-section-number">11.9</span> Evenwichten</h2>
+<p>Zoals hierboven uitgelegd is het vaak (relatief) eenvoudig om een ODE (bijvoorbeeld <span class="math inline">\(
+\mathchoice{\frac{\mathrm{d}H}
+{\mathrm{d}t}}{\mathrm{d}H/\mathrm{d}t}
+{\mathrm{d}H/\mathrm{d}t}
+{\mathrm{d}H/\mathrm{d}t}
+= m - dH\)</span>) op te stellen, maar niet zo eenvoudig om de algemene oplossing (<span class="math inline">\(H(t) = ...\)</span>) te vinden. In dit deel gaan we een ODE-model van de konijnen in Australië bestuderen, en zal je zien dat we die oplossing ook helemaal niet nodig hebben om inzichten te vergaren.</p>
+<p>Een mogelijk ODE-model voor de exponentiële groei van konijnen ziet er zo uit:</p>
+<p><span class="math display">\[\begin{equation}
+    \frac{\mathrm{d}N(t)}{\mathrm{d}t} = r \cdot N(t)
+\end{equation}\]</span></p>
+<p>Wederom laten we het vermenigvuldigingsteken en de <span class="math inline">\((t)\)</span> weg, zodat het iets leesbaarder wordt:</p>
+<p><span class="math display">\[\begin{equation}
+    \frac{\mathrm{d}N}{\mathrm{d}t} = rN
+\end{equation}\]</span></p>
+<p>De rechterzijde van deze vergelijking lijkt heel erg op de differentievergelijking uit het vorige hoofdstuk, <em>maar let op</em>, de interpretatie is net anders. Hier staat dat de <strong>groeisnelheid</strong> gelijk is aan <span class="math inline">\(rN\)</span>, en niet de populatiegrootte in “de volgende tijdstap”. Dat betekent dat bij deze ODE elke positieve waarde van <span class="math inline">\(r\)</span> (ook <span class="math inline">\(r=0.1\)</span>) resulteert in groei, terwijl er in de differentievergelijking alleen groei is wanneer <span class="math inline">\(r&gt;1\)</span>. Ondanks deze verschillen, kunnen we ook met ODEs de groei beperken door kleine uitbreidingen te doen. In het volgende hoofdstuk zullen we bijvoorbeeld – zoals in opgave <a href="exponentielegroei.html#exr-rabbits-map" class="quarto-xref">Oefening&nbsp;<span>10.2</span></a> – geboorte- (<span class="math inline">\(b\)</span>, <em>birth</em>) en sterfte- (<span class="math inline">\(d\)</span>, <em>death</em>) processen gaan toevoegen. Maar eerst gaan we onze ODE op een andere manier uitbreiden:</p>
+<p><span class="math display">\[\begin{equation}
+    \frac{\mathrm{d}N}{\mathrm{d}t} = rN \cdot f(N)
+\end{equation}\]</span></p>
+<p>Met de functie <span class="math inline">\(f(N)\)</span> kunnen we de ODE uitbreiden, bijvoorbeeld door de groeisnelheid van een populatie afhankelijk te maken van de huidige populatiedichtheid.</p>
+<p>Als <span class="math inline">\(f(N)\)</span> bijvoorbeeld afneemt bij toenemende <span class="math inline">\(N\)</span>, zal de groeisnelheid van de populatie ook afnemen naarmate <span class="math inline">\(N\)</span> groter wordt. Stel dat we <span class="math inline">\(f(N) = 1 - \frac{N}{100}\)</span> kiezen. Deze functie wordt gelijk aan <span class="math inline">\(0\)</span> als <span class="math inline">\(N = 100\)</span>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the function</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(N) {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span> <span class="sc">-</span> N <span class="sc">/</span> <span class="dv">100</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a sequence of N values</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>N_values <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="at">by =</span> <span class="dv">1</span>)  <span class="co"># Extended range to visualize the function around 100</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute f(N)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>f_values <span class="ot">&lt;-</span> <span class="fu">f</span>(N_values)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the function</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  N_values, f_values, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"N"</span>, <span class="at">ylab =</span> <span class="st">"f(N)"</span>, <span class="at">main =</span> <span class="st">"Plot van f(N) = 1 - N/100"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.2</span>, <span class="fl">1.4</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">140</span>), <span class="at">axes=</span>F</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">0</span>,<span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">0</span>,<span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the vertical line below the x-axis</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">segments</span>(</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">x0 =</span> <span class="dv">100</span>, <span class="at">y0 =</span> <span class="fu">par</span>(<span class="st">"usr"</span>)[<span class="dv">3</span>],  <span class="co"># par("usr")[3] gives the lower limit of the y-axis</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">x1 =</span> <span class="dv">100</span>, <span class="at">y1 =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"grey"</span>, <span class="at">lty =</span> <span class="dv">3</span>,<span class="at">lwd=</span><span class="fl">1.2</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotate the points (100, 0) and (0, 1)</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">100</span>, <span class="sc">-</span><span class="fl">0.37</span>, <span class="at">labels =</span> <span class="st">"100"</span>, <span class="at">col =</span> <span class="st">"black"</span>, <span class="at">cex=</span><span class="fl">0.7</span>, <span class="at">xpd=</span>T)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">1</span>, <span class="at">labels =</span> <span class="st">"1"</span>, <span class="at">col =</span> <span class="st">"black"</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="sc">-</span><span class="dv">15</span>, <span class="fl">1.3</span>, <span class="at">labels =</span> <span class="st">"f(N)"</span>, <span class="at">col =</span> <span class="st">"grey"</span>, <span class="at">cex=</span><span class="fl">0.9</span>, <span class="at">xpd=</span>T)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">140</span>, <span class="sc">-</span><span class="fl">0.15</span>, <span class="at">labels =</span> <span class="st">"N"</span>, <span class="at">col =</span> <span class="st">"grey"</span>, <span class="at">cex=</span><span class="fl">0.9</span>, <span class="at">xpd=</span>T)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="odes_basis_files/figure-html/unnamed-chunk-4-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="odes_basis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Als we onze ODE vermenigvuldigen met deze functie, betekent dit dat de snelheid van verandering <span class="math inline">\(0\)</span> wordt wanneer er <span class="math inline">\(100\)</span> konijnen zijn. Dit model impliceert dat de populatie niet meer kan groeien als <span class="math inline">\(N \geq 100\)</span>, omdat de groeisnelheid dan <span class="math inline">\(0\)</span> of zelfs negatief is. Simpel gezegd: er is een limiet aan de groei (en dus de grootte) van de populatie. Algemener kunnen we het getal <span class="math inline">\(100\)</span> vervangen door een parameter die we het draagvermogen (carrying capacity, <span class="math inline">\(K\)</span>) noemen. Het draagvermogen stelt de maximale populatiegrootte voor die de omgeving kan ondersteunen. Onze uiteindelijke ODE wordt dan:</p>
+<p><span id="eq-logisticode"><span class="math display">\[
+\begin{equation}
+    \frac{\mathrm{d}N}{\mathrm{d}t} = rN \left(1-\frac{N}{K}\right)
+\end{equation}
+\tag{11.5}\]</span></span></p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Parameters zijn vaak kleine letters, maar niet altijd
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Over het algemeen gebruiken we voor variabelen hoofdletters (<span class="math inline">\(R\)</span>, <span class="math inline">\(N\)</span>) en voor parameters kleine letters (<span class="math inline">\(r\)</span>, <span class="math inline">\(d\)</span>). Dit is echter niet altijd zo, zoals bij de parameter <span class="math inline">\(K\)</span>, die in de ecologie veel wordt gebruikt voor de <em>carrying capacity</em>.</p>
+</div>
+</div>
+</div>
+<p>Als een populatie groeit volgens vergelijking <a href="#eq-logisticode" class="quarto-xref">Vergelijking&nbsp;<span>11.5</span></a>, wanneer is er dan een evenwicht? Wanneer verandert de populatie niet meer? Met een ODE, is het antwoord daarop vrij eenvoudig te vinden: wanneer de snelheid van verandering (<span class="math inline">\(\frac{\mathrm{d}N}{\mathrm{d}t}\)</span>) gelijk is aan 0:</p>
+<p><span class="math display">\[\begin{equation}
+    0 = rN \left(1-\frac{N}{K}\right)
+\end{equation}\]</span></p>
+<p>Het gelijkstellen aan <span class="math inline">\(0\)</span> levert een enorm voordeel op: we raken de vreemde <span class="math inline">\(
+\mathchoice{\frac{\mathrm{d} }
+{\mathrm{d}t}}{\mathrm{d} /\mathrm{d}t}
+{\mathrm{d} /\mathrm{d}t}
+{\mathrm{d} /\mathrm{d}t}
+\)</span> helemaal kwijt, en hebben daardoor ineens te maken met een normale algebraïsche vergelijking! Nu kunnen we eenvoudig uitzoeken bij welke dichtheid (<span class="math inline">\(N\)</span>) de vergelijking klopt, met andere woorden we lossen op voor <span class="math inline">\(N\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+    rN \left(1-\frac{N}{K}\right) &amp;= 0 \quad \text{ als...}\\
+    \color{blue} \bar{N} &amp; \color{blue} = 0  \color{black} \quad \text{ of als...}\\
+    \left(1-\frac NK \right) &amp;= 0 \rightarrow \color{blue} \bar{N}=K \\
+\end{align*}\]</span></p>
+<p>Blauw-gedrukt staan de twee oplossingen van onze vergelijking, die de evenwichten of <em>steady states</em> van de populatie geven. Soms (maar lang niet altijd) worden populaties in evenwicht aangegeven met een streepje boven de variabele, in dit geval <span class="math inline">\(\bar{N}\)</span>. Uit deze analyse kunnen we concluderen dat de populatie konijnen niet kan groeien wanneer <span class="math inline">\(N=0\)</span> (als er geen konijnen zijn) of als <span class="math inline">\(N=K\)</span> (als de populatie gelijk is aan <span class="math inline">\(K\)</span>: de <em>carrying capacity</em> van het systeem. Het eerste evenwicht (<span class="math inline">\(N=0\)</span>) wordt vaak een “triviaal” evenwicht genoemd: als populaties niet bestaan kunnen ze ook niet groeien. Het tweede evenwicht (<span class="math inline">\(N=K\)</span>) is echter biologisch meer relevant: de populatie groeit totdat de <em>carrying capacity</em> is bereikt.</p>
+<p>We kunnen dezelfde strategie gebruiken om te controleren of pure exponentiële groei een evenwicht heeft:</p>
+<p><span class="math display">\[\begin{align*}
+    
+\mathchoice{\frac{\mathrm{d}N}
+{\mathrm{d}t}}{\mathrm{d}N/\mathrm{d}t}
+{\mathrm{d}N/\mathrm{d}t}
+{\mathrm{d}N/\mathrm{d}t}
+&amp;= rN = 0 \quad \text{ als...}\\
+    N &amp;= 0 &amp;
+\end{align*}\]</span></p>
+<p>Exponentiële groei heeft dus alleen een zogezegd triviaal evenwicht (<span class="math inline">\(N = 0\)</span>).</p>
+<div id="tip-parsnul" class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip&nbsp;11.3: Parameters zijn niet nul
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>ODEs kunnen ook gelijk zijn aan nul als parameters 0 zijn. Echter zijn dit vaak onzinnige inzichten (een model van exponentiële groei zonder groei is niet nuttig). Daarom bekijken we vooral bij welke <strong>populatiegroottes</strong> (of dichtheden) er evenwichten zijn.</p>
+</div>
+</div>
+</div>
+<p>Laten we ook kijken of ons hertenfeestje evenwichten heeft:</p>
+<p><span class="math display">\[\begin{align*}
+    
+\mathchoice{\frac{\mathrm{d}H}
+{\mathrm{d}t}}{\mathrm{d}H/\mathrm{d}t}
+{\mathrm{d}H/\mathrm{d}t}
+{\mathrm{d}H/\mathrm{d}t}
+&amp;= m = 0 \quad \text{ als...}\\
+\end{align*}\]</span></p>
+<p>Zoals uitgelegd in <a href="#tip-parsnul" class="quarto-xref">Tip&nbsp;<span>11.3</span></a> nemen we aan dat parameters niet <span class="math inline">\(0\)</span> zijn (een model van hertenmigratie zonder migratie is geen model), en zijn we dus vooral geïnteresseerd in welke waarden voor <span class="math inline">\(H\)</span> een evenwicht geven. Voor deze vergelijking bestaat er dus geen evenwicht, want welke waarde voor <span class="math inline">\(H\)</span> je ook invult, de populatie blijft met een constante snelheid <span class="math inline">\(m\)</span> veranderen. Voor het feestje waarbij ook herten vertrekken, ligt dat net anders:</p>
+<p><span class="math display">\[\begin{align*}
+    
+\mathchoice{\frac{\mathrm{d}H}
+{\mathrm{d}t}}{\mathrm{d}H/\mathrm{d}t}
+{\mathrm{d}H/\mathrm{d}t}
+{\mathrm{d}H/\mathrm{d}t}
+&amp;= m - dH = 0 \quad \text{ als...}\\
+    dH &amp;= m &amp; \\
+    \bar{H} &amp;= \frac{m}{d} &amp;
+\end{align*}\]</span></p>
+<p>De populatie herten op het feestje zal dus uiteindelijk uitkomen op een evenwicht (<span class="math inline">\(\bar{H}\)</span>) van <span class="math inline">\(\frac{m}{d}\)</span> herten. Op dit moment gaan er kennelijk evenveel herten dood als er naar het bos toe migreren.</p>
+<section id="conclusie-evenwichten" class="level3">
+<h3 class="anchored" data-anchor-id="conclusie-evenwichten">Conclusie evenwichten</h3>
+<p>Dus: als we willen weten waar het evenwicht van een een ODE (bijv. <span class="math inline">\(
+\mathchoice{\frac{\mathrm{d}X}
+{\mathrm{d}t}}{\mathrm{d}X/\mathrm{d}t}
+{\mathrm{d}X/\mathrm{d}t}
+{\mathrm{d}X/\mathrm{d}t}
+\)</span>) ligt, stellen we de ODE gelijk aan <span class="math inline">\(0\)</span> en lossen we de vergelijking op voor <span class="math inline">\(X\)</span>. Als de vergelijking geen <span class="math inline">\(X\)</span> bevat (of als <span class="math inline">\(X\)</span> wegvalt), en je dus alleen constanten overhoudt, is er geen evenwicht.</p>
+</section>
+</section>
+<section id="opgaven" class="level2" data-number="11.10">
+<h2 data-number="11.10" class="anchored" data-anchor-id="opgaven"><span class="header-section-number">11.10</span> Opgaven</h2>
+<div id="exr-eenheden-tussen2" class="pepexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 11.2 (Plastic in de oceaan (evenwicht))</strong></span> <br></p>
+<p>Bekijk nogmaals de volgende vergelijking voor hoe snel de hoeveelheid plastic in de oceaan verandert:</p>
+<p><span class="math display">\[\begin{align}
+
+\mathchoice{\frac{\mathrm{d}P}
+{\mathrm{d}t}}{\mathrm{d}P/\mathrm{d}t}
+{\mathrm{d}P/\mathrm{d}t}
+{\mathrm{d}P/\mathrm{d}t}
+= k - \delta P
+\end{align}\]</span></p>
+<ol type="a">
+<li>Bepaal bij welke hoeveelheid plastic er sprake is van een evenwichtssituatie (<em>steady state</em>)</li>
+<li>Is er een triviaal (<span class="math inline">\(P=0\)</span>) evenwicht?</li>
+<li>Stel we vissen morgen (op een magische manier) alle plastic uit de oceaan. Schets met pen en paper wat er daarna zal gebeuren.</li>
+</ol>
+</div>
+<div id="exr-rodebloedcellen" class="mixedexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 11.3 (Rode bloedcellen)</strong></span> &nbsp;</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/rode_bloedcellen.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Rode bloedcellen, of rode CUTEcellen? (gegenereerd met ChatGPT4-o)"><img src="figuren/rode_bloedcellen.png" class="img-fluid figure-img" style="width:50.0%" alt="Rode bloedcellen, of rode CUTEcellen? (gegenereerd met ChatGPT4-o)"></a></p>
+<figcaption>Rode bloedcellen, of rode CUTEcellen? (gegenereerd met ChatGPT4-o)</figcaption>
+</figure>
+</div>
+<p>Rode bloedcellen worden in het beenmerg geproduceerd met een snelheid <span class="math inline">\(p\)</span> cellen per dag. Elke rode bloedcel kan sterven met een kans <span class="math inline">\(d\)</span> per dag.</p>
+<ol type="a">
+<li>Dit process levert dezelfde ODEs op als het bovengenoemde model voor plastic in de oceaan. Schrijf de vergelijking (<span class="math inline">\(
+\mathchoice{\frac{\mathrm{d}B}
+{\mathrm{d}t}}{\mathrm{d}B/\mathrm{d}t}
+{\mathrm{d}B/\mathrm{d}t}
+{\mathrm{d}B/\mathrm{d}t}
+= \dots\)</span>) op.</li>
+<li>Wat zijn de eenheden van de parameters <span class="math inline">\(p\)</span> en <span class="math inline">\(d\)</span>?</li>
+<li>Reken uit hoeveel bloedcellen er in het evenwicht zijn.</li>
+<li>Stel je doneert een halve liter bloed. Maak met pen en papier een schets van de hoeveelheid bloedcellen over de tijd vlak na de donatie.</li>
+<li>Stel nu dat je juist bloed ontvangt. Maak nog een schets van de hoeveelheid bloedcellen over de tijd.</li>
+<li>Welke van deze twee parameters denk je dat de snelheid van het herstel bepaalt?</li>
+</ol>
+<p>Je hebt geleerd dat het vinden van algemene oplossingen van ODEs heel moeilijk kan zijn (met andere woorden, de exacte functie <span class="math inline">\(B(t)\)</span> vinden die aan onze bloedcellen-ODE voldoet is lastig). We kunnen echter een specifieke oplossing van een ODE wel berekenen, als we tenminste de begin-hoeveelheid en de parameters van het model invullen. Dan kunnen we met R numeriek doorrekenen wat er gaat gebeuren. <strong>Analyseer het onderstaande script regel voor regel, en lees de comments en zorg dat je begrijpt wat er gebeurt</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 1: stel parameters in</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fl">2e11</span>    </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">120</span>   </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 2: stel het beginaantal B in</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> p<span class="sc">/</span>d</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 3: maak functie die B, p, en d gebruikt om de verandering uit te rekenen</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>verandering <span class="ot">&lt;-</span> <span class="cf">function</span> (B, p, d){</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  delta <span class="ot">&lt;-</span> p <span class="sc">-</span> d<span class="sc">*</span>B</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(delta)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 4: een test of de functie werkt</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">verandering</span>(<span class="at">B=</span>p<span class="sc">/</span>d, <span class="at">p=</span>p, <span class="at">d=</span>d) </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 5: maak een vector van 1 lang met het begin-aantal erin</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.9</span><span class="sc">*</span>p<span class="sc">/</span>d)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 6: reken 500 keer de volgende hoeveelheid B uit</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">500</span>) {</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  B[t<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> B[t] <span class="sc">+</span> <span class="fu">verandering</span>(<span class="at">B=</span>B[t], <span class="at">p=</span>p, <span class="at">d=</span>d)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 7: plot de tijdserie</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(B, <span class="at">xlab=</span><span class="st">"Tijd in dagen"</span>, <span class="at">ylab=</span><span class="st">"Aantal rode bloedcellen"</span>, <span class="at">type=</span><span class="st">"l"</span>, <span class="at">col=</span><span class="st">"seagreen"</span>, <span class="at">lwd=</span><span class="dv">2</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="7" type="a">
+<li>In ‘Stap 4’ rekent het script de hoeveelheid verandering in <span class="math inline">\(B\)</span> uit. Waarom geeft de functie <span class="math inline">\(0\)</span> terug?</li>
+<li>De code in de for-loop produceert een specifieke oplossing, dat wil zeggen het rekent één van de mogelijke tijd-series uit voor <span class="math inline">\(B(t)\)</span>. Dit gebeurt op een zeer grove manier door in stappen de integraal (de opsomming van kleine veranderingen) door te rekenen. Om dit netjes te doen, gebruik je normaal gesproken integrators die automatisch zorgen dat de tijdstap niet te groot is<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Leg uit waarom dat belangrijk kan zijn (hint: denk aan het vorige hoofdstuk).</li>
+<li>Schat met behulp van de grafiek in hoe lang het duurt om de helft van het bloedverlies te herstellen.</li>
+<li>Stel dat je slechts een beetje bloed verliest (0.1%). Hoe lang duurt het om hiervan de helft te herstellen?</li>
+<li>Wat bepaalt denk je hoe snel je van bloedverlies herstelt (<span class="math inline">\(p\)</span>, <span class="math inline">\(d\)</span>, of beide)?</li>
+<li>Gebruik het script om te bepalen welke parameter (<span class="math inline">\(p\)</span> of <span class="math inline">\(d\)</span>) de snelheid van herstel bepaalt. Komt dit overeen met je eerdere inschatting?</li>
+</ol>
+</div>
+<div id="exr-diffvsdiffinR" class="Rexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 11.4 (Een differentie- en <strong>differentiaal</strong>vergelijking doorrekenen met R)</strong></span> <br></p>
+<p>We hebben eerder een R-script bekeken die een tijdserie produceert van een differentievergelijking voor logistische konijnengroei. We kunnen in deze differentievergelijking ook de parameter <span class="math inline">\(K\)</span> gebruiken om de groei te stoppen. De code ziet er dan ongeveer zo uit:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SIMPEL SCRIPT VOOR DIFFERENTIEVERGELIJKING</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 1, definieer beginaantal konijnen en parameters</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">24</span>    <span class="co"># aantal konijnen</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="dv">2</span>     <span class="co"># groei per jaar</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">9</span>  <span class="co"># schaalt de dichtheidsafhankelijkheid</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 2: bereken het aantal konijnen in [t+1] 40 keer</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>){</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  N[t<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> r<span class="sc">*</span>N[t]<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>(N[t]<span class="sc">/</span>K))</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 3: bekijk resultaten</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>N[<span class="dv">20</span>] <span class="co"># Aantal na 20 jaren</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(N,<span class="at">type=</span><span class="st">"o"</span>,<span class="at">xlab=</span><span class="st">"Tijd (jaren)"</span>, <span class="at">ylab=</span><span class="st">"Aantal konijnen"</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We kunnen een vergelijkbaar script gebruiken om de ODE (differen<em>tiaal</em>vergelijking) van konijnengroei door te rekenen. Let op: ODEs hebben in werkelijkheid geen “tijdstappen” (tijd is een continue variabele), maar een computer werkt eigenlijk altijd in stappen. We moeten dus in ieder geval zorgen dat we kleine stapjes nemen. Neem de onderstaande code over en zorg dat je de regels zo goed mogelijk begrijpt.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SIMPEL SCRIPT VOOR DIFFERENTIAALVERGELIJKING</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 1, definieer beginaantal konijnen en parameters</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">24</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">9</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 2, definieer tijdstappen en maak een dataframe aan</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>delta_t <span class="ot">&lt;-</span> <span class="fl">0.01</span> <span class="co"># grootte van de tijdstap </span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>tijdstapjes <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">20</span>,<span class="at">by=</span>delta_t)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>tijdserie <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">t=</span>tijdstapjes,<span class="at">konijnen=</span>N)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 3: Reken in kleine stapjes de volgende N uit</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(tijdstapjes)<span class="sc">-</span><span class="dv">1</span>){</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  groeiN <span class="ot">&lt;-</span> delta_t <span class="sc">*</span> r<span class="sc">*</span>N<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>N<span class="sc">/</span>K)  </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">&lt;-</span> N <span class="sc">+</span> groeiN </span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  tijdserie[t<span class="sc">+</span><span class="dv">1</span>,<span class="st">"konijnen"</span>] <span class="ot">&lt;-</span> N</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 3: bekijk resultaten</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>tijdserie[<span class="dv">20</span>,] <span class="co"># Aantal na 0.19 jaar</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tijdserie<span class="sc">$</span>t, tijdserie<span class="sc">$</span>konijnen, <span class="at">type=</span><span class="st">"l"</span>,<span class="at">xlab=</span><span class="st">"Tijd (jaren)"</span>, <span class="at">ylab=</span><span class="st">"Aantal konijnen"</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Het bovenstaande script is iets anders geschreven dan het eerste script. Simpele scripts kunnen vaak op heel veel manieren geschreven worden. Zo genereert de bovenstaande code niet een tijdserie-vector (zoals het vorige voorbeeld), maar een tijdserie-dataframe. Het voordeel hiervan is dat we ook een tweede kolom kunnen bijhouden: de hoeveelheid tijd die is verstreken.</p>
+<ol type="a">
+<li>Bestudeer het eerste R-script (voor de <strong>differentie</strong>vergelijking). Voer het script uit voor veel verschillende waarden van <span class="math inline">\(r\)</span>. Wat gebeurt er met <span class="math inline">\(r&lt;1\)</span>? Wat gebeurt er met <span class="math inline">\(r&gt;3.7\)</span>? <br></li>
+<li>Bestudeer ook het tweede R-script (voor de <strong>differentiaal</strong>vergelijking, waarbij we kleine stapjes nemen). Wat gebeurt er met <span class="math inline">\(r&lt;1\)</span>? Wat gebeurt er nu met <span class="math inline">\(r&gt;3.7\)</span>? Welke waarde van <span class="math inline">\(r\)</span> geeft afname? Welke Bij welke waarde van <span class="math inline">\(r\)</span> krijg je chaotische fluctuaties?</li>
+<li>Maak de tijdstap voor de differentiaalvergelijking heel klein (bijv <code>delta_t = 0.0001</code>), en voer het hele script uit. Wat valt je op? (hint: R-studio heeft rechtsboven in de console een grote rode STOP-knop)</li>
+</ol>
+</div>
+</section>
+<section id="terminologie" class="level2" data-number="11.11">
+<h2 data-number="11.11" class="anchored" data-anchor-id="terminologie"><span class="header-section-number">11.11</span> Terminologie</h2>
+<table class="table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 27%">
+<col style="width: 47%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Nederlands</th>
+<th>Engels</th>
+<th>Beschrijving</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Differentiaalvergelijking / ODE</td>
+<td>Differential equation / ODE</td>
+<td>Een wiskundige vergelijking die omschrijft hoe snel een variabele (bijvoorbeeld een populatiegrootte) verandert.</td>
+</tr>
+<tr class="even">
+<td>Continue variabelen</td>
+<td>Continuous variables</td>
+<td>Variabelen die elke waarde op een schaal kunnen aannemen, inclusief decimalen (denk aan lengte, temperatuur, of gewicht)</td>
+</tr>
+<tr class="odd">
+<td>Discrete variabelen</td>
+<td>Discrete variables</td>
+<td>Variabelen die een beperkt aantal (specifieke) waarden kunnen aannemen. Vaak zijn dit gehele getallen (denk aan een aantal cellen of een aantal mutaties)</td>
+</tr>
+<tr class="even">
+<td>Specifieke oplossing van een ODE</td>
+<td>Specific solution of an ODE</td>
+<td>Eén van de vele mogelijke oplossingen van een ODE, bijvoorbeeld door specifieke parameters / begin-hoeveelheden in te vullen</td>
+</tr>
+<tr class="odd">
+<td>Algemene oplossing</td>
+<td>General solution</td>
+<td>De wiskundige vergelijking waar alle specifieke oplossingen aan voldoen. Meestal moeilijk te verkrijgen.</td>
+</tr>
+<tr class="even">
+<td>Evenwicht</td>
+<td>Equilibrium / steady state</td>
+<td>We spreken van een evenwichtssituatie als alle processen elkaar opheffen, zodat de variabelen van het systeem niet meer veranderen.</td>
+</tr>
+<tr class="odd">
+<td>Triviaal evenwicht</td>
+<td>Trivial equilibrium</td>
+<td>Een evenwichts-situatie die biologisch gezien niet interessant is, bijvoorbeeld een evenwicht bij <span class="math inline">\(0\)</span> konijnen.</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Hiervoor gaan we later in de cursus een R-script genaamd Grind.R inladen<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Gekopieerd!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Gekopieerd!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+          // default icon
+          link.classList.add("external");
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../Modellen/exponentielegroei.html" class="pagination-link" aria-label="Exponentiële groei">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Exponentiële groei</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../Modellen/dichtheidseffecten.html" class="pagination-link" aria-label="Dichtheidseffecten">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Dichtheidseffecten</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Vakgroep Theoretische Biologie, Universiteit Utrecht.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Dit boek is gemaakt met <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","selector":".lightbox","closeEffect":"zoom","openEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
