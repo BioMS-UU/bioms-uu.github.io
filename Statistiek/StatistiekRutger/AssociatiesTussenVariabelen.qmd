@@ -1,8 +1,81 @@
 {{< include _macros.tex >}}
 
+```{r}
+#| eval: true
+#| echo: false
+#| output: false
+
+library(ggplot2)
+
+opvulkleur <- "darkorange"
+lijnkleur1 <- "darkorchid"
+lijnkleur2 <- "red"
+lijnkleur3 <- "blue"
+
+```
+
 # Associaties tussen variabelen
 
 ![Voorbeeld illustratie regressie](figuren/VoorbeeldIllustratieRegressie.gif)
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Lineaire regressie."
+#| label: fig-lineair-reg
+
+set.seed(885)
+
+a <- 2
+b <- 1
+x <- runif(10, 0, 4)
+y <- a*x + b + rnorm(10)
+y_pred <- a*x + b
+data <- data.frame(x = x, y = y)
+
+ggplot(data, aes(x = x, y = y)) +
+  # Verticale lijnen naar het gemiddelde
+  geom_segment(
+    aes(
+      x = x, xend = x, 
+      y = y, yend = y_pred
+    ),
+    color = "SlateGray",
+    linetype = "solid",
+    size = 1
+  ) +
+  # Punten
+  geom_point(
+    shape = 21, 
+    fill = "SlateGray", 
+    size = 5
+  ) +
+  geom_abline(
+    intercept = b,
+    slope = a,
+    color = opvulkleur,
+    size = 1
+  ) +
+  # y-as labels instellen
+  scale_y_continuous(
+    breaks = y, 
+    limits = c(min(y, y_pred), max(y, y_pred)),
+    labels = function(i) parse(text = paste0("y[", seq_along(i), "]"))
+  ) +
+  # x-as labels instellen
+  scale_x_continuous(
+    breaks = x,
+    labels = function(i) parse(text = paste0("x[", seq_along(i), "]"))
+  ) +
+  # Geen x-as, geen gridlijnen
+  theme_classic() +
+  theme(
+    axis.title = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  )
+```
+
 
 ## Dataset lineaire relaties
 
