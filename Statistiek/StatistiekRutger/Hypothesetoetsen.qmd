@@ -3,7 +3,7 @@
 # Het toetsen van hypotheses {#sec-hypothesetoetsen}
 
 
-![John Arbuthnot, schilderij door John Kneller](figuren/Arbuthnot_John_Kneller.jpg){width=4.5in #fig-arbuthnot-schilderij}
+![John Arbuthnot, geschilderd door John Kneller. Bron: WikiMedia Commons. Dit werk valt in het publieke domein.](figuren/Arbuthnot_John_Kneller.jpg){width=4.5in #fig-arbuthnot-schilderij}
 
 In het jaar 1710 deed de Schotse arts en schrijver John Arbuthnot 
 een interesssante ontdekking
@@ -177,9 +177,15 @@ puur toevallig tot stand is gekomen.
 Laten we het aantal jaren waarin jongetjes in de meerderheid waren $X$ noemen.
 Als we uitgaan van de $\HO$,
 dan kunnen we de kans op $X$ voor iedere mogelijke waarde van 0 tot 82 uitrekenen.[^binomiaal]
-Het resultaat is weergegeven in @fig-binomiale-kans. 
-De kansen voor $X < 23$ of $X > 59$ worden niet weergegeven
-omdat die erg klein zijn.
+Het resultaat is weergegeven in @fig-binomiale-kans.
+Deze kansverdeling laat zien dat "onder $\HO$" 
+(dat betekent: onder de aanname dat $\HO$ waar is)
+een waarde van $X$ tussen, zeg, 32 en 50
+redelijk in de verwachting ligt. 
+Waardes van $X$ die verder in de staarten liggen
+zijn onder $\HO$ onwaarschijnlijk.
+Vind je in werkelijkheid een waarde ver in één van de staarten
+dan is dat een indicatie dat $\HO$ niet juist is.
 
 [^binomiaal]: De berekening van deze kansen is niet moeilijk,
     maar voert te ver voor deze cursus. 
@@ -249,7 +255,54 @@ verdelingBinomiaal(kleur)
 
 
 
-## De $P$-waarde
+## De overschrijdingskans of $P$-waarde
+
+Hoe opmerkelijk een bepaalde waarde van $X$ is
+onder $\HO$
+kan worden uitgedrukt in een getal
+dat de **overschrijdingskans** of **$P$-waarde** genoemd wordt. 
+(In dit boek schrijven we de $P$ met een hoofdletter,
+maar in andere literatuur kom je ook $p$ tegen.)
+De $P$-waarde is gedefinieerd als de kans
+onder $\HO$ om een uitkomst te vinden die minstens even extreem is
+als de waarde die daadwerkelijk gevonden is.
+Stel dat Arbuthnot in werkelijkheid de waarde $X = 48$ had gevonden. 
+Dan is de $P$-waarde de kans om, aangenomen dat $\HO$ waar is,
+een waarde van $X$ te vinden die ten minste zo onwaarschijnlijk is als $X = 48$.
+Die kans is in @fig-binomiale-P-waarde weergegeven door de paarse staven.
+We kunnen de $P$-waarde dus berekenen door de kansen van de paarse staven op te tellen.
+$$
+\begin{align}
+P & = \pr{X \le 34} + \pr{X \ge 48}\\ 
+& = \left(\pr{X = 0} + \ldots + \pr{X = 34}\right) +  \left(\pr{X = 48} + \ldots + \pr{X = 82}\right)\\
+& = 
+\end{align}
+$$
+
+
+
+```{r}
+#| code-fold: true
+#| fig-cap: "Illustratie van de $P$-waarde voor de waarneming $X = 48$. De oppervlakte van de paarse staven is de $P$-waarde: de kans op $X = 48$ of extremer onder $\\HO$."
+#| label: fig-binomiale-P-waarde
+#| fig.height: 3.5
+#| fig.width: 7
+
+m <- 41
+X <- 48
+
+# Maak een vector van kleuren
+kleur_vector <- ifelse(
+  abs(uitkomsten - m) < abs(m - X), 
+  "darkorange", 
+  "DarkOrchid"
+  )
+
+verdelingBinomiaal(kleur_vector)
+
+```
+
+
 
 Staarten van de verdeling. Wat is de kans onder $\HO$ om zo'n extreme afwijking te krijgen, of nog extremer? Maat van verrassing: hoe verrast zijn we door de uitkomst als we aannemen dat $\HO$ waar is? En dus ook een maat van hoeverre de gegevens bewijs vormen tegen $\HO$.
 
@@ -258,10 +311,6 @@ Staarten van de verdeling. Wat is de kans onder $\HO$ om zo'n extreme afwijking 
 Voorbeeld: willekeurige steekproef uit normaal-verdeelde populatie met onbekend gemiddelde (maar bekende variantie).  
 
 Bekende variantie zeer onwaarschijnlijk.
-
-## Reflectie over $P$-waarde
-
-Meest gebruikte maat van bewijs tegen $\HO$, maar er is altijd veel discussie geweest.  Er bestaan alternatieven. Citeren.
 
 ## Hypothesetoetsen als besluitprocedures
 
@@ -328,6 +377,7 @@ In wetenschappelijke artikelen wordt zelden expliciet een nulhypothese geformule
 In de laatste stap trek je je conclusies over $\HO$ op basis van de $P$-waarde. Hoe kleiner $P$ is, hoe opmerkelijker de gevonden toetsingsgrootheid is onder de nulhypothese, en hoe meer je de nulhypothese dus in twijfel zult trekken. Vaak wordt de waarde $0{,}05$  als grens gehanteerd: als $P < 0{,}05$, dan spreekt men van een ``statistisch significant'' resultaat. Merk op dat een $P$-waarde van $0{,}05$ onder de nulhypothese gemiddeld één op de 20 keer voorkomt (want $0{,}05$ is precies een twintigste). Dat wil zeggen dat de toetsingsgrootheid zeker opmerkelijk is onder $\HO$, maar zeker niet ondenkbaar. Een waarde $P = 0{,}05$ is dus maar matig bewijs tegen de nulhypothese.
 
 Als je per sé een besluit wil nemen over het al-dan-niet verwerpen van de nulhypothese, dan zul je in stap 1 ook moeten besluiten welke $\alpha$ (kans op een type-I fout) je acceptabel vindt. In stap 6 bepaal je dan of $P < \alpha$. Als dat zo is, dan verwerp je de nulhypothese. Meestal wordt in de praktijk de waarde $\alpha = 0{,}05$ als grens genomen; je verwerpt in dat geval de nulhypothese als $P < 0{,}05$.
+
 
 ## Box veelgemaakte fouten:
 
