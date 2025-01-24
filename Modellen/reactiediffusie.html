@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>17&nbsp; Reacties en diffusie – Biologische Modellen en Statistiek</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Modellen/exciteerbaremedia.html" rel="next">
+<link href="../Modellen/zwermen.html" rel="prev">
+<link href="../figuren/favicon/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Modellen/intro_modellen.html">Biologische modellen</a></li><li class="breadcrumb-item"><a href="../Modellen/reactiediffusie.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reacties en diffusie</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../figuren/favicon/android-chrome-512x512.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Biologische <br>Modellen en Statistiek</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Schakel donkere modus"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Cursusinformatie</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inleiding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../cursusinformatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Algemene cursusinformatie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../planning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Studieplanning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../links.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Handige links</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Basisprincipes van R</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/introductie_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie en installatie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/introductie_R2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Programmeren in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/intro_R_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Extra R oefeningen</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Basiswiskunde</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/inleiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inleiding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/algebra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Algebra</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/breuken.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Breuken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/exponenten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Exponenten &amp; Logaritmen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/limieten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Asymptoten &amp; Limieten</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/afgeleiden.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Afgeleiden</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/schetsen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Functies schetsen</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Biologische modellen</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/intro_modellen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introductie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/exponentielegroei.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Exponentiële groei</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/odes_basis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelleren met ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/dichtheidseffecten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Dichtheidseffecten</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/ruimtelijkegroei.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Ruimtelijke groei</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/predatorprooi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Predator-prooi interacties</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/odes_grind.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs modelleren in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/competitie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Competitie en evolutie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/zwermen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Zwermen en foerageren</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/reactiediffusie.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reacties en diffusie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/exciteerbaremedia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Exciteerbare media</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mini-project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Statistiek</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/wat_is_statistiek.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Wat is statistiek?</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Bijlagen</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_wiskunde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden wiskunde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_modellen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden modellen</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/spiekbriefjes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spiekbriefjes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/dankwoord.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dankwoord</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="-1">
+    <h2 id="toc-title">Inhoudsopgave</h2>
+   
+  <ul class="collapse">
+  <li><a href="#van-reactievergelijking-naar-odes" id="toc-van-reactievergelijking-naar-odes" class="nav-link active" data-scroll-target="#van-reactievergelijking-naar-odes"><span class="header-section-number">17.1</span> Van reactievergelijking naar ODEs</a></li>
+  <li><a href="#diffusie-tussen-hokjes" id="toc-diffusie-tussen-hokjes" class="nav-link" data-scroll-target="#diffusie-tussen-hokjes"><span class="header-section-number">17.2</span> Diffusie tussen hokjes</a></li>
+  <li><a href="#activerende-en-remmende-eiwitten" id="toc-activerende-en-remmende-eiwitten" class="nav-link" data-scroll-target="#activerende-en-remmende-eiwitten"><span class="header-section-number">17.3</span> Activerende en remmende eiwitten</a></li>
+  <li><a href="#turing-patronen" id="toc-turing-patronen" class="nav-link" data-scroll-target="#turing-patronen"><span class="header-section-number">17.4</span> Turing-patronen</a></li>
+  <li><a href="#niet-alle-repetitieve-biologische-patronen-zijn-turing-patronen" id="toc-niet-alle-repetitieve-biologische-patronen-zijn-turing-patronen" class="nav-link" data-scroll-target="#niet-alle-repetitieve-biologische-patronen-zijn-turing-patronen"><span class="header-section-number">17.5</span> Niet alle repetitieve biologische patronen zijn Turing patronen</a></li>
+  <li><a href="#opgaven" id="toc-opgaven" class="nav-link" data-scroll-target="#opgaven"><span class="header-section-number">17.6</span> Opgaven</a></li>
+  <li><a href="#terminologie" id="toc-terminologie" class="nav-link" data-scroll-target="#terminologie"><span class="header-section-number">17.7</span> Terminologie</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Modellen/intro_modellen.html">Biologische modellen</a></li><li class="breadcrumb-item"><a href="../Modellen/reactiediffusie.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reacties en diffusie</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-diffusie" class="quarto-section-identifier"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reacties en diffusie</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<script>
+  window.onbeforeprint = () => {
+    const images = document.querySelectorAll('img#subset')
+    images.forEach((img) => { img.style.width = "60%"; });
+    const imagesShow = document.querySelectorAll('img#imgToShow')
+    imagesShow.forEach((img) => { img.style.display = "block"; });
+    
+    const videos = document.querySelectorAll('img#imgToShow')
+    imagesShow.forEach((img) => { img.style.display = "block"; });
+    
+    //document.body.style.fontFamily= "Georgia";
+    const iframes = document.querySelectorAll("iframe#iframeToReplace");
+    iframes.forEach((iframe, index) => {
+                // Create a placeholder element with text
+                const placeholder = document.createElement('div');
+                placeholder.innerHTML += "<br><center><font size=2>(Deze interactieve content vind je op <a href='" + iframe.src + "'> " + iframe.src + " </a>)</font></center><br>"
+                iframe.parentNode.replaceChild(placeholder, iframe);
+            });
+  };
+  window.onafterprint = () => {
+      window.location.reload(true);
+    }
+    
+  
+  
+  
+  //const iframeContainer =           document.getElementById('iframeContainer');
+  //const iframe = document.getElementById('printIframe');
+  //window.onbeforeprint = () => {
+  // Replace the iframe with a link
+  //  iframeContainer.innerHTML = `<p>Deze simulatie kun je bekijken op: <a href="${iframe.src}" target="_blank">${iframe.src}</a></p>`;
+  //  document.body.style.fontFamily= "Georgia";
+  //};
+  //window.onafterprint = () => {
+    //  window.location.reload(true);
+   // }
+</script>
+<p>De individual-based modellen uit het vorige hoofdstuk laten zien hoe complex gedrag kan worden gemodelleerd met verrassend simpele regels. We hebben hierbij gezien dat systemen zich kunnen zelf-organiseren tot patronen die niet zijn voorgedefinieerd: de levensechte “beestjes” van particle life, aapjes die op een verrassende manier meer eten kunnen vinden, en mieren die prachtige foerageerpatronen vormen. Deze patronen zijn voorbeelden van <strong>dynamische</strong> patronen: er is sprake van constante verandering over de tijd. Zo zagen we predator en prooi prachtige rollende golven vormen (<em>travelling waves</em>), of soms wat meer rommelige golven (<em>chaotic waves</em>). Misschien heb je tijdens het werkcollege zelfs wel een soort hypnotiserende spiralen gezien (<em>spiral waves</em>). Dergelijke patronen (zie <a href="#fig-dynpat" class="quarto-xref">Figuur&nbsp;<span>17.1</span></a>) vinden we ook terug in de biologie, bijvoorbeeld in de vorming van biofilms in bacteriële kolonies. Dus, kennis van al deze intrigerende patronen die we zien in onze computersimulaties, kan bijdragen aan ons begrip van de biologie.</p>
+<div id="fig-dynpat" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dynpat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figuren/waves.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figuur&nbsp;17.1: In ruimtelijke modellen komen we verschillende dynamische patronen tegen."><img src="figuren/waves.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dynpat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;17.1: In ruimtelijke modellen komen we verschillende dynamische patronen tegen.
+</figcaption>
+</figure>
+</div>
+<p>In dit hoofdstuk gaan we verder op het thema van patroonformatie, door te leren hoe een zebra haar strepen heeft gekregen. De strepen van een zebra zijn echter niet constant aan het veranderen, maar vormen een <em>stabiel patroon</em>. Hoe wordt een dergelijk stabiel patroon aangelegd? We gaan dit bekijken in reactie-diffusie vergelijkingen, waarbij (chemische) reacties in tijd en ruimte worden gemodelleerd. Hoewel deze modelvorm ook dynamische patronen kan opleveren (zoals de eerder genoemde golven en spiralen, wat we in het volgende hoofdstuk zullen zien), kun je hiermee ook de stabiele patronen op de huid van een dier verklaren. Om te beginnen gaan we eerst leren hoe we reactie-vergelijkingen kunnen omzetten naar ODEs.</p>
+<p>Leerdoelen:</p>
+<ul>
+<li>Reactie-vergelijkingen kunnen omzetten tot simpele ODEs</li>
+<li>Uitleggen wat het omschrijvingsniveau van een PDE is, en hoe dit verschilt van ODEs en IBMs</li>
+<li>Uitleggen wat Turing-patronen zijn, en wanneer deze ontstaan</li>
+<li>Uitleggen wat meerderheids-patronen zijn, en waarom dit anders is dan Turing patronen</li>
+</ul>
+<section id="van-reactievergelijking-naar-odes" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="van-reactievergelijking-naar-odes"><span class="header-section-number">17.1</span> Van reactievergelijking naar ODEs</h2>
+<p>Met ODEs hebben we ons tot nu toe vooral gericht op het modelleren van populaties. Echter zouden we ook interacties op moleculair niveau kunnen beschrijven met ODEs. Neem bijvoorbeeld het “centrale dogma” van de biologie:</p>
+<p><span class="math display">\[\begin{align*}
+    \mathrm{DNA} &amp; \rightarrow \mathrm{mRNA} \rightarrow \mathrm{Eiwit}
+\end{align*}\]</span></p>
+<p>Laten we voor het gemak aannemen dat het DNA in de cel simpelweg aanwezig is, en dat er met een constante snelheid (<span class="math inline">\(e\)</span>) mRNA wordt afgeschreven. Dit mRNA wordt met een bepaalde snelheid (<span class="math inline">\(v\)</span>) vertaald naar eiwit, en het breekt langzaam af <span class="math inline">\(d\)</span>. Ook het eiwit breekt langzaam af (<span class="math inline">\(\delta\)</span>). Zo kunnen we het bovenstaande diagram dus in 2 hele eenvoudige ODEs uitdrukken:</p>
+<p><span class="math display">\[\begin{align*}
+    
+\mathchoice{\frac{\mathrm{d}M}
+{\mathrm{d}t}}{\mathrm{d}M/\mathrm{d}t}
+{\mathrm{d}M/\mathrm{d}t}
+{\mathrm{d}M/\mathrm{d}t}
+&amp;= e - dM \\
+    
+\mathchoice{\frac{\mathrm{d}E}
+{\mathrm{d}t}}{\mathrm{d}E/\mathrm{d}t}
+{\mathrm{d}E/\mathrm{d}t}
+{\mathrm{d}E/\mathrm{d}t}
+&amp;= vM - \delta E
+\end{align*}\]</span></p>
+<p>Het eiwit zorgt er wellicht voor dat de cel meer glucose op kan nemen. Hiervoor kunnen we een derde vergelijking toevoegen:</p>
+<p><span class="math display">\[\begin{align*}
+    
+\mathchoice{\frac{\mathrm{d}M}
+{\mathrm{d}t}}{\mathrm{d}M/\mathrm{d}t}
+{\mathrm{d}M/\mathrm{d}t}
+{\mathrm{d}M/\mathrm{d}t}
+&amp;= e - dM \\
+    
+\mathchoice{\frac{\mathrm{d}E}
+{\mathrm{d}t}}{\mathrm{d}E/\mathrm{d}t}
+{\mathrm{d}E/\mathrm{d}t}
+{\mathrm{d}E/\mathrm{d}t}
+&amp;= vM - \delta E\\
+    
+\mathchoice{\frac{\mathrm{d}G}
+{\mathrm{d}t}}{\mathrm{d}G/\mathrm{d}t}
+{\mathrm{d}G/\mathrm{d}t}
+{\mathrm{d}G/\mathrm{d}t}
+&amp;= pE - \kappa G\\
+\end{align*}\]</span></p>
+<p>Om de cirkel volledig rond te maken, kunnen we verder nog stellen dat glucose de expressie van het gen bepaalt. Om ervoor te zorgen dat de genexpressie desondanks gelimiteerd is, maken we gebruik van een een Hill-functie ( <a href="../Modellen/odes_grind.html#hill-functies">hier</a> uitgelegd):</p>
+<p><span class="math display">\[\begin{align*}
+    
+\mathchoice{\frac{\mathrm{d}M}
+{\mathrm{d}t}}{\mathrm{d}M/\mathrm{d}t}
+{\mathrm{d}M/\mathrm{d}t}
+{\mathrm{d}M/\mathrm{d}t}
+&amp;= \frac{eG}{G+h} - dM \\
+    
+\mathchoice{\frac{\mathrm{d}E}
+{\mathrm{d}t}}{\mathrm{d}E/\mathrm{d}t}
+{\mathrm{d}E/\mathrm{d}t}
+{\mathrm{d}E/\mathrm{d}t}
+&amp;= vM - \delta E\\
+    
+\mathchoice{\frac{\mathrm{d}G}
+{\mathrm{d}t}}{\mathrm{d}G/\mathrm{d}t}
+{\mathrm{d}G/\mathrm{d}t}
+{\mathrm{d}G/\mathrm{d}t}
+&amp;= pE - \kappa G\\
+\end{align*}\]</span></p>
+<p>De parameter <span class="math inline">\(h\)</span> is de half-waarde constante voor de transcriptie: als er precies <span class="math inline">\(h\)</span> glucose in de cell aanwezig is, is de MRNA-transcriptie half-maximaal. De maximale transcriptie is <span class="math inline">\(e\)</span>, en als er 0 glucose is, is er geen expressie. Als we de ODEs doorrekenen zonder glucose, dan blijven inderdaad alle concentraties 0 (<a href="#fig-glucose" class="quarto-xref">Figuur&nbsp;<span>17.2</span></a> links). Als we echter een heel klein beetje glucose toevoegen, dan ontstaat er een evenwicht met veel glucose in de cel (<a href="#fig-glucose" class="quarto-xref">Figuur&nbsp;<span>17.2</span></a> rechts).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://tbb.bio.uu.nl/rdb/grindR/grind.R"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="cf">function</span>(t, state, parms) {</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(<span class="fu">as.list</span>(<span class="fu">c</span>(state,parms)), { </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    dM <span class="ot">&lt;-</span> e<span class="sc">*</span>G<span class="sc">/</span>(G<span class="sc">+</span>h) <span class="sc">-</span> d<span class="sc">*</span>M</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    dE <span class="ot">&lt;-</span> v<span class="sc">*</span>M <span class="sc">-</span> delta<span class="sc">*</span>E</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    dG <span class="ot">&lt;-</span> p<span class="sc">*</span>E <span class="sc">-</span> kappa<span class="sc">*</span>G</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(<span class="fu">c</span>(dM, dE, dG)))  </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  }) </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">e=</span><span class="dv">1</span>,<span class="at">h=</span><span class="dv">2</span>,<span class="at">d=</span><span class="fl">0.3</span>,<span class="at">v=</span><span class="fl">0.3</span>,<span class="at">delta=</span><span class="fl">0.05</span>,<span class="at">p=</span><span class="fl">0.4</span>,<span class="at">kappa=</span><span class="fl">0.2</span>) <span class="co">#Parameters</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">M=</span><span class="fl">0.0</span>,<span class="at">E=</span><span class="fl">0.0</span>,<span class="at">G=</span><span class="fl">0.00</span>) <span class="co">#Starting population sizes</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">run</span>(<span class="at">tmax=</span><span class="dv">200</span>,<span class="at">ymin=</span><span class="fl">0.0</span>,<span class="at">ymax=</span><span class="dv">1</span>) </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Begin-concentratie G: 0.00"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">M=</span><span class="fl">0.0</span>,<span class="at">E=</span><span class="fl">0.0</span>,<span class="at">G=</span><span class="fl">0.01</span>) <span class="co">#Starting population sizes</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">run</span>(<span class="at">tmax=</span><span class="dv">200</span>) </span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Begin-concentratie G: 0.01"</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-glucose" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-glucose-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="reactiediffusie_files/figure-html/fig-glucose-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figuur&nbsp;17.2: Met R berekende oplossingen van simpele ODEs van mRNA, eiwit, en glucose in de cel."><img src="reactiediffusie_files/figure-html/fig-glucose-1.png" class="img-fluid figure-img" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glucose-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;17.2: Met R berekende oplossingen van simpele ODEs van mRNA, eiwit, en glucose in de cel.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Samengevat zien we dus dat, met de gegeven parameters, een stabiele hoeveelheid glucose (en mRNA/eiwit) kan ontstaan in de cel. Dit evenwicht wordt alleen bereikt als er een klein beetje glucose aanwezig is in de cel. Een cel die geen glucose detecteert zal dus geen genen tot expressie brengen. Maar wellicht diffundeert er een beetje glucose naar binnen vanuit de omgeving, of van een nabij gelegen cel. Om deze processen te modelleren, kunnen we gebruik maken van <strong>reactie-diffusiesystemen</strong>.</p>
+<p>Reactie-diffusiesystemen beschrijven niet alleen de reactiesnelheden van processen (zoals hierboven), maar ook hoe ze door de ruimte diffunderen. Zo kun je modelleren hoe een chemisch signaal door een weefsel verspreidt, of hoe het evenwicht tussen verspreiding door diffusie en de reactiesnelheden eventuele patronen oplevert. Deze modellen worden bijvoorbeeld gebruikt om de verspreidingspatronen van dieren en planten te modelleren, hoe “golven” van ziekteverwekkers zich door een populatie mensen verspreiden (denk aan Covid!), of hoe actiepotentialen zich van de sinusknoop naar de hartpunt (apex) bewegen. We zien reactie-diffusiesystemen dus overal terug in de biologie.</p>
+</section>
+<section id="diffusie-tussen-hokjes" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="diffusie-tussen-hokjes"><span class="header-section-number">17.2</span> Diffusie tussen hokjes</h2>
+<p>Nu we een beeld hebben gekregen van hoe we simpele reacties kunnen modelleren met ODEs, gaan we beginnen met het modelleren van een diffusie-proces. Laten we eerst alleen diffusie bekijken (m.a.w. zonder reacties). Stel je voor dat we midden op een gel een druppel verf laten vallen. Langzaam diffundeert de verf door de gel heen. De meest eenvoudige manier om dit te modelleren, is om wederom een grid voor te stellen, waarbij het middelste punt de initiële hoeveelheid verf bevat (zie <a href="#fig-diffhokjes" class="quarto-xref">Figuur&nbsp;<span>17.3</span></a>, in stap 0 is de concentratie in het midden “4”). Alle andere hokjes bevatten geen verf, dus is de hoeveelheid verf 0. Om een diffusie-proces te simuleren, stellen we dat een bepaalde hoeveelheid (bijv. 10%) van de verf naar de vier directe buur-cellen diffundeert. Zodoende is er vier keer 0.4 (10% van 4) uit het middelste hokje verdwenen, en hebben de hokjes eromheen nu een hoeveelheid verf van 0.4 (<a href="#fig-diffhokjes" class="quarto-xref">Figuur&nbsp;<span>17.3</span></a>, stap 1). Na 3 stappen diffusie is de vlek al wat meer uitgebreid (<a href="#fig-diffhokjes" class="quarto-xref">Figuur&nbsp;<span>17.3</span></a>, stap 3)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Laad het viridis package (quietly zorgt ervoor dat er niets geprint word)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis,<span class="at">quietly =</span> T)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>),<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>grid_size <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>initial_value <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>diffusion_rate <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">10</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>iterations <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Leeg grid maken</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> grid_size, <span class="at">ncol =</span> grid_size)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Middelste punt een waardeg even</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>mid <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(grid_size <span class="sc">/</span> <span class="dv">2</span>) <span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>grid[mid, mid] <span class="ot">&lt;-</span> initial_value</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Functie voor diffusie </span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>diffuse <span class="ot">&lt;-</span> <span class="cf">function</span>(grid, rate) {</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  new_grid <span class="ot">&lt;-</span> grid</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>(<span class="fu">nrow</span>(grid) <span class="sc">-</span> <span class="dv">1</span>)) {</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>(<span class="fu">ncol</span>(grid) <span class="sc">-</span> <span class="dv">1</span>)) {</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>      vec <span class="ot">&lt;-</span> <span class="fu">c</span>(grid[i<span class="dv">-1</span>, j], grid[i<span class="sc">+</span><span class="dv">1</span>, j], grid[i, j<span class="dv">-1</span>], grid[i, j<span class="sc">+</span><span class="dv">1</span>])</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>      sumvec <span class="ot">&lt;-</span> <span class="fu">sum</span>(vec,<span class="at">na.rm=</span>T)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>      new_grid[i, j] <span class="ot">&lt;-</span> grid[i, j] <span class="sc">+</span> </span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        rate <span class="sc">*</span> (sumvec <span class="sc">-</span> <span class="dv">4</span> <span class="sc">*</span> grid[i, j])</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(new_grid)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Functie voor het plotten</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>plot_grid <span class="ot">&lt;-</span> <span class="cf">function</span>(grid, iteration) {</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(grid), <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(grid), <span class="at">type =</span> <span class="st">"n"</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">axes =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>, grid_size), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">1</span>, grid_size))</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Grijze gridlijnen</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span><span class="sc">:</span>grid_size, <span class="at">v =</span> <span class="dv">0</span><span class="sc">:</span>grid_size, <span class="at">col =</span> <span class="st">"grey"</span>, <span class="at">lty =</span> <span class="dv">2</span>) </span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Normaliseer waarden tussen 0 en 1</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  norm_grid <span class="ot">&lt;-</span> (grid <span class="sc">-</span> <span class="fu">min</span>(grid)) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">min</span>(grid))</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Viridis kleuren gebruiken</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  colors <span class="ot">&lt;-</span> <span class="fu">viridis</span>(<span class="dv">120</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>]</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  colors[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"#CCCCCC"</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Nummbers op de goede plek zetten </span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>(<span class="fu">nrow</span>(grid)<span class="sc">-</span><span class="dv">0</span>)) {</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>(<span class="fu">ncol</span>(grid)<span class="sc">-</span><span class="dv">0</span>)) {</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>      color_index <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">+</span><span class="dv">38</span><span class="sc">*</span><span class="fu">min</span>(<span class="dv">100</span>,<span class="fu">log10</span>(<span class="fu">floor</span>(norm_grid[i, j] <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">+</span> <span class="dv">1</span>))  <span class="co"># Map to color scale</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>      <span class="fu">text</span>(i <span class="sc">-</span> <span class="fl">0.5</span>, j <span class="sc">-</span> <span class="fl">0.5</span>, <span class="fu">round</span>(grid[i, j], <span class="dv">2</span>), <span class="at">col =</span> colors[color_index], <span class="at">cex =</span> <span class="fl">0.9</span>, <span class="at">font=</span><span class="dv">2</span>)  <span class="co"># Tekst op goede plek</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="fu">paste</span>(<span class="st">"Stap "</span>, iteration<span class="dv">-1</span>))</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Herhaal plotten, diffusie, plotten, diffusie, etc.</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (iter <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iterations) {</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_grid</span>(grid, iter)</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  grid <span class="ot">&lt;-</span> <span class="fu">diffuse</span>(grid, diffusion_rate)</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-diffhokjes" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-diffhokjes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="reactiediffusie_files/figure-html/fig-diffhokjes-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figuur&nbsp;17.3: Diffusie tussen hokjes van een concentratie van een hypothetisch stofje."><img src="reactiediffusie_files/figure-html/fig-diffhokjes-1.png" class="img-fluid figure-img" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-diffhokjes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;17.3: Diffusie tussen hokjes van een concentratie van een hypothetisch stofje.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>En zo eenvoudig kan het zijn: door de ruimte in hokjes op te delen kunnen we heel eenvoudig een diffusie-proces simuleren. Hoe kleiner de hokjes zijn, hoe preciezer we de lokale concentraties van de stofjes kunnen simuleren. Echter wordt het dan ook steeds zwaarder voor de computer om alle hokjes door te rekenen. Om deze beperking te omzeilen, kunnen partiële differentiaalvergelijkingen (PDEs) worden gebruikt, waarbij ruimte niet discreet maar continu is (“oneindig kleine hokjes”). PDEs lijken op ODEs, maar waar ODEs alleen tijd als onafhankelijke variabele gebruiken, hebben PDEs zowel tijd als ruimte als onafhankelijke variabelen. Met de computer benaderen we PDE door de hokjes voldoende klein te houden (net zoals ODEs in grind tijd in kleine stapjes opdeelt).</p>
+<p>De beste manier om het effect van diffusie weer te geven, is het toepassen op een afbeelding. In <a href="#fig-blurring" class="quarto-xref">Figuur&nbsp;<span>17.4</span></a> zie je dat diffusie vooral het effect heeft dat de afbeelding minder en minder patroon bevat, totdat alle pixels dezelfde kleur hebben. Misschien verbaast het je niet dat het vervagen van foto’s met Photoshop vaak precies op deze manier werkt!</p>
+<div id="fig-blurring" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-blurring-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figuren/blurring.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figuur&nbsp;17.4: Diffusie van een afbeelding van een hond."><img src="figuren/blurring.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-blurring-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;17.4: Diffusie van een afbeelding van een hond.
+</figcaption>
+</figure>
+</div>
+<p>We kunnen de eerder genoemde cellen met ODEs voor mRNA, eiwit, en glucose, ook in hokjes stoppen, en het effect van diffusie tussen buur-cellen bestuderen. We kunnen bijvoorbeeld 1 cel in het midden een boel glucose geven, en alle andere cellen 0 glucose. Zonder diffusie zie je dat alleen de cel in het midden eiwitten tot expressie brengt. Door echter een beetje diffusie van glucose toe te passen, zien we dat het signaal zich over het weefsel verspreidt. Net als bij het plaatje van de hond, zien we dus dat diffusie het initiële patroon (een hele duidelijke stip in het midden) verzacht, totdat er geen patroon meer is en alle cellen precies hetzelfde zijn.</p>
+<div class="interactive_content">
+
+<iframe id="iframeToReplace" width="100%" height="520" src="https://tbb.bio.uu.nl/bvd/bms/simulations/diffusie/" title="Simulation"></iframe>
+
+<!--<center><img id="imgToShow" src="figuren/sim_samenwerken.png" style="display:none; width=80%;"></img></center>-->
+</div>
+
+</section>
+<section id="activerende-en-remmende-eiwitten" class="level2" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="activerende-en-remmende-eiwitten"><span class="header-section-number">17.3</span> Activerende en remmende eiwitten</h2>
+<p>We hebben nu een beeld gekregen van reactie-diffusiesystemen, maar tot nu toe lijken ze patronen alleen maar tegen te werken. Maar reactie-diffusiesystemen kunnen weldegelijk prachtige patronen generen, zo ontdekte Alan Turing in 1952. Turing vroeg zich af of diffusie ook de <em>oorzaak</em> kon zijn van bepaalde patronen. Hij stelde zich voor dat in een weefsel twee eiwitten tot expressie komen: <em>activators</em> (<span class="math inline">\(A\)</span>) en <em>inhibitors</em> (<span class="math inline">\(I\)</span>). De activator (<span class="math inline">\(A\)</span>) verhoogt de expressie van beide eiwitten, en de inhibitor verlaagt deze. Dit scenario kunnen we omschrijven in een simpel systeem van ODEs:</p>
+<p><span class="math display">\[\begin{align}
+    
+\mathchoice{\frac{\mathrm{d}A}
+{\mathrm{d}t}}{\mathrm{d}A/\mathrm{d}t}
+{\mathrm{d}A/\mathrm{d}t}
+{\mathrm{d}A/\mathrm{d}t}
+&amp;= k_AA - k_II - dA^2 \\
+    
+\mathchoice{\frac{\mathrm{d}I}
+{\mathrm{d}t}}{\mathrm{d}I/\mathrm{d}t}
+{\mathrm{d}I/\mathrm{d}t}
+{\mathrm{d}I/\mathrm{d}t}
+&amp;= k_AA - k_II - dI
+\end{align}\]</span></p>
+<p>Waarbij <span class="math inline">\(A\)</span> de activator is, <span class="math inline">\(I\)</span> de inhibitor, <span class="math inline">\(k_A\)</span> de activatie-constante, <span class="math inline">\(k_I\)</span> de inhibitie-constante, en <span class="math inline">\(d\)</span> de afbraak van de eiwitten. Omdat zelf-activatie oneindige exponentiële groei kan opleveren, nemen we aan dat de afbraak van de activator (per molecuul) toeneemt met de dichtheid. Voor de inhibitor nemen we normale (constante) afbraak aan.</p>
+<p>Zoals jullie hebben geleerd kunnen we een dergelijk simpel ODE-systeem analyseren met nullcline analyse. Laten we ervoor kiezen om een faseruimte te tekenen met <span class="math inline">\(I\)</span> op de y-as, en <span class="math inline">\(A\)</span> op de x-as. Zodoende willen we dus nullclines vinden waarbij <span class="math inline">\(I\)</span> wordt uitgedrukt als functie van <span class="math inline">\(A\)</span>. Laten we eerste de nullcline(s) voor <span class="math inline">\(A\)</span> bepalen:</p>
+<p><span class="math display">\[\begin{align*}
+    
+\mathchoice{\frac{\mathrm{d}A}
+{\mathrm{d}t}}{\mathrm{d}A/\mathrm{d}t}
+{\mathrm{d}A/\mathrm{d}t}
+{\mathrm{d}A/\mathrm{d}t}
+&amp;= k_AA - k_II - dA^2 = 0 \\
+    k_II &amp;= k_AA - dA^2 = A(k_A-dA) \\
+    I &amp;= \color{blue} \frac{A(k_A-dA)}{k_I} \\
+\end{align*}\]</span></p>
+<p><span class="math inline">\(A\)</span> heeft dus één enkele nullcline: een bergparabool met nullpunten <span class="math inline">\(A=0\)</span> en <span class="math inline">\(A=\frac{k_a}{d}\)</span>. De nullcline(s) voor <span class="math inline">\(I\)</span> zijn:</p>
+<p><span class="math display">\[\begin{align}
+    
+\mathchoice{\frac{\mathrm{d}I}
+{\mathrm{d}t}}{\mathrm{d}I/\mathrm{d}t}
+{\mathrm{d}I/\mathrm{d}t}
+{\mathrm{d}I/\mathrm{d}t}
+&amp;= k_AA - k_II - dI = 0 \\
+    k_II - dI &amp;= k_AA \\
+    I(k_I - d) &amp;= k_AA \\
+    I &amp;= \color{red} \frac{k_AA}{k_I - d} \\
+\end{align}\]</span></p>
+<p><span class="math inline">\(I\)</span> heeft dus ook één nullcline. <span class="math inline">\(A\)</span> verschijnt alleen in de teller van de breuk, dus deze nullcline neemt lineair toe met <span class="math inline">\(A\)</span> (met hellingshoek <span class="math inline">\(\frac{k_A}{k_I - d}\)</span>). Naar verwachting vinden we dus een parabool en een lineaire functie in onze faseruimte. Als we de faseruimte tekenen met <code>Grind.R</code>, is dat inderdaad wat we zien (<a href="#fig-phaseturing" class="quarto-xref">Figuur&nbsp;<span>17.5</span></a>). Aan dit vectorveld kunnen we ook aflezen dat er twee evenwichten zijn: een instabiel evenwicht wanneer er geen <span class="math inline">\(A\)</span> en <span class="math inline">\(I\)</span> is, en een stabiel evenwicht bij een bepaalde hoeveelheid <span class="math inline">\(A\)</span> en <span class="math inline">\(I\)</span>. Het eerste trajectorie in <a href="#fig-phaseturing" class="quarto-xref">Figuur&nbsp;<span>17.5</span></a> laat zien dat de eiwitten inderdaad naar het stabiele evenwicht kunnen gaan. Als je echter met veel inhibitors begint, zien we beide concentraties juist hard afnemen. Hoewel het evenwicht bij <span class="math inline">\((0,0)\)</span> instabiel is, zijn negatieve concentraties niet biologisch relevant, en kunnen we voor de eenvoud aannemen dat deze concentraties naar <span class="math inline">\(0\)</span> gaan.</p>
+<p>Afhankelijk van de initiële conditie, zien we dus dat we wel/niet expressie van de eiwitten zien. Dit wordt ook wel bistabiliteit genoemd. In een systeem met bistabiliteit heeft de geschiedenis van een systeem (waar het systeem voorheen was) invloed op de verdere verloop van het systeem (waar het naar toe gaat). Dergelijke effecten zijn waargenomen voor de genexpressie van bacteriën, en zijn bovendien erg belangrijk voor natuurbehoud. Het kan namelijk erg moeilijk kan zijn om een eenmaal omgeslagen ecosysteem weer terug te krijgen in de “gezonde” toestand. (zie ook <a href="#tip-hysterese" class="quarto-xref">Tip&nbsp;<span>17.1</span></a>).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-phaseturing" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-phaseturing-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="reactiediffusie_files/figure-html/fig-phaseturing-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figuur&nbsp;17.5: De uitkomst van het activator-inhibitor systeem hangt af van de initiële conditie"><img src="reactiediffusie_files/figure-html/fig-phaseturing-1.png" class="img-fluid figure-img" style="width:60.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-phaseturing-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;17.5: De uitkomst van het activator-inhibitor systeem hangt af van de initiële conditie
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="tip-hysterese" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip&nbsp;17.1: <strong>Verdieping:</strong> hysterese in ecosystemen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Als een systeem meerdere evenwichten heeft, en je verandert langzaam de condities, dan kan er een punt zijn dat het van het ene naar het andere evenwicht omklapt. Dergelijke “tipping points” worden op alle schalen gezien: van de expressie van het lac-operon in E. coli, tot hele ecosystemen. In de onderstaande foto zie je bijvoorbeel twee bijna identieke meren, maar één van de meren is door eutroficatie (aanwezigheid van te veel voedingsstoffen) omgeslagen naar een ongezonde vertroebelde toestand. Een dergelijke vertroebeling ongedaan maken blijkt erg lastig te zijn. Inderdaad weten we dankzij modellen dat deze systemen <em>bistabiel</em> zijn, zoals weergegeven met de twee kuilen waarin het balletje naar beneden kan rollen: als het balletje eenmaal in een ander minimum ligt, krijg je deze er niet zomaar meer uit! Dit fenomeen wordt <em>hysterese</em> genoemd.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/eutro_hyst.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Bron foto: https://passel2.unl.edu/view/lesson/bcbd3f35f2e0/2"><img src="figuren/eutro_hyst.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Bron foto: https://passel2.unl.edu/view/lesson/bcbd3f35f2e0/2"></a></p>
+</figure>
+</div>
+<figcaption>Bron foto: https://passel2.unl.edu/view/lesson/bcbd3f35f2e0/2</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="turing-patronen" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="turing-patronen"><span class="header-section-number">17.4</span> Turing-patronen</h2>
+<p>Oke, we weten nu dus naar welke evenwichten de activators en inhibitors kunnen gaan. Laten we de variabelen <span class="math inline">\(A\)</span> en <span class="math inline">\(I\)</span> in hokjes stoppen, en hetzelfde lokale diffusieproces toepassen als eerder besproken. Elke tijdstap worden dus de differentiaalvergelijkingen zoals hierboven een klein stukje doorgerekend, dan een stapje diffusie, differentiaalvergelijkingen doorrekenen, diffusie, <em>etc.</em> We beginnen met een willekeurige hoeveelheid <span class="math inline">\(A\)</span> per hokje, en zonder <span class="math inline">\(I\)</span>:</p>
+<div class="interactive_content">
+
+<iframe id="iframeToReplace" width="100%" height="630" src="https://tbb.bio.uu.nl/bvd/bms/simulations/turing/" title="Simulation"></iframe>
+
+<!--<center><img id="imgToShow" src="figuren/sim_samenwerken.png" style="display:none; width=80%;"></img></center>-->
+</div>
+<p>Als je de simulatie hierboven een tijdje laat lopen, zul je zien dat er iets interessants gebeurt: ondanks de diffusie ontstaat een contrastrijk en stabiel patroon. Precies welk patroon je krijgt (groter/kleiner, strepen/vlekken), hangt af van de diffusie-snelheden en de activatie-/inhibitieconstanten (zie een paar voorbeelden in <a href="#fig-turingvoorbeelden" class="quarto-xref">Figuur&nbsp;<span>17.6</span></a>).</p>
+<div id="fig-turingvoorbeelden" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-turingvoorbeelden-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figuren/turing_voorbeelden.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figuur&nbsp;17.6: Turingpatronen gegenereerd met verschillende parameters van bovenstaand model."><img src="figuren/turing_voorbeelden.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-turingvoorbeelden-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;17.6: Turingpatronen gegenereerd met verschillende parameters van bovenstaand model.
+</figcaption>
+</figure>
+</div>
+<p>Met de bovenstaande simulatie zul je ook kunnen zien dat niet elke simulatie Turing-patronen oplevert. Als je bijvoorbeeld de diffusie van de activator verhoogt krijg je geen patronen. Hoe het ook zij: Turing slaagde er in om een proces te vinden waarbij, met de juiste parameter-voorwaarden, diffusie niet patronen uitvaagt maar juist genereert! Als de diffusie niet in alle richtingen even snel is (in di), kan je ook strepen krijgen die verdacht veel op de vacht van een zebra lijken:</p>
+<div class="interactive_content">
+
+<iframe id="iframeToReplace" width="100%" height="500" src="https://tbb.bio.uu.nl/bvd/bms/simulations/stripes/" title="Simulation"></iframe>
+
+<!--<center><img id="imgToShow" src="figuren/sim_samenwerken.png" style="display:none; width=80%;"></img></center>-->
+</div>
+
+<p>Dit is dan ook waarom Alan Turing ooit stelde:</p>
+<blockquote class="blockquote">
+<p>“The stripes are easy, but what about the horse part?”<br> – Alan Turing</p>
+</blockquote>
+<p>Vele decennia later is er ook veel gemodelleerd aan “the horse part”: hoe krijg je van een enkele cel een complex organisme met de juiste verdeling van weefsels en vingers? Het blijkt dat niet alleen de vlekken op de vacht, maar ook de ontwikkeling van planten en dieren veelal met Turing patronen verklaard kan worden. Zie bijvoorbeeld onderstaande afbeeldingen uit <a href="https://pubmed.ncbi.nlm.nih.gov/23276682/">onderzoek van James Sharpe</a>, wat aantoont hoe vergelijkbare activatie-en-inhibitie interacties vorm kan geven aan complexe organismen.</p>
+<div id="fig-sharpe" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sharpe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sharpe" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-sharpe-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sharpe-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figuren/jamessharpe1.png" class="lightbox" data-gallery="fig-sharpe" title="Figuur&nbsp;17.7&nbsp;(a): Onderzoek van Sharpe et al.&nbsp;over hoe cellen differentiëren in een 1D weefsel van cellen"><img src="figuren/jamessharpe1.png" class="img-fluid figure-img" style="width:70.0%" data-ref-parent="fig-sharpe"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sharpe-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Onderzoek van Sharpe et al.&nbsp;over hoe cellen differentiëren in een 1D weefsel van cellen
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sharpe" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-sharpe-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sharpe-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figuren/jamessharpe2.png" class="lightbox" data-gallery="fig-sharpe" title="Figuur&nbsp;17.7&nbsp;(b): Onderzoek van Sharpe et al.&nbsp;over hoe de aanleg van vingers tijdens de ontwikkeling wordt bepaald door een Turing-mechanisme"><img src="figuren/jamessharpe2.png" class="img-fluid figure-img" style="width:70.0%" data-ref-parent="fig-sharpe"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sharpe-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Onderzoek van Sharpe et al.&nbsp;over hoe de aanleg van vingers tijdens de ontwikkeling wordt bepaald door een Turing-mechanisme
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sharpe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;17.7: Turing patronen zijn ook relevant voor morphologie en ontwikkeling!
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="niet-alle-repetitieve-biologische-patronen-zijn-turing-patronen" class="level2" data-number="17.5">
+<h2 data-number="17.5" class="anchored" data-anchor-id="niet-alle-repetitieve-biologische-patronen-zijn-turing-patronen"><span class="header-section-number">17.5</span> Niet alle repetitieve biologische patronen zijn Turing patronen</h2>
+<p>Zoals we hierboven hebben gezien, ontstaan Turing-patronen door een combinatie van lokale activatie en inhibitie op afstand, wat niet alleen betrokken is bij vachtpatronen, maar ook bij de aanleg van het lichaam zelf. Heel recent is zelfs gevonden dat Turing-mechanismen een rol spelen bij de <a href="https://www.sciencedirect.com/science/article/pii/S0092867423000454?via%3Dihub">ontwikkeling van vingerafdrukken</a>.</p>
+<div id="fig-turingornot" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-turingornot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/turing_2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Patronen van struikgewas kun je goed met Turing-mechanismen verklaren"><img src="figuren/turing_2.png" class="img-fluid figure-img" style="width:60.0%"></a></p>
+<figcaption>Patronen van struikgewas kun je goed met Turing-mechanismen verklaren</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/notturing_3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Fruitvliegjes hebben tijdens de ontwikkeling ook “streepjes”, maar dit is geen Turing-patroon! In plaats daarvan is er een specifieke cascade van genen die het lijf in steeds kleinere stukjes onderverdeelt"><img src="figuren/notturing_3.png" class="img-fluid figure-img" style="width:56.0%"></a></p>
+<figcaption>Fruitvliegjes hebben tijdens de ontwikkeling ook “streepjes”, maar dit is geen Turing-patroon! In plaats daarvan is er een specifieke cascade van genen die het lijf in steeds kleinere stukjes onderverdeelt</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-turingornot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;17.8: Biologie heeft veel patronen, maar niet alles hoeft met een Turing-patroon verklaard te worden!
+</figcaption>
+</figure>
+</div>
+<p>Ook veel andere biologische processen ondergaan vergelijkbare interacties. In droge gebieden houden planten samen lokaal water vast, maar onttrekken daardoor water uit de omgeving op afstand. Ook dit levert patronen op die lijken op Turing-patronen. Maar <strong>let op</strong>: hoewel Turing-mechanismen veel patronen in de natuur <em>kunnen</em> verklaren, betekent dit niet dat deze patronen ook door Turing-mechanismen zijn ontstaan. Zo is er bijvoorbeeld veel onderzoek gedaan naar mogelijke Turing-mechanismen in de ontwikkeling van fruitvliegjes, maar dit patroon bleek op een geheel andere manier te vormen (<a href="#fig-turingornot" class="quarto-xref">Figuur&nbsp;<span>17.8</span></a>). Kortom: hoewel Turing patronen een terugkerend principe lijken te zijn binnen de biologie, is niet ieder “vlekken-of-strepen-patroon” ontstaan door Turing mechanismen. Zo kan je bijvoorbeeld op een grid van struikgewas (groen) of droge aarde (lichtbruin) ook vergelijkbare patronen krijgen door een simpele “meerderheidsregel”. Dat wil zeggen: als er meer planten in de buurt zijn dan verandert een grid-punt in een plant, en als er meer droge aarde in buurt is, dan verandert een grid-punt in droge aarde. Het resultaat is een patroon wat ook heel erg lijkt op het struikgewas in <a href="#fig-turingornot" class="quarto-xref">Figuur&nbsp;<span>17.8</span></a>:</p>
+<div class="interactive_content">
+
+<iframe id="iframeToReplace" width="100%" height="500" src="https://tbb.bio.uu.nl/bvd/bms/simulations/vote/" title="Simulation"></iframe>
+
+<!--<center><img id="imgToShow" src="figuren/sim_samenwerken.png" style="display:none; width=80%;"></img></center>-->
+</div>
+
+<p>Ook bovenstaand mechanisme genereert iedere keer dat je het uitvoert (dubbelklik!) een nieuw uniek patroon. Hoewel we in ODEs en het lab soms vergeten dat ze bestaan, zijn patronen in de biologie heel belangrijk. Hoewel bijvoorbeeld de oceaan relatief goed gemengd lijkt, is zelfs hier soms sprake van duidelijke patronen die de biologie beïnvloeden. Patronen zijn dus wellicht helemaal niet de uitzondering!</p>
+<blockquote class="blockquote">
+<p>“The pattern is the default.”<br> – Paulien Hogeweg (lecture ‘Computational biology’, 2012)</p>
+</blockquote>
+</section>
+<section id="opgaven" class="level2" data-number="17.6">
+<h2 data-number="17.6" class="anchored" data-anchor-id="opgaven"><span class="header-section-number">17.6</span> Opgaven</h2>
+<div id="exr-reactievergelijkingen" class="mixedexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 17.1 (Reactievergelijkingen)</strong></span> <br></p>
+<p>Bekijk de volgende reactievergelijking van een enzymatische reactie, waarbij een enzym (<span class="math inline">\(E\)</span>) een complex vormt met een substraat (<span class="math inline">\(S\)</span>). Dit complex (<span class="math inline">\(C_{ES}\)</span>) catalyseert de reactie naar product (<span class="math inline">\(P\)</span>), waarbij het enzym weer vrij komt. Echter kan het complex ook weer uit elkaar vallen zonder reactie, en weer <span class="math inline">\(E\)</span> + <span class="math inline">\(S\)</span> opleveren.</p>
+<p><span class="math display">\[\begin{align}
+    E+S &amp; \quad \underset{k_2}{\stackrel{k_1}{\rightleftharpoons}} \quad C_{ES} \quad \xrightarrow{k_{cat}} \quad E+P\\
+\end{align}\]</span></p>
+<ol type="a">
+<li>Stel dat we een dynamisch model van dit systeem zouden willen maken. Wat zijn de variabelen die we zouden willen modelleren? Wat zijn de parameters?</li>
+<li>Aangenomen dat de reactiesnelheden direct proportioneel zijn aan de concentraties, is de snelheid waarmee het complex <span class="math inline">\(C_{ES}\)</span> onstaat gelijk aan <span class="math inline">\(E \cdot S \cdot k_1\)</span>. Zijn er nog meer processen die de hoeveelheid complex verhogen of verlagen? Welke vergelijkingen beschrijven deze processen?</li>
+<li>Alle processen uit vraag b bij elkaar geven de totale snelheid waarmee complex ontstaat en/of vervalt. Met deze kennis kunnen we ODEs opstellen. Schrijf van <span class="math inline">\(C_{ES}\)</span> en de andere variabelen differentiaalvergelijkingen op.</li>
+<li>Bekijk het onderstaande Grind-model van dit systeem. Het script print hoeveel product er is ontstaan aan het begin van het reactie-proces. Schets door het script te bestuderen hoe deze initiële reactie-snelheid afhangt van de initiële substraat-concentratie. Hint: bekijk hoeveel een verdubbeling van <span class="math inline">\(S\)</span> de reactiesnelheid verhoogd bij lage <span class="math inline">\(S\)</span> (bijv. 0.001), en ook bij hele hoge <span class="math inline">\(S\)</span> (bijv 1000).</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://tbb.bio.uu.nl/rdb/grindR/grind.R"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="cf">function</span>(t, state, parms) {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(<span class="fu">as.list</span>(<span class="fu">c</span>(state,parms)), { </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    dE <span class="ot">&lt;-</span> k2<span class="sc">*</span>C <span class="sc">-</span> k1<span class="sc">*</span>E<span class="sc">*</span>S <span class="sc">+</span> kcat<span class="sc">*</span>C</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    dS <span class="ot">&lt;-</span> k2<span class="sc">*</span>C <span class="sc">-</span> k1<span class="sc">*</span>E<span class="sc">*</span>S</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    dC <span class="ot">&lt;-</span> k1<span class="sc">*</span>E<span class="sc">*</span>S <span class="sc">-</span> kcat<span class="sc">*</span>C</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    dP <span class="ot">&lt;-</span> kcat<span class="sc">*</span>C</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(<span class="fu">c</span>(dE, dS, dC, dP)))  </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  }) </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">k1=</span><span class="dv">1</span>,<span class="at">k2=</span><span class="fl">0.2</span>,<span class="at">kcat=</span><span class="dv">1</span>) <span class="co">#Parameters</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">E=</span><span class="dv">1</span>,<span class="at">S=</span><span class="dv">1</span>,<span class="at">C=</span><span class="dv">0</span>,<span class="at">P=</span><span class="dv">0</span>) <span class="co">#Starting population sizes</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">run</span>(<span class="at">tmax=</span><span class="dv">10</span>,<span class="at">tstep=</span><span class="fl">0.1</span>) </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>stapje <span class="ot">&lt;-</span> <span class="fu">run</span>(<span class="at">tmax=</span><span class="dv">1</span>,<span class="at">ymax=</span><span class="dv">3</span>,<span class="at">tstep=</span><span class="dv">1</span>,<span class="at">timeplot=</span>F) </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste</span>(<span class="st">"Er is in 1 stap"</span>,stapje[<span class="st">"P"</span>],<span class="st">"product ontstaan"</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="exr-diffusievraag" class="pepexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 17.2 (Diffusie simuleren)</strong></span> <br></p>
+<p>Kijk nog eens naar <a href="#fig-diffhokjes" class="quarto-xref">Figuur&nbsp;<span>17.3</span></a>. De diffusie-constante die in dit figuur werd aangenomen was 0.1, dat wil zeggen, van de totaal-concentratie 4.0 in het middelste punt, diffundeert 0.4 naar elk van de buurhokjes.</p>
+<p>Stel dat elke stap in <a href="#fig-diffhokjes" class="quarto-xref">Figuur&nbsp;<span>17.3</span></a> één minuut voorstelt, en dat je experimenteel hebt waargenomen dat na 3 minuten de verf volledig over de plaat is verspreid. Kennelijk is de diffussie in <a href="#fig-diffhokjes" class="quarto-xref">Figuur&nbsp;<span>17.3</span></a> te langzaam.</p>
+<ol type="a">
+<li>Teken de begin-conditie in <a href="#fig-diffhokjes" class="quarto-xref">Figuur&nbsp;<span>17.3</span></a> na, en bepaal wat er gebeurt met een snellere diffusie-constante. Probeer een diffusie-constante van 0.2 en 0.3. Wat valt je op?</li>
+<li>Hoe kan je er voor zorgen dat de stof beter is verspreid na 3 minuten?</li>
+</ol>
+<p>Lokale diffusie op een grid heeft dus zijn beperkingen, vooral doordat tijdstapjes te groot kunnen zijn.</p>
+<ol start="3" type="a">
+<li>Leg uit waar we dit probleem eerder hebben gezien, en waarom partiële differentiaalvergelijkingen (met “oneindig kleine hokjes”) dit probleem niet hebben.</li>
+</ol>
+</div>
+<div id="exr-bijproducten" class="Rexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 17.3 (Bijproducten)</strong></span> <br></p>
+<p>Bacteriën produceren tijdens hun metabolisme vaak bijproducten, zoals melkzuur, alcohol, en waterstofperoxide. Hoewel lage concentraties van deze metabolieten vaak niet schadelijk zijn, kan het op den duur opbouwen in de omgeving en zo de sterftekans van de bacteriën verhogen. We bestuderen in deze opgave een eenvoudig <em>individual-based model</em> (IBM), dat de volgende regels volgt:</p>
+<ol type="1">
+<li>Plaats een aantal individuen in het midden van een continue ruimte</li>
+<li>Voor elk individu:
+<ol type="i">
+<li>Tel het aantal individuen binnen een <strong>kleine</strong> radius van een individu (a)</li>
+<li>Tel het aantal individuen binnen een <strong>grote</strong> radius van een individu (i)</li>
+<li>Het individu reproduceert met kans <span class="math inline">\(a \cdot birth\)</span></li>
+<li>Het individu sterft met kans <span class="math inline">\(i \cdot toxiciteit\)</span></li>
+</ol></li>
+<li>Beweeg alle individuen een klein beetje een willekeurige kant op.</li>
+<li>Ga terug naar stap 2.</li>
+</ol>
+<div class="interactive_content">
+
+<iframe id="iframeToReplace" width="100%" height="650" src="https://tbb.bio.uu.nl/bvd/bms/simulations/toxic_byproducts/" title="Simulation"></iframe>
+
+<!--<center><img id="imgToShow" src="figuren/sim_samenwerken.png" style="display:none; width=80%;"></img></center>-->
+</div>
+
+<p>Bestudeer de simulatie door deze een paar keer opnieuw te starten, zodat je goed kan zien wat er gebeurt.</p>
+<ol type="a">
+<li>Gebruik eerst de standaard parameter-waarden. Omschrijf wat hier gebeurt in termen van concepten uit dit hoofdstuk.</li>
+<li>Controleer of dit model vergelijkbare voorwaarden heeft voor patroonvorming als in het hoofdstuk besproken.</li>
+<li>Stel dat er ergens in de simulatie een virus uitbreekt. Kan het virus alle individuen besmetten?</li>
+<li>Tel hoeveel groepjes je ziet, en gebruik daarna je muis om een paar groepjes weg te halen (alsof er dus idd een ernstig virus is uitgebroken). Wat gebeurt er daarna? Waarom gebeurde dit niet voor de ziekteuitbraak?</li>
+</ol>
+</div>
+<div id="exr-modelkeuzes" class="theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 17.4 (Modelkeuzes)</strong></span> <br></p>
+<p>Je hebt in dit cursusonderdeel al over allerlei verschillende modellen geleerd. Zoals in het introductiehoofdtuk uitgelegd, is niet elk model geschikt voor elke situatie. Als je bijvoorbeeld een goed gemengde Erlenmeyer met miljoenen bacteriële cellen modelleert, is een <em>individual-based model</em> met de posities van elk individu misschien niet zo nuttig. Anderzijds kun je zwerm-patronen van slijmschimmels niet modelleren met ODEs, want met ODEs is “een ruimtelijk patroon” niet een van de mogelijke uitkomsten.</p>
+<p>Om te oefenen met welk type model past bij welk vraagstuk, staan hieronder een aantal omschrijvingen van biologische systemen die we zouden willen modelleren. Omschrijf voor elk scenario welk type model je zou gebruiken om deze te bestuderen, en motiveer je antwoord. Denk na over het type model (differen<em>tie</em>vergelijkingen, differen<em>tiaal</em>vergelijkingen (ODEs), individual-based models, reactie-diffusie vergelijkingen (PDEs)), maar ook over het type variabele waarmee je de toestand modelleert (discreet, continu, zie <a href="zwermen.html#fig-contdisc" class="quarto-xref">Figuur&nbsp;<span>16.1</span></a>).</p>
+<ol type="a">
+<li>Twee soorten bacteriën ondervinden competitie in een goed gemengde Erlenmeyer.</li>
+<li>Twee druppels met fluorescente eiwitten worden op een agar plaat gepipetteerd, waarbij interessante patronen ontstaan.</li>
+<li>In een pas afgebrand bos komen pionierssoorten op. De eerste die zich vestigt neemt de ruimte in, waardoor er geen ruimte meer is voor anderen.</li>
+<li>Een populatie zooplankton in een goed-gemengd deel van de oceaan ondervindt onderlinge competitie om algen en andere voedselbronnen.</li>
+<li>Op de huid van een hagedis vormen zich tijdens de ontwikkeling gevlekte patronen</li>
+<li>Een populatie divers gekleurde konijnen wordt door havikken bejaagd</li>
+<li>Bacteriële cellen die groeien op een agarplaat kunnen met een kleine kans muteren, en daarbij fluorescent worden</li>
+<li>Een morfogen diffundeert door een weefsel van cellen, en activeert daarbij verschillende genexpressiepatronen tijdens de ontwikkeling.</li>
+<li>De hoeveelheid paracetamol in het bloed na inname wordt langzaam afgebroken</li>
+<li>Na bevruchting ontstaat een calcium-golf op het membraan van de eicel</li>
+<li>Een populatie van zeehonden wordt vanuit verschillende hoeken (richtingen) door orca’s belaagd</li>
+</ol>
+</div>
+</section>
+<section id="terminologie" class="level2" data-number="17.7">
+<h2 data-number="17.7" class="anchored" data-anchor-id="terminologie"><span class="header-section-number">17.7</span> Terminologie</h2>
+<table class="table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 25%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Nederlands</th>
+<th>Engels</th>
+<th>Beschrijving</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Reactie-diffusie vergelijkingen</td>
+<td>Reaction-diffusion equations</td>
+<td>Een type model waarbij variabelen in zowel tijd als ruimte kunnen worden gemodelleerd. Hiermee kunnen we goed onderzoek doen naar het ontstaan van patronen.</td>
+</tr>
+<tr class="even">
+<td>Turing patronen</td>
+<td>Turing patterns</td>
+<td>Een zelforganiserend patroon in biologische systemen dat ontstaat door interacties tussen twee chemische stoffen die reageren en zich met verschillende snelheden verspreiden. Turing patronen ontstaan vaak door “remming op afstand” en “activatie van dichtbij”.</td>
+</tr>
+<tr class="odd">
+<td>Hysterese</td>
+<td>Hysteresis</td>
+<td>Wanneer een systeem meerdere evenwichten heeft, kunnen er omslagpunten (“tipping points”) zijn waarbij het systeem van de ene naar de andere staat overslaat. Dit fenomeen wordt hysterese genoemd.</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Let op: de getallen worden hier afgerond om het process te visualiseren<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Gekopieerd!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Gekopieerd!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+          // default icon
+          link.classList.add("external");
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../Modellen/zwermen.html" class="pagination-link" aria-label="Zwermen en foerageren">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Zwermen en foerageren</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../Modellen/exciteerbaremedia.html" class="pagination-link" aria-label="Exciteerbare media">
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Exciteerbare media</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Vakgroep Theoretische Biologie, Universiteit Utrecht.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Dit boek is gemaakt met <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","loop":false,"descPosition":"bottom","openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
