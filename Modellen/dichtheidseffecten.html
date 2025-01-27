@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -731,44 +765,41 @@ Figuur&nbsp;12.3: Heckrunderen op de Oostvaardersplassen
 </ol>
 <p>Om het afschieten van runderen in dit model te betrekken, kunnen we een extra term aan de ODE toevoegen: <span class="math display">\[
       \frac{\mathrm{d}N}{\mathrm{d}t} = {\color{#2a53f7}b}(1-\frac{N}{K_b})N - {\color{red}d}(1+\frac{N}{K_b})N - kN
-  \]</span> Waarbij <span class="math inline">\(k\)</span> de fractie runderen is die we afschieten. Bekijk hetvolgende R-script:</p>
-<pre><code>::: {.cell}
-
-```{.r .cell-code  code-fold="false"}
-# Stap 1: Een functie die verandering uitrekent
-verandering &lt;- function (N){
-  delta &lt;- b*(1-(N/Kb))*N - d*(1+(N/Kd))*N - k*N
-  return(delta)
-}
-
-# Stap 2: stel begin-aantal / parameters in
-N &lt;- 10
-b &lt;- 0.4    
-d &lt;- 0.03
-Kb &lt;- 800
-Kd &lt;- 50
-k &lt;- 0.0
-
-# Stap 3, definieer tijdstappen en maak een dataframe aan
-delta_t &lt;- 0.1 # grootte van de tijdstap
-tijdstapjes &lt;- seq(0,50,by=delta_t)
-tijdserie &lt;- data.frame(t=tijdstapjes,runderen=N,sterfte=NA)
-
-for (t in 1:length(tijdstapjes)-1) {
-  if(t&gt;300) k &lt;- 0.05
-  sterfte &lt;- N*d*(1+N/Kd) + k*N
-  N &lt;- N + delta_t*verandering(N)
-  tijdserie[t+1,] &lt;- c(t=t*delta_t, runderen=N, sterfte=sterfte)
-}
-
-# Plot het totaal aantal heckrunderen door de tijd
-plot(tijdserie$t, tijdserie$runderen, xlab="Tijd in jaren", ylab="Aantal heckrunderen", type="l", col="brown", lwd=2)
-# Plot het aantal stervende heckrunderen
-lines(tijdserie$t, tijdserie$sterfte, col="red", lty=2)
-# Voeg legenda toe
-legend(40, 270, legend=c("Totaal", "Sterfte"), col=c("brown", "red"), lty=1:2)
-```
-:::</code></pre>
+  \]</span> Waarbij <span class="math inline">\(k\)</span> de fractie runderen is die we afschieten. Bekijk het volgende R-script:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 1: Een functie die verandering uitrekent</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>verandering <span class="ot">&lt;-</span> <span class="cf">function</span> (N){</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  delta <span class="ot">&lt;-</span> b<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>(N<span class="sc">/</span>Kb))<span class="sc">*</span>N <span class="sc">-</span> d<span class="sc">*</span>(<span class="dv">1</span><span class="sc">+</span>(N<span class="sc">/</span>Kd))<span class="sc">*</span>N <span class="sc">-</span> k<span class="sc">*</span>N</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(delta)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 2: stel begin-aantal / parameters in</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fl">0.4</span>    </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>Kb <span class="ot">&lt;-</span> <span class="dv">800</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>Kd <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fl">0.0</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Stap 3, definieer tijdstappen en maak een dataframe aan</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>delta_t <span class="ot">&lt;-</span> <span class="fl">0.1</span> <span class="co"># grootte van de tijdstap</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>tijdstapjes <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">50</span>,<span class="at">by=</span>delta_t)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>tijdserie <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">t=</span>tijdstapjes,<span class="at">runderen=</span>N,<span class="at">sterfte=</span><span class="cn">NA</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(tijdstapjes)<span class="sc">-</span><span class="dv">1</span>) {</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(t<span class="sc">&gt;</span><span class="dv">300</span>) k <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  sterfte <span class="ot">&lt;-</span> N<span class="sc">*</span>d<span class="sc">*</span>(<span class="dv">1</span><span class="sc">+</span>N<span class="sc">/</span>Kd) <span class="sc">+</span> k<span class="sc">*</span>N</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">&lt;-</span> N <span class="sc">+</span> delta_t<span class="sc">*</span><span class="fu">verandering</span>(N)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  tijdserie[t<span class="sc">+</span><span class="dv">1</span>,] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">t=</span>t<span class="sc">*</span>delta_t, <span class="at">runderen=</span>N, <span class="at">sterfte=</span>sterfte)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot het totaal aantal heckrunderen door de tijd</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tijdserie<span class="sc">$</span>t, tijdserie<span class="sc">$</span>runderen, <span class="at">xlab=</span><span class="st">"Tijd in jaren"</span>, <span class="at">ylab=</span><span class="st">"Aantal heckrunderen"</span>, <span class="at">type=</span><span class="st">"l"</span>, <span class="at">col=</span><span class="st">"brown"</span>, <span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot het aantal stervende heckrunderen</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(tijdserie<span class="sc">$</span>t, tijdserie<span class="sc">$</span>sterfte, <span class="at">col=</span><span class="st">"red"</span>, <span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Voeg legenda toe</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="dv">40</span>, <span class="dv">270</span>, <span class="at">legend=</span><span class="fu">c</span>(<span class="st">"Totaal"</span>, <span class="st">"Sterfte"</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">"brown"</span>, <span class="st">"red"</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <ol start="6" type="a">
 <li>Na hoeveel jaar wordt er begonnen met schieten? Welk percentage van de heckrunderen wordt afgeschoten?</li>
 </ol>
@@ -1452,7 +1483,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","loop":false,"selector":".lightbox","closeEffect":"zoom","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
