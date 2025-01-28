@@ -60,6 +60,13 @@ massa_manacus %>%
 t.test(massa_manacus$`Weight (gr)`[massa_manacus$Sex == "Male"],
        massa_manacus$`Weight (gr)`[massa_manacus$Sex == "Female"])
 
+summary(massa_manacus$`Weight (gr)`[massa_manacus$Sex == "Male"])
+summary(massa_manacus$`Weight (gr)`[massa_manacus$Sex == "Female"])
+sd(massa_manacus$`Weight (gr)`[massa_manacus$Sex == "Male"])
+sd(massa_manacus$`Weight (gr)`[massa_manacus$Sex == "Female"])
+library("car")
+leveneTest(`Weight (gr)` ~ Sex, data = massa_manacus)
+
 # Mogelijkheid voor paired t-test: sleep dataset
 # De sleep dataset is een standaard dataset in R met data van 10 proefpersonen
 # waarin het aantal uren slaap is gemeten met en zonder medicatie
@@ -67,5 +74,3 @@ t.test(massa_manacus$`Weight (gr)`[massa_manacus$Sex == "Male"],
 t.test(sleep$extra[sleep$group == 1],
        sleep$extra[sleep$group == 2], 
        paired = TRUE)
-
-
