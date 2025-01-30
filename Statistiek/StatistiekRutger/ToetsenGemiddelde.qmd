@@ -86,6 +86,70 @@ nulhypothese niet juist is. Als $P$ niet kleiner is dan $0{,}05$ wordt
 het resultaat meestal niet als significant gezien.
 
 ## Voorbeeld van de $t$-toets voor één steekproef
+```{r}
+#| code-fold: true
+#| warning: false
+#| echo: false
+#| fig-cap: "Met behulp van een $t$-toets kunnen we onderzoeken of het gemiddelde van een steekproef (bijvoorbeeld n = 10) significant verschilt van een verwachte waarde. De $t$-toets gaat ervan uit dat de data normaal verdeeld zijn."
+#| label: fig-t-toets-1-var
+
+library(ggplot2)
+
+m <- mean(sleep$extra[sleep$group == 1]) # Steekproefgemiddelde
+
+ggplot(sleep[sleep$group == 1, ], aes(x = ID, y = extra)) +
+  # Verticale lijnen naar het gemiddelde
+  geom_segment(
+    aes(
+      x = ID, xend = ID, 
+      y = extra, yend = m
+    ),
+    color = "SlateGray",
+    linetype = "solid",
+    size = 1
+  ) +
+  # Punten
+  geom_point(
+    shape = 21, 
+    fill = "SlateGray", 
+    size = 5
+  ) +
+  # Gemiddelde lijn
+  annotate(
+    "segment",
+    x = 0.5, xend = 10.5, 
+    y = m, 
+    color = opvulkleur,
+    size = 1
+  ) +
+  # Label bij de gemiddelde lijn
+  annotate(
+    "text",
+    x = 10.2, 
+    y = m + 0.2,
+    label = expression(bar(italic(x))),
+    color = opvulkleur,
+    hjust = 0,
+    size = 6
+  ) +
+  # Y-as instellen
+  scale_y_continuous(
+    breaks = sleep$extra[sleep$group == 1], 
+    limits = c(min(sleep$extra[sleep$group == 1]), max(sleep$extra[sleep$group == 1])),
+    labels = scales::number_format(accuracy = 0.1)
+  ) +
+  ylab("Extra uren slaap") +
+  # Geen x-as, geen gridlijnen
+  theme_classic() +
+  theme(
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.line.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  )
+```
 
 ```{r}
 #| code-fold: true
@@ -159,6 +223,93 @@ ggplot(data, aes(x = x, y = y)) +
 ```
 
 ## De $t$-toets voor gepaarde steekproeven
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Met een $t$-toets voor twee steekproeven kun je testen of het gemiddelde van twee groepen significant van elkaar verschilt. Dit is nuttig wanneer je bijvoorbeeld wilt weten of een bepaalde behandeling een meetbaar effect heeft in vergelijking met een controlegroep."
+#| label: fig-t-toets-2-var
+
+m1 <- mean(sleep$extra[sleep$group == 1]) # Steekproefgemiddelde groep 1
+m2 <- mean(sleep$extra[sleep$group == 2]) # Steekproefgemiddelde groep 2
+
+# Maak dataframe met beide steekproeven
+data <- data.frame(y = sleep$extra,
+                   x = seq(20),
+                   z = sleep$group,
+                   m = c(rep(m1, 10), rep(m2, 10)))
+
+ggplot(data, aes(x = x, y = y)) +
+  # Verticale lijnen naar het gemiddelde
+  geom_segment(
+    aes(
+      x = x, xend = x, 
+      y = y, yend = m
+    ),
+    color = "SlateGray",
+    linetype = "solid",
+    size = 1
+  ) +
+  # Punten
+  geom_point(
+    shape = 21, 
+    fill = "SlateGray", 
+    size = 5
+  ) +
+  # Gemiddelde lijn voor steekproef 1
+  annotate(
+    "segment",
+    x = 0.75, xend = 10.25, 
+    y = m1, 
+    color = opvulkleur,
+    size = 1
+  ) +
+  # Label bij de gemiddelde lijn
+  annotate(
+    "text",
+    x = 10.25, 
+    y = m1,
+    label = expression(bar(italic(`x`))[1]),
+    color = opvulkleur,
+    hjust = 0,
+    size = 6
+  ) +  
+  # Gemiddelde lijn voor steekproef 2
+  annotate(
+    "segment",
+    x = 10.75, xend = 20.25, 
+    y = m2, 
+    color = opvulkleur,
+    size = 1
+  ) +
+  # Label bij de gemiddelde lijn
+  annotate(
+    "text",
+    x = 20.25, 
+    y = m2,
+    label = expression(bar(italic(`x`))[2]),
+    color = opvulkleur,
+    hjust = 0,
+    size = 6
+  ) +
+  # Y-as instellen
+  scale_y_continuous(
+   # breaks = data$y, 
+    limits = c(min(data$y), max(data$y)),
+    labels = scales::number_format(accuracy = 1)
+  ) +
+  ylab("Extra uren slaap zonder (1) en met (2) medicatie") +
+  # Geen x-as, geen gridlijnen
+  theme_classic() +
+  theme(
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.line.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  )
+```
 
 ```{r}
 #| code-fold: true
