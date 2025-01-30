@@ -6,9 +6,10 @@
 #| output: false
 
 library(ggplot2)
+library(tidyverse)
 
 opvulkleur <- "darkorange"
-lijnkleur1 <- "DarkOrchid"
+lijnkleur1 <- "darkorchid"
 lijnkleur2 <- "red"
 lijnkleur3 <- "blue"
 
@@ -157,7 +158,7 @@ ggplot(data, aes(x = x, y = y)) +
   )
 ```
 
-## De $t$-toets voor twee onafhankelijke steekproeven
+## De $t$-toets voor gepaarde steekproeven
 
 ```{r}
 #| code-fold: true
@@ -256,6 +257,21 @@ ggplot(data, aes(x = x, y = y)) +
     panel.grid.minor.x = element_blank()
   )
 ```
+
+### Stap 1: De nulhypothese
+
+### Stap 2: Het statistische model
+
+### Stap 3: De toetsingsgrootheid
+
+### Stap 4: Kansverdeling onder $\HO$
+
+### Stap 5: Bepaal de $P$-waarde
+
+### Stap 6: Conclusies
+
+
+## De $t$-toets voor twee onafhankelijke steekproeven
 
 ### Stap 1: De nulhypothese
 
@@ -370,7 +386,6 @@ normaalGeneriek + pijl1 + pijl2 +
   
 ```
 
-
 ### Stap 3: De toetsingsgrootheid
 
 ### Stap 4: Kansverdeling onder $\HO$
@@ -378,6 +393,138 @@ normaalGeneriek + pijl1 + pijl2 +
 ### Stap 5: Bepaal de $P$-waarde
 
 ### Stap 6: Conclusies
+
+## Voorbeeld voor de $t$-toets voor twee onafhankelijke steekproeven
+
+::: {#fig-manacus layout-ncol=2 layout-valign="bottom"}
+
+[![Vrouwelijke Bonte manakin. Foto gemaakt door Dario Sanches uit São Paulo, Brazil](figuren/manacus_manacus_female.jpg)](https://www.flickr.com/photos/dariosanches/5833840567/){#fig-manacus-female}
+
+[![Mannelijke Bonte manakin. Foto gemaakt door Félix Uribe uit Rionegro, Antioquia, Colombia](figuren/manacus_manacus_male.jpg)](https://www.flickr.com/photos/24201429@N04/8254939982/){#fig-manacus-male}
+
+De Bonte manakin (*Manacus manacus*). [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0)
+
+:::
+
+Lichaamsgewicht is een belangrijke eigenschap bij dieren, omdat het invloed 
+heeft op hun fysiologie, gedrag en ecologische rol. In dit voorbeeld gebruiken 
+we een 
+[dataset](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273) 
+over vogels en zoogdieren in Colombia, waarin het lichaamsgewicht van meer dan 
+42.000 vogels en 7.400 zoogdieren is vastgelegd^[[Ocampo, D., Borja-Acosta, K. G., Lozano-Flórez, J., Cifuentes-Acevedo, S., Arbeláez-Cortés, E., Bayly, N. J., ... & Acevedo-Charry, O. (2021). *Body mass data set for 1,317 bird and 270 mammal species from Colombia.* Ecology, 102(3), e03273.](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273)]. We focussen op de Bonte manakin 
+(*Manacus manacus*) en onderzoeken of er een verschil is in lichaamsgewicht tussen 
+mannetjes en vrouwtjes. 
+
+::: {#fig-manakin-distributie layout-ncol="2"}
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.width: 2.5
+#| fig.height: 4
+#| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins, per geslacht."
+#| label: fig-dist-manakin-1
+
+massa_manacus <- read.csv("data/massa_manacus.csv")
+
+massa_manacus %>%
+  filter(Sex != "Undetermined") %>%
+  ggplot(aes(y = Weight, fill = Sex)) +
+    geom_boxplot() + 
+    theme_minimal() +
+    ylab("Gewicht (g)") +
+    scale_fill_discrete(name = "Geslacht",
+                        labels = c("Vrouwelijk", "Mannelijk")) +
+    guides(color = "none",
+            fill = guide_legend(position = "top",
+                                nrow = 2)) +
+    theme(axis.text.x = element_blank())
+
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.width: 2.5
+#| fig.height: 4
+#| fig-cap: "Histogram van het gewicht van vrouwelijke en mannetlijke Bonte manakins."
+#| label: fig-dist-manakin-2
+
+massa_manacus %>%
+  filter(Sex != "Undetermined") %>%
+  ggplot(aes(x = Weight, fill = Sex)) +
+    geom_histogram(color="#e9ecef", 
+                   alpha = 0.5, 
+                   binwidth = 1,
+                   position = "identity") +
+    theme_minimal() +
+    theme(legend.position = "none") +    
+    xlab("Gewicht (g)") +
+    ylab("Aantal observaties") +
+    facet_wrap(vars(Sex), 
+               nrow = 2)
+```
+
+Verdeling van gemeten gewichten van de Bonte manakin in Colombia.
+:::
+
+De gemeten gewichten van de Bonte manakins zijn per geslacht weergegeven in 
+@fig-manakin-distributie. Naast de visualisatie van de data vatten we deze 
+samen met kengetallen. 
+Voor de mannetjes:
+
+```{r}
+summary(massa_manacus$Weight[massa_manacus$Sex == "Male"])
+```
+
+En voor de vrouwtjes:
+
+```{r}
+summary(massa_manacus$Weight[massa_manacus$Sex == "Female"])
+```
+Daarnaast is het voor de $t$-test belangrijk om te kijken of de variatie in 
+beide groepen ongeveer gelijk is. Hiervoor gebruiken we de standaarddeviatie.
+
+```{r}
+sd(massa_manacus$Weight[massa_manacus$Sex == "Male"])
+```
+```{r}
+sd(massa_manacus$Weight[massa_manacus$Sex == "Female"])
+```
+Zoals je ziet is de standaarddeviatie van de vrouwelijke Bonte manakins iets
+groter dan van de mannelijke dieren. De standaard $t$-test neemt aan dat de 
+variantie van beide groepen gelijk is, Welch's $t$-test doet dat niet.
+Beide $t$-testen hebben de assumptie dat de data normaalverdeeld is. Het is dus
+belangrijk om te testen of de data in beide groepen normaalverdeeld is. Dat doen
+we met de volgende code:
+
+```{r}
+qqnorm(massa_manacus$Weight[massa_manacus$Sex == "Male"])
+qqline(massa_manacus$Weight[massa_manacus$Sex == "Male"])
+```
+
+```{r}
+qqnorm(massa_manacus$Weight[massa_manacus$Sex == "Female"])
+qqline(massa_manacus$Weight[massa_manacus$Sex == "Female"])
+```
+Uit bovenstaande QQ-plots kunnen we afleiden dat de verdeling voor de gewichten 
+van de mannelijke manakins niet helemaal symmetrisch is, maar een klein beetje 
+links-scheef. Dit kun je ook zien in @fig-dist-manakin-2: de staart aan de 
+linkerkant van de schaal is wat langer dan die aan de rechterkant. 
+We concluderen dat de verdeling symmetrisch genoeg is om een $t$-test uit te
+voeren.
+
+```{r}
+# Standaard gepaarde t-test
+t.test(massa_manacus$Weight[massa_manacus$Sex == "Male"],
+       massa_manacus$Weight[massa_manacus$Sex == "Female"],
+       var.equal = TRUE)
+```
+```{r}
+# Welch's gepaarde t-test
+t.test(massa_manacus$Weight[massa_manacus$Sex == "Male"],
+       massa_manacus$Weight[massa_manacus$Sex == "Female"],
+       var.equal = FALSE)
+```
 
 ## Welch's $t$-toets voor twee onafhankelijke steekproeven
 
@@ -387,20 +534,6 @@ Power.
 
 Advies: gebruik Welch tenzij je bijzondere redenen hebt om dat niet te
 doen.
-
-## De $t$-toets voor gepaarde steekproeven
-
-### Stap 1: De nulhypothese
-
-### Stap 2: Het statistische model
-
-### Stap 3: De toetsingsgrootheid
-
-### Stap 4: Kansverdeling onder $\HO$
-
-### Stap 5: Bepaal de $P$-waarde
-
-### Stap 6: Conclusies
 
 ## Niet-parametrische alternatieve
 
