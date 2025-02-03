@@ -16,103 +16,18 @@ lijnkleur3 <- "blue"
 
 # Associaties tussen variabelen
 
-![Voorbeeld illustratie regressie](figuren/VoorbeeldIllustratieRegressie.gif)
+**Associatie**
 
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.cap: "Lineaire regressie."
-#| label: fig-lineair-reg
-#| fig.width: 5
-#| fig.height: 5
-
-set.seed(885)
-
-a <- 2
-b <- 1
-x <- runif(10, 0, 4)
-y <- a*x + b + rnorm(10)
-data <- data.frame(x = x, y = y)
-
-# Doe een lineaire regressie met de gegenereerde data
-lin_reg <- lm(y ~ x, data)
-# Reken uit wat de geschatte y-waarden zijn volgens de lineaire regressie
-y_pred <- predict(lin_reg)
-
-ggplot(data, aes(x = x, y = y)) +
-  # Verticale lijnen naar het gemiddelde
-  geom_segment(
-    aes(
-      x = x, xend = x, 
-      y = y, yend = y_pred
-    ),
-    color = "SlateGray",
-    linetype = "solid",
-    size = 1
-  ) +
-  # Punten
-  geom_point(
-    shape = 21, 
-    fill = "SlateGray", 
-    size = 5
-  ) +
-  geom_abline(
-    intercept = lin_reg$coefficients[1],
-    slope = lin_reg$coefficients[2],
-    color = opvulkleur,
-    size = 1
-  ) +
-  # y-as labels instellen
-  scale_y_continuous(
-    breaks = y, 
-    limits = c(min(y, y_pred), max(y, y_pred)),
-    labels = function(i) parse(text = paste0("y[", seq_along(i), "]"))
-  ) +
-  # x-as labels instellen
-  scale_x_continuous(
-    breaks = x,
-    labels = function(i) parse(text = paste0("x[", seq_along(i), "]"))
-  ) +
-  # Geen x-as, geen gridlijnen
-  theme_classic() +
-  theme(
-    axis.title = element_blank(),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank()
-  )
-```
+**Correlatie**
 
 
-## Dataset lineaire relaties
+## Associaties tussen verschillende typen variabelen
 
-To install the dataset used here:
-```{r}
-#| echo: false
-#| eval: false
-install.packages("palmerpenguins")
-```
-[Dataset source](https://github.com/allisonhorst/palmerpenguins)
 
-::: {#exr-covid}
-Regressieopgave terugverwijzen naar Brams opgave over covid.
-    
-:::
+### Samenhang tussen een continue varaibele en een categorische variabele
 
-## Interpolatie
 
-## Extrapolatie en zijn gevaren
-
-## Correlation/association versus causation, spurious correlation, confounding
-
-## Simpsons paradox
-
-## Samenvatting
-
-## Terminologie in het Engels
-
-## KLAD
-
-## Samenhang tussen continue variabelen: Spreidingsdiagram
+### Samenhang tussen twee continue variabelen
 
 Om de samenhang tussen twee continue variabelen zichtbaar te maken
   wordt vaak gebruik gemaakt van een spreidingsdiagram,
@@ -120,7 +35,7 @@ Om de samenhang tussen twee continue variabelen zichtbaar te maken
   
 ::: {#exm-gewicht-lengte}
 
-## Samenhang tussen lichaamsgewicht en lengte in de NHANES-data
+### Samenhang tussen lichaamsgewicht en lengte in de NHANES-data
 
 In de NHANES-dataset is ook van de meeste deelnemers de lichaamslengte gegeven.
 Zou er een verband zijn tussen lichaamslengte en gewicht?
@@ -157,11 +72,9 @@ Maar er is grote variatie tussen mensen met hetzelfde gewicht,
   vooral onder volwassenen.
 :::
 
-## Samenhang tussen categorische variabelen: mozaïekplot
+### Samenhang tussen twee categorische variabelen
 
-Hierboven hebben we het al gehad over kruistabellen. 
-Je hebt toen gezien dat kruistabellen worden gebruikt
-om verbanden te onderzoeken tussen categorische variabelen.
+Kruistabellen.
 
 Je kunt Kruistabellen visualiseren met behulp van 
 mosaiekplots. Hoe dit werkt, leggen we uit aan de hand van een voorbeeld.
@@ -220,3 +133,139 @@ mosaicplot(
 
 :::
 
+
+## Correlation/association versus causation, spurious correlation, confounding
+
+### Causale diagrammen
+
+### Correlaties door direct oorzakelijk verband
+
+
+```{mermaid}
+graph LR;
+  A([roker]) --> B([longkanker])
+```
+
+### Correlaties door gezamenlijke oorzaak
+
+```{mermaid}
+graph LR;
+  A([dagtemperatuur]) --> B([waterrecreatie])
+  A --> C([ijsverkoop])
+```
+
+Gezamenlijke oorzaak, confounding, spurious correlation. 
+
+### Correlaties door selectie van een subpopulatie
+
+```{mermaid}
+graph LR;
+  A([acteertalent]) --> B([succes als acteur])
+  C([aantrekkelijk uiterlijk]) --> B
+```
+
+
+::: {#fig-collider layout-ncol="2" out.width="100%"}
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "In the gehele populatie is acteertalent onafhankelijk van uiterlijke aantrekkelijkheid. (Fictieve gegevens.)"
+#| label: fig-mozaiek-collider-A
+#| fig.width: 3.5
+#| fig.height: 3.5
+#| out.width: "100%"
+
+aantal_acteurs <- 10000
+number_sampled <- 1000
+
+set.seed(145)
+
+aantrekkelijk <- factor(sample(c("nee", "ja"), aantal_acteurs, replace = TRUE, prob = c(0.9, 0.1)), levels = c("ja", "nee"))
+talent <- factor(sample(c("nee", "ja"), aantal_acteurs, replace = TRUE, prob = c(0.9, 0.1)), c("nee", "ja"))
+gegevens <- data.frame(talent, aantrekkelijk)
+#gegevens_geselecteerd <- gegevens[aantrekkelijk == "ja" | talent == "ja", ]
+prob <- 0.02 + 
+  (gegevens$aantrekkelijk == "ja" | gegevens$talent == "ja")*0.75 + 
+  (gegevens$aantrekkelijk == "ja" & gegevens$talent == "ja")*0.15 
+
+select <- sample(1:nrow(gegevens), number_sampled, prob = prob)
+gegevens_geselecteerd <- gegevens[select, ]
+
+# Create a mosaic plot using base R
+mosaicplot(
+  table(gegevens), 
+  main = "Gehele populatie",
+  xlab = "aantrekkelijk uiterlijk",
+  ylab = "acteertalent"
+  )
+```
+
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "In de populatie van successvolle acteurs hebben onaantrekkelijke acteurs vaker vaker talent, puur omdat personen die noch *looks* noch talent hebben zelden door de selectie komen."
+#| label: fig-mozaiek-collider-B
+#| fig.width: 3.5
+#| fig.height: 3.5
+#| out.width: "100%"
+
+mosaicplot(
+  table(gegevens_geselecteerd),
+  main = "Succesvolle acteurs",
+  xlab = "aantrekkelijk uiterlijk",
+  ylab = "acteertalent"
+  )
+
+```
+
+:::
+
+### Causale relaties zijn vaak erg complex
+
+
+
+Causaal diagram voor het bepalen van 
+"association between pre-pregnancy BMI (exposure) and cesarean delivery (outcome)" in zwangere vrouwen. 
+
+overgewicht op zwangerschapsvergiftiging (pre-eclampia)
+
+
+Figuur uit^[Hamra, Ghassan B., Jay S. Kaufman, and Anjel Vahratian. “Model Averaging for Improving Inference from Causal Diagrams.” International Journal of Environmental Research and Public Health 12, no. 8 (August 2015): 9391–9407. https://doi.org/10.3390/ijerph120809391.
+]
+
+::: {.todo-box}
+
+Madelon en/of Yannick:  figuur hieronder namaken met Mermaid.
+
+:::
+
+
+![](figuren/causal_graph.png)
+
+## Experimenteel onderzoek versus observationeel onderzoek
+
+**Experimentele variabele**, **Responsvariabele**
+
+C
+
+
+## Samenvatting
+
+
+## Terminologie
+
+
+
+
+## Opgaven
+
+::: {.todo-box}
+Madelon en/of Yannick:
+
+Invoegen uit oude computerpracticum 2, opgave 2.
+De data staan in folder "data".
+Ik ga deze vraag zeker herschrijven.
+
+:::
