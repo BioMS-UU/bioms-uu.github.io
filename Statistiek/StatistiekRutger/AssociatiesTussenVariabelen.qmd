@@ -321,15 +321,19 @@ graph TD;
 
 Behandeling randomiseren verwijdert
 de mogelijkheid van een confounder.
+
+Twee groepen: behandelingsgroep + **controlegroep**.
+Controlegroep om te zien of de uitkomsten anders zijn
+met behandeling.
+
 ```{mermaid}
 %%| mermaid-format: png
 graph TD;
   A([mogelijke confounder]) --> B([uitkomst])
   C([behandeling]) -->|?| B
   D([randomgetallen]) --> C
-  A --x C
+  A ~~~ C
 ```
-
 
 Het is belangrijk om randomgetallen te gebruiken,
 omdat andere variabelen mogelijk ook de uitkomst beinvloeden.
@@ -351,16 +355,49 @@ proefpersoon heeft gehad de uitkomst beinvloeden.
 Dat kan bewust of onbewust.
 Als je een effect verwacht, dan herken je die wellicht sneller.
 
+::: {#fig-blinderen layout-ncol="2"}
 
 ```{mermaid}
 %%| mermaid-format: png
 graph TD;
-  A([behandeling]) --> B([kennis proefpersoon])
+  A([behandeling]) --> B([verwachting proefpersoon])
   A -->|?| C([uitkomst])
   B --> C
 ```
 
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([behandeling]) ~~~ B([verwachting proefpersoon])
+  A -->|?| C([uitkomst])
+  B --> C
+```
+
+:::
+
 ### Dubbel blinderen
+
+::: {#fig-dubbel-blinderen layout-ncol="2"}
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([behandeling]) --> D([verwachting onderzoeker])
+  A -->|?| C([daadwerkelijke uitkomst])
+  C --> E([Beoordeling/meting onderzoeker])
+  D --> E
+```
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([behandeling]) ~~~ D([verwachting onderzoeker])
+  A -->|?| C([daadwerkelijke uitkomst])
+  C --> E([Beoordeling/meting onderzoeker])
+  D --> E
+```
+
+:::
 
 
 ## Regression to the mean en controlegroepen
