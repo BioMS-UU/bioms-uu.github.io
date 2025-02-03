@@ -37,7 +37,7 @@ qqline(slaap$MWT_d7)
 t.test(slaap$MWT_d0, slaap$MWT_d7, paired = TRUE)
 t.test(slaap$MWT_d0, slaap$MWT_d4, paired = TRUE)
 
-dagen_geselecteerd <- slaap_lang[slaap_lang$dag == 0 | slaap_lang$dag == 6, ]
+dagen_geselecteerd <- slaap_lang[slaap_lang$dag == 0 | slaap_lang$dag == 7, ]
 
 ggplot(dagen_geselecteerd, aes(x = dag, y = MWT, color = ID)) +
   geom_point() +
@@ -47,7 +47,7 @@ ggplot(dagen_geselecteerd, aes(x = dag, y = MWT, color = ID)) +
 bereken_verschillen <- function(data) {
   data %>%
     pivot_wider(names_from = dag, values_from = MWT) %>%
-    mutate(verschil = `6` - `0`) %>%
+    mutate(verschil = `7` - `0`) %>%
     select(ID, verschil)
 }
 verschillen <- bereken_verschillen(dagen_geselecteerd)
