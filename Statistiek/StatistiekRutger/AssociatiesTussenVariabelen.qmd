@@ -138,18 +138,73 @@ mosaicplot(
 
 ### Causale diagrammen
 
+Korte uitleg.
+
 ### Correlaties door direct oorzakelijk verband
 
 
 ```{mermaid}
-graph LR;
+%%| mermaid-format: png
+graph TD;
   A([roker]) --> B([longkanker])
 ```
+
+
+Verkeerdom?
+
+:::{.todo-box}
+RH: onderstaande netjes herschrijven, met references.
+:::
+
+::: {#exm-zelfbeeld}
+## Leidt een Hoog Zelfbeeld tot Succes? (De Zelfbeeldbeweging)
+
+### Historische bewering
+
+In de jaren 1980 en 1990 ontdekten sommige onderzoekers dat mensen met een hoog zelfbeeld vaak succesvoller zijn in het leven. Dit leidde tot beleidsmaatregelen die gericht waren op het **verhogen van het zelfbeeld bij kinderen**, in de hoop dat dit hen succesvoller zou maken.
+
+### Werkelijkheid
+- **Succes** op school, in sport of in het sociale leven **verhoogt het zelfbeeld**.
+- **Is zelfbeeld vaker een gevolg van succes, niet de oorzaak?**
+- Helpt het om zelfvertrouwen **Kunstmatig op te blazen** als**vaardigheden en inspanning ontbreken**?
+
+::: {#fig-welk-diagram layout-ncol="3" out.width="100%"}
+
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([zelfbeeld]) --> B([succes])
+```
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([succes]) --> B([zelfbeeld])
+```
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([succes]) --> B([zelfbeeld])
+  B([zelfbeeld]) --> A([succes]) 
+```
+
+Welk model beschrijft de werkelijkheid het beste?
+
+:::
+
+Wil je meer weten? Begin met lezen in de citatie in de voetnoot.^[Orth, Ulrich, and Richard W. Robins. “Is High Self-Esteem Beneficial? Revisiting a Classic Question.” The American Psychologist 77, no. 1 (January 2022): 5–17. https://doi.org/10.1037/amp0000922.
+]
+
+:::
+
 
 ### Correlaties door gezamenlijke oorzaak
 
 ```{mermaid}
-graph LR;
+%%| mermaid-format: png
+graph TD;
   A([dagtemperatuur]) --> B([waterrecreatie])
   A --> C([ijsverkoop])
 ```
@@ -159,7 +214,8 @@ Gezamenlijke oorzaak, confounding, spurious correlation.
 ### Correlaties door selectie van een subpopulatie
 
 ```{mermaid}
-graph LR;
+%%| mermaid-format: png
+graph TD;
   A([acteertalent]) --> B([succes als acteur])
   C([aantrekkelijk uiterlijk]) --> B
 ```
@@ -229,8 +285,6 @@ mosaicplot(
 Causaal diagram voor het bepalen van 
 "association between pre-pregnancy BMI (exposure) and cesarean delivery (outcome)" in zwangere vrouwen. 
 
-overgewicht op zwangerschapsvergiftiging (pre-eclampia)
-
 
 Figuur uit^[Hamra, Ghassan B., Jay S. Kaufman, and Anjel Vahratian. “Model Averaging for Improving Inference from Causal Diagrams.” International Journal of Environmental Research and Public Health 12, no. 8 (August 2015): 9391–9407. https://doi.org/10.3390/ijerph120809391.
 ]
@@ -238,6 +292,8 @@ Figuur uit^[Hamra, Ghassan B., Jay S. Kaufman, and Anjel Vahratian. “Model Ave
 ::: {.todo-box}
 
 Madelon en/of Yannick:  figuur hieronder namaken met Mermaid.
+Vertaal de namen van de variabelen.
+Voorbeelden hierboven.
 
 :::
 
@@ -246,9 +302,109 @@ Madelon en/of Yannick:  figuur hieronder namaken met Mermaid.
 
 ## Experimenteel onderzoek versus observationeel onderzoek
 
+### Causale verbanden aantonen d.m.v. observationeel onderzoek is moeilijk
+
+Confounding probleem
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([mogelijke confounder]) --> B([uitkomst])
+  C([behandeling]) -->|?| B
+  A --> C
+```
+
+### Experimenten kunnen causale relaties aantonen
+
 **Experimentele variabele**, **Responsvariabele**
 
-C
+**Randomized trials.**
+
+Behandeling randomiseren verwijdert
+de mogelijkheid van een confounder.
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([mogelijke confounder]) --> B([uitkomst])
+  C([behandeling]) -->|?| B
+  D([randomgetallen]) --> C
+  A --x C
+```
+
+
+Het is belangrijk om randomgetallen te gebruiken,
+omdat andere variabelen mogelijk ook de uitkomst beinvloeden.
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([mogelijke confounder]) --> B([uitkomst])
+  C([behandeling]) -->|?| B
+  D([variabele die de behandeling bepaalt]) --> C
+  D -->|?| B
+  A --x C
+  A -->|?| D
+```
+
+### Blinderen: de proefpersoon 
+
+Niet geblindeerd: dan kan de wetenschap van welke behandeling de
+proefpersoon heeft gehad de uitkomst beinvloeden.
+Dat kan bewust of onbewust.
+Als je een effect verwacht, dan herken je die wellicht sneller.
+
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([behandeling]) --> B([kennis proefpersoon])
+  A -->|?| C([uitkomst])
+  B --> C
+```
+
+### Dubbel blinderen
+
+
+## Regression to the mean en controlegroepen
+
+Galton 1888
+
+
+
+## Placebo-effect
+
+Voorbeelden: pijnklachten.
+Weten dat je een pijnstiller hebt gehad,
+kan pijn verminderen.
+
+Effect van placebo vaak overdreven.^[McDonald, Clement J., Steven A. Mazzuca, and George P. McCabe. “How Much of the Placebo ‘Effect’ Is Really Statistical Regression?” Statistics in Medicine 2, no. 4 (October 1983): 417–27. https://doi.org/10.1002/sim.4780020401.
+]
+Onterecht vaak verward met regression to the mean.
+Om placebo aan te tonen is het niet voldoende 
+om te laten zien dat een groep met placebo-behandeling ook (deels) beter wordt.
+Dat is namelijk ook te verwachten bij regression to the mean. 
+Om placebo-effect aan te tonen moet je laten zien
+dat er een verschil is tussen twee controlegroepen:
+
+- Een controlegroep die denkt de behandeling te hebben ontvangen, 
+maar waarbij dat niet zo is.
+- Een geblindeerde controlegroep die de behandeling niet heeft ontvangen
+maar dat zelf niet kan weten.
+
+
+::: {.callout-warning}
+
+## Pas op voor percentages verbetering
+
+box: Beecher^[Beecher, Henry K. “THE POWERFUL PLACEBO.” Journal of the American Medical Association 159, no. 17 (December 24, 1955): 1602–6. https://doi.org/10.1001/jama.1955.02960340022006.
+]: 34.2% of patients improve after placebo-treatment; that does not mean anything.
+
+  
+Veel nieuwsberichten zijn van hetzelfde type:
+"Maarlieft 50% van de ondervraagden denkt dat het huidige kabinet
+het beter gaat doen dan het vorige."
+(Wat als de andere 50% het tegenovergestelde verwacht?)
+
+:::
+
 
 
 ## Samenvatting
