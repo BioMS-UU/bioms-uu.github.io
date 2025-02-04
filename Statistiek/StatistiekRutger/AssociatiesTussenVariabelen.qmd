@@ -7,14 +7,14 @@
 
 library(ggplot2)
 
-opvulkleur <- "darkorange"
+opvulkleur <- "#e8601d"
 lijnkleur1 <- "darkorchid"
 lijnkleur2 <- "red"
 lijnkleur3 <- "blue"
 
 ```
 
-# Associaties tussen variabelen
+# Associaties, oorzaak en gevolg, en experimenten
 
 Kan het eten van vlees darmkanker veroorzaken?
 Hangt het aantal nakomelingen van koolmezen samen met het moment waarop 
@@ -24,34 +24,40 @@ de kans op angstklachten of depressie?
 Draagt een verhoging van importtarieven bij aan inflatie?
 Heel veel vragen binnen de biologie en daarbuiten
 gaan over de **samenhang**, oftewel **associatie**, tussen variabelen.
-Dat is het thema van dit hoofdstuk, en van het volgende hoofdstuk (@sec-linrel).
+Belangrijker nog, 
+  vaak willen we weten of een variabele een andere beïnvloedt. 
+We hebben het dan over **oorzakelijke verbanden** of **causaliteit**.
+Hoe kunnen we door middel van goed geplande experimenten 
+onderscheid maken tussen associaties en oorzakelijke verbanden?
+Dat zijn de thema's van dit hoofdstuk.
 
 ## Associaties tussen verschillende typen variabelen
 
 Twee variabelen hangen samen of zijn geasssocieerd
 als de waarde van de ene variabele iets zegt over de waarde van de andere.
 Roker zijn en longkanker krijgen zijn geassocieerd omdat
-rokers een grotere kans hebben op longkanker.
+uit gegevens blijkt dat rokers een grotere kans hebben op longkanker.
 
-### Associatie tussen een continue variabele en een categorische variabele
+### Associaties tussen een continue variabele en een categorische variabele
 
 Twee variabelen die geassocieerd zijn
 hoeven niet van hetzelfde type te zijn.
 Zo kan een numerieke variabele
 geassocieerd zijn met een categorische variabele.
 Daarvan zijn we in @sec-toetsen-gemiddelden eigenlijk al voorbeelden tegengekomen.
-In @sec-t-toets-twee-steekproeven gebruikten we een $t$-toets voor twee steekproeven
+In @sec-t-toets-twee-steekproeven gebruikten we een $t$-toets voor twee onafhankelijke steekproeven
 om aan te tonen dat het gemiddelde gewicht van de bonte manacin 
 (*manacus manacus*) verschilt tussen de geslachten.
 In andere woorden, `gewicht` (continu) 
-hangt saen met `geslacht` (nominaal).
-Zo bekeken is iedere $t$-toets erop gericht om te bekijken 
-of een continue numerieke variabele samenhangt met een categorische variabele
+hangt samen met `geslacht` (nominaal).
+Zo bekeken is iedere $t$-toets voor twee onafhankelijke steekproeven 
+erop gericht om te bekijken 
+of een continue variabele samenhangt met een categorische variabele
 met twee niveaus.
 
-### Associatie tussen twee continue variabelen
+### Associaties tussen twee continue variabelen
 
-Natuurlijk kunnen twee continue variabelen ook samenhangen.
+Natuurlijk kunnen twee continue variabelen ook geassocieerd zijn.
 Hieronder bekijken we een voorbeeld uit de NHANES-dataset.
 
 ::: {#exm-gewicht-lengte}
@@ -59,12 +65,16 @@ Hieronder bekijken we een voorbeeld uit de NHANES-dataset.
 
 In de NHANES-dataset is ook van de meeste deelnemers de lichaamslengte
 gegeven. Zou er een verband zijn tussen lichaamslengte en gewicht? We
-onderzoeken het met een spreidingsdiagram:
+onderzoeken het door lichaamsgewicht uit te zetten tegen lichaamslengte in een spreidingsdiagram (@fig-gewicht-lengte). Er is duidelijk een trend te zien: langere mensen zijn gemiddeld
+zwaarder. Maar er is grote variatie tussen mensen met hetzelfde gewicht,
+vooral onder volwassenen.
+Merk ook op dat de relatie geen rechte lijn is:
+over het algemeen neemt gewicht sneller dan lineair toe met lichaamslengte.
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Lichaamsgewicht uitgezet tegen lengte in de NHANES-dataset."
+#| fig.cap: "Lichaamsgewicht uitgezet tegen lichaamslengte (NHANES-dataset)."
 #| label: fig-gewicht-lengte
 #| fig.width: 4.5
 #| fig.height: 3.5
@@ -81,16 +91,13 @@ ggplot(
   aes(x = Height, y = Weight)
 ) +
   geom_point(
-    fill = "darkorange", 
-    color = "black"
+    color = "#e8601d",
+    alpha = 0.5
   )+
-  labs( x = "Gewicht (kg)", y = "Lengte (cm)")
+  labs( x = "Gewicht (kg)", y = "Lengte (cm)") +
+  theme_minimal()
 
 ```
-
-Er is duidelijk een trend te zien: langere mensen zijn gemiddeld
-zwaarder. Maar er is grote variatie tussen mensen met hetzelfde gewicht,
-vooral onder volwassenen.
 :::
 
 Wanneer twee continue variabelen met elkaar samenhangen
