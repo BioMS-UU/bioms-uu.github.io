@@ -22,16 +22,13 @@ ggplot(slaap_lang, aes(x = dag, y = MWT, color = ID)) +
   theme_minimal()
 
 summary(slaap$MWT_d0)
-summary(slaap$MWT_d7)
+summary(slaap$MWT_d6)
 
 sd(slaap$MWT_d0)
-sd(slaap$MWT_d7)
+sd(slaap$MWT_d6)
 
-qqnorm(slaap$MWT_d0)
-qqline(slaap$MWT_d0)
-
-qqnorm(slaap$MWT_d7)
-qqline(slaap$MWT_d7)
+qqnorm(slaap$MWT_d0 - slaap$MWT_d6)
+qqline(slaap$MWT_d0 - slaap$MWT_d6)
 
 t.test(slaap$MWT_d0, slaap$MWT_d7, paired = TRUE)
 t.test(slaap$MWT_d0, slaap$MWT_d4, paired = TRUE)
