@@ -63,12 +63,15 @@ Hieronder bekijken we een voorbeeld uit de NHANES-dataset.
 ::: {#exm-gewicht-lengte}
 ### Samenhang tussen lichaamsgewicht en lengte in de NHANES-data
 
-In de NHANES-dataset is ook van de meeste deelnemers de lichaamslengte
-gegeven. Zou er een verband zijn tussen lichaamslengte en gewicht? We
-onderzoeken het door lichaamsgewicht uit te zetten tegen lichaamslengte in een spreidingsdiagram (@fig-gewicht-lengte). Er is duidelijk een trend te zien: langere mensen zijn gemiddeld
+In de NHANES-dataset is van de meeste deelnemers de lichaamslengte en het lichaamsgewicht gegeven. 
+Zou er een verband zijn tussen lichaamslengte en gewicht? 
+We onderzoeken het door die variabelen tegen elkaar uit te zetten
+in een spreidingsdiagram (@fig-gewicht-lengte). 
+
+Er is duidelijk een trend te zien: langere mensen zijn gemiddeld
 zwaarder. Maar er is grote variatie tussen mensen met hetzelfde gewicht,
 vooral onder volwassenen.
-Merk ook op dat de relatie geen rechte lijn is:
+Merk ook op dat de trend geen rechte lijn is:
 over het algemeen neemt gewicht sneller dan lineair toe met lichaamslengte.
 
 ```{r}
@@ -102,28 +105,35 @@ ggplot(
 
 Wanneer twee continue variabelen met elkaar samenhangen
 wordt ook wel gesproken over **correlatie**.
-Meestal wordt dan bedoeld dat de variabelen lineair met elkaar samenhangen;
-daar gaan we in @sec-linrel in detail op in. 
-Maar soms wordt het woord breder gebruikt.
-Statistici zouden het echter niet snel gebruiken voor een samenhang tussen categorische variabelen.
+Meestal wordt dan bedoeld dat de variabelen *lineair* met elkaar samenhangen;
+in @sec-linrel gaan we het specifiek over lineaire relaties hebben. 
+Soms wordt het woord correlatie breder gebruikt, vooral in de volksmond;
+maar statistici reserveren het wel 
+voor een samenhang tussen numerieke variabelen.
 
 ### Samenhang tussen twee categorische variabelen
 
-
-
-Kruistabellen.
-
-Je kunt Kruistabellen visualiseren met behulp van mosaiekplots. Hoe dit
-werkt, leggen we uit aan de hand van een voorbeeld.
+Ook categorische variablelen kunnen met elkaar samenhangen.
+We leggen dat weer uit aan de hand van een voorbeeld.
 
 ::: {#exm-mosaic}
 ## Hangt woontoestand samen met gezondheidstoestand?
 
 In de NHANES dataset is van iedere onderzochte persoon ook opgenomen wat
-de woontoestand is. De verschillende waarden van `woontoestand` zijn
-*Koopwoning*, *Huurwoning*, en *Overig*. We vragen ons af: is er een
-samenhang tussen die variabelen? Om dit te onderzoeken, maken we eerst
-een kruistabel.
+diens *woontoestand* is: de variabele `HomeOwn`, 
+een factor met niveaus 
+`Own`, `Rent`, en `Other` 
+(*Koopwoning*, *Huurwoning*, en *Overig*). 
+In @exm-freq-gezondheidsstatus hadden we 
+de variabele *gezondheidstoestand* albekeken (`HealthGen`),
+een factor met vijf niveaus: *Slecht*, *Matig*, *Goed*, *Zeer Goed*, of *Uitstekend*. 
+We vragen ons af: 
+is er een samenhang tussen woontoestand en en gezondheidstoestand?
+
+Om dit te onderzoeken, maken we eerst
+een **kruistabel**. Een kruistabel is
+een tabel die voor iedere combinatie van niveaus
+het aantal waarnemingen toont.
 
 ```{r}
 #| code-fold: true
@@ -131,6 +141,11 @@ een kruistabel.
 #| 
 # samenhang gezondheidstoestand en woontoestand
 
+if (!("knitr" %in% .packages())) {
+  library(knitr)
+}
+
+# Vertaal de niveaus van HomeOwn naar het Nederlands
 NHANES$HomeOwn <- factor(
   NHANES$HomeOwn,
   levels = c("Other", "Rent", "Own"),
@@ -138,33 +153,55 @@ NHANES$HomeOwn <- factor(
   ordered = TRUE
 )
 
-# Generate the contingency table for HealthGen and HomeOwn
-contingency_table <- table(NHANES$HealthGen, NHANES$HomeOwn)
-knitr::kable(t(contingency_table), caption = "Contingency Table of HealthGen and HomeOwn")
+# Vertaaal de niveaus van HealtGen naar het Nederlands
+NHANES$HealthGen <- factor(
+  NHANES$HealthGen,
+  levels = c("Poor", "Fair", "Good", "Vgood", "Excellent"),
+  labels = c("Slecht", "Matig", "Goed", "Zeer Goed", "Uitstekend"),
+  ordered = TRUE
+)
+
+# Genereer de kruistabel voor HealthGen en HomeOwn
+kruistabel <- table(
+  NHANES$HealthGen,
+  NHANES$HomeOwn
+)
+
+# Geef de kruistabel weer in een nette tabel
+kable(
+  t(kruistabel),
+  caption = "Kruistabel van gezondheidstoestand en woontoestand."
+)
+
 ```
 
-Deze getallen zijn lastig te overzien. Daarom maken we een mosaiekplot.
+Deze getallen zijn lastig te overzien. 
+Daarom maken we op basis van deze kruistabel een **mozaïekplot**:
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Mosaiekplot: Samenhang tussen woontoestand en gezondheidstoestand"
+#| fig.cap: "Mozaïekplot: Samenhang tussen woontoestand en gezondheidstoestand"
 #| label: fig-mozaiek
 #| fig.width: 7
 #| fig.height: 4.5
+#| out.width: "100%"
 
-custom_colors <- c("skyblue", "lightgreen", "lightcoral")
+kleuren <- c("DarkOrchid", "#409899", "#e8601d")
 
 # Create a mosaic plot using base R
 mosaicplot(
-  contingency_table, 
-  col = custom_colors, 
+  kruistabel, 
+  col = kleuren, 
   main = "Samenhang tussen woontoestand en gezondheidstoestand",
   xlab = "Gezondheidstoestand",
   ylab = "Woontoestand"
   )
 
 ```
+Een mozaïekplot laat zien
+
+
 :::
 
 ## Een associatie hoeft niet te wijzen op een oorzakelijk verband
