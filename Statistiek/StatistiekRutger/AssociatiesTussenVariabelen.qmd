@@ -369,6 +369,59 @@ lees je meer over het debat rondom de zelfwaardebeweging.
 
 ### Assiciaties veroorzaakt door een gezamenlijke oorzaak
 
+Associaties kunnen ook ontstaan als beide variabelen
+elkaar niet beïnvloeden
+maar wel 
+
+Data drowning: [National Safety Council](https://injuryfacts.nsc.org/all-injuries/preventable-death-overview/deaths-by-month/data-details/)
+
+Data icecream sales: Kaggle.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Samenhang tussen ijsverkoop en verdrinkingen in de VS; data voor 2019."
+#| label: fig-ijs
+#| fig.width: 7
+#| fig.height: 5
+#| out.width: "88%"
+#| 
+# Controleer of benodigde pakketten zijn geladen
+if (!("readr" %in% .packages())) { library(readr) }
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+
+# Inlezen van gegevens
+verdrinkingen <- read_csv("data/drowning.csv")
+ijsverkoop <- read_csv("data/ice_cream.csv")
+
+# Splits datum in jaar, maand en dag
+ijsverkoop$JAAR  <- as.numeric(format(ijsverkoop$DATE, "%Y"))
+ijsverkoop$MAAND <- as.numeric(format(ijsverkoop$DATE, "%m"))
+ijsverkoop$DAG   <- as.numeric(format(ijsverkoop$DATE, "%d"))
+
+# Selecteer alleen gegevens uit 2019
+ijsverkoop_2019 <- subset(ijsverkoop, JAAR == 2019)
+verdrinkingen_2019 <- subset(verdrinkingen, Year == 2019)
+
+# Koppel maandgegevens uit verdrinkingen aan ijsverkoop
+ijsverkoop_2019$MAAND <- verdrinkingen_2019$Month
+
+# Samenvoegen van gegevens in een nieuw data frame
+gegevens <- data.frame(
+  ijsverkoop = ijsverkoop_2019$IPN31152N,
+  verdrinkingen = verdrinkingen_2019$Drowning,
+  maand = verdrinkingen_2019$Month
+)
+
+# Visualisatie met ggplot2
+ggplot(gegevens, aes(x = ijsverkoop, y = verdrinkingen, 
+                     label = maand)) +
+  geom_point(color = "#e8601d") +
+  geom_text(vjust = 1.7, hjust = 0.4) +
+  theme_minimal() +
+  coord_cartesian(xlim = c(70, 130), ylim = c(100, 700))
+```
+
 ```{mermaid}
 %%| mermaid-format: png
 graph TD;
