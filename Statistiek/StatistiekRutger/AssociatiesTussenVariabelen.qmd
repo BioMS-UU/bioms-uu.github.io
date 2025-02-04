@@ -16,115 +16,50 @@ lijnkleur3 <- "blue"
 
 # Associaties tussen variabelen
 
-![Voorbeeld illustratie regressie](figuren/VoorbeeldIllustratieRegressie.gif)
+Kan het eten van vlees darmkanker veroorzaken?
+Hangt het aantal nakomelingen van koolmezen samen met het moment waarop 
+de eieren worden gelegd?
+Vergroot het dagelijks gebruik van sociale media 
+de kans op angstklachten of depressie?
+Draagt een verhoging van importtarieven bij aan inflatie?
+Heel veel vragen binnen de biologie en daarbuiten
+gaan over de **samenhang**, oftewel **associatie**, tussen variabelen.
+Dat is het thema van dit hoofdstuk, en van het volgende hoofdstuk (@sec-linrel).
 
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.cap: "Lineaire regressie."
-#| label: fig-lineair-reg
-#| fig.width: 5
-#| fig.height: 5
+## Associaties tussen verschillende typen variabelen
 
-set.seed(885)
+Twee variabelen hangen samen of zijn geasssocieerd
+als de waarde van de ene variabele iets zegt over de waarde van de andere.
+Roker zijn en longkanker krijgen zijn geassocieerd omdat
+rokers een grotere kans hebben op longkanker.
 
-a <- 2
-b <- 1
-x <- runif(10, 0, 4)
-y <- a*x + b + rnorm(10)
-data <- data.frame(x = x, y = y)
+### Associatie tussen een continue variabele en een categorische variabele
 
-# Doe een lineaire regressie met de gegenereerde data
-lin_reg <- lm(y ~ x, data)
-# Reken uit wat de geschatte y-waarden zijn volgens de lineaire regressie
-y_pred <- predict(lin_reg)
+Twee variabelen die geassocieerd zijn
+hoeven niet van hetzelfde type te zijn.
+Zo kan een numerieke variabele
+geassocieerd zijn met een categorische variabele.
+Daarvan zijn we in @sec-toetsen-gemiddelden eigenlijk al voorbeelden tegengekomen.
+In @sec-t-toets-twee-steekproeven gebruikten we een $t$-toets voor twee steekproeven
+om aan te tonen dat het gemiddelde gewicht van de bonte manacin 
+(*manacus manacus*) verschilt tussen de geslachten.
+In andere woorden, `gewicht` (continu) 
+hangt saen met `geslacht` (nominaal).
+Zo bekeken is iedere $t$-toets erop gericht om te bekijken 
+of een continue numerieke variabele samenhangt met een categorische variabele
+met twee niveaus.
 
-ggplot(data, aes(x = x, y = y)) +
-  # Verticale lijnen naar het gemiddelde
-  geom_segment(
-    aes(
-      x = x, xend = x, 
-      y = y, yend = y_pred
-    ),
-    color = "SlateGray",
-    linetype = "solid",
-    size = 1
-  ) +
-  # Punten
-  geom_point(
-    shape = 21, 
-    fill = "SlateGray", 
-    size = 5
-  ) +
-  geom_abline(
-    intercept = lin_reg$coefficients[1],
-    slope = lin_reg$coefficients[2],
-    color = opvulkleur,
-    size = 1
-  ) +
-  # y-as labels instellen
-  scale_y_continuous(
-    breaks = y, 
-    limits = c(min(y, y_pred), max(y, y_pred)),
-    labels = function(i) parse(text = paste0("y[", seq_along(i), "]"))
-  ) +
-  # x-as labels instellen
-  scale_x_continuous(
-    breaks = x,
-    labels = function(i) parse(text = paste0("x[", seq_along(i), "]"))
-  ) +
-  # Geen x-as, geen gridlijnen
-  theme_classic() +
-  theme(
-    axis.title = element_blank(),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank()
-  )
-```
+### Associatie tussen twee continue variabelen
 
+Natuurlijk kunnen twee continue variabelen ook samenhangen.
+Hieronder bekijken we een voorbeeld uit de NHANES-dataset.
 
-## Dataset lineaire relaties
-
-To install the dataset used here:
-```{r}
-#| echo: false
-#| eval: false
-install.packages("palmerpenguins")
-```
-[Dataset source](https://github.com/allisonhorst/palmerpenguins)
-
-::: {#exr-covid}
-Regressieopgave terugverwijzen naar Brams opgave over covid.
-    
-:::
-
-## Interpolatie
-
-## Extrapolatie en zijn gevaren
-
-## Correlation/association versus causation, spurious correlation, confounding
-
-## Simpsons paradox
-
-## Samenvatting
-
-## Terminologie in het Engels
-
-## KLAD
-
-## Samenhang tussen continue variabelen: Spreidingsdiagram
-
-Om de samenhang tussen twee continue variabelen zichtbaar te maken
-  wordt vaak gebruik gemaakt van een spreidingsdiagram,
-  waarbij de twee variabelen tegen elkaar worden uitgezet.
-  
 ::: {#exm-gewicht-lengte}
+### Samenhang tussen lichaamsgewicht en lengte in de NHANES-data
 
-## Samenhang tussen lichaamsgewicht en lengte in de NHANES-data
-
-In de NHANES-dataset is ook van de meeste deelnemers de lichaamslengte gegeven.
-Zou er een verband zijn tussen lichaamslengte en gewicht?
-We onderzoeken het met een spreidingsdiagram.
+In de NHANES-dataset is ook van de meeste deelnemers de lichaamslengte
+gegeven. Zou er een verband zijn tussen lichaamslengte en gewicht? We
+onderzoeken het met een spreidingsdiagram:
 
 ```{r}
 #| code-fold: true
@@ -133,6 +68,7 @@ We onderzoeken het met een spreidingsdiagram.
 #| label: fig-gewicht-lengte
 #| fig.width: 4.5
 #| fig.height: 3.5
+#| out.width: "64%"
 
 library(NHANES)
 library(ggplot2)
@@ -151,32 +87,36 @@ ggplot(
   labs( x = "Gewicht (kg)", y = "Lengte (cm)")
 
 ```
-Er is duidelijk een trend te zien:
-  langere mensen zijn gemiddeld zwaarder.
-Maar er is grote variatie tussen mensen met hetzelfde gewicht,
-  vooral onder volwassenen.
+
+Er is duidelijk een trend te zien: langere mensen zijn gemiddeld
+zwaarder. Maar er is grote variatie tussen mensen met hetzelfde gewicht,
+vooral onder volwassenen.
 :::
 
-## Samenhang tussen categorische variabelen: mozaïekplot
+Wanneer twee continue variabelen met elkaar samenhangen
+wordt ook wel gesproken over **correlatie**.
+Meestal wordt dan bedoeld dat de variabelen lineair met elkaar samenhangen;
+daar gaan we in @sec-linrel in detail op in. 
+Maar soms wordt het woord breder gebruikt.
+Statistici zouden het echter niet snel gebruiken voor een samenhang tussen categorische variabelen.
 
-Hierboven hebben we het al gehad over kruistabellen. 
-Je hebt toen gezien dat kruistabellen worden gebruikt
-om verbanden te onderzoeken tussen categorische variabelen.
+### Samenhang tussen twee categorische variabelen
 
-Je kunt Kruistabellen visualiseren met behulp van 
-mosaiekplots. Hoe dit werkt, leggen we uit aan de hand van een voorbeeld.
+
+
+Kruistabellen.
+
+Je kunt Kruistabellen visualiseren met behulp van mosaiekplots. Hoe dit
+werkt, leggen we uit aan de hand van een voorbeeld.
 
 ::: {#exm-mosaic}
-
 ## Hangt woontoestand samen met gezondheidstoestand?
 
-In de NHANES dataset is 
-  van iedere onderzochte persoon
-  ook opgenomen wat de woontoestand is.
-De verschillende waarden van `woontoestand` zijn 
-  *Koopwoning*, *Huurwoning*, en *Overig*.
-We vragen ons af: is er een samenhang tussen die variabelen?
-Om dit te onderzoeken, maken we eerst een kruistabel.
+In de NHANES dataset is van iedere onderzochte persoon ook opgenomen wat
+de woontoestand is. De verschillende waarden van `woontoestand` zijn
+*Koopwoning*, *Huurwoning*, en *Overig*. We vragen ons af: is er een
+samenhang tussen die variabelen? Om dit te onderzoeken, maken we eerst
+een kruistabel.
 
 ```{r}
 #| code-fold: true
@@ -195,6 +135,7 @@ NHANES$HomeOwn <- factor(
 contingency_table <- table(NHANES$HealthGen, NHANES$HomeOwn)
 knitr::kable(t(contingency_table), caption = "Contingency Table of HealthGen and HomeOwn")
 ```
+
 Deze getallen zijn lastig te overzien. Daarom maken we een mosaiekplot.
 
 ```{r}
@@ -217,16 +158,344 @@ mosaicplot(
   )
 
 ```
-
 :::
+
+## Een associatie hoeft niet te wijzen op een oorzakelijk verband
+
+### Causale diagrammen
+
+Korte uitleg.
+
+### Correlaties door direct oorzakelijk verband
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([roker]) --> B([longkanker])
+```
+
+Verkeerdom?
+
+::: todo-box
+RH: onderstaande netjes herschrijven, met references.
+:::
+
+:::: {#exm-zelfbeeld}
+## Leidt een Hoog Zelfbeeld tot Succes? (De Zelfbeeldbeweging)
+
+### Historische bewering
+
+In de jaren 1980 en 1990 ontdekten sommige onderzoekers dat mensen met
+een hoog zelfbeeld vaak succesvoller zijn in het leven. Dit leidde tot
+beleidsmaatregelen die gericht waren op het **verhogen van het zelfbeeld
+bij kinderen**, in de hoop dat dit hen succesvoller zou maken.
+
+### Werkelijkheid
+
+-   **Succes** op school, in sport of in het sociale leven **verhoogt
+    het zelfbeeld**.
+-   **Is zelfbeeld vaker een gevolg van succes, niet de oorzaak?**
+-   Helpt het om zelfvertrouwen **Kunstmatig op te blazen**
+    als**vaardigheden en inspanning ontbreken**?
+
+::: {#fig-welk-diagram layout-ncol="3" out.width="100%"}
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([zelfbeeld]) --> B([succes])
+```
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([succes]) --> B([zelfbeeld])
+```
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([succes]) --> B([zelfbeeld])
+  B([zelfbeeld]) --> A([succes]) 
+```
+
+Welk model beschrijft de werkelijkheid het beste?
+:::
+
+Wil je meer weten? Begin met lezen in de citatie in de
+voetnoot.[^associatiestussenvariabelen-1]
+::::
+
+[^associatiestussenvariabelen-1]: Orth, Ulrich, and Richard W. Robins.
+    “Is High Self-Esteem Beneficial? Revisiting a Classic Question.” The
+    American Psychologist 77, no. 1 (January 2022): 5–17.
+    https://doi.org/10.1037/amp0000922.
+
+### Correlaties door gezamenlijke oorzaak
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([dagtemperatuur]) --> B([waterrecreatie])
+  A --> C([ijsverkoop])
+```
+
+Gezamenlijke oorzaak, confounding, spurious correlation.
+
+### Correlaties door selectie van een subpopulatie
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([acteertalent]) --> B([succes als acteur])
+  C([aantrekkelijk uiterlijk]) --> B
+```
+
+::: {#fig-collider layout-ncol="2" out.width="100%"}
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "In the gehele populatie is acteertalent onafhankelijk van uiterlijke aantrekkelijkheid. (Fictieve gegevens.)"
+#| label: fig-mozaiek-collider-A
+#| fig.width: 3.5
+#| fig.height: 3.5
+#| out.width: "100%"
+
+aantal_acteurs <- 10000
+number_sampled <- 1000
+
+set.seed(145)
+
+aantrekkelijk <- factor(sample(c("nee", "ja"), aantal_acteurs, replace = TRUE, prob = c(0.9, 0.1)), levels = c("ja", "nee"))
+talent <- factor(sample(c("nee", "ja"), aantal_acteurs, replace = TRUE, prob = c(0.9, 0.1)), c("nee", "ja"))
+gegevens <- data.frame(talent, aantrekkelijk)
+#gegevens_geselecteerd <- gegevens[aantrekkelijk == "ja" | talent == "ja", ]
+prob <- 0.02 + 
+  (gegevens$aantrekkelijk == "ja" | gegevens$talent == "ja")*0.75 + 
+  (gegevens$aantrekkelijk == "ja" & gegevens$talent == "ja")*0.15 
+
+select <- sample(1:nrow(gegevens), number_sampled, prob = prob)
+gegevens_geselecteerd <- gegevens[select, ]
+
+# Create a mosaic plot using base R
+mosaicplot(
+  table(gegevens), 
+  main = "Gehele populatie",
+  xlab = "aantrekkelijk uiterlijk",
+  ylab = "acteertalent"
+  )
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "In de populatie van successvolle acteurs hebben onaantrekkelijke acteurs vaker vaker talent, puur omdat personen die noch *looks* noch talent hebben zelden door de selectie komen."
+#| label: fig-mozaiek-collider-B
+#| fig.width: 3.5
+#| fig.height: 3.5
+#| out.width: "100%"
+
+mosaicplot(
+  table(gegevens_geselecteerd),
+  main = "Succesvolle acteurs",
+  xlab = "aantrekkelijk uiterlijk",
+  ylab = "acteertalent"
+  )
+
+```
+:::
+
+### Causale relaties zijn vaak erg complex
+
+Causaal diagram voor het bepalen van "association between pre-pregnancy
+BMI (exposure) and cesarean delivery (outcome)" in zwangere vrouwen.
+
+Figuur uit[^associatiestussenvariabelen-2]
+
+[^associatiestussenvariabelen-2]: Hamra, Ghassan B., Jay S. Kaufman, and
+    Anjel Vahratian. “Model Averaging for Improving Inference from
+    Causal Diagrams.” International Journal of Environmental Research
+    and Public Health 12, no. 8 (August 2015): 9391–9407.
+    https://doi.org/10.3390/ijerph120809391.
+
+::: todo-box
+Madelon en/of Yannick: figuur hieronder namaken met Mermaid. Vertaal de
+namen van de variabelen. Voorbeelden hierboven.
+:::
+
+![](figuren/causal_graph.png)
+
+## Experimenteel onderzoek versus observationeel onderzoek
+
+### Causale verbanden aantonen d.m.v. observationeel onderzoek is moeilijk
+
+Confounding probleem
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([mogelijke confounder]) --> B([uitkomst])
+  C([behandeling]) -->|?| B
+  A --> C
+```
+
+### Experimenten kunnen causale relaties aantonen
+
+**Experimentele variabele**, **Responsvariabele**
+
+**Randomized trials.**
+
+Behandeling randomiseren verwijdert de mogelijkheid van een confounder.
+
+Twee groepen: behandelingsgroep + **controlegroep**. Controlegroep om te
+zien of de uitkomsten anders zijn met behandeling.
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([mogelijke confounder]) --> B([uitkomst])
+  C([behandeling]) -->|?| B
+  D([randomgetallen]) --> C
+  A ~~~ C
+```
+
+Het is belangrijk om randomgetallen te gebruiken, omdat andere
+variabelen mogelijk ook de uitkomst beinvloeden.
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([mogelijke confounder]) --> B([uitkomst])
+  C([behandeling]) -->|?| B
+  D([variabele die de behandeling bepaalt]) --> C
+  D -->|?| B
+  A --x C
+  A -->|?| D
+```
+
+### Blinderen: de proefpersoon
+
+Niet geblindeerd: dan kan de wetenschap van welke behandeling de
+proefpersoon heeft gehad de uitkomst beinvloeden. Dat kan bewust of
+onbewust. Als je een effect verwacht, dan herken je die wellicht
+sneller.
+
+::: {#fig-blinderen layout-ncol="2"}
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([behandeling]) --> B([verwachting proefpersoon])
+  A -->|?| C([uitkomst])
+  B --> C
+```
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([behandeling]) ~~~ B([verwachting proefpersoon])
+  A -->|?| C([uitkomst])
+  B --> C
+```
+:::
+
+### Dubbel blinderen
+
+::: {#fig-dubbel-blinderen layout-ncol="2"}
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([behandeling]) --> D([verwachting onderzoeker])
+  A -->|?| C([daadwerkelijke uitkomst])
+  C --> E([Beoordeling/meting onderzoeker])
+  D --> E
+```
+
+```{mermaid}
+%%| mermaid-format: png
+graph TD;
+  A([behandeling]) ~~~ D([verwachting onderzoeker])
+  A -->|?| C([daadwerkelijke uitkomst])
+  C --> E([Beoordeling/meting onderzoeker])
+  D --> E
+```
+:::
+
+## *Regression to the mean* en controlegroepen
+
+Galton 1888
+
+Essentie:
+
+-   Variabelen flucueren in de tijd
+-   Selecteren op extreme waarden.
+-   Neiging weer terug te bewegen naar het gemiddelde.
+
+Medische klachten fluctueren. Je kijkt het even aan. -\> klachten zijn
+op een gegeven moment extreem -\> naar een arts -\> behandeling -\>
+verbetering. Was de behandeling effectief, of waren je klachten ook
+zonder behandeling weer terugbewogen naar een voor jou meer typische
+waarde?
+
+Neiging om te zeggen: "Bij mij heeft het geholpen!".\
+Maar is dat ook zo? Het enige wat je weet is: "Bij mij zijn de klachten
+verminderd *na* de behandeling." Niet: "*door* de behandeling.". (Dit
+alles ook los van confirmation bias.)
+
+Piloten en complimenten[^associatiestussenvariabelen-3]
+
+[^associatiestussenvariabelen-3]: Kahneman, Daniel. Thinking, Fast and
+    Slow. 1st edition. New York: Farrar, Straus and Giroux, 2011.
+
+### Controlegroepen
+
+Meer weten over regression to the mean?[^associatiestussenvariabelen-4]
+
+[^associatiestussenvariabelen-4]: Morton, Veronica, and David J
+    Torgerson. “Effect of Regression to the Mean on Decision Making in
+    Health Care.” BMJ : British Medical Journal 326, no. 7398 (May 17,
+    2003): 1083–84.
+
+## Placebo-effect
+
+Voorbeelden: pijnklachten. Weten dat je een pijnstiller hebt gehad, kan
+pijn verminderen.
+
+Effect van placebo vaak overdreven.[^associatiestussenvariabelen-5]
+Onterecht vaak verward met regression to the mean. Om placebo aan te
+tonen is het niet voldoende om te laten zien dat een groep met
+placebo-behandeling ook (deels) beter wordt. Dat is namelijk ook te
+verwachten bij regression to the mean. Om placebo-effect aan te tonen
+moet je laten zien dat er een verschil is tussen twee controlegroepen:
+
+[^associatiestussenvariabelen-5]: McDonald, Clement J., Steven A.
+    Mazzuca, and George P. McCabe. “How Much of the Placebo ‘Effect’ Is
+    Really Statistical Regression?” Statistics in Medicine 2, no. 4
+    (October 1983): 417–27. https://doi.org/10.1002/sim.4780020401.
+
+-   Een controlegroep die denkt de behandeling te hebben ontvangen, maar
+    waarbij dat niet zo is.
+-   Een geblindeerde controlegroep die de behandeling niet heeft
+    ontvangen maar dat zelf niet kan weten.
+
+::: callout-warning
+## Pas op voor percentages verbetering
+
+box: Beecher[^associatiestussenvariabelen-6]: 34.2% of patients improve
+after placebo-treatment; that does not mean anything.
+
+Veel nieuwsberichten zijn van hetzelfde type: "Maarlieft 50% van de
+ondervraagden denkt dat het huidige kabinet het beter gaat doen dan het
+vorige." (Wat als de andere 50% het tegenovergestelde verwacht?)
+:::
+
+[^associatiestussenvariabelen-6]: Beecher, Henry K. “THE POWERFUL
+    PLACEBO.” Journal of the American Medical Association 159, no. 17
+    (December 24, 1955): 1602–6.
+    https://doi.org/10.1001/jama.1955.02960340022006.
+
+## Samenvatting
+
+## Terminologie
 
 ## Opgaven
 
-::: {.todo-box}
-Madelon en/of Yannick:
 
-Invoegen uit oude computerpracticum 2, opgave 2.
-De data staan in folder "data".
-Ik ga deze vraag zeker herschrijven.
-
-:::
