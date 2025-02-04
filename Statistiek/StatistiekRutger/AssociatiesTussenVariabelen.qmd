@@ -175,8 +175,9 @@ kable(
 
 ```
 
-Deze getallen zijn lastig te overzien. 
-Daarom maken we op basis van deze kruistabel een **mozaïekplot**:
+
+De getallen in de kruistabel zijn lastig te overzien. 
+Daarom maken we op basis van de kruistabel een **mozaïekplot**:
 
 ```{r}
 #| code-fold: true
@@ -197,18 +198,76 @@ mosaicplot(
   xlab = "Gezondheidstoestand",
   ylab = "Woontoestand"
   )
-
 ```
-Een mozaïekplot laat zien
 
+Uit deze mozaïekplot kun je verschillende dingen aflezen.
+Je ziet misschien dat de plot bestaat uit vijf kolommen.
+De breedte van die kolommen geeft weer van hoeveel 
+personen de gezondheid "Slecht", "Matig", etc. is.
+Dat zijn dus dezelfde verhoudingen als in @fig-stapel.
+Binnen de kolommen laten de hoogtes van de blokken
+vervolgens voor iedere gezondheidstoestand
+de verhoudingen zien van de verschillende woontoestanden.
+
+Het lijkt erop dat, over het geheel genomen,
+gezondere personen vaker een huis bezitten,
+al past de categorie "Slecht" niet helemaal in de trend.
+
+Om te beoordelen of de twee variabelen daadwerkelijk samenhangen
+zouden we eigenlijk een statistische toets moeten uitvoeren.
+Een geschikte toets zou de $\chi^2$-toets voor onafhankelijkheid zijn,
+maar we hebben in deze cursus geen tijd om die te behandelen.
+Voor de volledigheid kunnen we deze toch even uitvoeren:
+
+```{r}
+#| warning: false
+# chi-kwadraat-toets voor onafhankelijkheid
+chisq.test(kruistabel)
+```
+
+In de uitvoer is de $P$-waarde gegeven:
+die is kleiner dan $2{,}2 \times 10^{-16}$.
+Dat maakt het zeer onwaarschijnlijk dat de verschillen in verhoudingen
+het gevolg zijn van steekproefvariatie.
+De twee variabelen hangen dus vrijwel zeker samen.
+
+We kunnen alleen maar speculeren over de oorzaken van de samenhang.
+Je kunt je voorstellen dat personen met een matige gezondheid
+hierdoor soms beperkt worden en daardoor minder inkomen hebben.
+Dat zou kunnen verklaren dat zij minder vaak in staat zijn
+om een huis te kopen.
+Maar waarschijnlijk spelen er veel meer factoren een rol.
 
 :::
 
-## Een associatie hoeft niet te wijzen op een oorzakelijk verband
+## Oorzaken van associaties
+
+Als we tot de conclusie komen dat twee variabelen geassocieerd zijn,
+dan willen we graag weten hoe dat komt.
+Welke mechanismen zijn verantwoordelijk voor die associatie?
+In de praktijk is dat nog niet zo gemakkelijk,
+omdat variabelen op allerlei manieren met elkaar verknoopt kunnen raken.
+
+Een specifieke manier waarop variabelen geassocieerd kunnen raken
+is als ze elkaar beïnvloeden. 
+We hebben het dan over een **oorzakelijk** of **causaal verband**.
+Roken en longkanker zijn geassocieerd omdat roken kanker *veroorzaakt*.
+
+Maar als twee variabelen geassocieerd zijn,
+wil nog niet zeggen dat er een causaal verband bestaat tussen die variabelen.
+Bijvoorbeeld:
+het aantal regenpakken in het straatbeeld 
+is geassocieerd met het aantal paraplu's,
+maar regenpakken veroorzaken geen paraplu's,
+en paraplu's geen regenpakken.
+Een veelgehoorde uitspraak is dan ook: "Correlatie is nog geen causatie."
 
 ### Causale diagrammen
 
-Korte uitleg.
+Een nuttig hulpmiddel bij het denken over associaties en causale relaties
+is een **causaal diagram**.
+
+
 
 ### Correlaties door direct oorzakelijk verband
 
