@@ -147,13 +147,13 @@ ggplot() +
   geom_point(
     data = bhi_data,
     aes(x = factor(steekproef_id), y = gemiddelde),
-    color = "purple",
+    color = "darkorchid",
     size = 3
   ) +
   # Horizontale lijn voor het ware populatiegemiddelde
   geom_hline(
     yintercept = waar_gemiddelde,
-    color = "darkorange",
+    color = "#e8601d",
     linetype = "solid",
     size = 1
   ) +
@@ -411,7 +411,7 @@ data <- data.frame(
 
 # Plot de normale verdeling
 ggplot(data, aes(x = x, y = kansdichtheid)) +
-  geom_line(color = "darkorange", size = 1) +  # Lijn voor de curve
+  geom_line(color = "#e8601d", size = 1) +  # Lijn voor de curve
   labs(
     x = expression(italic(X)),                # Label voor de x-as
     y = "Kansdichtheid",                      # Label voor de y-as
@@ -470,7 +470,7 @@ maak_histogram <- function(data, gemiddelde, y_label = NULL) {
     geom_histogram(
       binwidth = staafbreedte,
       boundary = xmin,
-      fill = "darkorange",
+      fill = "#e8601d",
       alpha = 0.7,
       color = "black",
       size = 0.5
@@ -630,7 +630,7 @@ steekproef_gemiddelden <- data.frame(
 maak_verdelingsplot <- function(data, label, y_as_label) {
   plot <- ggplot(data, aes(x = waarde)) +
     geom_histogram(
-      binwidth = staafbreedte, fill = "darkorange", 
+      binwidth = staafbreedte, fill = "#e8601d", 
       color = "black", alpha = 0.7, size = 0.5
     ) +
     xlim(xmin, xmax) +
@@ -1112,7 +1112,7 @@ ggplot(data, aes(x = t_waarden)) +
   geom_histogram(
     aes(y = ..density..), # schaal het histogram, totale oppervlakte 1 
     binwidth = staafbreedte, 
-    fill = "darkorange", 
+    fill = "#e8601d", 
     color = "black", 
     alpha = 0.5,
     show.legend = FALSE
@@ -1383,7 +1383,7 @@ VerdelingPersoonlijkInkomen_CBS_2022 <- read_csv("data/VerdelingPersoonlijkInkom
 
 ggplot(VerdelingPersoonlijkInkomen_CBS_2022, 
        aes(y = Totaal, x = `persoonlijk inkomen (1000 euro)`)) +
-  geom_line(color = "darkorange", size = 1) +
+  geom_line(color = "#e8601d", size = 1) +
   labs(x = "Persoonlijk inkomen (1000 euro)", y = "Aantal personen (x 1000)") +
   theme_minimal()
 ```
@@ -1434,7 +1434,7 @@ ggplot(dataVink, aes(aantal_eieren)) +
   geom_histogram(
     binwidth = 1, 
     color = "black", 
-    fill = "darkorange"
+    fill = "#e8601d"
     ) +
   labs(x = "Aantal eieren per nest", y = "Frequentie") +
   theme_minimal()
@@ -1654,7 +1654,7 @@ filter_na <- function(data, variable) {
 generate_histogram <- function(var_name, label, binwidth) {
   filtered_data <- filter_na(NHANES, var_name)
   ggplot(filtered_data, aes(x = .data[[var_name]])) +
-    geom_histogram(binwidth = binwidth, fill = "darkorange", color = "black", alpha = 0.7) +
+    geom_histogram(binwidth = binwidth, fill = "#e8601d", color = "black", alpha = 0.7) +
     labs(x = "Variabele", y = "Frequentie", subtitle = label) +
     theme_minimal()
 }
@@ -1664,7 +1664,7 @@ generate_qqplot <- function(var_name, label) {
   filtered_data <- filter_na(NHANES, var_name)
   ggplot(filtered_data, aes(sample = .data[[var_name]])) +
     stat_qq(distribution = qnorm) +
-    stat_qq_line(distribution = qnorm, color = "darkorange", size = 1) +
+    stat_qq_line(distribution = qnorm, color = "#e8601d", size = 1) +
     labs(x = "Theoretische kwantielen", y = "Geobserveerde waarden", subtitle = label) +
     theme_minimal()
 }
@@ -1786,7 +1786,7 @@ set.seed(125)  # Voor reproduceerbaarheid
 # Functie om een histogram te maken
 maak_histogram <- function(
   data, xvariabele, x_label, binbreedte = 5, 
-  x_bereik = c(0, 200), kleur = "darkorange", alpha = 0.7, 
+  x_bereik = c(0, 200), kleur = "#e8601d", alpha = 0.7, 
   voeg_normaal_toe = FALSE
 ) {
   # Basis histogram
@@ -1835,7 +1835,7 @@ voeg_lijn_toe <- function(plot, x_waarde,
 # Functie om steekproef-histogram te maken
 maak_steekproef_histogram <- function(data, xvariabele, 
     steekproefgrootte, x_label, binbreedte = 5, 
-    x_bereik = c(0, 200), kleur = "darkorange", alpha = 0.7) {
+    x_bereik = c(0, 200), kleur = "#e8601d", alpha = 0.7) {
   steekproef <- sample(
     data[[xvariabele]], size = steekproefgrootte, replace = TRUE
   )
@@ -1852,7 +1852,7 @@ maak_steekproef_histogram <- function(data, xvariabele,
 # Functie om histogram van steekproefgemiddelden te maken
 maak_gemiddelden_histogram <- function(data, xvariabele, 
     steekproefgrootte, n_steekproeven, x_label, 
-    binbreedte = 5, x_bereik = c(0, 200), kleur = "darkorange", 
+    binbreedte = 5, x_bereik = c(0, 200), kleur = "#e8601d", 
     alpha = 0.7, voeg_normaal_toe = FALSE) {
   steekproefgemiddelden <- replicate(
     n_steekproeven,

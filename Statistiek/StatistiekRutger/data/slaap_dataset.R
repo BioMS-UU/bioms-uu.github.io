@@ -8,7 +8,8 @@ slaap <- data.frame(ID = as.factor(seq(8)),
                     MWT_d6 = c(4.5, 1.9, 3.7, 6.2, 10.3, 8.2, 5.14, 8.2),
                     MWT_d7 = c(1.7, 5.5, 4.7, 3.6, 10.3, 6.8, 8.5, 5.2))
 
-library(ggplot2)
+library("ggplot2")
+library("tidyr")
 
 slaap_lang <- pivot_longer(slaap, 
                            cols = starts_with("MWT"),
@@ -32,3 +33,23 @@ qqline(slaap$MWT_d0 - slaap$MWT_d6)
 
 t.test(slaap$MWT_d0, slaap$MWT_d7, paired = TRUE)
 t.test(slaap$MWT_d0, slaap$MWT_d4, paired = TRUE)
+
+dagen_geselecteerd <- slaap_lang[slaap_lang$dag == 0 | slaap_lang$dag == 7, ]
+
+ggplot(dagen_geselecteerd, aes(x = dag, y = MWT, color = ID)) +
+  geom_point() +
+  geom_line(aes(group = ID), lt = 2) +
+  theme_minimal()
+
+bereken_verschillen <- function(data) {
+  data %>%
+    pivot_wider(names_from = dag, values_from = MWT) %>%
+    mutate(verschil = `7` - `0`) %>%
+    select(ID, verschil)
+}
+verschillen <- bereken_verschillen(dagen_geselecteerd)
+t.test(verschillen$verschil)
+
+qqnorm(verschillen$verschil)
+qqline(verschillen$verschil)
+#vervelende outlier... in het verschil tussen dag 0 en 7; misschien 0 en 6 gebruiken?
