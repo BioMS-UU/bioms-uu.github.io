@@ -312,7 +312,7 @@ omdat roken longkanker veroorzaak, en longkanker mortaliteit.
 Zelfs als twee variabelen een causaal verband hebben,
 is het niet altijd vanzelfsprekend 
 in welke richting de pijl moet wijzen.
-Hier is een voorbeeld.
+Hieronder volgt een voorbeeld.
 
 ::: todo-box
 RH: onderstaande netjes herschrijven, met references.
@@ -369,18 +369,25 @@ lees je meer over het debat rondom de zelfwaardebeweging.
 
 ### Assiciaties veroorzaakt door een gezamenlijke oorzaak
 
-Associaties kunnen ook ontstaan als beide variabelen
-elkaar niet beïnvloeden
-maar wel 
+Bekijk @fig-ijs hieronder eens. 
+Deze is gebaseerd op cijfers uit de VS, uit 2019,
+maar ieder ander jaar laat een vergelijkbaar beeld zien.[^cijfersijs]
+In die grafiek zijn voor iedere maand het aantal verlijdens door verdrinking
+uitgezet tegen de verkoopcijfers van ijsjes.
+(Versies van deze figuur zijn op veel plekken op het internet te vinden.)
 
-Data drowning: [National Safety Council](https://injuryfacts.nsc.org/all-injuries/preventable-death-overview/deaths-by-month/data-details/)
+^cijfersijs: De verdrinkingscijfers zijn op 4 februari 2025 gedownload van de [National Safety Council](https://injuryfacts.nsc.org). De ijsverkooopcijfers komen van [www.kaggle.com](www.kaggle.com); de oorsprong van de getallen is niet duidelijk.
 
-Data icecream sales: Kaggle.
+::: {.todo-box}
+Hieronder zijn de maanden in het Engels. 
+Kan iemand die in de code vertalen naar het Nederlands?
+Kwestie van verdrinkingen_2019$Month overschijven.
+:::
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Samenhang tussen ijsverkoop en verdrinkingen in de VS; data voor 2019."
+#| fig.cap: "Samenhang tussen ijsverkoop en verdrinkingen in de VS (cijfers voor 2019)."
 #| label: fig-ijs
 #| fig.width: 7
 #| fig.height: 5
@@ -403,9 +410,6 @@ ijsverkoop$DAG   <- as.numeric(format(ijsverkoop$DATE, "%d"))
 ijsverkoop_2019 <- subset(ijsverkoop, JAAR == 2019)
 verdrinkingen_2019 <- subset(verdrinkingen, Year == 2019)
 
-# Koppel maandgegevens uit verdrinkingen aan ijsverkoop
-ijsverkoop_2019$MAAND <- verdrinkingen_2019$Month
-
 # Samenvoegen van gegevens in een nieuw data frame
 gegevens <- data.frame(
   ijsverkoop = ijsverkoop_2019$IPN31152N,
@@ -419,17 +423,72 @@ ggplot(gegevens, aes(x = ijsverkoop, y = verdrinkingen,
   geom_point(color = "#e8601d") +
   geom_text(vjust = 1.7, hjust = 0.4) +
   theme_minimal() +
+  labs(
+      x = "aantal verkochte ijsjes (x 1000)",
+      y = "aantal verdrinkingen"
+      ) +
   coord_cartesian(xlim = c(70, 130), ylim = c(100, 700))
 ```
 
+De figuur laat een positieve associatie zien tussen het aantal verdrinkingen
+  dat in een maand plaatsvindt
+  en het aantal ijsjes dat geconsumeerd wordt.
+Vooral in de zomermaanden mei, juni, juli en augustus
+  zijn de cijfers verontrustend:
+  de ijscoman doet dan goede zaken,
+  maar helaas verdrinken er in die periode een groot aantal mensen.
+Is het tijd om ijsjes te verbieden?
+Of zou de causaliteit de andere kant op lopen?
+
+Er is natuurlijk een veel betere verklaring.
+Hoogstwaarschijnlijk bestaat er tussen `ijsverkoop` en `verdrinking` 
+  geen oorzakelijk verband.
+In plaats daarvan zijn deze variabelen waarschijnlijk gecorreleerd 
+  als gevolg van één of meerdere **gezamenlijke oorzaken**.
+Een gezamenlijke oorzaak is een variabele
+  die beide variabelen beïnvloedt;
+  andere woorden hiervoor zijn **confounder** of **lurking variable**.
+Een belangrijke factor is waarschijnlijk de variabele `gemiddelde dagtemperatuur`. In de warme zomermaanden wordt meer ijs geconsumeerd,
+maar wordt er ook meer gerecreëerd in en rond het water,
+en dat kan leiden tot hogere verdrinkingscijfers.^[Andere factoren spelen mogelijk ook mee. Bijvoorbeeld, zowel `ijsverkoop` als `waterrecreatie` zijn wellicht hoger in vakantieperiodes.]
+Een eenvoudig model is weergegeven in het causale diagram @fig-causaal-ijs hieronder.
+
+::: {#fig-causaal-ijs}
 ```{mermaid}
 %%| mermaid-format: png
 graph TD;
-  A([dagtemperatuur]) --> B([waterrecreatie])
+  Z([maand]) --> A([gemiddelde dagtemperatuur]) --> B([waterrecreatie]) --> D([verdrinking])
   A --> C([ijsverkoop])
 ```
 
-Gezamenlijke oorzaak, confounding, spurious correlation.
+Variabelen `ijsverkoop` en `verdrinking` hebben een gezamenlijke oorzaak, `dagtemperatuur`.
+:::
+
+
+De boodschap van dit absurde voorbeeld is natuurlijk het volgende:
+variabelen die elkaar niet rechtstreeks beïnvloeden
+raken vaak geassocieerd door confounders.
+De structuur van een causaal diagram kan je vertellen wat mogelijk confounders zijn.
+In @fig-causaal-ijs vertrekken er *twee* pijlen vertrekken vanuit `gemiddelde dagtemperatuur`. 
+Daardoor heeft het diagram een "gevorkte" structuur.
+Altijd als er een vork bestaat in het causale diagram kunnen variabeleln "boven" de vork (dus `maand` en `gemiddelde dagtemperatuur`) confounders zijn
+voor variabelen aan verschillende kanten "onder" de vork 
+(hier dus `waterrecreatie`/`verdrinking` aan de ene kant, 
+en `ijsverkooop` aan de andere kant).
+
+::: {#exr-confounding}
+
+## Welke variabelen zijn mogelijk geassocieerd?
+
+:::
+
+::: {#exr-confounding}
+
+## Wat zouden mogelijk confounders kunnen zijn?
+
+:::
+
+
 
 ### Associaties veroorzaakt door selectie van een subpopulatie
 
