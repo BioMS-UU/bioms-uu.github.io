@@ -73,7 +73,7 @@ veelgebruikte indeling is weergegeven in @fig-variabelen.
 ```{mermaid}
 %%| label: fig-variabelen
 %%| fig-cap: "Indeling van typen variabelen."
-%%| mermaid-format: png
+
 
 flowchart TB
   A(Variabelen) --> C("Categorisch (Kwalitatief)")
@@ -347,52 +347,18 @@ df = data.frame(naam, level, totale_speeltijd, klassement, console)
 **a.** Schrijf voor elke vector het type variabele op volgens het schema
 van @fig-variabelen.
 
-*De vector `naam` is een nominale categorische variabel, de `level`
-vector is een discrete numerieke variabel, de `totale_speeltijd` vector
-is een continue numerieke variabel, de `klassement` vector is een
-ordinale categorische variabel en 'console\` is een nominale
-categorische variabel*
-
 **b.** Om de data efficienter te kunnen opslaan en analyseren willen we
 sommige variabelen omzette in een factor. Welke variabelen komen daar
 het meest voor in aanmerking?
 
-*De variabelen `klassement` en `console` zijn categorisch en kunnen dus
-goed als factor worden opgeslagen. Dat geldt ook voor variabele `naam`,
-maar omdat de namen uniek zijn wordt de lijst met niveaus dan even lang
-als de oorspronkelijke vector; deze variabele zal als factor dus niet
-minder geheugen in beslag nemen dan als character data.*
-
 **c.** Pas de code hierboven aan zodat de vector `klassement` een factor
 wordt. Run de nieuwe code in R.
 
-*antwoord*
-
-```{r}
-#| execute: false
-
-naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
-level <- c(8, 1, 3, 2, 10)
-totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
-klassement <- factor(c("Goud", "Brons", "Zilver", "Zilver", "Goud"))
-console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
-
-df = data.frame(naam, level, totale_speeltijd, klassement, console)
-
-#of 
-
-df$klassement = factor(df$klassement)
-```
 
 **d.** Gebruik de functie `levels()` om te bepalen wat de levels zijn
 van de vector `klassement`.
 
-*antwoord*
 
-```{r}
-levels(klassement)
-
-```
 
 We willen op een andere manier naar de data kijken door Brons en Zilver
 de nieuwe naam "Laag" te geven en Goud de nieuwe naam "Hoog".
@@ -400,13 +366,12 @@ de nieuwe naam "Laag" te geven en Goud de nieuwe naam "Hoog".
 **e.** Voeg de onderstaande regels toe aan je code, beschrijf wat er is
 veranderd in de dataset.
 
-```{r}
+```
+df$klassement
 levels(df$klassement) <- c("Laag", "Hoog", "Laag")
 levels(df$klassement)
 ```
 
-*Antwoord: de eerste en laatste klassementen, brons en zilver, zijn nu
-allebei hetzelfde level "Laag". Goud heet nu "Hoog".*
 :::
 
 ## De verdeling van een variabele
@@ -732,13 +697,7 @@ zien dat deze groep verantwoordelijk is voor de piek rond 20 kg.
 Selecteer vervolgens alleen min-of-meer volwassenen (vanaf 150 maanden)
 en laat zien dat hun verdeling unimodaal is met een piek rond 75 kg.
 
-```{r}
-#| echo: false
-#| eval: false
 
-hist(NHANES$Weight[NHANES$AgeMonths < 150], breaks = 30)
-
-```
 :::
 
 ## De cumulatieve verdeling van een variabele {#sec-cumul}
@@ -2183,11 +2142,30 @@ ggplot(NHANES, aes(x = Pulse)) +
 ```
 
 ::: {.todo-box}
-Madelon en/of Yannick:
+Rutger controleren
+:::
 
-Voeg hier in uit het oude werkboek, week 1, opgave 2.
-Neem ook de uitwerking over.
+::: {#exr-poezen}
+Een steekproef van $n=3$ volwassen poezen levert de volgende gewichten op: $Y_1 = 3,0$ kg, $Y_2 = 3,4$ kg en $Y_3=4,2$ kg.
 
+  a. Bereken $\sum_{i=1}^3 Y_i$
+
+  b. Leg uit dat het gemiddelde gewicht $\bar{Y}$ kan worden geschreven als: 
+  $$\bar{Y} = \frac{\sum_{i=1}^3 Y_i}{3}$$
+  c. Bereken $\sum_{i=2}^3 Y_i$
+
+  d. Bereken $\sum^n_{i=1} Y_i$
+  
+  e. Bereken $\sum^n_{i=1} Y_i^2$
+  
+  f. Bereken $\left( \sum^n_{i=1} Y_i\right)^2$
+  
+  g. Bereken $\sum^n_{i=1} (Y_i - \bar{Y})$
+
+  h. Bereken $\sum^n_{i=1} (Y_i - \bar{Y})^2$
+  
+  i. Bereken de variantie van de gewichten. Maak daarbij slim gebruik
+van je eerdere antwoorden.
 :::
 
 ## Wanneer gebruik je welke centrum- en spreidingsmaat?
@@ -2394,15 +2372,33 @@ conclusie niet direct in het oog.
 :::: {#exr-freqtab}
 ## Frequentietabellen voor een categoriale variabele met R
 
-::: todo-box
-Toepassen op een concrete dataset. Uitwerken.
-:::
-::::
+In deze opdracht gaan we de tabel uit @exm-freq-gezondheidsstatus reproduceren in R. 
 
-```{r}
-library(NHANES)
-table(NHANES$HealthGen)
+Neem de onderstaande code over: 
 ```
+library(NHANES)
+data <- NHANES$HealthGen
+```
+  a. Bekijk `data`. Wat voor soort variabele is het? 
+  
+Het viel je misschien ook al op dat er veel <NA> waardes zijn. Dit zijn lege datapunten. 
+
+  b. Voeg `data <- data[!is.na(data)]` onderaan je code toe. Wat is er veranderd? Kan je beschrijven wat de `is.na()` functie doet? 
+  
+  c. Voeg `data.t <- table(data)` toe aan je code. Wat is het verschil tussen data.t en data? Schrijf in je eigen woorden op wat de `table()` functie heeft gedaan. 
+  
+  d. Bereken de frequentie van elke waarde. Geef deze frequentie weer in een nieuwe variabele genaamd `data.f`. Hoe ziet `data.f` eruit? 
+  
+  Tip: Gebruik de `sum()` functie en herriner je dat je een hele vector kan vermedigvuldigen/delen met een bepaald getal. 
+
+::: todo-box
+Rutger controleren
+:::
+
+
+:::
+
+
 
 ### Frequentietabel voor continue variabelen
 
@@ -2549,9 +2545,11 @@ berekent.
 ::: {#exr-gemiddelde-frequentietabel}
 ## Gemiddelden berekenen op basis van een frequentietabel.
 
-Dataset: 5, 3, 6, 2, 4, 3, 3, 2, 2, 5.
+Je bent een middagje naar de vogeltrek aan het kijken en wilt graag weten hoe groot de zwermen vogels meestal zijn. Telkens als er een zwerm overvliegt tel je het aantal vogels dat erin zit. Uiteindelijk heb je de volgende waarnemingen: 
 
-Frequentietabel:
+```5, 3, 6, 2, 4, 3, 3, 2, 2, 5.```
+
+Van deze waarnemingen maak je een frequentietabel:
 
 | Waarneming | Frequentie | Relatieve frequentie |
 |-----------:|-----------:|---------------------:|
@@ -3271,36 +3269,14 @@ dataset en $n$ is het aantal datapunten.
 ## Opgaven
 
 ::: todo-box
-Madelon en/of Yannick:
 
-Invoegen uit oude werkboek statistiek: Uit Week 1, opgave 13. Neem ook
-het antwoordmodel over; die zal ik zelf herschrijven.
-
-# Antwoorden @exr-variab-bedenken: 
-*a* Een voorbeeld is een classificatie van de historische
-waarde van archeologische vondsten op een schaal
-van 1 tot 5.
-
-*b* Stel dat je de tijdsduur van een bepaald proces meet,
-maar je kunt om praktische redenen maar 1 keer per
-uur meten. Dan zal de tijdsduur – op zich een conti-
-nue variabele – alleen discrete waarden aannemen
-(1 uur, 2 uur , . . . ). Hoe grover de precisie van je me-
-ting, hoe meer je geneigd zou zijn om de gegevens
-als discreet op te vatten.
-
-*c* Of je bepaalde klassen als natuurlijk geordend be-
-schouwt, hangt erg af van de focus van je onderzoek.
-Bedrijfsnamen hebben bijvoorbeeld een alfabetische
-ordening. Meestal is die volledig irrelevant en zou
-je de bedrijfsnaam als nominale variabele beschou-
-wen. Maar wat als je wilt onderzoeken of bedrijven
-bewust namen kiezen die hoog in gealfabetiseerde
-lijsten verschijnen (zoals bedrijvengidsen)?
+Checken Rutger
 
 :::
 
 ::: {.pepexr #exr-variab-bedenken}
+## Variabelen op de Grens
+
 We hebben geleerd dat variabelen kunnen worden
 ingedeeld in verschillende categoriën: categoriale variabelen kunnen
 nominaal of ordinaal zijn, en numerieke variabelen zijn ofwel discreet
@@ -3318,85 +3294,17 @@ de vraag of ze nominaal of ordinaal zijn?
 :::
 
 ::: {.todo-box}
-Madelon en/of Yannick:
 
-Voeg hier in uit het oude werkboek, week 1, opgave 5, behalve 5d.
-Van a t/m c is het een pen-en-papier-opgave.
-Voeg d toe: 
-**d** Controleer je antwoorden op onderdelen a t/m c door ze rechtstreeks in R uit te herhalen,
-met onder ander de functies `mean()`, `sd()` en `var()`. 
-
-Neem ook de uitwerking over; die zal ik zelf herschrijven.
-
-# Antwoorden @exr-sprinkhanen: 
-**a** 
-Het gemiddelde: 
-
-De formule voor het gemiddelde is: $\bar{x} = \frac{\sum^n_{i=1}x_i}{n}$
-
-We hebben 5 datapunten dus:  
-
-$$\bar{x} = \frac{3,5+2,4+3,4+3,9+2,7}{5} = 3,18 \, \textrm{in}$$ 
-
-De variantie: 
-
-De formule voor de variantie is: $V_X = \frac{\sum_i^n \left(x_i - \overline{x}\right)^2}{n-1}$
-
-Eerst bereken ik het verschil tussen elke waarde en het gemiddelde: $3,5-3,18=0,32$, $2,4-3,18=-0,78$, $3,4-3,18=0,22$, $3,9-3,18=0,72$ en $2,7-3,18=-0,48$. Dit zijn de **residuen** van de verschillende datapunten. Deze gaan we kwadrateren en bij elkaar op tellen om de term in de teller te berekenen. 
-$$0,32^2+(-0,78)^2+0,22^2+0,72^2+(-0,48)^2=1,508$$
-
-(Let op dat je tussendoor niet afrond!)
-
-We hebben 5 datapunten dus $n-1$ is 4. We hebben dus: 
-$$V_X = \frac{1,508}{4}=0,377 \, \textrm{in}^2$$
-De standaarddeviatie: 
-
-De standaarddeviatie is de wortel van de variantie dus: 
-$$s_X = \sqrt{V_X} = \sqrt{0,377} = 0,614 \, \textrm{in}$$
-**b** De variantie en standaardafwijking blijven hetzelfde! Het gemiddelde neemt met 2 inches af en wordt dus 1,18. Je kan dit zelf narekenen door de stappen uit **a** te herhalen. 
-
-**c** Nu veranderen wel alle waardes. Met deze nieuwe waardes (8,89 cm, 6,096 cm, 8,636 cm, 9,906 cm en 6,858 cm) volgen we weer de stappen van **a** en komen we op het volgende uit: 
-$$\bar{x} \approx 8,08 \textrm{cm} \, \, \, V_X\approx 2,432 \textrm{cm}^2 \, \, \, s_X \approx 1,560 \textrm{cm}$$
-
-**d**
-```{r}
-data <- c(3.5, 2.4, 3.4, 3.9, 2.7)
-
-#a
-print("a")
-mean(data)
-var(data)
-sd(data)
-
-#b
-data_b <- data+2
-print("b")
-mean(data_b)
-var(data_b)
-sd(data_b)
-
-#c
-data_c <- data*2.54
-print("c")
-mean(data_c)
-var(data_c)
-sd(data_c)
-```
+Checken Rutger
 
 
 :::
 
-```{r}
-data <- c(3.5, 2.4, 3.4, 3.9, 2.7)
-data2 <- data*2.54
-data2
-mean(data)
-sd(data)
-
-```
 :::
 
 ::: {.pepexr #exr-sprinkhanen}
+
+## Sprinkhaan Statistiek
 
 We genereren een aselecte steekproef van vijf sprinkhanen en meten de lengte van iedere sprinkhaan. We vinden: 3,5 inches,
 2,4 inches, 3,4 inches, 3,9 inches, en 2,7 inches.
@@ -3416,27 +3324,13 @@ met onder ander de functies `mean()`, `sd()` en `var()`.
 :::
 
 ::: {.todo-box}
-Madelon en/of Yannick:
 
-Voeg hier in uit het oude werkboek, week 1, opgave 14.
-
-Neem ook de uitwerking over; die zal ik zelf herschrijven.
-  
-# Antwoord @exr-middelbare-mediaan
-
-De mediaan zou als schoolcijfer een aan-
-tal voordelen hebben, omdat deze minder gevoelig is voor
-uitbijters. Als je het hele jaar goede cijfers hebt gehaald,
-maar één keer door omstandigheden niet hebt kunnen
-leren voor een proefwerk, dan zou die ene keer misschien
-niet al te zwaar hoeven meetellen op je rapport. Maar
-“ieder voordeel heb zijn nadeel”. Wat zou er gebeuren met
-het rapportcijfer als een leerling besluit alleen de eerste
-helft van het jaar zijn best te doen?
+Checken Rutger
 
 :::
 
 ::: {.pepexr #exr-middelbare-mediaan}
+## Middelbare Mediaan
 
 Tijdens de middelbare school stond op je rapporten
 waarschijnlijk voor ieder vak het gemiddelde vermeld van alle cijfers
@@ -3449,13 +3343,24 @@ zou dat hebben? Waar zou jij voor kiezen?
 
 
 ::: {.todo-box}
-Madelon en/of Yannick:
-
-Voeg hier in uit het oude werkboek, week 1, opgave 20.
-
-Neem ook de uitwerking over; die zal ik zelf herschrijven.
-  
+Checken Rutger
 
 :::
 
+::: {.pepexr #exr-tuinvogeltelling}
+## Nationale Tuinvogeltelling
+Een bioloog doet mee aan de Nationale Tuinvogeltelling
+en telt hoeveel vogels van elke soort ze in een uur in haar tuin ziet.
+Welke grafiek zou ze het best kunnen gebruiken om de verdeling van
+vogelsoorten weer te geven?
+
+**A** een histogram
+
+**B** een cumulatieve frequentiepolygoon
+
+**C** een boxplot
+
+**D** een staafdiagram
+
+:::
 
