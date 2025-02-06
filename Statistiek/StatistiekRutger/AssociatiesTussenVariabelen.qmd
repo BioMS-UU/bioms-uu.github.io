@@ -262,70 +262,104 @@ maar regenpakken veroorzaken geen paraplu's,
 en paraplu's geen regenpakken.
 Een veelgehoorde uitspraak is dan ook: "Correlatie is nog geen causatie."
 
+Hoewel veel mensen dit begrijpen
+blijft de verleiding groot om associaties kritiekloos als oorzakelijke verbanden
+te interpreteren.
+Hopelijk zul jij daar na het lezen van dit hoofdstuk
+heel voorzichtig mee zijn,
+
 ### Causale diagrammen
 
 Een nuttig hulpmiddel bij het denken over associaties en causale relaties
 is een **causaal diagram**.
+Een eenvoudig voorbeeld van een causaal diagram is het volgende figuur:
 
-
-
-### Correlaties door direct oorzakelijk verband
-
+::: {#fig-CD fig-align="center"}
 ```{mermaid}
-%%| mermaid-format: png
-graph TD;
+
+graph LR;
   A([roker]) --> B([longkanker])
 ```
 
-Verkeerdom?
+Een eenvoudig causaal diagram dat stelt dat roken longkanker veroorzaakt.
+:::
+
+In een causaal diagram worden de namen van variabelen verbonden met pijlen
+als we vermoeden dat die variabelen elkaar causaal beïnvloeden. 
+Het voorbeeld van @fig-CD stelt dus simpelweg dat er een causaal verband is
+tussen roken en longkanker.
+Het is duidelijk dat `roker` en `longkanker` daardoor geassocieerd kunnen raken.
+
+In ingewikkeldere causale diagrammen kunnen associaties ook 
+ontstaan tussen variabelen die niet direct verbonden zijn.
+Een eenvoudig voorbeeld is een causale "ketting":
+
+::: {#fig-ketting fig-align="center"}
+```{mermaid}
+
+graph LR;
+  A([roker]) --> B([longkanker]) --> C([mortaliteit])
+```
+
+Roken kan geassocieerd raken met mortaliteit via longkanker.
+:::
+
+Hier raakt roken geassocieerd met mortaliteit
+omdat roken longkanker veroorzaak, en longkanker mortaliteit.
+
+### Het omdraaien van de causaliteit
+
+Zelfs als twee variabelen een causaal verband hebben,
+is het niet altijd vanzelfsprekend 
+in welke richting de pijl moet wijzen.
+Hieronder volgt een voorbeeld.
 
 ::: todo-box
 RH: onderstaande netjes herschrijven, met references.
 :::
 
 :::: {#exm-zelfbeeld}
-## Leidt een Hoog Zelfbeeld tot Succes? (De Zelfbeeldbeweging)
+## Leidt een positief zelfbeeld tot succes?
 
-### Historische bewering
+In de jaren 1980 en 1990 ontdekten onderzoekers dat mensen met
+een positief zelfbeeld vaak succesvoller zijn in het leven. Dit leidde tot
+beleidsmaatregelen die gericht waren op het verhogen van het zelfbeeld
+bij kinderen, in de hoop dat dit hen succesvoller zou maken.
 
-In de jaren 1980 en 1990 ontdekten sommige onderzoekers dat mensen met
-een hoog zelfbeeld vaak succesvoller zijn in het leven. Dit leidde tot
-beleidsmaatregelen die gericht waren op het **verhogen van het zelfbeeld
-bij kinderen**, in de hoop dat dit hen succesvoller zou maken.
-
-### Werkelijkheid
-
--   **Succes** op school, in sport of in het sociale leven **verhoogt
-    het zelfbeeld**.
--   **Is zelfbeeld vaker een gevolg van succes, niet de oorzaak?**
--   Helpt het om zelfvertrouwen **Kunstmatig op te blazen**
-    als**vaardigheden en inspanning ontbreken**?
+Maar het is niet vanzelfsprekend dat de causale pijl van zelfbeeld naar success
+loopt. Kan het niet ook andersom zijn?
 
 ::: {#fig-welk-diagram layout-ncol="3" out.width="100%"}
 ```{mermaid}
-%%| mermaid-format: png
+
 graph TD;
   A([zelfbeeld]) --> B([succes])
 ```
 
 ```{mermaid}
-%%| mermaid-format: png
+
 graph TD;
   A([succes]) --> B([zelfbeeld])
 ```
 
 ```{mermaid}
-%%| mermaid-format: png
+
 graph TD;
   A([succes]) --> B([zelfbeeld])
   B([zelfbeeld]) --> A([succes]) 
 ```
 
-Welk model beschrijft de werkelijkheid het beste?
+Welk causale diagram beschrijft de werkelijkheid het beste?
 :::
 
-Wil je meer weten? Begin met lezen in de citatie in de
-voetnoot.[^associatiestussenvariabelen-1]
+Het ligt voor de hand dat succes op school, in sport of in het sociale leven
+bijdraagt aan een positief zelfbeeld. 
+Als dat het mechanisme is dat de associatie verklaart,
+dan helpt het niet om zelfvertrouwen kunstmatig op te blazen
+en kan wellicht beter worden ingezet op vaardigheden en inspanning.
+
+Interessant? In de referentie in de voetnoot[^associatiestussenvariabelen-1]
+lees je meer over het debat rondom de zelfwaardebeweging.
 ::::
 
 [^associatiestussenvariabelen-1]: Orth, Ulrich, and Richard W. Robins.
@@ -333,25 +367,218 @@ voetnoot.[^associatiestussenvariabelen-1]
     American Psychologist 77, no. 1 (January 2022): 5–17.
     https://doi.org/10.1037/amp0000922.
 
-### Correlaties door gezamenlijke oorzaak
+### Condounding: assiciaties veroorzaakt door een gezamenlijke oorzaak
 
+Bekijk @fig-ijs hieronder eens. 
+Deze is gebaseerd op cijfers uit de VS, uit 2019,
+maar ieder ander jaar laat een vergelijkbaar beeld zien.[^cijfersijs]
+In die grafiek zijn voor iedere maand het aantal verlijdens door verdrinking
+uitgezet tegen de verkoopcijfers van ijsjes.
+(Versies van deze figuur zijn op veel plekken op het internet te vinden.)
+
+^cijfersijs: De verdrinkingscijfers zijn op 4 februari 2025 gedownload van de [National Safety Council](https://injuryfacts.nsc.org). De ijsverkooopcijfers komen van [www.kaggle.com](www.kaggle.com); de oorsprong van de getallen is niet duidelijk.
+
+::: {.todo-box}
+Hieronder zijn de maanden in het Engels. 
+Kan iemand die in de code vertalen naar het Nederlands?
+Kwestie van verdrinkingen_2019$Month overschijven.
+:::
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Samenhang tussen ijsverkoop en verdrinkingen in de VS (cijfers voor 2019)."
+#| label: fig-ijs
+#| fig.width: 7
+#| fig.height: 5
+#| out.width: "88%"
+#| 
+# Controleer of benodigde pakketten zijn geladen
+if (!("readr" %in% .packages())) { library(readr) }
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+
+# Inlezen van gegevens
+verdrinkingen <- read_csv("data/drowning.csv")
+ijsverkoop <- read_csv("data/ice_cream.csv")
+
+# Splits datum in jaar, maand en dag
+ijsverkoop$JAAR  <- as.numeric(format(ijsverkoop$DATE, "%Y"))
+ijsverkoop$MAAND <- as.numeric(format(ijsverkoop$DATE, "%m"))
+ijsverkoop$DAG   <- as.numeric(format(ijsverkoop$DATE, "%d"))
+
+# Selecteer alleen gegevens uit 2019
+ijsverkoop_2019 <- subset(ijsverkoop, JAAR == 2019)
+verdrinkingen_2019 <- subset(verdrinkingen, Year == 2019)
+
+# Samenvoegen van gegevens in een nieuw data frame
+gegevens <- data.frame(
+  ijsverkoop = ijsverkoop_2019$IPN31152N,
+  verdrinkingen = verdrinkingen_2019$Drowning,
+  maand = verdrinkingen_2019$Month
+)
+
+# Visualisatie met ggplot2
+ggplot(gegevens, aes(x = ijsverkoop, y = verdrinkingen, 
+                     label = maand)) +
+  geom_point(color = "#e8601d", size = 2) +
+  geom_text(vjust = 1.7, hjust = 0.4) +
+  theme_minimal() +
+  labs(
+      x = "aantal verkochte ijsjes (x 1000)",
+      y = "aantal verdrinkingen"
+      ) +
+  coord_cartesian(xlim = c(70, 130), ylim = c(100, 700))
+```
+
+De figuur laat een positieve associatie zien tussen het aantal verdrinkingen
+  dat in een maand plaatsvindt
+  en het aantal ijsjes dat geconsumeerd wordt.
+Vooral in de zomermaanden mei, juni, juli en augustus
+  zijn de cijfers verontrustend:
+  de ijscoman doet dan goede zaken,
+  maar helaas verdrinken er in die periode een groot aantal mensen.
+Is het tijd om ijsjes te verbieden?
+Of zou de causaliteit de andere kant op lopen?
+
+Er is natuurlijk een veel betere verklaring.
+Hoogstwaarschijnlijk bestaat er tussen `ijsverkoop` en `verdrinking` 
+  geen oorzakelijk verband.
+In plaats daarvan zijn deze variabelen waarschijnlijk gecorreleerd 
+  als gevolg van één of meerdere **gezamenlijke oorzaken**.
+Een gezamenlijke oorzaak is een variabele
+  die beide variabelen beïnvloedt;
+  andere woorden hiervoor zijn **confounder** of **lurking variable**.
+Een belangrijke factor is waarschijnlijk de variabele `gemiddelde dagtemperatuur`. In de warme zomermaanden wordt meer ijs geconsumeerd,
+maar wordt er ook meer gerecreëerd in en rond het water,
+en dat kan leiden tot hogere verdrinkingscijfers.^[Andere factoren spelen mogelijk ook mee. Bijvoorbeeld, zowel `ijsverkoop` als `waterrecreatie` zijn wellicht hoger in vakantieperiodes.]
+Een eenvoudig model is weergegeven in het causale diagram @fig-causaal-ijs hieronder.
+
+::: {#fig-causaal-ijs}
 ```{mermaid}
-%%| mermaid-format: png
+
 graph TD;
-  A([dagtemperatuur]) --> B([waterrecreatie])
+  Z([maand]) --> A([gemiddelde dagtemperatuur]) --> B([waterrecreatie]) --> D([verdrinking])
   A --> C([ijsverkoop])
 ```
 
-Gezamenlijke oorzaak, confounding, spurious correlation.
+Variabelen `ijsverkoop` en `verdrinking` hebben een gezamenlijke oorzaak, `dagtemperatuur`.
+:::
 
-### Correlaties door selectie van een subpopulatie
 
+De boodschap van dit absurde voorbeeld is natuurlijk het volgende:
+variabelen die elkaar niet rechtstreeks beïnvloeden
+raken vaak geassocieerd door confounders.
+De structuur van een causaal diagram kan je vertellen wat mogelijk confounders zijn.
+In @fig-causaal-ijs vertrekken er *twee* pijlen vertrekken vanuit `gemiddelde dagtemperatuur`. 
+Daardoor heeft het diagram een "gevorkte" structuur.
+Altijd als er een vork bestaat in het causale diagram kunnen variabeleln "boven" de vork (dus `maand` en `gemiddelde dagtemperatuur`) confounders zijn
+voor variabelen aan verschillende kanten "onder" de vork 
+(hier dus `waterrecreatie`/`verdrinking` aan de ene kant, 
+en `ijsverkooop` aan de andere kant).
+
+::: {#exr-confounding}
+
+## Welke variabelen zijn mogelijk geassocieerd?
+
+:::
+
+::: {#exr-confounding}
+
+## Wat zouden mogelijke confounders kunnen zijn?
+
+:::
+
+
+### Colliders: associaties veroorzaakt door selectie van een subpopulatie
+
+Beroemde filmacteurs hebben vaak een aantrekkelijk uiterlijk.
+Maar dat geldt niet voor iedere acteur.
+Is het je ooit opgevallen dat de *beste* acteurs
+vaak juist *niet* zo mooi zijn?
+En de mooiste acteurs vaak matig acteren?
+
+Hoewel er geen goed bewijs is voor de stelling
+  dat onder beroemde acteurs schoonheid en talent negatief geassocieerd zijn,
+  uiten veel mensen dit vermoeden.
+We laten de waarheid van deze vermoedens hier in het midden
+en vragen ons af:
+*als* die relatie zou bestaat,
+welke conclusie zouden we dan moeten trekken?
+Dat talent en schoonheid op niet goed samengaan?
+
+Hier is een andere mogelijke verklaring.
+Het volgende causale diagram zegt enkel
+dat `acteertalent` en `fysieke aantrekkelijkheid` invloed hebben
+op je kans om een beroemd acteur te worden:
 ```{mermaid}
-%%| mermaid-format: png
 graph TD;
   A([acteertalent]) --> B([succes als acteur])
-  C([aantrekkelijk uiterlijk]) --> B
+  C([fysieke aantrekkelijkheid]) --> B
 ```
+
+
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: ""
+#| label: fig-collider
+#| fig.width: 4
+#| fig.height: 4
+#| out.width: "60%"
+
+if (!("MASS" %in% .packages())) {
+  library(MASS)
+}
+if (!("ggplot2" %in% .packages())) {
+  library(ggplot2)
+}
+
+# Parameters
+n_steekproef <- 1000  # Aantal waarnemingen in de populatie
+n_deelsteekproef <- 80  # Aantal waarnemingen in de deelsteekproef
+lambda <- 2  # Parameter voor selectiekans
+
+# Genereer bivariate normale steekproef zonder correlatie
+set.seed(42)
+sigma <- matrix(c(1, 0, 0, 1), nrow = 2)  # Covariantiematrix
+steekproef <- as.data.frame(
+  mvrnorm(n_steekproef, mu = c(0, 0), Sigma = sigma)
+)
+colnames(steekproef) <- c("X", "Y")
+
+# Selectiekans berekenen op basis van exp(lambda * (X + Y))
+steekproef$kans <- exp(lambda * (sign(steekproef$X)*steekproef$X^2 + sign(steekproef$Y)*steekproef$Y^2))
+steekproef$kans <- steekproef$kans / sum(steekproef$kans)  # Normalisatie
+
+# Voeg een kleurkolom toe en initialiseer als "black"
+steekproef$kleur <- "darkgray"
+
+# Trek de deelsteekproef met gewogen kansen
+deelsteekproef_indices <- sample(
+  1:n_steekproef, n_deelsteekproef, prob = steekproef$kans, replace = FALSE
+)
+steekproef$kleur[deelsteekproef_indices] <- "#e8601d"
+
+# Plot de gegevens
+steekproef <- steekproef[order(steekproef$kleur, decreasing = TRUE), ]
+
+plot <- ggplot(
+  steekproef, aes(x = X, y = Y, color = kleur)
+) +
+  geom_point(alpha = 1, size = 2) +
+  scale_color_identity() +
+  theme_minimal() +
+  labs(
+    title = NULL,
+    x = "fysieke aantrekkelijkheid", y = "acteertalent"
+  )
+
+print(plot)
+
+```
+
+
 
 ::: {#fig-collider layout-ncol="2" out.width="100%"}
 ```{r}
@@ -372,7 +599,7 @@ aantrekkelijk <- factor(sample(c("nee", "ja"), aantal_acteurs, replace = TRUE, p
 talent <- factor(sample(c("nee", "ja"), aantal_acteurs, replace = TRUE, prob = c(0.9, 0.1)), c("nee", "ja"))
 gegevens <- data.frame(talent, aantrekkelijk)
 #gegevens_geselecteerd <- gegevens[aantrekkelijk == "ja" | talent == "ja", ]
-prob <- 0.02 + 
+prob <- 0.002 + 
   (gegevens$aantrekkelijk == "ja" | gegevens$talent == "ja")*0.75 + 
   (gegevens$aantrekkelijk == "ja" & gegevens$talent == "ja")*0.15 
 
@@ -382,6 +609,7 @@ gegevens_geselecteerd <- gegevens[select, ]
 # Create a mosaic plot using base R
 mosaicplot(
   table(gegevens), 
+  color = kleuren <- c("DarkOrchid", "#e8601d"),
   main = "Gehele populatie",
   xlab = "aantrekkelijk uiterlijk",
   ylab = "acteertalent"
@@ -400,6 +628,7 @@ mosaicplot(
 mosaicplot(
   table(gegevens_geselecteerd),
   main = "Succesvolle acteurs",
+  color = kleuren <- c("DarkOrchid", "#e8601d"),
   xlab = "aantrekkelijk uiterlijk",
   ylab = "acteertalent"
   )
@@ -434,7 +663,7 @@ namen van de variabelen. Voorbeelden hierboven.
 Confounding probleem
 
 ```{mermaid}
-%%| mermaid-format: png
+
 graph TD;
   A([mogelijke confounder]) --> B([uitkomst])
   C([behandeling]) -->|?| B
@@ -453,7 +682,7 @@ Twee groepen: behandelingsgroep + **controlegroep**. Controlegroep om te
 zien of de uitkomsten anders zijn met behandeling.
 
 ```{mermaid}
-%%| mermaid-format: png
+
 graph TD;
   A([mogelijke confounder]) --> B([uitkomst])
   C([behandeling]) -->|?| B
@@ -465,7 +694,7 @@ Het is belangrijk om randomgetallen te gebruiken, omdat andere
 variabelen mogelijk ook de uitkomst beinvloeden.
 
 ```{mermaid}
-%%| mermaid-format: png
+
 graph TD;
   A([mogelijke confounder]) --> B([uitkomst])
   C([behandeling]) -->|?| B
@@ -484,7 +713,7 @@ sneller.
 
 ::: {#fig-blinderen layout-ncol="2"}
 ```{mermaid}
-%%| mermaid-format: png
+
 graph TD;
   A([behandeling]) --> B([verwachting proefpersoon])
   A -->|?| C([uitkomst])
@@ -492,7 +721,7 @@ graph TD;
 ```
 
 ```{mermaid}
-%%| mermaid-format: png
+
 graph TD;
   A([behandeling]) ~~~ B([verwachting proefpersoon])
   A -->|?| C([uitkomst])
@@ -504,7 +733,7 @@ graph TD;
 
 ::: {#fig-dubbel-blinderen layout-ncol="2"}
 ```{mermaid}
-%%| mermaid-format: png
+
 graph TD;
   A([behandeling]) --> D([verwachting onderzoeker])
   A -->|?| C([daadwerkelijke uitkomst])
@@ -513,7 +742,7 @@ graph TD;
 ```
 
 ```{mermaid}
-%%| mermaid-format: png
+
 graph TD;
   A([behandeling]) ~~~ D([verwachting onderzoeker])
   A -->|?| C([daadwerkelijke uitkomst])
