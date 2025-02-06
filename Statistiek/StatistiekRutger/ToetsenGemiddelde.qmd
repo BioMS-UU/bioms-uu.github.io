@@ -87,8 +87,6 @@ het resultaat meestal niet als significant gezien.
 
 ## Voorbeeld van de $t$-toets voor één steekproef
 
-![De gevolgen van weinig slapen zijn niet mals.](figuren/slapende_student.jpg){#fig-slapende-student fig-cap="D. Sharon Pruitt, owner of [Pink Sherbet Photography](https://www.pinksherbet.com) [CC BY 2.0](https://creativecommons.org/licenses/by/2.0), via Wikimedia Commons"}
-
 
 ```{r}
 #| code-fold: true
@@ -273,6 +271,93 @@ ggplot(data, aes(x = x, y = y)) +
 
 ### Stap 6: Conclusies
 
+## Voorbeeld van de $t$-toets gepaarde steekproeven
+
+![De gevolgen van weinig slapen zijn niet mals.](figuren/slapende_student.jpg){#fig-slapende-student fig-cap="D. Sharon Pruitt, owner of [Pink Sherbet Photography](https://www.pinksherbet.com) [CC BY 2.0](https://creativecommons.org/licenses/by/2.0), via Wikimedia Commons"}
+
+De gepaarde $t$-toets zullen we illustreren aan de hand van een onderzoek naar
+slaap^[[Guilleminault, C., Powell, N. B., Martinez, S., Kushida, C., Raffray, T., Palombini, L., & Philip, P. (2003). Preliminary observations on the effects of sleep time in a sleep restriction paradigm. Sleep medicine, 4(3), 177-184.](https://doi.org/10.1016/S1389-9457(03)00061-3)]. 
+Gedurende één week mochten de proefpersonen slechts 4 uur per nacht in 
+bed doorbrengen. Vervolgens werd elke dag gemeten hoe slaperig de proefpersonen
+waren door middel van de *Maintainance of Wakefullness test* (MWT)^[[Mitler, M. M., Gujavarty, K. S., & Browman, C. P. (1982). Maintenance of wakefulness test: a polysomnographic technique for evaluating treatment efficacy in patients with excessive somnolence. Electroencephalography and clinical neurophysiology, 53(6), 658-661.](https://doi.org/10.1016/0013-4694(82)90142-0)]. 
+Hierbij zit de deelnemer gedurende 20 minuten in bed, in een donkere kamer zonder
+verdere afleiding. De deelnemer mag geen gerichte acties ondernemen om te 
+voorkomen dat deze in slaap valt, zoals zichzelf in het gezicht slaan of zingen. 
+De score wordt bepaald door het gemiddelde aantal minuten dat een deelnemer 
+wakker blijft, waarbij de 20 minuten durende test vijf keer wordt herhaald. 
+Zoals je in @fig-vb-gepaarde-t-toets kunt zien, waren er op de dag voor de 
+slaaprestrictie drie deelnemers die gedurende de hele test wakker bleven. Op dag 
+6 lukte dat geen van de deelnemers. De hypothese is dat het beperken van de tijd
+in bed tot vier uur per nacht leidt tot een slechtere MWT-score. Om te
+onderzoeken of dit inderdaad een significant verschil in MWT-score geeft, kunnen
+we gebruik maken van een gepaarde $t$-toets. We voeren datn een $t$-toets uit op
+de verschillen in MWT-scores per deelnemer tussen dag 0 en dag 6. Voordat we
+deze test uit kunnen voeren, moeten we eerst onderzoeken of de data aan de
+aannames voor een gepaarde $t$-toets voldoet.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| echo: false
+#| fig-cap: "De gemiddelde scores voor de Maintainance of Wakefullness test voor alle deelnemers (n=8) op dag 0 en dag 6."
+#| label: fig-vb-gepaarde-t-toets
+slaap <- data.frame(ID = as.factor(seq(8)),
+                    groep = c(rep(1, 4), rep(2, 4)),
+                    MWT_d0 = c(20, 13, 17, 14, 20, 17, 20, 14),
+                    MWT_d1 = c(3.5, 8.7, 10.8, 13.6, 14, 13, 11.9, 12.2),
+                    MWT_d2 = c(5.5, 7.6, 6.4, 10.4, 13, 11, 17.3, 7.5),
+                    MWT_d3 = c(5.3, 5.9, 5.8, 12.6, 13.3, 8, 9, 7.1),
+                    MWT_d4 = c(4.7, 7.9, 7, 17.8, 8.9, 8.5, 8.5, 7.4),
+                    MWT_d5 = c(3.7, 3.2, 5, 12.4, 8, 10.8, 16, 10.8),
+                    MWT_d6 = c(4.5, 1.9, 3.7, 6.2, 10.3, 8.2, 5.14, 8.2),
+                    MWT_d7 = c(1.7, 5.5, 4.7, 3.6, 10.3, 6.8, 8.5, 5.2))
+
+library(tidyverse)
+library(dplyr)
+
+# Bereken de offset voor overlappende waarden
+slaap_plot <- slaap %>%
+  pivot_longer(cols = starts_with("MWT"),
+               names_to = "dag",
+               names_prefix = "MWT_d",
+               values_to = "MWT") %>%
+  filter(dag %in% c(0, 6)) %>%
+  group_by(dag, MWT) %>%
+  mutate(n = n(),
+         offset = ifelse(n > 1, seq(-0.06, 0.06, length.out = n), 0)) %>%
+  ungroup()
+
+# Plot met systematische verschuiving voor overlappende punten
+ggplot(slaap_plot, aes(x = as.numeric(dag) + offset, y = MWT, color = ID)) +
+  geom_point() +
+  geom_line(aes(x = as.numeric(dag), group = ID)) +  # Lijnen blijven netjes op de juiste dagen
+  scale_x_continuous(breaks = c(0, 6),
+                     limits = c(-0.5, 6.5)) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  xlab("Dag")
+```
+Ten eerste moeten de metingen gepaard zijn voor een gepaarde $t$-toets. Dit is
+hier het geval, omdat we de MWT-score van dezelfde deelnemers op verschillende
+dagen met elkaar vergelijken. Daarnaast moeten de *verschillen* tussen de 
+gepaarde metingen normaalverdeeld zijn. Dit kunnen we testen door een QQ-plot te
+maken van de verschillen tussen de metingen: 
+
+```{r}
+# Maak een QQ-plot van de verschillen tussen de scores op dag 0 en dag 6
+qqnorm(slaap$MWT_d0 - slaap$MWT_d6)
+qqline(slaap$MWT_d0 - slaap$MWT_d6)
+```
+Uit de plot hierboven kunnen we afleiden dat we aan de aanname van
+normaalverdeelde verschillen voldoen. Dit betekent dat we de gepaarde $t$-test 
+mogen uitvoeren:
+
+```{r}
+t.test(slaap$MWT_d0, slaap$MWT_d6, paired = TRUE)
+```
+
+We kunnen de null-hypothese van geen verschil tussen de MWT-scores op dag 0 en 
+dag 6 dus verwerpen.
 
 ## De $t$-toets voor twee onafhankelijke steekproeven {#sec-t-toets-twee-steekproeven}
 
@@ -414,9 +499,9 @@ heeft op hun fysiologie, gedrag en ecologische rol. In dit voorbeeld gebruiken
 we een 
 [dataset](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273) 
 over vogels en zoogdieren in Colombia, waarin het lichaamsgewicht van meer dan 
-42.000 vogels en 7.400 zoogdieren is vastgelegd^[[Ocampo, D., Borja-Acosta, K. G., Lozano-Flórez, J., Cifuentes-Acevedo, S., Arbeláez-Cortés, E., Bayly, N. J., ... & Acevedo-Charry, O. (2021). *Body mass data set for 1,317 bird and 270 mammal species from Colombia.* Ecology, 102(3), e03273.](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273)]. We focussen op de Bonte manakin 
-(*Manacus manacus*) en onderzoeken of er een verschil is in lichaamsgewicht tussen 
-mannetjes en vrouwtjes. 
+42.000 vogels en 7.400 zoogdieren is vastgelegd^[[Ocampo, D., Borja-Acosta, K. G., Lozano-Flórez, J., Cifuentes-Acevedo, S., Arbeláez-Cortés, E., Bayly, N. J., ... & Acevedo-Charry, O. (2021). *Body mass data set for 1,317 bird and 270 mammal species from Colombia.* Ecology, 102(3), e03273.](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273)]. 
+We focussen op de Bonte manakin (*Manacus manacus*) en onderzoeken of er een 
+verschil is in lichaamsgewicht tussen mannetjes en vrouwtjes. 
 
 ::: {#fig-manakin-distributie layout-ncol="2"}
 ```{r}
