@@ -367,7 +367,7 @@ lees je meer over het debat rondom de zelfwaardebeweging.
     American Psychologist 77, no. 1 (January 2022): 5–17.
     https://doi.org/10.1037/amp0000922.
 
-### Condounding: assiciaties veroorzaakt door een gezamenlijke oorzaak
+### Confounding: assiciaties veroorzaakt door een gezamenlijke oorzaak
 
 Bekijk @fig-ijs hieronder eens. 
 Deze is gebaseerd op cijfers uit de VS, uit 2019,
@@ -491,41 +491,80 @@ en `ijsverkooop` aan de andere kant).
 
 ### Colliders: associaties veroorzaakt door selectie van een subpopulatie
 
-Beroemde filmacteurs hebben vaak een aantrekkelijk uiterlijk.
-Maar dat geldt niet voor iedere acteur.
-Is het je ooit opgevallen dat de *beste* acteurs
-vaak juist *niet* zo mooi zijn?
-En de mooiste acteurs vaak matig acteren?
+We beginnen weer met een voorbeeld.
 
-Hoewel er geen goed bewijs is voor de stelling
-  dat onder beroemde acteurs schoonheid en talent negatief geassocieerd zijn,
-  uiten veel mensen dit vermoeden.
-We laten de waarheid van deze vermoedens hier in het midden
-en vragen ons af:
-*als* die relatie zou bestaat,
-welke conclusie zouden we dan moeten trekken?
-Dat talent en schoonheid op niet goed samengaan?
+::: {#exm-aanmelding}
 
-Hier is een andere mogelijke verklaring.
-Het volgende causale diagram zegt enkel
-dat `acteertalent` en `fysieke aantrekkelijkheid` invloed hebben
-op je kans om een beroemd acteur te worden:
+## Selectie voor een masteropleiding
+
+Als een student zich aanmeldt voor de masteropleiding 
+  *Bioinformatics and Biocomplexity*
+  volgt een selectieprocedure
+  waarbij gekeken wordt of de achtergrond van de student
+  goed aansluit bij de opleiding.
+Op basis van beschikbare informatie ---CV, vakken, cijfers, motivatie, referenties---
+  krijgt iedere student scores voor verschillende deelaspecten.
+Bijvoorbeeld, 
+  als een student gedegen achtergrond heeft
+  in de bioinformatica,
+  dan heeft dat een positieve invloed op diens kans door de selectie te komen.
+Hetzelfde geldt als een student aantoonbaar affiniteit en ervaring heeft 
+  met biologisch modelleren.
+Laten we aannemen dat de opleiding besloten heeft
+  om alleen student toe te laten
+  waarvan het gemiddelde van beide scores boeven een drempel uitkomt.
+(In werkelijkheid worden nog veel meer variabelen meegewogen,
+  maar voor dit voorbeeld houden we het eenvoudig.)
+
+We kunnen de situatie dan weergeven in het volgende causale diagram:
+  
+:::{#fig-collider}
 ```{mermaid}
 graph TD;
-  A([acteertalent]) --> B([succes als acteur])
-  C([fysieke aantrekkelijkheid]) --> B
+  A([score bioinformatica]) --> B([toelating])
+  C([score biologisch modelleren]) --> B
 ```
+:::
 
+Merk op dat er volgens @fig-collider geen causaal verband bestaat
+  tussen beide scores. 
+Als een student een extra cursus bioinformatica volgt,
+  gaat diens `score bioinformatica` omhoog,
+  en dat zal invloed hebben op zijn kansen om toegelaten te worden;
+maar diens `score biologisch modelleren` zal er niet door veranderen, want
+  daarvoor staat de pijl tussen `toelating` en `score biologisch modelleren`
+  de verkeerde kant op.
+Op basis van de pijlen in @fig-collider zullen beide scores
+  dus niet geassocieerd raken.
+Het kan natuurlijk zijn dat
+  `score bioinformatica` en `score biologisch modelleren` 
+  bij voorbaat geassocieerd zijn (positief of negatief),
+  maar laten we even aannemen dat dat niet het geval is.
 
+Nu selecteren we een willekeurige student die voor de opleiding is aangenomen,
+  en we vernemen dat deze student heel weinig ervaring heeft met bioinformatica.
+Dan kunnen we direct concluderen
+  dat deze student een hoge score moet hebben gehad voor biologisch modelleren,
+  *want anders was deze niet aangenomen*.
+Dat geldt ook andersom:
+  heeft de student een lage `score biologisch modelleren`,
+  dan moet diens `score bioinformatica` wel hoog zijn.
+Kortom:
+  *binnen de subpopulatie van studenten die zijn toegelaten
+  kunnen beide scores (negatief) geassocieerd zijn,
+  zelfs als die associatie niet bestaat in de populatie aanmeldingen als geheel*!
+De associatie ontstaat doordat we een selectie hebben gemaakt
+  op basis van de variabele `toelating`.
+Figuur @fig-collider-plot illustreert dat.
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.cap: ""
-#| label: fig-collider
+#| fig.cap: "Illustratie van collider bias. In de volledige populatie van aanmeldingen (grijs en oranje samen) zijn beide scores niet geassocieerd. Toch laat de selectie van studenten met een hoge gemiddelde score (boven de zwarte lijn; oranje datapunten) wél een negatieve associatie zien. (De gegevens zijn natuurlijk fictief.)"
 #| fig.width: 4
 #| fig.height: 4
 #| out.width: "60%"
+#| label: fig-collider-plot
 
 if (!("MASS" %in% .packages())) {
   library(MASS)
@@ -535,9 +574,8 @@ if (!("ggplot2" %in% .packages())) {
 }
 
 # Parameters
-n_steekproef <- 1000  # Aantal waarnemingen in de populatie
-n_deelsteekproef <- 80  # Aantal waarnemingen in de deelsteekproef
-lambda <- 2  # Parameter voor selectiekans
+n_steekproef <- 500  # Aantal waarnemingen in de populatie
+drempel <- 1
 
 # Genereer bivariate normale steekproef zonder correlatie
 set.seed(42)
@@ -547,101 +585,111 @@ steekproef <- as.data.frame(
 )
 colnames(steekproef) <- c("X", "Y")
 
-# Selectiekans berekenen op basis van exp(lambda * (X + Y))
-steekproef$kans <- exp(lambda * (sign(steekproef$X)*steekproef$X^2 + sign(steekproef$Y)*steekproef$Y^2))
-steekproef$kans <- steekproef$kans / sum(steekproef$kans)  # Normalisatie
+# Voeg een kleurkolom toe en initialiseer als "darkgrey"
+steekproef$kleur <- "darkgrey"
 
-# Voeg een kleurkolom toe en initialiseer als "black"
-steekproef$kleur <- "darkgray"
-
-# Trek de deelsteekproef met gewogen kansen
-deelsteekproef_indices <- sample(
-  1:n_steekproef, n_deelsteekproef, prob = steekproef$kans, replace = FALSE
-)
+# Bepaal welke studenten toegelaten worden
+deelsteekproef_indices <- ((steekproef$X + steekproef$Y) > 2*drempel)
+# Stel de kleur van die datapunten in op oranje
 steekproef$kleur[deelsteekproef_indices] <- "#e8601d"
 
 # Plot de gegevens
-steekproef <- steekproef[order(steekproef$kleur, decreasing = TRUE), ]
-
 plot <- ggplot(
   steekproef, aes(x = X, y = Y, color = kleur)
 ) +
-  geom_point(alpha = 1, size = 2) +
+  geom_point(alpha = 1, size = 1) +
   scale_color_identity() +
   theme_minimal() +
   labs(
     title = NULL,
-    x = "fysieke aantrekkelijkheid", y = "acteertalent"
-  )
+    x = "score bioinformatica", y = "score biologisch modelleren"
+  ) +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank()
+  ) + 
+  geom_line(data = data.frame(X = c(-3, 3), Y = c(5, -1)), color = "black") +
+  coord_cartesian(xlim = c(-3,3), ylim = c(-3, 3))
 
 print(plot)
 
-```
+```  
 
 
-
-::: {#fig-collider layout-ncol="2" out.width="100%"}
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.cap: "In the gehele populatie is acteertalent onafhankelijk van uiterlijke aantrekkelijkheid. (Fictieve gegevens.)"
-#| label: fig-mozaiek-collider-A
-#| fig.width: 3.5
-#| fig.height: 3.5
-#| out.width: "100%"
-
-aantal_acteurs <- 10000
-number_sampled <- 1000
-
-set.seed(145)
-
-aantrekkelijk <- factor(sample(c("nee", "ja"), aantal_acteurs, replace = TRUE, prob = c(0.9, 0.1)), levels = c("ja", "nee"))
-talent <- factor(sample(c("nee", "ja"), aantal_acteurs, replace = TRUE, prob = c(0.9, 0.1)), c("nee", "ja"))
-gegevens <- data.frame(talent, aantrekkelijk)
-#gegevens_geselecteerd <- gegevens[aantrekkelijk == "ja" | talent == "ja", ]
-prob <- 0.002 + 
-  (gegevens$aantrekkelijk == "ja" | gegevens$talent == "ja")*0.75 + 
-  (gegevens$aantrekkelijk == "ja" & gegevens$talent == "ja")*0.15 
-
-select <- sample(1:nrow(gegevens), number_sampled, prob = prob)
-gegevens_geselecteerd <- gegevens[select, ]
-
-# Create a mosaic plot using base R
-mosaicplot(
-  table(gegevens), 
-  color = kleuren <- c("DarkOrchid", "#e8601d"),
-  main = "Gehele populatie",
-  xlab = "aantrekkelijk uiterlijk",
-  ylab = "acteertalent"
-  )
-```
-
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.cap: "In de populatie van successvolle acteurs hebben onaantrekkelijke acteurs vaker vaker talent, puur omdat personen die noch *looks* noch talent hebben zelden door de selectie komen."
-#| label: fig-mozaiek-collider-B
-#| fig.width: 3.5
-#| fig.height: 3.5
-#| out.width: "100%"
-
-mosaicplot(
-  table(gegevens_geselecteerd),
-  main = "Succesvolle acteurs",
-  color = kleuren <- c("DarkOrchid", "#e8601d"),
-  xlab = "aantrekkelijk uiterlijk",
-  ylab = "acteertalent"
-  )
-
-```
 :::
+
+
+In @fig-collider zie je dat er twee pijlen naar `toelating` toe wijzen.
+Een variabele waarnaar meerdere pijlen wijzen
+  wordt een **collider** genoemd.
+De algemene boodschap die je uit @exm-aanmelding moet meenemen is de volgende:
+
+::: {.callout-important}
+
+## Collider bias
+  
+Laat $C$ een collider zijn 
+  die causaal beïnvloed wordt door $X$ en $Y$ (en mogelijk andere variabelen):
+```{mermaid}
+graph TD;
+  X([X]) --> C([C])
+  Y([Y]) --> C
+  Z([...]) --> C
+```
+Nu selecteren we een subpopulatie op basis van de waarde
+  van de collider-variabele.
+Dan is er een grote kans dat, binnen die selectie,
+  de associatie tussen $X$ en $Y$ anders is
+  dan in de gehele populatie.
+  
+Specifiek kunnen $X$ en $Y$ binnen de selectie
+  sterk geassocieerd zijn
+  terwijl ze dat niet zijn in de gehele populatie
+  en ze elkaar op geen enkele manier causaal beïnvloeden.
+Ook is het mogelijk dat de associatie tussen $X$ en $Y$ 
+  binnen de selectie negatief is, 
+  terwijl die in de gehele populatie positief is
+  (of andersom).
+:::
+
+Collider bias komt enorm vaak voor en wordt vaak niet herkend.
+Bijvoorbeeld, 
+  tijdens de corona-pandemie werd in korte tijd veel onderzoek gedaan
+  naar risicofactoren bij SARS-COV-2.
+Daarbij werd vaak gebruik gemaakt van gegevens van patienten
+  die in het ziekenhuis opgenomen waren,
+  of die vrijwillig deelnamen aan een onderzoek
+  via een app.
+Een probleem daarbij is dat de risicofactoren mogelijk zelf
+van invloed zijn op de kans dat iemand aan het onderzoek deelneemt.
+Dat leidt tot ingewikkelde causale diagrammen, zoals die hieronder:
+
+```{mermaid}
+graph TD;
+  A([risicofactor 1]) --> B([deelname onderzoek])
+  C([risicofactor 2]) --> B
+  B --> D([verloop ziekte])
+  A -->|?| D
+  C -->|?| D
+```
+Je ziet: `deelname onderzoek` is hier een collider,
+  en de selectie van deelnemers kan nu gemakkelijk leiden
+  tot onechte associaties tussen risicofactoren.
+Dat maakt het vervolgens moeilijk om het causale effect in te schatten
+  van iedere afzonderlijke risicofactor op het verloop van de ziekte.
+
+Interessant? Lees er meer over in het artikel in de voetnoot.[^colliderCovid]
+
+[^colliderCovid]: Griffith, Gareth J., Tim T. Morris, Matthew J. Tudball, Annie Herbert, Giulia Mancano, Lindsey Pike, Gemma C. Sharp, et al. “Collider Bias Undermines Our Understanding of COVID-19 Disease Risk and Severity.” Nature Communications 11 (November 12, 2020): 5749. https://doi.org/10.1038/s41467-020-19478-2.
+    
 
 ### Causale relaties zijn vaak erg complex
 
-Causaal diagram voor het bepalen van "association between pre-pregnancy
-BMI (exposure) and cesarean delivery (outcome)" in zwangere vrouwen.
-
-Figuur uit[^associatiestussenvariabelen-2]
+In de praktijk zijn er bij veel onderzoeken nog veel meer variabelen betrokken.
+Een goed voorbeeld is een onderzoek dat probeerde te bepalen 
+of een hoog BMI (Body Mass Index) van een moeder vóór haar zwangerschap
+een verhoogd risico oplevert op een keizersnede.[^associatiestussenvariabelen-2]
+Het causale diagram uit dat artikel ziet er als volgt uit:
 
 [^associatiestussenvariabelen-2]: Hamra, Ghassan B., Jay S. Kaufman, and
     Anjel Vahratian. “Model Averaging for Improving Inference from
@@ -651,10 +699,20 @@ Figuur uit[^associatiestussenvariabelen-2]
 
 ::: todo-box
 Madelon en/of Yannick: figuur hieronder namaken met Mermaid. Vertaal de
-namen van de variabelen. Voorbeelden hierboven.
+namen van de variabelen. Voorbeelden hierboven. Hieronder alvast een beginnetje gemaakt.
 :::
 
 ![](figuren/causal_graph.png)
+
+```{mermaid}
+graph TD;
+  A([Chronische hoge bloeddruk]) --> B([Gewicht moeder voor de zwangerschap])
+  B --> C([Keizersnede])
+  D([Lichaamslengte moeder]) --> B
+  D --> E([Gewichtstoename tijdens zwangerschap])
+  E --> F([Geschat gewicht feutus])
+  F --> C
+```
 
 ## Experimenteel onderzoek versus observationeel onderzoek
 
