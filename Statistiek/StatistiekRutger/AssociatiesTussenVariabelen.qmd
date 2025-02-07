@@ -28,7 +28,7 @@ Belangrijker nog,
   vaak willen we weten of een variabele een andere beïnvloedt. 
 We hebben het dan over **oorzakelijke verbanden** of **causaliteit**.
 Hoe kunnen we door middel van goed geplande experimenten 
-onderscheid maken tussen associaties en oorzakelijke verbanden?
+aantonen dat er een oorzakelijk verband bestaat tussen variabelen?
 Dat zijn de thema's van dit hoofdstuk.
 
 ## Associaties tussen verschillende typen variabelen
@@ -252,6 +252,11 @@ Een specifieke manier waarop variabelen geassocieerd kunnen raken
 is als ze elkaar beïnvloeden. 
 We hebben het dan over een **oorzakelijk** of **causaal verband**.
 Roken en longkanker zijn geassocieerd omdat roken kanker *veroorzaakt*.
+Het is heel waardevol om te weten dat het verband tussen die twee variabelen
+oorzakelijk is, want dat betekent dat het aantal longkankerpatienten
+zal afnemen als we maatregelen nemen tegen roken.
+Als je niet weet wat longkanker veroorzaakt, 
+weet je ook niet hoe je longkanker moet voorkomen.
 
 Maar als twee variabelen geassocieerd zijn,
 wil nog niet zeggen dat er een causaal verband bestaat tussen die variabelen.
@@ -260,6 +265,8 @@ het aantal regenpakken in het straatbeeld
 is geassocieerd met het aantal paraplu's,
 maar regenpakken veroorzaken geen paraplu's,
 en paraplu's geen regenpakken.
+Maatregelen tegen het gebruik van paraplu's
+zullen dus ook niet helpen bij het bestrijden van regenpakken.
 Een veelgehoorde uitspraak is dan ook: "Correlatie is nog geen causatie."
 
 Hoewel veel mensen dit begrijpen
@@ -683,13 +690,15 @@ Interessant? Lees er meer over in het artikel in de voetnoot.[^colliderCovid]
 [^colliderCovid]: Griffith, Gareth J., Tim T. Morris, Matthew J. Tudball, Annie Herbert, Giulia Mancano, Lindsey Pike, Gemma C. Sharp, et al. “Collider Bias Undermines Our Understanding of COVID-19 Disease Risk and Severity.” Nature Communications 11 (November 12, 2020): 5749. https://doi.org/10.1038/s41467-020-19478-2.
     
 
-### Causale relaties zijn vaak erg complex
+### Verstrikt in het netwerk van causale relaties
 
 In de praktijk zijn er bij veel onderzoeken nog veel meer variabelen betrokken.
 Een goed voorbeeld is een onderzoek dat probeerde te bepalen 
-of een hoog BMI (Body Mass Index) van een moeder vóór haar zwangerschap
+of een hoog lichaamsgewicht van een moeder vóór haar zwangerschap
 een verhoogd risico oplevert op een keizersnede.[^associatiestussenvariabelen-2]
-Het causale diagram uit dat artikel ziet er als volgt uit:
+In het artikel over dit onderzoek 
+beeldden de autheurs een causaal diagram af;
+we hebben dat diagram nagetekend in @fig-keizersnede.
 
 [^associatiestussenvariabelen-2]: Hamra, Ghassan B., Jay S. Kaufman, and
     Anjel Vahratian. “Model Averaging for Improving Inference from
@@ -704,6 +713,7 @@ namen van de variabelen. Voorbeelden hierboven. Hieronder alvast een beginnetje 
 
 ![](figuren/causal_graph.png)
 
+:::{#fig-keizersnede}
 ```{mermaid}
 graph TD;
   A([Chronische hoge bloeddruk]) --> B([Gewicht moeder voor de zwangerschap])
@@ -713,20 +723,95 @@ graph TD;
   E --> F([Geschat gewicht feutus])
   F --> C
 ```
+:::
 
-## Experimenteel onderzoek versus observationeel onderzoek
+Het is gemakkelijk om in zo'n web van relaties 
+verstrikt te raken. 
+Het kan zijnn dat lichaamsgewicht het risico op een keizersnede
+daadwerkelijk beïnvloed. 
+Maar als in gegevens een dergelijke associatie wordt gevonden,
+ mag die conclusie niet zomaar getrokken worden.
+Het vereist heel geavanceerde methoden om deze kluwe te ontwarren,
+en zelfs daarmee is het nooit uit te sluiten
+dat er een confounder is gemist.
 
-### Causale verbanden aantonen d.m.v. observationeel onderzoek is moeilijk
+::: {#exr-keizersnede}
 
-Confounding probleem
+## Een ingewikkeld causaal diagram
 
-```{mermaid}
+Bekijk @fig-keizersnede nog eens goed. Zie je confounders die de associatie tussen lichaamsgewicht en keizersnede kunnen beïnvloeden?
+:::
 
-graph TD;
-  A([mogelijke confounder]) --> B([uitkomst])
-  C([behandeling]) -->|?| B
-  A --> C
-```
+
+## Twee soorten onderzoek: experimenteel en observationeel
+
+Voordat we uitleggen hoe we toch onderscheid kunnen maken 
+  causale relaties en misleidende associaties
+  moeten we het onderscheid uitleggen tussen
+  *observationeel onderzoek* en *experimenteel onderzoek*.
+  
+Bij **observationeel onderzoek** verzamelen onderzoekers gegevens
+  zonder in te grijpen in de onderzochte processen. 
+Ze observeren en registreren natuurlijke variaties in variabelen en proberen hieruit patronen of verbanden af te leiden.
+Voorbeelden zijn:
+-  Epidemiologische onderzoeken waarbij ziekenhuisgegevens worden gebruikt
+   om risicofactoren te ontdekken, 
+   zonder dat deelnemers wordt gevraagd hun gedrag te veranderen.
+-  Gedragsonderzoek waarbij dieren op afstand worden geobserveerd
+   en nauwkeurig wordt bijgehouden welke gedragingen ze vertonen.
+
+Bij **experimenteel onderzoek** manipuleren onderzoekers actief een of meer  variabelen en meten ze het effect daarvan op een of meer andere variabelen.
+Een voorbeeld is ecologisch onderzoek
+  naar het effect van begrazing door herbivoren op de plantendiversiteit,
+  waarbij stukken land actief worden beschermd tegen begrazing
+  en de plantendiversiteit van die stukken wordt vergeleken 
+  met stukken waar begrazing wél wordt toegestaan.
+Een ander voorbeeld:
+  een onderzoek naar de effectiviteit van een vaccin,
+  waarbij één groep mensen wordt gevaccineerd en een andere groep niet,
+  en de kans op infectie of ziekenhuisopname vervolgens wordt vergeleken tussen beide groepen.
+
+Variabelen die door de onderzoekers worden gemanipuleerd
+  worden **experimentele** of **onafhankelijke** variabelen genoemd.
+De variabele waarop het effect wordt bepaald heet de **afhankelijke** variabele of de **responsvariabele**.
+
+### Het is moeilijk causale relaties aan te tonen met observationele studies 
+
+Observationeel onderzoek heeft een aantal grote voordelen.
+De belangrijkste is dat bij dit soort onderzoek
+  het natuurlijke verloop van het systeem dat je onderzoekt
+  niet wordt verstoord.
+Je meet wat er van nature gebeurt
+  in plaats van wat je door manipulatie laat gebeuren.
+Maar er is ook een enorm nadeel.
+Hierboven hebben we het uitgebreid gehad
+  over confounders en collider bias,
+  subtiele effecten die de associatie tussen variabelen 
+  in observationele data kunnen beïnvloeden.
+Het is daardoor bij observationele onderzoeken altijd moeilijk
+  om aan te tonen of een gemeten verband
+  causaal is.
+
+
+
+
+
+
+Observationeel onderzoek: 
+
+Experimenteel onderzoek: variabele controleren / manipuleren.
+
+| Kenmerk                | Observationeel onderzoek  | Experimenteel onderzoek |
+|:------------------------|:--------------------------|:--------------------------|
+| Manipulatie van variabelen | ❌ Nee  | ✅ Ja  |
+| Causale conclusies mogelijk? | ⚠️ Beperkt  | ✅ Ja  |
+| Controle over storende variabelen | ⚠️ Beperkt | ✅ Groot  |
+| Natuurlijke setting? | ✅ Ja | ❌ Meestal niet  |
+| Voorbeelden | Cohortstudies, case-control studies, surveys | Randomized Controlled Trials (RCTs), laboratoriumexperimenten |
+
+: Verschillen tussen observationeel en experimenteel onderzoek
+{#tbl-woorden-variabelen-verdelingen .striped .hover}
+
 
 ### Experimenten kunnen causale relaties aantonen
 
@@ -739,14 +824,29 @@ Behandeling randomiseren verwijdert de mogelijkheid van een confounder.
 Twee groepen: behandelingsgroep + **controlegroep**. Controlegroep om te
 zien of de uitkomsten anders zijn met behandeling.
 
+::: {#fig-randomgetallen layout-ncol="2"}
 ```{mermaid}
+%%| fig-width: 3.5
+%%| fig-cap: "Bij observatief onderzoek kunnen confounders de associatie tussen behandeling en uitkomst verstoren."
+%%| label: fig-randomgetallen-a
 
+graph TD;
+  A([mogelijke confounder]) --> B([uitkomst])
+  C([behandeling]) -->|?| B
+  A --> C
+```
+
+```{mermaid}
+%%| fig-width: 3.5
+%%| fig-cap: "Bij een gerandomiseerd experiment wordt een effect van confounders uitgesloten."
+%%| label: fig-randomgetallen-b
 graph TD;
   A([mogelijke confounder]) --> B([uitkomst])
   C([behandeling]) -->|?| B
   D([randomgetallen]) --> C
   A ~~~ C
 ```
+:::
 
 Het is belangrijk om randomgetallen te gebruiken, omdat andere
 variabelen mogelijk ook de uitkomst beinvloeden.
@@ -771,7 +871,7 @@ sneller.
 
 ::: {#fig-blinderen layout-ncol="2"}
 ```{mermaid}
-
+%%| fig-width: 3.5
 graph TD;
   A([behandeling]) --> B([verwachting proefpersoon])
   A -->|?| C([uitkomst])
@@ -779,6 +879,7 @@ graph TD;
 ```
 
 ```{mermaid}
+%%| fig-width: 3.5
 
 graph TD;
   A([behandeling]) ~~~ B([verwachting proefpersoon])
