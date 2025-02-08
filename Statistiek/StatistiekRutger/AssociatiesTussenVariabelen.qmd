@@ -754,6 +754,7 @@ Bij **observationeel onderzoek** verzamelen onderzoekers gegevens
   zonder in te grijpen in de onderzochte processen. 
 Ze observeren en registreren natuurlijke variaties in variabelen en proberen hieruit patronen of verbanden af te leiden.
 Voorbeelden zijn:
+
 -  Epidemiologische onderzoeken waarbij ziekenhuisgegevens worden gebruikt
    om risicofactoren te ontdekken, 
    zonder dat deelnemers wordt gevraagd hun gedrag te veranderen.
@@ -761,13 +762,13 @@ Voorbeelden zijn:
    en nauwkeurig wordt bijgehouden welke gedragingen ze vertonen.
 
 Bij **experimenteel onderzoek** manipuleren onderzoekers actief een of meer  variabelen en meten ze het effect daarvan op een of meer andere variabelen.
-Een voorbeeld is ecologisch onderzoek
-  naar het effect van begrazing door herbivoren op de plantendiversiteit,
+Voorbeelden zijn:
+
+- Ecologisch onderzoek naar het effect van begrazing door herbivoren op de plantendiversiteit,
   waarbij stukken land actief worden beschermd tegen begrazing
   en de plantendiversiteit van die stukken wordt vergeleken 
   met stukken waar begrazing wél wordt toegestaan.
-Een ander voorbeeld:
-  een onderzoek naar de effectiviteit van een vaccin,
+- Onderzoek naar de effectiviteit van een vaccin,
   waarbij één groep mensen wordt gevaccineerd en een andere groep niet,
   en de kans op infectie of ziekenhuisopname vervolgens wordt vergeleken tussen beide groepen.
 
@@ -782,7 +783,8 @@ De belangrijkste is dat bij dit soort onderzoek
   het natuurlijke verloop van het systeem dat je onderzoekt
   niet wordt verstoord.
 Je meet wat er van nature gebeurt
-  in plaats van wat je door manipulatie laat gebeuren.
+  in plaats van wat je door ingrijpen in het system laat gebeuren.
+
 Maar er is ook een enorm nadeel.
 Hierboven hebben we het uitgebreid gehad
   over confounders en collider bias,
@@ -791,78 +793,177 @@ Hierboven hebben we het uitgebreid gehad
 Het is daardoor bij observationele onderzoeken altijd moeilijk
   om aan te tonen of een gemeten verband
   causaal is.
+  
+@Tbl-woorden-variabelen-verdelingen vat de verschillen tussen observationeel en experimenteel onderzoek samen.
 
-
-
-
-
-
-Observationeel onderzoek: 
-
-Experimenteel onderzoek: variabele controleren / manipuleren.
+Overigens zijn er ook veel onderzoeken waarbij de controle 
+over de relevante variabelen niet volledig is
+en die dus in feite noch strikt observationeel noch strikt experimenteel zijn.
 
 | Kenmerk                | Observationeel onderzoek  | Experimenteel onderzoek |
 |:------------------------|:--------------------------|:--------------------------|
 | Manipulatie van variabelen | ❌ Nee  | ✅ Ja  |
 | Causale conclusies mogelijk? | ⚠️ Beperkt  | ✅ Ja  |
-| Controle over storende variabelen | ⚠️ Beperkt | ✅ Groot  |
+| Controle over confounders? | ⚠️ Beperkt | ✅ Groot  |
 | Natuurlijke setting? | ✅ Ja | ❌ Meestal niet  |
-| Voorbeelden | Cohortstudies, case-control studies, surveys | Randomized Controlled Trials (RCTs), laboratoriumexperimenten |
+| Voorbeelden | Cohortstudies, surveys | gerandomiseerde gecontroleerde experimenten, laboratoriumexperimenten |
 
 : Verschillen tussen observationeel en experimenteel onderzoek
 {#tbl-woorden-variabelen-verdelingen .striped .hover}
 
 
-### Experimenten kunnen causale relaties aantonen
+### Randomized trials, of: Hoe experimenten wél causale relaties kunnen aantonen
 
-**Experimentele variabele**, **Responsvariabele**
+Om uit te leggen hoe experimenteel onderzoek
+  wél causale relaties kan aantonen,
+  bespreken we nu de "gouden standaard" van het experimenteel onderzoek:
+  het **gerandomiseerd gecontroleerd experiment** (GGE).
+Twee eisen definieren een GGE. 
+We leggen ze uit aan de hand van een eenvoudig voorbeeld:
+  een onderzoek dat moet uitzoeken of een zeker vaccin beschermt 
+  tegen een specifieke virale infectie.
+  
+De eerste eis is dat er een nauwkeurig ontworpen
+  **controlebehandeling** is.
+Om aan te tonen dat het vaccin werkt 
+  moeten we het vaccin aan een groep proefpersonen toedienen
+  en bijhouden hoe vaak ze in de periode daarna geïnfecteerd raken.
+Maar dat is niet genoeg:
+  we zullen het aantal infecties in deze groep moeten vergelijken 
+  met een andere groep
+  die het vaccin *niet* heeft gekregen.
+Zo'n extra groep die als "baseline" dient wordt de **controlegroep** genoemd.
 
-**Randomized trials.**
+Voor een goede controle
+  is het niet voldoende om de controlegroep simpelweg *geen* behandeling te geven.
+In plaats daarvan moeten we ervoor zorgen dat de proefpersonen in de controlegroep
+zoveel mogelijk dezelfde behandeling krijgen als de proefpersonen de vaccingroep.
+Zij krijgen dus ook een prik, 
+  soms zelfs met dezelfde samenstelling als het echte vaccin,
+  behalve dat de actieve component wordt weggelaten.
+Alleen op die manier zijn we er zeker van
+  dat eventuele verschillen in de uitkomsten van beide groepen
+  enkel het gevolg zijn van de werking van de actieve component,
+  en niet van andere verschillen tussen de ervaring van de groepen:
+  de bezoeken aan het ziekenhuis,
+  de toediening van de prik,
+  of een conserveermiddel in het vaccin.
+Het idee is ook goed te illustreren door middel van 
+  causale diagrammen (@fig-controlegroep).
+  
+::: {#fig-controlegroep layout-ncol="2" out-width="100%"}
+```{mermaid}
+%%| fig-width: 3.5
+%%| fig-cap: ""
+%%| label: fig-controlegroep-a
+graph TD;
+  A(["behandelgroep\n (vaccin of geen behandeling)"]) --> B([actieve component\n toegediend])
+  A --> D([ziekenhuisbezoek])
+  A --> F([...])
+  B --> E([infectie])  
+  D --> E
+  F --> E
+```
+```{mermaid}
+%%| fig-width: 3.5
+%%| fig-cap: ""
+%%| label: fig-controlegroep-b
+graph TD;
+  A(["behandelgroep\n (vaccin of controle)"]) --> B([actieve component\n toegediend])
+  A ~~~ D([ziekenhuisbezoek])
+  A ~~~ F([...])
+  B --> E([infectie])  
+  D --> E
+  F --> E
+```
 
-Behandeling randomiseren verwijdert de mogelijkheid van een confounder.
+Het belang van een zorgvuldige controlebehandeling. (a) Als de controlegroep simpelweg geen behandeling krijgt, zijn er mogelijk meerdere causale paden van `behandelgroep` naar `infectie`.
+(b) Een zorgvuldig gekozen controlecontrolebehandeling zorgt ervoor dat de groepen zoveel mogelijk identiek worden behandeld. Zo kan het effect van `behandelgroep` op `infectie` alleen via `actieve component` lopen, omdat toewijzing aan een groep geen effect heeft op de andere variabelen.
+:::
+  
+Het tweede eis aan een GGE is dat de toewijzing van eenheden aan groepen
+  plaatsvindt door middel van **randomisatie**.
+Dat wil zeggen dat de onderzoekers een onafhankelijk kansproces gebruiken,
+  zoals randomgetallen verkregen met R,
+  om te bepalen elke eenheid welke behandeling krijgt.
+Het doel daarvan is om counfounders te elimineren.
 
-Twee groepen: behandelingsgroep + **controlegroep**. Controlegroep om te
-zien of de uitkomsten anders zijn met behandeling.
+Het grote nadeel van observationeel onderzoek was
+  dat er vaak variabelen zijn,
+  bekend of onbekend,
+  die zowel de verklarende variabele
+  als de uitkomst beïnvloeden.
+Zulke confounders zorgen voor valse correlaties
+  waardoor het moeilijk wordt 
+  een oorzakelijk verband vast te stellen.
+Hetzelfde probleem kan optreden bij experimenten
+  als een variabele zowel de toewijzing aan een behandelgroep
+  als de responsvariabele beïnvloedt.
+De situatie is weergegeven in het causale diagram van @fig-randomgetallen-a.
+Stel bijvoorbeeld dat we besluiten om de proefpersonen
+  op basis van hun eerste voornaam aan een groep toe te kennen.
+Zeg, proefpersonen met namen van A tot K krijgen het vaccin,
+  die met namen L tot Z de controlebehandeling.
+Het is moeilijk te zeggen wat het effect zal zijn.
+De naam Noah, de meest populaire jongensnaam in 2024,
+  kwam vóór het jaar 2000 nauwelijks voor in Nederland,
+  en dus zijn vrijwal alle Noahs jong.
+De namen Mohammed en Inaya zijn het meest populair in grote steden
+  zoals Rotterdam,
+  en veel minder op het platteland.
+Kortom, namen zijn geassocieerd met allerlei variabelen
+  waaronder gender, leeftijd, geografie, ethniciteit, 
+  en het het inkomen en opleidingsniveau van de ouders.
+Het kan zijn dat de veel van deze associaties verzwakt worden
+  door de letters A tot K samen te voegen tot één groep,
+  maar er is een serieus risico dat er confounders overblijven.
+Een dergelijk risico is er altijd 
+  als de groepen ingedeeld worden op basis van een arbitrair gekozen variabele.
+
+Randomisatie lost dit probleem heel eenvoudig op;
+  zie @fig-randomgetallen-b. Als de toewijzing aan groepen
+  *enkel* op basis van randomgetallen gebeurt,
+  is er gegarandeerd geen associatie tussen de behandelgroep
+  en andere variabelen.
+Confounders zijn op die manier uitgesloten.  
 
 ::: {#fig-randomgetallen layout-ncol="2"}
 ```{mermaid}
 %%| fig-width: 3.5
-%%| fig-cap: "Bij observatief onderzoek kunnen confounders de associatie tussen behandeling en uitkomst verstoren."
+%%| fig-cap: "Observationeel of niet-gerandomiseerd onderzoek."
 %%| label: fig-randomgetallen-a
 
 graph TD;
-  A([mogelijke confounder]) --> B([uitkomst])
-  C([behandeling]) -->|?| B
+  A([mogelijke confounder]) --> B([infectie])
+  C([behandelgroep]) -->|?| B
   A --> C
 ```
 
 ```{mermaid}
 %%| fig-width: 3.5
-%%| fig-cap: "Bij een gerandomiseerd experiment wordt een effect van confounders uitgesloten."
+%%| fig-cap: "Gerandomiseerde toewijzing aan de behandelgroepen elimineert confounders."
 %%| label: fig-randomgetallen-b
 graph TD;
-  A([mogelijke confounder]) --> B([uitkomst])
-  C([behandeling]) -->|?| B
+  A([mogelijke confounder]) --> B([infectie])
+  C([behandelgroep]) -->|?| B
   D([randomgetallen]) --> C
   A ~~~ C
 ```
+
+Het belang van randomisatie. (a) Als de toewijzing van behandelgroep niet gerandomiseerd plaatsvindt, dan kunnen er confounders zijn die zowel de behandeling als de uitkomst beïnvloeden. (b) Als de toewijzing van de groepen enkel door randomgetallen worden bepaald, sluit dat confounders uit.
 :::
 
-Het is belangrijk om randomgetallen te gebruiken, omdat andere
-variabelen mogelijk ook de uitkomst beinvloeden.
+Deze twee aspecten samen
+---een zorgvuldige controlebehandeling én randomisatie---
+zorgen ervoor dat een GGE confounders kan omzeilen
+en zo directe causale verbanden kan aantonen.
 
-```{mermaid}
+## Blinderen: verstoring door proefpersonen en onderzoekers zelf
 
-graph TD;
-  A([mogelijke confounder]) --> B([uitkomst])
-  C([behandeling]) -->|?| B
-  D([variabele die de behandeling bepaalt]) --> C
-  D -->|?| B
-  A --x C
-  A -->|?| D
-```
+  
 
-### Blinderen: de proefpersoon
+
+### Enkelvoudig blinderen
 
 Niet geblindeerd: dan kan de wetenschap van welke behandeling de
 proefpersoon heeft gehad de uitkomst beinvloeden. Dat kan bewust of
