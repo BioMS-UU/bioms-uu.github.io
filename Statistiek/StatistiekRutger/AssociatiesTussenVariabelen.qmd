@@ -421,7 +421,18 @@ verdrinkingen_2019 <- subset(verdrinkingen, Year == 2019)
 gegevens <- data.frame(
   ijsverkoop = ijsverkoop_2019$IPN31152N,
   verdrinkingen = verdrinkingen_2019$Drowning,
-  maand = verdrinkingen_2019$Month
+  maand = c("januari",
+            "februari",
+            "maart",
+            "april",
+            "mei",
+            "juni",
+            "juli",
+            "augustus",
+            "september",
+            "oktober",
+            "november",
+            "december")
 )
 
 # Visualisatie met ggplot2
@@ -707,8 +718,7 @@ we hebben dat diagram nagetekend in @fig-keizersnede.
     https://doi.org/10.3390/ijerph120809391.
 
 ::: todo-box
-Madelon en/of Yannick: figuur hieronder namaken met Mermaid. Vertaal de
-namen van de variabelen. Voorbeelden hierboven. Hieronder alvast een beginnetje gemaakt.
+Rutger checken of deze figuur voldoet.
 :::
 
 ![](figuren/causal_graph.png)
@@ -717,17 +727,37 @@ namen van de variabelen. Voorbeelden hierboven. Hieronder alvast een beginnetje 
 ```{mermaid}
 graph TD;
   A([Chronische hoge bloeddruk]) --> B([Gewicht moeder voor de zwangerschap])
+  A --> K([Zwangerschaps-vergiftiging])
   B --> C([Keizersnede])
   D([Lichaamslengte moeder]) --> B
   D --> E([Gewichtstoename tijdens zwangerschap])
   E --> F([Geschat gewicht feutus])
   F --> C
+  E --> C
+  G([Leeftijd moeder]) --> B
+  G --> C
+  G --> L([Locatie prenatale zorg])
+  H([Ras moeder]) --> B
+  H --> G
+  H --> C
+  H --> L
+  H --> J([Opleidingsniveau moeder])
+  H --> I([Armoede-index])
+  I --> L
+  J --> C
+  J --> G
+  J --> I
+  K --> C
+  L --> C
 ```
+
+Causaal diagram over de relatie tussen een hoog lichaamsgewicht van een moeder
+vóór haar zwangerschap en het risico op een keizersnede.[^associatiestussenvariabelen-2]
 :::
 
 Het is gemakkelijk om in zo'n web van relaties 
 verstrikt te raken. 
-Het kan zijnn dat lichaamsgewicht het risico op een keizersnede
+Het kan zijn dat lichaamsgewicht het risico op een keizersnede
 daadwerkelijk beïnvloed. 
 Maar als in gegevens een dergelijke associatie wordt gevonden,
  mag die conclusie niet zomaar getrokken worden.
