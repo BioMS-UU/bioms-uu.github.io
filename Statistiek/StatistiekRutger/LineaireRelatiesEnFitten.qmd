@@ -71,20 +71,24 @@ Hoe kunnen we de lineaire samenhang tussen de lengte van ouders en hun kinderen 
 
 ## Pearsons correlatiecoëfficiënt $r$
 
-Populatie, steekproef grootte $n$, van iedere eenheid in de steekproef 
-twee variabelen gemeten $X$, en $Y$, met uitkomsten $x_1, \ldots, x_n$, 
-en $y_1, \dots, y_n$.
-**Pearson's correlatiecoëfficiënt** $r$ is een maat voor de lineaire correlatie 
-tussen de variabelen in de steekproef.
-In de praktijk vaak afgekort tot correlatiecoëfficiënt.
+### Eigenschappen
 
-Altijd tussen -1 en 1. De absolute waarde geeft aan hoe sterk het verband is:
-$r = 1$ of $r = -1$ geven allebei een perfect lineair verband weer.
-Alle punten liggen dan op een perfecte rechte lijn.
-Correlatie van 0: geen lineair verband.
-Het teken van $r$ geeft aan of het een positief of een negatief verband betreft.
-@Fig-correl-coefs geeft een aantal voorbeelden van puntenwolken 
-met de bijbehorende waarden van $r$.
+Stel, in een populatie wordt een steekproef met grootte $n$ genomen, waarbij van iedere eenheid in de steekproef twee variabelen worden gemeten: $X$ en $Y$. Dit levert de uitkomsten $x_1, \ldots, x_n$ en $y_1, \dots, y_n$.
+
+**Pearson's correlatiecoëfficiënt** $r$ is een maat voor de lineaire correlatie tussen deze variabelen in de steekproef. In de praktijk wordt deze vaak afgekort tot de **correlatiecoëfficiënt**.
+
+Deze coëfficiënt is een **getal zonder dimensie** en heeft dus geen eenheid. De waarde ligt altijd tussen **-1 en 1**. De absolute waarde geeft de sterkte van het lineaire verband aan:
+
+- **$r = 1$ of $r = -1$**: een perfect lineair verband; alle punten liggen exact op een rechte lijn.
+- **$r = 0$**: er is geen lineair verband tussen de variabelen.
+
+Het teken van $r$ geeft de richting van het verband aan:
+
+- **Positieve correlatie ($r > 0$)**: als $X$ toeneemt, neemt $Y$ gemiddeld ook toe.
+- **Negatieve correlatie ($r < 0$)**: als $X$ toeneemt, neemt $Y$ gemiddeld af.
+
+@Fig-correl-coefs toont een aantal voorbeelden van puntenwolken met de bijbehorende waarden van $r$.
+
 
 ```{r}
 #| out-width: "100%"
@@ -273,7 +277,7 @@ p <- ggplot(datasets, aes(x = X, y = Y)) +
 print(p)
 ```
 
-### Formule
+### Wisundige formule
 
 
 $$
@@ -281,8 +285,110 @@ r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}
          {s_x s_y}.
 $$
 
+```{r}
+#| out-width: "71.4%"
+#| fig-width: 5
+#| fig-height: 5
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Scatterplot met vier kwadranten en annotaties."
+#| label: fig-annotated-scatter
+
+# Laad benodigde pakketten
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("MASS" %in% .packages())) { library(MASS) }
+
+# Definieer parameters
+n <- 100  # Steekproefgrootte
+rho <- 0.7  # Correlatiecoëfficiënt
+
+set.seed(158)
+
+# Genereer bivariate normale data
+sigma <- matrix(c(1, rho, rho, 1), nrow = 2)
+data <- MASS::mvrnorm(n, mu = c(0, 0), Sigma = sigma)
+df <- data.frame(X = data[, 1], Y = data[, 2])
+
+# Bereken gemiddelden
+mean_x <- mean(df$X)
+mean_y <- mean(df$Y)
+
+# Maak de scatterplot
+p <- ggplot(df, aes(x = X, y = Y)) +
+  geom_point(color = "#e8601d", alpha = 0.8, size = 2) +
+  geom_vline(xintercept = mean_x, linetype = "dashed") +
+  geom_hline(yintercept = mean_y, linetype = "dashed") +
+  annotate("text", x = mean_x + 0.5, y = mean_y + 3.4, 
+           label = expression(atop(italic(X) ~ "groter dan gemiddeld,", 
+                                   italic(Y) ~ "groter dan gemiddeld")), 
+           size = 4, hjust = 0) +
+  annotate("text", x = mean_x - 2.8, y = mean_y + 3.4, 
+           label = expression(atop(italic(X) ~ "kleiner dan gemiddeld,", 
+                                   italic(Y) ~ "groter dan gemiddeld")), 
+           size = 4, hjust = 0) +
+  annotate("text", x = mean_x + 0.5, y = mean_y - 3.4, 
+           label = expression(atop(italic(X) ~ "groter dan gemiddeld,", 
+                                   italic(Y) ~ "kleiner dan gemiddeld")), 
+           size = 4, hjust = 0) +
+  annotate("text", x = mean_x - 2.8, y = mean_y - 3.4, 
+           label = expression(atop(italic(X) ~ "kleiner dan gemiddeld,", 
+                                   italic(Y) ~ "kleiner dan gemiddeld")), 
+           size = 4, hjust = 0) +
+  theme_minimal() + 
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank()
+  ) +
+  labs(x = expression(bar(italic(X))), y = expression(bar(italic(Y)))) +
+  coord_cartesian(xlim = c(-3, 3), ylim = c(-4, 4))
+
+# Print de plot
+print(p)
+```
+
+
+### Correlatie-coefficient berekenen met R
+
+```{r}
+x <- c(1, 2, 3)
+y <- c(3, 2, 1)
+cor(x, y)
+```
+
+### Toetsen van de correlatie-coefficient.
+
+In de populatie: $\rho$.
+
+Model: bivariaat normaal.
+
+toets:
+
+**Stap 1:**
+
+**Stap 2:**
+
+**Stap 3:**
+
+**Stap 4:**
+
+**Stap 5:**
+
+
+```{r}
+x <- c(1, 2, 3)
+y <- c(3, 2, 1)
+cor.test(x, y)
+```
+
 
 ## Regressie
+
+Een rechte lijn door de wolk trekken.
+
+$$ Y = a X + b. $$
+
+Kies $a$ en $b$ om de gekwadrate afwijkingen te minimaliseren.
+Denk weer aan elastiekjes die de lijn naar de datapunten toe trekken. 
 
 ```{r}
 #| code-fold: true
