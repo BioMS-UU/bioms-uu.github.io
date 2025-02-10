@@ -9,7 +9,7 @@ slaap <- data.frame(ID = as.factor(seq(8)),
                     MWT_d7 = c(1.7, 5.5, 4.7, 3.6, 10.3, 6.8, 8.5, 5.2))
 
 library("ggplot2")
-library("tidyr")
+library("tidyverse")
 
 slaap_lang <- pivot_longer(slaap, 
                            cols = starts_with("MWT"),
@@ -23,21 +23,18 @@ ggplot(slaap_lang, aes(x = dag, y = MWT, color = ID)) +
   theme_minimal()
 
 summary(slaap$MWT_d0)
-summary(slaap$MWT_d7)
+summary(slaap$MWT_d6)
 
 sd(slaap$MWT_d0)
-sd(slaap$MWT_d7)
+sd(slaap$MWT_d6)
 
-qqnorm(slaap$MWT_d0)
-qqline(slaap$MWT_d0)
-
-qqnorm(slaap$MWT_d7)
-qqline(slaap$MWT_d7)
+qqnorm(slaap$MWT_d0 - slaap$MWT_d6)
+qqline(slaap$MWT_d0 - slaap$MWT_d6)
 
 t.test(slaap$MWT_d0, slaap$MWT_d7, paired = TRUE)
 t.test(slaap$MWT_d0, slaap$MWT_d4, paired = TRUE)
 
-dagen_geselecteerd <- slaap_lang[slaap_lang$dag == 0 | slaap_lang$dag == 7, ]
+dagen_geselecteerd <- slaap_lang[slaap_lang$dag == 0 | slaap_lang$dag == 6, ]
 
 ggplot(dagen_geselecteerd, aes(x = dag, y = MWT, color = ID)) +
   geom_point() +
@@ -47,7 +44,7 @@ ggplot(dagen_geselecteerd, aes(x = dag, y = MWT, color = ID)) +
 bereken_verschillen <- function(data) {
   data %>%
     pivot_wider(names_from = dag, values_from = MWT) %>%
-    mutate(verschil = `7` - `0`) %>%
+    mutate(verschil = `6` - `0`) %>%
     select(ID, verschil)
 }
 verschillen <- bereken_verschillen(dagen_geselecteerd)
@@ -56,3 +53,7 @@ t.test(verschillen$verschil)
 qqnorm(verschillen$verschil)
 qqline(verschillen$verschil)
 #vervelende outlier... in het verschil tussen dag 0 en 7; misschien 0 en 6 gebruiken?
+
+t.test(slaap$MWT_d6[slaap$groep == 1], slaap$MWT_d6[slaap$groep == 2], var.equal = T)
+sd(slaap$MWT_d6[slaap$groep == 1])
+sd(slaap$MWT_d6[slaap$groep == 2])

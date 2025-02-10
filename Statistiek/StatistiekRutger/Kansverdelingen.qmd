@@ -639,7 +639,68 @@ zo smal dat de rechthoekige staven niet meer zichtbaar zijn
 en het histogram een gladde curve wordt.
 
 ::: {.todo-box}
-Opgave: schat kansen op basis van een schets van de kansverdeling.
+Rutger: check opdracht.
+:::
+
+::: {.pepexr #exr-schat-kansen}
+Schat op basis van onderstaande kansenverdelingen hoe groot de kans is dat een 
+waarneming een waarde heeft die in het paars gearceerde gebied ligt.
+
+```{r}
+#| echo: false
+#| label: fig-kansen-schatten
+#| layout-ncol: 2
+#| layout-nrow: 2
+#| fig-cap: ""
+#| fig-subcap:
+#|   - ""
+#|   - ""
+#|   - ""
+#|   - ""
+
+
+library(ggplot2)
+
+# Definieer de standaardnormale verdeling
+x <- seq(-3.5, 3.5, length.out = 1000)
+data <- data.frame(x = x, y = dnorm(x))
+
+oppervlak <- function(a, b){# Gebied tussen a en b kleuren
+  geom_area(
+    data = subset(data, x >= a & x <= b), 
+    aes(x, y), 
+    fill = "darkorchid", 
+    alpha = 0.4
+  ) 
+} 
+
+normaalGeneriek <- ggplot(
+  data, 
+  aes(x = x, y = y)) +
+  geom_line(
+    color = "darkorange", 
+    linewidth = 1) +          
+  theme_minimal() +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank())
+
+# Gebruik qnorm om de de x-waarde bij een bepaalde kans te bepalen zodat de 
+# antwoorden makkelijk gemaakt kunnen worden.
+
+# A
+normaalGeneriek + oppervlak(qnorm(0.5), qnorm(1))
+
+# B
+normaalGeneriek + oppervlak(qnorm(0.75), qnorm(1))
+
+# C
+normaalGeneriek + oppervlak(qnorm(0.25), qnorm(0.5))
+
+# D
+normaalGeneriek + oppervlak(qnorm(0.25), qnorm(0.75))
+
+```
+
 :::
 
 ## De normale verdeling

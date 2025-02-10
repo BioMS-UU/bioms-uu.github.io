@@ -293,9 +293,12 @@ $$
 #| label: fig-binomiale-P-waarde
 #| fig.height: 3.5
 #| fig.width: 7
+#| warning: false
 
 m <- 41
 X <- 48
+y_pijl <- 0.025
+y_end_pijl <- 0.012
 
 # Maak een vector van kleuren
 kleur_vector <- ifelse(
@@ -304,7 +307,43 @@ kleur_vector <- ifelse(
   "DarkOrchid"
   )
 
-verdelingBinomiaal(kleur_vector)
+verdelingBinomiaal(kleur_vector) +
+      # Kromme pijltjes toevoegen
+    annotate(
+      "curve",
+      x = 7, y = y_pijl, xend = 9, yend = y_end_pijl, 
+      curvature = 0.2, 
+      arrow = arrow(length = unit(0.2, "cm")), 
+      color = "darkorchid", 
+      size = 0.7
+    ) +
+    annotate(
+      "curve",
+      x = 31, y = y_pijl, xend = 29, yend = y_end_pijl, 
+      curvature = -0.2, 
+      arrow = arrow(length = unit(0.2, "cm")), 
+      color = "darkorchid", 
+      size = 0.7
+    ) +
+    # Annotaties toevoegen
+    annotate(
+      "text", 
+      x = 7, 
+      y = y_pijl + 0.01,  # Plaats annotatie net boven de pijl
+      label = expression(frac("p",2)), 
+      color = "darkorchid", 
+      hjust = 0.5, 
+      size = 4
+    ) +
+    annotate(
+      "text", 
+      x = 31, 
+      y = y_pijl + 0.01,  # Plaats annotatie net boven de pijl
+      label = expression(frac("p",2)), 
+      color = "darkorchid", 
+      hjust = 0.5, 
+      size = 4
+    )
 
 ```
 
@@ -334,7 +373,7 @@ uitkomst maar 1 op de 20 keer verwacht. Dat is een kleine kans, en dus
 zeker een reden om nog eens kritisch naar de $\HO$ te kijken. Maar
 gebeurtenissen met een kans van 0,05 zijn ook weer niet zó bijzonder.
 Een $P$-waarde van 0,05 is dus opmerkelijk, maar op zichzelf geen sterk
-bewijs tegen $\HO$. We komen in @sec-? nog uitgebreid terug op de
+bewijs tegen $\HO$. We komen in @sec-p-waarden nog uitgebreid terug op de
 interpretatie van de $P$-waarde.
 
 ## Iedere toets is gebaseerd op een statistisch model
@@ -526,7 +565,7 @@ een besluit onjuist kan uitpakken.
 Wanneer je een hypothesetoets gebruikt om de nulhypothese al-dan-niet te
 verwerpen, dan hoop je natuurlijk dat je de juiste beslissing maakt.
 Maar omdat gegevens onzeker zijn is er altijd een kans dat je tot de
-verkeerde beslissing komt. @Tab-fouten hieronder vat de mogelijkheden
+verkeerde beslissing komt. @tbl-fouten hieronder vat de mogelijkheden
 samen.
 
 Als in werkelijkheid $\HO$ waar is (tweede kolom) dan kunnen er twee
