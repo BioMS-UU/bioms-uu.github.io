@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Biologische Modellen en Statistiek - 1&nbsp; Introductie en installatie</title>
+<title>1&nbsp; Introductie en installatie – Biologische Modellen en Statistiek</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -77,13 +77,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "Geen resultaten",
     "search-matching-documents-text": "Gevonden documenten",
@@ -92,13 +101,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "meer overeenkomst in dit document",
     "search-more-matches-text": "meer overeenkomsten in dit document",
     "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Annuleren",
-    "search-submit-button-title": "Verzenden"
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -108,12 +146,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalk in" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Programmeren/introductie_R.html">Basisprincipes van R</a></li><li class="breadcrumb-item"><a href="../Programmeren/introductie_R.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie en installatie</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalk in" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Programmeren/introductie_R.html">Basisprincipes van R</a></li><li class="breadcrumb-item"><a href="../Programmeren/introductie_R.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie en installatie</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -123,7 +161,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="../index.html" class="sidebar-logo-link">
       <img src="../figuren/favicon/android-chrome-512x512.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
@@ -131,7 +169,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Biologische <br>Modellen en Statistiek</a> 
         <div class="sidebar-tools-main">
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Schakel donkere modus in"><i class="bi"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Schakel donkere modus"><i class="bi"></i></a>
 </div>
     </div>
       </div>
@@ -144,9 +182,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Cursusinformatie</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -179,9 +217,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Basisprincipes van R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -201,16 +239,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Programmeren/intro_R_questions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Extra R oefeningen</span></a>
+ <span class="menu-text">Oefenvragen R</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Basiswiskunde</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -257,13 +295,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Functies schetsen</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/wiskunde_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefenvragen wiskunde</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Biologische modellen</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -344,9 +388,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
  <span class="menu-text">Statistiek</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -361,9 +405,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
  <span class="menu-text">Bijlagen</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -403,7 +447,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="-1">
@@ -427,7 +471,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Programmeren/introductie_R.html">Basisprincipes van R</a></li><li class="breadcrumb-item"><a href="../Programmeren/introductie_R.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie en installatie</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span id="sec-introductieR" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie en installatie</span></span></h1>
 </div>
@@ -442,20 +486,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
 
+
 <p>Biologie in de 21e eeuw vereist analyse van grote hoeveelheden data, en modellering om complexe biologische systemen beter te begrijpen en te voorspellen. In dit eerste onderdeel leer je de basisprincipes van R, waarmee we gedurende de cursus modellen bouwen, data analyseren en grafieken maken.</p>
-<div id="fig-phrogs" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="figuren/Rfrogs.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figuur&nbsp;1.1: Om kikkers te begrijpen moeten we meer doen alleen heel hard aan kikkers denken.</figcaption>
+<div id="fig-phrogs" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-phrogs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figuren/Rfrogs.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figuur&nbsp;1.1: Om kikkers te begrijpen moeten we meer doen alleen heel hard aan kikkers denken."><img src="figuren/Rfrogs.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-phrogs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;1.1: Om kikkers te begrijpen moeten we meer doen alleen heel hard aan kikkers denken.
+</figcaption>
 </figure>
 </div>
 <section id="beginnen-met-rstudio" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="beginnen-met-rstudio"><span class="header-section-number">1.1</span> Beginnen met Rstudio</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="figuren/rstudio_logo.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<p><a href="figuren/rstudio_logo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="figuren/rstudio_logo.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></a></p>
 </figure>
 </div>
 <p>Er bestaan heel veel verschillende programmeertalen. Misschien heb je weleens gehoord van Python, C, of Javascript. Het analyseren van grote datasets wordt door biologen echter veelal in de programmeertaal R gedaan, omdat deze makkelijk te installeren is en door het grote aantal gebruikers er op internet veel hulp te vinden is. Hiervoor gebruiken we het programma Rstudio, waarin we op een georganiseerde manier met R-code kunnen werken. Maar eerst moeten we wel nog even <strong>R zelf</strong> installeren.</p>
@@ -482,7 +532,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Nu je Rstudio hebt opgestart, gaan we eerst een nieuw script aanmaken. Ga hiervoor naar <code>File -&gt; New file -&gt; R script</code> (<code>Ctrl/Cmd+Shift+N</code>). Nu opent zich een nieuw venster, met daar in een <code>script</code> zonder naam. Sla dit lege script op en geef het script een logische naam (in plaats van de standaardnaam ‘Untitled1’). Zo kan je het later makkelijk terug vinden en overschrijf je minder makkelijk per ongeluk je scripts. Maar wat is een script eigenlijk?</p>
 <p>Een script is vergelijkbaar met een recept: het bevat de instructies om een gerecht te koken, maar niet de ingrediënten of het gerecht zelf. De instructies om het gerecht te produceren staan in het zogeheten “plain text” bestandsformaat. Dit betekent dat de tekst geen vetgedrukte woorden, cursief, onderstrepingen, kleuren of speciale lettertypes bevat. Naast een R-script met een set instructies, kan plain tekst ook data beschrijven, bijvoorbeeld met elke regel een observatie. In het geval van een script, bevat elke regel hoogstens één instructie. De code kan regel-per-regel worden uitgevoerd, of in één keer.</p>
 <p>Kopieer voor het volgende onderdeel de volgende code naar je eigen script:</p>
-<div class="cell" data-hash="introductie_R_cache/html/unnamed-chunk-1_62728fa7ac4d454669a42b771bd4e516">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">+</span><span class="dv">2</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">+</span><span class="dv">2-3</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">+</span><span class="dv">2-3</span><span class="sc">*</span><span class="dv">4</span><span class="sc">/</span><span class="dv">5</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -490,20 +540,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="script-en-console" class="level2" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="script-en-console"><span class="header-section-number">1.5</span> Script en console</h2>
-<p>Rstudio is standaard opgedeeld in verschillende vensters (zie <a href="#fig-rstudiolayout">Figuur&nbsp;<span class="quarto-unresolved-ref">fig-rstudiolayout</span></a>). Om een regel code uit te voeren, klik je in het script-venster (linksboven) op de desbetreffende regel (niet selecteren, maar gewoon ergens in de regel klikken), en gebruik je de knop <code>Run</code> (de sneltoets hiervoor is <code>Ctrl/Cmd+Enter</code>, wat heel handig is om in je vingers te krijgen!). Als je dit met de eerste regel doet, springt Rstudio door naar de tweede regel. Als je dus nog een keer <code>Ctrl/Cmd+Enter</code> drukt, voert deze de tweede regel code uit, dan de derde regel, <em>etc.</em>.</p>
+<p>Rstudio is standaard opgedeeld in verschillende vensters (zie <a href="#fig-rstudiolayout" class="quarto-xref">Figuur&nbsp;<span>1.2</span></a>). Om een regel code uit te voeren, klik je in het script-venster (linksboven) op de desbetreffende regel (niet selecteren, maar gewoon ergens in de regel klikken), en gebruik je de knop <code>Run</code> (de sneltoets hiervoor is <code>Ctrl/Cmd+Enter</code>, wat heel handig is om in je vingers te krijgen!). Als je dit met de eerste regel doet, springt Rstudio door naar de tweede regel. Als je dus nog een keer <code>Ctrl/Cmd+Enter</code> drukt, voert deze de tweede regel code uit, dan de derde regel, <em>etc.</em>.</p>
 <p>Als je de eerste regel code uitvoert, zie je in de console (onder het script) het “antwoord” staan: <code>[1] 3</code>. Dit antwoord noemen we in de programmeerwereld meestal de <code>return-value</code>: wat geeft de berekening terug? De <code>[1]</code> geeft aan dat dit de eerste waarde is die de berekening heeft gegeven. Omdat je maar 1 berekening hebt (1+2) gevraagd, is dit dus ook het enige waarde. Later zul je zien dat een berekening ook meerdere waarden terug kan geven. Je kan ook het hele script in één keer uitvoeren door op <code>Source</code> te klikken (of <code>Ctrl/Cmd+Shift+Enter</code>). Als je dit doet, zul je zien dat er regel voor regel antwoord wordt gegeven op de sommetjes.</p>
-<div id="fig-rstudiolayout" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="figuren/rstudio_panels.png" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption class="figure-caption">Figuur&nbsp;1.2: Een overzicht van de verschillende vensters in Rstudio</figcaption>
+<div id="fig-rstudiolayout" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rstudiolayout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figuren/rstudio_panels.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figuur&nbsp;1.2: Een overzicht van de verschillende vensters in Rstudio"><img src="figuren/rstudio_panels.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rstudiolayout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;1.2: Een overzicht van de verschillende vensters in Rstudio
+</figcaption>
 </figure>
 </div>
-<p>De bovenstaande uitleg geeft aan hoe je het script (het “recept”) uit kan voeren, maar vaak wil je even snel iets uitproberen of uitrekenen voordat je het recept helemaal overhoop gooit. Hiervoor kun je direct in de console typen (linksonderin in <a href="#fig-rstudiolayout">Figuur&nbsp;<span class="quarto-unresolved-ref">fig-rstudiolayout</span></a>). Als je bijvoorbeeld de berekening <code>81/250</code> in de console typt, heb je gauw een antwoord op je vraag maar is je script niet aangepast. De console is dus handig om even gauw wat uit te rekenen, maar let op: dit wordt natuurlijk niet opgeslagen als je het script opslaat!</p>
+<p>De bovenstaande uitleg geeft aan hoe je het script (het “recept”) uit kan voeren, maar vaak wil je even snel iets uitproberen of uitrekenen voordat je het recept helemaal overhoop gooit. Hiervoor kun je direct in de console typen (linksonderin in <a href="#fig-rstudiolayout" class="quarto-xref">Figuur&nbsp;<span>1.2</span></a>). Als je bijvoorbeeld de berekening <code>81/250</code> in de console typt, heb je gauw een antwoord op je vraag maar is je script niet aangepast. De console is dus handig om even gauw wat uit te rekenen, maar let op: dit wordt natuurlijk niet opgeslagen als je het script opslaat!</p>
 </section>
 <section id="rekenen-met-r" class="level2" data-number="1.6">
 <h2 data-number="1.6" class="anchored" data-anchor-id="rekenen-met-r"><span class="header-section-number">1.6</span> Rekenen met R</h2>
 <p>Zoals je nu misschien begrijpt, is R een geweldig krachtige rekenmachine! In plaats van alles handmatig uit te rekenen of in je grafische rekenmachine in te typen, kunnen we onze eigen R-scripts maken die berekeningen eenvoudig en reproduceerbaar maken. Om dit nog makkelijker te maken, kunnen we gebruik maken van variabelen. Variabelen zijn waarden die we opslaan onder een bepaalde noemer, bijvoorbeeld ‘a’, ‘b’, of ‘c’:</p>
-<div class="cell" data-hash="introductie_R_cache/html/unnamed-chunk-2_505684036883627a21c1e25eeaee9aab">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a, b, en c waardes toekennen (assigning variables)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="dv">3</span></span>
@@ -534,7 +588,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="de-environment" class="level2" data-number="1.8">
 <h2 data-number="1.8" class="anchored" data-anchor-id="de-environment"><span class="header-section-number">1.8</span> De “Environment”</h2>
-<p>Variabelen die je definieert worden opgeslagen in de <strong>Environment</strong> (rechtsboven in <a href="#fig-rstudiolayout">Figuur&nbsp;<span class="quarto-unresolved-ref">fig-rstudiolayout</span></a>). Op dezelfde manier dat een script een soort “recept” is, is de <strong>Environment</strong> een soort “keukentafel”: hier komen al je ingrediënten te liggen. Alle ingeladen gegevens, berekeningen, en grafieken blijven opgeslagen totdat je Rstudio afsluit. Let op: ook de stapjes die je met de console hebt gedaan komen op deze keukentafel terecht, maar als je wil dat iemand anders het gerecht kan maken moet je zorgen dat deze stapjes ook in het <strong>recept</strong> (dus het script) staan! Het script is namelijk in veel gevallen het enige wat we zullen opslaan. Zo kunnen we de volgende keer ons script opnieuw uitvoeren, of ons script met andere onderzoekers delen. Nogmaals: als je de volgende keer Rstudio opstart, begin je met een lege Environment. In de kook-analogie begin je dus opnieuw met koken, en begint de keukentafel weer helemaal leeg! Bij het afsluiten van Rstudio krijg je echter de vraag of je de ‘R sessie’ wil opslaan. Als je dit doet, dan laad Rstudio bij het opstarten wél weer de environment in, en wordt je keukentafel dus precies zoals je hem had achtergelaten.</p>
+<p>Variabelen die je definieert worden opgeslagen in de <strong>Environment</strong> (rechtsboven in <a href="#fig-rstudiolayout" class="quarto-xref">Figuur&nbsp;<span>1.2</span></a>). Op dezelfde manier dat een script een soort “recept” is, is de <strong>Environment</strong> een soort “keukentafel”: hier komen al je ingrediënten te liggen. Alle ingeladen gegevens, berekeningen, en grafieken blijven opgeslagen totdat je Rstudio afsluit. Let op: ook de stapjes die je met de console hebt gedaan komen op deze keukentafel terecht, maar als je wil dat iemand anders het gerecht kan maken moet je zorgen dat deze stapjes ook in het <strong>recept</strong> (dus het script) staan! Het script is namelijk in veel gevallen het enige wat we zullen opslaan. Zo kunnen we de volgende keer ons script opnieuw uitvoeren, of ons script met andere onderzoekers delen. Nogmaals: als je de volgende keer Rstudio opstart, begin je met een lege Environment. In de kook-analogie begin je dus opnieuw met koken, en begint de keukentafel weer helemaal leeg! Bij het afsluiten van Rstudio krijg je echter de vraag of je de ‘R sessie’ wil opslaan. Als je dit doet, dan laad Rstudio bij het opstarten wél weer de environment in, en wordt je keukentafel dus precies zoals je hem had achtergelaten.</p>
 </section>
 <section id="plotshelp-en-meer" class="level2" data-number="1.9">
 <h2 data-number="1.9" class="anchored" data-anchor-id="plotshelp-en-meer"><span class="header-section-number">1.9</span> Plots/Help en meer</h2>
@@ -543,7 +597,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="weergave-van-code-en-resultaten" class="level2" data-number="1.10">
 <h2 data-number="1.10" class="anchored" data-anchor-id="weergave-van-code-en-resultaten"><span class="header-section-number">1.10</span> Weergave van code en resultaten</h2>
 <p>Met programmeren produceren we code en resultaten. Om dat onderscheid duidelijk te maken, gebruikt dit cursusboek twee verschillende stijlen voor deze onderdelen. R-code ziet er zo uit:</p>
-<div class="cell" data-hash="introductie_R_cache/html/unnamed-chunk-3_94cc01fb8d2ab39c848ab63fbbb6b51c">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># definieer een waarde voor x en y</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">9</span></span>
@@ -551,7 +605,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"De som van x en y is:"</span>, x<span class="sc">+</span>y, <span class="st">"en x min y is:"</span>, x<span class="sc">-</span>y, <span class="st">"</span><span class="sc">\n</span><span class="st">... einde berekening!"</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>De resultaten van code worden zo weergegeven:</p>
-<div class="cell" data-hash="introductie_R_cache/html/unnamed-chunk-4_f166204432ea922bcd5c2b328d2f6f64">
+<div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>De som van x en y is: 19 en x min y is: 1 
 ... einde berekening!</code></pre>
@@ -563,7 +617,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="1.11" class="anchored" data-anchor-id="opgaven"><span class="header-section-number">1.11</span> Opgaven</h2>
 <p>Om deze opgaven te maken, moet je eerst Rstudio installeren. Nadat je dat gedaan hebt, en de rest van de informatie op deze pagina hebt begrepen, kun je aan de slag!</p>
 <div id="exr-rekenenmetR" class="Rexr theorem exercise">
-<p><span class="theorem-title"><strong>Oefening 1.1 (Rekenen met R) </strong></span><br></p>
+<p><span class="theorem-title"><strong>Oefening 1.1 (Rekenen met R)</strong></span> <br></p>
 <p>Maak een nieuw (leeg) Rscript in Rstudio, en voer de volgende berekeningen uit:</p>
 <ol type="a">
 <li>Definieer a=2, en reken uit wat <span class="math inline">\(a \cdot a \cdot a = a^3\)</span> is.</li>
@@ -571,12 +625,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Stel je zet eerst 3 stappen naar links (laten we deze afstand <span class="math inline">\(a\)</span> noemen), dan 4 stappen naar voren (laten we deze <span class="math inline">\(b\)</span> noemen), en loopt vervolgens in een rechte lijn terug naar je beginpositie. Schrijf een script met R die uitrekent hoe ver je in totaal hebt gelopen. Zorg dat <strong>de uitkomst</strong> van je berekening <strong>niet</strong> in de environment staat, maar slechts in de console wordt weergegeven (met andere woorden, definieer geen nieuwe variabele!).</li>
 <li>Bereken nu uit hoever je gelopen zou hebben als je in plaats hiervan 5 stappen naar links en 6 stappen naar boven had gezet. Zorg dit keer dat de uitkomst <strong>wel</strong> in de environment staat onder de naam “afstand”. Voeg de onderstaande regel code toe aan het eind van je script (hint: er is een knop om de code te kopiëren!). Voer je script uit. Hoeveel stappen heb je gelopen? Sla je script op onder de naam <code>Pythagoras.R</code>.</li>
 </ol>
-<div class="cell" data-hash="introductie_R_cache/html/unnamed-chunk-5_63df4208c658500b2a943962b909a6e7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">'Je hebt'</span>, afstand, <span class="st">'stappen gelopen'</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="exr-rekenenmetR2" class="Rexr theorem exercise">
-<p><span class="theorem-title"><strong>Oefening 1.2 (Meer rekenen met R) </strong></span><br></p>
+<p><span class="theorem-title"><strong>Oefening 1.2 (Meer rekenen met R)</strong></span> <br></p>
 <p>Maak deze vraag direct nadat je de vorige vraagt hebt gedaan (zonder Rstudio opnieuw op te starten). Maak wel een <em>nieuw</em> (leeg) Rscript aan.</p>
 <ol type="a">
 <li>Bereken met R wat a+10 is. Bereken ook d+10 uit. Leg het verschil in de uitkomsten uit.</li>
@@ -636,6 +690,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -704,13 +785,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -745,18 +828,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -788,11 +860,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+          // default icon
+          link.classList.add("external");
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -802,8 +920,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -815,7 +942,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -859,6 +1109,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -884,6 +1135,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -941,32 +1218,16 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-          // target, if specified
-          link.setAttribute("target", "_blank");
-          // default icon
-          link.classList.add("external");
-      }
-    }
 });
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../links.html" class="pagination-link">
+      <a href="../links.html" class="pagination-link" aria-label="Handige links">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Handige links</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../Programmeren/introductie_R2.html" class="pagination-link">
+      <a href="../Programmeren/introductie_R2.html" class="pagination-link" aria-label="Programmeren in R">
         <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Programmeren in R</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -974,13 +1235,50 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left">Vakgroep Theoretische Biologie, Universiteit Utrecht.</div>   
+    <div class="nav-footer-left">
+<p>Vakgroep Theoretische Biologie, Universiteit Utrecht.</p>
+</div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>
-    <div class="nav-footer-right">Dit boek is gemaakt met <a href="https://quarto.org/">Quarto</a>.</div>
+    <div class="nav-footer-right">
+<p>Dit boek is gemaakt met <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","closeEffect":"zoom","descPosition":"bottom","loop":false});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
 
 
 
