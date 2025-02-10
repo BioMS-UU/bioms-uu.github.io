@@ -56,6 +56,9 @@ De waardes van $\mu$ en $\sigma$ zijn ons onbekend.
 #| code-fold: true
 #| warning: false
 #| echo: false
+#| fig-width: 4
+#| fig-height: 3
+#| out-width: "57%"
 #| fig-cap: "Met behulp van een $t$-toets kunnen we onderzoeken of het gemiddelde van een steekproef (bijvoorbeeld n = 10) significant verschilt van een verwachte waarde. De $t$-toets gaat ervan uit dat de data normaal verdeeld zijn."
 #| label: fig-t-toets-1-var
 
@@ -165,6 +168,9 @@ het resultaat meestal niet als significant gezien.
 ```{r}
 #| code-fold: true
 #| warning: false
+#| fig-width: 4.5
+#| fig-height: 3
+#| out-width: "64%"
 #| fig-cap: "Met een $t$-toets voor twee steekproeven kun je testen of het gemiddelde van twee groepen significant van elkaar verschilt. Dit is nuttig wanneer je bijvoorbeeld wilt weten of een bepaalde behandeling een meetbaar effect heeft in vergelijking met een controlegroep."
 #| label: fig-t-toets-2-var
 
@@ -263,6 +269,9 @@ ggplot(data, aes(x = x, y = y)) +
 ```{r}
 #| label: fig-model-t-test-2-var
 #| fig-cap: "CAPTION"
+#| fig-width: 4.5
+#| fig-height: 3.5
+#| out-width: "64%"
 #| echo: false
 #| code-fold: true
 #| warning: false
@@ -410,8 +419,9 @@ de aanname alleen dat de data normaalverdeeld is.
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 2.5
-#| fig.height: 4
+#| fig.width: 3.5
+#| fig.height: 2
+#| out.width: "50%"
 #| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins (n = 641)."
 #| label: fig-dist-manakin
 
@@ -467,12 +477,13 @@ De Bonte manakin (*Manacus manacus*). [CC BY-SA 2.0](https://creativecommons.org
 
 :::
 
-::: {#fig-manakin-distributie layout-ncol="2"}
+::: {#fig-manakin-distributie layout-ncol="2" out-width="100%"}
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 2.5
+#| fig.width: 3.5
 #| fig.height: 4
+#| out-width: "100%"
 #| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins, per geslacht."
 #| label: fig-dist-manakin-1
 
@@ -497,8 +508,9 @@ massa_manacus %>%
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 2.5
+#| fig.width: 3.5
 #| fig.height: 4
+#| out.width: "100%"
 #| fig-cap: "Histogram van het gewicht van vrouwelijke en mannetlijke Bonte manakins."
 #| label: fig-dist-manakin-2
 
@@ -632,20 +644,20 @@ sd(slaap$MWT_d0)
 # Dag 6
 sd(slaap$MWT_d6)
 ```
+::: {#fig-vb-gepaarde-t-toets}
+
+<div style="display: flex; gap: 10px;">
+  <div style="flex: 71.5%;">
+  
 ```{r}
 #| code-fold: true
 #| warning: false
 #| echo: false
-#| fig.width: 7
-#| fig.height: 5
-#| out.width: "100%"
-#| layout-ncol: 2
-#| layout: "[ 70, 30 ]"
-#| fig-cap: "Scores van acht proefpersonen voor de MWT tijdens een experiment over de gevolgen van slaaprestrictie."
-#| fig-subcap: 
-#|   - "De gemiddelde scores voor de Maintainance of Wakefullness test voor alle deelnemers op dag 0 en dag 6. Gemiddelde scores per dag zijn aangegeven met de oranje lijnen."
-#|   - "Het verschil in MWT-scores tussen dag 0 en dag 6. Een negatieve waarde betekent dat de score op dag 6 lager was dan de score op dag 0."
-#| label: fig-vb-gepaarde-t-toets
+#| fig.width: 5
+#| fig.height: 3
+#| out.width: "100%" 
+#| fig-cap: "De gemiddelde scores voor de Maintainance of Wakefullness test voor alle deelnemers op dag 0 en dag 6. Gemiddelde scores per dag zijn aangegeven met de oranje lijnen."
+#| label: fig-vb-gepaarde-t-toets-1
 
 library(tidyverse)
 library(dplyr)
@@ -680,18 +692,39 @@ ggplot(slaap_plot, aes(x = as.numeric(dag) + offset, y = MWT, color = ID)) +
   xlab("Dag") +
   ylab("MWT-score") +
   scale_color_viridis_d(option = "viridis")
+```
+
+  </div>
+  <div style="flex: 28.5%;">
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| echo: false
+#| fig.width: 2
+#| fig.height: 3
+#| out.width: "100%"
+#| fig-cap: "Het verschil in MWT-scores tussen dag 0 en dag 6."
+#| label: fig-vb-gepaarde-t-toets-2
 
 ggplot(slaap, aes(x = 0, y = MWT_d6 - MWT_d0, color = ID)) +
-  geom_point() +
+  geom_point(size = 3) +
   geom_hline(yintercept = 0) +
-  ylab("Verschil in MWT-score") +
+  ylab("\u0394 MWT-score (d6 - d0)") +
+  xlab("MWT-score") +
   scale_color_viridis_d(option = "viridis") +
   scale_y_continuous(breaks = c(-15, -10, -5, 0), limits = c(-17, 2)) + 
   theme_minimal() +
   theme(legend.position = "none",
-        axis.title.x = element_blank(), 
         axis.text.x = element_blank())
 ```
+
+  </div>
+</div>\
+
+Scores van acht proefpersonen voor de MWT tijdens een experiment over de gevolgen van slaaprestrictie
+:::
+
 
 De hypothese is dat het beperken van de tijd
 in bed tot vier uur per nacht leidt tot een lagere MWT-score. Om te
@@ -700,10 +733,6 @@ we gebruik maken van een gepaarde $t$-toets. We voeren datn een $t$-toets uit op
 de verschillen in MWT-scores per deelnemer tussen dag 0 en dag 6. Voordat we
 deze test uit kunnen voeren, moeten we eerst onderzoeken of de data aan de
 aannames voor een gepaarde $t$-toets voldoet.
-
-```{r}
-
-```
 
 Ten eerste moeten de metingen gepaard zijn voor een gepaarde $t$-toets. Dit is
 hier het geval, omdat we de MWT-score van dezelfde deelnemers op verschillende
