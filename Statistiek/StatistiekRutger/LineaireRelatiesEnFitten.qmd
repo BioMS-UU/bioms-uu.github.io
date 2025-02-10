@@ -16,6 +16,112 @@ lijnkleur3 <- "blue"
 
 # Lineaire relaties {#sec-linrel}
 
+## Correlatie
+
+Galton 1888
+
+```{r}
+#| fig-height: 5
+#| fig-width: 5
+#| fig-align: "center"
+#| code-fold: true
+#| warning: false
+#| fig.cap: "."
+#| label: fig-galton
+#| out.width: "71.4%"
+# Laad benodigde pakketten
+if (!("HistData" %in% .packages())) { library(HistData) }
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+
+# Laad de GaltonFamilies dataset
+data("GaltonFamilies")
+
+# Bereken de mid-parent height
+GaltonFamilies$mid_parent_height <- (GaltonFamilies$father + 
+                                     1.08 * GaltonFamilies$mother) / 2
+
+GaltonFamilies$childHeightCorrected <- GaltonFamilies$childHeight
+GaltonFamilies$childHeightCorrected[GaltonFamilies$gender == "female" ] <- 1.08*GaltonFamilies$childHeight[GaltonFamilies$gender == "female" ]
+
+
+# Maak de scatterplot met regressielijn en diagonaal
+ggplot(GaltonFamilies, aes(x = mid_parent_height, y = childHeightCorrected)) +
+  geom_point(alpha = 0.8, size = 1, color = "#e8601d") +  # Scatterplot punten
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") +  # Diagonaal y = x
+  xlim(60, 80) + 
+  ylim(60, 80) +
+  labs(x = "Mid-ouder lengte (inch)", 
+       y = "Lengte kind (inch)", 
+       title = "Scatterplot van Mid-ouder lengte vs. Kinderlengte") +
+  theme_minimal() +
+  geom_smooth(method = "lm")
+
+```
+
+$$
+r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}
+         {s_x s_y}
+$$
+
+
+```{r}
+#| out-width: "100%"
+#| fig-width: 7
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Voorbeelden van steekproeven met verschillende correlatiecoëfficiënten."
+#| label: fig-correl-coefs
+
+# Laad benodigde pakketten
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("MASS" %in% .packages())) { library(MASS) }
+if (!("dplyr" %in% .packages())) { library(dplyr) }
+
+# Definieer parameters
+n <- 100  # Steekproefgrootte
+correlaties <- c(1, 0.75, 0.5, 0.25, 0, -0.25, -0.5, -0.75)
+
+# Functie om een bivariate normale steekproef te genereren
+genereer_data <- function(rho, n, groep) {
+  sigma <- matrix(c(1, rho, rho, 1), nrow = 2)
+  set.seed(groep)  # Unieke seed per groep voor variatie
+  data <- MASS::mvrnorm(n, mu = c(0, 0), Sigma = sigma)
+  data.frame(X = data[, 1], Y = data[, 2], groep = groep)
+}
+
+# Genereer datasets voor verschillende correlaties
+datasets <- do.call(rbind, Map(genereer_data, correlaties, n = n, groep = 1:8))
+
+# Bereken sample correlaties per groep
+correlatie_labels <- datasets %>%
+  group_by(groep) %>%
+  summarise(sample_cor = cor(X, Y)) %>%
+  mutate(label = sprintf("r = %.2f", sample_cor))
+
+# Maak de ggplot met facet_wrap
+p <- ggplot(datasets, aes(x = X, y = Y)) +
+  geom_point(color = "#e8601d", alpha = 0.8, size = 1) +
+  facet_wrap(~ groep, nrow = 2, 
+             labeller = as_labeller(setNames(correlatie_labels$label, 1:8))) +
+  coord_fixed(xlim = c(-3, 3), ylim = c(-3, 3)) +
+#  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    strip.text = element_text(size = 12),
+    plot.margin = margin(0, 0, 0, 0)
+  ) +
+  labs(x = NULL, y = NULL)
+
+# Print de plot
+print(p)
+
+```
+
+
+
+### Regressie
+
 ```{r}
 #| code-fold: true
 #| warning: false
