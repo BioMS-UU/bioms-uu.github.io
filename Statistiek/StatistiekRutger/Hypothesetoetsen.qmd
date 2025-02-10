@@ -293,9 +293,12 @@ $$
 #| label: fig-binomiale-P-waarde
 #| fig.height: 3.5
 #| fig.width: 7
+#| warning: false
 
 m <- 41
 X <- 48
+y_pijl <- 0.025
+y_end_pijl <- 0.012
 
 # Maak een vector van kleuren
 kleur_vector <- ifelse(
@@ -304,7 +307,43 @@ kleur_vector <- ifelse(
   "DarkOrchid"
   )
 
-verdelingBinomiaal(kleur_vector)
+verdelingBinomiaal(kleur_vector) +
+      # Kromme pijltjes toevoegen
+    annotate(
+      "curve",
+      x = 7, y = y_pijl, xend = 9, yend = y_end_pijl, 
+      curvature = 0.2, 
+      arrow = arrow(length = unit(0.2, "cm")), 
+      color = "darkorchid", 
+      size = 0.7
+    ) +
+    annotate(
+      "curve",
+      x = 31, y = y_pijl, xend = 29, yend = y_end_pijl, 
+      curvature = -0.2, 
+      arrow = arrow(length = unit(0.2, "cm")), 
+      color = "darkorchid", 
+      size = 0.7
+    ) +
+    # Annotaties toevoegen
+    annotate(
+      "text", 
+      x = 7, 
+      y = y_pijl + 0.01,  # Plaats annotatie net boven de pijl
+      label = expression(frac("p",2)), 
+      color = "darkorchid", 
+      hjust = 0.5, 
+      size = 4
+    ) +
+    annotate(
+      "text", 
+      x = 31, 
+      y = y_pijl + 0.01,  # Plaats annotatie net boven de pijl
+      label = expression(frac("p",2)), 
+      color = "darkorchid", 
+      hjust = 0.5, 
+      size = 4
+    )
 
 ```
 
