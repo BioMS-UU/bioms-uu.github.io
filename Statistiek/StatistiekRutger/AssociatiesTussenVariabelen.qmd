@@ -1203,21 +1203,66 @@ en zo bijdrage aan een associatie tussen de behandelgroep en de beoordeling.
 (b) Door ook de onderzoeker te blinderen wordt dit tweede, ongewenste causale pad uitgesloten.
 :::
 
-## Terugkeer naar het gemiddelde *Regression to the mean*
+## Terugkeer naar het gemiddelde (*Regression to the mean*)
 
 
+In 1885 deed de vermaarde onderzoeker Francis Galton (1822--1911)
+ onderzoek naar de erfelijkheid van lichaamslengte.
+Hij stelde een dataset samen met daarin de lichaamslengtes
+  van verschillende ouderstellen en hun volwassen kinderen.
+Hij vond wat iedereen al wist:
+  lange ouders krijgen gemiddeld lange kinderen.
+De verrassing kwam toen hij de gegevens in meer detail analyseerde.
+Het bleek namelijk dat de kinderen van lange ouders
+  wel langer zijn dan gemiddeld,
+  *maar niet zo extreem als hun ouders*.
+Hetzelfde gold voor opvallend *kleine* ouders.
+Hun kinderen zijn gemiddeld ook klein,
+  maar niet zo klein als hun ouders.
+Galton schreef dit alles op in een beroemd artikel
+  met de naam *Regression toward mediocrity in Hereditary Stature".^[Galton, Francis. “Regression towards Mediocrity in Hereditary Stature.” Journal of the Anthropological Institute of Great Britain and Ireland, 1886, 246–63.]
 
-Essentie:
+In 1930 viel Horace Secrist (1881--1943),
+  een Amerikaanse econoom en statisticus,
+  iets vreemds op toen hij naar gegevens keek van Amerikaanse bedrijven.
+In allerlei sectoren was volgende patroon te vinden.
+Als je uit de cijfers van 1916 de meest succesvolle bedrijven selecteerde
+  en vervolgens keek hoe die bedrijven er in 1922 voor stonden,
+  dan bleek steeds dat ze in 1922 in de middemmoot vielen.
+Het leek haast op een wetmatigheid
+  dat bedrijven die in 1916 boven het maaiveld uitstaken
+  in 1922 een kopje kleiner waren gemaakt.[^secrist]
+  
+[^secrist]: Lees er meer over in dit boek: Ellenberg, Jordan. How Not to Be Wrong: The Power of Mathematical Thinking. New York, 2015.
 
--   Variabelen flucueren in de tijd
--   Selecteren op extreme waarden.
--   Neiging weer terug te bewegen naar het gemiddelde.
-
-Medische klachten fluctueren. Je kijkt het even aan. -\> klachten zijn
-op een gegeven moment extreem -\> naar een arts -\> behandeling -\>
-verbetering. Was de behandeling effectief, of waren je klachten ook
-zonder behandeling weer terugbewogen naar een voor jou meer typische
-waarde?
+De observaties van Galton en Secrist
+  gaan over heel verschillende systemen,
+  maar zijn voorbeelden van hetzelfde mechanisme,
+  dat **terugkeer naar het gemiddelde** wordt genoemd,
+  of **regression to the mean**.
+  
+*Regression to the mean* treedt vaak op
+  als de waarde van een variabele tenminste deels 
+  bepaald wordt door toeval
+  en daardoor door de tijd heen fluctueert. 
+@Fig-reg-mean hieronder laat een variabele zien 
+die door de tijd heen fluctueert.
+Het zijn fictieve (gesimuleerde) gegevens,
+  maar je kunt je voorstellen dat het gaat
+  om de dagwinst van een bedrijf door de tijd heen.
+Je ziet,
+  door toevallige factoren maakt het bedrijf
+  goede dagen mee, maar ook slechte dagen.
+Uitzonderlijke dagen die meer dan twee standaarddeviaties
+  afwijken van het gemiddelde
+  zijn met oranje datapunten aangegeven.
+Omdat de winst op die dagen uitzonderlijk is,
+  zie je dat de grafiek de neiging heeft
+  om vanaf die uitzonderlijke punten
+  terug te bewegen richting het gemiddelde.
+Als een bedrijf vandaag uitzonderlijk veel succes heeft,
+  dan is het volgende week waarschijnlijk *minder* succesvol!
+Dat is *regression to the mean* in actie.
 
 ```{r}
 #| code-fold: true
@@ -1294,60 +1339,181 @@ ggplot(data, aes(x = tijd, y = X_scaled)) +
     x = "Tijd", 
     y = "Variabele"
   ) +
-  theme_minimal()
+  theme_minimal() +
+  theme(
+      axis.text.x = element_blank(),
+  )
 
 ```
 
-Neiging om te zeggen: "Bij mij heeft het geholpen!".\
-Maar is dat ook zo? Het enige wat je weet is: "Bij mij zijn de klachten
-verminderd *na* de behandeling." Niet: "*door* de behandeling.". (Dit
-alles ook los van confirmation bias.)
+Dit is ook de verklaring voor de observatie van Secrist.
+Bedrijven die in 1916 de beste cijfers hadden binnen hun sector
+  hadden vast een goed product en competent management, 
+  maar daarnaast ook waarschijnlijk wat geluk gehad:
+  een paar grote orders misschien?
+De kans dat deze bedrijven in 1922
+  weer tot de uitzonderlijke geluksvogels behoren
+  is niet groot;
+  en dus zijn hun cijfers in 1922 over het algemeen gezakt richting het gemiddelde.
+  
+Iets vergelijkbaars geldt voor de cijfers van Galton.
+De lichaamslengte van een volwassen persoon wordt deels bepaald door diens genen,
+  en is daardoor deels erfelijk.
+Maar ook voeding, gezondheid, slaapkwaliteit, 
+  en andere levensomstandigheden zijn van grote invloed.
+Of iemand tijdens de groei gunstige omstandigheden ondervindt 
+  is deels een kwestie van toeval.
+Bijzonder lange mensen hebben dus typisch
+  een bijzondere combinatie van genen,
+  maar ze hebben ook waarschijnlijk toevallig een aantal belangrijke levensomstandigheden 
+  meegehad tijdens hun opvoeding.
+Zelfs als hun kinderen dezelfde aanleg meekrijgen
+  valt te verwachten dat zij gemiddeld kleiner uitvallen
+  dan hun ouders
+  omdat zij naar verwachting niet onder dezelfde positieve omstandigheden opgroeien.
 
-Piloten en complimenten[^associatiestussenvariabelen-3]
+Bij het analyseren van gegevens dan *regression to the mean* 
+  een bijzonder misleidend effect hebben.
+Stel, je hebt al lange tijd last van rugklachten,
+  maar de ernst van de klachten fluctueert van week tot week.
+Je kijkt de klachten dus al enige tijd aan 
+  zonder de mening van een arts te vragen.
+Maar in een kwade week in maart speelt de pijn zozeer op
+  dat je eindelijk de fysiotherapeut belt.
+Je kunt dezelfde week terecht, en gedurende drie weken
+  behandelt de fysiotherapeut je klachten met massages en oefeningen.
+Gelukkg worden de klachten gedurende die periode merkbaar minder.
+
+De vraag rijst nu:
+kun je nu concluderen dat de behandeling geholpen heeft?
+
+Een tegenwerping kan zijn dat het hier om een steekproef met maar één proefpersoon gaat. Daaruit kun je zelden iets concluderen!
+Maar laten we ons voorstellen dat we in de database van de fysiotherapeut
+nog 30 andere clienten terugvinden met exact hetzelfde verhaal.
+Zijn we dan wel overtuigd?
+
+Het echte probleem is dat we niet kunnen uitsluiten
+dat het de vermindering van de klachten
+het resultaat zijn van *regression to the mean*.
+Jij en je mede-clienten gingen naar de fysio
+op een moment waarop de klachten te ernstig waren 
+om ze nog langer te negeren.
+(Wellicht op een "oranje moment" in @fig-reg-mean.)
+Als je op zo'n extreem punt bent aangekomen
+kun je verwachten dat de klachten ook zonder behandeling
+zullen verminderen.
+Je klachten zijn *na* de behandeling verminderd;
+dat wil nog niet zeggen dat dit *door* behandeling kwam.
+
+*Regression to the mean* is een extra reden waarom een 
+controlegroep essentieel is.
+Het is niet genoeg dat de klachten na behandeling gemiddeld verminderen;
+we willen zien dat ze na behandeling sterker verminderen
+dan bij de controlegroep die de behandeling niet heeft gehad.
+
+Voor nog meer interessante voorbeelden 
+kun je de referenties in de voetnooten bekijken.[^associatiestussenvariabelen-3]
+Over het belang van *regression to the mean* in de medische wereld
+kun je 
 
 [^associatiestussenvariabelen-3]: Kahneman, Daniel. Thinking, Fast and
     Slow. 1st edition. New York: Farrar, Straus and Giroux, 2011.
+    
+    Morton, Veronica, and David J Torgerson. “Effect of Regression to the Mean on Decision Making in Health Care.” BMJ : British Medical Journal 326, no. 7398 (May 17, 2003): 1083–84.
 
-### Controlegroepen
+## Het machtige placebo-effect?
 
-Meer weten over regression to the mean?[^associatiestussenvariabelen-4]
+Tot slot moeten we het nog hebben over het *placebo-effect*.
 
-[^associatiestussenvariabelen-4]: Morton, Veronica, and David J
-    Torgerson. “Effect of Regression to the Mean on Decision Making in
-    Health Care.” BMJ : British Medical Journal 326, no. 7398 (May 17,
-    2003): 1083–84.
+Een **placebo** is een nep-medicijn of nep-behandeling die wordt gegeven 
+aan een controlegroep.
+Een controlegroep die een nep-behandeling krijgt toegediend wordt daarom ook wel een **placebo-groep** genoemd.
+Van een *placebo-effect* wordt gesproken
+als iemand een verbetering van klachten ervaart, 
+enkel doordat deze *gelooft* een effectieve behandeling te hebben ondergaan.
 
-## Placebo-effect
+Het idee dat geloven in de werkzaamheid van een behandeling
+op zichzelf heilzaam kan zijn
+is op het eerste gezicht heel verwonderlijk.
+Zo'n effect zou je vooral verwachten bij klachten
+die tot op zekere hoogte subjectief zijn, 
+zoals pijnklachten,
+en veel minder bij meetbare fysieke klachten,
+zoals bloedarmoede.
+Toch doen er wilde verhalen de ronde over de macht van de placebo.
+Zoek op YouTube naar "Power of Placebo", 
+en je vindt een indrukwekkende lijst video's 
+van artsen en wetenschappers die uitleggen
+hoe krachtig het placebo-effect kan zijn.
 
-Voorbeelden: pijnklachten. Weten dat je een pijnstiller hebt gehad, kan
-pijn verminderen.
+En het placebo-effect bestaat ook echt;
+er zijn studies die het overtuigend aantonen,
+bijvoorbeeld bij pijnklachten.
 
-Effect van placebo vaak overdreven.[^associatiestussenvariabelen-5]
-Onterecht vaak verward met regression to the mean. Om placebo aan te
-tonen is het niet voldoende om te laten zien dat een groep met
-placebo-behandeling ook (deels) beter wordt. Dat is namelijk ook te
-verwachten bij regression to the mean. Om placebo-effect aan te tonen
-moet je laten zien dat er een verschil is tussen twee controlegroepen:
+Maar helaas wordt het placebo-effect vaak enorm overdreven.[^associatiestussenvariabelen-5]
+Dat komt voornamelijk doordat geen rekening wordt gehouden
+met de mogelijkheid van *regression to the mean*.
+Als de controlegroep een nep-behandeling krijgt 
+en er toch gemiddeld op vooruit gaat,
+is daarmee niet aangetoond dat die verbetering het effect was
+van geloof in de behandeling.
+Het kan ook zijn dat dit type klachten de neiging hebben
+om ook zonder behandeling spontaan te verminderen.
+
+Om het placebo-effect te kunnen onderscheiden van
+*regression to the mean* zijn tenminsten twee controle-groepen nodig:
+één groep met proefpersonen die te horen krijgen dat ze een effectieve behandeling hebben gekregen terwijl dat niet zo is,
+en één groep met proefpersonen die niet te horen krijgen
+of ze een echte behandeling of een placebobehandeling hebben gekregen.
+Als de respons van die groepen van elkaar verschillen
+spelen kennis en verwachting blijkbaar een rol.
+De meeste medische onderzoeken hebben deze controlegroepen niet
+en kunnen het onderscheid tussen *regression to the mean* dus niet maken.
+
+Ook kan waarnemersbias een rol spelen.
+Proefpersonen die denken een behandeling te hebben ondergaan
+zijn mogelijk geneigd verbeteringen te rapporteren
+die er in werkelijkheid niet zijn.
+Placebo-effect en waarnemers-bias lopen daardoor vaak door elkaar.
+
+Al met al moet je claims over het placebo-effect dus serieus nemen,
+maar in ieder afzonderlijke geval met een gezonde skeptische blik beoordelen.
+
+Interessant? Zie de referenties in de voetnoot.[^associatiestussenvariabelen-5]
 
 [^associatiestussenvariabelen-5]: McDonald, Clement J., Steven A.
     Mazzuca, and George P. McCabe. “How Much of the Placebo ‘Effect’ Is
     Really Statistical Regression?” Statistics in Medicine 2, no. 4
     (October 1983): 417–27. https://doi.org/10.1002/sim.4780020401.
+    
+    Hróbjartsson, Asbjørn, and Peter C Gøtzsche. “Placebo Interventions for All Clinical Conditions.” Edited by Cochrane Consumers and Communication Group. Cochrane Database of Systematic Reviews, January 20, 2010. https://doi.org/10.1002/14651858.CD003974.pub3.
 
--   Een controlegroep die denkt de behandeling te hebben ontvangen, maar
-    waarbij dat niet zo is.
--   Een geblindeerde controlegroep die de behandeling niet heeft
-    ontvangen maar dat zelf niet kan weten.
+
 
 ::: callout-warning
-## Pas op voor percentages verbetering
+## Pas op voor misleidende percentages
 
-box: Beecher[^associatiestussenvariabelen-6]: 34.2% of patients improve
-after placebo-treatment; that does not mean anything.
+In besprekingen van het placebo-effect kom je vaak uitspraken tegen als:[^associatiestussenvariabelen-6]
 
-Veel nieuwsberichten zijn van hetzelfde type: "Maarlieft 50% van de
-ondervraagden denkt dat het huidige kabinet het beter gaat doen dan het
-vorige." (Wat als de andere 50% het tegenovergestelde verwacht?)
+    "34.2% of patients improved after placebo-treatment"
+    
+Dit soort getallen zegt niet zoveel. Als 34,2% van de patienten verbeteringen liet zien, hoe zat het dan met de overige 65,8%?
+Als die juist *verslechteringen* lieten zien, 
+lijken de resultaten bepaald niet te wijzen op een placebo-effect.
+
+Een ander voorbeeld:
+
+    "In fact both of these pills were placebo's, 
+    but 30% of students actually responded saying 
+    they felt either more sedated or more stimulated."
+    
+(Deze quote komt van [dit](https://www.youtube.com/watch?v=t70dQVGOm4I&t=16s) filmpje op YouTube.) Deze uitspraak gaat over de perceptie van de aan het onderzoek deelnemende studenten. Zou een objectieve test óók aantonen dat ze verdoofd of juist actiever waren geworden, of is dit slechts suggestie? (Er is een verschil tussen een *echt* effect van een nep-behandeling, en een *ingebeeld* effect van een nep-behandeling.)
+
+Kijk in het algemeen uit voor berichten waarin alleen het percentage
+van één van de mogelijk uitkomsten worden genoemd.
+Veel nieuwsberichten zijn van dat type: "De Nederlandse burger is pessimistisch: 50% van de
+ondervraagden denkt er het komend jaar financieel op achteruit te gaan." Wat als de andere 50% erop *vooruit* denkt te zullen gaan -- klinkt het dan nog steeds alarmerend?
+
 :::
 
 [^associatiestussenvariabelen-6]: Beecher, Henry K. “THE POWERFUL
