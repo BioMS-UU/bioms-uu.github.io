@@ -186,8 +186,26 @@ Met deze frequentietabel:
 ```
 
 @exr-gewogen-gemiddelden
+We kunnen nu niet het gemiddelde uitrekenen hoe we het normaal zouden doen. Als we $\frac{5+8+7}{3}$ uitrekenen houden we geen rekening met hoeveel de cijfers meetellen.
 
+We zouden deze berekening kunnen doen door elk cijfer te vermedigvulgigen met het bijpassende percentage, en deze te delen door 100. We zeggen dan eigenlijk dat we 10 keer een 5 hebben gehaald, 60 keer een 8 en 30 keer een 7, met in totaal 100 cijfers: 
+$$\frac{10\times 5+60\times 8 + 30\times 7}{100}=7,4$$
 
+In plaats daarvan kunnen we elk cijfer vermedigvuldigen met het kommagetal passend bij het percentage en deze bij elkaar optellen: 
+
+$$5\times,1+8\times,6+7\times,3=7,4$$
+Precies hetzelfde wiskundig gezien, maar goed om beide niet-wiskundige redentaties te kunnen maken. 
+
+@exr-gemiddelde-frequentietabel
+**a.** Je kan het gemiddelde uitrekenen met de formules in **b** en **c**. In beide gevallen komt er 3,5 vogels per zwerm uit. 
+
+**b.** Als we alle vermedigvuldigingen uitschrijven in sommaties (bijvoorbeeld $3\times 2 = 2+2+2$) zien we de standaardformule voor het gemiddelde weer terug. We tellen alle waarnemingen bij elkaar op en delen door het het aantal waarnemingen. 
+
+Het eerste getal in de vermedigvuldiging staat dus telkens voor de frequentie van die specifieke waarneming. 
+
+**c.** Hier gebruiken we de relatieve frequentie. We hebben hier de frequentie gedeeld door het totaal aantal waarnemingen en wiskundig staat hier precies hetzelfde als in **b**. Op deze manier hoef je niet meer door het totale aantal waarnemingen te delen. 
+
+**d.** We nemen als voorbeeld Waarneming$ = 2 = x$. Als we deze $x$ in de functie $f(x)$ stoppen krijgen we $f(2)=0,3$, want de relatieve frequentie van 2 waarnemingen is 0,3. $f(x)x$ is in dit geval dus $0,3\times 2$. Dit is de eerste term in de formule van **c**. Als we deze stappen herhalen voor de andere waarnemingen hebben we alle onderdelen van de formule uit **c**. We kunnen deze dan bij elkaar op tellen en dan hebben we het gemiddelde. Dit kan je wiskundig aangeven met het $\sum$ teken. Dus we kunnen altijd het g
 
 @exr-sprinkhanen: 
 **a** 
@@ -287,3 +305,67 @@ tellen.
 De kans is ongeveer 0.5. We hebben hier twee keer de oppervlakte van het paarse
 gebied in $c$.
 
+
+
+## @sec-schatten
+
+@exr-75-procent-interval Kort gezegd: om historische redenen. Er is
+niets speciaals of magisch aan het 95% betrouwbaarheids-
+interval. In feite zou je in elke situatie opnieuw moeten
+beslissen welk interval voor jouw doeleinden het meest
+geschikt is. In de praktijk gebeurt dat zelden en wordt
+bijna altijd het 95% betrouwbaarheidsinterval gepresen-
+teerd – simpelweg uit gewoonte.
+
+@exr-tomaten-gewicht
+Het 95%-betrouwbaarheidsinterval wordt met deze formule berekend: 
+$$
+\left[\mean{X} -\ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}}, \mean{X} + \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}} \right].
+$$
+
+$\mean{X}$ weten we al, die is gegeven als 44,1 g. We moeten dus nog $t_{0,05(2)(n-1)}\se{\mean{X}}$ berekenen. 
+
+Eerst rekenen we $\se{\mean{X}}$ uit met de formule: 
+
+$$\se{X} = \frac{s_X}{\sqrt{n}}$$
+
+$s_X = 8,6$ en $n=16$, dus $\se{x} = 8,6/\sqrt{16} =2,15$ g
+
+Om $t_{0,05(2)(n-1)}$ te berekenen hebben we eerst het aantal vrijheidsgraden nodig: $n-1=15$. Nu kunnen we t in R uitrekenen: 
+```{r}
+alpha <- 0.05 #95% interval, dus alpha is 0.05
+qt(1 - alpha/2, df = 15)
+```
+
+Ons 95%-betrouwbaarheidsinterval is dus: 
+$$
+\left[\mean{X} -\ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}}, \mean{X} + \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}} \right]
+$$
+$$
+=\left[44,1 -2,13\times 2,15, 44,1 +2,13\times 2,15 \right] = [39,5 \textrm{g}, 48.7\textrm{g}]
+$$
+
+Als we het volledig in R zouden doen zou je script er zo uit kunnen zien: 
+```{r}
+#Waardes 
+X_mean <- 44.1
+s_X <- 8.6
+n <- 16
+
+#SE berekenen
+SE <- s_X/sqrt(n)
+
+
+#t-waarde berekenen
+df = n-1
+
+alpha <- 0.05 #95% interval, dus alpha is 0.05
+t_waarde <- qt(1 - alpha/2, df = df)
+
+#Betrouwbaarheidsinterval berekenen en deze bijvoorbeeld in een vector weergeven:
+c(X_mean-t_waarde*SE, X_mean+t_waarde*SE)
+
+#Optie als je R ook af wilt laten ronden: 
+round(c(X_mean-t_waarde*SE, X_mean+t_waarde*SE), digits=1)
+
+```
