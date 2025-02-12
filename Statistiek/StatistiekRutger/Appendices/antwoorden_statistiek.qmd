@@ -369,3 +369,166 @@ c(X_mean-t_waarde*SE, X_mean+t_waarde*SE)
 round(c(X_mean-t_waarde*SE, X_mean+t_waarde*SE), digits=1)
 
 ```
+
+
+## @sec-toetsen-gemiddelden
+
+@exr-kippeneieren
+
+**a.** Het gemiddelde is 51,7 g. De variantie kun je niet berekenen: daar heb je tenminste twee waarnemingen
+voor nodig! Dat is ook eigenlijk wel logisch. De variantie van een steekproef is immers een schatter voor
+de variantie van de populatie, en een enkele waarneming bevat geen informatie over de spreiding in die populatie
+
+**b.** Onze nulhypothese is: $H_0: \mu=52$ g. Onze alternatieve hypothese is dat dit niet klopt: $H_A: \mu\neq 52g$. 
+
+We willen een t-toets voor één steekproef uitvoeren. De toetsingsgrootheid is: 
+$$t = \frac{\mean{X} - \mu_0}{\se{\mean{X}}}$$
+De toetsingsgrootheid $t$ is verdeeld volgens de t-verdeling met $n-1=3$ vrijheidsgraden. De kritieke waarde is dus 3,18 (zie de code hieronder). 
+
+```{r}
+alpha <- 0.05 #95% interval, dus alpha is 0.05
+t_kritiek <- qt(1 - alpha/2, df = 3)
+t_kritiek
+```
+
+**c.** We berekenen $t$, met R en de formules voor $\se{\mean{X}}$ en $t$: 
+
+```{r}
+#Onze data
+data <- c(51.7, 50.3, 48.4, 51.9)
+
+#Waardes berekenen
+X_mean <- mean(data)
+s_X <- sd(data)
+n <- length(data)
+
+#SE berekenen
+SE <- s_X/sqrt(n)
+
+mu_0 <- 52
+
+#t brekenen
+t <- (X_mean - mu_0)/SE
+
+t
+
+```
+Als $|t| >  \ct{0{,}05}{2}{(n-1)}$ kunnen we de nulhypothese verwerpen. $|t|  = 1,76 < 3,18 =  \ct{0{,}05}{2}{(n-1)}$, dus $t$ ligt niet in het verwerpingsgebied. Daarom kunnen we op basis van deze warnemingen $H_0$ niet verwerpen. Vooralsnog is er dus geen aanleiding om de poelier te wantrouwen. 
+
+**d.** De waarde van $|t|$ die we gevonden hebben ($|t|  = 1,76$) ligt tussen $\ct{0{,}1}{2}{3}$ en $\ct{0{,}2}{2}{3}$in. We concluderen
+daarom dat $0,1 < 𝑃 < 0,2$. Preciezer kunnen we de
+schatting met behulp van deze tabel niet maken
+
+
+@exr-diastolische-bloeddruk
+**a.** Het gaat om een 𝑡-toets voor één steekproef. Aan de functie `t.test()` is de optie `mu = 90` meegegeven; dit betekent dat de nulhypothese en alternatieve
+hypothese voor de uitgevoerde test als volgt waren:
+$$𝐻_0 : 𝜇 = 90 \textrm{  mm Hg}$$
+$$𝐻_A : 𝜇 ≠ 90 \textrm{  mm Hg}$$
+De aannames zijn dat de steekproef aselect is en dat de bloeddruk normaal verdeeld is in de populatie
+
+**b.** De toetsingsgrootheid is $𝑡 = −0,613$; de overschrij-
+dingskans $𝑃 = 0,543$. We kunnen de hypothese niet
+verwerpen omdat $𝑃 > 0,05$. 
+
+Een andere manier om
+dat te zien is door de kritieke waarde te berekenen voor n=50:
+
+```{r}
+alpha <- 0.05 #95% interval, dus alpha is 0.05
+df = 50-1
+t_kritiek <- qt(1 - alpha/2, df = df)
+t_kritiek
+```
+
+ $\ct{0{,}05}{2}{49} = 2,01 > |𝑡 |$, dus $t$ ligt
+niet in het verwerpingsgebied.
+
+**c.** Je kunt dit uitlezen uit de uitvoer:
+$$86,32 \textrm{  mm Hg} < 𝜇 < 91,96 \textrm{  mm Hg}$$
+Oftewel, het betrouwbaarheidsinterval is [86,32 mm Hg; 91,96 mm Hg].
+
+
+**d.** De testwaarde van 90 mm Hg valt binnen het 95%-betrouwbaarheidsinterval uit onderdeel **c**; dat betekent dat het gevonden gemiddelde niet significant
+afwijkt van de testwaarde (gegeven 𝛼 = 0,05). Dat is
+inderdaad wat we vonden in onderdeel **b**.
+
+
+@exr-zuurgraad
+**a.** Een gepaarde t-toets is hier toepasselijk. Met deze toets kunnen we bepalen of er een significant verschil is tussen de twee datasets. 
+```{r}
+zuurgraadOchtend <- c(4.89, 5.28, 5.24, 5.27, 4.92, 5.35, 4.76, 5.72, 4.62)
+zuurgraadAvond <- c(5.29, 5.51, 5.75, 5.62, 5.42, 6.09, 4.92, 6.01, 5.34)
+
+t.test(zuurgraadOchtend, zuurgraadAvond, paired = TRUE)
+```
+
+**b.** De effectgrootte is te zien onder `mean difference`. Hier zien we dat het gemiddelde verschil tussen de twee datasets -0,43 is. De zuurgraad in de ochtend is dus gemiddeld 0,43 lager dan in de avond. Het betrouwbaarheidsinterval is gegeven en is $[-0,59, -0,28]$. We kunnen het gemiddelde verschil dus opschrijven als: 
+$$-0,43 \pm 0,16 $$
+
+**c.**
+$𝐻_0$ : Het verschil tussen de pH ’s ochtends en ’s
+avonds is gemiddeld 0. 
+
+$𝐻_A$ : Het verschil tussen de pH
+’s ochtends en ’s avonds is gemiddeld geen 0. 
+
+Om dit te testen hebben we een gepaarde 𝑡-toets nodig, want
+we hebben de pH bij iedere vijver twee keer gemeten
+(’s ochtends en ’s avonds) en zijn geïnteresseerd in
+de verschillen tussen die herhaalde metingen (en dus
+niet zozeer in verschilllen tussen vijvers onderling).
+Aan het 95%-betrouwbaarheidsinterval konden we al
+zien dat het verschil significant is (bij $𝛼 = 0,05$). Dit
+zien we ook aan de overschrijdingskans uit de uitvoer:
+$𝑃 = 0,0002$. 
+
+Ten slotte kunnen we in R kunnen we de kritieke t waarde berekenen: 
+```{r}
+alpha <- 0.05 #95% interval, dus alpha is 0.05
+df = length(zuurgraadOchtend)-1
+t_kritiek <- qt(1 - alpha/2, df = df)
+t_kritiek
+```
+
+En trekken we weer dezelfde conclusie: 
+
+$$|𝑡 | = 6,389 > \ct{0{,}05}{2}{8} = 2,31$$
+Dit laat zien dat 𝑡 in het verwerpingsgebied ligt. 
+
+
+@exr-kurk
+
+::: {.todo-box}
+File path aanpassen
+:::
+
+**a.**
+```{r}
+kurk <- read.csv("C:/Users/yanni/Book2/Boek/Statistiek/StatistiekRutger/data/kurk.csv")
+```
+
+**b.**
+
+```{r}
+str(kurk)
+# Ik laat View(kurk) even weg, omdat je hiermee de data in een nieuw venster opent.
+# View(kurk)
+head(kurk)
+```
+1. `str()` laat zien dat er 4 variables zijn, en dus 4 kolommen. `head(kurk)` laat er 5 zien, maar de eerste kolom is geen echt onderdeel van de data, zoals je ook met `View()` kan zien. 
+2. `str()` geeft aan dat er 28 obs.(observations) zijn. Er zijn dus ook 28 rijen. 
+3. Met `head()` kan je zien dat elke kolom `int` als datatype heeft, dus integer. 
+4. Het zijn allemaal hele getallen, dus integers, dus het kan kloppen, maar `float` zou misschien beter passen. Als de data in decigrammen was had dit gemoeten, dus waarom we het nu niet zouden doen is lastig te onderbouwen. 
+
+**c.**
+
+
+
+
+
+
+
+
+
+
