@@ -19,24 +19,30 @@ lijnkleur3 <- "blue"
 Kan het eten van vlees darmkanker veroorzaken?
 Hangt het aantal nakomelingen van koolmezen samen met het moment waarop 
 de eieren worden gelegd?
-Vergroot het dagelijks gebruik van sociale media 
+Vergroot dagelijks gebruik van sociale media 
 de kans op angstklachten of depressie?
 Draagt een verhoging van importtarieven bij aan inflatie?
-Heel veel vragen binnen de biologie en daarbuiten
-gaan over de samenhang, relaties, oftewel **associaties** tussen variabelen.
-Belangrijker nog, 
-  vaak willen we weten of een variabele een andere beïnvloedt. 
-We hebben het dan over **oorzakelijke** of **causale** verbanden.
-Hoe kunnen we door middel van goed geplande experimenten 
-aantonen dat er een oorzakelijk verband bestaat tussen variabelen?
+
+Veel vragen binnen de biologie en daarbuiten
+gaan over de samenhang, relaties0---oftewel **associaties**---tussen variabelen.
+Vaak willen we bovendien weten of de ene variabele de andere beïnvloedt. 
+In dat geval spreken we over **oorzakelijke** of **causale** verbanden.
+
+Wat is het verschil tussen associaties en causale verbanden?
+Waarom is het moeilijk om verstandige conclusies te trekken over oorzaak en gevolg?
+En hhoe kunnen we met goed geplande experimenten 
+toch aantonen dat er een oorzakelijk verband bestaat tussen variabelen?
+
 Dat zijn de thema's van dit hoofdstuk.
 
 ## Associaties tussen verschillende typen variabelen
 
 Twee variabelen zijn geasssocieerd
-als de waarde van de ene variabele iets zegt over de waarde van de andere.
-Roker zijn en longkanker krijgen zijn geassocieerd omdat
-uit gegevens blijkt dat rokers een grotere kans hebben op longkanker.
+als de waarde van de ene variabele informatie geeft over de waarde van de andere.
+Roken en longkanker zijn geassocieerd omdat
+rokers vaker longkanker krijgen.
+Als je leert dat iemand rookt, 
+leer je dus ook iets over diens kans op longkanker.
 
 ### Associaties tussen een continue variabele en een categorische variabele
 
@@ -44,34 +50,36 @@ Variabelen die geassocieerd zijn
 hoeven niet van hetzelfde type te zijn.
 Zo kan een numerieke variabele
 geassocieerd zijn met een categorische variabele.
-Daarvan zijn we in @sec-toetsen-gemiddelden eigenlijk al voorbeelden tegengekomen.
+Daarvan zijn we in @sec-toetsen-gemiddelden al voorbeelden tegengekomen.
 In @sec-t-toets-twee-steekproeven gebruikten we een $t$-toets voor twee onafhankelijke steekproeven
 om aan te tonen dat het gemiddelde gewicht van de bonte manacin 
 (*manacus manacus*) verschilt tussen de geslachten.
 In andere woorden, `gewicht` (continu) 
 hangt samen met `geslacht` (nominaal).
-Zo bekeken is het doel van iedere $t$-toets voor twee onafhankelijke steekproeven 
-om de samenhang te beoordelen tussen een continue variabele 
+Je kunt de $t$-toets voor twee onafhankelijke steekproeven 
+dus zien als een methode om de samenhang te beoordelen tussen een continue variabele 
 en een categorische variabele met twee niveaus.
 
 ### Associaties tussen twee continue variabelen
 
 Natuurlijk kunnen twee continue variabelen ook geassocieerd zijn.
-Hieronder bekijken we een voorbeeld uit de NHANES-dataset.
+In @exm-gewicht-lengte bekijken we een voorbeeld uit de NHANES-dataset.
 
 ::: {#exm-gewicht-lengte}
 ### Samenhang tussen lichaamsgewicht en lengte in de NHANES-data
 
 In de NHANES-dataset is van de meeste deelnemers de lichaamslengte en het lichaamsgewicht gegeven. 
-Zou er een verband zijn tussen lichaamslengte en gewicht? 
+Zou er een verband zijn tussen lichaamslengte en gewicht?
 We onderzoeken het door die variabelen tegen elkaar uit te zetten
 in een spreidingsdiagram (@fig-gewicht-lengte). 
 
 Er is duidelijk een trend te zien: langere mensen zijn gemiddeld
-zwaarder. Maar er is grote variatie tussen mensen met hetzelfde gewicht,
-vooral onder volwassenen.
+zwaarder. 
+Maar mensen met dezelfde lichaamslengte kunnen sterk verschillen in gewicht.
+Dat geldt vooral vooral voor volwassenen.
+
 Merk ook op dat de trend geen rechte lijn is:
-over het algemeen neemt gewicht sneller dan lineair toe met lichaamslengte.
+gewicht neemt sneller dan lineair toe met lichaamslengte.
 
 ```{r}
 #| code-fold: true
@@ -96,7 +104,7 @@ ggplot(
     color = "#e8601d",
     alpha = 0.5
   )+
-  labs( x = "Gewicht (kg)", y = "Lengte (cm)") +
+  labs( x = "Lichaamslengte (cm)", y = "Gewicht (kg)") +
   theme_minimal()
 
 ```
@@ -108,9 +116,8 @@ Meestal wordt dan bedoeld dat de variabelen *lineair* met elkaar samenhangen
 (in @sec-linrel gaan we het specifiek over lineaire relaties hebben),
 maar soms worden ook andere verbanden bedoeld. 
 In de volksmond wordt het woord correlatie soms ook gebruikt
-  voor een samenhang tussen categorische variabelen,
-  maar in de statistiek is het gereserveerd  
-  voor samenhang tussen numerieke variabelen.
+voor een samenhang tussen categorische variabelen,
+maar in de statistiek is het woord gereserveerd voor samenhang tussen numerieke variabelen.
 
 ### Associaties tussen twee categorische variabelen
 
@@ -177,8 +184,9 @@ kable(
 
 ```
 
-De getallen in de kruistabel zijn lastig te overzien. 
-Daarom maken we op basis van de kruistabel een **mozaïekplot**:
+De getallen in de kruistabel zijn lastig te overzien
+en geven niet direct een beeld van de samenhang tussen de variabelen.
+Daarom geven we de kruistabel weer met een **mozaïekplot**:
 
 ```{r}
 #| code-fold: true
@@ -194,31 +202,34 @@ kleuren <- c("DarkOrchid", "#409899", "#e8601d")
 mosaicplot(
   kruistabel, 
   col = kleuren, 
-  main = "Samenhang tussen woontoestand en gezondheidstoestand",
+  main = NULL,
   xlab = "Gezondheidstoestand",
   ylab = "Woontoestand"
   )
 ```
 
 Uit deze mozaïekplot kun je verschillende dingen aflezen.
-Je ziet misschien dat de plot bestaat uit vijf kolommen.
+De plot bestaat uit vijf kolommen.
 De breedte van die kolommen geeft de frequentie weer 
 van de niveaus van gezondheidstoestand.
 Dat zijn dus dezelfde frequenties die we eerder zagen in @fig-stapel.
+Je ziet dus gelijk dat veel meer mensen hun gezondheid als "Goed"
+beoordeeld hebbend dan als "Slecht".
+
 Binnen de kolommen laten de hoogtes van de blokken
 vervolgens voor iedere gezondheidstoestand
 de relatieve frequenties zien van de verschillende woontoestanden.
-
-Het lijkt erop dat de oranje blokken van links naar rechts hoger worden.
+Die verhoudingen verschillen niet drastisch per niveau van gezondheidstoestand.
+Maar het lijkt erop dat de oranje blokken van links naar rechts wel hoger worden.
 Dat zou betekenen dat gezondere personen vaker een huis bezitten.
 Alleen de categorie *Slecht*"* past niet helemaal in die trend,
-  al zou in die kleine categorie steekproefvariabiliteit een rol kunnen spelen.
+  al zou steekproefvariabiliteit in die kleine categorie een rol kunnen spelen.
 
 Om te beoordelen of de twee variabelen daadwerkelijk samenhangen
 zouden we eigenlijk een statistische toets moeten uitvoeren.
-Een geschikte toets zou de $\chi^2$-toets voor onafhankelijkheid zijn,
-maar we hebben in deze cursus geen tijd om die te behandelen.
-Voor de volledigheid kunnen we deze toch even uitvoeren:
+Een geschikte toets zou de $\chi^2$-toets voor onafhankelijkheid zijn.
+We hebben in deze cursus geen tijd om die te behandelen,
+maar voor de volledigheid kunnen we deze toch even uitvoeren:
 
 ```{r}
 #| warning: false
@@ -226,38 +237,41 @@ Voor de volledigheid kunnen we deze toch even uitvoeren:
 chisq.test(kruistabel)
 ```
 
-In de uitvoer is de $P$-waarde gegeven:
+Het nulmodel van deze toets is dat de twee variabelen
+volledig onafhankelijk zijn.
+In de uitvoer is de $P$-waarde gegeven;
 die is kleiner dan $2{,}2 \times 10^{-16}$.
-Dat maakt het zeer onwaarschijnlijk dat de verschillen in verhoudingen
-het gevolg zijn van steekproefvariatie.
-De twee variabelen hangen dus vrijwel zeker samen.
+Dat wil zeggen dat deze kruistabel onder het nulmodel erg onwaarschijnlijk is.
+Dat is sterk bewijs tegen het nulmodel en voor het vermoeden
+dat de variabelen samenhangen.
 
-We kunnen alleen maar speculeren over de oorzaken van de samenhang.
-Je kunt je voorstellen dat personen met een matige gezondheid
-hierdoor soms beperkt worden en daardoor minder inkomen hebben.
+Over de oorzaken van deze samenhang kunnen we alleen maar speculeren.
+Je kunt je voorstellen dat mensen met een matige gezondheid
+daardoor soms beperkt worden, wat hun inkomen kan beïnvloeden.
 Dat zou kunnen verklaren dat zij minder vaak in staat zijn
-om een huis te kopen.
-Maar waarschijnlijk spelen er veel meer factoren een rol.
+een huis te kopen.
+Maar waarschijnlijk spelen nog veel meer factoren een rol.
 
 :::
 
 ## Oorzaken van associaties
 
-Als we tot de conclusie komen dat twee variabelen geassocieerd zijn,
-dan willen we graag weten hoe dat komt.
+Als twee variabelen geassocieerd zijn,
+willen we graag weten hoe dat komt.
 Welke mechanismen zijn verantwoordelijk voor die associatie?
-In de praktijk is dat nog niet zo gemakkelijk,
-omdat variabelen op allerlei manieren met elkaar verknoopt kunnen raken.
+In de praktijk is dat vaak moeilijk te achterhalen,
+omdat variabelen op allerlei manieren met elkaar verweven kunnen raken.
 
-Een specifieke manier waarop variabelen geassocieerd kunnen raken
-is als ze elkaar beïnvloeden. 
-We hebben het dan over een **oorzakelijk** of **causaal verband**.
-Roken en longkanker zijn geassocieerd omdat roken kanker *veroorzaakt*.
-Het is heel waardevol om te weten dat het verband tussen die twee variabelen
-oorzakelijk is, want dat betekent dat het aantal longkankerpatienten
-zal afnemen als we maatregelen nemen tegen roken.
+Een directe manier waarop variabelen geassocieerd kunnen raken
+is als ze elkaar beïnvloeden---een **oorzakelijk** of **causaal verband**.
+Roken en longkanker zijn bijvoorbeeld geassocieerd doordat roken kanker *veroorzaakt*.
+
+Het is heel waardevol om te weten dat dit verband
+oorzakelijk is, 
+want dat betekent dat we longkanker kunnen voorkomen
+door te stoppen met roken.
 Als je niet weet wat iets veroorzaakt, 
-weet je ook niet hoe je het moet bestreiden.
+weet je ook niet hoe je het moet bestrijden.
 
 Maar als twee variabelen geassocieerd zijn,
 wil dat nog niet zeggen dat er een causaal verband bestaat tussen die variabelen.
