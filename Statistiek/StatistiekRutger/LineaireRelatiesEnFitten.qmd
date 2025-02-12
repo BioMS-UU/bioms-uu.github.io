@@ -460,10 +460,10 @@ ggplot(data, aes(x = x, y = y)) +
 ### Regressiecoefficienten schatten
 
 
-### Interpolatie en regressielijn gebruiken om voorspellingen te doen 
+## Interpolatie en regressielijn gebruiken om voorspellingen te doen 
 
 
-### Extrapolatie en zijn gevaren
+## Extrapolatie en zijn gevaren
 
 
 ## Dataset lineaire relaties
@@ -481,6 +481,118 @@ Regressieopgave terugverwijzen naar Brams opgave over covid.
     
 :::
 
+
+## Het fitten van curves in het algemeen
+
+::: {#exr-nonlinear}
+## **Opdracht: Michaelis-Menten parameters schatten met niet-lineaire regressie**
+
+### **Doel**
+Je krijgt een dataset met experimentele gegevens over de reactiesnelheid ($v$) van een enzymatische reactie bij verschillende substraatconcentraties ($[S]$). Je taak is om de Michaelis-Menten parameters te bepalen:
+
+- **$v_{\max}$**: De maximale reactiesnelheid.
+- **$k_M$**: De substraatconcentratie waarbij de reactiesnelheid de helft van $v_{\max}$ bedraagt.
+
+Deze parameters worden beschreven door de **Michaelis-Menten vergelijking**:
+
+$$
+v = \frac{v_{\max} \cdot [S]}{k_M + [S]}
+$$
+
+waarbij:
+- $v$ de gemeten reactiesnelheid is,
+- $[S]$ de substraatconcentratie is.
+
+Je gaat de **niet-lineaire regressie (NLS)** in R gebruiken om deze parameters te schatten.
+
+---
+
+## **Instructies**
+1. **Laad de dataset**: De gegevens bevatten twee kolommen:  
+   - `substrate_concentration` (mM)  
+   - `reaction_rate` (μM/min)  
+
+2. **Pas niet-lineaire regressie toe** met **de functie `nls()`** in R om $k_M$ en $v_{\max}$ te schatten.
+
+3. **Maak een plot** van de meetpunten en pas de geschatte curve aan de data.
+
+4. **Beantwoord de volgende vragen**:
+   - Wat zijn de geschatte waarden voor $k_M$ en $v_{\max}$?
+   - Hoe goed past het model bij de data?
+   - Wat zou er gebeuren als de data **ruis** bevat of als er minder meetpunten beschikbaar zijn?
+   - Wat zijn de voordelen en nadelen van niet-lineaire regressie ten opzichte van lineaire transformaties zoals de **Lineweaver-Burk plot**?
+
+---
+
+## **Gegeven dataset**
+Gebruik de onderstaande tabel in je analyse:
+
+| Substraatconcentratie (mM) | Reactiesnelheid (μM/min) |
+|----------------------------|-------------------------|
+| 0.1                        | 2.3                     |
+| 0.2                        | 4.1                     |
+| 0.5                        | 8.5                     |
+| 1.0                        | 13.2                    |
+| 2.0                        | 18.4                    |
+| 5.0                        | 22.5                    |
+| 10.0                       | 24.0                    |
+
+---
+
+## **Oplossingsmodel (R-script)**
+Onderstaand R-script voert de niet-lineaire regressie uit en visualiseert de resultaten.
+
+```{r}
+# Controleer of de benodigde pakketten geladen zijn
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+
+# Gegevens inladen
+data <- data.frame(
+  substrate_concentration = c(0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0),
+  reaction_rate = c(2.3, 4.1, 8.5, 13.2, 18.4, 22.5, 24.0)
+)
+
+# Definieer het Michaelis-Menten model
+michaelis_menten <- function(S, v_max, k_M) {
+  v_max * S / (k_M + S)
+}
+
+# Pas niet-lineaire regressie toe
+fit <- nls(
+  reaction_rate ~ michaelis_menten(substrate_concentration, v_max, k_M),
+  data = data,
+  start = list(v_max = 25, k_M = 1) # Startwaarden op basis van ruwe schatting
+)
+
+# Toon de geschatte parameters
+summary(fit)
+
+# Extraheer de geschatte parameters
+params <- coef(fit)
+v_max_est <- params["v_max"]
+k_M_est <- params["k_M"]
+
+# Maak een dataset voor de voorspelde waarden
+fit_data <- data.frame(
+  substrate_concentration = seq(0, 12, length.out = 100)
+)
+fit_data$reaction_rate <- michaelis_menten(fit_data$substrate_concentration, v_max_est, k_M_est)
+
+# Visualiseer de resultaten
+ggplot(data, aes(x = substrate_concentration, y = reaction_rate)) +
+  geom_point(size = 3, color = "blue") +  # Meetpunten
+  geom_line(data = fit_data, aes(x = substrate_concentration, y = reaction_rate),
+            color = "red", linewidth = 1.2) +  # Modelcurve
+  labs(
+    title = "Michaelis-Menten Fit",
+    x = "Substraatconcentratie (mM)",
+    y = "Reactiesnelheid (μM/min)"
+  ) +
+  theme_minimal()
+```
+
+
+:::
 
 ## Samenvatting
 
