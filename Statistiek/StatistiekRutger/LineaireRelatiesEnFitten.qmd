@@ -16,17 +16,25 @@ lijnkleur3 <- "blue"
 
 # Lineaire relaties {#sec-linrel}
 
-## Correlatie
+Vorige hoofdstuk ging over associaties / relaties tussen variabelen.
+Dit hoofdstuk over een belangrijk type relatie,
+tussen continue variabelen: **lineaire relaties**.
 
-Galton 1888
+## De gegevens van Sir Francis Galton
+
+Relatie tussen de lichaamslengte van ouders
+en die van hun kinderen.
+Ontdekt door Galton en 1888.
+Gegevens van Galton geplot:
+
 
 ```{r}
 #| fig-height: 5
-#| fig-width: 5
+#| fig-width: 6
 #| fig-align: "center"
 #| code-fold: true
 #| warning: false
-#| fig.cap: "."
+#| fig.cap: "De lichaamslengte van volwassen kinderen is gecorreleerd met de lichaamslengte van de ouders. Op de $x$-as staat de mid-ouder-lengte; dat is het gemiddelde van beide ouders. De lichaamslengtes van alle vrouwen (moeders en kinderen) is vermenigvuldigd met 1,08 om te corrigeren voor het feit dat mannen iets langer zijn dan vrouwen."
 #| label: fig-galton
 #| out.width: "71.4%"
 # Laad benodigde pakketten
@@ -47,21 +55,39 @@ GaltonFamilies$childHeightCorrected[GaltonFamilies$gender == "female" ] <- 1.08*
 # Maak de scatterplot met regressielijn en diagonaal
 ggplot(GaltonFamilies, aes(x = mid_parent_height, y = childHeightCorrected)) +
   geom_point(alpha = 0.8, size = 1, color = "#e8601d") +  # Scatterplot punten
-  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") +  # Diagonaal y = x
+#  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") +  # Diagonaal y = x
   xlim(60, 80) + 
   ylim(60, 80) +
-  labs(x = "Mid-ouder lengte (inch)", 
+  labs(x = "Mid-ouder-lengte (inch)", 
        y = "Lengte kind (inch)", 
-       title = "Scatterplot van Mid-ouder lengte vs. Kinderlengte") +
-  theme_minimal() +
-  geom_smooth(method = "lm")
+       title = "") +
+  theme_minimal()# +
+#  geom_smooth(method = "lm")
 
 ```
 
-$$
-r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}
-         {s_x s_y}
-$$
+De samenhang lijkt lineair (rechte lijn plus ruis).
+Hoe kunnen we de lineaire samenhang tussen de lengte van ouders en hun kinderen kwantificeren?
+
+## Pearsons correlatiecoëfficiënt $r$
+
+### Eigenschappen
+
+Stel, in een populatie wordt een steekproef met grootte $n$ genomen, waarbij van iedere eenheid in de steekproef twee variabelen worden gemeten: $X$ en $Y$. Dit levert de uitkomsten $x_1, \ldots, x_n$ en $y_1, \dots, y_n$.
+
+**Pearson's correlatiecoëfficiënt** $r$ is een maat voor de lineaire correlatie tussen deze variabelen in de steekproef. In de praktijk wordt deze vaak afgekort tot de **correlatiecoëfficiënt**.
+
+Deze coëfficiënt is een **getal zonder dimensie** en heeft dus geen eenheid. De waarde ligt altijd tussen **-1 en 1**. De absolute waarde geeft de sterkte van het lineaire verband aan:
+
+- **$r = 1$ of $r = -1$**: een perfect lineair verband; alle punten liggen exact op een rechte lijn.
+- **$r = 0$**: er is geen lineair verband tussen de variabelen.
+
+Het teken van $r$ geeft de richting van het verband aan:
+
+- **Positieve correlatie ($r > 0$)**: als $X$ toeneemt, neemt $Y$ gemiddeld ook toe.
+- **Negatieve correlatie ($r < 0$)**: als $X$ toeneemt, neemt $Y$ gemiddeld af.
+
+@Fig-correl-coefs toont een aantal voorbeelden van puntenwolken met de bijbehorende waarden van $r$.
 
 
 ```{r}
@@ -78,13 +104,14 @@ if (!("MASS" %in% .packages())) { library(MASS) }
 if (!("dplyr" %in% .packages())) { library(dplyr) }
 
 # Definieer parameters
-n <- 100  # Steekproefgrootte
+n <- 200  # Steekproefgrootte
 correlaties <- c(1, 0.75, 0.5, 0.25, 0, -0.25, -0.5, -0.75)
+
+set.seed(135)
 
 # Functie om een bivariate normale steekproef te genereren
 genereer_data <- function(rho, n, groep) {
   sigma <- matrix(c(1, rho, rho, 1), nrow = 2)
-  set.seed(groep)  # Unieke seed per groep voor variatie
   data <- MASS::mvrnorm(n, mu = c(0, 0), Sigma = sigma)
   data.frame(X = data[, 1], Y = data[, 2], groep = groep)
 }
@@ -118,9 +145,252 @@ print(p)
 
 ```
 
+De correlatiecoëfficiënt geeft aan of het verband positief of negatief is,
+maar trekt zich verder niets aan van de richtingscoëfficiënt.
+De steekproeven in onderstaande figuren hebben allemaal $r = 1$ of $-1$.
 
 
-### Regressie
+```{r}
+#| out-width: "100%"
+#| fig-width: 7
+#| fig-height: 2.6
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Bij al deze steekproeven is de correlatiecoëfficiënt 1 of -1."
+#| label: fig-correl-sd
+
+# Laad benodigde pakketten
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("MASS" %in% .packages())) { library(MASS) }
+if (!("dplyr" %in% .packages())) { library(dplyr) }
+
+# Definieer parameters
+n <- 100
+correlaties <- c(1, 1, -1, -1)
+std_y <- c(1, 0.4, 0.1, 0.7)
+
+custom_labels <- c("1" = "r = 1", 
+                   "2" = "r = 1", 
+                   "3" = "r = -1", 
+                   "4" = "r = -1")
+
+# Functie om bivariate normaal verdeelde data te genereren
+genereer_data <- function(rho, sigma_y, groep) {
+  sigma <- matrix(c(1, rho * sigma_y, rho * sigma_y, sigma_y^2), nrow = 2)
+  set.seed(groep)
+  data <- MASS::mvrnorm(n, mu = c(0, 0), Sigma = sigma)
+  data.frame(X = data[, 1], Y = data[, 2], groep = groep)
+}
+
+# Genereer datasets
+datasets <- do.call(
+  rbind, 
+  Map(genereer_data, correlaties, std_y, groep = 1:4)
+  )
+
+# Maak de ggplot met facet_wrap
+p <- ggplot(datasets, aes(x = X, y = Y)) +
+  geom_point(color = "#e8601d", alpha = 0.8, size = 1) +
+  facet_wrap(~ groep, nrow = 1, labeller = as_labeller(custom_labels)) +
+  coord_fixed(xlim = c(-3, 3), ylim = c(-3, 3)) +
+#  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    strip.text = element_text(size = 12),
+    plot.margin = margin(0, 0, 0, 0)
+  ) +
+  labs(x = NULL, y = NULL)
+
+# Print de plot
+print(p)
+```
+
+Pearsons correlatiecoëfficiënt is bedoeld om lineaire relaties te beschrijven.
+De plotjes hieronder in @fig-nonlinear laten variabelen zien die wel een relatie hebben
+---de waarde van $Y$ hangt wel af van de waarde van $X$---
+maar de relatie is niet *lineair*.
+Het is dan niet nuttig (en misleidend) om $r$ uit te rekenen.
+
+```{r}
+#| out-width: "100%"
+#| fig-width: 7
+#| fig-height: 2.6
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Voorbeelden van niet-lineaire relaties."
+#| label: fig-nonlinear
+
+# Laad benodigde pakketten
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("dplyr" %in% .packages())) { library(dplyr) }
+
+# Definieer parameters
+n <- 200
+sigma_y <- 0.1  # Kleine variantie voor de fouten
+
+custom_labels <- c("1" = "parabool", 
+                   "2" = "exponentieel", 
+                   "3" = "1 / X", 
+                   "4" = "sinus")
+
+# Functie om niet-lineaire relaties te genereren
+genereer_data <- function(x, f, groep) {
+  set.seed(groep)
+  y <- f(x) + rnorm(n, mean = 0, sd = sigma_y)
+  data.frame(X = x, Y = y, groep = groep)
+}
+
+# Genereer waarden voor X
+set.seed(42)
+x <- rnorm(n, mean = 0, sd = 1)
+
+# Definieer niet-lineaire functies
+functies <- list(
+  function(x) .8*x^2 -2,         # Parabool
+  function(x) exp(x) -2,       # Exponentiële groei
+  function(x) 1 / (x),  # 1/x, met verschuiving om singulariteit te vermijden
+  function(x) 2*sin(x)        # Sinusfunctie
+)
+
+# Genereer datasets
+datasets <- do.call(
+  rbind, 
+  Map(genereer_data, list(x, x, x, x), functies, groep = 1:4)
+  )
+
+# Maak de ggplot met facet_wrap
+p <- ggplot(datasets, aes(x = X, y = Y)) +
+  geom_point(color = "#e8601d", alpha = 0.8, size = 1) +
+  facet_wrap(~ groep, nrow = 1, labeller = as_labeller(custom_labels)) +
+  coord_fixed(xlim = c(-3, 3), ylim = c(-3, 3)) +
+#  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    strip.text = element_text(size = 12),
+    plot.margin = margin(0, 0, 0, 0)
+  ) +
+  labs(x = NULL, y = NULL)
+
+# Print de plot
+print(p)
+```
+
+### Wisundige formule
+
+
+$$
+r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}
+         {s_x s_y}.
+$$
+
+```{r}
+#| out-width: "71.4%"
+#| fig-width: 5
+#| fig-height: 5
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Scatterplot met vier kwadranten en annotaties."
+#| label: fig-annotated-scatter
+
+# Laad benodigde pakketten
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("MASS" %in% .packages())) { library(MASS) }
+
+# Definieer parameters
+n <- 100  # Steekproefgrootte
+rho <- 0.7  # Correlatiecoëfficiënt
+
+set.seed(158)
+
+# Genereer bivariate normale data
+sigma <- matrix(c(1, rho, rho, 1), nrow = 2)
+data <- MASS::mvrnorm(n, mu = c(0, 0), Sigma = sigma)
+df <- data.frame(X = data[, 1], Y = data[, 2])
+
+# Bereken gemiddelden
+mean_x <- mean(df$X)
+mean_y <- mean(df$Y)
+
+# Maak de scatterplot
+p <- ggplot(df, aes(x = X, y = Y)) +
+  geom_point(color = "#e8601d", alpha = 0.8, size = 2) +
+  geom_vline(xintercept = mean_x, linetype = "dashed") +
+  geom_hline(yintercept = mean_y, linetype = "dashed") +
+  annotate("text", x = mean_x + 0.5, y = mean_y + 3.4, 
+           label = expression(atop(italic(X) ~ "groter dan gemiddeld,", 
+                                   italic(Y) ~ "groter dan gemiddeld")), 
+           size = 4, hjust = 0) +
+  annotate("text", x = mean_x - 2.8, y = mean_y + 3.4, 
+           label = expression(atop(italic(X) ~ "kleiner dan gemiddeld,", 
+                                   italic(Y) ~ "groter dan gemiddeld")), 
+           size = 4, hjust = 0) +
+  annotate("text", x = mean_x + 0.5, y = mean_y - 3.4, 
+           label = expression(atop(italic(X) ~ "groter dan gemiddeld,", 
+                                   italic(Y) ~ "kleiner dan gemiddeld")), 
+           size = 4, hjust = 0) +
+  annotate("text", x = mean_x - 2.8, y = mean_y - 3.4, 
+           label = expression(atop(italic(X) ~ "kleiner dan gemiddeld,", 
+                                   italic(Y) ~ "kleiner dan gemiddeld")), 
+           size = 4, hjust = 0) +
+  theme_minimal() + 
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank()
+  ) +
+  labs(x = expression(bar(italic(X))), y = expression(bar(italic(Y)))) +
+  coord_cartesian(xlim = c(-3, 3), ylim = c(-4, 4))
+
+# Print de plot
+print(p)
+```
+
+
+### Correlatie-coefficient berekenen met R
+
+```{r}
+x <- c(1, 2, 3)
+y <- c(3, 2, 1)
+cor(x, y)
+```
+
+### Toetsen van de correlatie-coefficient.
+
+In de populatie: $\rho$.
+
+Model: bivariaat normaal.
+
+toets:
+
+**Stap 1:**
+
+**Stap 2:**
+
+**Stap 3:**
+
+**Stap 4:**
+
+**Stap 5:**
+
+
+```{r}
+x <- c(1, 2, 3)
+y <- c(3, 2, 1)
+cor.test(x, y)
+```
+
+## Simpsons paradox
+
+
+## Regressie
+
+Een rechte lijn door de wolk trekken.
+
+$$ Y = a X + b. $$
+
+Kies $a$ en $b$ om de gekwadrateerde afwijkingen te minimaliseren.
+Denk weer aan elastiekjes die de lijn naar de datapunten toe trekken. 
 
 ```{r}
 #| code-fold: true
@@ -187,6 +457,15 @@ ggplot(data, aes(x = x, y = y)) +
   )
 ```
 
+### Regressiecoefficienten schatten
+
+
+### Interpolatie en regressielijn gebruiken om voorspellingen te doen 
+
+
+### Extrapolatie en zijn gevaren
+
+
 ## Dataset lineaire relaties
 
 To install the dataset used here:
@@ -202,11 +481,6 @@ Regressieopgave terugverwijzen naar Brams opgave over covid.
     
 :::
 
-## Interpolatie
-
-## Extrapolatie en zijn gevaren
-
-## Simpsons paradox
 
 ## Samenvatting
 
