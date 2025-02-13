@@ -7,7 +7,7 @@
 
 library(ggplot2)
 
-opvulkleur <- "#e8601d"
+opvulkleur <- "#ff7700" #opvulkleur
 lijnkleur1 <- "DarkOrchid"
 lijnkleur2 <- "red"
 lijnkleur3 <- "blue"
@@ -392,9 +392,9 @@ laat een voorbeeld zien: een histogram van de variabele `AgeMonths`
 #| warning: false
 #| fig.cap: "Histogram van leeftijd in de dataset NHANES."
 #| label: fig-histogram-agemonth
-#| fig.width: 4.5
-#| fig.height: 3.5
-#| out.width: "64%"
+#| fig.width: 4
+#| fig.height: 3
+#| out.width: "57%"
 
 library(ggplot2) # gebruik package ggplot2 voor het plotten
 library(NHANES)
@@ -405,7 +405,7 @@ ggplot(
   aes(x = AgeMonths)
   ) +
   geom_histogram(
-    fill = "#e8601d", 
+    fill = opvulkleur, 
     color = "black",
     binwidth = 36,
     boundary = 0,
@@ -444,11 +444,11 @@ verdeling. In @fig-symmetrisch zijn voorbeelden weergegeven.
 #| warning: false
 #| fig.width: 7
 #| fig.height: 2.2
-#| fig.cap: "Illustraties1 van scheve en symmetrische verdelingen."
+#| fig.cap: "Illustraties van scheve en symmetrische verdelingen."
 #| label: fig-symmetrisch
 #| out.width: "100%"
 
-# Laad benodigde bibliotheken
+# Controleer of ggplot2 geladen is
 if (!("ggplot2" %in% .packages())) { 
   library(ggplot2) 
 }
@@ -456,38 +456,43 @@ if (!("ggplot2" %in% .packages())) {
 # Stel een seed in voor reproduceerbaarheid
 set.seed(123)
 
-samplesize <- 3 * 10^3  # Aantal punten per histogram
-nr.bins <- 25           # Aantal bins voor de histogrammen
+# Definieer parameters
+aantal_punten <- 3 * 10^3  # Aantal punten per histogram
+aantal_bins <- 25          # Aantal bins voor de histogrammen
 
-# Genereer steekproeven met gamma- en normale verdelingen
+# Genereer steekproeven uit gamma- en normale verdelingen
 data <- data.frame(
   x = c(
-    -rgamma(samplesize, shape = 3, scale = 1),  # Links-scheve verdeling
-    rnorm(samplesize),                          # Symmetrische verdeling
-    rgamma(samplesize, shape = 3, scale = 1)    # Rechts-scheve verdeling
+    -rgamma(aantal_punten, shape = 3, scale = 1),  # Links-scheef
+    rnorm(aantal_punten),                          # Symmetrisch
+    rgamma(aantal_punten, shape = 3, scale = 1)    # Rechts-scheef
   ),
-  group = factor(
+  groep = factor(
     rep(
       c("Links-scheef", "Symmetrisch", "Rechts-scheef"), 
-      each = samplesize
+      each = aantal_punten
     )
   )
 )
 
-# Plot met facet_wrap
+# Plot de histogrammen per verdelingstype
 ggplot(data, aes(x = x)) +
-  geom_histogram(bins = nr.bins, fill = opvulkleur, color = "black") +
-  facet_wrap(~group, nrow = 1, scales = "free_x") +  # Maak drie panelen naast elkaar
+  geom_histogram(
+    bins = aantal_bins, 
+    fill = opvulkleur, 
+    color = "black"
+    ) +
+  facet_wrap(~groep, nrow = 1, scales = "free_x") + 
   labs(
-    x = "Waarde",           # Gezamenlijk label voor de x-as
-    y = "Frequentie"        # Gezamenlijk label voor de y-as (alleen links)
+    x = "Waarde", 
+    y = "Frequentie"
   ) +
   theme_minimal() +
   theme(
-    strip.text = element_text(face = "bold"),  # Dikke tekst voor facet-labels
-    axis.text.y = element_text(size = 9),      # Y-as-ticks alleen voor het linker paneel
-    axis.ticks.y = element_line(),             # Y-as-ticks inschakelen voor links
-    panel.spacing = unit(1, "lines")           # Ruimte tussen panelen vergroten
+    strip.text = element_text(face = "bold"),  
+    axis.text.y = element_text(size = 9),      
+    axis.ticks.y = element_line(),             
+    panel.spacing = unit(1, "lines")           
   )
 ```
 
@@ -538,8 +543,9 @@ in het domein tussen 0 en 1.
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 5
+#| fig.width: 4
 #| fig.height: 2.5
+#| out-width: "57%"
 #| fig.cap: "Histogram van een ongeveer uniforme verdeling."
 #| label: fig-uniform
 
@@ -581,62 +587,71 @@ pentamodaal, ...), maar die namen worden in de praktijk zelden gebruikt.
 #| warning: false
 #| fig.width: 6
 #| fig.height: 2.5
+#| out.width: "86%"
 #| fig.cap: "Unimodale en bimodale verdelingen."
 #| label: fig-bimodaal
 
-# Laad benodigde bibliotheken
-if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
+# Controleer of ggplot2 geladen is
+if (!("ggplot2" %in% loadedNamespaces())) { 
+  library(ggplot2) 
+}
 
 # Stel een seed in voor reproduceerbaarheid
 set.seed(123)
 
-samplesize <- 3 * 10^3  # Aantal punten per histogram
-nr.bins <- 30           # Aantal bins voor de histogrammen
+# Definieer parameters
+aantal_punten <- 3 * 10^3  # Aantal punten per histogram
+aantal_bins <- 30          # Aantal bins voor de histogrammen
 
-# Genereer steekproeven van twee gammaverdelingen
-data_left_skewed <- -rgamma(samplesize / 3, shape = 8, scale = 1) + 3
-data_right_skewed <- rgamma(samplesize * 2 / 3, shape = 8, scale = 1) - 3
+# Genereer steekproeven van twee gamma-verdelingen
+data_links_scheef <- -rgamma(aantal_punten / 3, shape = 8, scale = 1) + 3
+data_rechts_scheef <- rgamma(aantal_punten * 2 / 3, shape = 8, scale = 1) - 3
+
 # Combineer om een bimodale verdeling te maken
-data_bi <- c(data_left_skewed, data_right_skewed)
+data_bimodaal <- c(data_links_scheef, data_rechts_scheef)
 
 # Genereer een unimodale verdeling (Poisson)
-data_uni <- rpois(samplesize, lambda = 10)
+data_unimodaal <- rpois(aantal_punten, lambda = 10)
 
 # Combineer gegevens en voeg een groepsvariabele toe
 data <- data.frame(
-  x = c(data_uni, data_bi),
-  group = factor(
+  x = c(data_unimodaal, data_bimodaal),
+  groep = factor(
     rep(
       c("Unimodaal", "Bimodaal"), 
-      each = samplesize
-      ), 
+      each = aantal_punten
+    ), 
     levels = c("Unimodaal", "Bimodaal")
-    )
+  )
 )
 
-# Plot met facet_wrap
+# Plot de histogrammen per verdelingstype
 ggplot(data, aes(x = x)) +
   geom_histogram(
-    data = subset(data, group == "Unimodaal"),
-    binwidth = 1, fill = opvulkleur, color = "black"
+    data = subset(data, groep == "Unimodaal"),
+    binwidth = 1, 
+    fill = opvulkleur, 
+    color = "black"
   ) +
   geom_histogram(
-    data = subset(data, group == "Bimodaal"),
-    bins = nr.bins, fill = opvulkleur, color = "black"
+    data = subset(data, groep == "Bimodaal"),
+    bins = aantal_bins, 
+    fill = opvulkleur, 
+    color = "black"
   ) +
-  facet_wrap(~group, nrow = 1, scales = "free_x") +  # Creëer twee panelen naast elkaar
+  facet_wrap(~groep, nrow = 1, scales = "free_x") +  
   labs(
-    x = "Waarde",           # Gezamenlijk label voor de x-as
-    y = "Frequentie"        # Gezamenlijk label voor de y-as (alleen links)
+    x = "Waarde",  
+    y = "Frequentie"
   ) +
   theme_minimal() +
   theme(
-    strip.text = element_text(face = "bold"),  # Dikke tekst voor facet-labels
-    axis.text.y = element_text(size = 9),      # Y-as-ticks alleen voor het linker paneel
-    axis.ticks.y = element_line(),             # Y-as-ticks inschakelen voor links
-    axis.text.x = element_text(size = 9),      # X-as-ticks inschakelen
-    axis.ticks.x = element_line(),             # X-as-ticks inschakelen
-    panel.spacing = unit(1, "lines")           # Ruimte tussen panelen vergroten
+    strip.text = element_text(face = "bold"),  
+    axis.text.y = element_text(size = 9),      
+    axis.ticks.y = element_line(),             
+    axis.text.x = element_text(size = 9),      
+    axis.ticks.x = element_line(),             
+    panel.spacing = unit(1, "lines")           
   )
 ```
 
@@ -657,7 +672,8 @@ ziet er als volgt uit:
 #| fig.cap: "Histogram van de lichaamsgewichten uit de NHANES-dataset."
 #| label: fig-histogram
 #| fig.width: 4.5
-#| fig.height: 3.5
+#| fig.height: 3
+#| out.width: "64%"
 
 ggplot(
   data = NHANES, 
@@ -709,7 +725,7 @@ dit uit aan de hand van een voorbeeld.
 ## De cumulatieve verdeling van lichaamsgewicht
 
 In @fig-cumul is als voorbeeld de cumulatieve verdeling van `Weight`
-(lichaamsgewicht) weergegeven (de [oranje]{style="color:#e8601d;"}
+(lichaamsgewicht) weergegeven (de [oranje]{style="color:opvulkleur;"}
 curve). Voor elk lichaamsgewicht op de $x$-as geeft de $y$-as aan welke
 proportie van de waarnemingen zich onder of op die waarde bevindt; dat
 wordt wel eens de **cumulatieve proportie** genoemd. Je kunt uit deze
@@ -720,11 +736,15 @@ onderbroken lijnen) dat 86% van de mensen een gewicht heeft van maximaal
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. De rode onderbroken lijnen laten zien dat 86% van de mensen in de dataset hoogstens 100kg weegt."
+#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. 
+#| De rode onderbroken lijnen laten zien dat 86% van de mensen in de dataset 
+#| hoogstens 100kg weegt."
 #| label: fig-cumul
-#| fig.width: 7
-#| fig.height: 3.5
+#| fig.width: 5
+#| fig.height: 2.5
+#| out.width: "71.4%"
 
+# Maak een cumulatieve verdelingsplot
 cumulplot <- ggplot(NHANES, aes(x = Weight)) +
   stat_ecdf(
     geom = "step", 
@@ -733,31 +753,30 @@ cumulplot <- ggplot(NHANES, aes(x = Weight)) +
     bw = 2
   ) +
   labs(
-    title = NULL,
     x = "Lichaamsgewicht",
     y = "Cumulatieve proportie"
   ) + 
   theme_minimal()
 
 # Definieer het kruispunt van de lijnen
-kruising <- c(100, 0.86)
+kruispunt <- c(100, 0.86)
 
 cumulplot +
-  # Voeg een horizontale stippellijn toe bij de cumulatieve proportie van 0.86
+  # Voeg een horizontale stippellijn toe bij 0.86
   geom_segment(
     aes(
-      x = 0, xend = kruising[1], 
-      y = kruising[2], yend = kruising[2]
+      x = 0, xend = kruispunt[1], 
+      y = kruispunt[2], yend = kruispunt[2]
     ), 
     linetype = "dashed", 
     color = lijnkleur2, 
     size = 1
   ) +
-  # Voeg een verticale stippellijn toe bij het gewicht van 100 kg
+  # Voeg een verticale stippellijn toe bij 100 kg
   geom_segment(
     aes(
-      x = kruising[1], xend = kruising[1], 
-      y = 0, yend = kruising[2]
+      x = kruispunt[1], xend = kruispunt[1], 
+      y = 0, yend = kruispunt[2]
     ), 
     linetype = "dashed", 
     color = lijnkleur2, 
@@ -765,13 +784,13 @@ cumulplot +
   ) +
   # Voeg een punt toe op het kruispunt van de lijnen
   geom_point(
-    aes(x = kruising[1], y = kruising[2]), 
+    aes(x = kruispunt[1], y = kruispunt[2]), 
     color = lijnkleur2, 
     size = 3
   ) +
-  # Pas de y-as aan om een extra label toe te voegen bij 0.86
   scale_y_continuous(
-    breaks = function(limits) c(0.86, scales::extended_breaks()(limits)),
+    breaks = c(0, 0.25, 0.5, 0.75, 0.86, 1),  
+    minor_breaks = c(0.25 / 2, 0.375, 0.625, 0.875),  
     labels = function(breaks) ifelse(breaks == 0.86, "0.86", breaks)
   )
 ```
@@ -817,7 +836,8 @@ maar hun ligging is gelijk.
 #| warning: false
 #| fig.width: 8
 #| fig.height: 4.2
-#| fig.cap: "Illustratie van ligging en spreiding."
+#| out.width: "100%"
+#| fig.cap: "Illustratie van de begrippen ligging en spreiding."
 #| label: fig-ligging-spreiding
 
 # Laad benodigde bibliotheken
@@ -1049,8 +1069,9 @@ proportie daar precies $0{,}5$ is.
 #| warning: false
 #| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. De mediaan is met een kruis op de $x$-as aangegeven. De mediaan is gedefineerd als de waarde zodanig dat de helft van de waarnemingen kleiner is en de helft groter. Daarom bereikt de cumulatieve verdeling op dat punt precies een half."
 #| label: fig-cumul-2a
-#| fig.width: 7
-#| fig.height: 3.5
+#| fig.width: 5
+#| fig.height: 2.5
+#| out.width: "71.4%"
 
 # Bereken de kwartielen van de Weight-variabele
 quantiles <- quantile(
@@ -1155,6 +1176,7 @@ driehoekje plaatst, dan blijft het geheel precies in balans.
 #| warning: false
 #| fig.width: 7
 #| fig.height: 2
+#| out.width: "80%"
 #| fig-cap: "Het gemiddelde als het zwaartepunt van de getallen"
 #| label: fig-zwaartepunt
 # Plot de volgende getallen
@@ -1228,9 +1250,9 @@ het gemiddelde.
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 2.5
-#| fig.height: 4
-#| out.width: "60%"
+#| fig.width: 2
+#| fig.height: 3.5
+#| out.width: "57%"
 #| fig-cap: "Elastiekjes trekken de oranje lijn precies naar het gemiddelde."
 #| label: fig-res-1
 
@@ -1298,9 +1320,9 @@ ggplot(data, aes(x = x, y = y)) +
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 2.5
-#| fig.height: 4
-#| out.width: "60%"
+#| fig.width: 2
+#| fig.height: 3.5
+#| out.width: "57%"
 #| fig-cap: "Voorbeeld met slechts drie punten. De paarse lijn minimaliseert som van de afstanden tot de punten; de oranje lijn die het gemiddelde aangeeft minimaliseert de kwadratensom."
 #| label: fig-res-2
 
@@ -1529,9 +1551,8 @@ ggplot(data, aes(x = Weight)) +
     aes(
       y = ifelse(after_stat(x) <= q1 + 5, after_stat(density), NA)
     ),
-    color = "#e8601d",
-    fill = lighten_color("#e8601d", 0.8),
-    alpha = 1,
+    color = opvulkleur,
+    fill = lighten_color(opvulkleur, 0.8),
     bw = 2,
     size = 1
   ) +
@@ -1544,9 +1565,8 @@ ggplot(data, aes(x = Weight)) +
         NA
       )
     ),
-    color = "#e8601d",
-    fill = lighten_color("#e8601d", 0.6),
-    alpha = 1,
+    color = opvulkleur,
+    fill = lighten_color(opvulkleur, 0.6),
     bw = 2,
     size = 1
   ) +
@@ -1559,9 +1579,8 @@ ggplot(data, aes(x = Weight)) +
         NA
       )
     ),
-    color = "#e8601d",
-    fill = lighten_color("#e8601d", 0.4),
-    alpha = 1,
+    color = opvulkleur,
+    fill = lighten_color(opvulkleur, 0.4),
     bw = 2,
     size = 1
   ) +
@@ -1570,9 +1589,8 @@ ggplot(data, aes(x = Weight)) +
     aes(
       y = ifelse(after_stat(x) >= q3, after_stat(density), NA)
     ),
-    color = "#e8601d",
-    fill = lighten_color("#e8601d", 0.2),
-    alpha = 1,
+    color = opvulkleur,
+    fill = lighten_color(opvulkleur, 0.2),
     bw = 2,
     size = 1
   ) +
@@ -1665,8 +1683,9 @@ gemarkeerd. De zwarte pijl geeft opnieuw de interkwartielafstand aan.
 #| include: false
 #| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. Het eerste, tweede, en derde kwartiel worden met verticale stippellijnen aangegeven. De zwarte pijl loopt van Q1 naar Q3; zijn lengte is dus de interkwartielafstand."
 #| label: fig-cumul-IKA
-#| fig.width: 7
-#| fig.height: 3.5
+#| fig.width: 5
+#| fig.height: 2.5
+#| out.width: "71.4%"
 
 library(grid) # voor de pijl
 
@@ -1759,7 +1778,7 @@ cumulplot +
     title = NULL,
     x = "Lichaamsgewicht",
     y = "Cumulatieve proportie"
-    ) 
+    ) + coord_cartesian(xlim = c(0, max(x)))
 ```
 
 ```{r}
@@ -1767,8 +1786,9 @@ cumulplot +
 #| warning: false
 #| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. Het eerste, tweede, en derde kwartiel worden met verticale stippellijnen aangegeven. De zwarte pijl loopt van Q1 naar Q3; zijn lengte is dus de interkwartielafstand."
 #| label: fig-cumul-IKA2
-#| fig.width: 7
-#| fig.height: 3.5
+#| fig.width: 5
+#| fig.height: 2.5
+#| out.width: "71.4%"
 
 # Laad de benodigde bibliotheken als ze nog niet geladen zijn
 if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
@@ -1797,7 +1817,6 @@ ggplot(data, aes(x = Weight)) +
       y = after_stat(y),
       fill = "Q1"
     ),
-    alpha = 1,
     bw = 2
   ) +
   # Opvulgebied voor Q2
@@ -1811,7 +1830,6 @@ ggplot(data, aes(x = Weight)) +
       ),
       fill = "Q2"
     ),
-    alpha = 1,
     bw = 2
   ) +
   # Opvulgebied voor Q3
@@ -1825,7 +1843,6 @@ ggplot(data, aes(x = Weight)) +
       ),
       fill = "Q3"
     ),
-    alpha = 1,
     bw = 2
   ) +
   # Opvulgebied voor Q4
@@ -1839,7 +1856,6 @@ ggplot(data, aes(x = Weight)) +
       ),
       fill = "Q4"
     ),
-    alpha = 1,
     bw = 2
   ) +
   # Volledige ECDF-curve (consistent over de hele dataset)
@@ -1858,10 +1874,10 @@ ggplot(data, aes(x = Weight)) +
   # Voeg aangepaste kleuren toe voor de kwartielen
   scale_fill_manual(
     values = c(
-      "Q1" = lighten_color("#e8601d", 0.8),
-      "Q2" = lighten_color("#e8601d", 0.6),
-      "Q3" = lighten_color("#e8601d", 0.4),
-      "Q4" = lighten_color("#e8601d", 0.2)
+      "Q1" = lighten_color(opvulkleur, 0.8),
+      "Q2" = lighten_color(opvulkleur, 0.6),
+      "Q3" = lighten_color(opvulkleur, 0.4),
+      "Q4" = lighten_color(opvulkleur, 0.2)
     )
   ) +
   geom_segment(
@@ -2049,8 +2065,9 @@ standaarddeviatie met een pijl aangegeven.
 #| warning: false
 #| fig.cap: "Histogram van `Pulse` (rusthartslag) in de NHANES dataset. De standaarddeviatie is aangegeven met een pijl. Deze komt ongeveer overeen met de helft van de breedte van de piek, gemeten halverwege de hoogte van de piek."
 #| label: fig-histogram-pulse
-#| fig.width: 7
-#| fig.height: 4
+#| fig.width: 5.5
+#| fig.height: 2.8
+#| out.width: "78.6%"
 
 # Controleer of de benodigde pakketten zijn geladen
 if (!("ggplot2" %in% .packages())) { library(ggplot2) }
@@ -2077,9 +2094,8 @@ labels <- ifelse(
 ggplot(NHANES, aes(x = Pulse)) +
   geom_histogram(
     binwidth = 6, 
-    fill = "#e8601d", 
+    fill = opvulkleur, 
     color = "black", 
-    alpha = 0.7
   ) +
   
   # Voeg een verticale stippellijn toe voor het gemiddelde
@@ -2241,7 +2257,6 @@ ggplot(gamma_df, aes(x = value)) +
     boundary = 0,
     fill = opvulkleur,
     color = "black",
-    alpha = 0.7
   ) +
   geom_vline(
     aes(xintercept = mean_value),
@@ -2614,24 +2629,19 @@ aan de studie van de NCHS. Die frequentietabel ziet er als staafdiagram
 als volgt uit:
 
 ```{r}
-#| output: false
-#| echo: false
-
-library(dplyr)
-
-```
-
-```{r}
 #| code-fold: true
 #| fig.cap: "Staafdiagram van de zelf-gerapporteerde gezondheidsstatus in de gegevensvan het NCHS-onderzoek."
 #| label: fig-gezondheid-staaf
 #| fig.width: 4.5
 #| fig.height: 3.5
+#| out.width: "64%"
 
 # De gegevens zijn gepubliceerd in dit package:
 library(NHANES)
 library(ggplot2)
 library(knitr)
+library(dplyr)
+
 
 # Laad de dataset in:
 data(NHANES)
@@ -2936,6 +2946,7 @@ datasets. De anatomie van een boxplot is getoond in
 #| warning: false
 #| fig.cap: "Anatomie van een boxplot. Links is van een steekproef uit de NHANES dataset het lichaamsgewicht geplot in een jitterplot. Daarnaast is de bijbehorende boxplot weergegeven."
 #| label: fig-anatomie-boxplot
+#| out.width: "100%"
 
 # Data voorbereiden
 data <- NHANES[1:200, ]
@@ -2987,14 +2998,14 @@ ggplot(data, aes(x = "", y = Weight)) +
     y = kwantielen[2], 
     x = 3.47, 
     label = "Q1", 
-    color = "#e8601d"
+    color = opvulkleur
   ) +
   annotate(
     "text", 
     y = kwantielen[4], 
     x = 3.47, 
     label = "Q3", 
-    color = "#e8601d"
+    color = opvulkleur
   ) +
   annotate(
     "text", 
@@ -3002,7 +3013,7 @@ ggplot(data, aes(x = "", y = Weight)) +
     x = 3.8, 
     label = "interkwartiel-
 afstand", 
-    color = "#e8601d"
+    color = opvulkleur
   ) +
   annotate(
     "text", 
@@ -3024,7 +3035,7 @@ afstand",
     yend = kwantielen[4] - 5,
     x = 3.46,
     size = 0.7,
-    color = "#e8601d"
+    color = opvulkleur
   ) +
   annotate(
     "text", 
