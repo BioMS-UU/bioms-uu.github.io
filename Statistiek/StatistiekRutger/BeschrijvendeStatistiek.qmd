@@ -704,11 +704,11 @@ dit uit aan de hand van een voorbeeld.
 ## De cumulatieve verdeling van lichaamsgewicht
 
 In @fig-cumul is als voorbeeld de cumulatieve verdeling van `Weight`
-(lichaamsgewicht) weergegeven (de [oranje]{style="color:opvulkleur;"}
+(lichaamsgewicht) weergegeven (de [oranje]{style="color:darkorange;"}
 curve). Voor elk lichaamsgewicht op de $x$-as geeft de $y$-as aan welke
-proportie van de waarnemingen zich onder of op die waarde bevindt; dat
-wordt wel eens de **cumulatieve proportie** genoemd. Je kunt uit deze
-grafiek bijvoorbeeld aflezen (zie de [rode]{style="color:red;"}
+proportie van de waarnemingen zich onder of op die waarde bevindt; 
+dat wordt de **cumulatieve proportie** genoemd. Je kunt uit deze
+grafiek bijvoorbeeld aflezen (zie de [paarse]{style="color:darkorchid;"}
 onderbroken lijnen) dat 86% van de mensen een gewicht heeft van maximaal
 100kg. Dit betekent dat de overige 14% méér weegt dan 100 kg.
 
@@ -716,7 +716,7 @@ onderbroken lijnen) dat 86% van de mensen een gewicht heeft van maximaal
 #| code-fold: true
 #| warning: false
 #| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. 
-#| De rode onderbroken lijnen laten zien dat 86% van de mensen in de dataset 
+#| De paarse onderbroken lijnen laten zien dat 86% van de mensen in de dataset 
 #| hoogstens 100kg weegt."
 #| label: fig-cumul
 #| fig.width: 5
@@ -748,7 +748,7 @@ cumulplot +
       y = kruispunt[2], yend = kruispunt[2]
     ), 
     linetype = "dashed", 
-    color = lijnkleur2, 
+    color = lijnkleur1, 
     size = 1
   ) +
   # Voeg een verticale stippellijn toe bij 100 kg
@@ -758,13 +758,13 @@ cumulplot +
       y = 0, yend = kruispunt[2]
     ), 
     linetype = "dashed", 
-    color = lijnkleur2, 
+    color = lijnkleur1, 
     size = 1
   ) +
   # Voeg een punt toe op het kruispunt van de lijnen
   geom_point(
     aes(x = kruispunt[1], y = kruispunt[2]), 
-    color = lijnkleur2, 
+    color = lijnkleur1, 
     size = 3
   ) +
   scale_y_continuous(
@@ -775,9 +775,9 @@ cumulplot +
 ```
 :::
 
-De cumulatieve proportie neemt altijd toe naarmate de waarde op de
-$x$-as groter wordt, omdat dan steeds meer waarnemingen kleiner zijn dan
-de waarde op de $x$-as. Hierdoor is de cumulatieve verdeling een
+De cumulatieve proportie neemt van links naar rechts altijd toe, 
+omdat bij grotere waarden op de $x$-as het aantal waarnemingen kleiner dan die waarde ook groter is. 
+Hierdoor is de cumulatieve verdeling altijd een
 stijgende functie die begint bij 0 (bij de kleinste waarde binnen de
 waarnemingen) en eindigt bij 1 (bij de grootste waarde).
 
@@ -808,7 +808,7 @@ verschilt hun ligging maar is hun spreiding gelijk. De twee histogrammen
 aan de rechterkant liggen ongeveer op dezelfde plek, gecentreerd op de
 waarde 0, maar in het onderste histogram zijn de waarden over een groter
 domein verspreid. (De piek is breder.) Daarom verschilt hun spreiding,
-maar hun ligging is gelijk.
+maar is hun ligging gelijk.
 
 ```{r}
 #| code-fold: true
@@ -878,12 +878,12 @@ paneel_titels <- data.frame(
   )
 )
 
-annotatie_linksboven <- data.frame(
+annotatie_linksonder <- data.frame(
   x = c(gemiddelde1 - 2.5),
   xend = c(gemiddelde2 + 1),
   y = c(500),
   yend = c(500),
-  groep = "Zelfde spreiding, verschillende ligging"
+  groep = "Linksonder"
 )
 
 annotatie_rechtsboven <- data.frame(
@@ -902,7 +902,7 @@ annotatie_rechtsonder <- data.frame(
   groep = "Rechtsonder"
 )
 
-# Basisplot
+# plot
 basis_plot <- ggplot(data, aes(x = waarden)) +
   geom_histogram(
     binwidth = 0.5, 
@@ -910,14 +910,14 @@ basis_plot <- ggplot(data, aes(x = waarden)) +
     color = "black"
   ) +
   geom_segment(
-    data = annotatie_linksboven,
+    data = annotatie_linksonder,
     aes(x = x, xend = xend, y = y, yend = yend),
     arrow = arrow(length = unit(0.3, "cm")), 
     color = lijnkleur3,  
     size = 1.2
   ) +
   geom_segment(
-    data = annotatie_linksboven,
+    data = annotatie_linksonder,
     aes(x = x, xend = x, y = y - 100, yend = yend + 100),
     color = lijnkleur3,  
     size = 1.2
@@ -981,13 +981,16 @@ iedere maat net anders gedefinieerd.
 
 ### De modus
 
-De eerste centrummaat is de **modus**. In het algemeen wordt met de
-modus de waarde bedoeld die het vaakst voorkomt. Bij categorische
-variabelen kun je simpelweg tellen welke uitkomst dat is. Bij numerieke
+De eerste centrummaat is de **modus**. 
+Met de modus wordt de waarde bedoeld die het vaakst voorkomt. 
+Bij categorische
+variabelen kun je simpelweg tellen welke uitkomst dat is. 
+Bij numerieke
 variabelen wordt meestal het interval bedoeld dat hoort bij de hoogste
 staaf van het histogram. Als er meerdere pieken zijn, dan zijn er
 meerdere modi (meervoud van modus). Daar komen ook de woorden unimodaal,
-bimodaal, etc. vandaan. In @fig-histogram, het histogram van `Weight`,
+bimodaal, etc. vandaan. 
+In @fig-histogram, het histogram van `Weight`,
 waren twee pieken te zien. Er zijn dan ook twee modi: het interval
 $[15,20)$ en het interval $[75,80)$.
 
@@ -1012,21 +1015,21 @@ je cijfers?
 
 We sorteren de cijfers en krijgen
 
-$$1;\quad 7;\quad {\color{orange}7{,}5};\quad 8{,}5;\quad 9.$$
+$$1;\quad 7;\quad {\color{darkorange}7{,}5};\quad 8{,}5;\quad 9.$$
 
-Het getal midden in de rij is de ${\color{orange}7{,}5}$ en dus is de
-mediaan gelijk aan ${\color{orange}7{,}5}$.
+Het getal midden in de rij is de ${\color{darkorange}7{,}5}$ en dus is de
+mediaan gelijk aan ${\color{darkorange}7{,}5}$.
 
 Als je voor het volgende tentamen een 10 haalt, verandert de gesorteerde
 reeks als volgt:
 
-$$1;\quad 7;\quad {\color{orange}7{,}5};\quad {\color{orange}8{,}5};\quad 9; \quad 10.$$
+$$1;\quad 7;\quad {\color{darkorange}7{,}5};\quad {\color{darkorange}8{,}5};\quad 9; \quad 10.$$
 
 Omdat het aantal tentamencijfers nu even is, is er geen middelste getal
 meer. Als mediaan nemen we daarom het gemiddelde van de *twee* middelste
 getallen:
 
-$$\tilde{x}=\frac{{\color{orange}7{,}5} + {\color{orange}8{,}5}}{2} = 8.$$
+$$\tilde{x}=\frac{{\color{darkorange}7{,}5} + {\color{darkorange}8{,}5}}{2} = 8.$$
 :::
 
 De mediaan is dus een "typische" of representatieve waarde in de zin dat
@@ -1039,8 +1042,8 @@ aan $0{,}5$. De mediaan kan daarom uit de cumulatieve verdeling worden
 afgelezen door de waarde op de $x$-as te bepalen die hoort bij een
 cumulatieve proportie van $0{,}5$. In @fig-cumul-2a is net als in
 @exm-cumul-weight de cumulatieve verdeling van de variabele `Weight`
-(lichaamsgewicht) weergegeven. Het rode kruis geeft de mediaan van
-lichaamsgewicht aan. De rode lijnen laten zien dat de cumulatieve
+(lichaamsgewicht) weergegeven. Het [paarse]{style="color:DarkOrchid;"} kruis geeft de mediaan van
+lichaamsgewicht aan. De [paarse]{style="color:DarkOrchid;"} lijnen laten zien dat de cumulatieve
 proportie daar precies $0{,}5$ is.
 
 ```{r}
@@ -1068,7 +1071,7 @@ cumulplot_median <- cumulplot +
       y = 0.5, yend = 0.5
     ),
     linetype = "dashed", 
-    color = lijnkleur2, 
+    color = lijnkleur1, 
     size = 1
   ) +
   # Verticale lijn bij de mediaan
@@ -1078,7 +1081,7 @@ cumulplot_median <- cumulplot +
       y = 0, yend = 0.5
     ),
     linetype = "dashed", 
-    color = lijnkleur2, 
+    color = lijnkleur1, 
     size = 1
   ) +
   # Punt op het kruispunt van mediaan en cumulatieve proportie 0.5
@@ -1087,7 +1090,7 @@ cumulplot_median <- cumulplot +
       x = quantiles[2], 
       y = 0.5
     ),
-    color = lijnkleur2, 
+    color = lijnkleur1, 
     size = 3
   ) +
   # Kruis op de x-as bij de mediaan
@@ -1096,7 +1099,7 @@ cumulplot_median <- cumulplot +
       x = quantiles[2], 
       y = 0
     ),
-    color = lijnkleur2, 
+    color = lijnkleur1, 
     shape = 4, 
     size = 3, 
     stroke = 2
@@ -1128,11 +1131,12 @@ vergelijkbaar met huisnummers in een straat. Zo'n nummer noemen we een
 **index**, en omdat we het aantal waarnemingen $n$ is lopen de indices
 (meervoud van index) van 1 tot $n$. De waarde van de waarneming met
 index 1 noteren we als $x_1$, de waarde van de waarneming met index 2
-als $x_2$, enzovoort. Het sommatieteken is geïntroduceerd in
-@sec-sommatieteken. Het gemiddelde van de waarnemingen, geschreven als
+als $x_2$, enzovoort. Het gemiddelde van de waarnemingen, geschreven als
 $\mean{x}$, en kunnen we nu definiëren met de volgende formule: $$
 \mean{x} = \frac{\sum_{i=1}^n x_i}{n}.
 $$ {#eq-gemiddelde}
+(Ken je het sommatieteken nog? Kijk anders terug naar
+@sec-sommatieteken.)
 
 Je hebt al lang geleden geleerd wat een gemiddelde is en bent er
 waarschijnlijk volledig aan gewend. Maar waarom is het gemiddelde
@@ -1148,7 +1152,7 @@ als kralen die op een getallenlijn geregen zijn, zoals in
 van de kralen. Dat wil zeggen: als de getallenlijn in @fig-zwaartepunt
 een dun stokje is met een verwaarloosbaar gewicht, en je het stokje
 precies met het gemiddelde op het [oranje]{style="color:#e8601d;"}
-driehoekje plaatst, dan blijft het geheel precies in balans.
+driehoekje plaatst, dan blijft het geheel in balans.
 
 ```{r}
 #| code-fold: true
@@ -1208,7 +1212,7 @@ doordat de 1 zo ver van de andere cijfers ligt kan deze in z'n eentje
 als tegengewicht dienen voor alle overige getallen. Het is duidelijk de
 moeite waard om deze toets te herkansen!
 
-::: {#exr-cijfer}
+::: {#exr-cijfer .pepexr}
 ## Gevoeligheid voor uitbijters
 
 Stel dat je het tentamen waarvoor je een 1 had gehaald mag herkansen. Je
@@ -1218,10 +1222,10 @@ a.  Wat is het effect op je gemiddelde cijfer?
 b.  Wat is het effect op de mediaan?
 :::
 
-Een ander nuttig perspectief wordt geïllustreerd in @fig-res-1
+Een ander nuttig perspectief is @fig-res-1
 hieronder. Dezelfde tentamencijfers zijn nu op de *verticale* as geplot.
 (De horizontale positie van de punten is willekeurig.) De
-[oranje]{style="color:#e8601d;"} lijn markeert het gemiddelde
+[oranje]{style="color:darkorange;"} lijn markeert het gemiddelde
 $\mean{x}$. Vanuit ieder punt is een verticale grijze lijn getekend naar
 het gemiddelde.
 
@@ -1361,7 +1365,7 @@ ggplot(data, aes(x = x, y = y)) +
   ) +
   # Y-as instellen
   scale_y_continuous(
-    breaks = c(1.0, data$y), 
+    breaks = c(1.0, data$y, 8.0), 
     limits = c(1.0, max(data$y)),
     labels = scales::number_format(accuracy = 0.1)
   ) +
@@ -1426,8 +1430,8 @@ Het gemiddelde is dus *wel* de waarde die kwadratensom minimaliseert.
 
 Ook hier past een metafoor. In dit geval zijn de grijze lijntjes geen
 touwen, maar *elastiekjes*. Net als bij de touwtrekwedstrijd trekken
-alle punten aan de [oranje]{style="color:#e8601d;"} lijn, en daardoor
-zal de [oranje]{style="color:#e8601d;"} lijn omhoog of omlaag
+alle punten aan de [oranje]{style="color:darkorange;"} lijn, en daardoor
+zal de [oranje]{style="color:darkorange;"} lijn omhoog of omlaag
 bewegen, totdat de krachten in evenwicht zijn. Het essentiële verschil
 tussen touwen en elastiekjes is het volgende. Bij het touwtrekken hangt
 de kracht waarmee een punt aan de [oranje]{style="color:#e8601d;"}
@@ -1436,13 +1440,10 @@ meerderheid. Bij elastiekjes hangt de trekkracht wel af van de
 uitrekking. Punten die verder van de lijn afliggen, trekken daardoor
 harder. Het gemiddelde "luistert" op die manier ook naar de minderheid.
 Dat zorg ervoor dat de evenwichtspositie van de
-[oranje]{style="color:#e8601d;"} lijn nu wél overeenkomt met het
+[oranje]{style="color:darkorange;"} lijn nu wél overeenkomt met het
 gemiddelde $\mean{x}$.
 
-::: todo-box
-Volgende alinea redigeren en/of verplaatsen naar een appendix.
-:::
-
+::: {.content-hidden}
 Als je op de middelbare school natuurkunde hebt gekozen dan kun je
 begrijpen waarom deze metafoor werkt. We nemen aan dat de elastiekjes
 zich gedragen volgens de Wet van Hooke, met veerconstante $k$, en met
@@ -1454,6 +1455,7 @@ maal de som van de gekwadrateerde lengtes, oftewel de kwadratensom. De
 uiteindelijk positie van de [oranje]{style="color:#e8601d;"} lijn is
 de positie met minimale potentiële energie. Dat is precies de positie
 waar de kwadratensom minimaal is, oftewel het gemiddelde.
+:::
 
 ## Maten voor de spreiding van een verdeling
 
