@@ -352,34 +352,19 @@ wordt. Run de nieuwe code in R.
 **d.** Gebruik de functie `levels()` om te bepalen wat de levels zijn
 van de vector `klassement`.
 
-
-
-We willen op een andere manier naar de data kijken door Brons en Zilver
-de nieuwe naam "Laag" te geven en Goud de nieuwe naam "Hoog".
-
-**e.** Voeg de onderstaande regels toe aan je code, beschrijf wat er is
-veranderd in de dataset.
-
-```
-df$klassement
-levels(df$klassement) <- c("Laag", "Hoog", "Laag")
-levels(df$klassement)
-```
-
 :::
 
 ## De verdeling van een variabele
 
 In de praktijk willen we vaak weten hoe de waarden van een variabele
-over de mogelijke waarden zijn verspreid. We noemen dat de **verdeling**
-van de variabele.
+over de mogelijke waarden zijn verspreid. We noemen dat de **verdeling** van de variabele.
 
 ### Histogrammen
 
-Als de variabele numeriek is, kunnen we zijn verdeling in een dataset
-visualiseren met een **histogram**. @fig-histogram-agemonth hieronder
-laat een voorbeeld zien: een histogram van de variabele `AgeMonths`
-(leeftijd in maanden) van de personen in de dataset NHANES die we in
+Als de variabele numeriek is, kunnen we zijn verdeling
+visualiseren met een **histogram**. @Fig-histogram-agemonth hieronder
+laat een voorbeeld zien voor variabele `AgeMonths`
+(leeftijd in maanden) uit de dataset NHANES die we in
 @exm-NHANES hebben besproken.
 
 ```{r}
@@ -391,8 +376,15 @@ laat een voorbeeld zien: een histogram van de variabele `AgeMonths`
 #| fig.height: 3
 #| out.width: "57%"
 
-library(ggplot2) # gebruik package ggplot2 voor het plotten
-library(NHANES)
+
+# Controleer of ggplot2 en NHANES zijn geladen
+if (!("ggplot2" %in% .packages())) { 
+  library(ggplot2) 
+}
+if (!("NHANES" %in% .packages())) { 
+  library(NHANES) 
+}
+
 data("NHANES")
 
 ggplot(
@@ -416,10 +408,9 @@ ggplot(
 
 Een histogram is opgebouwd uit staafjes. De hoogte van die staafjes
 geeft weer hoe vaak een leeftijd binnen een bepaalde leeftijdscategorie
-valt; dat wordt de **frequentie** van die categorie genoemd. We zullen
-later uitgebreider terugkomen op histogrammen en andere manieren om
-verdelingen te visualiseren (@sec-hist-en-freqpoly), maar gaan er voor
-nu vanuit dat histogrammen niet nieuw voor je zijn.
+valt; dat wordt de **frequentie** van die categorie genoemd. We komen
+later uitgebreider terug op histogrammen en andere manieren om
+verdelingen te visualiseren (@sec-hist-en-freqpoly), maar gaan er vanuit dat histogrammen niet nieuw voor je zijn.
 
 ### Kwalitatieve beschrijvingen van de verdeling numerieke variabelen {#sec-terminologie}
 
@@ -430,9 +421,9 @@ Een verdeling is **symmetrisch** als de vorm van het histogram (grofweg)
 spiegelsymmetrisch is. Als dat niet zo is, dan is de verdeling
 **scheef**. Het woord scheef wordt vooral gebruikt als de verdeling een
 "staart" heeft naar links of naar rechts. Heeft de verdeling een staart
-aan de linkerkant, dan wordt het een **links-scheve** verdeling genoemd;
-zit de staart aan de rechterkant, dan is het een **rechts-scheve**
-verdeling. In @fig-symmetrisch zijn voorbeelden weergegeven.
+aan de linkerkant, dan is hij **links-scheef**;
+zit de staart aan de rechterkant, dan is hij een **rechts-scheef**. 
+@Fig-symmetrisch laat voorbeelden zien.
 
 ```{r}
 #| code-fold: true
@@ -492,21 +483,21 @@ ggplot(data, aes(x = x)) +
 ```
 
 Verdelingen binnen de biologie en daarbuiten hebben vaak de vorm van een
-kerkklok. We noemen ze dan **klokvormig** (zie figuur @fig-klokvorm).
+kerkklok (@fig-klok). We noemen ze dan **klokvormig**.
 Klokvormige verdelingen spelen later in de cursus een grote rol.
 
-::: {#fig-klok layout-ncol="2"}
-![Kerkklok (gegenereerd door DALL·E
-3)](figuren/ChurchBell.webp){#fig-kerkklok
+::: {#fig-klok layout="[2.6, 4]" out-width="100%"}
+![Kerkklok (gemaakt met DALL·E
+3)](figuren/ChurchBell.webp){#fig-klok-a
 width="2.6in"}
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 3
-#| fig.height: 2.5
-#| fig.cap: "Klokvormige verdeling"
-#| label: fig-klokvorm
+#| fig.width: 4.4
+#| fig.height: 3
+#| fig.cap: "Klokvormige verdeling."
+#| label: fig-klok-b
 
 # kies een random seed om de figuur reproduceerbaar te maken
 set.seed(125)
@@ -575,7 +566,7 @@ ggplot(data.frame(x = data_unif), aes(x)) +
 Een verdeling die één piek heeft noemen we **unimodaal**. Een verdeling
 met twee pieken is **bimodaal** (zie @fig-bimodaal). Voor verdelingen
 met nog meer pieken bestaan ook namen (trimodaal, quadrimodaal,
-pentamodaal, ...), maar die namen worden in de praktijk zelden gebruikt.
+pentamodaal, ...), maar die worden in de praktijk zelden gebruikt.
 
 ```{r}
 #| code-fold: true
@@ -599,8 +590,14 @@ aantal_punten <- 3 * 10^3  # Aantal punten per histogram
 aantal_bins <- 30          # Aantal bins voor de histogrammen
 
 # Genereer steekproeven van twee gamma-verdelingen
-data_links_scheef <- -rgamma(aantal_punten / 3, shape = 8, scale = 1) + 3
-data_rechts_scheef <- rgamma(aantal_punten * 2 / 3, shape = 8, scale = 1) - 3
+data_links_scheef <- -rgamma(
+  round(aantal_punten * 0.55), 
+  shape = 8, scale = 1
+  ) + 3
+data_rechts_scheef <- rgamma(
+  round(aantal_punten * 0.45), 
+  shape = 8, scale = 1
+  ) - 3
 
 # Combineer om een bimodale verdeling te maken
 data_bimodaal <- c(data_links_scheef, data_rechts_scheef)
@@ -651,14 +648,14 @@ ggplot(data, aes(x = x)) +
 ```
 
 Multimodale verdelingen ontstaan vaak als binnen een steekproef meerdere
-deelpopulaties voorkomen die ieder een verschillend gemiddelde hebben. De
-variabele `Weight` (lichaamsgewicht) uit de dataset NHANES is een
+deelpopulaties voorkomen met ieder een verschillend gemiddelde.
+De variabele `Weight` (lichaamsgewicht) uit de dataset NHANES is een
 voorbeeld.
 
 ::: {#exm-histogram}
 ## De verdeling van `Weight` is bimodaal in de dataset NHANES
 
-De verdeling van `Weight` (lichaamsgewicht) in de gegevens van NHANES
+De verdeling van `Weight` (lichaamsgewicht) in de dataset NHANES
 ziet er als volgt uit:
 
 ```{r}
@@ -690,25 +687,12 @@ ggplot(
 ```
 
 Het histogram laat twee pieken zien: één rond 20 kg, en één in de buurt
-van 75 kg. De verdeling is dus bimodaal. Het is duidelijk hoe dit komt:
-In de dataset zijn zowel kinderen als volwassenen opgenomen. De twee
-pieken van deze verdeling corresponderen dus met typische gewichten van
-kinderen en volwassenen.
+van 75 kg. De verdeling is dus bimodaal. 
+Dit komt doordat in de dataset zowel kinderen als volwassenen zijn opgenomen. 
+De twee pieken van deze verdeling corresponderen dus met typische gewichten van kinderen en volwassenen.
 :::
 
-::: {#exr-pieken}
-## De twee pieken in de verdeling
 
-In @exm-histogram zagen we dat de verdeling van lichaamsgewichten in de
-dataset NHANES bimodaal is. Schrijf een heel kort script in R dat uit
-de dataset alleen kinderen tot een leeftijd van 150 maanden selecteert
-en een histogram produceert van hun lichaamsgewicht. Laat op die manier
-zien dat deze groep verantwoordelijk is voor de piek rond 20 kg.
-Selecteer vervolgens alleen min-of-meer volwassenen (vanaf 150 maanden)
-en laat zien dat hun verdeling unimodaal is met een piek rond 75 kg.
-
-
-:::
 
 ## De cumulatieve verdeling van een variabele {#sec-cumul}
 
@@ -3286,12 +3270,6 @@ dataset en $n$ is het aantal datapunten.
 
 ## Opgaven
 
-::: todo-box
-
-Checken Rutger
-
-:::
-
 ::: {.pepexr #exr-variab-bedenken}
 ## Variabelen op de Grens
 
@@ -3311,14 +3289,19 @@ de vraag of ze nominaal of ordinaal zijn?
 
 :::
 
-::: {.todo-box}
+::: {.Rexr #exr-pieken}
+## De twee pieken in de verdeling
 
-Checken Rutger
-
-
+@Fig-histogram liet zien dat de verdeling van lichaamsgewicht (`Weight`) in de
+dataset NHANES bimodaal is. Schrijf een heel kort script in R dat uit
+de dataset alleen kinderen tot een leeftijd van 150 maanden selecteert
+en een histogram produceert van hun lichaamsgewicht. 
+Verifieer op die manier
+dat deze groep verantwoordelijk is voor de piek rond 20 kg.
+Selecteer vervolgens alleen min-of-meer volwassenen (vanaf 150 maanden)
+en laat zien dat hun verdeling unimodaal is met een piek rond 75 kg.
 :::
 
-:::
 
 ::: {.pepexr #exr-sprinkhanen}
 
@@ -3341,13 +3324,7 @@ met onder ander de functies `mean()`, `sd()` en `var()`.
 
 :::
 
-::: {.todo-box}
-
-Checken Rutger
-
-:::
-
-::: {.pepexr #exr-middelbare-mediaan}
+::: {#exr-middelbare-mediaan}
 ## Middelbare Mediaan
 
 Tijdens de middelbare school stond op je rapporten
@@ -3355,13 +3332,6 @@ waarschijnlijk voor ieder vak het gemiddelde vermeld van alle cijfers
 die je in de betreffende periode had gehaald. In plaats daarvan zouden
 scholen ook kunnen kiezen voor de mediaan. Welke voor- en nadelen
 zou dat hebben? Waar zou jij voor kiezen?
-
-:::
-
-
-
-::: {.todo-box}
-Checken Rutger
 
 :::
 
