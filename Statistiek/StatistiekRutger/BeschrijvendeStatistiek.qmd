@@ -20,9 +20,9 @@ lijnkleur3 <- "blue"
 
 Je hebt maandenlang hele dagen in het lab gestaan, en het resultaat van
 je werk is een enorme verzameling getallen, zorgvuldig gerangschikt in
-een Excel-bestand. Wat nu? Je bent eigenlijk pas halverwege; je begrijpt
+een Excel-bestand. Wat nu? Je bent eigenlijk pas halverwege: je begrijpt
 dat het je taak is om in de cijferbrij patronen te ontdekken die iets
-vertellen over de onderliggende biologie. Maar met al die getallen voor
+vertellen over de onderliggende biologie, maar met al die getallen voor
 je neus zie je door de bomen het bos niet meer. **Beschrijvende statistiek** 
 is het onderdeel van de statistiek dat zich bezighoudt met
 methoden en technieken voor het creëren van overzicht in gegevens.
@@ -53,7 +53,7 @@ Deze drie categorieën --- kengetallen, tabellen, visualisaties --- komen
 hieronder allemaal aan bod. Je zult zien dat ze sterk met elkaar
 samenhangen.
 
-Maar, hoe je gegevens kunt beschrijven hangt sterk af van het soort
+Maar hoe je gegevens kunt beschrijven hangt sterk af van het soort
 gegevens waarmee je te maken hebt. Daarom moeten we eerst stilstaan bij
 de verschillende typen gegevens die je kunt tegenkomen.
 
@@ -75,8 +75,8 @@ veelgebruikte indeling is weergegeven in @fig-variabelen.
 %%| fig-cap: "Indeling van typen variabelen."
 
 flowchart TB
-  A(Variabelen) --> C("Categorisch (Kwalitatief)")
-  A --> B("Numeriek (Kwantitatief)")
+  A(Variabelen) --> B("Numeriek (Kwantitatief)")
+  A --> C("Categorisch (Kwalitatief)")
   B --> F(Discreet)
   B --> G(Continu)
   C --> E(Nominaal)
@@ -95,9 +95,9 @@ genoemd.
 **Categorische variabelen** zijn variabelen waarvan de waarden een
 categorie of groep aanduiden. De waarden stellen geen meetbare
 hoeveelheden voor. Je kunt ze dus ook niet optellen of aftrekken. De
-verschillende mogelijke waarden worden vaak **niveaus** genoemd.
-Voorbeelden zijn de genus (het geslacht) van bacteriën aangetroffen bij
-blaasontstekingen (met niveaus *Escherichia*, *Klebsiella*, ...), of het
+verschillende mogelijke waarden worden **niveaus** genoemd.
+Voorbeelden zijn de genus (het fylogenetisch geslacht) van bacteriën aangetroffen bij een
+blaasontsteking (met niveaus *Escherichia*, *Klebsiella*, ...), of het
 stadium van kanker (met als niveaus de kankerstadia 0, I, II, III, of
 IV). Categorische variabelen worden ook wel **kwalitatieve variabelen**
 genoemd.
@@ -107,7 +107,8 @@ genoemd.
 
 Dat kankerstadium in een (Romeins) getal wordt uitgedrukt (0, I, II,
 III, of IV) wil niet zeggen dat het een numerieke variabele is. Het
-getal stelt namelijk geen meetbare hoeveelheid voor. We hadden de stadia
+getal stelt namelijk geen meetbare hoeveelheid voor,
+en het optellen van kankerstadia is onzinnig. We hadden de stadia
 net zo goed kunnen aanduiden met letters A, B, C, D, en E. Dit laat zien
 dat je soms goed moet nadenken om te bepalen van welk type een variabele
 is.
@@ -117,7 +118,7 @@ Binnen de numerieke variabelen maken we onderscheid tussen **discrete**
 en **continue** variabelen. Een numerieke variabele is **discreet** als
 deze alleen specifieke, afzonderlijke waarden kan aannemen. Dit is
 bijvoorbeeld het geval bij tellingen, zoals het aantal plantensoorten
-dat je op een vierkante meter heidegrond aantreft. Deze variabele kan
+dat je op een vierkante meter heidegrond aantreft: deze variabele kan
 alleen niet-negatieve gehele getallen aannemen (0, 1, 2, ...). Een
 numerieke variabele is **continu** als deze in theorie elke waarde uit
 een interval van reële getallen kan aannemen. Een voorbeeld hiervan is
@@ -129,7 +130,7 @@ Binnen de categorische variabelen onderscheiden we **ordinale** en
 een natuurlijke volgorde. De kankerstadia (0, I, II, III, IV) die we
 hierboven al tegenkwamen zijn hiervan een goed voorbeeld. Bij
 **nominale** variabelen hebben de niveaus géén natuurlijke rangorde; het
-zijn enkel namen of labels. Een voorbeeld hiervan is de
+zijn enkel namen of labels. Een voorbeeld is de
 voedingsstrategie van organismen, ingedeeld als "herbivoor",
 "carnivoor", "omnivoor", of "detrivoor".
 
@@ -137,7 +138,8 @@ voedingsstrategie van organismen, ingedeeld als "herbivoor",
 ## Alternatieve indelingen van variabelen
 
 De indeling van @fig-variabelen is overigens niet de enige manier waarop
-variabelen kunnen worden ingedeeld. Over andere indelingen kun je meer
+variabelen kunnen worden ingedeeld. 
+Over andere indelingen kun je desgewenst meer
 lezen in het artikel [Statistical data
 type](https://en.wikipedia.org/wiki/Statistical_data_type) op Wikipedia.
 :::
@@ -172,13 +174,13 @@ dataframe en binnen RStudio te bekijken:
 #| echo: true
 #| output: false
 library(NHANES)
-data("NHANES")
-View(NHANES)
+data("NHANES") # laad de dataset in een dataframe
+View(NHANES).  # open een tab in RStudio om de gegevens te bekijken
 ```
 
 Je zult zien dat de dataset bestaat uit een groot aantal regels en
 kolommen. Iedere regel beschrijft één persoon; iedere kolom bevat de
-informatie van één variabele. Er zijn 76 kolommen, en dus 76 variabele
+informatie van één variabele. Er zijn 76 kolommen, en dus 76 variabelen
 weergegeven. Daaronder zijn onder andere de burgerlijke staat
 (`MaritalStatus`), lichaamslengte in cm (`Height`), en voor iedere vrouw
 het aantal baby's dat zij op de wereld heeft gezet (`nBabies`).
@@ -186,18 +188,26 @@ Burgerlijke staat is een nominale variabele, lichaamslengte een continue
 variabele, en aantal baby's een discrete variabele.
 :::
 
-::: {#exr-typen-vars}
+::: {#exr-typen-vars .pepexr}
 ## Typen variabelen.
 
 Van welk type zijn de volgende variabelen?
 
-**a.** Bloedgroep bij mensen (A, B, AB, O).
+**a.** Bloedgroep (A, B, AB, of O).
 
 **b.** Aantal chromosomen in een cel.
 
-**c.** Opleidingsniveau. Het CBS hanteert 5 niveaus, waarbij niveau 1
-staat voor "Basisonderwijs", niveau 2 voor "vmbo, mbo1, havo onderbouw",
-etc.
+**c.** Opleidingsniveau. Het Centraal Bureau voor de Statistiek (CBS) hanteert vaak 5 niveaus:
+
+| Onderwijsniveau | Omschrijving          |
+|---------------:|:----------------------|
+| 1             | Basisonderwijs        |
+| 2             | Vmbo, havo-, vwo-onderbouw, mbo1  |
+| 3             | Havo, vwo, mbo2-4        |
+| 4             | Hbo-, wo-bachelor        |
+| 5             | Hbo-, wo-master, doctor  |
+
+: Onderwijsniveaus gebruikt door het CBS. {#tbl-CBS .striped .hover}
 
 **d.** Hartslagfrequentie.
 
@@ -207,48 +217,42 @@ etc.
 de volgende generatie.
 :::
 
-## Typen variabelen in R en `factors`
+## Typen variabelen in R
 
-In @sec-type-variabelen-R heb je geleerd dat R ook onderscheid maakt
-tussen verschillende typen variabelen, zoals `numeric`, `integer`, of
-`character` (@sec-type-variabelen-R). Deze typen komen niet één op één
+In @sec-type-variabelen-R heb je geleerd dat variabelen in R ook
+verschillende types hebben, zoals `numeric`, `integer`, of
+`character`. Deze typen komen niet één op één
 overeen met de indeling van @fig-variabelen. Wat is de relatie tussen
 @fig-variabelen en de data-typen van R?
 
-Voor numerieke variabelen zul je vaak het datatype `Numeric` gebruiken,
-waarin getallen met decimalen ("kommagetallen", *floats*) kunnen worden
-opgeslagen. Op zich kan `Numeric` zowel voor continue als voor discrete
-numerieke variabelen gebruikt worden. Maar als een discrete variabele
-alleen gehele waarden kan aannemen ligt `Integer` meer voor de hand. In
-het geheugen van de computer neemt een `Integer` ook minder ruimte in
-dan een `Numerical` (4 bytes in plaats van 8 bytes).
+Voor numerieke variabelen zul je meestal het datatype `numeric` gebruiken,
+waarin getallen met decimalen ("kommagetallen", *floats*) kunnen worden opgeslagen. 
+Op zich kan `numeric` zowel voor continue als voor discrete
+numerieke variabelen worden gebruikt. 
+Maar als een discrete variabele alleen gehele waarden kan aannemen ligt `integer` meer voor de hand. 
+In het geheugen van de computer neemt een `integer` ook minder ruimte in dan een `numerical` (4 bytes in plaats van 8 bytes).
 
 Voor categorische variabelen kan het type `character` worden gebruikt,
 omdat je daarin de waarden van de variabele als een string kunt opslaan.
-Maar binnen R bestaat ook datastructuur die speciaal bedoeld is voor
+Maar R voorziet ook in een datastructuur die speciaal bedoeld is voor
 categorische data: de `factor`.
 
-Je kunt een vector met strings gemakkelijk omzetten naar een
-factor-variabele, met de functie `factor()`. Om dat te illustreren
-definiëren we in R eerst een vector `voedingsstrategie` van type
+### Categorische gegevens in R: de *factor*
+
+Om te illustreren wat een factor is,
+definiëren we in R eerst een vector van type
 `character`:
 
 ```{r}
-# Character vector met de voedingsstrategie van 5 organismen:
+# Vector met de voedingsstrategie van 5 organismen:
 voedingsstrategie <- c("herbivoor", "carnivoor", "omnivoor", "detrivoor", "herbivoor")
 voedingsstrategie
 ```
 
 Bekijk de uitvoer; je kunt daaraan zien dat `voedingsstrategie`
-simpelweg een lijstje (vector) met strings is. Met behulp van de functie
-`typeof()` kunnen we bevestigen dat `voedingsstrategie` een variabele is
-van type `character`:
+simpelweg een lijstje (vector) met strings is.
 
-```{r}
-typeof(voedingsstrategie)
-```
-
-Deze vector van type `character` zetten we nu om naar een factor en
+Deze vector van type `character` zetten we nu om naar een `factor` en
 slaan die op onder de naam `factor.voedingsstrategie`:
 
 ```{r}
@@ -257,71 +261,62 @@ factor.voedingsstrategie <- factor(voedingsstrategie)
 factor.voedingsstrategie
 ```
 
-De uitvoer ziet er subtiel anders uit. De vijf verschillende waarden
-worden weer getoond, maar er is nu een extra regel die begint met het
-woord "Levels". Op die regel worden de verschillende niveaus weergegeven
-van de categorische variabele. In dit geval waren dat "carnivoor",
-"detrivoor", "herbivoor" en "omnivoor". Je kunt de niveaus ook
-rechtstreeks opvragen:
+De uitvoer ziet er subtiel anders uit. 
+De vijf verschillende waarden worden weer getoond, 
+maar er is nu een extra regel die begint met het woord "Levels". 
+Op die regel worden de verschillende niveaus
+van de categorische variabele weergegeven. 
+In dit geval waren dat "carnivoor", "detrivoor", "herbivoor" en "omnivoor". 
+Je kunt de niveaus ook rechtstreeks opvragen met de functie `levels()`:
 
 ```{r}
 levels(factor.voedingsstrategie)
 ```
 
-Laten we eens kijken van welk type de variabele
-`factor.voedingsstrategie` is:
-
-```{r}
-typeof(factor.voedingsstrategie)
-```
-
-Dit is een verrassing: in de factor zijn de gegevens dus opgeslagen als
-een lijst integers (gehele getallen) en niet meer als een lijst strings.
-
-Dit verraadt wat een factor precies is: de oorspronkelijke gegevens zijn
-vervangen door een lijst getallen, in dit geval
-
+R slaat factoren in het computergeheugen op 
+met behulp van een code.
+Ieder niveau van de variabele krijgt een nummer (`integer`);
+in het voorbeeld levert dat de volgende codetabel op:
 ```{r}
 #| warning: false
 #| echo: false
- as.integer(factor.voedingsstrategie)
-```
 
-plus een "codetabel" die aangeeft welk niveau ieder getal representeert.
-Hier is de codetabel voor het voorbeeld:
+# Controleer of gt is geladen
+if (!("gt" %in% .packages())) { 
+  library(gt) 
+}
 
-```{r}
-#| warning: false
-#| echo: false
-library(gt)
-
+# Maak een dataframe met codes en voedingsstrategieën
 df <- data.frame(
-  Code = seq(1,4), Level = levels(factor.voedingsstrategie))
+  Code = seq(1, 4), 
+  Niveau = levels(factor.voedingsstrategie)
+)
 
+# Genereer een tabel met aangepaste kolombreedtes en uitlijning
 gt(df) %>%
   cols_width(
-    Code ~ px(50),    # Set width (pixels or other CSS units)
-    Level ~ px(150)
+    Code ~ px(50),    # Breedte instellen (in pixels of andere CSS-eenheden)
+    Niveau ~ px(150)
   ) %>%
   cols_align(
-    align = "left"    # Left-align all text
+    align = "left"    # Links uitlijnen van alle tekst
   )
-
-
-# Create a code table mapping integers to levels
-code_table <- data.frame(Code = seq_along(levels(factor.voedingsstrategie)), 
-                         Level = levels(factor.voedingsstrategie))
 
 ```
 
-Het feit dat de gegevens nu opgeslagen zijn als integers heeft veel
-voordelen. Integers gebruiken veel minder geheugen dan strings. Dat
-scheelt vooral als de dataset groot is en een klein aantal niveaus heel
-vaak worden gebruikt. Bovendien, doordat factoren intern als integers
+Met behulp van die codetabel wordt de oorspronkelijke vector `voedingsstrategie`
+efficiënt opgeslagen als de rij integers:
+3,1,4,2,3.
+
+Dat de gegevens nu opgeslagen zijn als integers heeft veel
+voordelen. Integers gebruiken veel minder geheugen dan strings.
+Bovendien, doordat factoren intern als integers
 worden behandeld zijn operaties zoals groeperen, filteren en sorteren
-ook vaak sneller dan bij character vectors. Tot slot zijn er veel
-belangrijke functies in R die een factor verwachten als input. (Vanaf
-@sec-toetsen-gemiddelden hebben we ze daarom hard nodig!)
+ook vaak sneller dan bij vectoren van type `character`. 
+
+Er zijn veel
+belangrijke functies in R die als input een factor verwachten. In
+@sec-toetsen-gemiddelden hebben we ze daarom hard nodig!
 
 ::: {#exr-factoren}
 ## Factors en niveaus
@@ -2632,9 +2627,9 @@ als volgt uit:
 #| code-fold: true
 #| fig.cap: "Staafdiagram van de zelf-gerapporteerde gezondheidsstatus in de gegevensvan het NCHS-onderzoek."
 #| label: fig-gezondheid-staaf
-#| fig.width: 4.5
-#| fig.height: 3.5
-#| out.width: "64%"
+#| fig.width: 4
+#| fig.height: 3
+#| out.width: "57%"
 
 # De gegevens zijn gepubliceerd in dit package:
 library(NHANES)
@@ -2701,7 +2696,7 @@ Let bij het maken van een staafdiagram op drie dingen.
 Het volgende krantenknipsel laat zien dat De Times beter verkoopt dan de
 Daily Telegraph:
 
-![](figuren/MisleidingStaafdiagram_Times.jpeg)
+![](figuren/MisleidingStaafdiagram_Times.jpeg){width=80% fig-align="center"}
 
 Maar kijk eens goed naar het staafdiagram aan de rechterkant. Op het
 eerste gezicht lijkt het verschil tussen de verkoopcijfers enorm omdat
@@ -2748,6 +2743,7 @@ laten zien in een taartdiagram:
 #| label: fig-taart
 #| fig.width: 4.5
 #| fig.height: 3.5
+#| out.width: "64%"
 
 NHANES$MaritalStatus <- factor(
   NHANES$MaritalStatus,
@@ -2815,6 +2811,7 @@ wel een stapeldiagram worden gebruikt:
 #| fig.cap: "Stapeldiagram van de variabele Gezondheidsstatus in de NHANES-gegevens."
 #| fig.width: 4.5
 #| fig.height: 3.5
+#| out.width: "64%"
 
 freq_df <- data.frame(
   freq_table
@@ -2924,6 +2921,7 @@ belangrijke verschillen:
 #| label: fig-viool
 #| fig.width: 2.5
 #| fig.height: 3.5
+#| out.width: "36%"
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
   geom_violin(fill = "Bisque", color = opvulkleur) +
@@ -3152,6 +3150,7 @@ individuele datapunten weer te geven, bijvoorbeeld met een
 #| label: fig-box-gewicht
 #| fig.width: 2.5
 #| fig.height: 3.5
+#| out.width: "36%"
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
   geom_boxplot(fill = "Bisque", color = opvulkleur) +
@@ -3172,6 +3171,13 @@ Boodschap: samenvatten met alle drie methoden. Altijd visualiseren!
 ::: todo-box
 Schrijven.
 :::
+
+| Type variabele  |   | Datatype in R             |
+|--------------|-------------|-------------------------|
+| Numeriek     | Continu     | `numeric`               |
+|              | Discreet    | `numeric`/`integer`     |
+| Categorisch  | Nominaal    | `factor`                |
+|              | Ordinaal    | `factor`                |
 
 Het gemiddelde (@eq-gemiddelde): $$\bar{x} = \frac{\sum^n_{i=1}x_i}{n}$$
 $\bar{x}$ is het gemiddelde van de dataset, $x_i$ zijn de individuele
