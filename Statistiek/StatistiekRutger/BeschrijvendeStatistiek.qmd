@@ -616,7 +616,7 @@ onderbroken lijnen) dat 86% van de mensen een gewicht heeft van maximaal
 #| hoogstens 100kg weegt."
 #| label: fig-cumul
 #| fig.width: 5
-#| fig.height: 2.5
+#| fig.height: 3.5
 #| out.width: "71.4%"
 
 # Maak een cumulatieve verdelingsplot
@@ -664,7 +664,7 @@ cumulplot +
     size = 3
   ) +
   scale_y_continuous(
-    breaks = c(0, 0.25, 0.5, 0.75, 0.86, 1),  
+    breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.86, 0.9, 1),  
     minor_breaks = c(0.25 / 2, 0.375, 0.625, 0.875),  
     labels = function(breaks) ifelse(breaks == 0.86, "0.86", breaks)
   )
@@ -676,6 +676,21 @@ omdat bij grotere waarden op de $x$-as het aantal waarnemingen kleiner dan die w
 Hierdoor is de cumulatieve verdeling altijd een
 stijgende functie die begint bij 0 (bij de kleinste waarde binnen de
 waarnemingen) en eindigt bij 1 (bij de grootste waarde).
+
+::: {#exr-cumul .pepexr}
+## De cumulatieve verdeling
+
+Gebruik @fig-cumul om de antwoorden te schatten op de volgende vragen.
+
+a.  Welk percentage van de mensen weegt hoogstens 75kg?
+
+b.  Welk percentage van de mensen weegt tenminste 50kg?
+
+c.  Welk percentage van de mensen heeft een gewicht tussen 75 en 100kg?
+
+d.  Stel, we selecteren de lichtste 10% van deze populatie.
+    Hoeveel weegt de zwaarste persoon in deze groep?
+:::
 
 ## Ligging en spreiding van een verdeling
 
@@ -802,6 +817,7 @@ annotatie_rechtsonder <- data.frame(
 basis_plot <- ggplot(data, aes(x = waarden)) +
   geom_histogram(
     binwidth = 0.5, 
+    boundary = 0,
     fill = opvulkleur, 
     color = "black"
   ) +
@@ -894,7 +910,9 @@ $[15,20)$ en het interval $[75,80)$.
 
 Een andere veel gebruikte centrummaat is de **mediaan**. In dit boek
 noteren we de mediaan van een serie waarnemingen $x_1$, $x_2$, $\ldots$
-als $\tilde{x}$. Om de mediaan te berekenen sorteer je de waarnemingen
+als $\tilde{x}$. 
+
+Om de mediaan te berekenen sorteer je de waarnemingen
 eerst van klein naar groot. Als het aantal waarnemingen $n$ oneven is,
 dan is de mediaan het middelste getal in de gesorteerde rij. Als het
 aantal waarnemingen $n$ even is, dan bestaat zo'n middelste getal niet;
@@ -932,15 +950,17 @@ De mediaan is dus een "typische" of representatieve waarde in de zin dat
 er evenveel waarden groter zijn als kleiner. Dat hoeft bij de modus en
 het gemiddelde niet zo te zijn.
 
-In @sec-cumul hebben we de cumulatieve verdeling besproken. De mediaan
-is per definitie de waarde waarbij de cumulatieve proportie gelijk is
-aan $0{,}5$. De mediaan kan daarom uit de cumulatieve verdeling worden
+In @sec-cumul hebben we de cumulatieve verdeling besproken. 
+Per definitie is de helft van de waarnemingen kleiner dan de mediaan;
+dat wil zeggen dat de cumulatieve proportie die hoort bij de mediaan
+gelijk is aan $0{,}5$. 
+De mediaan kan daarom uit de cumulatieve verdeling worden
 afgelezen door de waarde op de $x$-as te bepalen die hoort bij een
 cumulatieve proportie van $0{,}5$. In @fig-cumul-2a is net als in
 @exm-cumul-weight de cumulatieve verdeling van de variabele `Weight`
 (lichaamsgewicht) weergegeven. Het [paarse]{style="color:DarkOrchid;"} kruis geeft de mediaan van
 lichaamsgewicht aan. De [paarse]{style="color:DarkOrchid;"} lijnen laten zien dat de cumulatieve
-proportie daar precies $0{,}5$ is.
+proportie daar inderdaad $0{,}5$ is.
 
 ```{r}
 #| code-fold: true
@@ -1116,6 +1136,7 @@ haalt voor het hertentamen een 7.
 
 a.  Wat is het effect op je gemiddelde cijfer?
 b.  Wat is het effect op de mediaan?
+c.  Welke waarde is gevoeliger voor uitbijters?
 :::
 
 Een ander nuttig perspectief is @fig-res-1
@@ -1357,6 +1378,7 @@ uiteindelijk positie van de [oranje]{style="color:darkorange;"} lijn is
 de positie met minimale potentiële energie. Dat is precies de positie
 waar de kwadratensom minimaal is, oftewel het gemiddelde.
 :::
+
 
 ## Maten voor de spreiding van een verdeling
 
@@ -1876,13 +1898,13 @@ Maar kijk niet gek op als je de kantielen die R produceert
 :::
 
 ::: {#exr-kwantielen .mixedexr}
-## Opgave: Kwantielen van tentamencijfers
+## Opgave: Ligging en spreiding van tentamencijfers
 
 De scores van 16 studenten op een toets zijn als volgt (in volgorde van
 laag naar hoog):
 **12, 15, 18, 20, 21, 23, 25, 28, 30, 32, 35, 38, 40, 42, 45, 46**.
 
-a.  Bepaal met de hand de mediaan van deze dataset. 
+a.  Bereken met de hand de mediaan van deze dataset. 
 b.  Verifieer je antwoord in R. Definieer daartoe een vector `v` met alle scores, 
     en gebruik vervolgens de functie `median()`.
 b.  Bereken Q1 (het eerste kwartiel) en Q3 (het derde kwartiel) met de hand.
