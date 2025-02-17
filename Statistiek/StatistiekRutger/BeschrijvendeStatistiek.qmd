@@ -137,14 +137,41 @@ voedingsstrategie van organismen, ingedeeld als "herbivoor",
 ::: callout-tip
 ## Alternatieve indelingen van variabelen
 
-De indeling van @fig-variabelen is overigens niet de enige manier waarop
+De indeling van @fig-variabelen is niet de enige manier waarop
 variabelen kunnen worden ingedeeld. 
 Over andere indelingen kun je desgewenst meer
 lezen in het artikel [Statistical data
 type](https://en.wikipedia.org/wiki/Statistical_data_type) op Wikipedia.
 :::
 
-::: {#exm-NHANES}
+
+
+::: {#exr-typen-vars .pepexr}
+## Typen variabelen.
+
+Van welk type zijn de volgende variabelen?
+
+a.  Bloedgroep (A, B, AB, of O).
+b.  Aantal chromosomen in een cel.
+c.  Opleidingsniveau. Het Centraal Bureau voor de Statistiek (CBS) hanteert vaak 5 niveaus:
+
+    | Onderwijsniveau | Omschrijving          |
+    |---------------:|:----------------------|
+    | 1             | Basisonderwijs        |
+    | 2             | Vmbo, havo-, vwo-onderbouw, mbo1  |
+    | 3             | Havo, vwo, mbo2-4        |
+    | 4             | Hbo-, wo-bachelor        |
+    | 5             | Hbo-, wo-master, doctor  |
+
+    : Onderwijsniveaus gebruikt door het CBS. {#tbl-CBS .striped .hover}
+
+d.  Hartslagfrequentie.
+e.  Verdubbelingstijd van een bacteriekolonie.
+f.  Fitness, gemeten als het aantal nakomelingen van een organisme in
+de volgende generatie.
+:::
+
+::: {#exr-NHANES .Rexr}
 ## Variabelen in de dataset NHANES van de US National Center for Health Statistics
 
 Om de theorie in dit hoofdstuk te illustreren zullen we vaak gebruik
@@ -156,68 +183,70 @@ Amerikanen van alle leeftijden. De deelnemers vullen ook een enquête in.
 De NHANES dataset bevat de gegevens van een groot aantal personen die
 tussen 2009 en 2012 zijn onderzocht.
 
-Je kunt de dataset ook gemakkelijk zelf onderzoeken. De dataset is
-beschikbaar gesteld in de R-package `NHANES`; om de dataset te bekijken
-zul je dat package eenmalig moeten installeren, met het commando:
+Je kunt de dataset ook gemakkelijk zelf onderzoeken met R.
 
-```{r}
-#| eval: false
-#| echo: true
-install.packages("NHANES")
-```
+a.  De dataset is beschikbaar gesteld in een R-package 
+met de naam `NHANES`. 
+    Om de dataset te bekijken moet je dat package eenmalig installeren, 
+    met het commando:
+    ```{r}
+    #| eval: false
+    #| echo: true
+    install.packages("NHANES", dependencies = TRUE)
+    ```
+    
+    Kopieer het commando en voer het uit in R.
 
-Daarna voer je de volgende code uit om de gegevens in te laden in een
-dataframe en binnen RStudio te bekijken:
+b.  Start een nieuw R-script. 
+    Kopieer onderstaande code en plak die in je script.
+    ```{r}
+    #| eval: false
+    library("NHANES") # laad de library 
+    data("NHANES") # laad de dataset "NHANES" in een dataframe
+    View(NHANES).  # open een tab in RStudio om de dataframe te bekijken
+    ```
+    Zorg dat je begrijpt waar de verschillende regels code goed voor zijn
+    en voer ze dan uit.
 
-```{r}
-#| eval: false
-#| echo: true
-#| output: false
-library(NHANES)
-data("NHANES") # laad de dataset in een dataframe
-View(NHANES).  # open een tab in RStudio om de gegevens te bekijken
-```
+c.  Bekijk de gegevens in RStudio. 
+    Je zult zien dat de dataset bestaat uit een groot aantal regels en
+kolommen. 
+    Iedere regel beschrijft één persoon; 
+    iedere kolom bevat de
+informatie voor één variabele.
 
-Je zult zien dat de dataset bestaat uit een groot aantal regels en
-kolommen. Iedere regel beschrijft één persoon; iedere kolom bevat de
-informatie van één variabele. Er zijn 76 kolommen, en dus 76 variabelen
-weergegeven. Daaronder zijn onder andere de burgerlijke staat
-(`MaritalStatus`), lichaamslengte in cm (`Height`), en voor iedere vrouw
-het aantal baby's dat zij op de wereld heeft gezet (`nBabies`).
-Burgerlijke staat is een nominale variabele, lichaamslengte een continue
-variabele, en aantal baby's een discrete variabele.
+    Een van de variabelen is burgerlijke staat
+(`MaritalStatus`).
+    Zoek die kolom op, en kijk door de waarden.
+    Van welk type is deze variabele volgens het systeem van @fig-variabelen?
+d.  Zoek ook de kolom voor variabele lichaamslengte (`Height`).
+    
+    - Van welk type is deze variabele?
+    
+    - Welke eenheid wordt gebruikt?
+    
+    (Tip: Bij twijfel gebruik je het commando `?NHANES` om de Help-files te bekijken;
+    daar staat voor iedere variabele informatie.)
+e.  Zoek de kolom voor `nBabies`.
+    Voor iedere vrouw vanaf 20 jaar is daar het aantal baby's weergegeven 
+    dat zij op de wereld heeft gezet.
+    
+    - Van welk type is deze variabele?
+    
+    - Wat is er bij mannen ingevuld?
+    
+    - Wat is er bij vrouwen ingevuld als zij geen babies hebben?
+f.  Voer het volgende commando toe aan je script en voer het uit:
+    ```{r}
+    #| eval: false
+    str(NHANES)
+    ```
+    De functie `str()` geeft de structuur van het data frame weer.
+    
+    - Van hoeveel personen is er informatie opgenomen in deze dataset?
+    
+    - Hoeveel variabelen zijn er?
 :::
-
-::: {#exr-typen-vars .pepexr}
-## Typen variabelen.
-
-Van welk type zijn de volgende variabelen?
-
-**a.** Bloedgroep (A, B, AB, of O).
-
-**b.** Aantal chromosomen in een cel.
-
-**c.** Opleidingsniveau. Het Centraal Bureau voor de Statistiek (CBS) hanteert vaak 5 niveaus:
-
-| Onderwijsniveau | Omschrijving          |
-|---------------:|:----------------------|
-| 1             | Basisonderwijs        |
-| 2             | Vmbo, havo-, vwo-onderbouw, mbo1  |
-| 3             | Havo, vwo, mbo2-4        |
-| 4             | Hbo-, wo-bachelor        |
-| 5             | Hbo-, wo-master, doctor  |
-
-: Onderwijsniveaus gebruikt door het CBS. {#tbl-CBS .striped .hover}
-
-**d.** Hartslagfrequentie.
-
-**e.** Verdubbelingstijd van een bacteriekolonie.
-
-**f.** Fitness, gemeten als het aantal nakomelingen van een organisme in
-de volgende generatie.
-:::
-
-
 
 ## De verdeling van een variabele
 
@@ -230,7 +259,7 @@ Als de variabele numeriek is, kunnen we zijn verdeling
 visualiseren met een **histogram**. @Fig-histogram-agemonth hieronder
 laat een voorbeeld zien voor variabele `AgeMonths`
 (leeftijd in maanden) uit de dataset NHANES die we in
-@exm-NHANES hebben besproken.
+@exr-NHANES hebben bekeken
 
 ```{r}
 #| code-fold: true
@@ -275,7 +304,7 @@ Een histogram is opgebouwd uit staafjes. De hoogte van die staafjes
 geeft weer hoe vaak een leeftijd binnen een bepaalde leeftijdscategorie
 valt; dat wordt de **frequentie** van die categorie genoemd. We komen
 later uitgebreider terug op histogrammen en andere manieren om
-verdelingen te visualiseren (@sec-hist-en-freqpoly), maar gaan er vanuit dat histogrammen niet nieuw voor je zijn.
+verdelingen te visualiseren (@sec-hist-en-freqpoly), maar gaan ervan uit dat histogrammen niet nieuw voor je zijn.
 
 
 ### Kwalitatieve beschrijvingen van de verdeling numerieke variabelen {#sec-terminologie}
