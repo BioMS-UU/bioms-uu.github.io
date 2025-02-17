@@ -412,6 +412,19 @@ valt; dat wordt de **frequentie** van die categorie genoemd. We komen
 later uitgebreider terug op histogrammen en andere manieren om
 verdelingen te visualiseren (@sec-hist-en-freqpoly), maar gaan er vanuit dat histogrammen niet nieuw voor je zijn.
 
+
+::: {.callout-note icon=false}
+
+## Histogrammen in R
+
+In R kun je heel eenvoudig histogrammen maken.
+Als `v` een numerieke vector is, dan is de eenvoudigste methode:
+```{r}
+#| eval: false
+hist(v)
+```
+:::
+
 ### Kwalitatieve beschrijvingen van de verdeling numerieke variabelen {#sec-terminologie}
 
 Om de vorm van de verdeling van een numerieke variabele te omschrijven
@@ -994,7 +1007,7 @@ In @fig-histogram, het histogram van `Weight`,
 waren twee pieken te zien. Er zijn dan ook twee modi: het interval
 $[15,20)$ en het interval $[75,80)$.
 
-### De mediaan
+### De mediaan {#sec-mediaan}
 
 Een andere veel gebruikte centrummaat is de **mediaan**. In dit boek
 noteren we de mediaan van een serie waarnemingen $x_1$, $x_2$, $\ldots$
@@ -1437,7 +1450,6 @@ Dat zorg ervoor dat de evenwichtspositie van de
 [oranje]{style="color:darkorange;"} lijn nu wél overeenkomt met het
 gemiddelde $\mean{x}$.
 
-
 ::: {.callout-important}
 
 ## Eigenschappen van het gemiddelde
@@ -1465,8 +1477,8 @@ waar de kwadratensom minimaal is, oftewel het gemiddelde.
 
 ## Maten voor de spreiding van een verdeling
 
-Nu we de centrummaten hebben behandeld, is het tijd om de
-spreidingsmaten te bespreken.
+Na de centrummaten zijn nu de
+spreidingsmaten aan de beurt.
 
 ### Het bereik
 
@@ -1477,10 +1489,10 @@ voorbeeld van zojuist is het interval $[1, 9]$.
 
 ### Kwantielen en de interkwartielafstand
 
-We hebben het gehad over de mediaan. Je weet dus dat de helft van de
+We hebben het gehad over de mediaan (@sec-mediaan). Je weet dus dat de helft van de
 waarnemingen kleiner is dan de mediaan. Om de mediaan te bepalen, deelde
 je de waarnemingen in twee groepen: de kleinere waarden en de grotere
-waarden. De mediaan vormde de scheidslijn tussen deze twee groepen.
+waarden. De mediaan is de scheidslijn tussen deze twee groepen.
 
 Op een vergelijkbare manier kunnen we kengetallen definiëren die we de
 **kwartielen** noemen. Hiervoor splitsen we de twee helften nogmaals in
@@ -1946,33 +1958,95 @@ ggplot(data, aes(x = Weight)) +
   theme(legend.position = "none")  # Verwijder de legenda
 ```
 
-Tot slot bespreken we de **percentielen**. Deze zijn gemakkelijk te
+Statistieken die hier nauw mee samenhangen zijn de **percentielen**. 
+Deze zijn gemakkelijk te
 begrijpen aan de hand van een paar voorbeelden. Omdat 25% van de
 waarnemingen kleiner is dan Q1, wordt Q1 ook wel het vijf-en-twintigste
 percentiel genoemd, oftewel P25. Op dezelfde manier is 90% van de
 waarnemingen kleiner dan P90, het negentigste percentiel.
 
 In algemene termen worden statistieken zoals kwartielen en percentielen
-samen aangeduid als **kwantielen**. We komen in latere hoofdstukken ook
+samen aangeduid als **kwantielen**. We komen die in latere hoofdstukken ook
 nog tegen.
 
-::: {#exr-kwantielen}
+::: {.callout-note #nte-kwartielen icon=false}
+
+## Kwartielen, kwantielen, en  IKA in R
+  
+In R kun je de kwantielen berekenen met de functie `quantile()`. 
+Als `v` een vector is, geeft 
+```{r}
+#| eval: false
+quantile(v)
+```
+de kwartielen weer.
+Je kunt ook een specifieke kwantiel opvragen.
+Q1 of P25 kun je bijvoorbeeld zo berekenen:
+```{r}
+#| eval: false
+quantile(v, prob = c(0.25))
+```
+De functie `IQR()` geeft direct de interkwartielafstand
+van een numerieke vector:
+```{r}
+#| eval: false
+IQR(v)
+```
+
+Er is alleen een complicatie:
+Het is niet vanzelfsprekend hoe je kwantielen *precies* moet definiëren.
+Bijvoorbeeld, 
+  hoe deel je een dataset in vier stukken
+  om de kwartielen te vinden
+  als het aantal waarnemingen
+  niet deelbaar is door vier? 
+En waar trek je dan precies de grens?
+
+Omdat er verschillende conventies mogelijk zijn,
+zijn er verschillende definities in omloop.
+In de R-functie `quantile()` zijn maar liefst 9 verschillende definities ingebouwd;
+via de parameter `type` kun je kiezen welke je wilt gebruiken.
+
+Afhankelijk van die keuze verschillen de resultaten subtiel.
+Een eenvoudig voorbeeld:
+```{r}
+v <- c(1, 2, 3, 4, 5)
+quantile( v, type = 7 ) # type = 7 is de default
+```
+
+```{r}
+quantile( v, type = 2 )
+```
+
+Als de dataset niet heel klein is,
+zijn de verschillen te verwaarlozen;
+in deze cursus zullen we ons er verder niet druk om maken.
+Maar, kijk dus niet gek op als `quantile()` of gerelateerde functies
+zoals `IQR()` waarden produceren die je niet *exact* kunt reproduceren.
+
+:::
+
+
+::: {#exr-kwantielen .mixedexr}
 ## Opgave: Kwantielen van tentamencijfers
 
 De scores van 16 studenten op een toets zijn als volgt (in volgorde van
-laag naar hoog):\
+laag naar hoog):
 **12, 15, 18, 20, 21, 23, 25, 28, 30, 32, 35, 38, 40, 42, 45, 46**.
 
-a.  Wat is de mediaan van deze dataset?\
-b.  Bereken Q1 (het eerste kwartiel) en Q3 (het derde kwartiel).\
-c.  Wat is de interkwartielafstand (IKA)?
-d.  Bereken de kwartielen en de IKA ook met R.\
-    Hint: Gebruik de functie `quantile()` om de kwartielen te
-    berekenen.\
+a.  Bepaal met de hand de mediaan van deze dataset. 
+b.  Verifieer je antwoord in R. Definieer daartoe een vector `v` met alle scores, 
+    en gebruik vervolgens de functie `median()`.
+b.  Bereken Q1 (het eerste kwartiel) en Q3 (het derde kwartiel) met de hand.
+    Verifieer het resultaat met in R met de functie `quantile()`.
+    (Zie @imp-kwartielen.)
+c.  Wat is de interkwartielafstand (IKA)? 
+d.  Bereken de kwartielen en de IKA ook met R.
+    Hint: Gebruik de functie `IQR()`.
 e.  Wat zegt de interkwartielafstand over de spreiding van de scores?
-f.  Welk percentiel komt overeen met een score van 30?\
+f.  Welk percentiel komt overeen met een score van 30?
 g.  De docent zegt dat een score van 40 in het hoogste kwartiel ligt.
-    Klopt dit?\
+    Klopt dit?
 h.  Een student scoort 20 op de toets. In welk kwartiel en percentiel
     valt deze score?
 :::
@@ -2018,7 +2092,7 @@ s_X = \sqrt{V_X}.
 $$ {#eq-sd-var} Als we de definitie van de variantie invullen levert dat
 op: $$
 s_X = \sqrt{\frac{\sum_i^n \left(x_i - \overline{x}\right)^2}{n-1}}.
-$$ {#eq-sd} De standaarddeviatie wordt ook wet **standaardafwijking**
+$$ {#eq-sd} De standaarddeviatie wordt ook wel de **standaardafwijking**
 genoemd.
 
 Die twee woorden zijn synoniem en kunnen door elkaar gebruikt worden.
@@ -2032,7 +2106,7 @@ dus een lengte in mm, dan is de standaarddeviatie ook een lengte in mm.
 Dit maakt de standaarddeviatie gemakkelijker te interpreteren dan de
 variantie.
 
-Je kunt de standaarddeviatie interpreteren als een \`\`typische''
+Je kunt de standaarddeviatie interpreteren als een "typische"
 afwijking van het gemiddelde. Het is dus niet verrassend als een
 willekeurig gekozen waarneming een standaarddeviatie groter of kleiner
 is dan het gemiddelde. Bij de meeste verdelingen liggen verreweg de
@@ -2695,7 +2769,7 @@ eerste gezicht lijkt het verschil tussen de verkoopcijfers enorm omdat
 de staaf van The Times een veel groter oppervlakte heeft dan die van de
 Telegraph. (Die indruk wordt nog versterkt door het verschil in de
 kleur!) Pas als je naar de $y$-as kijkt, blijkt het verschil wel mee te
-vallen:
+vallen: zo'n 10%.
 :::
 
 2.  **Houd ruimte tussen de staven.** Dat laat zien dat de categorieën
