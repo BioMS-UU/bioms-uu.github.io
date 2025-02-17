@@ -607,4 +607,114 @@ steekproef zorgt voor een meer robuuste schatting en een kleinere kans op het
 vinden van een onterecht significante p-waarde.
 :::
 
+## Antwoorden @sec-associaties
 
+## Antwoorden @sec-linrel
+
+@exr-loopsnelheid
+
+  a. Het bestand bevat informatie over de populatiegrootte en gemiddelde loopsnelheid van 14 steden.
+```{r}
+# Lees de data in
+loopsnelheid <- read.csv("data/loopsnelheid.csv")
+
+# Bekijk de eerste paar regels
+head(loopsnelheid)
+
+# Bekijk de structuur van de dataframe
+str(loopsnelheid)
+```
+  b.
+```{r}
+# Histogram van gemiddelde loopsnelheid
+hist(loopsnelheid$av.wlksp, 
+     main="Histogram van gemiddelde loopsnelheid",
+     xlab="Gemiddelde loopsnelheid")
+
+# Histogram van aantal inwoners (popsize)
+hist(loopsnelheid$popsize, 
+     main="Histogram van aantal inwoners", 
+     xlab="Aantal inwoners")
+
+# Boxplot van gemiddelde loopsnelheid
+boxplot(loopsnelheid$av.wlksp, 
+        main="Boxplot van gemiddelde loopsnelheid",
+        ylab="Gemiddelde loopsnelheid")
+```
+
+  We kunnen ook de kengetallen van beide variabelen inspecteren met behulp van `summary()`.
+```{r}
+summary(loopsnelheid)
+```
+  c. We maken eerst een nieuwe kolom met daarin het logaritme van het aantal inwoners, en vervolgens maken we hier een spreidingsdiagram van.
+```{r}
+# Maak eerst een nieuwe kolom met de logaritme van het aantal inwoners
+loopsnelheid$logpops <- log(loopsnelheid$popsize)
+
+plot(loopsnelheid$logpops,
+     loopsnelheid$av.wlksp,
+     main = "Loopsnelheid en populatiegrootte in verschillende steden",
+     xlab = "Populatiegrootte (log)",
+     ylab = "Gemiddelde loopsnelheid",
+     col = "darkorange")
+```
+
+  d. 
+```{r}
+cor_pops_walk <- cor.test(loopsnelheid$logpops, loopsnelheid$av.wlksp)
+cor_pops_walk
+```
+  e. De Pearson correlatie coefficient heeft een aantal aannames:
+  - De data van beide variabelen moet normaalverdeeld zijn.
+  - De relatie tussen de variabelen is lineair.
+  - Homoscedasticiteit: de spreiding van de gegevens moet constant zijn.
+```{r}
+# Voor beide variabelen onderzoeken we of deze grofweg
+# normaalverdeeld zijn
+
+# Logaritme van de populatiegrootte
+qqnorm(loopsnelheid$logpops)
+qqline(loopsnelheid$logpops)
+
+# Gemiddelde loopsnelheid
+qqnorm(loopsnelheid$av.wlksp)
+qqline(loopsnelheid$av.wlksp)
+```
+  
+```{r}
+# QQplot om te onderzoeken of de relatie lineair is
+qqplot(loopsnelheid$logpops, loopsnelheid$av.wlksp)
+```
+  f. Hiervoor moeten we even kijken naar de uitkomst van onze correlatietest bij vraag d:
+```{r}
+cor_pops_walk
+```
+  De P-waarde is niet kleiner dan $0,05$, dus we kunnen concluderen dat de correlatiecoëfficiënt statistisch gezien niet verschillend is van nul.
+  g. De hypothese is dat de gemiddelde loopsnelheid afhangt van de logaritme van het aantal inwoners van een stad. 
+```{r}
+# Voer lineaire regressie uit
+model <- lm(av.wlksp ~ logpops, data = loopsnelheid)
+
+# Bekijk het model en de samenvatting
+summary(model)
+```
+  De aannames van de regressieanalyse zijn:
+  - Lineariteit: De relatie tussen de onafhankelijke en afhankelijke variabele moet lineair zijn.
+  - Normaliteit van de residuen: De residuen van het model moeten normaal verdeeld zijn.
+  - Homoscedasticiteit: De spreiding van de residuen moet constant zijn over de voorspelde waarden.
+  - Onafhankelijkheid van de residuen: De residuen moeten onafhankelijk zijn van elkaar.
+  
+  We kunnen deze aannames testen met behulp van de volgende figuur:
+```{r}
+par(mfrow = c(2, 2))
+plot(model)
+```
+  h. De uitkomst van `summary()` laat zien dat er geen significante regressie is, 
+  omdat de P-waarde voor de regressiecoëfficiënt groter is dan $0,05$.
+  
+::: {.todo-box}
+Antwoord i en j nog uitwerken!
+:::
+  i.
+  j.
+  
