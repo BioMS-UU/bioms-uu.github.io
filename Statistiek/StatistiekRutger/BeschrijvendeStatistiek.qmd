@@ -7,7 +7,7 @@
 
 library(ggplot2)
 
-opvulkleur <- "#e8601d"
+opvulkleur <- "#ff7700" #opvulkleur
 lijnkleur1 <- "DarkOrchid"
 lijnkleur2 <- "red"
 lijnkleur3 <- "blue"
@@ -20,9 +20,9 @@ lijnkleur3 <- "blue"
 
 Je hebt maandenlang hele dagen in het lab gestaan, en het resultaat van
 je werk is een enorme verzameling getallen, zorgvuldig gerangschikt in
-een Excel-bestand. Wat nu? Je bent eigenlijk pas halverwege; je begrijpt
+een Excel-bestand. Wat nu? Je bent eigenlijk pas halverwege: je begrijpt
 dat het je taak is om in de cijferbrij patronen te ontdekken die iets
-vertellen over de onderliggende biologie. Maar met al die getallen voor
+vertellen over de onderliggende biologie, maar met al die getallen voor
 je neus zie je door de bomen het bos niet meer. **Beschrijvende statistiek** 
 is het onderdeel van de statistiek dat zich bezighoudt met
 methoden en technieken voor het creëren van overzicht in gegevens.
@@ -53,11 +53,11 @@ Deze drie categorieën --- kengetallen, tabellen, visualisaties --- komen
 hieronder allemaal aan bod. Je zult zien dat ze sterk met elkaar
 samenhangen.
 
-Maar, hoe je gegevens kunt beschrijven hangt sterk af van het soort
+Maar hoe je gegevens kunt beschrijven hangt sterk af van het soort
 gegevens waarmee je te maken hebt. Daarom moeten we eerst stilstaan bij
 de verschillende typen gegevens die je kunt tegenkomen.
 
-## Verschillende soorten variabelen
+## Verschillende soorten variabelen {#sec-type-variabelen-R}
 
 Een dataset is een verzameling meetwaarden of observaties van
 eigenschappen. Die eigenschappen worden **variabelen** genoemd.
@@ -73,11 +73,10 @@ veelgebruikte indeling is weergegeven in @fig-variabelen.
 ```{mermaid}
 %%| label: fig-variabelen
 %%| fig-cap: "Indeling van typen variabelen."
-%%| mermaid-format: png
 
 flowchart TB
-  A(Variabelen) --> C("Categorisch (Kwalitatief)")
-  A --> B("Numeriek (Kwantitatief)")
+  A(Variabelen) --> B("Numeriek (Kwantitatief)")
+  A --> C("Categorisch (Kwalitatief)")
   B --> F(Discreet)
   B --> G(Continu)
   C --> E(Nominaal)
@@ -96,9 +95,9 @@ genoemd.
 **Categorische variabelen** zijn variabelen waarvan de waarden een
 categorie of groep aanduiden. De waarden stellen geen meetbare
 hoeveelheden voor. Je kunt ze dus ook niet optellen of aftrekken. De
-verschillende mogelijke waarden worden vaak **niveaus** genoemd.
-Voorbeelden zijn de genus (het geslacht) van bacteriën aangetroffen bij
-blaasontstekingen (met niveaus *Escherichia*, *Klebsiella*, ...), of het
+verschillende mogelijke waarden worden **niveaus** genoemd.
+Voorbeelden zijn de genus (het fylogenetisch geslacht) van bacteriën aangetroffen bij een
+blaasontsteking (met niveaus *Escherichia*, *Klebsiella*, ...), of het
 stadium van kanker (met als niveaus de kankerstadia 0, I, II, III, of
 IV). Categorische variabelen worden ook wel **kwalitatieve variabelen**
 genoemd.
@@ -108,7 +107,8 @@ genoemd.
 
 Dat kankerstadium in een (Romeins) getal wordt uitgedrukt (0, I, II,
 III, of IV) wil niet zeggen dat het een numerieke variabele is. Het
-getal stelt namelijk geen meetbare hoeveelheid voor. We hadden de stadia
+getal stelt namelijk geen meetbare hoeveelheid voor,
+en het optellen van kankerstadia is onzinnig. We hadden de stadia
 net zo goed kunnen aanduiden met letters A, B, C, D, en E. Dit laat zien
 dat je soms goed moet nadenken om te bepalen van welk type een variabele
 is.
@@ -118,7 +118,7 @@ Binnen de numerieke variabelen maken we onderscheid tussen **discrete**
 en **continue** variabelen. Een numerieke variabele is **discreet** als
 deze alleen specifieke, afzonderlijke waarden kan aannemen. Dit is
 bijvoorbeeld het geval bij tellingen, zoals het aantal plantensoorten
-dat je op een vierkante meter heidegrond aantreft. Deze variabele kan
+dat je op een vierkante meter heidegrond aantreft: deze variabele kan
 alleen niet-negatieve gehele getallen aannemen (0, 1, 2, ...). Een
 numerieke variabele is **continu** als deze in theorie elke waarde uit
 een interval van reële getallen kan aannemen. Een voorbeeld hiervan is
@@ -130,20 +130,48 @@ Binnen de categorische variabelen onderscheiden we **ordinale** en
 een natuurlijke volgorde. De kankerstadia (0, I, II, III, IV) die we
 hierboven al tegenkwamen zijn hiervan een goed voorbeeld. Bij
 **nominale** variabelen hebben de niveaus géén natuurlijke rangorde; het
-zijn enkel namen of labels. Een voorbeeld hiervan is de
+zijn enkel namen of labels. Een voorbeeld is de
 voedingsstrategie van organismen, ingedeeld als "herbivoor",
 "carnivoor", "omnivoor", of "detrivoor".
 
 ::: callout-tip
 ## Alternatieve indelingen van variabelen
 
-De indeling van @fig-variabelen is overigens niet de enige manier waarop
-variabelen kunnen worden ingedeeld. Over andere indelingen kun je meer
+De indeling van @fig-variabelen is niet de enige manier waarop
+variabelen kunnen worden ingedeeld. 
+Over andere indelingen kun je desgewenst meer
 lezen in het artikel [Statistical data
 type](https://en.wikipedia.org/wiki/Statistical_data_type) op Wikipedia.
 :::
 
-::: {#exm-NHANES}
+
+
+::: {#exr-typen-vars .pepexr}
+## Typen variabelen.
+
+Van welk type zijn de volgende variabelen?
+
+a.  Bloedgroep (A, B, AB, of O).
+b.  Aantal chromosomen in een cel.
+c.  Opleidingsniveau. Het Centraal Bureau voor de Statistiek (CBS) hanteert vaak 5 niveaus:
+
+    | Onderwijsniveau | Omschrijving          |
+    |---------------:|:----------------------|
+    | 1             | Basisonderwijs        |
+    | 2             | Vmbo, havo-, vwo-onderbouw, mbo1  |
+    | 3             | Havo, vwo, mbo2-4        |
+    | 4             | Hbo-, wo-bachelor        |
+    | 5             | Hbo-, wo-master, doctor  |
+
+    : Onderwijsniveaus gebruikt door het CBS. {#tbl-CBS .striped .hover}
+
+d.  Hartslagfrequentie.
+e.  Verdubbelingstijd van een bacteriekolonie.
+f.  Fitness, gemeten als het aantal nakomelingen van een organisme in
+de volgende generatie.
+:::
+
+::: {#exr-NHANES .Rexr}
 ## Variabelen in de dataset NHANES van de US National Center for Health Statistics
 
 Om de theorie in dit hoofdstuk te illustreren zullen we vaak gebruik
@@ -155,250 +183,102 @@ Amerikanen van alle leeftijden. De deelnemers vullen ook een enquête in.
 De NHANES dataset bevat de gegevens van een groot aantal personen die
 tussen 2009 en 2012 zijn onderzocht.
 
-Je kunt de dataset ook gemakkelijk zelf onderzoeken. De dataset is
-beschikbaar gesteld in de R-package `NHANES`; om de dataset te bekijken
-zul je dat package eenmalig moeten installeren, met het commando:
+Je kunt de dataset ook gemakkelijk zelf onderzoeken met R.
 
-```{r}
-#| eval: false
-#| echo: true
-install.packages("NHANES")
-```
+a.  De dataset is beschikbaar gesteld in een R-package 
+met de naam `NHANES`. 
+    Om de dataset te bekijken moet je dat package eenmalig installeren, 
+    met het commando:
+    ```{r}
+    #| eval: false
+    #| echo: true
+    install.packages("NHANES", dependencies = TRUE)
+    ```
+    
+    Kopieer het commando en voer het uit in R.
 
-Daarna voer je de volgende code uit om de gegevens in te laden in een
-dataframe en binnen RStudio te bekijken:
+b.  Start een nieuw R-script. 
+    Kopieer onderstaande code en plak die in je script.
+    ```{r}
+    #| eval: false
+    library("NHANES") # laad de library 
+    data("NHANES") # laad de dataset "NHANES" in een dataframe
+    View(NHANES).  # open een tab in RStudio om de dataframe te bekijken
+    ```
+    Zorg dat je begrijpt waar de verschillende regels code goed voor zijn
+    en voer ze dan uit.
 
-```{r}
-#| eval: false
-#| echo: true
-#| output: false
-library(NHANES)
-data("NHANES")
-View(NHANES)
-```
+c.  Bekijk de gegevens in RStudio. 
+    Je zult zien dat de dataset bestaat uit een groot aantal regels en
+kolommen. 
+    Iedere regel beschrijft één persoon; 
+    iedere kolom bevat de
+informatie voor één variabele.
 
-Je zult zien dat de dataset bestaat uit een groot aantal regels en
-kolommen. Iedere regel beschrijft één persoon; iedere kolom bevat de
-informatie van één variabele. Er zijn 76 kolommen, en dus 76 variabele
-weergegeven. Daaronder zijn onder andere de burgerlijke staat
-(`MaritalStatus`), lichaamslengte in cm (`Height`), en voor iedere vrouw
-het aantal baby's dat zij op de wereld heeft gezet (`nBabies`).
-Burgerlijke staat is een nominale variabele, lichaamslengte een continue
-variabele, en aantal baby's een discrete variabele.
-:::
-
-::: {#exr-typen-vars}
-## Typen variabelen.
-
-Van welk type zijn de volgende variabelen?
-
-**a.** Bloedgroep bij mensen (A, B, AB, O).
-
-**b.** Aantal chromosomen in een cel.
-
-**c.** Opleidingsniveau. Het CBS hanteert 5 niveaus, waarbij niveau 1
-staat voor "Basisonderwijs", niveau 2 voor "vmbo, mbo1, havo onderbouw",
-etc.
-
-**d.** Hartslagfrequentie.
-
-**e.** Verdubbelingstijd van een bacteriekolonie.
-
-**f.** Fitness, gemeten als het aantal nakomelingen van een organisme in
-de volgende generatie.
-:::
-
-## Typen variabelen in R en `factors`
-
-In @sec-type-variabelen-R heb je geleerd dat R ook onderscheid maakt
-tussen verschillende typen variabelen, zoals `numeric`, `integer`, of
-`character` (@sec-type-variabelen-R). Deze typen komen niet één op één
-overeen met de indeling van @fig-variabelen. Wat is de relatie tussen
-@fig-variabelen en de data-typen van R?
-
-Voor numerieke variabelen zul je vaak het datatype `Numeric` gebruiken,
-waarin getallen met decimalen ("kommagetallen", *floats*) kunnen worden
-opgeslagen. Op zich kan `Numeric` zowel voor continue als voor discrete
-numerieke variabelen gebruikt worden. Maar als een discrete variabele
-alleen gehele waarden kan aannemen ligt `Integer` meer voor de hand. In
-het geheugen van de computer neemt een `Integer` ook minder ruimte in
-dan een `Numerical` (4 bytes in plaats van 8 bytes).
-
-Voor categorische variabelen kan het type `character` worden gebruikt,
-omdat je daarin de waarden van de variabele als een string kunt opslaan.
-Maar binnen R bestaat ook datastructuur die speciaal bedoeld is voor
-categorische data: de `factor`.
-
-Je kunt een vector met strings gemakkelijk omzetten naar een
-factor-variabele, met de functie `factor()`. Om dat te illustreren
-definiëren we in R eerst een vector `voedingsstrategie` van type
-`character`:
-
-```{r}
-# Character vector met de voedingsstrategie van 5 organismen:
-voedingsstrategie <- c("herbivoor", "carnivoor", "omnivoor", "detrivoor", "herbivoor")
-voedingsstrategie
-```
-
-Bekijk de uitvoer; je kunt daaraan zien dat `voedingsstrategie`
-simpelweg een lijstje (vector) met strings is. Met behulp van de functie
-`typeof()` kunnen we bevestigen dat `voedingsstrategie` een variabele is
-van type `character`:
-
-```{r}
-typeof(voedingsstrategie)
-```
-
-Deze vector van type `character` zetten we nu om naar een factor en
-slaan die op onder de naam `factor.voedingsstrategie`:
-
-```{r}
-# Omzetten naar een factor-variabele:
-factor.voedingsstrategie <- factor(voedingsstrategie)
-factor.voedingsstrategie
-```
-
-De uitvoer ziet er subtiel anders uit. De vijf verschillende waarden
-worden weer getoond, maar er is nu een extra regel die begint met het
-woord "Levels". Op die regel worden de verschillende niveaus weergegeven
-van de categorische variabele. In dit geval waren dat "carnivoor",
-"detrivoor", "herbivoor" en "omnivoor". Je kunt de niveaus ook
-rechtstreeks opvragen:
-
-```{r}
-levels(factor.voedingsstrategie)
-```
-
-Laten we eens kijken van welk type de variabele
-`factor.voedingsstrategie` is:
-
-```{r}
-typeof(factor.voedingsstrategie)
-```
-
-Dit is een verrassing: in de factor zijn de gegevens dus opgeslagen als
-een lijst integers (gehele getallen) en niet meer als een lijst strings.
-
-Dit verraadt wat een factor precies is: de oorspronkelijke gegevens zijn
-vervangen door een lijst getallen, in dit geval
-
-```{r}
-#| warning: false
-#| echo: false
- as.integer(factor.voedingsstrategie)
-```
-
-plus een "codetabel" die aangeeft welk niveau ieder getal representeert.
-Hier is de codetabel voor het voorbeeld:
-
-```{r}
-#| warning: false
-#| echo: false
-library(gt)
-
-df <- data.frame(
-  Code = seq(1,4), Level = levels(factor.voedingsstrategie))
-
-gt(df) %>%
-  cols_width(
-    Code ~ px(50),    # Set width (pixels or other CSS units)
-    Level ~ px(150)
-  ) %>%
-  cols_align(
-    align = "left"    # Left-align all text
-  )
-
-
-# Create a code table mapping integers to levels
-code_table <- data.frame(Code = seq_along(levels(factor.voedingsstrategie)), 
-                         Level = levels(factor.voedingsstrategie))
-
-```
-
-Het feit dat de gegevens nu opgeslagen zijn als integers heeft veel
-voordelen. Integers gebruiken veel minder geheugen dan strings. Dat
-scheelt vooral als de dataset groot is en een klein aantal niveaus heel
-vaak worden gebruikt. Bovendien, doordat factoren intern als integers
-worden behandeld zijn operaties zoals groeperen, filteren en sorteren
-ook vaak sneller dan bij character vectors. Tot slot zijn er veel
-belangrijke functies in R die een factor verwachten als input. (Vanaf
-@sec-toetsen-gemiddelden hebben we ze daarom hard nodig!)
-
-::: {#exr-factoren}
-## Factors en niveaus
-
-In de code hieronder wordt een dataframe geconstrueerd met daarin
-gegevens over meerdere spelers van een videogame. Eerst worden de
-gegevens opgeslagen in meerdere vectoren; daarna worden ze samengevoegd
-tot een dataframe.
-
-```{r}
-#| execute: false
-
-naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
-level <- c(8, 1, 3, 2, 10)
-totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
-klassement <- c("Goud", "Brons", "Zilver", "Zilver", "Goud")
-console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
-
-df = data.frame(naam, level, totale_speeltijd, klassement, console)
-```
-
-**a.** Schrijf voor elke vector het type variabele op volgens het schema
-van @fig-variabelen.
-
-**b.** Om de data efficiënter te kunnen opslaan en analyseren willen we
-sommige variabelen omzette in een factor. Welke variabelen komen daar
-het meest voor in aanmerking?
-
-**c.** Pas de code hierboven aan zodat de vector `klassement` een factor
-wordt. Run de nieuwe code in R.
-
-
-**d.** Gebruik de functie `levels()` om te bepalen wat de levels zijn
-van de vector `klassement`.
-
-
-
-We willen op een andere manier naar de data kijken door Brons en Zilver
-de nieuwe naam "Laag" te geven en Goud de nieuwe naam "Hoog".
-
-**e.** Voeg de onderstaande regels toe aan je code, beschrijf wat er is
-veranderd in de dataset.
-
-```
-df$klassement
-levels(df$klassement) <- c("Laag", "Hoog", "Laag")
-levels(df$klassement)
-```
-
+    Een van de variabelen is burgerlijke staat
+(`MaritalStatus`).
+    Zoek die kolom op, en kijk door de waarden.
+    Van welk type is deze variabele volgens het systeem van @fig-variabelen?
+d.  Zoek ook de kolom voor variabele lichaamslengte (`Height`).
+    
+    - Van welk type is deze variabele?
+    
+    - Welke eenheid wordt gebruikt?
+    
+    (Tip: Bij twijfel gebruik je het commando `?NHANES` om de Help-files te bekijken;
+    daar staat voor iedere variabele informatie.)
+e.  Zoek de kolom voor `nBabies`.
+    Voor iedere vrouw vanaf 20 jaar is daar het aantal baby's weergegeven 
+    dat zij op de wereld heeft gezet.
+    
+    - Van welk type is deze variabele?
+    
+    - Wat is er bij mannen ingevuld?
+    
+    - Wat is er bij vrouwen ingevuld als zij geen babies hebben?
+f.  Voer het volgende commando toe aan je script en voer het uit:
+    ```{r}
+    #| eval: false
+    str(NHANES)
+    ```
+    De functie `str()` geeft de structuur van het data frame weer.
+    
+    - Van hoeveel personen is er informatie opgenomen in deze dataset?
+    
+    - Hoeveel variabelen zijn er?
 :::
 
 ## De verdeling van een variabele
 
 In de praktijk willen we vaak weten hoe de waarden van een variabele
-over de mogelijke waarden zijn verspreid. We noemen dat de **verdeling**
-van de variabele.
+over de mogelijke waarden zijn verspreid. We noemen dat de **verdeling** van de variabele.
 
 ### Histogrammen
 
-Als de variabele numeriek is, kunnen we zijn verdeling in een dataset
-visualiseren met een **histogram**. @fig-histogram-agemonth hieronder
-laat een voorbeeld zien: een histogram van de variabele `AgeMonths`
-(leeftijd in maanden) van de personen in de dataset NHANES die we in
-@exm-NHANES hebben besproken.
+Als de variabele numeriek is, kunnen we zijn verdeling
+visualiseren met een **histogram**. @Fig-histogram-agemonth hieronder
+laat een voorbeeld zien voor variabele `AgeMonths`
+(leeftijd in maanden) uit de dataset NHANES die we in
+@exr-NHANES hebben bekeken
 
 ```{r}
 #| code-fold: true
 #| warning: false
 #| fig.cap: "Histogram van leeftijd in de dataset NHANES."
 #| label: fig-histogram-agemonth
-#| fig.width: 4.5
-#| fig.height: 3.5
-#| out.width: "64%"
+#| fig.width: 4
+#| fig.height: 3
+#| out.width: "57%"
 
-library(ggplot2) # gebruik package ggplot2 voor het plotten
-library(NHANES)
+
+# Controleer of ggplot2 en NHANES zijn geladen
+if (!("ggplot2" %in% .packages())) { 
+  library(ggplot2) 
+}
+if (!("NHANES" %in% .packages())) { 
+  library(NHANES) 
+}
+
 data("NHANES")
 
 ggplot(
@@ -406,7 +286,7 @@ ggplot(
   aes(x = AgeMonths)
   ) +
   geom_histogram(
-    fill = "#e8601d", 
+    fill = opvulkleur, 
     color = "black",
     binwidth = 36,
     boundary = 0,
@@ -422,10 +302,11 @@ ggplot(
 
 Een histogram is opgebouwd uit staafjes. De hoogte van die staafjes
 geeft weer hoe vaak een leeftijd binnen een bepaalde leeftijdscategorie
-valt; dat wordt de **frequentie** van die categorie genoemd. We zullen
-later uitgebreider terugkomen op histogrammen en andere manieren om
-verdelingen te visualiseren (@sec-hist-en-freqpoly), maar gaan er voor
-nu vanuit dat histogrammen niet nieuw voor je zijn.
+valt; dat wordt de **frequentie** van die categorie genoemd. We komen
+later uitgebreider terug op histogrammen en andere manieren om
+verdelingen te visualiseren (@sec-hist-en-freqpoly), 
+maar gaan ervan uit dat histogrammen niet nieuw voor je zijn.
+
 
 ### Kwalitatieve beschrijvingen van de verdeling numerieke variabelen {#sec-terminologie}
 
@@ -436,20 +317,20 @@ Een verdeling is **symmetrisch** als de vorm van het histogram (grofweg)
 spiegelsymmetrisch is. Als dat niet zo is, dan is de verdeling
 **scheef**. Het woord scheef wordt vooral gebruikt als de verdeling een
 "staart" heeft naar links of naar rechts. Heeft de verdeling een staart
-aan de linkerkant, dan wordt het een **links-scheve** verdeling genoemd;
-zit de staart aan de rechterkant, dan is het een **rechts-scheve**
-verdeling. In @fig-symmetrisch zijn voorbeelden weergegeven.
+aan de linkerkant, dan is hij **links-scheef**;
+zit de staart aan de rechterkant, dan is hij een **rechts-scheef**. 
+@Fig-symmetrisch laat voorbeelden zien.
 
 ```{r}
 #| code-fold: true
 #| warning: false
 #| fig.width: 7
 #| fig.height: 2.2
-#| fig.cap: "Illustraties1 van scheve en symmetrische verdelingen."
+#| fig.cap: "Illustraties van scheve en symmetrische verdelingen."
 #| label: fig-symmetrisch
 #| out.width: "100%"
 
-# Laad benodigde bibliotheken
+# Controleer of ggplot2 geladen is
 if (!("ggplot2" %in% .packages())) { 
   library(ggplot2) 
 }
@@ -457,57 +338,62 @@ if (!("ggplot2" %in% .packages())) {
 # Stel een seed in voor reproduceerbaarheid
 set.seed(123)
 
-samplesize <- 3 * 10^3  # Aantal punten per histogram
-nr.bins <- 25           # Aantal bins voor de histogrammen
+# Definieer parameters
+aantal_punten <- 3 * 10^3  # Aantal punten per histogram
+aantal_bins <- 25          # Aantal bins voor de histogrammen
 
-# Genereer steekproeven met gamma- en normale verdelingen
+# Genereer steekproeven uit gamma- en normale verdelingen
 data <- data.frame(
   x = c(
-    -rgamma(samplesize, shape = 3, scale = 1),  # Links-scheve verdeling
-    rnorm(samplesize),                          # Symmetrische verdeling
-    rgamma(samplesize, shape = 3, scale = 1)    # Rechts-scheve verdeling
+    -rgamma(aantal_punten, shape = 3, scale = 1),  # Links-scheef
+    rnorm(aantal_punten),                          # Symmetrisch
+    rgamma(aantal_punten, shape = 3, scale = 1)    # Rechts-scheef
   ),
-  group = factor(
+  groep = factor(
     rep(
       c("Links-scheef", "Symmetrisch", "Rechts-scheef"), 
-      each = samplesize
+      each = aantal_punten
     )
   )
 )
 
-# Plot met facet_wrap
+# Plot de histogrammen per verdelingstype
 ggplot(data, aes(x = x)) +
-  geom_histogram(bins = nr.bins, fill = opvulkleur, color = "black") +
-  facet_wrap(~group, nrow = 1, scales = "free_x") +  # Maak drie panelen naast elkaar
+  geom_histogram(
+    bins = aantal_bins, 
+    fill = opvulkleur, 
+    color = "black"
+    ) +
+  facet_wrap(~groep, nrow = 1, scales = "free_x") + 
   labs(
-    x = "Waarde",           # Gezamenlijk label voor de x-as
-    y = "Frequentie"        # Gezamenlijk label voor de y-as (alleen links)
+    x = "Waarde", 
+    y = "Frequentie"
   ) +
   theme_minimal() +
   theme(
-    strip.text = element_text(face = "bold"),  # Dikke tekst voor facet-labels
-    axis.text.y = element_text(size = 9),      # Y-as-ticks alleen voor het linker paneel
-    axis.ticks.y = element_line(),             # Y-as-ticks inschakelen voor links
-    panel.spacing = unit(1, "lines")           # Ruimte tussen panelen vergroten
+    strip.text = element_text(face = "bold"),  
+    axis.text.y = element_text(size = 9),      
+    axis.ticks.y = element_line(),             
+    panel.spacing = unit(1, "lines")           
   )
 ```
 
 Verdelingen binnen de biologie en daarbuiten hebben vaak de vorm van een
-kerkklok. We noemen ze dan **klokvormig** (zie figuur @fig-klokvorm).
+kerkklok (@fig-klok). We noemen ze dan **klokvormig**.
 Klokvormige verdelingen spelen later in de cursus een grote rol.
 
-::: {#fig-klok layout-ncol="2"}
-![Kerkklok (gegenereerd door DALL·E
-3)](figuren/ChurchBell.webp){#fig-kerkklok
+::: {#fig-klok layout="[2.6, 4]" out-width="100%"}
+![Kerkklok (gemaakt met DALL·E
+3)](figuren/ChurchBell.webp){#fig-klok-a
 width="2.6in"}
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 3
-#| fig.height: 2.5
-#| fig.cap: "Klokvormige verdeling"
-#| label: fig-klokvorm
+#| fig.width: 4.4
+#| fig.height: 3
+#| fig.cap: "Klokvormige verdeling."
+#| label: fig-klok-b
 
 # kies een random seed om de figuur reproduceerbaar te maken
 set.seed(125)
@@ -539,8 +425,9 @@ in het domein tussen 0 en 1.
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 5
+#| fig.width: 4
 #| fig.height: 2.5
+#| out-width: "57%"
 #| fig.cap: "Histogram van een ongeveer uniforme verdeling."
 #| label: fig-uniform
 
@@ -575,81 +462,96 @@ ggplot(data.frame(x = data_unif), aes(x)) +
 Een verdeling die één piek heeft noemen we **unimodaal**. Een verdeling
 met twee pieken is **bimodaal** (zie @fig-bimodaal). Voor verdelingen
 met nog meer pieken bestaan ook namen (trimodaal, quadrimodaal,
-pentamodaal, ...), maar die namen worden in de praktijk zelden gebruikt.
+pentamodaal, ...), maar die worden in de praktijk zelden gebruikt.
 
 ```{r}
 #| code-fold: true
 #| warning: false
 #| fig.width: 6
 #| fig.height: 2.5
+#| out.width: "86%"
 #| fig.cap: "Unimodale en bimodale verdelingen."
 #| label: fig-bimodaal
 
-# Laad benodigde bibliotheken
-if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
+# Controleer of ggplot2 geladen is
+if (!("ggplot2" %in% loadedNamespaces())) { 
+  library(ggplot2) 
+}
 
 # Stel een seed in voor reproduceerbaarheid
 set.seed(123)
 
-samplesize <- 3 * 10^3  # Aantal punten per histogram
-nr.bins <- 30           # Aantal bins voor de histogrammen
+# Definieer parameters
+aantal_punten <- 3 * 10^3  # Aantal punten per histogram
+aantal_bins <- 30          # Aantal bins voor de histogrammen
 
-# Genereer steekproeven van twee gammaverdelingen
-data_left_skewed <- -rgamma(samplesize / 3, shape = 8, scale = 1) + 3
-data_right_skewed <- rgamma(samplesize * 2 / 3, shape = 8, scale = 1) - 3
+# Genereer steekproeven van twee gamma-verdelingen
+data_links_scheef <- -rgamma(
+  round(aantal_punten * 0.55), 
+  shape = 8, scale = 1
+  ) + 3
+data_rechts_scheef <- rgamma(
+  round(aantal_punten * 0.45), 
+  shape = 8, scale = 1
+  ) - 3
+
 # Combineer om een bimodale verdeling te maken
-data_bi <- c(data_left_skewed, data_right_skewed)
+data_bimodaal <- c(data_links_scheef, data_rechts_scheef)
 
 # Genereer een unimodale verdeling (Poisson)
-data_uni <- rpois(samplesize, lambda = 10)
+data_unimodaal <- rpois(aantal_punten, lambda = 10)
 
 # Combineer gegevens en voeg een groepsvariabele toe
 data <- data.frame(
-  x = c(data_uni, data_bi),
-  group = factor(
+  x = c(data_unimodaal, data_bimodaal),
+  groep = factor(
     rep(
       c("Unimodaal", "Bimodaal"), 
-      each = samplesize
-      ), 
+      each = aantal_punten
+    ), 
     levels = c("Unimodaal", "Bimodaal")
-    )
+  )
 )
 
-# Plot met facet_wrap
+# Plot de histogrammen per verdelingstype
 ggplot(data, aes(x = x)) +
   geom_histogram(
-    data = subset(data, group == "Unimodaal"),
-    binwidth = 1, fill = opvulkleur, color = "black"
+    data = subset(data, groep == "Unimodaal"),
+    binwidth = 1, 
+    fill = opvulkleur, 
+    color = "black"
   ) +
   geom_histogram(
-    data = subset(data, group == "Bimodaal"),
-    bins = nr.bins, fill = opvulkleur, color = "black"
+    data = subset(data, groep == "Bimodaal"),
+    bins = aantal_bins, 
+    fill = opvulkleur, 
+    color = "black"
   ) +
-  facet_wrap(~group, nrow = 1, scales = "free_x") +  # Creëer twee panelen naast elkaar
+  facet_wrap(~groep, nrow = 1, scales = "free_x") +  
   labs(
-    x = "Waarde",           # Gezamenlijk label voor de x-as
-    y = "Frequentie"        # Gezamenlijk label voor de y-as (alleen links)
+    x = "Waarde",  
+    y = "Frequentie"
   ) +
   theme_minimal() +
   theme(
-    strip.text = element_text(face = "bold"),  # Dikke tekst voor facet-labels
-    axis.text.y = element_text(size = 9),      # Y-as-ticks alleen voor het linker paneel
-    axis.ticks.y = element_line(),             # Y-as-ticks inschakelen voor links
-    axis.text.x = element_text(size = 9),      # X-as-ticks inschakelen
-    axis.ticks.x = element_line(),             # X-as-ticks inschakelen
-    panel.spacing = unit(1, "lines")           # Ruimte tussen panelen vergroten
+    strip.text = element_text(face = "bold"),  
+    axis.text.y = element_text(size = 9),      
+    axis.ticks.y = element_line(),             
+    axis.text.x = element_text(size = 9),      
+    axis.ticks.x = element_line(),             
+    panel.spacing = unit(1, "lines")           
   )
 ```
 
 Multimodale verdelingen ontstaan vaak als binnen een steekproef meerdere
-deelpopulaties voorkomen die ieder een verschillend gemiddelde hebben. De
-variabele `Weight` (lichaamsgewicht) uit de dataset NHANES is een
+deelpopulaties voorkomen met ieder een verschillend gemiddelde.
+De variabele `Weight` (lichaamsgewicht) uit de dataset NHANES is een
 voorbeeld.
 
 ::: {#exm-histogram}
 ## De verdeling van `Weight` is bimodaal in de dataset NHANES
 
-De verdeling van `Weight` (lichaamsgewicht) in de gegevens van NHANES
+De verdeling van `Weight` (lichaamsgewicht) in de dataset NHANES
 ziet er als volgt uit:
 
 ```{r}
@@ -658,7 +560,8 @@ ziet er als volgt uit:
 #| fig.cap: "Histogram van de lichaamsgewichten uit de NHANES-dataset."
 #| label: fig-histogram
 #| fig.width: 4.5
-#| fig.height: 3.5
+#| fig.height: 3
+#| out.width: "64%"
 
 ggplot(
   data = NHANES, 
@@ -680,25 +583,12 @@ ggplot(
 ```
 
 Het histogram laat twee pieken zien: één rond 20 kg, en één in de buurt
-van 75 kg. De verdeling is dus bimodaal. Het is duidelijk hoe dit komt:
-In de dataset zijn zowel kinderen als volwassenen opgenomen. De twee
-pieken van deze verdeling corresponderen dus met typische gewichten van
-kinderen en volwassenen.
+van 75 kg. De verdeling is dus bimodaal. 
+In @exr-pieken ga je zelf aantonen
+waar die twee pieken vandaan komen.
 :::
 
-::: {#exr-pieken}
-## De twee pieken in de verdeling
 
-In @exm-histogram zagen we dat de verdeling van lichaamsgewichten in de
-dataset NHANES bimodaal is. Schrijf een heel kort script in R dat uit
-de dataset alleen kinderen tot een leeftijd van 150 maanden selecteert
-en een histogram produceert van hun lichaamsgewicht. Laat op die manier
-zien dat deze groep verantwoordelijk is voor de piek rond 20 kg.
-Selecteer vervolgens alleen min-of-meer volwassenen (vanaf 150 maanden)
-en laat zien dat hun verdeling unimodaal is met een piek rond 75 kg.
-
-
-:::
 
 ## De cumulatieve verdeling van een variabele {#sec-cumul}
 
@@ -710,22 +600,26 @@ dit uit aan de hand van een voorbeeld.
 ## De cumulatieve verdeling van lichaamsgewicht
 
 In @fig-cumul is als voorbeeld de cumulatieve verdeling van `Weight`
-(lichaamsgewicht) weergegeven (de [oranje]{style="color:#e8601d;"}
+(lichaamsgewicht) weergegeven (de [oranje]{style="color:darkorange;"}
 curve). Voor elk lichaamsgewicht op de $x$-as geeft de $y$-as aan welke
-proportie van de waarnemingen zich onder of op die waarde bevindt; dat
-wordt wel eens de **cumulatieve proportie** genoemd. Je kunt uit deze
-grafiek bijvoorbeeld aflezen (zie de [rode]{style="color:red;"}
+proportie van de waarnemingen zich onder of op die waarde bevindt; 
+dat wordt de **cumulatieve proportie** genoemd. Je kunt uit deze
+grafiek bijvoorbeeld aflezen (zie de [paarse]{style="color:darkorchid;"}
 onderbroken lijnen) dat 86% van de mensen een gewicht heeft van maximaal
 100kg. Dit betekent dat de overige 14% méér weegt dan 100 kg.
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. De rode onderbroken lijnen laten zien dat 86% van de mensen in de dataset hoogstens 100kg weegt."
+#| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. 
+#| De paarse onderbroken lijnen laten zien dat 86% van de mensen in de dataset 
+#| hoogstens 100kg weegt."
 #| label: fig-cumul
-#| fig.width: 7
+#| fig.width: 5
 #| fig.height: 3.5
+#| out.width: "71.4%"
 
+# Maak een cumulatieve verdelingsplot
 cumulplot <- ggplot(NHANES, aes(x = Weight)) +
   stat_ecdf(
     geom = "step", 
@@ -734,55 +628,69 @@ cumulplot <- ggplot(NHANES, aes(x = Weight)) +
     bw = 2
   ) +
   labs(
-    title = NULL,
     x = "Lichaamsgewicht",
     y = "Cumulatieve proportie"
   ) + 
   theme_minimal()
 
 # Definieer het kruispunt van de lijnen
-kruising <- c(100, 0.86)
+kruispunt <- c(100, 0.86)
 
 cumulplot +
-  # Voeg een horizontale stippellijn toe bij de cumulatieve proportie van 0.86
+  # Voeg een horizontale stippellijn toe bij 0.86
   geom_segment(
     aes(
-      x = 0, xend = kruising[1], 
-      y = kruising[2], yend = kruising[2]
+      x = 0, xend = kruispunt[1], 
+      y = kruispunt[2], yend = kruispunt[2]
     ), 
     linetype = "dashed", 
-    color = lijnkleur2, 
+    color = lijnkleur1, 
     size = 1
   ) +
-  # Voeg een verticale stippellijn toe bij het gewicht van 100 kg
+  # Voeg een verticale stippellijn toe bij 100 kg
   geom_segment(
     aes(
-      x = kruising[1], xend = kruising[1], 
-      y = 0, yend = kruising[2]
+      x = kruispunt[1], xend = kruispunt[1], 
+      y = 0, yend = kruispunt[2]
     ), 
     linetype = "dashed", 
-    color = lijnkleur2, 
+    color = lijnkleur1, 
     size = 1
   ) +
   # Voeg een punt toe op het kruispunt van de lijnen
   geom_point(
-    aes(x = kruising[1], y = kruising[2]), 
-    color = lijnkleur2, 
+    aes(x = kruispunt[1], y = kruispunt[2]), 
+    color = lijnkleur1, 
     size = 3
   ) +
-  # Pas de y-as aan om een extra label toe te voegen bij 0.86
   scale_y_continuous(
-    breaks = function(limits) c(0.86, scales::extended_breaks()(limits)),
+    breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.86, 0.9, 1),  
+    minor_breaks = c(0.25 / 2, 0.375, 0.625, 0.875),  
     labels = function(breaks) ifelse(breaks == 0.86, "0.86", breaks)
   )
 ```
 :::
 
-De cumulatieve proportie neemt altijd toe naarmate de waarde op de
-$x$-as groter wordt, omdat dan steeds meer waarnemingen kleiner zijn dan
-de waarde op de $x$-as. Hierdoor is de cumulatieve verdeling een
+De cumulatieve proportie neemt van links naar rechts altijd toe, 
+omdat bij grotere waarden op de $x$-as het aantal waarnemingen kleiner dan die waarde ook groter is. 
+Hierdoor is de cumulatieve verdeling altijd een
 stijgende functie die begint bij 0 (bij de kleinste waarde binnen de
 waarnemingen) en eindigt bij 1 (bij de grootste waarde).
+
+::: {#exr-cumul .pepexr}
+## De cumulatieve verdeling
+
+Gebruik @fig-cumul om de antwoorden te schatten op de volgende vragen.
+
+a.  Welk percentage van de mensen weegt hoogstens 75kg?
+
+b.  Welk percentage van de mensen weegt tenminste 50kg?
+
+c.  Welk percentage van de mensen heeft een gewicht tussen 75 en 100kg?
+
+d.  Stel, we selecteren de lichtste 10% van deze populatie.
+    Hoeveel weegt de zwaarste persoon in deze groep?
+:::
 
 ## Ligging en spreiding van een verdeling
 
@@ -811,14 +719,15 @@ verschilt hun ligging maar is hun spreiding gelijk. De twee histogrammen
 aan de rechterkant liggen ongeveer op dezelfde plek, gecentreerd op de
 waarde 0, maar in het onderste histogram zijn de waarden over een groter
 domein verspreid. (De piek is breder.) Daarom verschilt hun spreiding,
-maar hun ligging is gelijk.
+maar is hun ligging gelijk.
 
 ```{r}
 #| code-fold: true
 #| warning: false
 #| fig.width: 8
 #| fig.height: 4.2
-#| fig.cap: "Illustratie van ligging en spreiding."
+#| out.width: "100%"
+#| fig.cap: "Illustratie van de begrippen ligging en spreiding."
 #| label: fig-ligging-spreiding
 
 # Laad benodigde bibliotheken
@@ -880,12 +789,12 @@ paneel_titels <- data.frame(
   )
 )
 
-annotatie_linksboven <- data.frame(
+annotatie_linksonder <- data.frame(
   x = c(gemiddelde1 - 2.5),
   xend = c(gemiddelde2 + 1),
   y = c(500),
   yend = c(500),
-  groep = "Zelfde spreiding, verschillende ligging"
+  groep = "Linksonder"
 )
 
 annotatie_rechtsboven <- data.frame(
@@ -904,22 +813,23 @@ annotatie_rechtsonder <- data.frame(
   groep = "Rechtsonder"
 )
 
-# Basisplot
+# plot
 basis_plot <- ggplot(data, aes(x = waarden)) +
   geom_histogram(
     binwidth = 0.5, 
+    boundary = 0,
     fill = opvulkleur, 
     color = "black"
   ) +
   geom_segment(
-    data = annotatie_linksboven,
+    data = annotatie_linksonder,
     aes(x = x, xend = xend, y = y, yend = yend),
     arrow = arrow(length = unit(0.3, "cm")), 
     color = lijnkleur3,  
     size = 1.2
   ) +
   geom_segment(
-    data = annotatie_linksboven,
+    data = annotatie_linksonder,
     aes(x = x, xend = x, y = y - 100, yend = yend + 100),
     color = lijnkleur3,  
     size = 1.2
@@ -983,21 +893,26 @@ iedere maat net anders gedefinieerd.
 
 ### De modus
 
-De eerste centrummaat is de **modus**. In het algemeen wordt met de
-modus de waarde bedoeld die het vaakst voorkomt. Bij categorische
-variabelen kun je simpelweg tellen welke uitkomst dat is. Bij numerieke
+De eerste centrummaat is de **modus**. 
+Met de modus wordt de waarde bedoeld die het vaakst voorkomt. 
+Bij categorische
+variabelen kun je simpelweg tellen welke uitkomst dat is. 
+Bij numerieke
 variabelen wordt meestal het interval bedoeld dat hoort bij de hoogste
 staaf van het histogram. Als er meerdere pieken zijn, dan zijn er
 meerdere modi (meervoud van modus). Daar komen ook de woorden unimodaal,
-bimodaal, etc. vandaan. In @fig-histogram, het histogram van `Weight`,
+bimodaal, etc. vandaan. 
+In @fig-histogram, het histogram van `Weight`,
 waren twee pieken te zien. Er zijn dan ook twee modi: het interval
 $[15,20)$ en het interval $[75,80)$.
 
-### De mediaan
+### De mediaan {#sec-mediaan}
 
 Een andere veel gebruikte centrummaat is de **mediaan**. In dit boek
 noteren we de mediaan van een serie waarnemingen $x_1$, $x_2$, $\ldots$
-als $\tilde{x}$. Om de mediaan te berekenen sorteer je de waarnemingen
+als $\tilde{x}$. 
+
+Om de mediaan te berekenen sorteer je de waarnemingen
 eerst van klein naar groot. Als het aantal waarnemingen $n$ oneven is,
 dan is de mediaan het middelste getal in de gesorteerde rij. Als het
 aantal waarnemingen $n$ even is, dan bestaat zo'n middelste getal niet;
@@ -1014,44 +929,47 @@ je cijfers?
 
 We sorteren de cijfers en krijgen
 
-$$1;\quad 7;\quad {\color{orange}7{,}5};\quad 8{,}5;\quad 9.$$
+$$1;\quad 7;\quad {\color{darkorange}7{,}5};\quad 8{,}5;\quad 9.$$
 
-Het getal midden in de rij is de ${\color{orange}7{,}5}$ en dus is de
-mediaan gelijk aan ${\color{orange}7{,}5}$.
+Het getal midden in de rij is de ${\color{darkorange}7{,}5}$ en dus is de
+mediaan gelijk aan ${\color{darkorange}7{,}5}$.
 
 Als je voor het volgende tentamen een 10 haalt, verandert de gesorteerde
 reeks als volgt:
 
-$$1;\quad 7;\quad {\color{orange}7{,}5};\quad {\color{orange}8{,}5};\quad 9; \quad 10.$$
+$$1;\quad 7;\quad {\color{darkorange}7{,}5};\quad {\color{darkorange}8{,}5};\quad 9; \quad 10.$$
 
 Omdat het aantal tentamencijfers nu even is, is er geen middelste getal
 meer. Als mediaan nemen we daarom het gemiddelde van de *twee* middelste
 getallen:
 
-$$\tilde{x}=\frac{{\color{orange}7{,}5} + {\color{orange}8{,}5}}{2} = 8.$$
+$$\tilde{x}=\frac{{\color{darkorange}7{,}5} + {\color{darkorange}8{,}5}}{2} = 8.$$
 :::
 
 De mediaan is dus een "typische" of representatieve waarde in de zin dat
 er evenveel waarden groter zijn als kleiner. Dat hoeft bij de modus en
 het gemiddelde niet zo te zijn.
 
-In @sec-cumul hebben we de cumulatieve verdeling besproken. De mediaan
-is per definitie de waarde waarbij de cumulatieve proportie gelijk is
-aan $0{,}5$. De mediaan kan daarom uit de cumulatieve verdeling worden
+In @sec-cumul hebben we de cumulatieve verdeling besproken. 
+Per definitie is de helft van de waarnemingen kleiner dan de mediaan;
+dat wil zeggen dat de cumulatieve proportie die hoort bij de mediaan
+gelijk is aan $0{,}5$. 
+De mediaan kan daarom uit de cumulatieve verdeling worden
 afgelezen door de waarde op de $x$-as te bepalen die hoort bij een
 cumulatieve proportie van $0{,}5$. In @fig-cumul-2a is net als in
 @exm-cumul-weight de cumulatieve verdeling van de variabele `Weight`
-(lichaamsgewicht) weergegeven. Het rode kruis geeft de mediaan van
-lichaamsgewicht aan. De rode lijnen laten zien dat de cumulatieve
-proportie daar precies $0{,}5$ is.
+(lichaamsgewicht) weergegeven. Het [paarse]{style="color:DarkOrchid;"} kruis geeft de mediaan van
+lichaamsgewicht aan. De [paarse]{style="color:DarkOrchid;"} lijnen laten zien dat de cumulatieve
+proportie daar inderdaad $0{,}5$ is.
 
 ```{r}
 #| code-fold: true
 #| warning: false
 #| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. De mediaan is met een kruis op de $x$-as aangegeven. De mediaan is gedefineerd als de waarde zodanig dat de helft van de waarnemingen kleiner is en de helft groter. Daarom bereikt de cumulatieve verdeling op dat punt precies een half."
 #| label: fig-cumul-2a
-#| fig.width: 7
-#| fig.height: 3.5
+#| fig.width: 5
+#| fig.height: 2.5
+#| out.width: "71.4%"
 
 # Bereken de kwartielen van de Weight-variabele
 quantiles <- quantile(
@@ -1069,7 +987,7 @@ cumulplot_median <- cumulplot +
       y = 0.5, yend = 0.5
     ),
     linetype = "dashed", 
-    color = lijnkleur2, 
+    color = lijnkleur1, 
     size = 1
   ) +
   # Verticale lijn bij de mediaan
@@ -1079,7 +997,7 @@ cumulplot_median <- cumulplot +
       y = 0, yend = 0.5
     ),
     linetype = "dashed", 
-    color = lijnkleur2, 
+    color = lijnkleur1, 
     size = 1
   ) +
   # Punt op het kruispunt van mediaan en cumulatieve proportie 0.5
@@ -1088,7 +1006,7 @@ cumulplot_median <- cumulplot +
       x = quantiles[2], 
       y = 0.5
     ),
-    color = lijnkleur2, 
+    color = lijnkleur1, 
     size = 3
   ) +
   # Kruis op de x-as bij de mediaan
@@ -1097,7 +1015,7 @@ cumulplot_median <- cumulplot +
       x = quantiles[2], 
       y = 0
     ),
-    color = lijnkleur2, 
+    color = lijnkleur1, 
     shape = 4, 
     size = 3, 
     stroke = 2
@@ -1129,11 +1047,12 @@ vergelijkbaar met huisnummers in een straat. Zo'n nummer noemen we een
 **index**, en omdat we het aantal waarnemingen $n$ is lopen de indices
 (meervoud van index) van 1 tot $n$. De waarde van de waarneming met
 index 1 noteren we als $x_1$, de waarde van de waarneming met index 2
-als $x_2$, enzovoort. Het sommatieteken is geïntroduceerd in
-@sec-sommatieteken. Het gemiddelde van de waarnemingen, geschreven als
+als $x_2$, enzovoort. Het gemiddelde van de waarnemingen, geschreven als
 $\mean{x}$, en kunnen we nu definiëren met de volgende formule: $$
 \mean{x} = \frac{\sum_{i=1}^n x_i}{n}.
 $$ {#eq-gemiddelde}
+(Ken je het sommatieteken nog? Kijk anders terug naar
+@sec-sommatieteken.)
 
 Je hebt al lang geleden geleerd wat een gemiddelde is en bent er
 waarschijnlijk volledig aan gewend. Maar waarom is het gemiddelde
@@ -1148,14 +1067,15 @@ als kralen die op een getallenlijn geregen zijn, zoals in
 @fig-zwaartepunt hieronder. Het gemiddelde is nu precies het zwaartepunt
 van de kralen. Dat wil zeggen: als de getallenlijn in @fig-zwaartepunt
 een dun stokje is met een verwaarloosbaar gewicht, en je het stokje
-precies met het gemiddelde op het [oranje]{style="color:#e8601d;"}
-driehoekje plaatst, dan blijft het geheel precies in balans.
+precies met het gemiddelde op het [oranje]{style="color:darkorange;"}
+driehoekje plaatst, dan blijft het geheel in balans.
 
 ```{r}
 #| code-fold: true
 #| warning: false
 #| fig.width: 7
 #| fig.height: 2
+#| out.width: "80%"
 #| fig-cap: "Het gemiddelde als het zwaartepunt van de getallen"
 #| label: fig-zwaartepunt
 # Plot de volgende getallen
@@ -1208,7 +1128,7 @@ doordat de 1 zo ver van de andere cijfers ligt kan deze in z'n eentje
 als tegengewicht dienen voor alle overige getallen. Het is duidelijk de
 moeite waard om deze toets te herkansen!
 
-::: {#exr-cijfer}
+::: {#exr-cijfer .pepexr}
 ## Gevoeligheid voor uitbijters
 
 Stel dat je het tentamen waarvoor je een 1 had gehaald mag herkansen. Je
@@ -1216,12 +1136,13 @@ haalt voor het hertentamen een 7.
 
 a.  Wat is het effect op je gemiddelde cijfer?
 b.  Wat is het effect op de mediaan?
+c.  Welke waarde is gevoeliger voor uitbijters?
 :::
 
-Een ander nuttig perspectief wordt geïllustreerd in @fig-res-1
+Een ander nuttig perspectief is @fig-res-1
 hieronder. Dezelfde tentamencijfers zijn nu op de *verticale* as geplot.
 (De horizontale positie van de punten is willekeurig.) De
-[oranje]{style="color:#e8601d;"} lijn markeert het gemiddelde
+[oranje]{style="color:darkorange;"} lijn markeert het gemiddelde
 $\mean{x}$. Vanuit ieder punt is een verticale grijze lijn getekend naar
 het gemiddelde.
 
@@ -1229,9 +1150,9 @@ het gemiddelde.
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 2.5
-#| fig.height: 4
-#| out.width: "60%"
+#| fig.width: 2
+#| fig.height: 3.5
+#| out.width: "57%"
 #| fig-cap: "Elastiekjes trekken de oranje lijn precies naar het gemiddelde."
 #| label: fig-res-1
 
@@ -1299,9 +1220,9 @@ ggplot(data, aes(x = x, y = y)) +
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.width: 2.5
-#| fig.height: 4
-#| out.width: "60%"
+#| fig.width: 2
+#| fig.height: 3.5
+#| out.width: "57%"
 #| fig-cap: "Voorbeeld met slechts drie punten. De paarse lijn minimaliseert som van de afstanden tot de punten; de oranje lijn die het gemiddelde aangeeft minimaliseert de kwadratensom."
 #| label: fig-res-2
 
@@ -1361,7 +1282,7 @@ ggplot(data, aes(x = x, y = y)) +
   ) +
   # Y-as instellen
   scale_y_continuous(
-    breaks = c(1.0, data$y), 
+    breaks = c(1.0, data$y, 8.0), 
     limits = c(1.0, max(data$y)),
     labels = scales::number_format(accuracy = 0.1)
   ) +
@@ -1388,16 +1309,11 @@ lijntjes zo kort mogelijk maakt. Dat is helaas *niet* het geval. Om dat
 te begrijpen, gebruiken we een voorbeeld met slechts drie cijfers.
 @fig-res-2 laat de situatie zien. De drie tentamencijfers zijn hier één
 zes en twee negens. Het gemiddelde is natuurlijk 8 (de
-[oranje]{style="color:#e8601d;"} lijn). De totale lengte van de
+[oranje]{style="color:darkorange;"} lijn). De totale lengte van de
 grijze lijntjes kun je in dit voorbeeld gemakkelijk aflezen: die is
 $1 + 1 + 2 = 4$. Is dat zo kort mogelijk? Nee! Kijk maar eens naar de
 [paarse]{style="color:DarkOrchid;"} lijn. De afstanden van alle punten
 tot die lijn tellen op tot $0+0+3 = 3$.
-
-::: callout-important
-Het gemiddelde is dus *niet* de waarde die de totale afstand tot de
-waarnemingen minimaliseert.
-:::
 
 Je kunt dit begrijpen met behulp van een metafoor. Als je de positie van
 de lijn zoekt die de som van de grijze lijntjes minimaliseert, dan lijkt
@@ -1411,7 +1327,7 @@ ze in de meerderheid zijn.
 Stel nu dat we de lengtes van de grijze lijntjes niet simpelweg
 optellen, maar die lengtes eerst *kwadrateren* voordat we ze optellen.
 Deze som van kwadraten noemen we de **kwadratensom**. Als we de
-[oranje]{style="color:#e8601d;"} lijn op hoogte $m$ plaatsen, dan
+[oranje]{style="color:darkorange;"} lijn op hoogte $m$ plaatsen, dan
 wordt de kwadratensom $\mathrm{SS}(m)$ gegeven door:
 
 $$ \mathrm{SS}(m) = \sum_{i=1}^n \left( x_i - m\right)^2.$$ {#eq-kwadratensom}
@@ -1420,29 +1336,36 @@ Het is eenvoudig aan te tonen dat het gemiddelde $\mean{x}$ de waarde
 van $m$ is die deze *kwadratensom* minimaliseert. Voor wie benieuwd is:
 de afleiding kun je vinden in @sec-kwadratensom.
 
-::: callout-important
-Het gemiddelde is dus *wel* de waarde die kwadratensom minimaliseert.
-:::
 
-Ook hier past een metafoor. In dit geval zijn de grijze lijntjes geen
-touwen, maar *elastiekjes*. Net als bij de touwtrekwedstrijd trekken
-alle punten aan de [oranje]{style="color:#e8601d;"} lijn, en daardoor
-zal de [oranje]{style="color:#e8601d;"} lijn omhoog of omlaag
-bewegen, totdat de krachten in evenwicht zijn. Het essentiële verschil
-tussen touwen en elastiekjes is het volgende. Bij het touwtrekken hangt
-de kracht waarmee een punt aan de [oranje]{style="color:#e8601d;"}
-lijn trekt niet af van de lengte van het touw. Daardoor wint altijd de
-meerderheid. Bij elastiekjes hangt de trekkracht wel af van de
-uitrekking. Punten die verder van de lijn afliggen, trekken daardoor
-harder. Het gemiddelde "luistert" op die manier ook naar de minderheid.
+Ook hier past een metafoor. Nu zijn de grijze lijntjes geen
+touwen, maar *elastiekjes*. Weer trekken
+alle punten aan de [oranje]{style="color:darkorange;"} lijn, en daardoor
+zal de [oranje]{style="color:darkorange;"} lijn omhoog of omlaag
+bewegen totdat de krachten in evenwicht zijn. Het essentiële verschil
+tussen touwen en elastiekjes is het volgende. Bij touwtrekken hangt
+de kracht waarmee een punt aan de [oranje]{style="color:darkorange;"}
+lijn trekt niet af van de lengte van het touw
+(de afstand tot het punt). 
+Bij elastiekjes hangt de trekkracht wél af van de
+uitrekking: punten die verder van de lijn afliggen, trekken daardoor
+harder. Het gemiddelde "luistert" op die manier veel meer
+naar punten die ver van de [oranje]{style="color:darkorange;"} lijn afliggen.
 Dat zorg ervoor dat de evenwichtspositie van de
-[oranje]{style="color:#e8601d;"} lijn nu wél overeenkomt met het
+[oranje]{style="color:darkorange;"} lijn nu wél overeenkomt met het
 gemiddelde $\mean{x}$.
 
-::: todo-box
-Volgende alinea redigeren en/of verplaatsen naar een appendix.
+::: {.callout-important}
+
+## Eigenschappen van het gemiddelde
+
+Het gemiddelde is dus *niet* de waarde die de totale afstand tot de
+waarnemingen minimaliseert.
+
+Het gemiddelde is *wel* de waarde die de kwadratensom minimaliseert:
+het totaal van de kwadraten van de afstanden.
 :::
 
+::: {.content-hidden}
 Als je op de middelbare school natuurkunde hebt gekozen dan kun je
 begrijpen waarom deze metafoor werkt. We nemen aan dat de elastiekjes
 zich gedragen volgens de Wet van Hooke, met veerconstante $k$, en met
@@ -1451,14 +1374,16 @@ uitgerekt tot een lengte $l$ is dan $E(l) = k l^2$, en de totale
 potentiële energie van alle elastiekjes samen is dan
 $E = \sum_{i = 1}^n k l_i^2$. Merk op dat dit precies gelijk is aan $k$
 maal de som van de gekwadrateerde lengtes, oftewel de kwadratensom. De
-uiteindelijk positie van de [oranje]{style="color:#e8601d;"} lijn is
+uiteindelijk positie van de [oranje]{style="color:darkorange;"} lijn is
 de positie met minimale potentiële energie. Dat is precies de positie
 waar de kwadratensom minimaal is, oftewel het gemiddelde.
+:::
+
 
 ## Maten voor de spreiding van een verdeling
 
-Nu we de centrummaten hebben behandeld, is het tijd om de
-spreidingsmaten te bespreken.
+Na de centrummaten zijn nu de
+spreidingsmaten aan de beurt.
 
 ### Het bereik
 
@@ -1469,10 +1394,10 @@ voorbeeld van zojuist is het interval $[1, 9]$.
 
 ### Kwantielen en de interkwartielafstand
 
-We hebben het gehad over de mediaan. Je weet dus dat de helft van de
+We hebben het gehad over de mediaan (@sec-mediaan). Je weet dus dat de helft van de
 waarnemingen kleiner is dan de mediaan. Om de mediaan te bepalen, deelde
 je de waarnemingen in twee groepen: de kleinere waarden en de grotere
-waarden. De mediaan vormde de scheidslijn tussen deze twee groepen.
+waarden. De mediaan is de scheidslijn tussen deze twee groepen.
 
 Op een vergelijkbare manier kunnen we kengetallen definiëren die we de
 **kwartielen** noemen. Hiervoor splitsen we de twee helften nogmaals in
@@ -1530,9 +1455,8 @@ ggplot(data, aes(x = Weight)) +
     aes(
       y = ifelse(after_stat(x) <= q1 + 5, after_stat(density), NA)
     ),
-    color = "#e8601d",
-    fill = lighten_color("#e8601d", 0.8),
-    alpha = 1,
+    color = opvulkleur,
+    fill = lighten_color(opvulkleur, 0.8),
     bw = 2,
     size = 1
   ) +
@@ -1545,9 +1469,8 @@ ggplot(data, aes(x = Weight)) +
         NA
       )
     ),
-    color = "#e8601d",
-    fill = lighten_color("#e8601d", 0.6),
-    alpha = 1,
+    color = opvulkleur,
+    fill = lighten_color(opvulkleur, 0.6),
     bw = 2,
     size = 1
   ) +
@@ -1560,9 +1483,8 @@ ggplot(data, aes(x = Weight)) +
         NA
       )
     ),
-    color = "#e8601d",
-    fill = lighten_color("#e8601d", 0.4),
-    alpha = 1,
+    color = opvulkleur,
+    fill = lighten_color(opvulkleur, 0.4),
     bw = 2,
     size = 1
   ) +
@@ -1571,9 +1493,8 @@ ggplot(data, aes(x = Weight)) +
     aes(
       y = ifelse(after_stat(x) >= q3, after_stat(density), NA)
     ),
-    color = "#e8601d",
-    fill = lighten_color("#e8601d", 0.2),
-    alpha = 1,
+    color = opvulkleur,
+    fill = lighten_color(opvulkleur, 0.2),
     bw = 2,
     size = 1
   ) +
@@ -1666,8 +1587,9 @@ gemarkeerd. De zwarte pijl geeft opnieuw de interkwartielafstand aan.
 #| include: false
 #| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. Het eerste, tweede, en derde kwartiel worden met verticale stippellijnen aangegeven. De zwarte pijl loopt van Q1 naar Q3; zijn lengte is dus de interkwartielafstand."
 #| label: fig-cumul-IKA
-#| fig.width: 7
-#| fig.height: 3.5
+#| fig.width: 5
+#| fig.height: 2.5
+#| out.width: "71.4%"
 
 library(grid) # voor de pijl
 
@@ -1760,7 +1682,7 @@ cumulplot +
     title = NULL,
     x = "Lichaamsgewicht",
     y = "Cumulatieve proportie"
-    ) 
+    ) + coord_cartesian(xlim = c(0, max(x)))
 ```
 
 ```{r}
@@ -1768,8 +1690,9 @@ cumulplot +
 #| warning: false
 #| fig.cap: "Cumulatieve verdeling van lichaamsgewicht in de HNANES-dataset. Het eerste, tweede, en derde kwartiel worden met verticale stippellijnen aangegeven. De zwarte pijl loopt van Q1 naar Q3; zijn lengte is dus de interkwartielafstand."
 #| label: fig-cumul-IKA2
-#| fig.width: 7
-#| fig.height: 3.5
+#| fig.width: 5
+#| fig.height: 2.5
+#| out.width: "71.4%"
 
 # Laad de benodigde bibliotheken als ze nog niet geladen zijn
 if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
@@ -1798,7 +1721,6 @@ ggplot(data, aes(x = Weight)) +
       y = after_stat(y),
       fill = "Q1"
     ),
-    alpha = 1,
     bw = 2
   ) +
   # Opvulgebied voor Q2
@@ -1812,7 +1734,6 @@ ggplot(data, aes(x = Weight)) +
       ),
       fill = "Q2"
     ),
-    alpha = 1,
     bw = 2
   ) +
   # Opvulgebied voor Q3
@@ -1826,7 +1747,6 @@ ggplot(data, aes(x = Weight)) +
       ),
       fill = "Q3"
     ),
-    alpha = 1,
     bw = 2
   ) +
   # Opvulgebied voor Q4
@@ -1840,7 +1760,6 @@ ggplot(data, aes(x = Weight)) +
       ),
       fill = "Q4"
     ),
-    alpha = 1,
     bw = 2
   ) +
   # Volledige ECDF-curve (consistent over de hele dataset)
@@ -1859,10 +1778,10 @@ ggplot(data, aes(x = Weight)) +
   # Voeg aangepaste kleuren toe voor de kwartielen
   scale_fill_manual(
     values = c(
-      "Q1" = lighten_color("#e8601d", 0.8),
-      "Q2" = lighten_color("#e8601d", 0.6),
-      "Q3" = lighten_color("#e8601d", 0.4),
-      "Q4" = lighten_color("#e8601d", 0.2)
+      "Q1" = lighten_color(opvulkleur, 0.8),
+      "Q2" = lighten_color(opvulkleur, 0.6),
+      "Q3" = lighten_color(opvulkleur, 0.4),
+      "Q4" = lighten_color(opvulkleur, 0.2)
     )
   ) +
   geom_segment(
@@ -1944,33 +1863,60 @@ ggplot(data, aes(x = Weight)) +
   theme(legend.position = "none")  # Verwijder de legenda
 ```
 
-Tot slot bespreken we de **percentielen**. Deze zijn gemakkelijk te
+Statistieken die hier nauw mee samenhangen zijn de **percentielen**. 
+Deze zijn gemakkelijk te
 begrijpen aan de hand van een paar voorbeelden. Omdat 25% van de
 waarnemingen kleiner is dan Q1, wordt Q1 ook wel het vijf-en-twintigste
 percentiel genoemd, oftewel P25. Op dezelfde manier is 90% van de
 waarnemingen kleiner dan P90, het negentigste percentiel.
 
 In algemene termen worden statistieken zoals kwartielen en percentielen
-samen aangeduid als **kwantielen**. We komen in latere hoofdstukken ook
+samen aangeduid als **kwantielen**. We komen die in latere hoofdstukken ook
 nog tegen.
 
-::: {#exr-kwantielen}
-## Opgave: Kwantielen van tentamencijfers
+::: {.callout-note #nte-kwartielen icon=false}
+
+## Exacte definities van kwantielen zijn gecompliceerd
+
+Als je er dieper over nadenkt 
+is het niet vanzelfsprekend hoe je kwantielen *precies* moet definiëren.
+Bijvoorbeeld, 
+  stel dat je de kwartielen Q1 en Q3 wilt berekenen
+  als het aantal waarnemingen niet deelbaar is door 4.
+Hoe deel je de dataset dan in vier stukken,
+  en waar trek je dan precies de grens tussen de kwartielen?
+
+In de praktijk zijn verschillende conventies mogelijk,
+ en daarom zijn er verschillende definities in omloop.
+Als de dataset niet heel klein is,
+  zijn de verschillen te verwaarlozen;
+  in deze cursus zullen we ons er verder niet druk om maken.
+Maar kijk niet gek op als je de kantielen die R produceert
+  niet exact kunt reproduceren.
+(Zie @sec-kwantielen-R.)
+
+:::
+
+::: {#exr-kwantielen .mixedexr}
+## Opgave: Ligging en spreiding van tentamencijfers
 
 De scores van 16 studenten op een toets zijn als volgt (in volgorde van
-laag naar hoog):\
+laag naar hoog):
 **12, 15, 18, 20, 21, 23, 25, 28, 30, 32, 35, 38, 40, 42, 45, 46**.
 
-a.  Wat is de mediaan van deze dataset?\
-b.  Bereken Q1 (het eerste kwartiel) en Q3 (het derde kwartiel).\
-c.  Wat is de interkwartielafstand (IKA)?
-d.  Bereken de kwartielen en de IKA ook met R.\
-    Hint: Gebruik de functie `quantile()` om de kwartielen te
-    berekenen.\
+a.  Bereken met de hand de mediaan van deze dataset. 
+b.  Verifieer je antwoord in R. Definieer daartoe een vector `v` met alle scores, 
+    en gebruik vervolgens de functie `median()`.
+b.  Bereken Q1 (het eerste kwartiel) en Q3 (het derde kwartiel) met de hand.
+    Verifieer het resultaat met in R met de functie `quantile()`.
+    (Zie @imp-kwartielen.)
+c.  Wat is de interkwartielafstand (IKA)? 
+d.  Bereken de kwartielen en de IKA ook met R.
+    Hint: Gebruik de functie `IQR()`.
 e.  Wat zegt de interkwartielafstand over de spreiding van de scores?
-f.  Welk percentiel komt overeen met een score van 30?\
+f.  Welk percentiel komt overeen met een score van 30?
 g.  De docent zegt dat een score van 40 in het hoogste kwartiel ligt.
-    Klopt dit?\
+    Klopt dit?
 h.  Een student scoort 20 op de toets. In welk kwartiel en percentiel
     valt deze score?
 :::
@@ -2016,7 +1962,7 @@ s_X = \sqrt{V_X}.
 $$ {#eq-sd-var} Als we de definitie van de variantie invullen levert dat
 op: $$
 s_X = \sqrt{\frac{\sum_i^n \left(x_i - \overline{x}\right)^2}{n-1}}.
-$$ {#eq-sd} De standaarddeviatie wordt ook wet **standaardafwijking**
+$$ {#eq-sd} De standaarddeviatie wordt ook wel de **standaardafwijking**
 genoemd.
 
 Die twee woorden zijn synoniem en kunnen door elkaar gebruikt worden.
@@ -2030,7 +1976,7 @@ dus een lengte in mm, dan is de standaarddeviatie ook een lengte in mm.
 Dit maakt de standaarddeviatie gemakkelijker te interpreteren dan de
 variantie.
 
-Je kunt de standaarddeviatie interpreteren als een \`\`typische''
+Je kunt de standaarddeviatie interpreteren als een "typische"
 afwijking van het gemiddelde. Het is dus niet verrassend als een
 willekeurig gekozen waarneming een standaarddeviatie groter of kleiner
 is dan het gemiddelde. Bij de meeste verdelingen liggen verreweg de
@@ -2050,8 +1996,9 @@ standaarddeviatie met een pijl aangegeven.
 #| warning: false
 #| fig.cap: "Histogram van `Pulse` (rusthartslag) in de NHANES dataset. De standaarddeviatie is aangegeven met een pijl. Deze komt ongeveer overeen met de helft van de breedte van de piek, gemeten halverwege de hoogte van de piek."
 #| label: fig-histogram-pulse
-#| fig.width: 7
-#| fig.height: 4
+#| fig.width: 5.5
+#| fig.height: 2.8
+#| out.width: "78.6%"
 
 # Controleer of de benodigde pakketten zijn geladen
 if (!("ggplot2" %in% .packages())) { library(ggplot2) }
@@ -2078,9 +2025,8 @@ labels <- ifelse(
 ggplot(NHANES, aes(x = Pulse)) +
   geom_histogram(
     binwidth = 6, 
-    fill = "#e8601d", 
+    fill = opvulkleur, 
     color = "black", 
-    alpha = 0.7
   ) +
   
   # Voeg een verticale stippellijn toe voor het gemiddelde
@@ -2242,7 +2188,6 @@ ggplot(gamma_df, aes(x = value)) +
     boundary = 0,
     fill = opvulkleur,
     color = "black",
-    alpha = 0.7
   ) +
   geom_vline(
     aes(xintercept = mean_value),
@@ -2615,24 +2560,19 @@ aan de studie van de NCHS. Die frequentietabel ziet er als staafdiagram
 als volgt uit:
 
 ```{r}
-#| output: false
-#| echo: false
-
-library(dplyr)
-
-```
-
-```{r}
 #| code-fold: true
 #| fig.cap: "Staafdiagram van de zelf-gerapporteerde gezondheidsstatus in de gegevensvan het NCHS-onderzoek."
 #| label: fig-gezondheid-staaf
-#| fig.width: 4.5
-#| fig.height: 3.5
+#| fig.width: 4
+#| fig.height: 3
+#| out.width: "57%"
 
 # De gegevens zijn gepubliceerd in dit package:
 library(NHANES)
 library(ggplot2)
 library(knitr)
+library(dplyr)
+
 
 # Laad de dataset in:
 data(NHANES)
@@ -2692,14 +2632,14 @@ Let bij het maken van een staafdiagram op drie dingen.
 Het volgende krantenknipsel laat zien dat De Times beter verkoopt dan de
 Daily Telegraph:
 
-![](figuren/MisleidingStaafdiagram_Times.jpeg)
+![](figuren/MisleidingStaafdiagram_Times.jpeg){width=80% fig-align="center"}
 
 Maar kijk eens goed naar het staafdiagram aan de rechterkant. Op het
 eerste gezicht lijkt het verschil tussen de verkoopcijfers enorm omdat
 de staaf van The Times een veel groter oppervlakte heeft dan die van de
 Telegraph. (Die indruk wordt nog versterkt door het verschil in de
 kleur!) Pas als je naar de $y$-as kijkt, blijkt het verschil wel mee te
-vallen:
+vallen: zo'n 10%.
 :::
 
 2.  **Houd ruimte tussen de staven.** Dat laat zien dat de categorieën
@@ -2739,6 +2679,7 @@ laten zien in een taartdiagram:
 #| label: fig-taart
 #| fig.width: 4.5
 #| fig.height: 3.5
+#| out.width: "64%"
 
 NHANES$MaritalStatus <- factor(
   NHANES$MaritalStatus,
@@ -2806,6 +2747,7 @@ wel een stapeldiagram worden gebruikt:
 #| fig.cap: "Stapeldiagram van de variabele Gezondheidsstatus in de NHANES-gegevens."
 #| fig.width: 4.5
 #| fig.height: 3.5
+#| out.width: "64%"
 
 freq_df <- data.frame(
   freq_table
@@ -2915,6 +2857,7 @@ belangrijke verschillen:
 #| label: fig-viool
 #| fig.width: 2.5
 #| fig.height: 3.5
+#| out.width: "36%"
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
   geom_violin(fill = "Bisque", color = opvulkleur) +
@@ -2937,6 +2880,7 @@ datasets. De anatomie van een boxplot is getoond in
 #| warning: false
 #| fig.cap: "Anatomie van een boxplot. Links is van een steekproef uit de NHANES dataset het lichaamsgewicht geplot in een jitterplot. Daarnaast is de bijbehorende boxplot weergegeven."
 #| label: fig-anatomie-boxplot
+#| out.width: "100%"
 
 # Data voorbereiden
 data <- NHANES[1:200, ]
@@ -2988,14 +2932,14 @@ ggplot(data, aes(x = "", y = Weight)) +
     y = kwantielen[2], 
     x = 3.47, 
     label = "Q1", 
-    color = "#e8601d"
+    color = opvulkleur
   ) +
   annotate(
     "text", 
     y = kwantielen[4], 
     x = 3.47, 
     label = "Q3", 
-    color = "#e8601d"
+    color = opvulkleur
   ) +
   annotate(
     "text", 
@@ -3003,7 +2947,7 @@ ggplot(data, aes(x = "", y = Weight)) +
     x = 3.8, 
     label = "interkwartiel-
 afstand", 
-    color = "#e8601d"
+    color = opvulkleur
   ) +
   annotate(
     "text", 
@@ -3025,7 +2969,7 @@ afstand",
     yend = kwantielen[4] - 5,
     x = 3.46,
     size = 0.7,
-    color = "#e8601d"
+    color = opvulkleur
   ) +
   annotate(
     "text", 
@@ -3142,6 +3086,7 @@ individuele datapunten weer te geven, bijvoorbeeld met een
 #| label: fig-box-gewicht
 #| fig.width: 2.5
 #| fig.height: 3.5
+#| out.width: "36%"
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
   geom_boxplot(fill = "Bisque", color = opvulkleur) +
@@ -3157,11 +3102,249 @@ ggplot(NHANES, aes(x = "", y = Weight)) +
 Boodschap: samenvatten met alle drie methoden. Altijd visualiseren!
 :::
 
+## Beschrijvende statistiek in R {#sec-beschr-stats-R}
+
+Hieronder geven we kort aan hoe je verschillende technieken 
+uit dit hoofdstuk in R kunt toepassen.
+
+### Typen variabelen in R
+
+In @sec-type-variabelen-R heb je geleerd dat variabelen in R ook
+verschillende types hebben, zoals `numeric`, `integer`, of
+`character`. Deze typen komen niet één op één
+overeen met de indeling van @fig-variabelen. Wat is de relatie tussen
+@fig-variabelen en de data-typen van R?
+
+Voor numerieke variabelen zul je meestal het datatype `numeric` gebruiken,
+waarin getallen met decimalen ("kommagetallen", *floats*) kunnen worden opgeslagen. 
+Op zich kan `numeric` zowel voor continue als voor discrete
+numerieke variabelen worden gebruikt. 
+Maar als een discrete variabele alleen gehele waarden kan aannemen ligt `integer` meer voor de hand. 
+In het geheugen van de computer neemt een `integer` ook minder ruimte in dan een `numerical` (4 bytes in plaats van 8 bytes).
+
+Voor categorische variabelen kan het type `character` worden gebruikt,
+omdat je daarin de waarden van de variabele als een string kunt opslaan.
+Maar R voorziet ook in een datastructuur die speciaal bedoeld is voor
+categorische data: de `factor`.
+
+#### Categorische gegevens in R: de *factor*
+
+Om te illustreren wat een factor is,
+definiëren we in R eerst een vector van type
+`character`:
+
+```{r}
+# Vector met de voedingsstrategie van 5 organismen:
+voedingsstrategie <- c("herbivoor", "carnivoor", "omnivoor", "detrivoor", "herbivoor")
+voedingsstrategie
+```
+
+Bekijk de uitvoer; je kunt daaraan zien dat `voedingsstrategie`
+simpelweg een lijstje (vector) met strings is.
+
+Deze vector van type `character` zetten we nu om naar een `factor` en
+slaan die op onder de naam `factor.voedingsstrategie`:
+
+```{r}
+# Omzetten naar een factor-variabele:
+factor.voedingsstrategie <- factor(voedingsstrategie)
+factor.voedingsstrategie
+```
+
+De uitvoer ziet er subtiel anders uit. 
+De vijf verschillende waarden worden weer getoond, 
+maar er is nu een extra regel die begint met het woord "Levels". 
+Op die regel worden de verschillende niveaus
+van de categorische variabele weergegeven. 
+In dit geval waren dat "carnivoor", "detrivoor", "herbivoor" en "omnivoor". 
+Je kunt de niveaus ook rechtstreeks opvragen met de functie `levels()`:
+
+```{r}
+levels(factor.voedingsstrategie)
+```
+
+R slaat factoren in het computergeheugen op 
+met behulp van een code.
+Ieder niveau van de variabele krijgt een nummer (`integer`);
+in het voorbeeld levert dat de volgende codetabel op:
+```{r}
+#| warning: false
+#| echo: false
+
+# Controleer of gt is geladen
+if (!("gt" %in% .packages())) { 
+  library(gt) 
+}
+
+# Maak een dataframe met codes en voedingsstrategieën
+df <- data.frame(
+  Code = seq(1, 4), 
+  Niveau = levels(factor.voedingsstrategie)
+)
+
+# Genereer een tabel met aangepaste kolombreedtes en uitlijning
+gt(df) %>%
+  cols_width(
+    Code ~ px(50),    # Breedte instellen (in pixels of andere CSS-eenheden)
+    Niveau ~ px(150)
+  ) %>%
+  cols_align(
+    align = "left"    # Links uitlijnen van alle tekst
+  )
+
+```
+
+Met behulp van die codetabel wordt de oorspronkelijke vector `voedingsstrategie`
+efficiënt opgeslagen als de rij integers:
+3,1,4,2,3.
+
+Dat de gegevens nu opgeslagen zijn als integers heeft veel
+voordelen. Integers gebruiken veel minder geheugen dan strings.
+Bovendien, doordat factoren intern als integers
+worden behandeld zijn operaties zoals groeperen, filteren en sorteren
+ook vaak sneller dan bij vectoren van type `character`. 
+
+Er zijn veel
+belangrijke functies in R die als input een factor verwachten. In
+@sec-toetsen-gemiddelden hebben we ze daarom hard nodig!
+
+::: {#exr-factoren}
+## Factors en niveaus
+
+In de code hieronder wordt een dataframe geconstrueerd met daarin
+gegevens over meerdere spelers van een videogame. Eerst worden de
+gegevens opgeslagen in meerdere vectoren; daarna worden ze samengevoegd
+tot een dataframe.
+
+```{r}
+#| execute: false
+
+naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
+level <- c(8, 1, 3, 2, 10)
+totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
+klassement <- c("Goud", "Brons", "Zilver", "Zilver", "Goud")
+console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
+
+df = data.frame(naam, level, totale_speeltijd, klassement, console)
+```
+
+**a.** Schrijf voor elke vector het type variabele op volgens het schema
+van @fig-variabelen.
+
+**b.** Om de data efficiënter te kunnen opslaan en analyseren willen we
+sommige variabelen omzette in een factor. Welke variabelen komen daar
+het meest voor in aanmerking?
+
+**c.** Pas de code hierboven aan zodat de vector `klassement` een factor
+wordt. Run de nieuwe code in R.
+
+
+**d.** Gebruik de functie `levels()` om te bepalen wat de levels zijn
+van de vector `klassement`.
+
+:::
+
+### Maten voor ligging en spreiding in R
+
+#### Centrummaten
+
+Voor het gemiddelde en de mediaan van een numerieke vector `v`
+zijn in R functies ingebouwd:
+```{r}
+#| eval: false
+mean(v) # gemiddelde
+median(v) # mediaan
+```
+
+#### Spreidingsmaten
+
+De standaarddeviatie, de variantie, en de IKA van een vector bereken je zo:
+```{r}
+#| eval: false
+sd(v) # standaarddeviatie
+var(v) # variantie
+IQR(v) # interkwartielafstand (IKA)
+```
+
+
+#### Kwantielen
+
+Kwantielen bereken je met de functie `quantile()`. 
+Als `v` een vector is, geeft 
+```{r}
+#| eval: false
+quantile(v)
+```
+de kwartielen weer van die vector.
+Je kunt ook een specifieke kwantiel opvragen.
+Bijvoorbeeld, Q1 of P25 kun je zo berekenen:
+```{r}
+#| eval: false
+quantile(v, prob = 0.25)
+```
+
+### Frequentietabellen
+
+Het is in R eenvoudig om een frequentietabel te maken voor een factor.
+Als voorbeeld maken we een frequentietabel voor de gezondheidstoestand
+van de personen in de dataaset NHANES:
+```{r}
+#| echo: false
+data(NHANES)
+```
+```{r}
+table(NHANES$HealthGen)
+```
+
+### Grafieken en figuren in R
+
+Een **scatterplot** waarin twee numerieke variabelen tegen elkaar worden uitgezet
+maak je met de functie `plot()`:
+```{r}
+#| fig-width: 3
+#| fig-height: 3
+#| out-width: "43%"
+x <- c(1, 2, 3)
+y <- c(2, 1, 5)
+plot(x, y)
+```
+
+Een **histogram** op basis van een numerieke vector maak je zo:
+```{r}
+#| fig-width: 3
+#| fig-height: 3
+#| out-width: "43%"
+
+hist( NHANES$Age ) # histogram van leeftijden in NHANES
+```
+
+Een **staafdiagram** kun je als volgt:
+```{r}
+#| fig-width: 5
+#| fig-height: 5
+#| out-width: "70%"
+
+# Maak een frequentietabel
+tabel <- table(NHANES$HealthGen)
+
+# Teken het staafdiagram
+barplot(tabel)
+```
+
+
+
 ## Samenvatting
 
 ::: todo-box
 Schrijven.
 :::
+
+| Type variabele  |   | Datatype in R             |
+|--------------|-------------|-------------------------|
+| Numeriek     | Continu     | `numeric`               |
+|              | Discreet    | `numeric`/`integer`     |
+| Categorisch  | Nominaal    | `factor`                |
+|              | Ordinaal    | `factor`                |
 
 Het gemiddelde (@eq-gemiddelde): $$\bar{x} = \frac{\sum^n_{i=1}x_i}{n}$$
 $\bar{x}$ is het gemiddelde van de dataset, $x_i$ zijn de individuele
@@ -3270,12 +3453,6 @@ dataset en $n$ is het aantal datapunten.
 
 ## Opgaven
 
-::: todo-box
-
-Checken Rutger
-
-:::
-
 ::: {.pepexr #exr-variab-bedenken}
 ## Variabelen op de Grens
 
@@ -3295,14 +3472,34 @@ de vraag of ze nominaal of ordinaal zijn?
 
 :::
 
-::: {.todo-box}
+::: {.Rexr #exr-pieken}
+## De twee pieken in de verdeling van 
 
-Checken Rutger
+@Fig-histogram liet zien dat de verdeling van lichaamsgewicht (`Weight`) in de
+dataset NHANES bimodaal is.
+Hoe zou dat komen?
 
-
+Om dat te onderzoeken start je een nieuw script.
+In dat script laad je de dataset in met de volgende regels:
+```{r}
+#| eval: false
+library("NHANES")
+data("NHANES")
+```
+a.  Maak nu eerst een histogram van `Weight`:
+    ```{r}
+    #| eval: false
+    hist(NHANES$Weight, breaks = 40)
+    ```
+b.  Mensen van 20kg moeten haast wel kinderen zijn.
+    Voeg een regel code toe 
+    dat een scatter-plot maakt met leeftijd in maanden (`AgeMonths`) op de $x$-as
+    en lichaamsgewicht (`Weight`) op de $y$-as.
+    Gebruik daarvoor de functie `plot()`; zie @sec-beschr-stats-R.
+    
+    Wat vertelt deze plot je over de groep met een gewicht rond 20kg?
 :::
 
-:::
 
 ::: {.pepexr #exr-sprinkhanen}
 
@@ -3325,13 +3522,7 @@ met onder ander de functies `mean()`, `sd()` en `var()`.
 
 :::
 
-::: {.todo-box}
-
-Checken Rutger
-
-:::
-
-::: {.pepexr #exr-middelbare-mediaan}
+::: {#exr-middelbare-mediaan}
 ## Middelbare Mediaan
 
 Tijdens de middelbare school stond op je rapporten
@@ -3339,13 +3530,6 @@ waarschijnlijk voor ieder vak het gemiddelde vermeld van alle cijfers
 die je in de betreffende periode had gehaald. In plaats daarvan zouden
 scholen ook kunnen kiezen voor de mediaan. Welke voor- en nadelen
 zou dat hebben? Waar zou jij voor kiezen?
-
-:::
-
-
-
-::: {.todo-box}
-Checken Rutger
 
 :::
 
