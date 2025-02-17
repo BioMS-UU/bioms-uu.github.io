@@ -217,142 +217,7 @@ Van welk type zijn de volgende variabelen?
 de volgende generatie.
 :::
 
-## Typen variabelen in R
 
-In @sec-type-variabelen-R heb je geleerd dat variabelen in R ook
-verschillende types hebben, zoals `numeric`, `integer`, of
-`character`. Deze typen komen niet één op één
-overeen met de indeling van @fig-variabelen. Wat is de relatie tussen
-@fig-variabelen en de data-typen van R?
-
-Voor numerieke variabelen zul je meestal het datatype `numeric` gebruiken,
-waarin getallen met decimalen ("kommagetallen", *floats*) kunnen worden opgeslagen. 
-Op zich kan `numeric` zowel voor continue als voor discrete
-numerieke variabelen worden gebruikt. 
-Maar als een discrete variabele alleen gehele waarden kan aannemen ligt `integer` meer voor de hand. 
-In het geheugen van de computer neemt een `integer` ook minder ruimte in dan een `numerical` (4 bytes in plaats van 8 bytes).
-
-Voor categorische variabelen kan het type `character` worden gebruikt,
-omdat je daarin de waarden van de variabele als een string kunt opslaan.
-Maar R voorziet ook in een datastructuur die speciaal bedoeld is voor
-categorische data: de `factor`.
-
-### Categorische gegevens in R: de *factor*
-
-Om te illustreren wat een factor is,
-definiëren we in R eerst een vector van type
-`character`:
-
-```{r}
-# Vector met de voedingsstrategie van 5 organismen:
-voedingsstrategie <- c("herbivoor", "carnivoor", "omnivoor", "detrivoor", "herbivoor")
-voedingsstrategie
-```
-
-Bekijk de uitvoer; je kunt daaraan zien dat `voedingsstrategie`
-simpelweg een lijstje (vector) met strings is.
-
-Deze vector van type `character` zetten we nu om naar een `factor` en
-slaan die op onder de naam `factor.voedingsstrategie`:
-
-```{r}
-# Omzetten naar een factor-variabele:
-factor.voedingsstrategie <- factor(voedingsstrategie)
-factor.voedingsstrategie
-```
-
-De uitvoer ziet er subtiel anders uit. 
-De vijf verschillende waarden worden weer getoond, 
-maar er is nu een extra regel die begint met het woord "Levels". 
-Op die regel worden de verschillende niveaus
-van de categorische variabele weergegeven. 
-In dit geval waren dat "carnivoor", "detrivoor", "herbivoor" en "omnivoor". 
-Je kunt de niveaus ook rechtstreeks opvragen met de functie `levels()`:
-
-```{r}
-levels(factor.voedingsstrategie)
-```
-
-R slaat factoren in het computergeheugen op 
-met behulp van een code.
-Ieder niveau van de variabele krijgt een nummer (`integer`);
-in het voorbeeld levert dat de volgende codetabel op:
-```{r}
-#| warning: false
-#| echo: false
-
-# Controleer of gt is geladen
-if (!("gt" %in% .packages())) { 
-  library(gt) 
-}
-
-# Maak een dataframe met codes en voedingsstrategieën
-df <- data.frame(
-  Code = seq(1, 4), 
-  Niveau = levels(factor.voedingsstrategie)
-)
-
-# Genereer een tabel met aangepaste kolombreedtes en uitlijning
-gt(df) %>%
-  cols_width(
-    Code ~ px(50),    # Breedte instellen (in pixels of andere CSS-eenheden)
-    Niveau ~ px(150)
-  ) %>%
-  cols_align(
-    align = "left"    # Links uitlijnen van alle tekst
-  )
-
-```
-
-Met behulp van die codetabel wordt de oorspronkelijke vector `voedingsstrategie`
-efficiënt opgeslagen als de rij integers:
-3,1,4,2,3.
-
-Dat de gegevens nu opgeslagen zijn als integers heeft veel
-voordelen. Integers gebruiken veel minder geheugen dan strings.
-Bovendien, doordat factoren intern als integers
-worden behandeld zijn operaties zoals groeperen, filteren en sorteren
-ook vaak sneller dan bij vectoren van type `character`. 
-
-Er zijn veel
-belangrijke functies in R die als input een factor verwachten. In
-@sec-toetsen-gemiddelden hebben we ze daarom hard nodig!
-
-::: {#exr-factoren}
-## Factors en niveaus
-
-In de code hieronder wordt een dataframe geconstrueerd met daarin
-gegevens over meerdere spelers van een videogame. Eerst worden de
-gegevens opgeslagen in meerdere vectoren; daarna worden ze samengevoegd
-tot een dataframe.
-
-```{r}
-#| execute: false
-
-naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
-level <- c(8, 1, 3, 2, 10)
-totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
-klassement <- c("Goud", "Brons", "Zilver", "Zilver", "Goud")
-console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
-
-df = data.frame(naam, level, totale_speeltijd, klassement, console)
-```
-
-**a.** Schrijf voor elke vector het type variabele op volgens het schema
-van @fig-variabelen.
-
-**b.** Om de data efficiënter te kunnen opslaan en analyseren willen we
-sommige variabelen omzette in een factor. Welke variabelen komen daar
-het meest voor in aanmerking?
-
-**c.** Pas de code hierboven aan zodat de vector `klassement` een factor
-wordt. Run de nieuwe code in R.
-
-
-**d.** Gebruik de functie `levels()` om te bepalen wat de levels zijn
-van de vector `klassement`.
-
-:::
 
 ## De verdeling van een variabele
 
@@ -412,18 +277,6 @@ valt; dat wordt de **frequentie** van die categorie genoemd. We komen
 later uitgebreider terug op histogrammen en andere manieren om
 verdelingen te visualiseren (@sec-hist-en-freqpoly), maar gaan er vanuit dat histogrammen niet nieuw voor je zijn.
 
-
-::: {.callout-note icon=false}
-
-## Histogrammen in R
-
-In R kun je heel eenvoudig histogrammen maken.
-Als `v` een numerieke vector is, dan is de eenvoudigste methode:
-```{r}
-#| eval: false
-hist(v)
-```
-:::
 
 ### Kwalitatieve beschrijvingen van de verdeling numerieke variabelen {#sec-terminologie}
 
@@ -1971,61 +1824,26 @@ nog tegen.
 
 ::: {.callout-note #nte-kwartielen icon=false}
 
-## Kwartielen, kwantielen, en  IKA in R
-  
-In R kun je de kwantielen berekenen met de functie `quantile()`. 
-Als `v` een vector is, geeft 
-```{r}
-#| eval: false
-quantile(v)
-```
-de kwartielen weer.
-Je kunt ook een specifieke kwantiel opvragen.
-Q1 of P25 kun je bijvoorbeeld zo berekenen:
-```{r}
-#| eval: false
-quantile(v, prob = c(0.25))
-```
-De functie `IQR()` geeft direct de interkwartielafstand
-van een numerieke vector:
-```{r}
-#| eval: false
-IQR(v)
-```
+## Exacte definities van kwantielen zijn gecompliceerd
 
-Er is alleen een complicatie:
-Het is niet vanzelfsprekend hoe je kwantielen *precies* moet definiëren.
+Als je er dieper over nadenkt 
+is het niet vanzelfsprekend hoe je kwantielen *precies* moet definiëren.
 Bijvoorbeeld, 
-  hoe deel je een dataset in vier stukken
-  om de kwartielen te vinden
-  als het aantal waarnemingen
-  niet deelbaar is door vier? 
-En waar trek je dan precies de grens?
+  stel dat je de kwartielen Q1 en Q3 wilt berekenen
+  als het aantal waarnemingen niet deelbaar is door 4.
+Hoe deel je de dataset dan in vier stukken,
+  en waar trek je dan precies de grens tussen de kwartielen?
 
-Omdat er verschillende conventies mogelijk zijn,
-zijn er verschillende definities in omloop.
-In de R-functie `quantile()` zijn maar liefst 9 verschillende definities ingebouwd;
-via de parameter `type` kun je kiezen welke je wilt gebruiken.
-
-Afhankelijk van die keuze verschillen de resultaten subtiel.
-Een eenvoudig voorbeeld:
-```{r}
-v <- c(1, 2, 3, 4, 5)
-quantile( v, type = 7 ) # type = 7 is de default
-```
-
-```{r}
-quantile( v, type = 2 )
-```
-
+In de praktijk zijn verschillende conventies mogelijk,
+ en daarom zijn er verschillende definities in omloop.
 Als de dataset niet heel klein is,
-zijn de verschillen te verwaarlozen;
-in deze cursus zullen we ons er verder niet druk om maken.
-Maar, kijk dus niet gek op als `quantile()` of gerelateerde functies
-zoals `IQR()` waarden produceren die je niet *exact* kunt reproduceren.
+  zijn de verschillen te verwaarlozen;
+  in deze cursus zullen we ons er verder niet druk om maken.
+Maar kijk niet gek op als je de kantielen die R produceert
+  niet exact kunt reproduceren.
+(Zie @sec-kwantielen-R.)
 
 :::
-
 
 ::: {#exr-kwantielen .mixedexr}
 ## Opgave: Kwantielen van tentamencijfers
@@ -3231,6 +3049,237 @@ ggplot(NHANES, aes(x = "", y = Weight)) +
 ::: todo-box
 Boodschap: samenvatten met alle drie methoden. Altijd visualiseren!
 :::
+
+## Beschrijvende statistiek in R
+
+Hieronder geven we kort aan hoe je verschillende technieken 
+uit dit hoofdstuk in R kunt toepassen.
+
+### Typen variabelen in R
+
+In @sec-type-variabelen-R heb je geleerd dat variabelen in R ook
+verschillende types hebben, zoals `numeric`, `integer`, of
+`character`. Deze typen komen niet één op één
+overeen met de indeling van @fig-variabelen. Wat is de relatie tussen
+@fig-variabelen en de data-typen van R?
+
+Voor numerieke variabelen zul je meestal het datatype `numeric` gebruiken,
+waarin getallen met decimalen ("kommagetallen", *floats*) kunnen worden opgeslagen. 
+Op zich kan `numeric` zowel voor continue als voor discrete
+numerieke variabelen worden gebruikt. 
+Maar als een discrete variabele alleen gehele waarden kan aannemen ligt `integer` meer voor de hand. 
+In het geheugen van de computer neemt een `integer` ook minder ruimte in dan een `numerical` (4 bytes in plaats van 8 bytes).
+
+Voor categorische variabelen kan het type `character` worden gebruikt,
+omdat je daarin de waarden van de variabele als een string kunt opslaan.
+Maar R voorziet ook in een datastructuur die speciaal bedoeld is voor
+categorische data: de `factor`.
+
+#### Categorische gegevens in R: de *factor*
+
+Om te illustreren wat een factor is,
+definiëren we in R eerst een vector van type
+`character`:
+
+```{r}
+# Vector met de voedingsstrategie van 5 organismen:
+voedingsstrategie <- c("herbivoor", "carnivoor", "omnivoor", "detrivoor", "herbivoor")
+voedingsstrategie
+```
+
+Bekijk de uitvoer; je kunt daaraan zien dat `voedingsstrategie`
+simpelweg een lijstje (vector) met strings is.
+
+Deze vector van type `character` zetten we nu om naar een `factor` en
+slaan die op onder de naam `factor.voedingsstrategie`:
+
+```{r}
+# Omzetten naar een factor-variabele:
+factor.voedingsstrategie <- factor(voedingsstrategie)
+factor.voedingsstrategie
+```
+
+De uitvoer ziet er subtiel anders uit. 
+De vijf verschillende waarden worden weer getoond, 
+maar er is nu een extra regel die begint met het woord "Levels". 
+Op die regel worden de verschillende niveaus
+van de categorische variabele weergegeven. 
+In dit geval waren dat "carnivoor", "detrivoor", "herbivoor" en "omnivoor". 
+Je kunt de niveaus ook rechtstreeks opvragen met de functie `levels()`:
+
+```{r}
+levels(factor.voedingsstrategie)
+```
+
+R slaat factoren in het computergeheugen op 
+met behulp van een code.
+Ieder niveau van de variabele krijgt een nummer (`integer`);
+in het voorbeeld levert dat de volgende codetabel op:
+```{r}
+#| warning: false
+#| echo: false
+
+# Controleer of gt is geladen
+if (!("gt" %in% .packages())) { 
+  library(gt) 
+}
+
+# Maak een dataframe met codes en voedingsstrategieën
+df <- data.frame(
+  Code = seq(1, 4), 
+  Niveau = levels(factor.voedingsstrategie)
+)
+
+# Genereer een tabel met aangepaste kolombreedtes en uitlijning
+gt(df) %>%
+  cols_width(
+    Code ~ px(50),    # Breedte instellen (in pixels of andere CSS-eenheden)
+    Niveau ~ px(150)
+  ) %>%
+  cols_align(
+    align = "left"    # Links uitlijnen van alle tekst
+  )
+
+```
+
+Met behulp van die codetabel wordt de oorspronkelijke vector `voedingsstrategie`
+efficiënt opgeslagen als de rij integers:
+3,1,4,2,3.
+
+Dat de gegevens nu opgeslagen zijn als integers heeft veel
+voordelen. Integers gebruiken veel minder geheugen dan strings.
+Bovendien, doordat factoren intern als integers
+worden behandeld zijn operaties zoals groeperen, filteren en sorteren
+ook vaak sneller dan bij vectoren van type `character`. 
+
+Er zijn veel
+belangrijke functies in R die als input een factor verwachten. In
+@sec-toetsen-gemiddelden hebben we ze daarom hard nodig!
+
+::: {#exr-factoren}
+## Factors en niveaus
+
+In de code hieronder wordt een dataframe geconstrueerd met daarin
+gegevens over meerdere spelers van een videogame. Eerst worden de
+gegevens opgeslagen in meerdere vectoren; daarna worden ze samengevoegd
+tot een dataframe.
+
+```{r}
+#| execute: false
+
+naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
+level <- c(8, 1, 3, 2, 10)
+totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
+klassement <- c("Goud", "Brons", "Zilver", "Zilver", "Goud")
+console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
+
+df = data.frame(naam, level, totale_speeltijd, klassement, console)
+```
+
+**a.** Schrijf voor elke vector het type variabele op volgens het schema
+van @fig-variabelen.
+
+**b.** Om de data efficiënter te kunnen opslaan en analyseren willen we
+sommige variabelen omzette in een factor. Welke variabelen komen daar
+het meest voor in aanmerking?
+
+**c.** Pas de code hierboven aan zodat de vector `klassement` een factor
+wordt. Run de nieuwe code in R.
+
+
+**d.** Gebruik de functie `levels()` om te bepalen wat de levels zijn
+van de vector `klassement`.
+
+:::
+
+### Maten voor ligging en spreiding in R
+
+#### Centrummaten
+
+Voor het gemiddelde en de mediaan van een numerieke vector `v`
+zijn in R functies ingebouwd:
+```{r}
+#| eval: false
+mean(v) # gemiddelde
+median(v) # mediaan
+```
+
+#### Spreidingsmaten
+
+De standaarddeviatie, de variantie, en de IKA van een vector bereken je zo:
+```{r}
+#| eval: false
+sd(v) # standaarddeviatie
+var(v) # variantie
+IQR(v) # interkwartielafstand (IKA)
+```
+
+
+#### Kwantielen
+
+Kwantielen bereken je met de functie `quantile()`. 
+Als `v` een vector is, geeft 
+```{r}
+#| eval: false
+quantile(v)
+```
+de kwartielen weer van die vector.
+Je kunt ook een specifieke kwantiel opvragen.
+Bijvoorbeeld, Q1 of P25 kun je zo berekenen:
+```{r}
+#| eval: false
+quantile(v, prob = 0.25)
+```
+
+### Frequentietabellen
+
+Het is in R eenvoudig om een frequentietabel te maken voor een factor.
+Als voorbeeld maken we een frequentietabel voor de gezondheidstoestand
+van de personen in de dataaset NHANES:
+```{r}
+#| echo: false
+data(NHANES)
+```
+```{r}
+table(NHANES$HealthGen)
+```
+
+### Grafieken en figuren in R
+
+Een **scatterplot** waarin twee numerieke variabelen tegen elkaar worden uitgezet
+maak je met de functie `plot()`:
+```{r}
+#| fig-width: 3
+#| fig-height: 3
+#| out-width: "43%"
+x <- c(1, 2, 3)
+y <- c(2, 1, 5)
+plot(x, y)
+```
+
+Een **histogram** op basis van een numerieke vector maak je zo:
+```{r}
+#| fig-width: 3
+#| fig-height: 3
+#| out-width: "43%"
+
+hist( NHANES$Age ) # histogram van leeftijden in NHANES
+```
+
+Een **staafdiagram** kun je als volgt:
+```{r}
+#| fig-width: 5
+#| fig-height: 5
+#| out-width: "70%"
+
+# Maak een frequentietabel
+tabel <- table(NHANES$HealthGen)
+
+# Teken het staafdiagram
+barplot(tabel)
+```
+
+
 
 ## Samenvatting
 
