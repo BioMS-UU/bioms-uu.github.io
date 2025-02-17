@@ -304,7 +304,8 @@ Een histogram is opgebouwd uit staafjes. De hoogte van die staafjes
 geeft weer hoe vaak een leeftijd binnen een bepaalde leeftijdscategorie
 valt; dat wordt de **frequentie** van die categorie genoemd. We komen
 later uitgebreider terug op histogrammen en andere manieren om
-verdelingen te visualiseren (@sec-hist-en-freqpoly), maar gaan ervan uit dat histogrammen niet nieuw voor je zijn.
+verdelingen te visualiseren (@sec-hist-en-freqpoly), 
+maar gaan ervan uit dat histogrammen niet nieuw voor je zijn.
 
 
 ### Kwalitatieve beschrijvingen van de verdeling numerieke variabelen {#sec-terminologie}
@@ -583,8 +584,8 @@ ggplot(
 
 Het histogram laat twee pieken zien: één rond 20 kg, en één in de buurt
 van 75 kg. De verdeling is dus bimodaal. 
-Dit komt doordat in de dataset zowel kinderen als volwassenen zijn opgenomen. 
-De twee pieken van deze verdeling corresponderen dus met typische gewichten van kinderen en volwassenen.
+In @exr-pieken ga je zelf aantonen
+waar die twee pieken vandaan komen.
 :::
 
 
@@ -3079,7 +3080,7 @@ ggplot(NHANES, aes(x = "", y = Weight)) +
 Boodschap: samenvatten met alle drie methoden. Altijd visualiseren!
 :::
 
-## Beschrijvende statistiek in R
+## Beschrijvende statistiek in R {#sec-beschr-stats-R}
 
 Hieronder geven we kort aan hoe je verschillende technieken 
 uit dit hoofdstuk in R kunt toepassen.
@@ -3450,16 +3451,31 @@ de vraag of ze nominaal of ordinaal zijn?
 :::
 
 ::: {.Rexr #exr-pieken}
-## De twee pieken in de verdeling
+## De twee pieken in de verdeling van 
 
 @Fig-histogram liet zien dat de verdeling van lichaamsgewicht (`Weight`) in de
-dataset NHANES bimodaal is. Schrijf een heel kort script in R dat uit
-de dataset alleen kinderen tot een leeftijd van 150 maanden selecteert
-en een histogram produceert van hun lichaamsgewicht. 
-Verifieer op die manier
-dat deze groep verantwoordelijk is voor de piek rond 20 kg.
-Selecteer vervolgens alleen min-of-meer volwassenen (vanaf 150 maanden)
-en laat zien dat hun verdeling unimodaal is met een piek rond 75 kg.
+dataset NHANES bimodaal is.
+Hoe zou dat komen?
+
+Om dat te onderzoeken start je een nieuw script.
+In dat script laad je de dataset in met de volgende regels:
+```{r}
+#| eval: false
+library("NHANES")
+data("NHANES")
+```
+a.  Maak nu eerst een histogram van `Weight`:
+    ```{r}
+    #| eval: false
+    hist(NHANES$Weight, breaks = 40)
+    ```
+b.  Mensen van 20kg moeten haast wel kinderen zijn.
+    Voeg een regel code toe 
+    dat een scatter-plot maakt met leeftijd in maanden (`AgeMonths`) op de $x$-as
+    en lichaamsgewicht (`Weight`) op de $y$-as.
+    Gebruik daarvoor de functie `plot()`; zie @sec-beschr-stats-R.
+    
+    Wat vertelt deze plot je over de groep met een gewicht rond 20kg?
 :::
 
 
