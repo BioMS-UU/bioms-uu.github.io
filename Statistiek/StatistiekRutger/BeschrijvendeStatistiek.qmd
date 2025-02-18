@@ -598,14 +598,23 @@ Man
 ::: {.todo-box}
 Madelon en/of Yannick:
 
-Maak een figuur met histogrammen van 6 verschillende verdelingen.
+Maak een figuur met histogrammen van 6 verschillende verdelingen, bijv.
 
+- Normale verdeling
+- Gamma-verdeling met shape-parameter > 1
+- uniforme verdeling
+- Driehoek: sample uniform en reject iedere waarde x met kans max(0, abs(2*(x - 0.5))).
+- Bimodaal: standaard-normaal  + standaard-normaal verschoven met 1,5
+- Trimodaal: standaard-normaal  + standaard-normaal verschoven met 1,5 + standaard-normaal verschoven met 3 sd
+
+willekeurige volgorde
 
 :::
 
-::: {#fig-termen layout="[[1,1,1],[1,1,1]]"}
+::: {#fig-termen layout="[[1,1,1], [1,1,1]]"}
 
 ![](figuren/dummy.png)
+
 ![](figuren/dummy.png)
 
 ![](figuren/dummy.png)
@@ -620,7 +629,7 @@ Welke termen zijn van toepassing op deze verdelingen?
 :::
 
 
-Bekijk #fig-termen. Zet vervolgens vinkjes in onderstaande tabel
+Bekijk @fig-termen. Zet vervolgens vinkjes in onderstaande tabel
 als de omschrijving van toepassing is.
 
 | Figuur | Symmetrisch | Links-scheef | Rechts-scheef | Klokvormig | Uniform | Bimodaal |
@@ -647,7 +656,7 @@ dit uit aan de hand van een voorbeeld.
 In @fig-cumul is als voorbeeld de cumulatieve verdeling van `Weight`
 (lichaamsgewicht) weergegeven (de [oranje]{style="color:darkorange;"}
 curve). Voor elk lichaamsgewicht op de $x$-as geeft de $y$-as aan welke
-proportie van de waarnemingen zich onder of op die waarde bevindt; 
+proportie van de waarnemingen kleiner of gelijk is aan die waarde; 
 dat wordt de **cumulatieve proportie** genoemd. Je kunt uit deze
 grafiek bijvoorbeeld aflezen (zie de [paarse]{style="color:darkorchid;"}
 onderbroken lijnen) dat 86% van de mensen een gewicht heeft van maximaal
@@ -661,7 +670,7 @@ onderbroken lijnen) dat 86% van de mensen een gewicht heeft van maximaal
 #| hoogstens 100kg weegt."
 #| label: fig-cumul
 #| fig.width: 5
-#| fig.height: 3.5
+#| fig.height: 3
 #| out.width: "71.4%"
 
 # Maak een cumulatieve verdelingsplot
@@ -673,7 +682,7 @@ cumulplot <- ggplot(NHANES, aes(x = Weight)) +
     bw = 2
   ) +
   labs(
-    x = "Lichaamsgewicht",
+    x = "Lichaamsgewicht (kg)",
     y = "Cumulatieve proportie"
   ) + 
   theme_minimal()
@@ -709,8 +718,8 @@ cumulplot +
     size = 3
   ) +
   scale_y_continuous(
-    breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.86, 0.9, 1),  
-    minor_breaks = c(0.25 / 2, 0.375, 0.625, 0.875),  
+    breaks = c(0, 0.2, 0.4, 0.6, 0.8, 0.86, 1),  
+    minor_breaks = c(0.1, 0.3, 0.5, 0.7, 0.9),  
     labels = function(breaks) ifelse(breaks == 0.86, "0.86", breaks)
   )
 ```
@@ -754,8 +763,8 @@ histogram van `BMI` bevinden zich dus in de buurt van het getal 27.
 
 Het tweede getal geeft de **spreiding** van de verdeling weer. Informeel
 bedoelen we met de spreiding van de verdeling de mate waarin de
-verschillende waarden van de variabele van elkaar verschillen; de mate
-waarin de waarden *verspreid* zijn.
+verschillende waarden van de variabele van elkaar verschillen; 
+dus in hoeverre de waarden *verspreid* zijn.
 
 @fig-ligging-spreiding illustreert die twee begrippen, ligging en
 spreiding, aan de hand van histogrammen. De twee histogrammen aan de
@@ -2030,7 +2039,7 @@ is de wortel van de variantie: $$
 s_X = \sqrt{V_X}.
 $$ {#eq-sd-var} Als we de definitie van de variantie invullen levert dat
 op: $$
-s_X = \sqrt{\frac{\sum_i^n \left(x_i - \overline{x}\right)^2}{n-1}}.
+s_X = \sqrt{\frac{\sum_{i=1}^n \left(x_i - \overline{x}\right)^2}{n-1}}.
 $$ {#eq-sd} De standaarddeviatie wordt ook wel de **standaardafwijking**
 genoemd.
 
