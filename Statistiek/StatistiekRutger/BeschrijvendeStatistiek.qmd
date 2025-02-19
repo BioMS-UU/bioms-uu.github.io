@@ -9,8 +9,9 @@ library(ggplot2)
 
 opvulkleur <- "#ff7700" #opvulkleur
 lijnkleur1 <- "DarkOrchid"
-lijnkleur2 <- "red"
-lijnkleur3 <- "blue"
+lijnkleur2 <- "#C72C05"
+lijnkleur3 <- "#0044FB"
+lijnkleur4 <- "#65982B"
 
 ```
 
@@ -1668,7 +1669,7 @@ cumulplot +
       x = min(NHANES$Weight, na.rm = TRUE), xend = quantiles[1], 
       y = 0.25, yend = 0.25
       ), 
-    linetype = "dashed", color = "purple", size = 1
+    linetype = "dashed", color = lijnkleur1, size = 1
     ) +
   geom_segment(
     aes(
@@ -1682,14 +1683,14 @@ cumulplot +
       x = min(NHANES$Weight, na.rm = TRUE), xend = quantiles[3], 
       y = 0.75, yend = 0.75
       ), 
-    linetype = "dashed", color = "purple", size = 1
+    linetype = "dashed", color = lijnkleur1, size = 1
     ) +
   geom_segment(
     aes(
       x = quantiles[1], xend = quantiles[1], 
       y = 0, yend = 0.25
       ), 
-    linetype = "dashed", color = "purple", size = 1
+    linetype = "dashed", color = lijnkleur1, size = 1
     ) +
   geom_segment(
     aes(
@@ -1703,11 +1704,11 @@ cumulplot +
       x = quantiles[3], xend = quantiles[3], 
       y = 0, yend = 0.75
       ), 
-    linetype = "dashed", color = "purple", size = 1
+    linetype = "dashed", color = lijnkleur1, size = 1
     ) +
   geom_point(
     aes(x = quantiles[1], y = 0.25), 
-    color = "purple", size = 3
+    color = lijnkleur1, size = 3
     ) +
   geom_point(
     aes(x = quantiles[2], y = 0.5), 
@@ -1715,15 +1716,15 @@ cumulplot +
     ) +
   geom_point(
     aes(x = quantiles[3], y = 0.75), 
-    color = "purple", size = 3
+    color = lijnkleur1, size = 3
     ) +
   # geom_point(
   #   aes(x = quantiles[1], y = 0), 
-  #   color = "purple", shape = 4, size = 3, stroke = 1.5
+  #   color = lijnkleur1, shape = 4, size = 3, stroke = 1.5
   #   ) +
   # geom_point(
   #   aes(x = quantiles[3], y = 0), 
-  #   color = "purple", shape = 4, size = 3, stroke = 1.5
+  #   color = lijnkleur1, shape = 4, size = 3, stroke = 1.5
   #   ) +  
   geom_segment(
     aes(
@@ -2197,8 +2198,6 @@ h. Bereken $\sum^n_{i=1} (Y_i - \mean{Y})^2$.
   
 i. Bereken de variantie en de standaarddeviatie van de gewichten. Maak daarbij gebruik
     van je eerdere antwoorden.
-    
-j. Wat is het bereik van de gewichten? 
 :::
 
 ::: {#exr-schat-sd}
@@ -2239,19 +2238,13 @@ kleiner dan het gemiddelde, doordat de "staart" aan de rechterkant een
 sterk effect heeft op het gemiddelde maar nauwelijks op de andere
 centrummaten.
 
-::: todo-box
-Liever zou ik een een biologische dataset gebruiken, maar ik heb geen
-mooie set kunnen vinden...
-
-Kleuren van de lijnen aanpassen!
-:::
-
 ```{r}
 #| code-fold: true
 #| warning: false
 #| fig.width: 5
 #| fig.height: 3
-#| fig-cap: "Voorbeeld van een scheve verdeling, waarbij de modus, de mediaan, en het gemiddelde zijn aangegeven."
+#| fig-cap: "Voorbeeld van een scheve verdeling, waarbij de modus, de mediaan, en het gemiddelde zijn aangegeven. Bij zo'n rechts-scheve verdeling is typisch de modus kleiner dan de mediaan,
+#| en de mediaan kleiner dan het gemiddelde."
 #| label: fig-centrummaten
 
 # Installeer en laad ggplot2 als het niet al beschikbaar is
@@ -2292,19 +2285,19 @@ ggplot(gamma_df, aes(x = value)) +
   ) +
   geom_vline(
     aes(xintercept = mean_value),
-    color = "red",
+    color = lijnkleur1,
     linetype = "dashed",
     size = 1.2
   ) +
   geom_vline(
     aes(xintercept = median_value),
-    color = "green",
+    color = lijnkleur4,
     linetype = "dashed",
     size = 1.2
   ) +
   geom_vline(
     aes(xintercept = mode_value),
-    color = "purple",
+    color = lijnkleur3,
     linetype = "dashed",
     size = 1.2
   ) +
@@ -2314,7 +2307,7 @@ ggplot(gamma_df, aes(x = value)) +
     y = 630,
     vjust = 0,
     label = paste0("Gemiddelde = ", round(mean_value, 1)),
-    color = "red"
+    color = lijnkleur1
   ) +
   annotate(
     "text",
@@ -2322,7 +2315,7 @@ ggplot(gamma_df, aes(x = value)) +
     y = 530,
     vjust = 0,
     label = paste0("Mediaan = ", round(median_value, 1)),
-    color = "green"
+    color = lijnkleur4
   ) +
   annotate(
     "text",
@@ -2330,7 +2323,7 @@ ggplot(gamma_df, aes(x = value)) +
     y = 430,
     vjust = 0,
     label = paste0("Modus = ", round(mode_value, 1)),
-    color = "purple"
+    color = lijnkleur3
   ) +
   labs(
     title = NULL,
@@ -2394,7 +2387,7 @@ knitr::kable(
     "Absolute frequentie", 
     "Relatieve frequentie"
     ), 
-  caption = "Frequentietabel van gezondheidsstatus in de NHANES-gegevens."
+  caption = NULL
   )
 ```
 :::
@@ -2417,34 +2410,7 @@ meeste mensen hun eigen gezondheid positief beoordelen (Goed, Zeer Goed,
 of Uitstekend). In de duizenden regels van de ruwe data springt die
 conclusie niet direct in het oog.
 
-:::: {#exr-freqtab}
-## Frequentietabellen voor een categoriale variabele met R
 
-In deze opdracht gaan we de tabel uit @exm-freq-gezondheidsstatus reproduceren in R. 
-
-Neem de onderstaande code over: 
-```
-library(NHANES)
-data <- NHANES$HealthGen
-```
-  a. Bekijk `data`. Wat voor soort variabele is het? 
-  
-Het viel je misschien ook al op dat er veel <NA> waardes zijn. Dit zijn lege datapunten. 
-
-  b. Voeg `data <- data[!is.na(data)]` onderaan je code toe. Wat is er veranderd? Kan je beschrijven wat de `is.na()` functie doet? 
-  
-  c. Voeg `data.t <- table(data)` toe aan je code. Wat is het verschil tussen data.t en data? Schrijf in je eigen woorden op wat de `table()` functie heeft gedaan. 
-  
-  d. Bereken de frequentie van elke waarde. Geef deze frequentie weer in een nieuwe variabele genaamd `data.f`. Hoe ziet `data.f` eruit? 
-  
-  Tip: Gebruik de `sum()` functie en herinner je dat je een hele vector kan vermenigvuldigen/delen met een bepaald getal. 
-
-::: todo-box
-Rutger controleren
-:::
-
-
-:::
 
 
 
@@ -3397,6 +3363,38 @@ data(NHANES)
 ```{r}
 table(NHANES$HealthGen)
 ```
+
+:::: {#exr-freqtab}
+## Frequentietabellen voor een categoriale variabele met R
+
+In deze opdracht gaan we de frequentietabel uit @exm-freq-gezondheidsstatus reproduceren in R. 
+
+Start een nieuw script en neem de onderstaande code over
+om de gegevens te importeren:
+```{r}
+#| eval: false
+library("NHANES")   # gebruik het package NHANES
+data(NHANES)        # laad de gegevens in een dataframe
+gezondheid <- NHANES$HealthGen # kopieer de kolom HealthGen naar een vector
+```
+  
+  a. Van welk type is variabele `gezondheid`? 
+      Tip: Voeg `str(gezondheid)` en `levels(gezondheid)` toe aan je code.)
+  
+  b. Bekijk de eerste 20 waarden van `gezondheid` met het commando `head(gezondheid, 20)`. Wat valt je op?
+  
+In plaats van een gezondheidstoestand is vaak de waarde `NA` ingevuld. 
+Dat staat voor "Not Available"; voor deze personen is de gezondheidsstatus dus onbekend.
+
+  c. Voeg `gezondheid <- gezondheid[!is.na(gezondheid)]` onderaan je code toe. Wat is er veranderd? Wat doet de functie `is.na()`? 
+  
+  d. Voeg `gezondheid.t <- table(gezondheid)` toe aan je code. Bekijk `gezondheid.t`. Wat heeft de functie `table()` gedaan?
+  
+  e. Bereken nu ook de *relatieve* frequenties van alle niveaus. 
+  Sla deze op in een nieuwe variabele `gezondheid.f`. Hoe ziet `gezondheid.f` eruit? 
+  
+    Tip: Gebruik de functie `sum()` en het feit dat je een hele vector kunt delen door een getal.
+:::
 
 ### Grafieken en figuren in R
 
