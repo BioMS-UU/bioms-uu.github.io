@@ -2,101 +2,74 @@
 
 # Antwoorden statistiek {.unnumbered}
 
-## Antworoden @sec-variabelen-verdelingen
+## Antwoorden @sec-variabelen-verdelingen
 
-@exr-typen-vars
-**a.** nominale & categorisch 
+### @exr-typen-vars
 
-**b.** discreet & numeriek
+a. categorisch & nominaal 
 
-**c.** ordinaal & categorisch
+b. numeriek & discreet
 
-**d.** continu & numeriek
+c. categorisch & ordinaal
 
-**e.** continu & numeriek
+d. numeriek & continu
 
-**f.** discreet & numeriek
+e. numeriek & continu
 
-@exr-factoren
-**a.** De vector `naam` is een nominale categorische variabel, de `level`
-vector is een discrete numerieke variabel, de `totale_speeltijd` vector
-is een continue numerieke variabel, de `klassement` vector is een
-ordinale categorische variabel en 'console\` is een nominale
-categorische variabel
+f. discreet & numeriek
+  
+### @exr-NHANES
 
-**b.** De variabelen `klassement` en `console` zijn categorisch en kunnen dus
-goed als factor worden opgeslagen. Dat geldt ook voor variabele `naam`,
-maar omdat de namen uniek zijn wordt de lijst met niveaus dan even lang
-als de oorspronkelijke vector; deze variabele zal als factor dus niet
-minder geheugen in beslag nemen dan als character data.
+::: {}
+a. --
+    
+b. --
+    
+c. `MaritalStatus` is een nominale variabele met niveaus "Divorced", "LivePartner", "Married", "NeverMarried", "Separated", of    "Widowed",
+    
+d. `Height` is een numerieke, continue variabele. De eenheid is cm.
+    
+e. `nBabies` is een numerieke, discrete variabele. Bij mannen is `NA` ingevuld,
+  voor *Not Available*. Dit is de nette manier om in R missende gegevens aan te geven.
+    
+    Er zijn 5020 vrouwen in de dataset:
+    ```{r}
+    library(NHANES)
+    data(NHANES)
+    sum(NHANES$Gender == "female")
+    ```
+    
+    Bij een klein aantal vrouwen is 0 ingevuld:
+    ```{r}
+    sum(NHANES$nBabies == 0, na.rm = TRUE)
+    ```
+     
+    Dat zijn er wel erg weinig voor zo'n grote groep.
+    Het vermoeden is dus dat bij vrouwen zonder kinderen ook vaak `NA` is ingevuld.
+    
+f.  De eerste regel van de uitvoer is:
 
-**c.**
+    `Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	10000 obs. of  76 variables:`
 
-```{r}
-#| execute: false
+    We lezen hier af dat er 10000 waarnemingen zijn van 76 variabelen.
+:::
 
-naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
-level <- c(8, 1, 3, 2, 10)
-totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
-klassement <- factor(c("Goud", "Brons", "Zilver", "Zilver", "Goud"))
-console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
-
-df = data.frame(naam, level, totale_speeltijd, klassement, console)
-
-#of 
-
-df$klassement = factor(df$klassement)
-```
-
-**d.**
-```{r}
-levels(klassement)
-
-```
-
-**e.**
-De eerste en laatste klassementen, brons en zilver, zijn nu
-allebei hetzelfde level "Laag". Goud heet nu "Hoog".
-
-@exr-pieken
-
-```{r}
-#| echo: false
-#| eval: false
-
-hist(NHANES$Weight[NHANES$AgeMonths < 150], breaks = 30)
-
-```
+### @exr-termen
 
 
-@exr-cijfer
-**a** Het gemiddelde gaat nu van een 6.6 naar een 7,8
+### @exr-cumul-verd
 
-**b** De mediaan blijft hetzelfde. De "middelste" waarde van de dataset is namelijk niet veranderd. 
 
-@exr-variab-bedenken 
-**a** Een voorbeeld is een classificatie van de historische
-waarde van archeologische vondsten op een schaal
-van 1 tot 5.
+### @exr-cijfer
 
-**b** Stel dat je de tijdsduur van een bepaald proces meet,
-maar je kunt om praktische redenen maar 1 keer per
-uur meten. Dan zal de tijdsduur – op zich een conti-
-nue variabele – alleen discrete waarden aannemen
-(1 uur, 2 uur , . . . ). Hoe grover de precisie van je me-
-ting, hoe meer je geneigd zou zijn om de gegevens
-als discreet op te vatten.
+  a. Het gemiddelde gaat nu van een 6.6 naar een 7,8
+  
+  b. De mediaan blijft hetzelfde. De "middelste" waarde van de dataset is namelijk niet veranderd. 
 
-**c** Of je bepaalde klassen als natuurlijk geordend be-
-schouwt, hangt erg af van de focus van je onderzoek.
-Bedrijfsnamen hebben bijvoorbeeld een alfabetische
-ordening. Meestal is die volledig irrelevant en zou
-je de bedrijfsnaam als nominale variabele beschou-
-wen. Maar wat als je wilt onderzoeken of bedrijven
-bewust namen kiezen die hoog in gealfabetiseerde
-lijsten verschijnen (zoals bedrijvengidsen)?
 
-@exr-kwantielen
+### @exr-centrummaten
+
+### @exr-kwantielen
 
 De scores van 16 studenten op een toets zijn als volgt (in volgorde van
 laag naar hoog):\
@@ -135,7 +108,8 @@ quantile(cijfers, 0.25)
 length(cijfers)
 ```
 
-@exr-poezen
+### @exr-poezen
+
 **a.** We tellen alle gewichten bij elkaar op: $3,0 \, \, \textrm{kg} + 3,4\, \, \textrm{kg} + 4,2 \, \, \textrm{kg} = 10,6 \, \, \textrm{kg}$
 
 **b.** Boen de deelstreep worden alle getallen bij elkaar opgeteld, eronder staat het aantal getallen, namelijk 3. Dit is dezelfde formule als die van het gemiddelde. Het resultaat is $\bar{Y} = 3,53$ kg. 
@@ -157,8 +131,77 @@ $$(3,0 \, \, \textrm{kg} - 3,53 \, \, \textrm{kg})^2 + (3,4 \, \, \textrm{kg} - 
 **i.** De formule voor de variantie is $V_X = \frac{\sum_i^n \left(x_i - \overline{x}\right)^2}{n-1}$. De teller in deze formule komt overeen met ons antwoord van **h**, deze hoeven we dus niet nog een keer uit te rekenen. We hebben dus: 
 $$V_X = \frac{0,747}{3-1} = 0,373 \, \, \textrm{kg}^2$$
 
-@exr-freqtab
+### @exr-schat-sd
 
+### @exr-gewogen-gemiddelden
+We kunnen nu niet het gemiddelde uitrekenen hoe we het normaal zouden doen. Als we $\frac{5+8+7}{3}$ uitrekenen houden we geen rekening met hoeveel de cijfers meetellen.
+
+We zouden deze berekening kunnen doen door elk cijfer te vermedigvulgigen met het bijpassende percentage, en deze te delen door 100. We zeggen dan eigenlijk dat we 10 keer een 5 hebben gehaald, 60 keer een 8 en 30 keer een 7, met in totaal 100 cijfers: 
+$$\frac{10\times 5+60\times 8 + 30\times 7}{100}=7,4$$
+
+In plaats daarvan kunnen we elk cijfer vermedigvuldigen met het kommagetal passend bij het percentage en deze bij elkaar optellen: 
+
+$$5\times,1+8\times,6+7\times,3=7,4$$
+Precies hetzelfde wiskundig gezien, maar goed om beide niet-wiskundige redentaties te kunnen maken. 
+
+### @exr-gemiddelde-frequentietabel
+**a.** Je kan het gemiddelde uitrekenen met de formules in **b** en **c**. In beide gevallen komt er 3,5 vogels per zwerm uit. 
+
+**b.** Als we alle vermedigvuldigingen uitschrijven in sommaties (bijvoorbeeld $3\times 2 = 2+2+2$) zien we de standaardformule voor het gemiddelde weer terug. We tellen alle waarnemingen bij elkaar op en delen door het het aantal waarnemingen. 
+
+Het eerste getal in de vermedigvuldiging staat dus telkens voor de frequentie van die specifieke waarneming. 
+
+**c.** Hier gebruiken we de relatieve frequentie. We hebben hier de frequentie gedeeld door het totaal aantal waarnemingen en wiskundig staat hier precies hetzelfde als in **b**. Op deze manier hoef je niet meer door het totale aantal waarnemingen te delen. 
+
+**d.** We nemen als voorbeeld Waarneming$ = 2 = x$. Als we deze $x$ in de functie $f(x)$ stoppen krijgen we $f(2)=0,3$, want de relatieve frequentie van 2 waarnemingen is 0,3. $f(x)x$ is in dit geval dus $0,3\times 2$. Dit is de eerste term in de formule van **c**. Als we deze stappen herhalen voor de andere waarnemingen hebben we alle onderdelen van de formule uit **c**. We kunnen deze dan bij elkaar op tellen en dan hebben we het gemiddelde. Dit kan je wiskundig aangeven met het $\sum$ teken. Dus we kunnen altijd het g
+
+### @exr-tuinvogeltelling
+Antwoord D is correct. Elke staaf kan gekoppeld worden aan een bepaalde gespotte vogel, en de hoogte van de staaf kan aangeven hoe vaak deze is gezien. 
+
+
+### @exr-factoren
+
+  a. De vector `naam` is een nominale categorische variabel, de `level`
+    vector is een discrete numerieke variabel, de `totale_speeltijd` vector
+    is een continue numerieke variabel, de `klassement` vector is een
+    ordinale categorische variabel en 'console\` is een nominale
+    categorische variabel
+  
+  b. De variabelen `klassement` en `console` zijn categorisch en kunnen dus
+    goed als factor worden opgeslagen. Dat geldt ook voor variabele `naam`,
+    maar omdat de namen uniek zijn wordt de lijst met niveaus dan even lang
+    als de oorspronkelijke vector; deze variabele zal als factor dus niet
+      minder geheugen in beslag nemen dan als character data.
+  
+  c.
+  
+  ```{r}
+  #| execute: false
+  
+  naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
+  level <- c(8, 1, 3, 2, 10)
+  totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
+  klassement <- factor(c("Goud", "Brons", "Zilver", "Zilver", "Goud"))
+  console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
+  
+  df = data.frame(naam, level, totale_speeltijd, klassement, console)
+  
+  #of 
+  
+  df$klassement = factor(df$klassement)
+  ```
+  
+  d.
+  ```{r}
+  levels(klassement)
+  
+  ```
+  
+  e.
+  De eerste en laatste klassementen, brons en zilver, zijn nu
+  allebei hetzelfde level "Laag". Goud heet nu "Hoog".
+
+### @exr-freqtab
 
 **a.** Het is een ordinle categoriale variabele. 
 
@@ -185,29 +228,41 @@ Met deze frequentietabel:
 0.11646107 0.33267012 0.39209444 0.13397002 0.02480435
 ```
 
-@exr-gewogen-gemiddelden
-We kunnen nu niet het gemiddelde uitrekenen hoe we het normaal zouden doen. Als we $\frac{5+8+7}{3}$ uitrekenen houden we geen rekening met hoeveel de cijfers meetellen.
+### @exr-staafdiagram-opleiding
 
-We zouden deze berekening kunnen doen door elk cijfer te vermedigvulgigen met het bijpassende percentage, en deze te delen door 100. We zeggen dan eigenlijk dat we 10 keer een 5 hebben gehaald, 60 keer een 8 en 30 keer een 7, met in totaal 100 cijfers: 
-$$\frac{10\times 5+60\times 8 + 30\times 7}{100}=7,4$$
 
-In plaats daarvan kunnen we elk cijfer vermedigvuldigen met het kommagetal passend bij het percentage en deze bij elkaar optellen: 
+### @exr-variab-bedenken 
+**a** Een voorbeeld is een classificatie van de historische
+waarde van archeologische vondsten op een schaal
+van 1 tot 5.
 
-$$5\times,1+8\times,6+7\times,3=7,4$$
-Precies hetzelfde wiskundig gezien, maar goed om beide niet-wiskundige redentaties te kunnen maken. 
+**b** Stel dat je de tijdsduur van een bepaald proces meet,
+maar je kunt om praktische redenen maar 1 keer per
+uur meten. Dan zal de tijdsduur – op zich een conti-
+nue variabele – alleen discrete waarden aannemen
+(1 uur, 2 uur , . . . ). Hoe grover de precisie van je me-
+ting, hoe meer je geneigd zou zijn om de gegevens
+als discreet op te vatten.
 
-@exr-gemiddelde-frequentietabel
-**a.** Je kan het gemiddelde uitrekenen met de formules in **b** en **c**. In beide gevallen komt er 3,5 vogels per zwerm uit. 
+**c** Of je bepaalde klassen als natuurlijk geordend be-
+schouwt, hangt erg af van de focus van je onderzoek.
+Bedrijfsnamen hebben bijvoorbeeld een alfabetische
+ordening. Meestal is die volledig irrelevant en zou
+je de bedrijfsnaam als nominale variabele beschou-
+wen. Maar wat als je wilt onderzoeken of bedrijven
+bewust namen kiezen die hoog in gealfabetiseerde
+lijsten verschijnen (zoals bedrijvengidsen)?
 
-**b.** Als we alle vermedigvuldigingen uitschrijven in sommaties (bijvoorbeeld $3\times 2 = 2+2+2$) zien we de standaardformule voor het gemiddelde weer terug. We tellen alle waarnemingen bij elkaar op en delen door het het aantal waarnemingen. 
+### @exr-pieken
 
-Het eerste getal in de vermedigvuldiging staat dus telkens voor de frequentie van die specifieke waarneming. 
+```{r}
+#| eval: false
 
-**c.** Hier gebruiken we de relatieve frequentie. We hebben hier de frequentie gedeeld door het totaal aantal waarnemingen en wiskundig staat hier precies hetzelfde als in **b**. Op deze manier hoef je niet meer door het totale aantal waarnemingen te delen. 
+hist(NHANES$Weight[NHANES$AgeMonths < 150], breaks = 30)
 
-**d.** We nemen als voorbeeld Waarneming$ = 2 = x$. Als we deze $x$ in de functie $f(x)$ stoppen krijgen we $f(2)=0,3$, want de relatieve frequentie van 2 waarnemingen is 0,3. $f(x)x$ is in dit geval dus $0,3\times 2$. Dit is de eerste term in de formule van **c**. Als we deze stappen herhalen voor de andere waarnemingen hebben we alle onderdelen van de formule uit **c**. We kunnen deze dan bij elkaar op tellen en dan hebben we het gemiddelde. Dit kan je wiskundig aangeven met het $\sum$ teken. Dus we kunnen altijd het g
+```
 
-@exr-sprinkhanen: 
+### @exr-sprinkhanen: 
 **a** 
 Het gemiddelde: 
 
@@ -267,7 +322,7 @@ sd(data_c)
 ```
 
 
-@exr-middelbare-mediaan
+### @exr-middelbare-mediaan
 
 De mediaan zou als schoolcijfer een aan-
 tal voordelen hebben, omdat deze minder gevoelig is voor
@@ -279,8 +334,6 @@ niet al te zwaar hoeven meetellen op je rapport. Maar
 het rapportcijfer als een leerling besluit alleen de eerste
 helft van het jaar zijn best te doen?
 
-@exr-tuinvogeltelling
-Antwoord D is correct. Elke staaf kan gekoppeld worden aan een bepaalde gespotte vogel, en de hoogte van de staaf kan aangeven hoe vaak deze is gezien. 
 
 ## Antwoorden @sec-kansverdelingen {.unnumbered}
 
