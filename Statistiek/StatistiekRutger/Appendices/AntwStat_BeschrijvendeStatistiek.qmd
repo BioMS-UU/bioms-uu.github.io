@@ -1,0 +1,476 @@
+## Uitwerkingen @sec-variabelen-verdelingen
+
+### @exr-typen-vars
+
+a. categorisch & nominaal 
+
+b. numeriek & discreet
+
+c. categorisch & ordinaal
+
+d. numeriek & continu
+
+e. numeriek & continu
+
+f. discreet & numeriek
+  
+### @exr-NHANES
+
+a. --
+    
+b. --
+    
+c. `MaritalStatus` is een nominale variabele met niveaus "Divorced", "LivePartner", "Married", "NeverMarried", "Separated", of    "Widowed",
+    
+d. `Height` is een numerieke, continue variabele. De eenheid is cm.
+    
+e. `nBabies` is een numerieke, discrete variabele. Bij mannen is `NA` ingevuld,
+   voor *Not Available*. Dit is de nette manier om in R missende gegevens aan te geven.
+
+   Er zijn 5020 vrouwen in de dataset:
+   ```{r}
+   library(NHANES)
+   data(NHANES)
+   sum(NHANES$Gender == "female")
+   ```
+
+   Bij een klein aantal vrouwen is 0 ingevuld:
+   ```{r}
+   sum(NHANES$nBabies == 0, na.rm = TRUE)
+   ```
+
+   Dat zijn er wel erg weinig voor zo'n grote groep.
+   Het vermoeden is dus dat bij vrouwen zonder kinderen ook vaak `NA` is ingevuld.
+    
+f. De eerste regel van de uitvoer is:
+
+   ```
+   Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	10000 obs. of  76 variables:
+   ```
+
+   We lezen hier af dat er 10000 waarnemingen zijn van 76 variabelen.
+
+
+### @exr-termen
+
+::: {.todo-box}
+
+Schrijven zodra de opgave af is.
+:::
+
+a.  `NA`
+
+b.  `NA`
+
+c.  `NA`
+
+d.  `NA`
+
+e.  `NA`
+
+f.  `NA`
+
+
+### @exr-cumul-verd
+
+a. Ongeveer 54%.
+
+b. Ongeveer 81%.
+
+c. Ongeveer 86% weegt hoogstens 100kg, en 54% weegt hoogstens 54%. Tussen die grenzen zit dus $86\% - 54\% = 32\%$. 
+
+d. Ongeveer 25kg. 
+
+
+### @exr-cijfer
+
+a. Het gemiddelde gaat nu van een 6,6 naar een 7,8.
+
+b. De mediaan blijft hetzelfde. De "middelste" waarde van de dataset is namelijk niet veranderd. 
+
+c. Het gemiddelde is een stuk gevoeliger voor uitbijters.
+   In dit geval had het verschuiven van de uitbijter
+   geen enkel effect op de mediaan.
+
+### @exr-centrummaten
+
+a. Gemiddelde: 6,78. Mediaan: 4.
+
+b. De sessie met 24 landingen is nogal een uitbijter. Die ene waarde heeft een groot effect op het gemiddelde.
+   De mediaan geeft in dit geval misschien een representatiever beeld.
+
+
+### @exr-kwantielen
+
+**a.** en **b.** Een overzicht van de kwartielen:
+
+$$ 12\     15\     18\   20 \underset{\mathrm{Q1} = 20{,}5}{|} 21\    23\   25\    28 \underset{\mathrm{Q2} = 29}{|} 30\    32\    35\    38 \underset{\mathrm{Q3} = 39}{|} 40\    42\    45\    46 $$
+  
+c. $\text{IKA} = \text{Q3} - \text{Q1} = 39 - 20{,}5 = 18{,}5$. 
+
+
+d. Nu worden de kwartielen:
+
+$$ 12\    15\    18\   19\underset{\mathrm{Q1} = 19{,}5}{|} 20 \    21\   23\    25\quad     \underset{\mathrm{Q2} = 29}{28\phantom{|}} \quad    30\    32\   35\    38 \underset{\mathrm{Q3} = 39}{|} 40\    42\    45\    46 $$
+De IKA is dus:
+$$\text{IKA} = \text{Q3} - \text{Q2} = 39 - 19{,}5 = 19{,}5. $$
+
+### @exr-poezen
+
+Let op! In de berekeningen hieronder
+is het heel belangrijk dat je niet tussendoor afrondt.
+Als je een eerder resultaat later hergebruikt,
+gebruik dan het *onafgeronde* resultaat.
+
+a. We tellen alle gewichten bij elkaar op: $$\sum_{i=1}^3 Y_i = 3{,}0 \, \textrm{kg} + 3{,}4\,\textrm{kg} + 4{,}2\,\textrm{kg} = 10{,}6\,\textrm{kg}.$$
+
+b. Boven de deelstreep worden alle getallen bij elkaar opgeteld, eronder staat het aantal getallen, namelijk 3. Dit is dezelfde formule als die van het gemiddelde. Het resultaat is: $$\mean{Y} = \frac{\sum_{i=1}^3 Y_i}{3} = 3{,}53\,\text{kg}.$$ 
+
+c. $i=2$ onder het sommatieteken geeft aan dat we beginnen met optellen bij het tweede datapunt. We tellen dus alleen $Y_2$ en $Y_3$ bij elkaar op: 
+$$\sum_{i=2}^3 Y_i=3{,}4\,\textrm{kg} + 4{,}2\,\textrm{kg}=7{,}6\,\text{kg}.$$
+
+d. Er staat nu niet 3 bovenin het sommatieteken, maar $n$. 
+Maar $n$ is hier gelijk aan 3, en dus we krijgen hier hetzelfde antwoord als bij **a**: $10{,}6\,\textrm{kg}$.
+
+e. Omdat het kwadraat-teken hier binnen de sommatie staat moeten we elk datapunt eerst kwadrateren, en daarna de resultaten bij elkaar optellen: 
+
+$$\sum^n_{i=1} Y_i^2 = (3,0\,\textrm{kg})^2 + (3,4\,\textrm{kg})^2 + (4,2\,\textrm{kg})^2 = 38,2\,\textrm{kg}^2$$
+
+f. Nu staat de hele sommatie tussen haken en het kwadraat daarbuiten.
+Tussen haken staat dus het resultaat van **a**, en dat moeten we kwadrateren: 
+$$\left( \sum^n_{i=1} Y_i\right)^2 = (10,6\, \, \textrm{kg})^2 = 112\,\textrm{kg}^2.$$
+
+g. We tellen hier de afwijkingen van het gemiddelde (residuen) bij elkaar op. Deze som is altijd gelijk aan nul! 
+   Je kunt dat ook wiskundig aantonen:
+   $$ \sum_{i = 1}^n (Y_i - \mean{Y}) = \left(\sum_{i = 1}^n Y_i\right) - \sum_{i = 1}^n \mean{Y} = n \mean{Y} - n \mean{Y} = 0.$$ 
+
+h. Hier moeten we eerst het kwadraat van elk verschil uitrekenen. Hierdoor wordt het uiteindelijke resultaat niet meer 0 omdat de negatieve waardes die we eruit krijgen positief worden: 
+
+$$\sum^n_{i=1} (Y_i - \mean{Y})^2 = (3{,}0\,\textrm{kg} - 3{,}53\,\textrm{kg})^2 + (3{,}4\,\textrm{kg} - 3{,}53\,\textrm{kg})^2 + (4{,}2\,\textrm{kg}-3{,}53\,\textrm{kg})^2 = 0{,}747\,\textrm{kg}^2.$$
+
+i.  De formule voor de variantie is: $$V_X = \frac{\sum_i^n \left(x_i - \mean{x}\right)^2}{n-1}.$$ 
+De teller in deze formule komt overeen met ons antwoord van **h**; deze hoeven we dus niet nog een keer uit te rekenen. 
+We krijgen dus: 
+$$V_X = \frac{0{,}747}{3-1} = 0{,}373\,\textrm{kg}^2.$$
+
+### @exr-schat-sd
+
+::: {.todo-box}
+Schrijven als de opdracht af is.
+:::
+
+### @exr-gewogen-gemiddelden
+
+We kunnen niet de gewone formule voor het gemiddelde gebruiken,
+want ieder cijfer heeft nu een ander "gewicht".
+We kunnen het gewogen gemiddelde berekenen door elk cijfer te vermenigvuldigen met het bijbehorende gewicht, 
+en het resultaat te delen door de som van de gewichten. 
+$$\frac{10\times 5+60\times 8 + 30\times 7}{10 + 60 + 30}=\frac{10\times 5+60\times 8 + 30\times 7}{100}=7{,}4.$$
+Het is dus net alsof je 10 keer een 5 hebt gehaald, 60 keer een 8, en 30 keer een 7, met in totaal 100 cijfers.
+
+We kunnen hetzelfde resultaat krijgen als we elk cijfer vermenigvuldigen met het kommagetal
+dat hoort bij het percentage, want:
+
+$$
+\begin{align}
+\frac{10\times 5+60\times 8 + 30\times 7}{100} &= 0{,}1\times 5+0{,}6\times 8 + 0{,}3\times 7\\
+& = 7{,}4.
+\end{align}$$ {#eq-gew-gem}
+
+### @exr-gemiddelde-frequentietabel
+
+a. De waarnemingen zijn 5, 3, 6, 2, 4, 3, 3, 2, 2, 5. Het gemiddelde is $\left(\sum_{i = 1}^10 x_i\right)/10 = 3{,}5$.
+
+b. We kunnen $5 + 3 + 6 + 2 + 4 + 3 + 3 + 2 + 2 + 5$ schrijven als $3 \times 2 + 3\times 3 + 1 \times 4 + 2 \times 5 + 1 \times 6$.
+    Daarom geldt ook:
+     $$ \mean{x} = \frac{\sum_{i = 1}^{10} x_i}{10} = \frac{3\times {\color{darkorange}2} + 3\times {\color{darkorange}3} + 1\times {\color{darkorange}4} + 2\times {\color{darkorange}5} + 1 \times {\color{darkorange}6} }{10}.$$ {#eq-gem-1}
+
+    Het tweede (oranje) getal in de vermenigvuldigingen is dus telkens waarde van de variabele (het aantal vogels),
+    het eerste getal de absolute frequentie van die waarde.
+
+c. De noemer van @eq-gem-1 kunnen we verrekenen met de zwarte getallen in de teller:
+$$
+\begin{align}
+\frac{\sum_{i = 1}^{10} x_i}{10} & = \frac{3\times {\color{darkorange}2} + 3\times {\color{darkorange}3} + 1\times {\color{darkorange}4} + 2\times {\color{darkorange}5} + 1 \times {\color{darkorange}6} }{10}\\
+& = \left(\frac{3}{10}\right)\times {\color{darkorange}2} + \left(\frac{3}{10}\right)\times {\color{darkorange}3} + \left(\frac{1}{10}\right)\times {\color{darkorange}4} + \left(\frac{2}{10}\right)\times {\color{darkorange}5} +\left(\frac{1}{10}\right)\times {\color{darkorange}6}\\
+& = 0{,}3 \times {\color{darkorange}2} + 0{,}3\times {\color{darkorange}3} + 0{,}1 \times {\color{darkorange}4} + 0{,}2\times {\color{darkorange}5} +0{,}1\times {\color{darkorange}6}.
+\end{align}
+$$ {#eq-gem-2}
+Het gevolg is dat we uiteindelijk steeds de *relatieve frequentie* met de waarde van de variabele vermenigvuldigen. 
+
+d. @Eq-gem-2 is niets anders dan de som over alle mogelijke uitkomsten, steeds vermenigvuldigd met hun relatieve frequentie.
+    Dat is precies wat vergelijking @eq-mean-rel-freq uitdrukt.
+
+e. Vergelijk @eq-gem-2 met @eq-gew-gem. 
+    De boodschap is: als een frequentietabel gegeven is, kun je het gemiddelde uitrekenen
+   door een *gewogen gemiddelde* uit te rekenen met de *relatieve frequenties* als de gewichten.
+
+### @exr-tuinvogeltelling
+
+`Vogelsoort` is een nominale variabele.
+Een histogram, cumulatieve frequentiepolygoon, of boxplot is dus niet van toepassing.
+Dan blijft antwoord D, het staafdiagram, over.
+Dat past ook: een staafdiagram kan voor iedere vogelsoort de frequentie laten zien.
+
+### @exr-zetelverdeling
+
+a. Aangezien we vooral geïnteresseerd zijn de relatieve frequenties
+    van de zetelverdeling, zou een taartdiagram goed werken.
+
+b. Het is leuk dat deze visualisatie de zetelverdeling laat zien
+    door letterlijk de opstelling van de zetels (stoelen) in de Tweede Kamer
+    weer te geven. Een nadeel is dat het aantal zetels per partij
+    niet direct in het oog springt; je moet een beetje zoeken naar
+    de zetels van iedere kleur.
+    Een subtieler punt: de zetels zijn niet allemaal even groot weergegeven! 
+    Het zetelaantal van een partij
+    en de totale oppervlakte van de bijbehorende kleur 
+    komen daardoor niet precies overeen,
+    wat misleidend kan zijn.
+
+### @exr-factoren
+
+a. `naam`: nominaal\
+    `level`: discreet\
+    `totale_speeltijd`: continu\
+    `klassement`: ordinaal\
+    `console`: nominaal.
+    
+b. `naam`: character\
+    `level`: numerical\
+    `totale_speeltijd`: numerical\
+    `klassement`: character\
+    `console`: character.
+    
+c. De variabelen `klassement` en `console` zijn categorisch en kunnen dus
+    goed als factor worden opgeslagen. Dat geldt op zich ook voor variabele `naam`,
+    maar omdat de namen uniek zijn wordt de lijst met niveaus dan even lang
+    als de oorspronkelijke vector; deze variabele zal als factor dus niet
+    efficiënter kunnen worden opgeslagen dan character string.
+
+d. Je kunt `klassement` direct als vector definieren:
+
+   ```{r}
+   #| eval: true
+   
+   naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
+   level <- c(8, 1, 3, 2, 10)
+   totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
+   # definieer klassement direct als factor:
+   klassement <- factor(c("Goud", "Brons", "Zilver", "Zilver", "Goud"))
+   console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
+  
+   df = data.frame(naam, level, totale_speeltijd, klassement, console)
+   ```
+
+   Alternatief is om de kolom eerst als character vector te definieren
+   en achteraf om te zetten naar een factor: 
+   ```{r}
+   #| eval: false
+
+   naam <- c("Mario", "Luigi", "Peach", "Toad", "Bowser")
+   level <- c(8, 1, 3, 2, 10)
+   totale_speeltijd <- c(57884, 14841, 7709, 5513, 109867)
+   # definieer klassement eerst als vector van type character:
+   klassement <- c("Goud", "Brons", "Zilver", "Zilver", "Goud")
+   console <- c("Switch", "Switch", "Wii", "Wii", "Switch")
+
+   df = data.frame(naam, level, totale_speeltijd, klassement, console)
+
+   # kolom klassement omzetten naar factor
+   df$klassement = factor(df$klassement)
+   ```
+
+e. Vraag de niveaus op:
+   ```{r}
+   levels(klassement)
+   ```
+
+### @exr-freqtab
+
+```{r}
+#| echo: false
+library("NHANES")   # gebruik het package NHANES
+data(NHANES)        # laad de gegevens in een dataframe
+gezondheid <- NHANES$HealthGen # kopieer de kolom HealthGen naar een vector
+```
+
+a. Het is een ordinale variabele. Deze is als een factor opgeslagen, met 5 niveaus:
+
+   ```{r}
+   str(gezondheid)
+   levels(gezondheid)
+   ```
+
+b. Het valt op dat er veel regels zijn waar niet een van de niveuas maar `NA` is ingevuld.
+
+c. Deze code selecteerd alle waarden die niet gelijk zijn aan `NA`. De functie `is.na()` bekijkt alle waarden in de factor
+   en produceert een boolean vector met `TRUE` voor elke `NA`, en anders `FALSE`. 
+   Voorbeeld:
+
+   ```{r}
+   voorbeeld_vector <- c("Biologie van Dieren", NA, "Microbiologie")
+   is.na(voorbeeld_vector)
+   ```
+
+   Het uitroepteken in `!is.na()` maakt van elke `TRUE` een `FALSE` en *vice versa*:
+
+   ```{r}
+   !is.na(voorbeeld_vector)
+   ```
+
+   Door die vector binnen de vierkante haken te plaatsen, selecteer je alleen waarden
+   die niet `NA` zijn. 
+
+c. Het resultaat is:
+
+   ```{r}
+  #| echo: false
+   library(NHANES)
+   gezondheid <- NHANES$HealthGen
+   gezondheid <- gezondheid[!is.na(gezondheid)]
+
+   gezondheid.t <- table(gezondheid)
+   ```
+   
+   ```{r}
+   gezondheid.t
+   ```
+   
+   De functie `table()` heeft voor ieder niveau van `gezondheid` geteld
+   hoe vaak die waarde voorkomt in `gezondheid`. 
+   Het resultaat is een absolutie frequentietabel;
+   de waardes komen overeen met de tabel uit @exm-freq-gezondheidsstatus. 
+   
+d. Je uiteindelijke code zou er zo uit kunnen zien: 
+
+   ```{r}
+   library(NHANES)
+   gezondheid <- NHANES$HealthGen
+   gezondheid <- gezondheid[!is.na(gezondheid)]
+
+   gezondheid.t <- table(gezondheid)
+   (gezondheid.f <- gezondheid.t/sum(gezondheid.t))
+   ```
+   
+   In de laatste regel delen we de gehele (absolutie) frequentietabel
+   door het totaal aantal waarnemingen
+   om zo de relatieve frequenties te krijgen.
+
+### @exr-staafdiagram-opleiding
+
+:::{.todo-box}
+Uitwerking schrijven.
+:::
+
+
+### @exr-variab-bedenken 
+
+a. Een voorbeeld is een classificatie van de historische
+   waarde van archeologische vondsten op een schaal
+   van 1 tot 5.
+
+b. Stel dat je de tijdsduur van een bepaald proces meet,
+   maar je kunt om praktische redenen maar 1 keer per
+   uur meten. Dan zal de tijdsduur---op zich een continue variabele---alleen 
+   discrete waarden aannemen
+   (1 uur, 2 uur , ... ). Hoe grover de resolutie van je meting, 
+   hoe meer je geneigd zou zijn om de gegevens
+   als discreet op te vatten.
+
+c. Of je bepaalde klassen als natuurlijk geordend be-
+   schouwt, hangt erg af van de focus van je onderzoek.
+   Bedrijfsnamen hebben bijvoorbeeld een alfabetische
+   ordening. Meestal is die volledig irrelevant en zou
+   je die naam als nominale variabele beschouwen. 
+   Maar wat als je wilt onderzoeken of bedrijven
+   die bovenaan de lijst staan in een bedrijvengids
+   vaker als eerste door klanten worden gebeld?
+
+
+### @exr-pieken
+
+```{r}
+#| eval: false
+
+hist(NHANES$Weight[NHANES$AgeMonths < 150], breaks = 30)
+
+```
+
+### @exr-sprinkhanen: 
+a. Het gemiddelde: 
+
+   De formule voor het gemiddelde is: $\bar{x} = \frac{\sum^n_{i=1}x_i}{n}$
+
+   We hebben 5 datapunten dus:  
+
+   $$\bar{x} = \frac{3,5+2,4+3,4+3,9+2,7}{5} = 3,18 \, \textrm{in}$$ 
+
+   De variantie: 
+
+   De formule voor de variantie is: $V_X = \frac{\sum_i^n \left(x_i - \overline{x}\right)^2}{n-1}$
+
+   Eerst berekenen we het verschil tussen elke waarde en het gemiddelde: $3,5-3,18=0,32$, $2,4-3,18=-0,78$, $3,4-3,18=0,22$, $3,9-3,18=0,72$ en $2,7-3,18=-0,48$. Dit zijn de **residuen** van de verschillende datapunten. Deze gaan we kwadrateren en bij elkaar op tellen om de term in de teller te berekenen. 
+   
+   $$0,32^2+(-0,78)^2+0,22^2+0,72^2+(-0,48)^2=1,508$$
+
+   (Let op dat je tussendoor niet afrond!)
+
+   We hebben 5 datapunten dus $n-1$ is 4. We hebben dus: 
+
+   $$V_X = \frac{1,508}{4}=0,377 \, \textrm{in}^2$$
+
+   De standaarddeviatie: 
+
+   De standaarddeviatie is de wortel van de variantie dus: 
+
+   $$s_X = \sqrt{V_X} = \sqrt{0,377} = 0,614 \, \textrm{in}.$$
+   
+b. De variantie en standaardafwijking blijven hetzelfde! Het gemiddelde neemt met 2 inches af en wordt dus 1,18. Je kan dit zelf narekenen door de stappen uit **a** te herhalen. 
+
+c. Nu veranderen wel alle waardes. Met deze nieuwe waardes (8,89 cm, 6,096 cm, 8,636 cm, 9,906 cm en 6,858 cm) volgen we weer de stappen van **a** en komen we op het volgende uit: 
+
+   $$\bar{x} \approx 8,08 \textrm{cm} \, \, \, V_X\approx 2,432 \textrm{cm}^2 \, \, \, s_X \approx 1,560 \textrm{cm}$$
+
+e. Code:
+
+   ```{r}
+   #| eval: true
+   #| output: true
+
+   data <- c(3.5, 2.4, 3.4, 3.9, 2.7)
+
+   #a
+   print("a")
+   mean(data)
+   var(data)
+   sd(data)
+
+   #b
+   data_b <- data+2
+   print("b")
+   mean(data_b)
+   var(data_b)
+   sd(data_b)
+
+   #c
+   data_c <- data*2.54
+   print("c")
+   mean(data_c)
+   var(data_c)
+   sd(data_c)
+   ```
+
+
+### @exr-middelbare-mediaan
+
+De mediaan zou als schoolcijfer een aantal voordelen hebben, 
+omdat deze minder gevoelig is voor
+uitbijters. Als je het hele jaar goede cijfers hebt gehaald,
+maar één keer door omstandigheden niet hebt kunnen
+leren voor een proefwerk, dan zou die ene keer misschien
+niet al te zwaar hoeven meetellen op je rapport. 
+
+Maar "ieder voordeel heb zijn nadeel". Wat zou er gebeuren met
+het rapportcijfer als een leerling besluit alleen de eerste
+helft van het jaar zijn best te doen?
