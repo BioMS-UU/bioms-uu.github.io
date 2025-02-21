@@ -20,7 +20,7 @@ a. --
     
 b. --
     
-c. `MaritalStatus` is een nominale variabele met niveaus "Divorced", "LivePartner", "Married", "NeverMarried", "Separated", of    "Widowed",
+c. `MaritalStatus` is een nominale variabele met niveaus "Divorced", "LivePartner", "Married", "NeverMarried", "Separated", of    "Widowed".
     
 d. `Height` is een numerieke, continue variabele. De eenheid is cm.
     
@@ -359,10 +359,13 @@ d. Je uiteindelijke code zou er zo uit kunnen zien:
 
 ### @exr-staafdiagram-opleiding
 
-:::{.todo-box}
-Uitwerking schrijven.
-:::
+De volgende code geeft het staafdiagram:
 
+```{r}
+#| fig-width: 9
+#| out-width: 100%
+barplot(table(NHANES$Education))
+```
 
 ### @exr-variab-bedenken 
 
@@ -390,90 +393,143 @@ c. Of je bepaalde klassen als natuurlijk geordend be-
 
 ### @exr-pieken
 
-:::{.todo-box}
-Uitwerking uitschrijven.
-:::
+Het volgende kort scriptje maakt eerst het (bimodale) histogram
+en plot daarna gewicht (`Weight`) tegen leeftijd `AgeMonths`.
 
 ```{r}
-hist(NHANES$Weight, breaks = 40)
+library(NHANES) # library NHANES inladen
+data(NHANES)    # dataset in dataframe zetten
+
+hist(NHANES$Weight, breaks = 40)  # histogram van Weight, met ongeveer 40 klassen
 ```
 
 
-We plotten gewicht tegen leeftijd:
+```{r}
+#| fig-width: 5
+#| fig-height: 6
+#| out-width: "71%"
+plot(
+  NHANES$AgeMonths, NHANES$Weight,
+  xlab = "Leeftijd (maand)", ylab = "Gewicht (kg)"
+  ) 
+```
+
+Aan deze plot kun je aflezen dat vrijwel alle personen
+die minder dan 40 kg wegen
+jonger zijn dan 160 maanden.
+De bimodaliteit van de gegevens
+komt dus doordat de populatie grofweg uit twee groepen bestaat:
+volwassenen met een modus rond 75kg
+en kinderen met een modus rond 20kg.
+(Die onderverdeling is natuurlijk niet scherp:
+jongeren in de puberteit vallen tussen de wal en het schip.)
+
+We kunnen dat verder demonstreren door aparte histogrammen te tekenen
+voor volwassenen en voor kinderen/jongeren.
+We trekken de grens bij 15 jaar.
 
 ```{r}
-plot(NHANES$AgeMonths, NHANES$Weight)
+library(NHANES) # library NHANES inladen
+data(NHANES)    # dataset in dataframe zetten
+
+grens <- 15 # grens in jaren
+
+volwassen <- (NHANES$AgeMonths < grens*12)
+
+hist(NHANES$Weight[volwassen], breaks = 40)  # histogram volwassenen
+
+hist(NHANES$Weight[!volwassen], breaks = 40)  # histogram van de jeugd
 ```
+
 
 ### @exr-sprinkhanen: 
 
-:::{.todo-box}
-Uitwerking aanscherpen.
-:::
+a.  Het gemiddelde: 
 
-a. Het gemiddelde: 
+    $$\bar{x} = \frac{\sum^n_{i=1}x_i}{n} = \frac{(3{,}5+2{,}4+3{,}4+3{,}9+2{,}7)\,\textrm{in}}{5} = 3{,}2 \, \textrm{in}.$$
 
-   De formule voor het gemiddelde is: $\bar{x} = \frac{\sum^n_{i=1}x_i}{n}$
-
-   We hebben 5 datapunten dus:  
-
-   $$\bar{x} = \frac{3,5+2,4+3,4+3,9+2,7}{5} = 3,18 \, \textrm{in}$$ 
-
-   De variantie: 
-
-   De formule voor de variantie is: $V_X = \frac{\sum_i^n \left(x_i - \overline{x}\right)^2}{n-1}$
-
-   Eerst berekenen we het verschil tussen elke waarde en het gemiddelde: $3,5-3,18=0,32$, $2,4-3,18=-0,78$, $3,4-3,18=0,22$, $3,9-3,18=0,72$ en $2,7-3,18=-0,48$. Dit zijn de **residuen** van de verschillende datapunten. Deze gaan we kwadrateren en bij elkaar op tellen om de term in de teller te berekenen. 
+    De variantie: 
    
-   $$0,32^2+(-0,78)^2+0,22^2+0,72^2+(-0,48)^2=1,508$$
+    $$
+    \begin{align}
+    V_X & = \frac{\sum_i^n \left(x_i - \overline{x}\right)^2}{n-1}\\
+    &= \frac{\sum_i^n \left(3{,}5\,\textrm{in} - 3{,}18\,\textrm{in}\right)^2 + \left(2{,}4\,\textrm{in} - 3{,}18\,\textrm{in}\right)^2 + \ldots}{5 - 1}\\
+    &= 0{,}38\,\textrm{in}^2.\\
+    \end{align}
+    $$
 
-   (Let op dat je tussendoor niet afrond!)
+    (Let op dat je tussendoor niet afrondt!)
 
-   We hebben 5 datapunten dus $n-1$ is 4. We hebben dus: 
-
-   $$V_X = \frac{1,508}{4}=0,377 \, \textrm{in}^2$$
-
-   De standaarddeviatie: 
-
-   De standaarddeviatie is de wortel van de variantie dus: 
-
-   $$s_X = \sqrt{V_X} = \sqrt{0,377} = 0,614 \, \textrm{in}.$$
+    De standaarddeviatie: 
    
-b. De variantie en standaardafwijking blijven hetzelfde! Het gemiddelde neemt met 2 inches af en wordt dus 1,18. Je kan dit zelf narekenen door de stappen uit **a** te herhalen. 
+    $$s_X = \sqrt{V_X} = \sqrt{0{,}377}\,\textrm{in} = 0{,}61\,\textrm{in}.$$
+    
+    Verifieren in R:
+    
+    ```{r}
+    data <- c(3.5, 2.4, 3.4, 3.9, 2.7)
 
-c. Nu veranderen wel alle waardes. Met deze nieuwe waardes (8,89 cm, 6,096 cm, 8,636 cm, 9,906 cm en 6,858 cm) volgen we weer de stappen van **a** en komen we op het volgende uit: 
+    mean(data)
+    var(data)
+    sd(data)
+    ```
 
-   $$\bar{x} \approx 8,08 \textrm{cm} \, \, \, V_X\approx 2,432 \textrm{cm}^2 \, \, \, s_X \approx 1,560 \textrm{cm}$$
+   
+b.  Als we van iedere lengte 2 in aftrekken, verschuiven alle datapunten evenveel.
+    Het gemiddelde neemt dus met 2 inches af en wordt 1,2 in.
+    
+    Als alle punten evenveel opschuiven,
+    blijft de spreiding van de gegevens gelijk.
+    (Alle afstanden tussen punten bijven onveranderd,
+    en het histogram blijft even breed.)
+    Daarom moeten ook variantie en standaarddeviatie onveranderd blijven.
+    
+    Verifieren in R:
+    
+    ```{r}
+    data_verschoven <- data - 2
 
-e. Code:
+    mean(data_verschoven)
+    var(data_verschoven)
+    sd(data_verschoven)
+    ```
 
-   ```{r}
-   #| eval: true
-   #| output: true
+c.  Als alle waarden in cm worden uitgedrukt, worden ze allemaal een factor 2,54 groter.
+    Dat betekent dat ook het gemiddelde een factor 2,54 groter wordt.
+    Je ziet dit vanzelf als je invult dat $1\,\text{in} = 2{,}54\,\text{cm}$: 
+    
+    $$\mean{x} = 3{,}18\,\text{in} = 3{,}18 \times (2{,}54\,\text{cm}) = 3{,}18 \times (2{,}54)^2\,\text{cm}^2 = 8{,}1\,\text{cm}.$$
 
-   data <- c(3.5, 2.4, 3.4, 3.9, 2.7)
+    Hetzelfde geldt voor de standaarddeviatie: 
+    als alle getallen een factor 2,54 groter worden,
+    dan worden ook alle afstanden diezelfde factor groter,
+    en de breedte van de verdeling ook.
+    Ook dat volgt direct als we invullen dat $1\,\text{in} = 2{,}54\,\text{cm}$:
+    
+    $$s_X = 0{,}614\,\text{in} = 0{,}614\times(2{,}54\,\text{cm}) = 1{,}56\,\text{cm}.$$
+    
+    De variantie is iets ingewikkelder. 
+    De variantie heeft dimensie lengte-in-het-kwadraat,
+    en eenheid $\text{in}^2$.
+    Als alle waarden een factor 2{,}54 groter worden,
+    dan wordt de variantie dus een factor $2{,}54^2$ groter!
+    Je kunt dat ook zien in de formule voor $V_X$:
+    de residuen worden gekwadrateerd, en dus ook de factor $2{,}54$.
+    
+    Maar je krijgt het juiste resultaat ook door weer gewoon 
+    $1\,\text{in} = 2{,}54\,\text{cm}$ in te vullen:
 
-   #a
-   print("a")
-   mean(data)
-   var(data)
-   sd(data)
+    $$V_X = 0{,}377\,\text{in}^2 = 0{,}377\times(2{,}54\,\text{cm})^2 = 2{,}43\,\text{cm}^2.$$
+    
+    Verifieren in R:
+    
+    ```{r}
+    data_cm <- data*2.54
 
-   #b
-   data_b <- data+2
-   print("b")
-   mean(data_b)
-   var(data_b)
-   sd(data_b)
-
-   #c
-   data_c <- data*2.54
-   print("c")
-   mean(data_c)
-   var(data_c)
-   sd(data_c)
-   ```
-
+    mean(data_cm)
+    var(data_cm)
+    sd(data_cm)
+    ```
 
 ### @exr-middelbare-mediaan
 
