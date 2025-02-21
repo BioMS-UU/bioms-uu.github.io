@@ -614,6 +614,8 @@ Maak een figuur met histogrammen van 6 verschillende verdelingen, bijv.
 
 willekeurige volgorde
 
+Alternatief: histogrammen van numerieke variabelen uit NHANES.
+
 :::
 
 ::: {#fig-termen layout="[[1,1,1], [1,1,1]]"}
@@ -1213,26 +1215,21 @@ haalt voor het hertentamen een 7.
   c.  Welke waarde is gevoeliger voor uitbijters?
 :::
 
-::: {.todo-box}
-
-Naar college?
-
-:::
-
 Een ander nuttig perspectief is @fig-res-1
 hieronder. Dezelfde tentamencijfers zijn nu op de *verticale* as geplot.
 (De horizontale positie van de punten is willekeurig.) De
 [oranje]{style="color:darkorange;"} lijn markeert het gemiddelde
 $\mean{x}$. Vanuit ieder punt is een verticale grijze lijn getekend naar
 het gemiddelde.
+De lengte van zo'n lijn (de afstand van een punt tot het gemiddelde)
+wordt wordt het **residu** genoemd.
 
-::: {#fig-residuen layout-ncol="2" out-width="100%"}
 ```{r}
 #| code-fold: true
 #| warning: false
 #| fig.width: 2
 #| fig.height: 3.5
-#| out.width: "57%"
+#| out.width: "30%"
 #| fig-cap: "Elastiekjes trekken de oranje lijn precies naar het gemiddelde."
 #| label: fig-res-1
 
@@ -1297,153 +1294,67 @@ ggplot(data, aes(x = x, y = y)) +
   )
 ```
 
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.width: 2
-#| fig.height: 3.5
-#| out.width: "57%"
-#| fig-cap: "Voorbeeld met slechts drie punten. De paarse lijn minimaliseert som van de afstanden tot de punten; de oranje lijn die het gemiddelde aangeeft minimaliseert de kwadratensom."
-#| label: fig-res-2
-
-# Maak een dataset met drie punten
-data <- data.frame(
-  x = c(0.08, 0, -0.08),
-  y = c(9.0, 6, 9)
-)
-
-# Bereken het gemiddelde
-m2 <- mean(data$y)
-
-ggplot(data, aes(x = x, y = y)) +
-  # Verticale lijnen naar het gemiddelde
-  geom_segment(
-    aes(
-      x = x, xend = x, 
-      y = y, yend = m2
-    ),
-    color = "SlateGray",
-    linetype = "solid",
-    size = 1
-  ) +
-  # Punten
-  geom_point(
-    shape = 21, 
-    fill = "SlateGray", 
-    size = 4
-  ) +
-  # Gemiddelde lijn
-  geom_segment(
-    aes(
-      x = -0.15, xend = 0.15, 
-      y = m2, yend = m2
-    ),
-    color = opvulkleur,
-    size = 1
-  ) +
-  # Alternatieve lijn
-  geom_segment(
-    aes(
-      x = -0.15, xend = 0.15, 
-      y = 9, yend = 9
-    ),
-    color = lijnkleur1,
-    size = 1
-  ) +
-  # Label bij de gemiddelde lijn
-  annotate(
-    "text",
-    x = 0.12, 
-    y = m2 + 0.3,
-    label = expression(bar(italic(x))),
-    color = opvulkleur,
-    hjust = 0,
-    size = 6
-  ) +
-  # Y-as instellen
-  scale_y_continuous(
-    breaks = c(1.0, data$y, 8.0), 
-    limits = c(1.0, max(data$y)),
-    labels = scales::number_format(accuracy = 0.1)
-  ) +
-  ylab("") +
-  # Geen x-as, geen gridlijnen
-  theme_classic() +
-  theme(
-    axis.title.x = element_blank(),
-    axis.text.x = element_blank(),
-    axis.line.x = element_blank(),
-    axis.ticks.x = element_blank(),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank()
-  )
-```
-
-Eigenschappen van het gemiddelde.
-:::
-
 Intuïtief verwacht je misschien dat het gemiddelde de waarde is die zo
 dicht mogelijk bij alle punten ligt. Dat zou betekenen dat de oranje
-lijn precies op de hoogte ligt die de totale lengte van de grijze
-lijntjes zo kort mogelijk maakt. Dat is helaas *niet* het geval. Om dat
-te begrijpen, gebruiken we een voorbeeld met slechts drie cijfers.
-@fig-res-2 laat de situatie zien. De drie tentamencijfers zijn hier één
-zes en twee negens. Het gemiddelde is natuurlijk 8 (de
-[oranje]{style="color:darkorange;"} lijn). De totale lengte van de
-grijze lijntjes kun je in dit voorbeeld gemakkelijk aflezen: die is
-$1 + 1 + 2 = 4$. Is dat zo kort mogelijk? Nee! Kijk maar eens naar de
-[paarse]{style="color:DarkOrchid;"} lijn. De afstanden van alle punten
-tot die lijn tellen op tot $0+0+3 = 3$.
-
-Je kunt dit begrijpen met behulp van een metafoor. Als je de positie van
-de lijn zoekt die de som van de grijze lijntjes minimaliseert, dan lijkt
-de situatie op een spelletje touwtrekken. In deze metafoor is ieder
-grijs lijntje een touw, en elk punt trekt even hard aan zijn touw in een
-poging om de lijn naar zich toe te bewegen. De lijn zal dan altijd in de
-richting van de meerderheid van de punten schuiven. In het voorbeeld van
-@fig-res-2 winnen de negens het touwtrekken van de zes, simpelweg omdat
-ze in de meerderheid zijn.
+lijn precies op de hoogte ligt die de totale lengte van de residuen (grijze
+lijntjes) zo kort mogelijk maakt. Dat is helaas *niet* het geval.
 
 Stel nu dat we de lengtes van de grijze lijntjes niet simpelweg
 optellen, maar die lengtes eerst *kwadrateren* voordat we ze optellen.
-Deze som van kwadraten noemen we de **kwadratensom**. Als we de
-[oranje]{style="color:darkorange;"} lijn op hoogte $m$ plaatsen, dan
-wordt de kwadratensom $\mathrm{SS}(m)$ gegeven door:
+Deze som van deze kwadraten noemen we de **kwadratensom**:
 
-$$ \mathrm{SS}(m) = \sum_{i=1}^n \left( x_i - m\right)^2.$$ {#eq-kwadratensom}
+$$ \mathrm{SS} = \sum_{i=1}^n \left( x_i - \mean{x}\right)^2.$$ {#eq-kwadratensom}
 
-Het is eenvoudig aan te tonen dat het gemiddelde $\mean{x}$ de waarde
-van $m$ is die deze *kwadratensom* minimaliseert. Voor wie benieuwd is:
+Het is eenvoudig aan te tonen dat het gemiddelde $\mean{x}$ wél de waarde
+is die deze *kwadratensom* minimaliseert. Voor wie benieuwd is:
 de afleiding kun je vinden in @sec-kwadratensom.
 
+Hier past een metafoor. 
+Je kunt je de grijze lijntjes voorstellen als *elastiekjes*
+die zowel aan de oranje lijn als aan de datapunten vastgeknoopt zijn.
+Alle datapunten trekken via hun elastiekje aan de [oranje]{style="color:darkorange;"} lijn, 
+en daardoor zal de [oranje]{style="color:darkorange;"} lijn omhoog of omlaag
+bewegen totdat de krachten in evenwicht zijn.
+Dat evenwicht is precies het gemiddelde.
 
-Ook hier past een metafoor. Nu zijn de grijze lijntjes geen
-touwen, maar *elastiekjes*. Weer trekken
-alle punten aan de [oranje]{style="color:darkorange;"} lijn, en daardoor
-zal de [oranje]{style="color:darkorange;"} lijn omhoog of omlaag
-bewegen totdat de krachten in evenwicht zijn. Het essentiële verschil
-tussen touwen en elastiekjes is het volgende. Bij touwtrekken hangt
-de kracht waarmee een punt aan de [oranje]{style="color:darkorange;"}
-lijn trekt niet af van de lengte van het touw
-(de afstand tot het punt). 
-Bij elastiekjes hangt de trekkracht wél af van de
-uitrekking: punten die verder van de lijn afliggen, trekken daardoor
-harder. Het gemiddelde "luistert" op die manier veel meer
-naar punten die ver van de [oranje]{style="color:darkorange;"} lijn afliggen.
-Dat zorg ervoor dat de evenwichtspositie van de
-[oranje]{style="color:darkorange;"} lijn nu wél overeenkomt met het
-gemiddelde $\mean{x}$.
+De trek-kracht van een elastiekje is groter 
+naarmate deze verder wordt uitgerekt. 
+Punten die verder van de lijn afliggen, trekken daardoor
+harder aan de [oranje]{style="color:darkorange;"} lijn.
+De oranje lijn zal dus sterk naar uitbuiters worden toegetrokken.
+(Zie @eq-kwadratensom: een punt dat twee keer zo ver van $\mean{x}$
+afligt, draagt door het kwadrateren van de residuen
+vier keer zo sterk bij aan de kwadratensom.)
 
 ::: {.callout-important}
 
 ## Eigenschappen van het gemiddelde
 
-Het gemiddelde is dus *niet* de waarde die de totale afstand tot de
-waarnemingen minimaliseert.
+Het gemiddelde is dus *niet* de waarde die de som van de residuen minimaliseert.
 
-Het gemiddelde is *wel* de waarde die de kwadratensom minimaliseert:
-het totaal van de kwadraten van de afstanden.
+Het gemiddelde is *wel* de waarde die de *kwadratensom* minimaliseert:
+de som van de kwadraten van de residuen
 :::
+
+::: {.callout-tip}
+
+## Waarom werkt de metafoor van de elastiekjes?
+
+Voor wie dat interessant vindt:
+het is geen toeval dat deze metafoor "werkt".
+
+In de metafoor zou de evenwichtspositie van de oranje lijn 
+de positie zijn waar de totale *potentiële energie* minimaal is.
+De potentiële energie van een "ideale" elastiek
+of veer is gelijk is aan $E(u) = \frac{1}{2} k u^2$, 
+waar $u$ de uitrekking is van de elastiek, en $k$ de veerconstante.
+De energie hangt dus samen met het *kwadraat* van de uitrekking!
+De potentiële energie is dus minimaal
+op de positie waar de som van de *kwadraten* van $u$ minimaal is.
+De oranje lijn komt dus echt tot rust bij het gemiddelde.
+
+:::
+
 
 ::: {.content-hidden}
 Als je op de middelbare school natuurkunde hebt gekozen dan kun je
@@ -2464,16 +2375,7 @@ of Uitstekend). In de duizenden regels van de ruwe data springt die
 conclusie niet direct in het oog.
 
 
-
-
-
 ### Frequentietabel voor continue variabelen
-
-:::{.todo-box}
-
-korter?
-
-:::
 
 Het opstellen van een frequentietabel voor een numerieke variabele is
 net iets minder vanzelfsprekend.
@@ -2487,27 +2389,11 @@ voorkomt levert dus geen nuttige samenvatting op. Dit is een algemeen
 probleem voor continue variabelen.
 
 Als we een frequentietabel willen maken voor een continue variabele
-moeten we de gegevens daarom indelen in verschillende klassen. Dat gaat
-zo:
-
-1.  Bepaal eerst de kleinste en de grootste waarde onder de
-    waarnemingen. Het interval van de kleinste tot en met de grootste
-    waarde noemen we het **bereik** van de waarnemingen.
-2.  Verdeel vervolgens de reële as in gelijke intervallen. Dat zijn de
-    **klassen**.
-3.  Tel daarna voor elke klasse het aantal waarnemingen dat binnen de
-    klasse valt. Dit aantal is de absolute frequentie van de klasse. (We
-    hoeven natuurlijk alleen de klassen mee te nemen die overlappen met
-    het bereik.)
-4.  Een lastig punt is: wat doe je als een waarneming precies op een
-    grens valt tussen klassen? In deze cursus tellen we de waarde dan
-    mee in de hogere klasse, maar dat is een willekeurige keuze.
-5.  Nu heb je alle gegevens om de absolute frequentietabel op te
-    stellen. Om ook de relatieve frequentie van iedere klasse te
-    berekenen, deel je de absolute frequenties door het totaal aantal
-    waarnemingen.
-
-Als we deze stappen toepassen op het voorbeeld, is dit het resultaat:
+moeten we de gegevens daarom opdelen in verschillende intervallen.
+Die intervallen noemen we **klassen** (*bins* in het Engels).
+Vervolgens tellen we voor iedere klasse hoe vaak een waarneming 
+in die klasse valt.
+Toegepast op het voorbeeld is dit het resultaat:
 
 ```{r}
 #| echo: false
@@ -2559,29 +2445,16 @@ Uit deze tabel kun je gemakkelijk aflezen dat de meest voorkomende
 gewichten zo tussen 50 en 100 kg liggen.
 
 De lastigste stap is het kiezen van de klassen. Daarvoor moet je
-namelijk besluiten hoe breed je de klassen maakt en op welke plek je ze
+namelijk besluiten hoe *breed* je de klassen maakt en op welke plek je ze
 laat beginnen. Hiervoor zijn allerlei formele regels voorgesteld, maar
 met gezond verstand kom je een heel eind.
 
--   Ronde getallen zijn overzichtelijk; in het voorbeeld gebruikten we
-    daarom intervallen die beginnen en eindigen op een geheel tiental.
+-   Ronde getallen zijn overzichtelijk.
 -   Als je heel brede intervallen gebruikt, veeg je veel gegevens op één
     hoop. Het gevaar is dat je daarmee belangrijke patronen in je data
-    onzichtbaar maakt. (We komen hierop terug bij het hoofdstukje over
-    histogrammen.) Aan de andere kant, als je heel smalle intervallen
-    gebruikt, wordt de tabel heel lang, en dat levert geen
-    overzichtelijke samenvatting op. Bovendien wordt het aantal
-    waarnemingen per klasse dan klein en dus sterk afhankelijk van
-    toeval. Voor een geschikte klassenbreedte zoek je daarom een
-    compromis tussen beide gevaren.
--   Meestal is het verstandig om iedere klasse dezelfde breedte te
-    geven. Als sommige klassen breder zijn dan andere kunnen de
-    frequenties namelijk een misleidend beeld geven. Er zijn
-    uitzonderingen: het is bijvoorbeeld niet ongebruikelijk om een
-    restcategorie in een tabel op te nemen voor alle waarnemingen groter
-    dan een bepaalde grens. Gebruik altijd je gezond verstand: als een
-    keuze een misleidend beeld geeft, zul je iets anders moeten
-    verzinnen.
+    onzichtbaar maakt. Aan de andere kant, als je heel smalle intervallen
+    gebruikt, wordt de tabel onoverzichtelijk lang en het aantal
+    waarnemingen per klasse erg klein. Het is dus zoeken naar een middenweg.
 
 ### Frequentietabellen voor discrete variabelen
 
@@ -3317,7 +3190,6 @@ waarin getallen met decimalen ("kommagetallen", *floats*) kunnen worden opgeslag
 Op zich kan `numeric` zowel voor continue als voor discrete
 numerieke variabelen worden gebruikt. 
 Maar als een discrete variabele alleen gehele waarden kan aannemen ligt `integer` meer voor de hand. 
-In het geheugen van de computer neemt een `integer` ook minder ruimte in dan een `numerical` (4 bytes in plaats van 8 bytes).
 
 Voor categorische variabelen kan het type `character` worden gebruikt,
 omdat je daarin de waarden van de variabele als een string kunt opslaan.
@@ -3361,7 +3233,7 @@ levels(factor.voedingsstrategie)
 ```
 
 R slaat factoren in het computergeheugen op 
-met behulp van een code.
+met behulp van een soort code.
 Ieder niveau van de variabele krijgt een nummer (`integer`);
 in het voorbeeld levert dat de volgende codetabel op:
 ```{r}
