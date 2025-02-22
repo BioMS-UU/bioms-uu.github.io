@@ -9,7 +9,7 @@ en daarnaast geplaagd worden door **meetfouten**.
 Beide situaties gaan we apart bekijken.
 We beginnen bij steekproeven.
 
-## Belangrijke begrippen over populaties en steekproeven
+## Onzekerheid in schattingen op basis van steekproeven
 
 Na iedere cursus word je gevraagd 
 om een Caracal-enquête in te vullen.
@@ -131,9 +131,7 @@ d.  Onderzoekers doen een steekproef om te bepalen welk deel van de populatie
     bepaalde kabinetsplannen steunt.
 :::
 
-:::
-
-## Meetfouten in experimenten
+## Onzekerheid door meetfouten
 
 In de vorige paragraaf hebben we besproken hoe onzekerheid ontstaat bij schattingen die zijn gebaseerd op steekproeven. In andere situaties maken we echter geen gebruik van steekproeven, maar gebruiken we meetinstrumenten om een grootheid te bepalen. Denk bijvoorbeeld aan het meten van een fysische constante, zoals de lichtsnelheid, of het meten van een individuele eigenschap, zoals je ochtendgewicht vandaag.
 
@@ -156,9 +154,8 @@ zowel in individuele metingen als in schattingen die gebaseerd zijn op steekproe
 
 ## Schattingen: precisie, nauwkeurigheid, zuiverheid en bias
 
-Als we het hebben over de verschillende manieren
-waarop schattingen kunnen afwijken van de ware parameter
-maken we onderscheid tussen **precisie** en **nauwkeurigheid**.
+Schattingen kunnen op verschillende manieren afwijken van de ware parameter.
+Daarbij maken we nderscheid tussen **precisie** en **nauwkeurigheid**.
 Deze begrippen worden in @fig-precisie-vs-nauwkeurig hieronder geïllustreerd.
 
 ```{r}
@@ -168,6 +165,7 @@ Deze begrippen worden in @fig-precisie-vs-nauwkeurig hieronder geïllustreerd.
 #| label: fig-precisie-vs-nauwkeurig
 #| fig.width: 5
 #| fig.height: 5
+#| out.width: 60%
 
 # Controleer of benodigde pakketten zijn geladen
 if (!("ggplot2" %in% .packages())) { library(ggplot2) }
@@ -262,10 +260,11 @@ gridExtra::grid.arrange(
 
 Stel je voor dat je heel vaak dezelfde methode gebruikt
     om een parameter te schatten.
-Het resultaat kan iedere keer net iets anders uitvallen.
-De methode wordt **precies**
+Het resultaat zal iedere keer net iets anders uitvallen.
+De methode of schatting wordt **precies**
     genoemd als de verschillende resultaten
     weinig van elkaar verschillen.
+Precisie heeft dus te maken met de *spreiding* van resultaten bij herhaling. 
 Je kunt je dat vast voorstellen:
     als je direct na elkaar meerdere keren op dezelfde weegschaal gaat staan
     en de resultaten meerdere kilo's van elkaar verschillen,
@@ -283,6 +282,7 @@ Toch wijken in het onderste plaatje
 Een methode wordt **nauwkeurig** genoemd
 als het gemiddelde van de verschillende resultaten
 dicht bij de juiste waarde ligt.
+Nauwkeurigheid heeft dus te maken met de *locatie* van de resultaten bij herhaling.
 In beide plaatjes in de eerste rij
 van @fig-precisie-vs-nauwkeurig
 zijn de resultaten geclusterd rond de *bull's-eye*.
@@ -348,13 +348,16 @@ d.  Bij het bepalen van een chemische reactiesnelheid speelt
 
 :::
 
-  
-## Toevallige fouten in steekproeven {#sec-toevallige-fouten}
+
 
 Gewapend met deze begrippen keren we terug 
     naar schattingen op basis van steekproeven.
 Waar komen bij schattingen op basis van steekproeven
   de toevallige en de systematische fouten vandaan?
+  
+## Toevallige fouten in schattingen op basis van steekproeven {#sec-toevallige-fouten}
+
+We beginnen met *toevallige* fouten in steekproeven.
 
 In de aanloop naar de Tweede Kamerverkiezingen voeren we een peiling uit. 
 We nemen een steekproef van 1000 stemgerechtigde Nederlanders 
@@ -396,11 +399,16 @@ Als in de gehele populatie 20% van de stemgerechtigden
     op de VVD wil stemmen,
     dan is de kans om in een steekproef van 1000 personen
     slechts 33 VVD-stemmers aan te treffen *enorm klein*.
-(We verwachten er namelijk 200.)
-Die redenering kun je omdraaien:
-    als we in die steekproef 3,3% VVD-stemmers vinden
+(We verwachten er namelijk zo'n 200.)
+Die redenering kun je ook omdraaien:
+    als we in die steekproef 33 VVD-stemmers vinden
     dan kunnen we vrijwel uitsluiten dat het in de gehele populatie
-    om 20% gaat (want dan hadden we er 200 verwacht).
+    om 20% gaat.
+(Dan hadden we er namelijk zo'n 200 verwacht).
+
+Het punt is:
+schattingen kunnen ondanks hun onzekerheid heel informatief zijn,
+maar bij het interpreteren moeten we ons wel bewust zijn van de *mate* van onzekerheid.
 In @sec-schatten leer je
     te berekenen
     hoe groot de onzekerheid in een schatting is.
@@ -436,18 +444,21 @@ Als de manier van selecteren ervoor zorgt
     dat iedere mogelijke verzameling van $n$ eenheden
     een gelijke kans heeft om te worden gekozen,
     dan noemen we dit een **eenvoudige aselecte steekproef** (EAS).
+Een gevolg daarvan is 
+  dat iedere eenheid gelijke kans heeft
+  om in de steekproef opgenomen te worden.
 
 Een EAS heeft verschillende voordelen.
 De eerste is dat een dergelijke steekproef 
     geen bias introduceert.
 Hoewel de verdeling van een variabele 
-  in een eenvoudige aselecte steekproef 
+  in een EAS 
   meestal
   niet perfect overeen komt met die van de populatie,
   is er geen *systematische* afwijking.
 Dat maakt het mogelijk om nauwkeurige schattingen te maken.
-Ten tweede kun je voor een eenvoudige aselecte steekproef
-    vaak uitrekenen hoe groot de toevallige fout is.
+De tweede is dat je voor een eenvoudige aselecte steekproef
+    vaak kunt uitrekenen hoe groot de toevallige fout is.
 Dat wil zeggen dat je de precisie van je schattingen
     kunt kwantificeren.
 (We gaan daar in @sec-schatten verder op in.)
@@ -513,7 +524,43 @@ b.  Laad de dataset NHANES in, zoals je al vaker hebt gedaan.
     Selecteer nu aselect 30 individuen uit deze lijst en 
     geef voor deze steekproef weer hoeveel uren zij
     op doordeweekse dagen typisch te slapen (`SleepHrsNight`). 
-  
+    
+c.  Het volgende script herhaalt de EAS 1000 keer,
+    berekent steeds het gemiddelde van `SleepHrsNight`
+    binnen de steekproef, en tekent vervolgens
+    een histogram van de resultaten.
+    
+    ```{r}
+    #| eval: false
+    #| code-fold: true
+    library(NHANES)
+    data(NHANES)
+    
+    # Instellen van parameters
+    n_herhalingen <- 1000  # Aantal steekproeven
+    n_steekproef  <- 30    # Grootte van elke steekproef
+    gemiddelden   <- numeric(n_herhalingen)  # Opslag voor gemiddelden
+    
+    # Herhaal steekproeven en bereken gemiddelden
+    for (i in 1:n_herhalingen) {
+      steekproef <- sample(
+        NHANES$SleepHrsNight, size = n_steekproef
+      )
+      gemiddelden[i] <- mean(steekproef, na.rm = TRUE)
+    }
+    
+    # Plot histogram van de gemiddelden
+    hist(
+      gemiddelden, col = "darkorange", breaks = 10
+    )
+    ```
+    
+    Zorg dat je het script begrijpt en voer het dan uit op je computer.
+    
+d.  Bestudeer het histogram. Iedere steekproef geeft een schatting van het populatiegemiddelde
+    van `SleepHrsNight` in de populatie van NHANES. 
+    Wat zou een goede maat zijn van de onzekerheid in zo'n schatting?
+    
 :::
   
 ### Oorzaken van bias in schattingen op basis van steekproeven {#sec-bias}
@@ -625,9 +672,9 @@ dat ze een naam hebben gekregen.
    Over dezelfde video's rapporteerden de studenten gemiddeld meer positieve en minder negatieve emoties
    als hen vooraf was verteld dat de video's afkomstig waren van een biologische boerderij.
 
-[^rosen]: ROSENTHAL, ROBERT. “ON THE SOCIAL PSYCHOLOGY OF THE PSYCHOLOGICAL EXPERIMENT: 1, 2 THE EXPERIMENTER’S HYPOTHESIS AS UNINTENDED DETERMINANT OF EXPERIMENTAL RESULTS.” American Scientist 51, no. 2 (1963): 268–83.
+[^rosen]: Rosenthal, Robert. “On the Social Psychology of the Psychological Experiment: The Experimenter's Hypothesis as Unintended Determinant of Experimental Results.” American Scientist 51, no. 2 (1963): 268–83.
 
-        Rosenthal, Robert, and Kermit L. Fode. “Psychology of the Scientist: V. Three Experiments in Experimenter Bias.” Psychological Reports 12, no. 2 (April 1, 1963): 491–511. https://doi.org/10.2466/pr0.1963.12.2.491.
+    Rosenthal, Robert, and Kermit L. Fode. “Psychology of the Scientist: V. Three Experiments in Experimenter Bias.” Psychological Reports 12, no. 2 (April 1, 1963): 491–511. https://doi.org/10.2466/pr0.1963.12.2.491.
 
 [^biasdiergedrag]: Tuyttens, F. A. M., S. de Graaf, J. L. T. Heerkens, L. Jacobs, E. Nalon, S. Ott, L. Stadig, E. Van Laer, and B. Ampe. “Observer Bias in Animal Behaviour Research: Can We Believe What We Score, If We Score What We Believe?” Animal Behaviour 90 (April 1, 2014): 273–80. https://doi.org/10.1016/j.anbehav.2014.02.007.
 
@@ -671,12 +718,79 @@ e.  Op een conferentie voor managers uit de ICT sector
 Schrijven
 :::
   
-## Samenvatting
+## Beknopt overzicht
 
-::: {.todo-box}
-Schrijven
-:::
-  
+### Onzekerheid in gegevens ontstaat door
+
+- **variabiliteit** en **bias** in steekproeven
+- **meetfouten**
+
+Meetfouten kunnen **systematisch** of **toevallig** zijn.
+
+### Terminologie van steekproeven
+
+Ieder onderzoek gaat over een **populatie**
+die bestaat uit **eenheden**,
+en focust op zekere **variabelen** van die eenheden.
+Die variabelen hebben een **verdeling in de populatie**
+die wordt gekarakteriseerd door **populatieparameters**.
+Het doel van menig onderzoek is het **schatten** van zo'n populatieparameter
+op basis van een **steekproef**.
+De statistiek die we gebruiken voor de schatting wordt de **schatter** genoemd.
+
+- **Steekproefvariabiliteit:**
+De samenstelling van een steekproef wordt (deels) bepaald door toeval,
+en zal dus *toevallig* afwijken van die van de populatie.
+Dit draagt bij aan de onzekerheid in schattingen.
+
+- **Bias**:
+De samenstelling van een steekproef kan ook,
+door de manier waarop de steekproef is ontstaan of wordt uitgevoerd,
+*systematisch* afwijken van die van de populatie.
+Dan is de steekproef niet **representatief**, 
+wat kan leiden tot **bias** in de schatting.
+
+Voorbeelden zijn:
+
+- **Vrijwilligersbias**
+
+- **Non-respons-bias**
+
+- **Overlevingsbias**
+
+- **Waarnemersbias**
+
+### Eenvoudige aselecte steekproeven (EAS)
+
+Een EAS van grootte $n$ is een steekproef die zo wordt uitgevoerd
+    dat iedere mogelijke verzameling van $n$ eenheden
+    een gelijke kans heeft om te worden gekozen.
+Dit elimineert bias en maakt het mogelijk steekproefvariabiliteit te berekenen.
+
+### Terminologie van afwijkingen
+
+Om de afwijking van schattingen of metingen van de ware parameter te beschrijven
+maken we onderscheid tussen **precisie** en **nauwkeurigheid**.
+Daarvoor stellen we ons voor dat we dezelfde schatting heel vaak herhalen.
+
+- **Precisie:** De methode/schatter/meting wordt **precies** genoemd
+als de resultaten dicht bij elkaar liggen. 
+Precisie heeft dus te maken met de *spreiding* van resultaten.
+Toevallige meetfouten en steekproefvariabiliteit verlagen dus de precisie.
+
+- **Nauwkeurigheid:** De methode/schatter/meting wordt **nauwkeurig** genoemd
+als het gemiddelde van de resultaten dicht bij de ware parameter ligt.
+Nauwkeurigheid heeft dus te maken met de *locatie* van de resultaten.
+Systematische meetfouten en bias verlagen dus de nauwkeurigheid.
+
+
+Een schatting is bruikbaar ondanks onzekerheid
+als we ons bewust zijn van de mate van precisie en nauwkeurigheid.
+
+*Andersom:*
+
+**Een schatting is nutteloos als we geen beeld hebben van de precisie en nauwkeurigheid.**
+
 ## Terminologie
   
 | Nederlands | Engels | Beschrijving |
@@ -708,13 +822,18 @@ Schrijven
 
 ## Extra informatie
 
-*"The Flaw of Averages"* door Sam L. Savage (2009).  
+Als de verschillende voorbeelden van bias je interesse hebben gewekt,
+zijn de volgende populair-wetenschappelijke boeken de moeite waard:
 
-*"How Not to Be Wrong: The Power of Mathematical Thinking"* door Jordan Ellenberg (2014).  
+* "How to Lie with Statistics"* door Darrell Huff (1954)
 
-*"Thinking Fast and Slow"*, door Daniel Kahneman (2011)
+* "The Flaw of Averages"* door Sam L. Savage (2009).  
 
-*"How to Lie with Statistics"* door Darrell Huff (1954)
+* "Thinking Fast and Slow"*, door Daniel Kahneman (2011)
+
+* "How Not to Be Wrong: The Power of Mathematical Thinking"* door Jordan Ellenberg (2014).  
+
+Zie daarnaast de voetnoten hieronder.
 
 ## Opgaven
 
