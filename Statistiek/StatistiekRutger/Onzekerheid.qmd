@@ -485,83 +485,7 @@ Overigens maken veel onderzoeken gebruik
   zoals een **gestratificeerde steekproef**.
 We gaan daar in deze cursus niet op in.
 
-::: {.Rexr #exr-aselect}
 
-## Een eenvoudige aselecte steekproef nemen met R
-<br>
-
-Als je een lijst hebt van alle eenheden in je populatie,
-dan kan R je gemakkelijk helpen
-om een eenvoudige aselecte steekproef te nemen.
-De functie `sample()` is daar speciaal voor bedoeld.
-
-Als `v` een vector is, en `n` een integer, dan geeft 
-`sample(v, n)`
-een willekeurige selectie van `n` eenheden uit `v`.
-Iedere eenheid komt hoogstens één keer in de steekproef voor.
-(Dat betekent ook dat `n` niet groter mag zijn dan de lengte van `v`,
-want anders kun je niet `n` elementen uit `v` selecteren.)
-
-Voorbeeld:
-```{r}
-v <- c(
-  "Mike", "Dustin", "Lucas", "Eleven", "Will", 
-  "Max", "Jim", "Joyce", "Steven", "Nancy"
-  )
-n <- 4
-
-sample(v, n)
-```
-
-a.  Stel je hebt twintig plotjes land, waarmee je wilt testen wat het effect 
-    is van bemesting op de biodiversiteit. Om dit te testen, ben je van plan de 
-    helft van de plotjes wel te bemesten en de andere helft niet. 
-    Je hebt de plotjes genummerd. Schrijf een 
-    simpele R-code met de functie `sample()` om aselect 10 plotjes uit te kiezen
-    die bemest gaan worden.
-
-b.  Laad de dataset NHANES in, zoals je al vaker hebt gedaan.
-    Selecteer nu aselect 30 individuen uit deze lijst en 
-    geef voor deze steekproef weer hoeveel uren zij
-    op doordeweekse dagen typisch te slapen (`SleepHrsNight`). 
-    
-c.  Het volgende script herhaalt de EAS 1000 keer,
-    berekent steeds het gemiddelde van `SleepHrsNight`
-    binnen de steekproef, en tekent vervolgens
-    een histogram van de resultaten.
-    
-    ```{r}
-    #| eval: false
-    #| code-fold: true
-    library(NHANES)
-    data(NHANES)
-    
-    # Instellen van parameters
-    n_herhalingen <- 1000  # Aantal steekproeven
-    n_steekproef  <- 30    # Grootte van elke steekproef
-    gemiddelden   <- numeric(n_herhalingen)  # Opslag voor gemiddelden
-    
-    # Herhaal steekproeven en bereken gemiddelden
-    for (i in 1:n_herhalingen) {
-      steekproef <- sample(
-        NHANES$SleepHrsNight, size = n_steekproef
-      )
-      gemiddelden[i] <- mean(steekproef, na.rm = TRUE)
-    }
-    
-    # Plot histogram van de gemiddelden
-    hist(
-      gemiddelden, col = "darkorange", breaks = 10
-    )
-    ```
-    
-    Zorg dat je het script begrijpt en voer het dan uit op je computer.
-    
-d.  Bestudeer het histogram. Iedere steekproef geeft een schatting van het populatiegemiddelde
-    van `SleepHrsNight` in de populatie van NHANES. 
-    Wat zou een goede maat zijn van de onzekerheid in zo'n schatting?
-    
-:::
   
 ### Oorzaken van bias in schattingen op basis van steekproeven {#sec-bias}
   
@@ -794,7 +718,7 @@ als we ons bewust zijn van de mate van precisie en nauwkeurigheid.
 ## Terminologie
   
 | Nederlands | Engels | Beschrijving |
-|:--------------------|:-----------------------|:--------------------------|
+|:------------------|:---------------------|:--------------so----------------|
 | bias (of "vertekening" of "vooroordeel") | bias                                     | Een systematische afwijking in een methode of schatter. |
 | eenheid (in de context van een populatie)                  | unit                      | Een populatie kan zijn samengesteld uit allerlei soorten objecten en subjecten, van personen tot voorwerpen. In het algemeen spreken we over de eenheden waaruit een populatie bestaat. |
 | eenvoudige aselecte steekproef  | simple random sampling                            | Een steekproef die genomen zodanig dat alle mogelijk steekproeven even waarschijnlijk zijn. |
@@ -837,9 +761,83 @@ Zie daarnaast de voetnoten hieronder.
 
 ## Opgaven
 
-::: {.todo-box}
+::: {.Rexr #exr-aselect}
 
-Ontwerpen.
+## Een eenvoudige aselecte steekproef nemen met R
+<br>
 
+Als je een lijst hebt van alle eenheden in je populatie,
+dan kan R je gemakkelijk helpen
+om een eenvoudige aselecte steekproef te nemen.
+De functie `sample()` is daar speciaal voor bedoeld.
+
+Als `v` een vector is, en `n` een integer, dan geeft 
+`sample(v, n)`
+een willekeurige selectie van `n` eenheden uit `v`.
+Iedere eenheid komt hoogstens één keer in de steekproef voor.
+(Dat betekent ook dat `n` niet groter mag zijn dan de lengte van `v`,
+want anders kun je niet `n` elementen uit `v` selecteren.)
+
+Voorbeeld:
+```{r}
+v <- c(
+  "Mike", "Dustin", "Lucas", "Eleven", "Will", 
+  "Max", "Jim", "Joyce", "Steven", "Nancy"
+  )
+n <- 4
+
+sample(v, n)
+```
+
+a.  Stel je hebt twintig plotjes land, waarmee je wilt testen wat het effect 
+    is van bemesting op de biodiversiteit. Om dit te testen, ben je van plan de 
+    helft van de plotjes wel te bemesten en de andere helft niet. 
+    Je hebt de plotjes genummerd. Schrijf een 
+    simpele R-code met de functie `sample()` om aselect 10 plotjes uit te kiezen
+    die bemest gaan worden.
+
+b.  Laad de dataset NHANES in, zoals je al vaker hebt gedaan.
+    Selecteer nu aselect 30 individuen uit deze lijst en 
+    geef voor deze steekproef weer hoeveel uren zij
+    op doordeweekse dagen typisch te slapen (`SleepHrsNight`). 
+    
+c.  Het volgende script herhaalt de EAS 1000 keer,
+    berekent steeds het gemiddelde van `SleepHrsNight`
+    binnen de steekproef, en tekent vervolgens
+    een histogram van de resultaten.
+    
+    ```{r}
+    #| eval: false
+    #| code-fold: true
+    library(NHANES)
+    data(NHANES)
+    
+    # Instellen van parameters
+    n_herhalingen <- 1000  # Aantal steekproeven
+    n_steekproef  <- 30    # Grootte van elke steekproef
+    gemiddelden   <- numeric(n_herhalingen)  # Opslag voor gemiddelden
+    
+    # Herhaal steekproeven en bereken gemiddelden
+    for (i in 1:n_herhalingen) {
+      steekproef <- sample(
+        NHANES$SleepHrsNight, size = n_steekproef
+      )
+      gemiddelden[i] <- mean(steekproef, na.rm = TRUE)
+    }
+    
+    # Plot histogram van de gemiddelden
+    hist(
+      gemiddelden, col = "darkorange", breaks = 10
+    )
+    ```
+    
+    Zorg dat je het script begrijpt en voer het dan uit op je computer.
+    
+d.  Bestudeer het histogram. 
+    Iedere steekproef geeft een schatting van het populatiegemiddelde
+    van `SleepHrsNight` in de populatie van NHANES. 
+    Wat zou een goede maat zijn van de onzekerheid in één zo'n schatting?
+    Voeg een regel toe aan het script 
+    om die maat uit te rekenen.
 :::
   
