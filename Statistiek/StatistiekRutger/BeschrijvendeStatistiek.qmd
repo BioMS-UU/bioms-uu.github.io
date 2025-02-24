@@ -618,6 +618,43 @@ Alternatief: histogrammen van numerieke variabelen uit NHANES.
 
 :::
 
+```{r}
+library(ggplot2)
+
+# Aantal samples
+n <- 9000
+
+# Data genereren
+set.seed(123)
+
+driehoek <- {x <- runif(n); x[runif(n) < pmax(0, abs(2 * (x - 0.5)))] <- NA; na.omit(x)}
+
+data <- data.frame(
+  value = c(
+    rnorm(n),
+    rgamma(n, shape = 2, scale = 2),
+    runif(n),
+    c(rnorm(n/2), rnorm(n/2, mean = 1.5)),
+    c(rnorm(n/3), rnorm(n/3, mean = 1.5), rnorm(n/3, mean = 3)),
+    driehoek
+  ),
+  distribution = c(rep(c("Normaal", "Gamma (shape=2)", "Uniform", "Bimodaal", "Trimodaal"), each = n), rep("Driehoek", length(driehoek)))
+)
+
+# Plot maken
+p <- ggplot(data, aes(x = value, fill = distribution)) +
+  geom_histogram(bins = 50, color = "black", alpha = 0.6) +
+  facet_wrap(~distribution, scales = "free") +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  labs(title = "Histogrammen van Verschillende Verdelingen", x = "Waarde", y = "Frequentie")
+
+# Plot weergeven
+print(p)
+
+```
+
+
 ::: {#fig-termen layout="[[1,1,1], [1,1,1]]"}
 
 ![](figuren/dummy.png)
