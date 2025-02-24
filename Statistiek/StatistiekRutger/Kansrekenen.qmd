@@ -40,18 +40,6 @@ Eerder hebben we verschillende typen variabelen besproken,
 zoals continu, discreet, nominaal en ordinaal (zie @fig-variabelen). 
 Kansvariabelen kunnen op dezelfde manier worden ingedeeld.
 
-::: {#exr-type}
-## Typen kansvariabelen
-
-Kansvariabelen kunnen nog steeds discreet, numeriek, categoriaal en ordinaal zijn. Van welk type zijn de volgende kansvariabelen?
-
-**a.**  Het aantal ogen bij het werpen van een dobbelsteen.
-
-**b.**  Het resultaat bij het gooien van een muntje (dus kop of munt). 
-
-**c.** Een getrokken kaart uit een set speelkaarten
-:::
-
 De verzameling van alle mogelijke uitkomsten
 van een kansexperiment
 wordt de **kansruimte** genoemd.
@@ -87,6 +75,32 @@ Merk op dat we dezelfde gebeurtenis ook zo hadden kunnen schrijven:
 Iedere gebeurtenis is dus eigenlijk een omschrijving van een 
 *deelverzameling van de kansruimte*.
 
+::: {#exr-begrippen-kans}
+## Basisbegrippen van kansrekenen
+
+Identificeer van de volgende situaties het **kansexperiment**,
+de **kansvariabele**, de **kansruimte**, en de **gebeurtenis**
+waarin we geïnteresseerd zijn.
+
+a.  We kruisen twee heterozygote dieren (genotype `aA`) en onderzoeken
+    de kans dat een nakomeling homozygoot recessief (`aa`) is. 
+    
+b.  We tellen het aantal teken aangetroffen op reeën in een bepaald bosgebied
+    en vragen ons af hoe vaak we er minstens één aantreffen.
+
+c.  Na het toedienen van een vaccin houden we van alle vrouwen of er 
+    na afloop medische complicaties waren. 
+    We willen vervolgens weten hoe vaak 
+    trombose met trombocytopenie syndroom (TTS) optreedt.
+    
+d.  Om de omvang te schatten van de brasem-populatie in het IJsselmeer en Markermeer
+    willen we 2000 brasems vangen, merken, en weer teruggooien.
+    Twee maanden later willen we er weer 2000 vangen en tellen
+    hoeveel van deze vissen gemarkeerd zijn.
+    We vragen ons af wat de kans is dat we geen enkele gemarkeerde brasem terugvangen
+    als de populatiegrootte $1{,}5\cdot 10^5$ is.
+:::
+
 ## Kansen als frequenties van een lange serie identieke kansexperimenten {#sec-frequentistisch}
 
 Wat is een kans nu eigenlijk precies?
@@ -95,11 +109,10 @@ Je kunt kansen op verschillende manieren definiëren,
 en de aanhangers van verschillende "kansinterpretaties" 
 maken hier al zeker een eeuw ruzie over.
 (Als dit je interesse wekt, 
-is [dit artikel](https://plato.stanford.edu/entries/probability-interpret/) 
-een goede ingang tot de uitgebreide literatuur hierover.)
+is [dit artikel](https://plato.stanford.edu/entries/probability-interpret/) een goede ingang tot de uitgebreide literatuur.)
 Voor veel berekeningen maken de definitieverschillen niet veel uit,
-en daarom gebruiken we de interpretatie die 
-in de statistiek traditioneel het meest gebruikt wordt:
+en daarom gebruiken we de interpretatie die traditioneel
+in de statistiek het meest gebruikt wordt:
 de **frequentistische** interpretatie.
 
 In de frequentistische interpretatie is de kans op een gebeurtenis
@@ -116,35 +129,67 @@ De relatieve frequentie van de uitkomst 6
   is dus $\frac{1}{6}$.
 Daarom is de kans $\pr{X = 6}$ gelijk aan $\frac{1}{6}$.
 
-Het lastige van deze definitie is het volgende.
 De definitie heeft het over een héél lange reeks kansexperimenten.
 Hoe lang dan precies?
 Is een miljoen keer genoeg?
 Of een miljard?
 Zolang het aantal keer dat je met de dobbelsteen gooit eindig is,
-    blijft het mogelijk
-    (en zelfs waarschijnlijk)
-    dat de daadwerkelijke frequentie van zessen
-    afwijkt van  $\frac{1}{6}$.
+blijft het mogelijk
+(en zelfs waarschijnlijk)
+dat de daadwerkelijke frequentie van zessen
+afwijkt van  $\frac{1}{6}$.
 De frequentistische definitie van kansen gaat dus uit van een reeks kansexperimenten
-    die tot in het oneindige wordt herhaald;
-    alleen dan zal
-    de frequentie van zessen met zekerheid convergeren naar $\frac{1}{6}$.
+die tot in het oneindige wordt herhaald;
+alleen dan zal
+de frequentie van zessen met zekerheid convergeren naar $\frac{1}{6}$.
+
+::: {#exr-simulatie-dobbelsteen}
+
+## De relatieve frequentie van 6 bij het gooien van een dobbelsteen
+
+In de tekst hierboven hebben we het over heel-erg-vaak gooien
+met een dobbelsteen.
+In de praktijk is dat lastig om te doen.
+Maar we kunnen dat natuurlijk wel simuleren!
+
+Deze code in R gooit virtueel een miljoen keer een dobbelsteen:
+```{r}
+aantal_keer_gooien <- 10^6
+
+resultaten <- sample(
+  seq(1:6), # kies uit 1 tot 6
+  size = aantal_keer_gooien, 
+  replace = TRUE
+  )
+```
+Het argument `replace = TRUE` zorgt ervoor dat we trekken "met terugleggen".
+
+a.  Maak een frequentietabel van de resultaten.
+    Je hebt in @sec-freq-tab geleerd hoe dat moet;
+    het is één regeltje code.
+    Bereken ook de *relatieve* frequenties.
+   
+b.  Bekijk hoe vaak je een 6 hebt gegooid. Komt dat exact overeen met een kans van $\frac{1}{6}$?
+
+c.  Wat is de kans de relatieve frequentie van de uitkomst "6"
+    na een miljoen herhalingen een relatieve frequentie heeft
+    van exact $\frac{1}{6}$?
+:::
 
 Een relatieve frequentie ligt altijd tussen 0 en 1
-    (inclusief 0 en 1).
+(inclusief 0 en 1).
 Een kans is dus ook altijd een getal tussen 0 en 1.
 Als een gebeurtenis plaatsvindt iedere keer dat we het kansexperiment uitvoeren,
-    dan is de kans op die gebeurtenis 1.
+dan is de kans op die gebeurtenis 1.
 Als een gebeurtenis nooit gebeurt,
-  hoe vaak we het kansexperiment ook uitvoeren,
-    dan is de kans op die gebeurtenis 0.
+hoe vaak we het kansexperiment ook uitvoeren,
+dan is de kans op die gebeurtenis 0.
 
 Soms worden kansen in percentages uitgedrukt.
 Men zegt dan bijvoorbeeld bij het gooien van een munt 
     dat de kans op “kop” 50% is. 
 Daar is op zich niets mis mee.
-Maar het heeft eigenlijk ook geen voordelen om percentages te gebruiken,
+Maar het heeft eigenlijk ook geen voordelen,
     en wiskundige formules met procenten erin
     worden al snel omslachtig.
 Wij houden het dus zoveel mogelijk bij getallen tussen 0 en 1.
@@ -154,6 +199,7 @@ Als de kansvariabele discreet is of categorisch,
     optellen.
 Omdat de som van alle relatieve frequenties altijd gelijk is aan 1
     moet de som van de kansen op alle uitkomsten ook altijd 1 zijn. 
+    
 
 ::: {#wrn-continue-kansvariabelen .callout-warning}
 
@@ -223,7 +269,7 @@ Bijvoorbeeld, bij het gooien met één dobbelsteen
     dus $\{1, 2, 3, 4, 5, 6\}$.
     
 We zagen dat iedere gebeurtenis kan worden gerepresenteerd als
-    een deelverzameling van de kansruimte. 
+    een *deelverzameling* van de kansruimte. 
 We kunnen een gebeurtenis $A$
     daarom voorstellen als een gedeelte van de kansruimte,
     hieronder in @fig-vennA weergegeven als een gele cirkel:
@@ -258,13 +304,21 @@ kansruimte + A
 ```
 
 De uitkomsten die binnen de cirkel vallen 
-  zijn de uitkomsten waarbij gebeurtenis $A$ plaatsvindt.
+zijn de uitkomsten waarbij gebeurtenis $A$ plaatsvindt.
 De uitkomsten die buiten de cirkel vallen
-  zijn de uitkomsten waarbij de gebeurtenis $A$ *niet* plaatsvindt.
+zijn de uitkomsten waarbij de gebeurtenis $A$ *niet* plaatsvindt.
 Bijvoorbeeld,
-    als $A$ de gebeurtenis is dat we een even getal gooien,
-    dan vinden we de uitkomsten $\{2, 4, 6\}$ binnen de cirkel,
-    en de uitkomsten $\{1, 3, 5\}$ erbuiten.
+als $A$ de gebeurtenis is dat we een even getal gooien,
+dan vinden we de uitkomsten $\{2, 4, 6\}$ binnen de cirkel,
+en de uitkomsten $\{1, 3, 5\}$ erbuiten.
+    
+::: {#exr-aminozuren}
+
+Aminozuren kunnen hydrofoob, polair 
+
+
+
+:::
     
 ### De gebeurtenis "$A$ en $B$"
 
@@ -321,7 +375,7 @@ Het deel van het Venn diagram waar $A$ en $B$ overlappen ---
   is zelf óók een gebeurtenis; 
   we noemen dit de gebeurtenis "$A$ en $B$".
 In de praktijk zijn we heel vaak geïnteresseerd in de kans
-  dat de gebeurtenis $A$ en $B$ plaats vindt, 
+  dat de gebeurtenis "$A$ en $B$" plaats vindt, 
   $\pr{A \text{ en } B}$.
 Denk aan de kans dat een willekeurig persoon 
   zowel rookt en longkanker heeft,
@@ -333,7 +387,7 @@ Denk aan de kans dat een willekeurig persoon
 We zijn ook vaak geïnteresseerd 
   in de situatie dat gebeurtenis $A$ *of* gebeurtenis $B$ plaatsvindt.
 Dat is de gebeurtenis "$A$ of $B$".
-In het Venn-diagram @fig-vennAB wordt de gebeurtenis $A$ of $B$
+In het Venn-diagram @fig-vennAB wordt de gebeurtenis "$A$ of $B$"
   gerepresenteerd door het hele gekleurde gebied,
   omdat in dat hele gebied ofwel $A$ ofwel $B$ plaatsvindt (of beide).
 De kans op een uitkomst in dat gebied wordt geschreven als $\pr{A \textrm{ of } B}$.
@@ -344,7 +398,7 @@ De kans op een uitkomst in dat gebied wordt geschreven als $\pr{A \textrm{ of } 
 
 Het wordt *of* wordt in het Nederlands op twee manieren gebruikt.
 Als iemand zegt dat je een koekje *of* een bonbon mag pakken,
-is het meestal niet de bedoeling dat je en koekje én een bonbon pakt.
+is het meestal niet de bedoeling dat je een koekje én een bonbon pakt.
 Het woord *of* wordt dan *exclusief* gebruikt:
   het één of het ander, maar niet allebei.
 Maar als de overheid zegt dat je een vaccin mag komen halen
@@ -367,8 +421,8 @@ Vaak verandert de kans op een gebeurtenis
 Bijvoorbeeld,
    de kans dat een willekeurige gekozen persoon zwanger is
    verandert zodra je leert dat deze persoon 60 jaar oud is.
-We moeten de kansen op bepaalde uitkomsten dus aanpassen
-  wanneer bepaalde informatie over de uitkomst
+We moeten de kansen op uitkomsten dus herzien
+  wanneer informatie over de uitkomst
   "gegeven is".
 We noemen zulke aangepaste kansen **conditionele kansen**.
 
@@ -379,7 +433,7 @@ $$\pr{A | B}.$$
 Je spreekt dit uit als "de kans op $A$ gegeven $B$",
 of zegt dat de kans op A "geconditioneerd is op $B$".
 
-Venn-diagrammen geven een nuttig perspectief op conditionele kansen.
+Venn-diagrammen kunnen helpen bij het interpreteren van conditionele kansen.
 Kijk maar eens terug naar het Venn-diagram van @fig-vennAB.
 De kans op $A$, 
     dus $\pr{A}$, 
@@ -401,8 +455,6 @@ Neem bijvoorbeeld de kans dat een willekeurig gekozen Nederlander lijdt aan hart
 Dan beperken we ons tot de deelpopulatie van personen met diabetes,
   en vragen ons af wat de kans is dat iemand in die deelpopulatie
   hartfalen heeft.
-Dat is precies de gezochte conditionele kans.
-
 
 ::: {.todo-box}
 Opgaven maken.
@@ -462,9 +514,7 @@ en schrijf het daarin.
 ## De kans op $A$ en $B$ berekenen
 
 Vaak willen we de kans op $A$ en $B$ uitrekenen.
-Bijvoorbeeld:
-    wat is de kans dat een willekeurig gekozen persoon in Nederland
-    diabetes heeft én hartfalen?
+Wat zijn de regels die je daarvoor kunt gebruiken?
     
 ### Algemene regel voor $\pr{A \textrm{ en } B}$
 
@@ -477,9 +527,7 @@ Die regel volgt direct uit @eq-conditionele-kans,
 Om de kans op $A$ en $B$ te berekenen,
     berekenen we dus eerst de kans op $A$,
     en vermenigvuldigen die kans met de kans op $B$ gegeven $A$.
-Omdat het niet uitmaakt welke gebeurtenis je $A$ noemt
-    en welke $B$,
-    geldt ook:
+Omdat $\pr{A \textrm{ en } B = \pr{B \textrm{ en } A}$ geldt ook:
 $$
 \pr{A \textrm{ en } B} = \pr{B}\pr{A | B}.  
 $$ {#eq-AenBalgemeen2}   
@@ -505,26 +553,32 @@ Het berekenen van $\pr{A \text{ en } B}$ is erg eenvoudig
 Laten we dat begrip eerst behandelen.
 
 Twee gebeurtenissen $A$ en $B$ zijn **onafhankelijk**
-    als de kans op gebeurtenis $A$ niet verandert 
-    wanneer we leren dat gebeurtenis $B$ plaatsvindt:
-$$ \pr{A} = \pr{A | B}. $$ {#eq-onafhankelijk-1}
-In dat geval verandert ook de kans op $B$ niet als $A$ gegeven wordt:
-$$ \pr{B} = \pr{B | A}. $$ {#eq-onafhankelijk-2}
+als de kans op gebeurtenis $A$ niet verandert 
+wanneer we leren dat gebeurtenis $B$ plaatsvindt,
+oftewel, als
+$$ \pr{A | B} = \pr{A}.$$ {#eq-onafhankelijk-1}
+In dat geval verandert ook de kans op $B$ niet als $A$ gegeven wordt,
+en geldt dus ook
+$$ \pr{B | A} = \pr{B}.$$ {#eq-onafhankelijk-2}
 
-Een voorbeeld: 
-    stel je weer voor
-    dat we met twee eerlijke dobbelstenen gooien---
-    eerst een rode, en dan een blauwe.
+
+::: {#exm-onafhankelijk}
+## Dobbelstenen: afhankelijk en onafhankelijke gebeurtenisssen
+
+Stel je voor
+dat we twee eerlijke dobbelstenen gooien---
+eerst een rode, en dan een blauwe.
 Gebeurtenis $A$ is dat we met de rode dobbelsteen een zes gooien;
-    gebeurtenis $B$ dat we met de blauwe dobbelsteen een zes gooien.
+gebeurtenis $B$ dat we met de blauwe dobbelsteen een zes gooien.
 Zijn $A$ en $B$ onafhankelijk?
 Het is moeilijk voor te stellen
-    dat de uitkomst van de rode dobbelsteen
-    iets vertelt over de uitkomst van de blauwe dobbelsteen.
+dat de uitkomst van de rode dobbelsteen
+iets vertelt over de uitkomst van de blauwe dobbelsteen.
 De uitkomst van de blauwe dobbelsteen hangt minutieus af 
-  van de manier waarop hij geworpen wordt,
-  niet van de uitkomst van de rode dobbelsteen.
-Het is dus duidelijk dat de gebeurtenissen $A$ en $B$ onafhankelijk zijn.
+van de manier waarop hij geworpen wordt,
+niet van de uitkomst van de rode dobbelsteen.
+Het is dus te verwachten dat de gebeurtenissen $A$ en $B$ onafhankelijk zijn.
+
 
 Voor een voorbeeld van gebeurtenissen die wél afhankelijk zijn
   gooien we nu in gedachte één eerlijke dobbelsteen.
@@ -539,9 +593,10 @@ Maar als gegeven is dat $B$ plaatsvindt,
     en blijven dus alleen uitkomsten $\{4, 5, 6\}$ over.
 Van die drie uitkomsten zijn er twee even,
     en daarom is de kans $\pr{A | B}$ gelijk aan $\frac{2}{3}$.
-Het is duidelijk dat $\pr{A} \neq \pr{A | B}$;
+Dus: $\pr{A} \neq \pr{A | B}$, en
     $A$ en $B$ zijn in dit geval niet onafhankelijk
     (en dus afhankelijk).
+:::
     
 ::: {#exr-onafhankelijk}
 
@@ -692,7 +747,7 @@ Als gebeurtenissen elkaar *niet* uitsluiten,
 kun je @eq-AofBspeciaal niet gebruiken.
 Je kunt dat begrijpen aan de hand van het Venn-diagram @fig-vennAB.
 Gebeurtenissen die elkaar niet uitsluiten overlappen in het Venn-diagram.
-Als je de kansen op $A$ en $B$ nu bij elkaar optelt
+Als je de kansen op $A$ en $B$ nu bij elkaar optelt,
 tel je het overlappende deel twee keer mee!
 Dat geeft natuurlijk niet het juiste resultaat.
 Daarom moeten we in zulke gevallen een andere regel gebruiken; 
@@ -801,23 +856,30 @@ Oefenen met $A$ of $B$ in biologische context
 
 ## De Stelling van Bayes
 
+::: {.todo-box}
+Plaatje Bayes.
+:::
+
+![](figuren/dummy.png){#fig-bayes width=50%}
+
 In @exr-omdraaien-bayes heb je gezien dat $\pr{A |B}$ en $\pr{B | A}$
 over het algemeen niet gelijk zijn.
 Dat is eigenlijk ook logisch als je het concreet maakt
 met een voorbeeld.
-De kans dat een willekeurig persoon zwanger is 
-gegeven dat die persoon een vrouw is,
-is iets heel anders dan de kans dat een persoon een vrouw is gegeven dat deze zwanger is.
+De kans dat een willekeurig persoon Engels verstaat 
+gegeven dat die persoon Nederlander is,
+is iets heel anders dan de kans dat een persoon Nederlander is 
+gegeven dat deze Engels verstaat.
 
 Toch is er wel een relatie tussen de twee conditionele kansen.
 Die relatie heet de **Stelling van Bayes** of ook wel
 de *regel* van Bayes,
-naar Thomas Bayes (1701--1761),
+naar Thomas Bayes (1701--1761, @fig-bayes),
 de Engelsman die deze regel als eerste lijkt te hebben gebruikt.
 
 De relatie is gemakkelijk af te leiden
 uit twee vergelijkingen die we eerder gezien hebben,
-namelijk @eq-AenBalgemeen1 en @eq-AenBalgemeen1:
+namelijk @eq-AenBalgemeen1 en @eq-AenBalgemeen2:
 $$
 \begin{gather}
 \pr{A \text{ en } B} = \pr{A}\pr{ B | A},\\
@@ -878,28 +940,34 @@ de gebeurtenis dat ze geen borstkanker heeft als $G$
 (voor gezond).
 De gebeurtenis van een positieve test is $P$ en die van een negatieve test is $N$.
 
-  a. Wat is $\pr{K}$ (*incidence*)? Om hoeveel vrouwen van 30 jaar gaat het dus naar verwachting?
-  b. Wat is $\pr{G}$?
-  c. Wat is $\pr{P | K}$ (*true positive rate*)? Bij hoeveel vrouwen zou de screening naar verwachting kanker ontdekken?
-  d. Wat is $\pr{N | G}$ (*true negative rate*)?
-  e. Wat is $\pr{P | G}$ (*false positive rate*)? Bij hoeveel vrouwen zou de screening *onterecht* positief uitvallen? Vergelijk dit met je antwoord op onderdeel b.
-  f. Wat is $\pr{P}$? Hint: gebruik dat
-$$ 
-\begin{align}
-\pr{P} &= \pr{K \text{ and } P} + \pr{G \text{ and } P}\\
-& = \pr{P | K}\pr{K} + \pr{P | G}\pr{G}.\\
-\end{align}
-$$
-  Hoeveel vrouwen krijgen in totaal een positieve test terug?
-  g. Wat is $\pr{K | P}$, de kans dat iemand die met een positieve test wordt doorverwezen naar de cardioloog
-  ook daadwerkelijk kanker heeft? Hint: gebruik de [Stelling van Bayes](#imp-bayes).
-  h. Wat is, gezien deze resultaten, het grote nadeel van vroegtijdig screenen?
-  i. De sensitiviteit en specificiteit van deze test
-  was behoorlijk hoog; toch hebben de meeste vrouwen
-  met een positieve uitslag geen kanker.
-  Dat gegeven wordt de **screening-paradox** genoemd.
-  Leg uit wanneer die paradox optreedt.
+a.  Wat is $\pr{K}$ (*incidence*)? Om hoeveel vrouwen van 30 jaar gaat het dus naar verwachting?
 
+b.  Wat is $\pr{G}$?
+
+c.  Wat is $\pr{P | K}$ (*true positive rate*)? Bij hoeveel vrouwen zou de screening naar verwachting kanker ontdekken?
+  
+d.  Wat is $\pr{N | G}$ (*true negative rate*)?
+
+e.  Wat is $\pr{P | G}$ (*false positive rate*)? Bij hoeveel vrouwen zou de screening *onterecht* positief uitvallen? Vergelijk dit met je antwoord op onderdeel b.
+  
+f.  Wat is $\pr{P}$? Hint: gebruik dat
+    $$ 
+    \begin{align}
+    \pr{P} &= \pr{K \text{ and } P} + \pr{G \text{ and } P}\\
+    & = \pr{P | K}\pr{K} + \pr{P | G}\pr{G}.\\
+    \end{align}
+    $$
+    Hoeveel vrouwen krijgen in totaal een positieve test terug?
+
+g.  Wat is $\pr{K | P}$, de kans dat iemand die met een positieve test wordt doorverwezen naar de cardioloog ook daadwerkelijk kanker heeft? Hint: gebruik de [Stelling van Bayes](#imp-bayes).
+
+h.  Wat is, gezien deze resultaten, het grote nadeel van vroegtijdig screenen?
+
+i.  De sensitiviteit en specificiteit van deze test
+    was behoorlijk hoog; toch hebben de meeste vrouwen
+    met een positieve uitslag geen kanker.
+    Dat gegeven wordt de **screening-paradox** genoemd.
+    Leg uit wanneer die paradox optreedt.
 :::
 
 ## Samenvatting
