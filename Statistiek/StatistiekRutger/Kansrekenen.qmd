@@ -75,8 +75,9 @@ Merk op dat we dezelfde gebeurtenis ook zo hadden kunnen schrijven:
 Iedere gebeurtenis is dus eigenlijk een omschrijving van een 
 *deelverzameling van de kansruimte*.
 
-::: {#exr-begrippen-kans}
+::: {#exr-begrippen-kans .pepexr}
 ## Basisbegrippen van kansrekenen
+<br>
 
 Identificeer van de volgende situaties het **kansexperiment**,
 de **kansvariabele**, de **kansruimte**, en de **gebeurtenis**
@@ -88,10 +89,10 @@ a.  We kruisen twee heterozygote dieren (genotype `aA`) en onderzoeken
 b.  We tellen het aantal teken aangetroffen op reeën in een bepaald bosgebied
     en vragen ons af hoe vaak we er minstens één aantreffen.
 
-c.  Na het toedienen van een vaccin houden we van alle vrouwen of er 
+c.  Na vaccinatie houden we bij of er 
     na afloop medische complicaties waren. 
-    We willen vervolgens weten hoe vaak 
-    trombose met trombocytopenie syndroom (TTS) optreedt.
+    We willen vervolgens weten hoe vaak na vaccinatie 
+    trombose met trombocytopenie-syndroom (TTS) optreedt.
     
 d.  Om de omvang te schatten van de brasem-populatie in het IJsselmeer en Markermeer
     willen we 2000 brasems vangen, merken, en weer teruggooien.
@@ -143,9 +144,9 @@ die tot in het oneindige wordt herhaald;
 alleen dan zal
 de frequentie van zessen met zekerheid convergeren naar $\frac{1}{6}$.
 
-::: {#exr-simulatie-dobbelsteen}
-
+::: {#exr-simulatie-dobbelsteen .Rexr}
 ## De relatieve frequentie van 6 bij het gooien van een dobbelsteen
+<br>
 
 In de tekst hierboven hebben we het over heel-erg-vaak gooien
 met een dobbelsteen.
@@ -154,6 +155,7 @@ Maar we kunnen dat natuurlijk wel simuleren!
 
 Deze code in R gooit virtueel een miljoen keer een dobbelsteen:
 ```{r}
+#| eval: false
 aantal_keer_gooien <- 10^6
 
 resultaten <- sample(
@@ -164,7 +166,7 @@ resultaten <- sample(
 ```
 Het argument `replace = TRUE` zorgt ervoor dat we trekken "met terugleggen".
 
-a.  Maak een frequentietabel van de resultaten.
+a.  Maak in R een frequentietabel van de resultaten.
     Je hebt in @sec-freq-tab geleerd hoe dat moet;
     het is één regeltje code.
     Bereken ook de *relatieve* frequenties.
@@ -249,7 +251,7 @@ kleurKansruimte <- "FloralWhite"
 kansruimte <- ggplot() +  
   geom_rect(
     aes(xmin = 0, ymin = 0, xmax= 100, ymax = 100),
-    fill = kleurKansruimte, color = "black", size = .8
+    fill = kleurKansruimte, color = "black", linewidth = .8
     ) +
   annotate(
     "text", 
@@ -287,7 +289,7 @@ kleurA <- "Gold"
 A <- list(
   geom_ellipse(
     aes(x0 = 34, y0 = 47, a = 28,  b = 40,  angle = 0), 
-    fill = kleurA , alpha = 0.7, size = .8
+    fill = kleurA , alpha = 0.7, linewidth = .8
     ),
   annotate(
     "text", 
@@ -311,15 +313,8 @@ Bijvoorbeeld,
 als $A$ de gebeurtenis is dat we een even getal gooien,
 dan vinden we de uitkomsten $\{2, 4, 6\}$ binnen de cirkel,
 en de uitkomsten $\{1, 3, 5\}$ erbuiten.
-    
-::: {#exr-aminozuren}
-
-Aminozuren kunnen hydrofoob, polair 
 
 
-
-:::
-    
 ### De gebeurtenis "$A$ en $B$"
 
 We kunnen ook meerdere gebeurtenissen weergeven in één diagram weergeven.
@@ -338,7 +333,7 @@ kleurB <- "DodgerBlue"
 B <- list( 
   geom_ellipse(
     aes(x0 = 66, y0 = 47, a = 28,  b = 40,  angle = 0), 
-    fill = kleurB, alpha = 0.75, size = .8
+    fill = kleurB, alpha = 0.75, linewidth = .8
     ),
   annotate(
     "text", 
@@ -365,10 +360,6 @@ labelAenB <- annotate(
 In dit geval overlappen de twee cirkels elkaar.
 Dit betekent dat er uitkomsten zijn zijn waarbij $A$ en $B$
     allebei plaatsvinden.
-Een voorbeeld zou zijn als $A$ de gebeurtenis "$X$ is oneven" voorstelt
-    en $B$ de gebeurtenis "$X$ is groter dan 3". 
-Die gebeurtenissen overlappen omdat de uitkomst 5
-    zowel oneven is als groter dan 3.
     
 Het deel van het Venn diagram waar $A$ en $B$ overlappen --- 
   het groene gedeelte ---
@@ -378,9 +369,36 @@ In de praktijk zijn we heel vaak geïnteresseerd in de kans
   dat de gebeurtenis "$A$ en $B$" plaats vindt, 
   $\pr{A \text{ en } B}$.
 Denk aan de kans dat een willekeurig persoon 
-  zowel rookt en longkanker heeft,
-  of de kans dat op een gegeven moment springvloed
+  zowel COPD heeft en rookt,
+  of de kans dat op hetzelfde moment springvloed
   én noordwesterstorm samenkomen.
+
+::: {#exr-overlap-1 .pepexr}
+## Overlappende gebeurtenissen $A$ en $B$, deel 1
+<br>
+
+Je gooit één keer met een eerlijke dobbelsteen.
+De kansvariabele $X$ is de uitkomst van dit kansexperiment.
+We definiëren de volgend gebeurtenissen:
+
+- Gebeurtenis $A$ is "$X$ is oneven", 
+
+- Gebeurtenis $B$ is "$X$ is groter dan 4". 
+
+Gebruik die definities bij de volgende vragen,
+
+a.  Teken @fig-vennAB na op papier. (Inkleuren hoeft niet.)
+
+b.  Bepaal voor elke mogelijke uitkomst (1 tot 6)
+    in welk deel van het Venn-diagram het thuishoort, 
+    en schrijf het daarin.
+    
+c.  Is er een uitkomst waarbij $A$ en $B$ beide plaatsvinden?
+
+d.  Wat is de kans $\pr{A \text{ en } B}$?
+
+:::
+
 
 ### De gebeurtenis "$A$ of $B$"
 
@@ -413,9 +431,9 @@ $A$ of $B$ vindt plaats als $A$ plaatsvindt of als $B$ plaatsvindt,
   of beide.
 :::
 
-::: {#exr-in-of-exclusief}
-
+::: {#exr-in-of-exclusief .pepexr}
 ## Inclusieve of exclusive "of"
+<br>
 
 Identificeer of "of" in de volgende zinnen
 inclusief of exclusief bedoeld is.
@@ -438,6 +456,21 @@ met het oordeel voldoende (V) **of** onvoldoende (ONV)."
 :::
 
 
+::: {#exr-overlap-2 .pepexr}
+## Overlappende gebeurtenissen $A$ en $B$, deel 2
+<br>
+
+Gebruik dezelfde definities van $A$ en $B$ als in @exr-overlap.
+Je kunt ook de schets hergebruiken die je daar hebt gemaakt.
+
+a.  Teken een lijn om de gebeurtenis "$A$ of $B$".
+
+b.  Welke uitkomsten vallen onder die gebeurtenis?
+
+c.  Wat is de kans op $\pr{A \text{ of } B}$?
+
+:::
+
 ## Conditionele kansen
 
 Vaak verandert de kans op een gebeurtenis
@@ -455,7 +488,7 @@ De kans op gebeurtenis $A$
     wordt geschreven als
 $$\pr{A | B}.$$
 Je spreekt dit uit als "de kans op $A$ gegeven $B$",
-of zegt dat de kans op A "geconditioneerd is op $B$".
+of zegt dat de kans op $A$ "geconditioneerd is op $B$".
 
 Venn-diagrammen kunnen helpen bij het interpreteren van conditionele kansen.
 Kijk maar eens terug naar het Venn-diagram van @fig-vennAB.
@@ -480,57 +513,26 @@ Dan beperken we ons tot de deelpopulatie van personen met diabetes,
   en vragen ons af wat de kans is dat iemand in die deelpopulatie
   hartfalen heeft.
 
-::: {.todo-box}
-Opgaven maken.
-:::
 
-::: {#exr-conditionele-kans}
+::: {#exr-omdraaien-conditionele-kansen .pepexr}
 
-## Hartfalen en diabetes
+## Conditionele kansen
+<br>
 
-In een land wonen 30 miljoen mensen. In 2024 hebben 15.000 van deze mensen een hartfalen ondergaan. 450.000 mensen in dit land hebben diabetes. 
+Gebruik weer de definities van @exr-overlap-1. 
+Pak het Venn-diagram er ook weer bij.
 
-**a.** Stel je pakt een random persoon uit dit land, hoe groot is de kans dat je iemand vindt die vorig jaar een hartfalen heeft ondergaan?  
+a.  Wat is de kans $\pr{A}$?
 
-*Antwoord: *$30*10^6 / 15*10^3 = 0.0005$
+b.  Wat is de kans $\pr{B}$?
 
-**b.** Hoe groot is de kans dat iemand die diabetes heeft afgelopen jaar ook een hartfalen heeft ondergaan? 
+c.  Wat is de kans $\pr{A \text{ en } B}$?
 
-*Antwoord:* $0.0005*450*10^3/30*10^6 = 0.0000075$
+d.  Wat is de kans op $\pr{A|B}$?
 
-Het blijkt dat 1/1000 mensen met diabetes vorig jaar een hartfalen heeft ondergaan. 
+e.  Wat is de kans $\pr{B|A}$?
 
-**c.** Bereken de kans dat iemand die diabetes heeft afgelopen jaar ook een hartfalen heeft ondergaan gegeven deze nieuwe informatie. Gebruik  @eq-conditionele-kans
-
-*Antwoord: * $Pr(hartfalen|diabetes)\frac{Pr(Diabetes\&Hartfalen)}{Pr(diabetes)} = \frac{1/1000}{450.000/30.000.000} = \frac{1}{15}\approx 0.067$
-
-:::
-
-::: {#exr-omdraaien-bayes}
-
-## Omdraaien van conditionele kansen.
-
-Stel dat je met een dobbelsteen gooit.
-$X$ is de uitkomst van dit kansexperiment. 
-Gebeurtenis $A$ is "$X$ is even" en gebeurtenis $B$ is "$X < 3$". 
-
-**a.**  Teken het Venn-diagram van @fig-vennAB na.
-
-**b.**  Bepaal voor elke mogelijke uitkomst (1 tot 6)
-in welk deel van het Venn-diagram het thuishoort, 
-en schrijf het daarin.
-
-**c.**  Wat is de kans $\pr{A}$?
-
-**d.**  Wat is de kans $\pr{B}$?
-
-**e.**  Wat is de kans $\pr{A \text{ en } B}$?
-
-**f.**  Wat is de kans op $\pr{A|B}$?
-
-**g.**  Wat is de kans $\pr{B|A}$?
-
-**h.**   Leg uit waarom in het algemeen $\pr{A|B}$ niet gelijk is aan $\pr{B|A}$.
+f.  Leg uit waarom in het algemeen $\pr{A|B}$ niet gelijk is aan $\pr{B|A}$.
 
 :::
 
@@ -538,35 +540,31 @@ en schrijf het daarin.
 ## De kans op $A$ en $B$ berekenen
 
 Vaak willen we de kans op $A$ en $B$ uitrekenen.
-Wat zijn de regels die je daarvoor kunt gebruiken?
+In @exr-overlap-1 lukte dat door het Venn-diagram te bekijken,
+maar in ingewikkeldere situaties is dat moeilijk.
+Wat zijn de rekenregels die je kunt gebruiken?
     
 ### Algemene regel voor $\pr{A \textrm{ en } B}$
 
 De regel die in *alle* situaties geldt is:
 $$ 
-\pr{A \textrm{ en } B} = \pr{A}\pr{B | A}.  
+\pr{A \textrm{ en } B} = \pr{A | B}\pr{B}.  
 $$ {#eq-AenBalgemeen1}
 Die regel volgt direct uit @eq-conditionele-kans,
-  zoals je zelf kunt verifiëren.
+zoals je zelf kunt verifiëren.
 Om de kans op $A$ en $B$ te berekenen,
-    berekenen we dus eerst de kans op $A$,
-    en vermenigvuldigen die kans met de kans op $B$ gegeven $A$.
+berekenen we dus eerst de kans op $B$,
+en vermenigvuldigen die kans met de kans op $A$ gegeven $B$.
 Omdat $\pr{A \textrm{ en } B = \pr{B \textrm{ en } A}$ geldt ook:
 $$
-\pr{A \textrm{ en } B} = \pr{B}\pr{A | B}.  
+\pr{A \textrm{ en } B} = \pr{B | A}\pr{A}.  
 $$ {#eq-AenBalgemeen2}   
-Je kunt dus ook de kans op $B$
-    vermenigvuldigen met de kans op $A$ gegeven $B$.
+Je kunt dus ook de kans op $A$
+vermenigvuldigen met de kans op $B$ gegeven $A$.
 
-::: {#exr-oneindig}
-Opgave om inzichtelijk te maken dat in een oneindige rij met experimenten
-de kans op $A$ en $B$ gelijk is aan de fractie van de experimenten waarin $A$ gebeurt
-keer de fractie *van die experimenten* waarin ook $B$ gebeurt.
+::: {#exr-A-en-B-algemeen}
 
 
-**a.** a
-
-**b.** b
 
 :::
 
@@ -622,13 +620,27 @@ Dus: $\pr{A} \neq \pr{A | B}$, en
     (en dus afhankelijk).
 :::
     
-::: {#exr-onafhankelijk}
+::: {#exr-onafhankelijk .pepexr}
+## Bloedgroep
 
-Oefenen met onafhankelijke gebeurtenissen.
+Bloedgroepen worden gekarakteriseerd door de antigenen (O, A, B, of AB)
+en de rhesusfactor (Rh+ of Rh-). De volgende figuur is van de website van 
+[Sanquin](https://www.sanquin.nl/over-sanquin):
 
-**a.**  x
+![](figuren/sanquinnl-medium.png){width=70% #fig-sanquin}
 
-**b.**  y
+a.  Wat is de kans dat een willekeurig gekozen Nederlander bloedgroep O+ heeft?
+
+b.  Wat is de kans dat een willekeurig gekozen Nederlander bloedgroep O heeft
+    (ongeacht de rhesusfactor)?
+
+c.  Wat is de kans dat een willekeurig gekozen Nederlander rhesusfactor Rh+ heeft?
+
+d.  Als antigen en rhesusfactor onafhankelijk zouden zijn,
+    wat was dan de kans op O+ geweest?
+    Ligt dat ver af van de werkelijkheid?
+    
+e.  Wat vind je van de manier waarop Sanquin de verdeling heeft gevisualiseerd?
 
 :::
 
@@ -713,7 +725,7 @@ Dat betekent dat in het Venn-diagram
 A2 <- list(
   geom_ellipse(
     aes(x0 = 28, y0 = 32, a = 25,  b = 28,  angle = 0), 
-    fill = kleurA, alpha = 0.5, size = 0.8
+    fill = kleurA, alpha = 0.5, linewidth = 0.8
     ), 
   annotate(
     "text", 
@@ -728,7 +740,7 @@ A2 <- list(
 B2 <- list(
   geom_ellipse(
     aes(x0 = 72, y0 = 68, a = 25,  b = 28,  angle = 0), 
-    fill = kleurB, alpha = 0.5, size = 0.8
+    fill = kleurB, alpha = 0.5, linewidth = 0.8
     ),
   annotate(
     "text", 
@@ -1021,6 +1033,36 @@ Schrijven!
 : Woordenlijst @sec-kans . {#tbl-woorden-kans .striped .hover}
 
 ## Opgaven
+
+::: {#exr-conditionele-kans}
+
+
+::: {.todo-box}
+
+Bayes met subpopulaties
+:::
+
+## Hartfalen en diabetes
+<br>
+
+
+In een land wonen 30 miljoen mensen. In 2024 hebben 15.000 van deze mensen een hartfalen ondergaan. 450.000 mensen in dit land hebben diabetes. 
+
+**a.** Stel je pakt een random persoon uit dit land, hoe groot is de kans dat je iemand vindt die vorig jaar een hartfalen heeft ondergaan?  
+
+*Antwoord: *$30*10^6 / 15*10^3 = 0.0005$
+
+**b.** Hoe groot is de kans dat iemand die diabetes heeft afgelopen jaar ook een hartfalen heeft ondergaan? 
+
+*Antwoord:* $0.0005*450*10^3/30*10^6 = 0.0000075$
+
+Het blijkt dat 1/1000 mensen met diabetes vorig jaar een hartfalen heeft ondergaan. 
+
+**c.** Bereken de kans dat iemand die diabetes heeft afgelopen jaar ook een hartfalen heeft ondergaan gegeven deze nieuwe informatie. Gebruik  @eq-conditionele-kans
+
+*Antwoord: * $Pr(hartfalen|diabetes)\frac{Pr(Diabetes\&Hartfalen)}{Pr(diabetes)} = \frac{1/1000}{450.000/30.000.000} = \frac{1}{15}\approx 0.067$
+
+:::
 
 
 ## Voetnoten
