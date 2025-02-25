@@ -52,12 +52,9 @@ $$
 
 Soms zijn we geïnteresseerd in de kans op een specifieke 
 uitkomst. 
-De kans dat de uitkomst gelijk is aan 2
-kunnen we noteren als
+De kans dat de uitkomst gelijk is aan 2 noteren we als
 $\pr{X = 2}$.
 (De letters Pr staan hier voor *Probability*.)
-Bij een eerlijke dobbelsteen is die kans natuurlijk 
-$$\pr{X = 2} =\frac{1}{6}.$$
 
 In andere gevallen willen we weten wat de kans is 
 op een bepaalde **gebeurtenis**.
@@ -102,6 +99,7 @@ d.  Om de omvang te schatten van de brasem-populatie in het IJsselmeer en Marker
     als de populatiegrootte $1{,}5\cdot 10^5$ is.
 :::
 
+
 ## Kansen als frequenties van een lange serie identieke kansexperimenten {#sec-frequentistisch}
 
 Wat is een kans nu eigenlijk precies?
@@ -144,6 +142,8 @@ die tot in het oneindige wordt herhaald;
 alleen dan zal
 de frequentie van zessen met zekerheid convergeren naar $\frac{1}{6}$.
 
+
+
 ::: {#exr-simulatie-dobbelsteen .Rexr}
 ## De relatieve frequentie van 6 bij het gooien van een dobbelsteen
 <br>
@@ -153,7 +153,7 @@ met een dobbelsteen.
 In de praktijk is dat lastig om te doen.
 Maar we kunnen dat natuurlijk wel simuleren!
 
-Deze code in R gooit virtueel een miljoen keer een dobbelsteen:
+Deze code in R gooit virtueel een miljoen keer een eerlijke dobbelsteen:
 ```{r}
 #| eval: false
 aantal_keer_gooien <- 10^6
@@ -173,9 +173,8 @@ a.  Maak in R een frequentietabel van de resultaten.
    
 b.  Bekijk hoe vaak je een 6 hebt gegooid. Komt dat exact overeen met een kans van $\frac{1}{6}$?
 
-c.  Wat is de kans de relatieve frequentie van de uitkomst "6"
-    na een miljoen herhalingen een relatieve frequentie heeft
-    van exact $\frac{1}{6}$?
+c.  Wat is de kans dat de relatieve frequentie van de uitkomst "6"
+    na een miljoen herhalingen exact gelijk is aan $\frac{1}{6}$?
 :::
 
 Een relatieve frequentie ligt altijd tussen 0 en 1
@@ -221,6 +220,46 @@ op een speciale manier moet nadenken.
 We komen daar later op terug.
 
 :::
+
+
+## Het toepassen van kansrekenen vereist altijd een model
+
+Altijd als je kansrekenen wilt toepassen in de werkelijke wereld
+zul je aannames moeten maken over het kansexperiment
+waarover je kansberekeningen wilt maken.
+Die aannames vormen samen een *model* van dat kansexperiment.
+Voor dit type model wordt ook wel de naam *kansmodel* gebruikt.
+
+Bijvoorbeeld,
+stel dat je een dobbelsteen gaat gooien en geïnteresseerd bent
+in de kans op een 6.
+Je hebt de dobbelsteen in een normale spelletjeswinkel gekocht
+(niet op www.goochelshop.nl);
+de dobbelsteen heeft een mooie symmetrische kubusvorm;
+zijn oppervlak is overal glad,
+en zo te voelen is het gewicht goed verdeeld.
+Bovendien neem je je voor om de dobbelsteen voor het gooien
+goed te schudden en tijdens het gooien je ogen dicht te houden.
+
+Wat is dan een redelijk model?
+
+Gezien de symmetrische vorm van de dobbelsteen
+en de manier waarop je gooit,
+is er geen reden om de ene uitkomst waarschijnlijker te vinden
+dan de andere.
+Het is daarom heel redelijk om de aanname te maken
+dat de kans op iedere uitkomst $\frac{1}{6}$ is,
+en in het bijzonder dat
+
+$$\pr{X = 6} =\frac{1}{6}.$$
+
+Het toepassen van kansrekenen is dus altijd een vorm van modelleren,
+zelfs in het simpele geval van een dobbelsteen.
+Dat de kans op een 6 gelijk is aan $\frac{1}{6}$ is geen *feit*,
+maar volgt uit *aannames* die je maakt op basis van kennis over het kansexperiment.
+Als blijkt dat die aannames niet juist zijn,
+bijvoorbeeld doordat een een kant van de dobbelsteen niet recht is afgezaagd,
+geeft het model geen betrouwbare voorspellingen.
 
 ## Venn-diagrammen
 
@@ -377,7 +416,7 @@ Denk aan de kans dat een willekeurig persoon
 ## Overlappende gebeurtenissen $A$ en $B$, deel 1
 <br>
 
-Je gooit één keer met een eerlijke dobbelsteen.
+Je gooit één keer met een dobbelsteen.
 De kansvariabele $X$ is de uitkomst van dit kansexperiment.
 We definiëren de volgend gebeurtenissen:
 
@@ -395,7 +434,7 @@ b.  Bepaal voor elke mogelijke uitkomst (1 tot 6)
     
 c.  Is er een uitkomst waarbij $A$ en $B$ beide plaatsvinden?
 
-d.  Wat is de kans $\pr{A \text{ en } B}$?
+d.  Neem aan dat de dobbelsteen eerlijk is. Wat is de kans $\pr{A \text{ en } B}$?
 
 :::
 
@@ -467,7 +506,7 @@ a.  Teken een lijn om de gebeurtenis "$A$ of $B$".
 
 b.  Welke uitkomsten vallen onder die gebeurtenis?
 
-c.  Wat is de kans op $\pr{A \text{ of } B}$?
+c.  Aangenomen dat de dobbelsteen eerlijk is, wat is de kans op $\pr{A \text{ of } B}$?
 
 :::
 
@@ -505,12 +544,12 @@ De conditionele kans $\pr{A | B}$
 Dat levert de volgende formule op:
 $$\pr{A | B} = \frac{\pr{A \text{ en } B}}{\pr{B}}.$$ {#eq-conditionele-kans}
 
-Bij het interpreteren van conditionele kansen
-  is het vaak inzichtelijk om te denken aan deelpopulaties.
-Neem bijvoorbeeld de kans dat een willekeurig gekozen Nederlander lijdt aan hartfalen
+Bij het denken over conditionele kansen
+  helpt het vaak om te denken aan deelpopulaties.
+Neem bijvoorbeeld de kans dat een willekeurige Nederlander lijdt aan hartfalen
   *gegeven dat* deze persoon diabetes heeft.
 Dan beperken we ons tot de deelpopulatie van personen met diabetes,
-  en vragen ons af wat de kans is dat iemand in die deelpopulatie
+  en vragen ons af wat de kans is dat iemand *in die deelpopulatie*
   hartfalen heeft.
 
 
@@ -520,7 +559,9 @@ Dan beperken we ons tot de deelpopulatie van personen met diabetes,
 <br>
 
 Gebruik weer de definities van @exr-overlap-1. 
-Pak het Venn-diagram er ook weer bij.
+Pak het Venn-diagram dat je getekend hebt er ook weer bij.
+
+Ga uit van een eerlijke dobbelsteen.
 
 a.  Wat is de kans $\pr{A}$?
 
@@ -547,14 +588,17 @@ Wat zijn de rekenregels die je kunt gebruiken?
 ### Algemene regel voor $\pr{A \textrm{ en } B}$
 
 De regel die in *alle* situaties geldt is:
+
 $$ 
 \pr{A \textrm{ en } B} = \pr{A | B}\pr{B}.  
 $$ {#eq-AenBalgemeen1}
+
 Die regel volgt direct uit @eq-conditionele-kans,
 zoals je zelf kunt verifiëren.
 Om de kans op $A$ en $B$ te berekenen,
 berekenen we dus eerst de kans op $B$,
 en vermenigvuldigen die kans met de kans op $A$ gegeven $B$.
+
 Omdat $\pr{A \textrm{ en } B = \pr{B \textrm{ en } A}$ geldt ook:
 $$
 \pr{A \textrm{ en } B} = \pr{B | A}\pr{A}.  
@@ -593,31 +637,34 @@ eerst een rode, en dan een blauwe.
 Gebeurtenis $A$ is dat we met de rode dobbelsteen een zes gooien;
 gebeurtenis $B$ dat we met de blauwe dobbelsteen een zes gooien.
 Zijn $A$ en $B$ onafhankelijk?
+
 Het is moeilijk voor te stellen
 dat de uitkomst van de rode dobbelsteen
 iets vertelt over de uitkomst van de blauwe dobbelsteen.
 De uitkomst van de blauwe dobbelsteen hangt minutieus af 
-van de manier waarop hij geworpen wordt,
-niet van de uitkomst van de rode dobbelsteen.
+van de manier waarop hij geworpen wordt;
+de uitkomst van de rode dobbelsteen zal daarbij geen rol spelen.
 Het is dus te verwachten dat de gebeurtenissen $A$ en $B$ onafhankelijk zijn.
+Daarom nemen we dat eigenlijk altijd aan als we 
+berekeningen doen over meerdere dobbelstenen.
 
+En wat als je meerdere keren achter elkaar met *dezelfde* dobbelsteen gooit?
+Als je de dobbelsteen tussendoor goed schudt en hem niet al te dicht boven de tafel laat vallen,
+is het weer redelijk om aan te nemen dat opeenvolgende uitkomsten
+onafhankelijk zijn.
+Maar als je de dobbelsteen tussen de worpen alleen oppakt en zonder schudden weer 
+vlak boven de tafel laat vallen, is dat helemaal niet zeker.
+In die situatie geeft een model dat onafhankelijkheid aanneemt mogelijk onjuiste voorspellingen.
 
-Voor een voorbeeld van gebeurtenissen die wél afhankelijk zijn
-  gooien we nu in gedachte één eerlijke dobbelsteen.
-Gebeurtenis $A$ is dat we een even aantal ogen gooien;
-    gebeurtenis $B$ dat we tenminste vier ogen gooien.
-Nu zijn $A$ en $B$ *niet* *onafhankelijk.
-De kans op $A$ is $\frac{1}{2}$, 
-    want er zijn net zoveel even uitkomsten
-    als oneven uitkomsten.
-Maar als gegeven is dat $B$ plaatsvindt,
-    dan sluit dat uitkomsten $\{1, 2, 3\}$ uit
-    en blijven dus alleen uitkomsten $\{4, 5, 6\}$ over.
-Van die drie uitkomsten zijn er twee even,
-    en daarom is de kans $\pr{A | B}$ gelijk aan $\frac{2}{3}$.
-Dus: $\pr{A} \neq \pr{A | B}$, en
-    $A$ en $B$ zijn in dit geval niet onafhankelijk
-    (en dus afhankelijk).
+:::
+
+::: {#exr-dobbel-AB-afhankelijk}
+
+## Zijn $A$ en $B$ onafhankelijk?
+
+Kijk eens terug naar @exr-omdraaien-conditionele-kansen.
+Zijn $A$ en $B$ daar onafhankelijk?
+
 :::
     
 ::: {#exr-onafhankelijk .pepexr}
@@ -639,23 +686,10 @@ c.  Wat is de kans dat een willekeurig gekozen Nederlander rhesusfactor Rh+ heef
 d.  Als antigen en rhesusfactor onafhankelijk zouden zijn,
     wat was dan de kans op O+ geweest?
     Ligt dat ver af van de werkelijkheid?
+    Maken we een grote fout als we in modelberekeningen veronderstellen
+    dat ze onafhankelijk zijn?
     
 e.  Wat vind je van de manier waarop Sanquin de verdeling heeft gevisualiseerd?
-
-:::
-
-::: {#exr-redeneerfout}
-
-## Redeneerfout
-
-Welke van de volgende redenaties kloppen? Waarom kloppen de anderen niet? 
-
-**a.**  Ik heb al 4 keer 6 gegooid dus de kans dat ik de volgende keer wéér 6 gooi is kleiner.
-
-**b.**  De kans dat ik eerst 1, daarna 2, daarna 3, daarna 4, daarna 5 en daarna 6 gooi is even groot als 6 keer achter elkaar 6 gooien. 
-
-**c.**  Als ik 6 dobbelstenen gooi is de kans even groot dat ik 6 verschillende getallen heb dan dat ik dat niet heb
-
 
 :::
 
@@ -918,8 +952,8 @@ uit twee vergelijkingen die we eerder gezien hebben,
 namelijk @eq-AenBalgemeen1 en @eq-AenBalgemeen2:
 $$
 \begin{gather}
-\pr{A \text{ en } B} = \pr{A}\pr{ B | A},\\
-\pr{A \text{ en } B} = \pr{B}\pr{ A | B}.
+\pr{A \text{ en } B} = \pr{ B | A}\pr{A},\\
+\pr{A \text{ en } B} = \pr{ A | B}\pr{B}.
 \end{gather}
 $$
 Daaruit volgt gelijk dat
@@ -936,7 +970,7 @@ en daarmee krijgen we de gewenste regel:
 
 $$ 
 \pr{ B | A} = \frac{\pr{A | B} \pr{B}}{\pr{A}}.
-$$
+$$ {#eq-bayes}
 :::
 
 Deze stelling maakt het mogelijk om $\pr{B | A}$ en $\pr{A | B}$ in elkaar om te rekenen.
@@ -1006,28 +1040,97 @@ i.  De sensitiviteit en specificiteit van deze test
     Leg uit wanneer die paradox optreedt.
 :::
 
-## Samenvatting
+## Beknopt overzicht
   
-::: {.todo-box}
+### Basisbegrippen & frequentistische definities
 
-Schrijven!
-  
-:::
+Kansrekenen of waarschijnlijkheidsleer gaat over **kansexperimenten**.
+En kansexperiment kan meerdere uitkomsten hebben.
+Iedere functie van de uitkomst is een **kansvariabele**.
+De verzameling van mogelijk uitkomsten heet de **kansruimte**.
+Een **gebeurtenis** is een deelverzameling van de kansruimte.
+Volgens de frequentistische definitie is de **kans** op een gebeurtenis
+de relatieve frequentie waarmee de gebeurtenis voorkomt 
+in een oneindig lange reeks herhalingen van hetzelfde kansexperiment.
+
+Om kansen te kunnen berekenen van gebeurtenissen in de werkelijkheid
+zul je altijd aannames moeten maken over het kansexperiment:
+een **kansmodel**.
+
+### Venn-diagrammen
+
+Een **Venn-diagram** is een diagram waarin de kansruimte
+en relevante gebeurtenissen verbeeld worden als vormen (zoals cirkels)
+met of zonder overlap.
+
+### Rekenregels
+
+**Som van alle kansen:**
+
+Bij categorische variabelen en discrete variabelen kunnen de kansen worden opgeteld:
+$$
+\sum_x \pr{X = x} = 1.
+$$
+De sommatie gaat over alle mogelijke uitkomsten $x$
+(de volledige kansruimte).
+
+
+**Conditionele kansen:**
+
+$$\pr{A | B} = \frac{\pr{A \text{ en } B}}{\pr{B}}.$$
+Gebeurtenissen $A$ en $B$ zijn onafhankelijk als
+$$ \pr{A | B} = \pr{A}.$$
+
+**Kans op A en B:**
+
+Vermenigvuldigingsregel voor onafhankelijke gebeurtenissen:
+$$
+\pr{A \textrm{ en } B} = \pr{A} \pr{B}.
+$$
+
+
+Algemene regel:
+$$ 
+\pr{A \textrm{ en } B} = \pr{A | B}\pr{B}.  
+$$
+
+
+**Kans op A of B**
+
+Optelregel voor gebeurtenissen die elkaar uitsluiten:
+$$
+\pr{A \textrm{ of } B}  = \pr{A} + \pr{B}.
+$$
+
+
+Algemene regel:
+$$ 
+\pr{A \textrm{ of } B} = \pr{A} + \pr{B} - \pr{A \textrm{ en } B}.
+$$
+
+
+
+**Stelling van Bayes**
+
+$$
+\pr{ B | A} = \frac{\pr{A | B} \pr{B}}{\pr{A}}.
+$$
+
 
   
 ## Terminologie
 
 | Nederlands                  | Engels                        | Betekenis |
 |:--------------------|:-----------------------|:--------------------------|
-| conditionele kans         |  conditional probability    | Een kans diens grootte afhangt van de context. |
-| frequentistische            | frequentist                   | De kans dat iets kan gebeuren uitgedrukt in de relatieve frequentie vergeleken met de andere mogelijkheden. |
-| gebeurtenis                 | event                         | Een (verzameling van) mogelijke uitkomst(en) van een kansexperiment. |
-| kansexperiment              | chance experiment             | Een experiment waarbij de uitkomst niet van tevoren te voorspellen is. |
+| conditionele kans         |  conditional probability    | De kans op een gebeurtenis als gegeven dat een andere gebeurtenis plaatsvindt. |
+| frequentistisch kansbegrip            | frequentist probability concept   | Begrippenkader waarbinnen een kans gedefineerd wordt als de relatieve frequentie in een oneindige reeks identiek uitgevoerde kansexperimenten. |
+| gebeurtenis                 | event                         | Een deelverzameling van mogelijke uitkomst van een kansexperiment. |
+| kansexperiment              | chance experiment             | Een experiment of procedure waarbij de uitkomst niet van tevoren te voorspellen is. |
 | kansruimte                  | sample space                  | De verzameling van alle mogelijke uitkomsten van een kansexperiment. 
-| kansvariabele               | random variable               | Een variabele waarvan de waarde afhangt van een kansexperiment, wordt meestal aangeduid met een hoofdletter. |
-| onafhankelijk               |  independent                  | Een gebeurtenis die niet afhangt van een andere gebeurtenis. |
+| kansvariabele               | random variable               | Een variabele waarvan de waarde afhangt van de uitkomst van een kansexperiment. |
+| onafhankelijk gebeurtenissen               |  independent events   |  Twee gebeurtenissen zijn onafhankelijk als de kans op de ene gebeurtenis niet verandert als gegeven wordt dat de andere plaatsvindt. |
 | stochastische variabele/stochast     | stochastic variable           | Een ander woord voor kansvariabele. |
-| Venn-diagram                | Venn diagram                  | Een diagram waarin je (overlappende) kansen in een kansruimte weer kan geven. |
+| Venn-diagram                | Venn diagram                  | Een diagram waarin de kansruimte en relevante gebeurtenissen verbeeld worden als vormen (zoals cirkels) met of zonder overlap. |
 
 
 : Woordenlijst @sec-kans . {#tbl-woorden-kans .striped .hover}
