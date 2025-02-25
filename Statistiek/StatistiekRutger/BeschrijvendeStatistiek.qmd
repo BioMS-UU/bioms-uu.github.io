@@ -605,6 +605,9 @@ waar die twee pieken vandaan komen.
 #| warning: false
 #| fig.cap: "Welke termen zijn van toepassing op deze verdelingen?"
 #| label: fig-termen
+#| fig-width: 6
+#| fig-height: 4
+#| out-width: "100%"
 
 library(ggplot2)
 
@@ -612,7 +615,7 @@ library(ggplot2)
 n <- 9000
 
 # Data genereren
-set.seed(123)
+set.seed(124)
 
 driehoek <- {x <- runif(n); x[runif(n) < pmax(0, abs(2 * (x - 0.5)))] <- NA; na.omit(x)}
 
@@ -635,19 +638,19 @@ data <- data.frame(
     rep("Driehoek", 
         length(driehoek))),
   label = c(
-    rep(c("a", 
-          "b", 
-          "c", 
-          "d", 
-          "e"), 
+    rep(c("(a)", 
+          "(b)", 
+          "(c)", 
+          "(d)", 
+          "(e)"), 
         each = n), 
-    rep("f", 
+    rep("(f)", 
         length(driehoek)))
 )
 
 # Plot maken
 ggplot(data, aes(x = value, fill = distribution)) +
-  geom_histogram(bins = 50, color = "black", alpha = 0.6) +
+  geom_histogram(bins = 40, color = "black", alpha = 1, fill= opvulkleur) +
   facet_wrap(~label, scales = "free") +
   theme_minimal() +
   theme(legend.position = "none") +
@@ -659,7 +662,7 @@ Bekijk @fig-termen. Zet vervolgens vinkjes in onderstaande tabel
 als de omschrijving van toepassing is.
 
 | Figuur | Symmetrisch | Links-scheef | Rechts-scheef | Klokvormig | Uniform | Bimodaal |
-|:-------|-------------|--------------|---------------|------------|---------|----------|
+|:-------|:-----------:|:------------:|:-------------:|:----------:|:-------:|:--------:|
 | a. | <input type="checkbox"/> | <input type="checkbox"/> | <input type="checkbox"/> | <input type="checkbox"/> | <input type="checkbox"/> | <input type="checkbox"/> | 
 | b. | <input type="checkbox"/> | <input type="checkbox"/> | <input type="checkbox"/> | <input type="checkbox"/> | <input type="checkbox"/> | <input type="checkbox"/> | 
 | c. | <input type="checkbox"/> | <input type="checkbox"/> | <input type="checkbox"/> | <input type="checkbox"/> | <input type="checkbox"/> | <input type="checkbox"/> | 

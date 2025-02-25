@@ -53,31 +53,15 @@ f. De eerste regel van de uitvoer is:
 
 ### @exr-termen
 
-::: {.todo-box}
-
-Schrijven zodra de opgave af is. Ik (Madelon) heb alvast een ingevulde tabel hier geplaatst.
-:::
-
 | Figuur | Symmetrisch | Links-scheef | Rechts-scheef | Klokvormig | Uniform | Bimodaal |
 |:-------|:-------------:|:--------------:|:---------------:|:------------:|:---------:|:----------:|
-| a. | x |  |  | x |  |  | 
-| b. |  |  | x |  |  |  | 
-| c. | x |  |  |  | x |  | 
-| d. | x |  |  | x |  | x | 
-| e. | x |  |  | x |  |  | 
-| f. | x |  |  |  |  |  | 
+| a. | $\checkmark$ |  |   | $\checkmark$ |   |   | 
+| b. |   |  | $\checkmark$ |   |   |   | 
+| c. | $\checkmark$ |  |   |   | $\checkmark$ |   | 
+| d. | $\checkmark$ |  |   |   |   | $\checkmark$ | 
+| e. | $\checkmark$ |  |   |   |   |   | 
+| f. | $\checkmark$ |  |   |   |   |   | 
 
-a.  `NA`
-
-b.  `NA`
-
-c.  `NA`
-
-d.  `NA`
-
-e.  `NA`
-
-f.  `NA`
 
 
 ### @exr-cumul-verd
@@ -169,20 +153,16 @@ i.  De formule voor de variantie is: $$V_X = \frac{\sum_i^n \left(x_i - \mean{x}
 
 ### @exr-schat-sd
 
-::: {.todo-box}
-Schrijven als de opdracht af is. 
-
-De standaarddeviaties staan alvast hieronder.
-:::
-
 ```{r}
+#| eval: FALSE
+#| echo: FALSE
 library(tidyverse)
 
 # Aantal samples
 n <- 9000
 
 # Data genereren
-set.seed(123)
+set.seed(124)
 
 driehoek <- {x <- runif(n); x[runif(n) < pmax(0, abs(2 * (x - 0.5)))] <- NA; na.omit(x)}
 
@@ -217,8 +197,25 @@ data <- data.frame(
 
 data %>%
   group_by(label) %>%
-  summarise(sd = round(sd(value), digits = 2))
+  summarise(sd = round(sd(value), digits = 1))
+
+data %>%
+  group_by(label) %>%
+  summarise(sd = round(IQR(value), digits = 1))
+
 ```
+
+a.  Standaarddeviate: 1,0. IKA: 1,3.
+
+b.  Standaarddeviate: 2,8. IKA: 3,5.
+
+c.  Standaarddeviate: 0,3. IKA: 0,5.
+
+d.  Standaarddeviate: 1,8. IKA: 3,1.
+
+e.  Standaarddeviate: 2,7. IKA: 4,7.
+
+f.  Standaarddeviate: 0,2. IKA: 0,3.
 
 
 ### @exr-gewogen-gemiddelden
