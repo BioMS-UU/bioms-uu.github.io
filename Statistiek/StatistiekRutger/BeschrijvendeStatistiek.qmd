@@ -600,25 +600,12 @@ waar die twee pieken vandaan komen.
 ## Omschrijf de verdeling
 <br>
 
-::: {.todo-box}
-Madelon en/of Yannick:
-
-Maak een figuur met histogrammen van 6 verschillende verdelingen, bijv.
-
-- Normale verdeling
-- Gamma-verdeling met shape-parameter > 1
-- uniforme verdeling
-- Driehoek: sample uniform en reject iedere waarde x met kans max(0, abs(2*(x - 0.5))).
-- Bimodaal: standaard-normaal  + standaard-normaal verschoven met 1,5
-- Trimodaal: standaard-normaal  + standaard-normaal verschoven met 1,5 + standaard-normaal verschoven met 3 sd
-
-willekeurige volgorde
-
-Alternatief: histogrammen van numerieke variabelen uit NHANES.
-
-:::
-
 ```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Welke termen zijn van toepassing op deze verdelingen?"
+#| label: fig-termen
+
 library(ggplot2)
 
 # Aantal samples
@@ -634,44 +621,39 @@ data <- data.frame(
     rnorm(n),
     rgamma(n, shape = 2, scale = 2),
     runif(n),
-    c(rnorm(n/2), rnorm(n/2, mean = 1.5)),
-    c(rnorm(n/3), rnorm(n/3, mean = 1.5), rnorm(n/3, mean = 3)),
+    c(rnorm(n/2), rnorm(n/2, mean = 3)),
+    c(rnorm(n/3), rnorm(n/3, mean = 3), rnorm(n/3, mean = 6)),
     driehoek
   ),
-  distribution = c(rep(c("Normaal", "Gamma (shape=2)", "Uniform", "Bimodaal", "Trimodaal"), each = n), rep("Driehoek", length(driehoek)))
+  distribution = c(
+    rep(c("Normaal", 
+          "Gamma (shape=2)", 
+          "Uniform", 
+          "Bimodaal", 
+          "Trimodaal"), 
+        each = n), 
+    rep("Driehoek", 
+        length(driehoek))),
+  label = c(
+    rep(c("a", 
+          "b", 
+          "c", 
+          "d", 
+          "e"), 
+        each = n), 
+    rep("f", 
+        length(driehoek)))
 )
 
 # Plot maken
-p <- ggplot(data, aes(x = value, fill = distribution)) +
+ggplot(data, aes(x = value, fill = distribution)) +
   geom_histogram(bins = 50, color = "black", alpha = 0.6) +
-  facet_wrap(~distribution, scales = "free") +
+  facet_wrap(~label, scales = "free") +
   theme_minimal() +
   theme(legend.position = "none") +
-  labs(title = "Histogrammen van Verschillende Verdelingen", x = "Waarde", y = "Frequentie")
-
-# Plot weergeven
-print(p)
+  labs(x = "Waarde", y = "Frequentie")
 
 ```
-
-
-::: {#fig-termen layout="[[1,1,1], [1,1,1]]"}
-
-![](figuren/dummy.png)
-
-![](figuren/dummy.png)
-
-![](figuren/dummy.png)
-
-![](figuren/dummy.png)
-
-![](figuren/dummy.png)
-
-![](figuren/dummy.png)
-
-Welke termen zijn van toepassing op deze verdelingen?
-:::
-
 
 Bekijk @fig-termen. Zet vervolgens vinkjes in onderstaande tabel
 als de omschrijving van toepassing is.
