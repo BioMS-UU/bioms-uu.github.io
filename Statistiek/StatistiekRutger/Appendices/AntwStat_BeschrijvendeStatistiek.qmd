@@ -55,8 +55,17 @@ f. De eerste regel van de uitvoer is:
 
 ::: {.todo-box}
 
-Schrijven zodra de opgave af is.
+Schrijven zodra de opgave af is. Ik (Madelon) heb alvast een ingevulde tabel hier geplaatst.
 :::
+
+| Figuur | Symmetrisch | Links-scheef | Rechts-scheef | Klokvormig | Uniform | Bimodaal |
+|:-------|:-------------:|:--------------:|:---------------:|:------------:|:---------:|:----------:|
+| a. | x |  |  | x |  |  | 
+| b. |  |  | x |  |  |  | 
+| c. | x |  |  |  | x |  | 
+| d. | x |  |  | x |  | x | 
+| e. | x |  |  | x |  |  | 
+| f. | x |  |  |  |  |  | 
 
 a.  `NA`
 
@@ -161,8 +170,56 @@ i.  De formule voor de variantie is: $$V_X = \frac{\sum_i^n \left(x_i - \mean{x}
 ### @exr-schat-sd
 
 ::: {.todo-box}
-Schrijven als de opdracht af is.
+Schrijven als de opdracht af is. 
+
+De standaarddeviaties staan alvast hieronder.
 :::
+
+```{r}
+library(tidyverse)
+
+# Aantal samples
+n <- 9000
+
+# Data genereren
+set.seed(123)
+
+driehoek <- {x <- runif(n); x[runif(n) < pmax(0, abs(2 * (x - 0.5)))] <- NA; na.omit(x)}
+
+data <- data.frame(
+  value = c(
+    rnorm(n),
+    rgamma(n, shape = 2, scale = 2),
+    runif(n),
+    c(rnorm(n/2), rnorm(n/2, mean = 3)),
+    c(rnorm(n/3), rnorm(n/3, mean = 3), rnorm(n/3, mean = 6)),
+    driehoek
+  ),
+  distribution = c(
+    rep(c("Normaal", 
+          "Gamma (shape=2)", 
+          "Uniform", 
+          "Bimodaal", 
+          "Trimodaal"), 
+        each = n), 
+    rep("Driehoek", 
+        length(driehoek))),
+  label = c(
+    rep(c("a", 
+          "b", 
+          "c", 
+          "d", 
+          "e"), 
+        each = n), 
+    rep("f", 
+        length(driehoek)))
+)
+
+data %>%
+  group_by(label) %>%
+  summarise(sd = round(sd(value), digits = 2))
+```
+
 
 ### @exr-gewogen-gemiddelden
 
