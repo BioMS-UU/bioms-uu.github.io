@@ -265,42 +265,203 @@ f.  $\pr{B|A}$ is de kans op $A$ en $B$ relatief ten opzichte van
     zijn beide conditionele kansen dus verschillend.
 
 
-### @exr-A-en-B-algemeen
+### @exr-hartfalen
+
+Het is handig om R als rekenmachine gebruiken. 
+We voeren eerst netjes alle getallen in:
+
+```{r}
+#| echo: false
+#| output: false
+#| warning: false
+if (!("VennDiagram" %in% .packages())) { library(VennDiagram) }
+if (!("grid" %in% .packages())) { library(grid) }
+```
+
+```{r}
+#| warning: false
+
+# Definieer de populatiegrootte en aantallen
+nederlanders      <- 17.6*10^6
+diabetes          <- 1.08*10^5
+hartfalen        <- 2.5*10^5
+beide            <- 4*10^3
+
+# Bereken de aantallen voor ieder compartiment
+alleen_diabetes   <- diabetes - beide
+alleen_hartfalen  <- hartfalen - beide
+geen_van_beide    <- nederlanders - (alleen_diabetes + alleen_hartfalen + beide)
+```
+    
+a.  Het Venn-diagram ziet er dan als volgt out: 
+
+    ```{r}
+    #| echo: FALSE
+    #| warning: FALSE
+    #| fig.width: 6
+    #| fig.height: 4
+    #| fig.label: fig-Venn-ingevuld
+    
+    if (!("ggplot2" %in% .packages())){ 
+      library(ggplot2) 
+      }
+    if (!("ggforce" %in% .packages())){ 
+      library(ggforce) 
+      }
+    
+    kleurKansruimte <- "FloralWhite"
+    
+    kansruimte <- ggplot() +  
+      geom_rect(
+        aes(xmin = 0, ymin = 0, xmax= 100, ymax = 100),
+        fill = kleurKansruimte, color = "black", size = .8
+        ) +
+      annotate(
+        "text", 
+        x = 41, y = 94, 
+        label = "17,246 miljoen", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        ) +
+      theme_void()
+      
+    kleurA <- "Gold"
+
+    A <- list(
+      geom_ellipse(
+        aes(x0 = 34, y0 = 47, a = 28,  b = 40,  angle = 0), 
+        fill = kleurA , alpha = 0.7, linewidth = .8
+        ),
+      annotate(
+        "text", 
+        x = 20, y = 45, 
+        label = "246000", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        ),
+      annotate(
+        "text", 
+        x = 25, y = 60, 
+        label = "D", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        )
+      )
+      
+    kleurB <- "DodgerBlue"
+
+    B <- list( 
+      geom_ellipse(
+        aes(x0 = 66, y0 = 47, a = 28,  b = 40,  angle = 0), 
+        fill = kleurB, alpha = 0.75, linewidth = .8
+        ),
+      annotate(
+        "text", 
+        x = 70, y = 45, 
+        label = "104000", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        ),
+      annotate(
+        "text", 
+        x = 65, y = 60, 
+        label = "H", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        )
+    )
+    
+    labelInAenB <- annotate(
+      "text",
+      x = 50, y = 50, 
+      label = "4000",
+      color = "black",
+      size = 5
+    )
+
+    kansruimte + A + B + labelInAenB
+ 
+    ```
 
 
+b.  De kans dat een willekeurige Nederlander hartfalen heeft is:  
+
+    ```{r}
+    (pr_H <- hartfalen / nederlanders)
+    ```
+
+c.  De kans dat een diabetespatiënt ook hartfalen heeft:  
+
+    ```{r}
+    (pr_H_given_D <- beide / diabetes)
+    ```
+    
+    Dit is precies wat bedoeld wordt met de kans $\pr{H | D}$.
+
+d.  Om te bepalen of het risico op hartfalen groter is voor mensen met diabetes, 
+    berekenen we de verhouding tussen $\pr{H | D}$ en $\pr{H}$:
+
+    ```{r}
+    (risico_verhoging <- pr_H_given_D / pr_H)
+    ```
+
+    Mensen met diabetes hebben volgens deze berekening
+    een 2,6 keer zo hoog risico op hartfalen vergeleken met de algemene bevolking.
+
+
+### @exr-dobbel-AB-afhankelijk
+
+In  @exr-omdraaien-conditionele-kansen was $\pr{A} = \pr{A | B} = \frac{1}{2}$.
+Deze gebeurtenissen zijn dus onafhankelijk!
+Dit blijkt ook uit het feit dat $\pr{B} = \pr{B | A} = \frac{1}{3}$.
 
 
 ### @exr-onafhankelijk
 
-a.  Aflezen van de figuur: $\pr{\text{O+} = 0{,}382$.
+a.  Aflezen van de figuur: $\pr{\text{O+}} = 0{,}382$.
 
 b.  $\pr{\text{O}} = \pr{\text{O+}} + \pr{\text{O-}} = 0{,}382 + 0{,}068 = 0{,}45$.
 
-c.  $$
+c.  We tellen de kansen van alle Rh+ bloedgroepen op:
+
+    $$
     \begin{align}
     \pr{\text{+}} &= \pr{\text{O+}} + \pr{\text{A+}} + \pr{\text{B+}} + \pr{\text{AB+}}\\
                   &= 0{,}382 + 0{,}366 + 0{,}077 + 0{,}025 = 0{,}85.
     \end{align}
     $$
 
-d.  Als antigen en rhesusfactor onafhankelijk dan zijn, dan zou de
+d.  Als antigen en rhesusfactor onafhankelijk zouden zijn, dan zou de
     vermenigvuldigingsregel gelden:
 
     $$
     \begin{align}
     \pr{\text{O+}} &= \pr{\text{O en +}} = \pr{\text{O}}\cdot\pr{\text{+}}\\
                   &= 0{,}45 \times 0{,}85\\
-                  $= 0{,}383.
+                  &= 0{,}383.
     \end{align}
     $$
     
-    Daarmee komen we behoorlijk dicht bij de werkelijke waarde!
+    Daarmee komen we heel dicht bij de werkelijke waarde van 0,382!
     Blijkbaar zijn gebeurtenissen O en + vrijwel onafhankelijk.
+    
+f.  De ABO-bloedgroep en de rhesusfactor worden bepaald door genen 
+    die op verschillende chromosomen liggen.
+    Die segregeren dus onafhankelijk van elkaar
+    en *linkage* is dus niet te verwachten.
+    Kleine associaties kunnen wel optreden,
+    bijvoorbeeld als bepaalde etnische bevolkingsgroepen onderling
+    verschillen in hun proporties.
 
 e.  Het plaatje ziet er mooi uit, maar geeft de getallen niet helder weer.
     De oppervlakte van de bloeddruppels is niet in proportie met het percentage
     dat erbij hoort. Dat is misleidend: het lijkt er bijvoorbeeld niet op
-    dat de kans op O+ maarliefst 76 keer zo groot is als de kans op AB-.
+    dat de kans op O+ maar liefst 76 keer zo groot is als de kans op AB-.
     
     Deze figuur geeft de verhoudingen beter weer:
     
@@ -365,4 +526,5 @@ e.  Het plaatje ziet er mooi uit, maar geeft de getallen niet helder weer.
       )
     ```
     :::
+    
 
