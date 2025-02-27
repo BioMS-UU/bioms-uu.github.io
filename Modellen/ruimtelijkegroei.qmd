@@ -21,7 +21,7 @@ In dit hoofdstuk, gaan we na denken over hoe populaties (of het nu bomen, bacter
 
 ## Wat is individual-based modelling?
 
-Individual-based modelling (IBMs, ook wel *agent-based modelling* of ABMs genoemd), is een modeltechniek waarbij organismen als discrete entiteiten (indivuen) worden beschouwd. Hierdoor kunnen we niet louter en alleen populatiegroottes bestuderen, maar ook de eigenschappen en gedragingen van individuen *binnen* de populatie. Formeler gezegd kunnen we stellen dat individual-based modellen een ander **omschrijvingsniveau** hebben dan ODEs/differentievergelijkingen. Dit omschrijvingsniveau bepaalt ook welke **modeluitkomsten** we kunnen verwachten: als we alleen de populatiegroottes bestuderen, kunnen we geen inzichten over individuele verschillen verwachten. Laten we hiermee kennis maken door te denken aan een bacteriekolonie die zich over een agarplaat verspreidt.
+Individual-based modelling (IBMs, ook wel *agent-based modelling* of ABMs genoemd), is een modeltechniek waarbij organismen als discrete entiteiten (individuen) worden beschouwd. Hierdoor kunnen we niet louter en alleen populatiegroottes bestuderen, maar ook de eigenschappen en gedragingen van individuen *binnen* de populatie. Formeler gezegd kunnen we stellen dat individual-based modellen een ander **omschrijvingsniveau** hebben dan ODEs/differentievergelijkingen. Dit omschrijvingsniveau bepaalt ook welke **modeluitkomsten** we kunnen verwachten: als we alleen de populatiegroottes bestuderen, kunnen we geen inzichten over individuele verschillen verwachten. Laten we hiermee kennis maken door te denken aan een bacteriekolonie die zich over een agarplaat verspreidt.
 
 ## Individuen en hun posities
 
@@ -29,7 +29,7 @@ Stel je voor dat in het midden van een agarplaat een enkele (paarse) bacteriecel
 
 ```{r ruimtelijkegroei}
 #| code-fold: true
-#| fig-cap: "Paarse stippen staan voor wildtype bacteriën, terwjil gele stippen bacteriën zijn met een mutatie. Door lokale celdeling onstaat er een \"taartpunt\" van mutanten, zoals waargenomen in [Fusco et. al (2016)](https://www.nature.com/articles/ncomms12760)"
+#| fig-cap: "Paarse stippen staan voor wildtype bacteriën, terwijl gele stippen bacteriën zijn met een mutatie. Door lokale celdeling onstaat er een \"taartpunt\" van mutanten, zoals waargenomen in [Fusco et. al (2016)](https://www.nature.com/articles/ncomms12760)"
 #| label: fig-colony
 #| code-summary: "Code (voor de leuk, dit is geen leerstof)"
 # Functie om het grid te visualiseren als punten
@@ -436,11 +436,11 @@ Dit model lijkt erg op vergelijkingen die we al hebben gezien voor logistische g
 
 a. Schets de groeisnelheid $\dt{N}$ als een functie van $N$. Teken onder je schets een faseportret met pijltjes om aan te geven bij welke dichtheden de populatie kan groeien, en bij welke de populatie zal krimpen. 
 
-Nu nemen we aan dat $c=2$. De functie krijgt nu de vorm $bN^2 - \frac{bN^3}{k} - dN$, die wat lastiger te schetsen is. We kunnen de $N$ buiten haakjes halen, en dan de ABC-formule kunnen gebruiken om de nulpunten van het deel binnen de haakjes uit te rekenen... Maar we kunnen ook een stukje R-code schrijven om de grafiek te plotten, of de grafiek plotten in Desmos (beide opties staan hieronder weergegeven). 
+Nu nemen we aan dat $c=2$. De functie krijgt nu de vorm $bN^2 - \frac{bN^3}{K} - dN$, die wat lastiger te schetsen is. We kunnen de $N$ buiten haakjes halen, en dan de ABC-formule kunnen gebruiken om de nulpunten van het deel binnen de haakjes uit te rekenen... Maar we kunnen ook een stukje R-code schrijven om de grafiek te plotten, of de grafiek plotten in Desmos (beide opties staan hieronder weergegeven). 
 
 ```{=html}
 <div class="interactive_content">
-<iframe id="iframeToReplace" scrolling="no" src="https://www.desmos.com/calculator/tvfr14fdgv"
+<iframe id="iframeToReplace" scrolling="no" src="https://www.desmos.com/calculator/9jfc3fouiz"
 width="100%" height="350" style="border: 1px solid #ccc; zoom: 0.75; transform: scale(1.00);                transform-origin: 0 0;" frameborder=0></iframe>
 </div>
 ```
@@ -450,17 +450,20 @@ width="100%" height="350" style="border: 1px solid #ccc; zoom: 0.75; transform: 
 #| eval: false
 #| code-summary: "Code voor het tekenen van de functie met R"
 b=0.2
-k=10
+K=10
 d=0.1
 c=2
 
-func <- function(C){
- return(b*C^c*(1-C/k) - d*C)
+fN <- function(N){
+ return(b*N^c*(1-N/K) - d*N)
 }
 
-curve(func,0,11,lwd=2,ylim=c(-0.1,3),
-       ylab="dC/dt",xlab="C",col="blue",
-       main="dC/dt als een functie van C")
+x <- seq(0,11,by=0.01)
+y <- fN(x)
+
+plot(x,y, type='l',lwd=3,col='seagreen', ylim=c(-0.1,3),
+       ylab="dN/dt",xlab="N",
+       main="dN/dt als een functie van N")
 abline(h=0)
 ```
 b. Neem de grafiek uit R of Desmos over op papier, en schets opnieuw een faseportret met pijltjes eronder. Geef met open of gesloten cirkels respectievelijk instabiele en stabiele evenwichten aan.
@@ -495,7 +498,7 @@ width="100%" height="675" frameborder=0></iframe>
 </div>
 ```
 
-  a. Bestudeer (voor de standaardparameters $b=0.13, c=0.11, d=0.1$) in biologische begrippen op hoe dit systeem reageert op meer/minder mengen. Contrasteer je bevindingen met wat we gezien hebben voor het ``cheater-cooperator'' model. 
+  a. Bestudeer het model voor de standaardparameters $b=0.13, c=0.11, d=0.1$, en beschrijf in biologische begrippen hoe dit systeem reageert op meer/minder mengen. Contrasteer je bevindingen met wat we gezien hebben voor het "cheater-cooperator" model. 
 
 In de onderstaande simulatie zijn er niet 3, maar 6 soorten die elkaar in een vergelijkbare cyclus helpen met reproduceren. 
   

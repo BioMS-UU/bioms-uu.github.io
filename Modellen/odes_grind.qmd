@@ -5,7 +5,7 @@
 
 In @sec-meerdere hebben we een heel beroemd model uit de biologie geanalyseerd: het *Lotka-Volterra predator-prooi model*. Dit model gaat natuurlijk niet specifiek over konijnen en vossen, maar zou op allerlei systemen toegepast kunnen worden: bacteriofagen die bacteriën infecteren, protozoa die bacteriën eten, lieveheersbeestjes die bladluizen eten, vleermuizen die motjes eten, *etc.* Naast het predator-prooi model bestaat er ook het *Lotka-Volterra competitie model* (waar we in het volgende hoofdstuk naar gaan kijken). Zodoende is het Lotka-Volterra model uitgegroeid tot één van de meest veelzijdige modellen in de biologie, waarmee voorspellingen gedaan kunnen worden over welke soorten wel/niet kunnen samenleven. 
 
-We hebben gezien hoe met behulp van faseruimtes het relatief eenvoudig kan zijn om inzicht in een biologisch proces te vergaten. Maar de eenvoud van deze eerdere analyses is deels te verklaren door de eenvoud van het model dat we hebben gebruikt. Hoe meer interacties we willen begrijpen, hoe moeilijker het zal worden om met pen en papier te werk te gaan. Daarom gaan we leren om ODEs door te rekenen met het Rscript `grind.R`, waarmee je eenvoudig faseruimtes en grafiekjes van de dynamica van variabelen kan plotten. 
+We hebben gezien hoe met behulp van faseruimtes het relatief eenvoudig kan zijn om inzicht in een biologisch proces te vergaren. Maar de eenvoud van deze eerdere analyses is deels te verklaren door de eenvoud van het model dat we hebben gebruikt. Hoe meer interacties we willen begrijpen, hoe moeilijker het zal worden om met pen en papier te werk te gaan. Daarom gaan we leren om ODEs door te rekenen met het Rscript `grind.R`, waarmee je eenvoudig faseruimtes en grafiekjes van de dynamica van variabelen kan plotten. 
 
 ![Een faseruimte (links) en oplossing (rechts) gegenereerd met het Rscript 'grind.R'. De zwarte lijnen links tonen trajectories (de dynamica vanaf specifieke initiële condities). De oplossing (rechts) geeft één trajectorie weer als functie van tijd, met de twee variabelen op de y-as. ](figuren/odes_grind.png){fig-align="center" width="90%"}
 
@@ -23,14 +23,14 @@ In ons eerdere Lotka-Volterra model namen we aan dat predatie lineair proportion
 
 \begin{align*}
 \frac{\dd \color{#2a53f7}R}{\dd t} &= \underbrace{b(1-\frac{\color{#2a53f7}R}{K})\color{#2a53f7}R}_{\text{geboorte prooi}} - \underbrace{d\color{#2a53f7}R}_{\text{sterfte prooi}} - \underbrace{\frac{\color{black}a\color{#2a53f7}R\color{orange}N}{h+\color{#2a53f7}R}}_{\text{nieuwe predatieterm}}\\
-\frac{\dd \color{orange}N}{\dd t} &= \underbrace{\frac{a\color{#2a53f7}R\color{orange}N}{h+\color{#2a53f7}R\color{black}}}_{\text{geboorte predator}} - \underbrace{\delta \color{orange}N}_{\text{sterfte predator}}
+\frac{\dd \color{orange}N}{\dd t} &= \underbrace{\frac{ca\color{#2a53f7}R\color{orange}N}{h+\color{#2a53f7}R\color{black}}}_{\text{geboorte predator}} - \underbrace{\delta \color{orange}N}_{\text{sterfte predator}}
 \end{align*}
 
 Wat is met deze nieuwe predator-term de *per capita* predatie? Dat wil zeggen: hoeveel prooi kan een enkele predator per tijdseenheid opeten? Hiervoor delen we wederom de predatie-term door $N$, waardoor we functie $\frac{aR}{h+R}$ krijgen. Deze functie wordt de **functionele respons** van de predator genoemd. Om een beeld van deze functie te krijgen, is het handig om deze even te schetsen. 
 
 ## Vorm van de nieuwe predatieterm 
 
-Laten we eerst even naar de noemer te kijken, en vooral naarde balans tussen $h$ en $R$. Als $R$ heel klein is, heeft $h$ de overhand in de noemer, waardoor $R$ verwaarloosbaar is. Dus voor kleine $R$ nadert de functie $\frac{aR}{h}$, wat een lineaire toename is. Dus voor kleine prooi-dichtheden, neemt predatie lineair toe met de prooi-dichtheid, net zoals in het eerdere model. Maar als $R$ alsmaar groter wordt, wordt $h$ juist verwaarloosbaar ten opzichte van $R$. Daarom nadert deze functie bij hoge $R$ de waarde $\frac{aR}{R} = a$. Dus: zelfs bij hele hoge prooidichtheiden kan een enkele predator per tijdseenheid (bijv. per dag) hoogstens $a$ prooi eten. Tussen deze twee extreme waarden zit nog een laatste bijzondere punt: het punt waar $R$ precies gelijk is aan $h$. Op dit punt is de functie gelijk aan $\frac{aR}{R+R}=\frac{aR}{2R}=\frac{a}{2}$. De parameter $h$ geeft dus de prooi-dichtheid waar de predatieterm half-maximaal is. Nu kunnen we de functie schetsen, zoals weergegeven in @fig-predatieterm-1. 
+Laten we eerst even naar de noemer te kijken, en vooral naar de balans tussen $h$ en $R$. Als $R$ heel klein is, heeft $h$ de overhand in de noemer, waardoor $R$ verwaarloosbaar is. Dus voor kleine $R$ nadert de functie $\frac{aR}{h}$, wat een lineaire toename is. Dus voor kleine prooi-dichtheden, neemt predatie lineair toe met de prooi-dichtheid, net zoals in het eerdere model. Maar als $R$ alsmaar groter wordt, wordt $h$ juist verwaarloosbaar ten opzichte van $R$. Daarom nadert deze functie bij hoge $R$ de waarde $\frac{aR}{R} = a$. Dus: zelfs bij hele hoge prooidichtheiden kan een enkele predator per tijdseenheid (bijv. per dag) hoogstens $a$ prooi eten. Tussen deze twee extreme waarden zit nog een laatste bijzondere punt: het punt waar $R$ precies gelijk is aan $h$. Op dit punt is de functie gelijk aan $\frac{aR}{R+R}=\frac{aR}{2R}=\frac{a}{2}$. De parameter $h$ geeft dus de prooi-dichtheid waar de predatieterm half-maximaal is. Nu kunnen we de functie schetsen, zoals weergegeven in @fig-predatieterm-1. 
 
 ## Hill-functies
 
@@ -163,7 +163,7 @@ Voordat je Grind kan gebruiken, moet je eenmalig een paar "packages" in R instal
 ```{r}
 #| eval: false
 # Installeer de packages (hoeft maar 1 keer!)
-install.packages("FME", "deSolve","coda","rootSolve") 
+install.packages(c("FME", "deSolve","coda","rootSolve"))
 ```
 
 Nadat deze packages zijn geinstalleerd, moeten we het grind.R script inladen. Dit kan je vanaf de website doen:
@@ -199,7 +199,7 @@ Nu kunnen we grind.R gebruiken. De differentiaalvergelijkingen staan in een func
 
 model <- function(t, state, parms) {
   with(as.list(c(state,parms)), {
-    dR <- r*R*(1 - R/K) - a*R*N/(R+h)
+    dR <- b*R*(1 - R/K) -d*R - a*R*N/(R+h)
     dN <- c*a*R*N/(R+h) - delta*N
     return(list(c(dR, dN)))  
   }) 
@@ -211,8 +211,8 @@ En vervolgens geef je de parameters en begin-waarden (*initial condition*) voor 
 ```{r}
 #| code-fold: false
 #| eval: true
-p <- c(r=1,K=1,a=1,c=1,delta=0.3,c=1,h=1)  #parameters
-s <- c(R=1,N=0.01) #begin-dichtheden van R en N  
+p <- c(b=1,d=0.01,K=1,a=1,c=1,delta=0.3,c=1,h=1)  #parameters
+s <- c(R=1.1,N=0.25) #begin-dichtheden van R en N  
 colors[1] = "blue"
 colors[2] = "#FF7F50"
 ```
@@ -263,7 +263,7 @@ plane(xmax=1.5, ymax=1.5,vector = T)
 newton(state=c(R=0.0,N=0.0),plot=T)
 newton(state=c(R=1.0,N=0.0),plot=T)
 newton(state=c(R=0.4,N=0.8),plot=T)
-run(traject = T)
+run(traject = T,tstep=0.1)
 ```
 
 De laatste regel gebruikt `run` met de optie `traject=T` om een trajectorie door de faseruimte te tekenen. Dit vertaalt het grafiekje door de tijd die we eerder hebben uitgerekend, naar een mooie inwaardse spiraal. Er zijn nog [veel meer opties](https://tbb.bio.uu.nl/rdb/grindR/basics.html) in grind.R. Als je wil zien welke argumenten een functie allemaal kent, kun je gebruik maken van `args`:
@@ -286,13 +286,13 @@ Als je de bovenstaande tutorial hebt gevolgd (en de packages hebt geïnstalleerd
 
 model <- function(t, state, parms) {
   with(as.list(c(state,parms)), {
-    dR <- r*R*(1 - R/K) - a*R*N/(R+h)
+    dR <- b*R*(1 - R/K) - d*R - a*R*N/(R+h)
     dN <- c*a*R*N/(R+h) - delta*N
     return(list(c(dR, dN)))  
   }) 
 }  
-p <- c(r=1,K=2,a=1,c=1,delta=0.3,c=1,h=1)  #parameters
-s <- c(R=1,N=0.01) #begin-dichtheden van R en N  
+p <- c(b=1,d=0.1,K=2,a=1,c=1,delta=0.3,c=1,h=1)  #parameters
+s <- c(R=1.1,N=0.1) #begin-dichtheden van R en N  
 
 colors[1] = "blue" #optioneel, default = 'red'
 colors[2] = "#FF7F50" #optioneel, default = 'blue'
@@ -328,15 +328,15 @@ Het model met verzadigbare predator heeft een interessante eigenschap: afhankeli
 #| fig.height: 4
 #| fig-cap: "Verschillende faseruimtes voor het predator-prooi model met verzadigbare predator"
 #| fig-subcap: 
-#|   - "Als de nullclines niet snijden, is er geen evenwicht."
-#|   - "Vertrouwde inwaartse spiraal die naar een stabiel evenwicht gaat."
-#|   - "Voortdurende oscillaties rond een instabiel evenwicht."
+#|   - "Als de nullclines niet snijden, is er geen evenwicht met beide populaties, en overleeft alleen de prooi."
+#|   - "Inwaartse spiraal die naar een stabiel evenwicht van predatoren en prooi gaat."
+#|   - "Voortdurende oscillaties van predatoren en prooi rond een instabiel evenwicht."
 #| label: "fig-lvvoort"
 #| layout-ncol: 3
 
 model <- function(t, state, parms) {
   with(as.list(c(state,parms)), {
-    dR <- r*R*(1 - R/K) - a*R*N/(R+h)
+    dR <- b*R*(1 - R/K) - d*R - a*R*N/(R+h)
     dN <- c*a*R*N/(R+h) - delta*N
     return(list(c(dR, dN)))  
   }) 
@@ -345,23 +345,25 @@ model <- function(t, state, parms) {
 colors[1] = "blue" #optioneel, default = 'red'
 colors[2] = "#FF7F50" #optioneel, default = 'blue'
 
-p <- c(r=1,K=0.4,a=1,c=1,delta=0.3,c=1,h=1)  #parameters
-s <- c(R=0.4,N=0.01) #begin-dichtheden van R en N  
+p <- c(b=1,d=0.0,K=0.4,a=1,c=1,delta=0.3,c=1,h=1)  #parameters
+s <- c(R=0.7,N=0.2) #begin-dichtheden van R en N  
+plane(xmax=0.8,ymax=2)
+run(tstep=0.5, traject=T,col="grey")
+newton(state=c(R=0.4,N=0.0),plot=T)
+
+p <- c(b=1,d=0.0,K=1,a=1,c=1,delta=0.3,c=1,h=1)  #parameters
+s <- c(R=1,N=1) #begin-dichtheden van R en N  
 plane(xmax=2.2,ymax=2)
 run(tstep=0.5, traject=T,col="grey")
 newton(state=c(R=0.5,N=0.5),plot=T)
 
-p <- c(r=1,K=1,a=1,c=1,delta=0.3,c=1,h=1)  #parameters
-s <- c(R=2,N=0.01) #begin-dichtheden van R en N  
+p <- c(b=1,d=0.0,K=2,a=1,c=1,delta=0.3,c=1,h=1)  #parameters
+s <- c(R=1.2,N=1.3) #begin-dichtheden van R en N  
 plane(xmax=2.2,ymax=2)
-run(tstep=0.5, traject=T,col="grey")
+run(tstep=0.2, traject=T,col="grey")
 newton(state=c(R=0.5,N=0.5),plot=T)
-
-p <- c(r=1,K=2,a=1,c=1,delta=0.3,c=1,h=1)  #parameters
-s <- c(R=2,N=0.01) #begin-dichtheden van R en N  
-plane(xmax=2.2,ymax=2)
-run(tstep=0.5, traject=T,col="grey")
-newton(state=c(R=0.5,N=0.5),plot=T)
+newton(state=c(R=0.0,N=0.0),plot=T)
+newton(state=c(R=2.0,N=0.0),plot=T)
 ```
 
 Voortdurende oscillaties tussen prooi en predator worden inderdaad waargenomen, bijvoorbeeld de oscillaties tussen hazen en lynxen in Noord Amerika (@fig-hazenenlynxen). Ook in experimenten zijn dergelijke oscillaties waargenomen, bijvoorbeeld door *Paramecium* (een-cellige protist, prooi) en *Didinium* (eencellige protist, predator) samen te groeien in een Erlenmeyer (Xia *et al.*, 1992).

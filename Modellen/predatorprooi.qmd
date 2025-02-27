@@ -36,7 +36,7 @@ In het vorige hoofdstuk hebben we populaties gemodelleerd waarbij de groei wordt
 
 We kunnen elk van deze aannames vertalen naar een wiskundige functie die beschrijft hoe populaties reageren op hun eigen dichtheid, of die van een ander (@fig-lvresponses).
 
-![Eenvoudige functies die we kunnen gebruiken in een predator/prooi model. Op de y-as staan de geboorte van prooi (a), sterfte van prooi (b), de predatie van prooi (c), de groei van predatoren (d) en de sterfte van predatoren (e). Al deze begrippen zijn gedefinieerd *per capita* (p.c.), dus "per prooi" voor a, b en c, en "per predator" voor d en e.](figuren/LV_responses.png){#fig-lvresponses fig-align="center" width="80%"}
+![Eenvoudige functies die we kunnen gebruiken in een predator/prooi model. Op de y-as staan de geboorte van prooi (a), sterfte van prooi (b), de predatie van prooi (c), de groei van predatoren (d) en de sterfte van predatoren (e). Al deze begrippen zijn gedefinieerd *per capita* (p.c.), dus "per prooi" voor a en b, en "per predator" voor en c, en d, en e.](figuren/LV_responses.png){#fig-lvresponses fig-align="center" width="80%"}
 
 De eerste twee processen (@fig-lvresponses a+b, de reproductie en sterfte van konijnen) kennen we al van het vorige hoofdstuk. Hoewel we de konijnen eerder $N$ hadden genoemd, is het in het predator-prooi model dat we gaan bespreken gebruikelijk om de [prooi]{style="color:#2d43fc; font-weight:bold"} R te noemen. Onze groeivergelijking voor prooidieren (met dichtheidsafhankelijke geboorte) ziet er dan dus zo uit:
 
@@ -61,13 +61,13 @@ $$
 \end{align*}
 $$ {#eq-vossen-konijnen}
 
-@eq-vossen-konijnen bestaat uit 2 ODEs, en wordt een 2 dimensioneel (2D) ODE systeem genoemd. We spreken van een **systeem van differentiaalvergelijkingen** wanneer de variabelen in elkaars vergelijking terugkomen, waardoor de dynamica van de variabelen gekoppeld (en niet onafhankelijk) is. Hierbij nemen we dus aan dat de organismen in hetzelfde (eco)systeem voorkomen, want konijnen op de Veluwe en konijnen op een eiland in Zweden beïnvloeden elkaar niet (tenzij ze het vliegtuig nemen).
+Het bovenstaande model staat bekend als het **Lotka-Volterra predator-prooi model**, vernoemd naar de ontdekkers Alfred Lotka en Vito Volterra. De vergelijking  bestaat uit 2 ODEs die van elkaar afhankelijk zijn, en wordt daarom een 2 dimensioneel (2D) ODE systeem genoemd. We spreken van een **systeem van differentiaalvergelijkingen** wanneer de variabelen in elkaars vergelijking terugkomen, waardoor de dynamica van de variabelen gekoppeld (en niet onafhankelijk) is. Hierbij nemen we dus aan dat de organismen in hetzelfde (eco)systeem voorkomen, want konijnen op de Veluwe en konijnen op een eiland in Zweden beïnvloeden elkaar niet (tenzij ze het vliegtuig nemen).
 
 We zouden het systeem natuurlijk nog verder uit kunnen breiden. We zouden bijvoorbeeld een top predator (adelaars) kunnen toevoegen, en dan hebben we een 3 dimensioneel (3D) ODE systeem^[3D slaat hier dus niet op ruimtelijke dimensies, maar op de hoeveelheid variabelen van het ODE systeem]. We zouden zelfs een heel ecosysteem kunnen opbouwen, en een 10D of 100D systeem bestuderen. Voor deze "hoogdimensionele" systemen kunnen we vaak alleen numeriek (met de computer) uitrekenen wat er gebeurt. Maar voor 2D systemen kunnen we nog best veel met pen en papier voor elkaar krijgen.
 
 ## Evenwichtsanalyse van 2D systemen
 
-In het vorige hoofdstuk hebben we geleerd dat een populatie in evenwicht is wanneer er geen verandering meer is: als de ODE gelijk is aan $0$. Als je werkt met meerdere ODEs, moet dit **voor elke ODE waar zijn**. Dit is biologisch ook wel te begrijpen: de prooi is in evenwicht als alle processen (alle termen) elkaar opheffen, maar als ondertussen de predator nog verandert is deze balans onmiddelijk weer verstoord! 
+In het vorige hoofdstuk hebben we geleerd dat een populatie in evenwicht is wanneer er geen verandering meer is: als de ODE gelijk is aan $0$. Als je werkt met meerdere ODEs, moet dit **voor elke ODE waar zijn**. Dit is biologisch ook wel te begrijpen: de prooi is in evenwicht als alle processen (alle termen) elkaar opheffen, maar als ondertussen de predator nog verandert is deze balans onmiddellijk weer verstoord! 
 
 We moeten dus uitzoeken wanneer zowel de prooi vergelijking als de predator vergelijking $0$ zijn. Door de ODEs beide aan 0 gelijk te stellen, krijgen we een stelsel van twee algebraïsche vergelijkingen met 2 onbekenden. Deze kunnen we proberen op te lossen om te ontdekken bij welke hoeveelheid konijnen/vossen er een evenwicht is, maar dit geeft eigenlijk maar weinig inzicht in hoe de populaties veranderen *over de tijd*. Maar dit is nou juist wat we graag willen weten, zodat we goed kunnen voorspellen wat er zou kunnen gebeuren als je plotseling een wolf op de Veluwe loslaat. Hoe gaan de populaties precies veranderen? Gaat het naar een stabiel evenwicht? Dit kunnen we bestuderen door gebruik te maken van faseruimtes.
 
@@ -114,7 +114,7 @@ Axis(side=2, labels=FALSE)
 
 Als we nu naar onze vergelijkingen kijken, kunnen we voor extreme waarden van R en N proberen te beredeneren wat er gebeurt. Laten we bijvoorbeeld kijken wat er gebeurt als er heel weinig prooien en predatoren zijn. Omdat ODEs meestal de dichtheden van de populaties beschrijven (bijvoorbeeld "vossen per vierkante kilometer"), kan deze dichtheid ook kleiner zijn dan 1. Wat als er een dichtheid is van 0.001 konijnen, en 0.001 vossen? 
 
-Als we de geboorteterm van prooien $b(1- \frac{bR}{K})R$ uitvermenigvuldigen krijgen we $bR - \frac{bR^2}{K}$. Omdat we aannemen dat $R=0.001$, is de tweede term extra klein (want $0.001^2 = 10^{-6}$). Deze tweede term is onder deze omstandigheden dus verwaarloosbaar. Biologisch gesproken kunnen we zeggen dat wanneer er weinig konijnen zijn, dan is dichtheidsafhankelijke afname van groei verwaarloosbaar. Ditzelfde principe kunnen we toepassen op de predatieterm ($aRN$), waar de kleine $R$ en kleine $N$ met elkaar vermenigvuldigd worden, dus dat wordt ook een extra klein getal. 
+Als we de geboorteterm van prooien $b(1- \frac{R}{K})R$ uitvermenigvuldigen krijgen we $bR - \frac{bR^2}{K}$. Omdat we aannemen dat $R=0.001$, is de tweede term extra klein (want $0.001^2 = 10^{-6}$). Deze tweede term is onder deze omstandigheden dus verwaarloosbaar. Biologisch gesproken kunnen we zeggen dat wanneer er weinig konijnen zijn, dan is dichtheidsafhankelijke afname van groei verwaarloosbaar. Ditzelfde principe kunnen we toepassen op de predatieterm ($aRN$), waar de kleine $R$ en kleine $N$ met elkaar vermenigvuldigd worden, dus dat wordt ook een extra klein getal. 
 
 Samengevat verwachten we bij lage dichtheden dus hetvolgende:
 
@@ -255,13 +255,11 @@ De lijnen die we hierboven geschetst hebben heten nullisoclines, of kortgezegd: 
 
 \begin{align*}
     b\left(1-\frac{{\color{#2d43fc}R}}{K}\right){\color{#2d43fc}R} - d{\color{#2d43fc}R} - a{\color{#2d43fc}R}\color{#ff7700}N &= 0 \\
-    {\color{#2d43fc}R} \left( b\left(1-\frac{{\color{#2d43fc}R}}{K}\right) - d - a\color{#ff7700}N \right) &= 0\\
+    {\color{#2d43fc}R} \left( b\left(1-\frac{{\color{#2d43fc}R}}{K}\right) - d - a{\color{#ff7700}N} \right) &= 0\\
     {\color{#2d43fc}R} &= 0 \quad \text{(oplossing 1)} \\
     b\left(1-\frac{{\color{#2d43fc}R}}{K}\right) - d - a\color{#ff7700}N &= 0 \\
     a\color{#ff7700}N &= b\left(1-\frac{{\color{#2d43fc}R}}{K}\right) - d  \\
-    \color{#ff7700}N &= \frac{b\left(1-\frac{{\color{#2d43fc}R}}{K}\right) - d}{a} \\
-    \color{#ff7700}N &= \frac{b-d}{a} - \frac{b}{aK}{\color{#2d43fc}R} \quad \text{(oplossing 2)}
-
+    \color{#ff7700}N &= \frac{b\left(1-\frac{{\color{#2d43fc}R}}{K}\right) - d}{a} \quad \text{(oplossing 2)}
 \end{align*}
 
 De eerste nullcline ligt dus bij R=0 (en is dus verticaal). De tweede nullcline ziet er wat ingewikkelder uit, want hier is $N$ een functie van $R$ (met andere woorden $N=f(R)$). Dit is conceptueel niet heel anders dan "y als een functie van x", zoals je misschien gewend bent. Je ziet dat $N$ lineair afneemt met $R$, dus deze nullcline zal een schuine lijn naar beneden vormen in ons assenstelsel. Met alle nullclines bij elkaar, zien we dus:
@@ -396,7 +394,7 @@ text(90,8,"Evenwicht 2", cex=0.7)
 
 Laten we beginnen bij evenwicht 1, waar beide populaties 0 zijn. Een dergelijk evenwicht noemen we triviaal, omdat geen van de relevante variabelen (predator/prooi) aanwezig is. In dit punt is er dus ook geen verandering in de prooi- en predatorpopulatie. Maar wat als we, vanaf dit punt ($0,0$), een beetje predator toevoegen? Kan de predator dan groeien? In dit geval kijken we vlak boven het evenwicht, want dat is het punt waar er "een beetje predator" aanwezig is. We zien dat in dit gebied de oranje pijl naar beneden wijst, dus kan de predatorpopulatie alleen maar weer afnemen. Biologisch betekent dit het volgende: predatoren kunnen niet groeien als er geen prooien zijn (dit is het equivalent van vossen vrijlaten op Australië voordat er konijnen waren!). We moeten natuurlijk ook controleren wat er gebeurt als we een beetje prooi toevoegen. Om dit te bestuderen, kijken we rechts van dit evenwicht. Hier is de groeisnelheid van de prooi positief, en kan de prooipopulatie dus gaan groeien (ook dit is logisch, want dit is precies wat er gebeurde met de vrijgelaten konijnen in Australië!). Een evenwicht is alleen stabiel als het systeem na **elke** verstoring terug gaat naar het evenwicht. Dus we moeten hierbij concluderen dat het evenwicht bij ($0,0$) **instabiel** is.
 
-Voor evenwicht 2 en 3 kunnen we dezelfde analyse toepassen. Prooi toevoegen aan evenwicht 2 resulteert in afname van de prooipopulatie, maar predator toevoegen resulteert in toename van de predator. Vergelijkbaar met evenwicht 1 is ook dit dus ook een *instabiel evenwicht*. Voor evenwicht 3 geldt wederom dat prooi toevoegen resulteert in afname. Echter zien we dat we bij het toevoegen van predatoren (vlak boven evenwicht 3) precies *op* de nullcline zitten, en de groeisnelheid van de predator dus 0 blijft. Omdat evenwicht 3 robust is voor het toevoegen van prooi (de verstoring neemt af) en ook voor het toevoegen van predator (de verstoring vergoot in ieder geval niet), kunnen we concluderen dat dit evenwicht **stabiel** is. Daarom staat hij in figuur @fig-faseruimtecompleet aangegeven met een gesloten cirkel.
+Voor evenwicht 2 en 3 kunnen we dezelfde analyse toepassen. Prooi toevoegen aan evenwicht 2 resulteert in afname van de prooipopulatie, maar predator toevoegen resulteert in toename van de predator. Vergelijkbaar met evenwicht 1 is ook dit dus ook een *instabiel evenwicht*. Voor evenwicht 3 geldt wederom dat prooi toevoegen resulteert in afname. Echter zien we dat we bij het toevoegen van predatoren (vlak boven evenwicht 3) we precies *op* de nullcline zitten, en de groeisnelheid van de predator dus 0 blijft. Omdat evenwicht 3 robust is voor het toevoegen van prooi (de verstoring neemt af) en ook voor het toevoegen van predator (de verstoring vergoot in ieder geval niet), kunnen we concluderen dat dit evenwicht **stabiel** is. Daarom staat hij in figuur @fig-faseruimtecompleet aangegeven met een gesloten cirkel.
 
 ## Verhoogde death rates van predatoren
 
@@ -586,11 +584,12 @@ f. Omschrijf wat er gebeurt (halveer zo nodig de death rate van de predatoren no
 g. Wat gebeurt er als de death rate van de predator heel laag is (bijvoorbeeld 0.001)? Denk je dat dit ook in de ODEs zou gebeuren? 
 :::
 
-
 ::: {.mixedexr #exr-virusuitbraak}
 
-## Virus-uitbraak
+## Virus-uitbraak 
+<br>
 
+<span style="color:purple;font-weight:bold">Correctie: dankzij een oplettende student realiseer ik me dat de onderstaande SIR-vraag bij nader inzien niet helemaal correct is. Het model zoals het er staat is niet het klassieke SIR model (daarin kunnen alle individuen voortplanten), en ook niet het SIRS model zoals in het college besproken (daar veranderen recovered individuen weer in sensitieven). Doordat de recovered individuen in dit model niet meer terug kunnen naar de susceptible populatie, en deze ook niet kunnen voortplanten, kan de hele populatie hele populatie uitsterven nadat het virus is verdwenen. Dat is natuurlijk een beetje vreemd. Er ontbreekt eigenlijk nog een belangrijke koppeling tussen deze ODEs: de recovered individuen die verdwijnen (-dR) moeten toegevoegd worden aan de susceptible populatie (+dR). In dat geval zouden alle individuen uiteindelijk weer S worden, die wel kan voortplanten. Dan herstelt de populatie volledig. </span>
 <br>
 
 Als een nieuw virus ontstaat, kan deze zich vroeg in de epidemie vaak enorm hard uitbreiden: veel individuen zijn nog niet resistent. Over de tijd zullen individuen echter resistent worden. Zodoende hebben we te maken met drie type individuen: vatbare individuen (*susceptibles*, $S$), geinfecteerde individuen (*infected*, $I$), en resistente individuen (*recovered*, $R$). De totale populatiegrootte ($S$+$I$+$R$), kunnen we $N$ noemen. Nu kunnen we een systeem van drie ODEs opstellen:
@@ -604,7 +603,7 @@ N &= S+I+R\\
 
 Bekijk de vergelijkingen hierboven.
 
-a. Planten alle individuen (susceptible, infected, recovered) zich voort? 
+a. Welke van de drie individuen (susceptible, infected, recovered) kan zich individueel voortplanten? 
 
 b. In welke eenheden wordt de $\delta$ parameter uitgedrukt? Wat is de biologische interpretatie van deze parameter? 
 
@@ -670,9 +669,6 @@ f. Maak de $\beta$-parameters van het virus hoger (bijvoorbeeld 0.1, maar je kan
 ## Een 3D systeem
 
 <br>
-
-![](figuren/abc.png){width="60%" fig-align="center"}
-
 Bekijk het volgende 3D ODE systeem van een voedselketen (B eet A, C eet B):
 
 \begin{align*}

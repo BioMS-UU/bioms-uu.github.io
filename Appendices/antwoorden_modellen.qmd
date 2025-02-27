@@ -140,33 +140,33 @@ for (t in 1:30){
 plot(N, type='l', col="seagreen", lwd=2)
 ```
 
-Dit is hetzelfde resultaat als bij vraag b met $r<1$!. Nu kunnen we dit echter uitdrukken in termen van geboorte- en sterfte. Hoewel er elke tijdstap een toenname is van 100%, is er ook een afname van 110%! De konijnen gaan dus sneller dood dan dat ze zich voort kunnen planten, en is er exponentiële afname. 
-
+Dit is hetzelfde resultaat als bij vraag b met $r<1$! Nu kunnen we dit echter uitdrukken in termen van geboorte en sterfte. Hoewel er elke tijdstap een toenname is van 100%, is er ook een afname van 110%! De konijnen gaan dus sneller dood dan ze zich voort kunnen planten, dus is er exponentiële afname. 
+  
 **e.**
-Invullen van $K(t)=24$, $b=2$ en $d=0.001$ geeft:
+Invullen van $N(t)=24$, $b=2$ en $d=0.001$ geeft:
 
 \begin{align*}
-K(t+1) &= b \cdot K(t) - d \cdot K(t)^2 \\
-K(t+1) &= 2 \cdot 24 - 0.001 \cdot 24^2 \\
-K(t+1) &= 48 - 0.001 \cdot 576 \\
-K(t+1) &= 48 - 0.576 \\
-K(t+1) &= 47.424
+N(t+1) &= b \cdot N(t) - d \cdot N(t)^2 \\
+N(t+1) &= 2 \cdot 24 - 0.001 \cdot 24^2 \\
+N(t+1) &= 48 - 0.001 \cdot 576 \\
+N(t+1) &= 48 - 0.576 \\
+N(t+1) &= 47.424
 \end{align*}
 
-Er worden dus wel veel nieuwe konijnen geboren, maar er gaan er maar weinig (een half konijn) dood. De populatie zal dus -- beginnende met 24 konijnen -- groeien. Later in de cursus komen we terug op het feit dat er natuurlijk geen "halve konijnen" dood kunnen gaan. 
+De geboorteterm is dus 48, en de sterfteterm slechts 0.576. Er worden dus wel veel nieuwe konijnen geboren, maar er gaan er maar weinig (een half konijn) dood. De volledige vergelijking (de hoeveelheid konijnen in de volgende tijdstap) is dus 47.424. De populatie zal dus -- beginnende met 24 konijnen -- groeien. Later in de cursus komen we terug op het feit dat er natuurlijk geen "halve konijnen" dood kunnen gaan. 
 
 **f.**
-Invullen van $K(t)=1000$, $b=2$ en $d=0.001$ geeft:
+Invullen van $N(t)=1000$, $b=2$ en $d=0.001$ geeft:
 
 \begin{align*}
-K(t+1) &= b \cdot K(t) - d \cdot K(t)^2 \\
-K(t+1) &= 2 \cdot 1000 - 0.001 \cdot 1000^2 \\
-K(t+1) &= 2000 - 0.001 \cdot 10^6\\
-K(t+1) &= 2000 - 1000 \\
-K(t+1) &= 1000
+N(t+1) &= b \cdot N(t) - d \cdot N(t)^2 \\
+N(t+1) &= 2 \cdot 1000 - 0.001 \cdot 1000^2 \\
+N(t+1) &= 2000 - 0.001 \cdot 10^6\\
+N(t+1) &= 2000 - 1000 \\
+N(t+1) &= 1000
 \end{align*}
 
-Ook nu worden er veel nieuwe konijnen geboren ($b$ is nog steeds dezelfde waarde), maar er gaan ook heel veel konijnen dood!
+Ook nu worden er veel nieuwe konijnen geboren (2000), maar er gaan ook veel konijnen dood (1000). In totaal is de populatie in de volgende tijdstap dus 1000 geworden, en dat was al zo! Bij 1000 konijnen verwachten we dus een evenwichtshoeveelheid konijnen. 
 
 **g.**
 
@@ -177,7 +177,7 @@ dN = b - 1 \\
 N = {(b - 1) \over d} \\
 \end{align*}
 
-Met de parameters $b=2$ en $d=0.001$ geeft dit $N_{evenwicht}=\frac{2-1}{d} = \frac{1}{d}$. Het systeem is dus evenwicht als er 1000 konijnen zijn. 
+Met de parameters $b=2$ en $d=0.001$ geeft dit $\bar{N} (\text{N in evenwicht})=\frac{2-1}{d} = \frac{1}{d}$. Het systeem is dus in evenwicht als er 1000 konijnen zijn. 
 
 **h.**
 ```{r}
@@ -302,7 +302,7 @@ Bij een exponentiële toename zouden we een rechte lijn moeten zien wanneer we d
 
 **a.** $$\dt{B} = p - dB$$
 
-**b.** De productiesnelheid $p$ is al in de eenheid cellen per dag (net als $\dt{B}$) en hangt niet af van het aantal rode bloedcellen. Het aantal rode bloedcellen dat doodgaat hangt wel af van het aantal rode bloedcellen, dus dit is $dB$. Dus $d$ is geen snelheid (aantal cellen per dag), maar slechts een snelheid (per dag). 
+**b.** De productiesnelheid $p$ is al in de eenheid cellen per dag (net als $\dt{B}$) en hangt niet af van het aantal rode bloedcellen. Het aantal rode bloedcellen dat doodgaat hangt wel af van het aantal rode bloedcellen, dus dit is $dB$. Dus $d$ is heeft niet de eenheid "aantal cellen per dag", maar de eenheid "per dag".
 
 **c.** Bij een evenwichtssituatie is $\dt{B}$ gelijk aan nul. Dus:
 
@@ -390,8 +390,8 @@ verandering <- function (B, p, d){
 # Stap 4: een test of de functie werkt
 # verandering(B=p/d, p=p, d=d) 
 
-# Stap 5: maak een lege lijst met begin-aantal erin
-B <- c(0.99*p/d)
+# Stap 5: maak een lege lijst met begin-aantal erin, waarbij we slechts 0.1% bloed doneren
+B <- c(0.999*p/d)
 
 # Stap 6: reken 500 keer de volgende hoeveelheid B uit
 for (t in 1:500) {
@@ -874,7 +874,7 @@ Er wordt telkens 5% van de populatie afgeschoten omdat $k$ gelijk gesteld wordt 
 
 **d.** Het lukt de populatie nu veel vaker (bijna altijd) om succesvol uit te groeien.
 
-**e.** Je zou duidelij keen verschil moeten zien. Maar het zou natuurlijk toeval kunnen zijn. In het onderdeel 'Statistiek' ga je leren hoe je toch uitspraken kan doen over deze onzekere data. 
+**e.** Je zou duidelijk een verschil moeten zien. Maar het zou natuurlijk toeval kunnen zijn. In het onderdeel 'Statistiek' ga je leren hoe je toch uitspraken kan doen over deze onzekere data. 
 
 @exr-desimpelstecoop
 
@@ -898,7 +898,7 @@ $N=0$ is stabiel, $\frac db$ is instabiel. Bij een kleine populatiegrootte zal e
 
 Je schets zou identiek moeten zijn aan de rechterzijde van @fig-faseportret:
 
-![](../Modellen/figuren/faseportret_logistische_groei.png)
+![](../Modellen/figuren/faseportret_logistischegroei_c.jpeg)
 
 **b+c.**
 
@@ -908,9 +908,9 @@ Het faseportret met oplossingen zal er ongeveer zo uit zien:
 
 Er zijn drie mogelijke opties voor de oplossingen: 
 
-  1. De populatie begint te klein en neemt af tot 0, 
-  2. Er zijn genoeg individuen om te groeien, dus groeit te populatie tot een evenwicht,
-  3. we beginnen met een hele grote populatie, die exponentieel afneemt tot aan de stabliele evenwichtsstand.
+  1. De populatie begint te klein en neemt af tot 0.
+  2. Er zijn genoeg individuen om te groeien, dus groeit de populatie tot een evenwicht.
+  3. We beginnen met een hele grote populatie, die exponentieel afneemt tot aan de stabliele evenwichtsstand.
 
 
 @exr-kreislauf 
@@ -925,13 +925,13 @@ Er zijn drie mogelijke opties voor de oplossingen:
 
 @exr-ziekezeehonden
 
-**a.** De parameter $\beta$ bepaalt hoe snel zeehonden via de term $\beta ZI$ in de zieke zeehonden populatie terecht komen (ze verdwijnen uit de gezonde populatie, en komen erbij in de zieke populatie). De term $\beta ZI$ is dus een infectieterm. De parameter \delta bepaalt hoe vaak zieke zeehonden dood gaan. 
+**a.** De parameter $\beta$ bepaalt hoe snel zeehonden via de term $\beta ZI$ in de zieke zeehonden populatie terecht komen (ze verdwijnen uit de gezonde populatie, en komen erbij in de zieke populatie). De term $\beta ZI$ is dus een infectieterm. De parameter $\delta$ bepaalt hoe vaak zieke zeehonden dood gaan. 
 
 **b.** Ja, wel gegeven de modelomschrijving, want daar staat dat de zeehonden die ziek zijn snel dood gaan.
 
 **c.** Het is dan een 1D systeem: $$\dt{Z} = bZ\left(1-\frac{Z}{k}\right)-dZ$$ Deze vergelijking gelijkstellen aan 0 geeft $Z = k\left(1-\frac{d}{b}\right)$. Dit is het evenwicht van de gezonde populatie in afwezigheid van de infectieziekte.
 
-**d.** Ja, de populatiegrootte zonder infectieziekte wordt bepaald door $k(1-d/b)$ met kleinere b. Met hogere b wordt d/b groter, dus de evenwichtwaarde kleiner. De populatie zal dus afnemen door de PCB's. Tip: als je het moeilijk vindt om dit voor te stellen vul dan waarden in voor d en b.
+**d.** Ja, de populatie wordt kleiner. De populatiegrootte zonder infectieziekte wordt bepaald door $k(1-d/b)$. Met kleinere $b$ wordt d/b groter, dus de evenwichtwaarde kleiner. De populatie zal dus afnemen door de PCB's. Tip: als je het moeilijk vindt om dit voor te stellen vul dan waarden in voor d en b.
 
 **e.** Stel beide vergelijkingen gelijk aan 0. 
 
@@ -942,8 +942,7 @@ Nullcline van Z:
     Z &= 0 \quad \text{(oplossing 1)} \\
     b\left(1-\frac Zk\right) - d - \beta I &= 0 \\
     \beta I &= b\left(1-\frac Zk \right) - d \\
-    I &= \frac{b\left(1-\frac Zk \right) - d}{\beta} \\
-    I &= -Z\frac{b}{k\beta} + \frac{b - d}{\beta} \quad \text{(oplossing 2)}
+    I &= \frac{b\left(1-\frac Zk \right) - d}{\beta} \quad \text{(oplossing 2)}
 \end{align*}
 
 Nullcline van I: 
@@ -1001,30 +1000,30 @@ abline(v=0, lwd=2, col="blue",)
 abline(a=80,b=-1.25, lwd=2,col="blue")
 ```
 
-**f.**
-Er is een evenwicht op een plek waar de oranje en blauwe lijn elkaar kruizen. 
-Er zijn meerdere evenwichten. Evenwicht 1 is (0 ; 0): als er geen zeehonden zijn.
-De schuine nullcline (van $Z$) kan op twee punten de oranje lijnen snijden. 
-We weten echter nog niet de precieze coördinaten van deze snijpunten, hier kunnen we achter komen door de waarde die we wel weten in te vullen in de formule van de $Z$-nullcline. \br
-Evenwicht 2: \br
-$I = 0$ invullen in de $Z$-nullcline $I = -Z\frac{b}{k\beta} + \frac{b - d}{\beta}$.
-\begin{align*}
--Z\frac{b}{k\beta} + \frac{b - d}{\beta} &= 0 \\
-Z\frac{b}{k\beta} &= \frac{b - d}{\beta} \\
-Z &= \frac{b - d}{\beta} \cdot \frac{k\beta}{b} \\
-Z &= \frac{k\beta(b - d)}{\beta b} \\
-Z &= \frac{k(b - d)}{b} \\
-Z &= \frac{kb - kd}{b} \\
-Z &= k - \frac{kd}{b} 
-\end{align*}
-Dus hier is een evenwicht voor $I=0$ en $Z = k - \frac{kd}{b}$. \br
-Evenwicht 3: \br
-$Z = \delta / \beta$ invullen in de $Z$-nullcline $I = -Z\frac{b}{k\beta} + \frac{b - d}{\beta}$.
-\begin{align*}
-I &= -Z\frac{b}{k\beta} + \frac{b - d}{\beta} \\
-I &= -\frac{\delta}{\beta} \cdot \frac{b}{k\beta} + \frac{b - d}{\beta} \\
-I &= -\frac{\delta b}{k \beta^2} + \frac{b - d}{\beta} 
-\end{align*}
+<!-- **f.** -->
+<!-- Er is een evenwicht op een plek waar de oranje en blauwe lijn elkaar kruizen.  -->
+<!-- Er zijn meerdere evenwichten. Evenwicht 1 is (0 ; 0): als er geen zeehonden zijn. -->
+<!-- De schuine nullcline (van $Z$) kan op twee punten de oranje lijnen snijden.  -->
+<!-- We weten echter nog niet de precieze coördinaten van deze snijpunten, hier kunnen we achter komen door de waarde die we wel weten in te vullen in de formule van de $Z$-nullcline. \br -->
+<!-- Evenwicht 2: \br -->
+<!-- $I = 0$ invullen in de $Z$-nullcline $I = -Z\frac{b}{k\beta} + \frac{b - d}{\beta}$. -->
+<!-- \begin{align*} -->
+<!-- -Z\frac{b}{k\beta} + \frac{b - d}{\beta} &= 0 \\ -->
+<!-- Z\frac{b}{k\beta} &= \frac{b - d}{\beta} \\ -->
+<!-- Z &= \frac{b - d}{\beta} \cdot \frac{k\beta}{b} \\ -->
+<!-- Z &= \frac{k\beta(b - d)}{\beta b} \\ -->
+<!-- Z &= \frac{k(b - d)}{b} \\ -->
+<!-- Z &= \frac{kb - kd}{b} \\ -->
+<!-- Z &= k - \frac{kd}{b}  -->
+<!-- \end{align*} -->
+<!-- Dus hier is een evenwicht voor $I=0$ en $Z = k - \frac{kd}{b}$. \br -->
+<!-- Evenwicht 3: \br -->
+<!-- $Z = \delta / \beta$ invullen in de $Z$-nullcline $I = -Z\frac{b}{k\beta} + \frac{b - d}{\beta}$. -->
+<!-- \begin{align*} -->
+<!-- I &= -Z\frac{b}{k\beta} + \frac{b - d}{\beta} \\ -->
+<!-- I &= -\frac{\delta}{\beta} \cdot \frac{b}{k\beta} + \frac{b - d}{\beta} \\ -->
+<!-- I &= -\frac{\delta b}{k \beta^2} + \frac{b - d}{\beta}  -->
+<!-- \end{align*} -->
 
 **f.**
 ```{r}
@@ -1110,11 +1109,16 @@ Dit geeft dan een derde evenwichtssituatie, die ook stabiel is. In dit evenwicht
 De locatie van de $I$-nullcline wordt bepaald door $\beta$ en $\delta$. Als de ziekte niet infectieus genoeg is ($\beta$ is te klein) of als de geïnfecteerde zeehonden te snel dood gaan ($\delta$ is te groot) zal de ziekte te snel weer uit de populatie verdwijnen. 
 
 **h.**
-Alleen de nullcline van de gezonde zeehonden wordt beïnvloed door de hoeveelheid zeehonden die geboren wordt: 
-$$Z=k\left(1-\frac{d+\beta I}{b} \right)$$
-Als b gehalveerd wordt krijgen we: 
-$$Z=k\left(1-\frac{d+\beta I}{0.5 b}\right)=k\left(1-2\frac{d+\beta I}{ b}\right)$$
-De richtingscoëfficiënt van deze lijn is twee keer so stijl. 
+Alleen de nullcline van de gezonde zeehonden wordt beïnvloed door de geboortesnelheid van gezonde zeehonden, want daar staat $b$ in:
+
+$$I = \frac{b\left(1-\frac Zk \right) - d}{\beta}$$
+
+Als b gehalveerd wordt krijgen we dus: 
+
+$$I = \frac{0.5b\left(1-\frac Zk \right) - d}{\beta}$$
+
+Deze lijn begint dus bij een lagere waarde, maar zal ook langzamer dalen. Het snijpunt ligt daardoor precies bij dezelfde waarde van Z: 
+
 ```{r}
 #| fig.width: 7
 #| fig.height: 4
@@ -1125,8 +1129,8 @@ vectorfield <- function(x,y,dx,dy){
   arrows(x, y, x+dx, y+0, length = 0.07, angle = 20, col="blue",lwd=2)
 }
 
-I <- 1:100
-Z <- 1:100
+I <- 1:140
+Z <- 1:140
 
 par(pty="s",mfrow=c(1,1),mar=c(4,4,1,1.5))
 
@@ -1144,14 +1148,22 @@ abline(h=0, lwd=2, col="#f2790f")
 abline(v=25, lwd=2, col="#f2790f")
 abline(v=0, lwd=2, col="blue",)
 abline(a=100,b=-0.8, lwd=2,col="blue")
-abline(a=50,b=-1.6, lwd=2,col="blue", lty=2)
+abline(a=50,b=-0.5, lwd=2,col="blue", lty=2)
+# add a black arrow pointing down in the middle of the plot
+arrows(25, 80, 25, 40, length = 0.1, angle = 20, col="black",lwd=4)
+# add text saying "alleen aantal geinfecteerde zeehonden neemt af", met een stippellijn verbonden met het midden van de pijl, verdeeld over twee regels en met een witten achtergrondkleur zodat het leesbaar is
+
+text(60, 70, "alleen aantal *geinfecteerde* \nzeehonden neemt af", adj=0, cex=0.5, col="black", font=2, bg="white")
+
+
+legend("topright", legend=c("Normale b", "Gehalveerde b"), col=c("blue", "blue"), lty=1:2, cex=0.5)
 ```
 
 **i.**
 
 Het aantal gezonde zeehonden in evenwicht is helemaal niet kleiner geworden! De evenwichtswaarde van de hoeveelheid gezonde zeehonden is onafhankelijk van hun geboorte geworden, en wordt alleen bepaald door de ligging van de predatornullcline. Er zijn kennelijk vooral minder zieke zeehonden.
 
-Mocht je het niet door hebben gehad: dit model is identiek aan het predator-prooi model dat we in dit hoofdstuk hebben besproken. Ook de conclusies komen overeen. Het feit dat de zieke zeehonden niet beïnvloed worden door hun geboorte, is hetzelfde fenomeen als de konijnen een hogere birth rate hadden (bijvoorbeeld door meer te eten te hebben), maar toch niet in populatiegroote toenamen. Maar dit gaat alleen op als er ook daadwerkelijk een infectieziekte (of predator zoals bij de konijnen) aanwezig is. De mogelijke populatiegrootte (draagkracht) zonder ziekte is wel lager als we $b$ halveren.
+Mocht je het niet door hebben gehad: dit model is identiek aan het predator-prooi model dat we in dit hoofdstuk hebben besproken. Ook de conclusies komen overeen. Het feit dat de zieke zeehonden niet beïnvloed worden door hun geboorte, is hetzelfde fenomeen als de konijnen die een hogere birth rate hadden (bijvoorbeeld door meer te eten te hebben), maar toch niet in populatiegroote toenamen. Maar dit gaat alleen op als er ook daadwerkelijk een infectieziekte (of predator zoals bij de konijnen) aanwezig is. De mogelijke populatiegrootte (draagkracht) zonder ziekte is wel lager als we $b$ halveren.
 
 @exr-lvinspace
 
@@ -1180,7 +1192,7 @@ Dit zou niet voor komen in een ODE, omdat daar niet met losse individuen gewerkt
 
 @exr-virusuitbraak
 
-**a.** Alleen susceptible individuen planten zich voort. Zoals je ziet bevat alleen $\dt{S}$ een birth rate.
+**a.** Alleen susceptible individuen planten zich individueel voort. De andere populatie planten kunnen wel groeien, maar alleen dankzij de aanwezigheid van een ander. 
 
 **b.**
 De eenheid van $\dt{I}$ is $I$ per tijdseenheid. Dus: $\delta I = \frac It$ en $\delta = \frac {1}{It} \cdot I = \frac 1t$. Dit kunnen we interpreteren als 'per tijdseenheid'. Dus het geeft een verhoogde kans aan om dood te gaan als je bent geïnfecteerd met het virus.
@@ -1217,59 +1229,62 @@ B &= \frac fe
 \end{align*}
 We zien dus dat we of een triviale oplossing hebben waarbij we niet meer 3 populaties hebben (C=0), die in dit geval niet van toepassing is, of een oplossing voor een populatie van $B$ waarbij er een evenwicht is. De populatiegroote van $B$ is dus $\frac fe$ als de populaties in evenwicht zijn. 
 
-## Antwoorden [Complexe ODEs in R](../Modellen/odes_grind.qmd)
+## Antwoorden [ODEs modelleren in R](../Modellen/odes_grind.qmd)
 
-@exr-hillfuncties
+<!-- @exr-hillfuncties -->
 
-**a.** De macht in de Hill-functie `n` (die tot nu toe alleen 1 en 2 was) kunnen we veel hoger maken. Dit geeft bij hoge waarden (van bijvoorbeeld 30) een zeer plotselinge overgang van 0 (geen expressie) naar 1 (volledige expressie):
+<!-- **a.** De macht in de Hill-functie `n` (die tot nu toe alleen 1 en 2 was) kunnen we veel hoger maken. Dit geeft bij hoge waarden (van bijvoorbeeld 30) een zeer plotselinge overgang van 0 (geen expressie) naar 1 (volledige expressie): -->
 
-```{r}
-#| eval: true
+<!-- ```{r} -->
+<!-- #| eval: true -->
 
-h=1
-n=30
+<!-- h=1 -->
+<!-- n=30 -->
 
-func <- function(x){
-  return(x^n/(x^n+h^n))
-}
+<!-- func <- function(x){ -->
+<!--   return(x^n/(x^n+h^n)) -->
+<!-- } -->
 
-curve(func,0,3,lwd=2.5,ylim=c(0,1.), 
-      ylab="f(x)",xlab="x",col="seagreen")
-```
+<!-- curve(func,0,3,lwd=2.5,ylim=c(0,1.),  -->
+<!--       ylab="f(x)",xlab="x",col="seagreen") -->
+<!-- ``` -->
 
-**b.** We kunnen de Hill functie omkeren door 1 - de Hill functie te doen: $$f(x)=1-\frac{x^n}{x^n+h^n}$$
+<!-- **b.** We kunnen de Hill functie omkeren door 1 - de Hill functie te doen: $$f(x)=1-\frac{x^n}{x^n+h^n}$$ -->
 
-```{r}
-#| eval: true
-h=1
-n=30
+<!-- ```{r} -->
+<!-- #| eval: true -->
+<!-- h=1 -->
+<!-- n=30 -->
 
-func <- function(x){
-  return(1-x^n/(x^n+h^n))
-}
+<!-- func <- function(x){ -->
+<!--   return(1-x^n/(x^n+h^n)) -->
+<!-- } -->
 
-curve(func,0,3,lwd=2.5,ylim=c(0,1.), 
-      ylab="f(x)",xlab="x",col="seagreen")
+<!-- curve(func,0,3,lwd=2.5,ylim=c(0,1.),  -->
+<!--       ylab="f(x)",xlab="x",col="seagreen") -->
 
-```
+<!-- ``` -->
 
-**c.**
+<!-- **c.** -->
 
-```{=tex}
-\begin{align}
-&\text{start:}\\
-&f(x)=1-\frac{x^n}{x^n+h^n} \\
-&\text{1 herschrijven als breuk van zodat je gelijke noemers krijgt:} \\
-&=\frac{x^n+h^n}{x^n+h^n} - \frac{x^n}{x^n+h^n} \\
-&\text{nu kun je de breuk aftrekken:} \\
-&=\frac{x^n+h^n-x^n}{x^n+h^n} = \frac{h^n}{x^n+h^n} \\
-& \text{als laatste kunnen we alles delen door $h^n$:} \\
-&=\frac{1}{x^n/h^n+1}
-& \end{align}
-```
-**d.** Om toch de maximale expressie gelijk te stellen aan *a* in plaats van 1 kan je de volledige functie vermedigvuldigen met *a*. Dit werkt voor de normale Hill-functie en voor de omgekeerde Hill functie.
+<!-- ```{=tex} -->
+<!-- \begin{align} -->
+<!-- &\text{start:}\\ -->
+<!-- &f(x)=1-\frac{x^n}{x^n+h^n} \\ -->
+<!-- &\text{1 herschrijven als breuk van zodat je gelijke noemers krijgt:} \\ -->
+<!-- &=\frac{x^n+h^n}{x^n+h^n} - \frac{x^n}{x^n+h^n} \\ -->
+<!-- &\text{nu kun je de breuk aftrekken:} \\ -->
+<!-- &=\frac{x^n+h^n-x^n}{x^n+h^n} = \frac{h^n}{x^n+h^n} \\ -->
+<!-- & \text{als laatste kunnen we alles delen door $h^n$:} \\ -->
+<!-- &=\frac{1}{x^n/h^n+1} -->
+<!-- & \end{align} -->
+<!-- ``` -->
+<!-- **d.** Om toch de maximale expressie gelijk te stellen aan *a* in plaats van 1 kan je de volledige functie vermedigvuldigen met *a*. Dit werkt voor de normale Hill-functie en voor de omgekeerde Hill functie. -->
 
 @exr-paraboollv
+
+<br>
+
 **a.** We hebben nu deze functie die de verandering in de prooi populatie beschrijft:
 
 $$\dt{\textcolor{#2d43fc}{R}} = b\left(1-\frac{\textcolor{#2d43fc}{R}}{K}\right)\textcolor{#2d43fc}{R} - d\textcolor{#2d43fc}{R} - \frac{a\textcolor{#2d43fc}{R}\textcolor{orange}{N}}{h+\textcolor{#2d43fc}{R}}$$ 
@@ -1342,7 +1357,7 @@ Als er meer competitie is, dan zal $N_2$ steeds meer "last krijgen" van $N_1$, d
 **b.**
 De oranje lijn gaat verschuiven, omdat dit de nullcline van $N_2$ is. De formule van deze nullcline is: 
 $$\textcolor{orange}{N_2} = \frac{1 - c_{21}\textcolor{#2d43fc}{N_1}}{c_{22}}$$
-Als $c_{21}$ toeneemt, zal de lijn stijler afnemen en het snijpunt met de x-as dus naar links verschuiven. 
+Als $c_{21}$ toeneemt, zal de lijn steiler afnemen en het snijpunt met de x-as dus naar links verschuiven. 
 
 **c.**
 Let op: hoewel twee rechte lijnen elkaar altijd snijden als ze niet parallel lopen, zijn we als biologen alleen geïnteresseerd in snijpunten met positieve populatiegroottes. Omdat $c_{21}$ groter wordt in dit scenario, verplaatst het snijpunt met de x-as naar links. Er komt een punt dat $c{21}$ groter is dan ${c11}$, en de nullclines dus niet meer snijden in het positieve domein (maar nog wel ergens in een ander kwadrant).
@@ -1355,7 +1370,7 @@ Voor grote $N_1$ en $N_2$ hebben we nog steeds afname voor beide populaties. Als
 @exr-vectorveld
 
 **a.**
-Je kan zien dat er een evenwicht is in het midden, waar er geen pijltjes zijn (de populaties veranderen niet meer). Als er een evenwicht ontstaat met beide populaties hebben we sterkere intraspecifieke competie.
+Je kan zien dat er een evenwicht is in het midden, waar er geen pijltjes zijn (de populaties veranderen niet meer). Als er een evenwicht ontstaat met beide populaties hebben we sterkere intraspecifieke competitie.
 
 **b.**
 Nee dat kan niet, want voor elke waarde van X en Y krijg je een specifieke hoeveelheid groei van X en Y. Je gaat dus altijd dezelfde kant op. 
@@ -1373,7 +1388,7 @@ Mogelijkheid 2: Er zijn mogelijk nog meer processen die een rol spelen in de ver
 Mogelijkheid 3: De tijdstap is niet continu. Zoals we in @sec-exp zagen zorgt een te grote tijdstap er voor dat er chaotisch gedrag kan ontstaan. Mogelijk schiet de populatie te verder over een nullcline heen dan verwacht. Dit kan bijvoorbeeld gebeuren in een populatie die niet continu voortplanten, maar bijvoorbeeld maar 1 keer per jaar. Hoewel dit een goed antwoord is, neem je hiermee dus wel aan dat het universum "in stapjes" gaat, terwijl we over het algemeen aannemen dat tijd continu is.  
 
 **e.**
-Ze gaan altijd horizontaal door de nullcline van de verticale as en verticaal door de nullcline van de verticale as. Dit is zo omdat de verandering in de populatie op de verticale as 0 is als deze door de nullcline heen gaat. Hierdoor veranderd alleen de horizontale waarde en is de beweging dus horizontaal. En andersom natuurlijk voor de andere as. 
+Ze gaan altijd horizontaal door de nullcline van de variabele op de verticale as, en horizontal door de nullcline voor de variabele op de horizontalle as. Dit is zo omdat de verandering var de variabele op de verticale as 0 is als deze door deze nullcline heen gaat. Hierdoor verandert alleen de horizontale waarde en is de beweging dus horizontaal. En andersom natuurlijk voor de andere as. 
 
 
 
@@ -1398,11 +1413,11 @@ Omdat het eerste punt stabiel is gaat de trajectorie direct righting het evenwic
 $C_2$ is de cheater, omdat zijn populatie toeneemt als de populatie van $C_1$ toeneemt. $C_2$ heeft dus voordeel van de aanwezigheid van $C_1$ terwijl $C_1$ dat niet heeft met $C_2$. 
 
 **b.**
-Dit is de dichtheidsafhankelijkheid, hoe meer individuen hoe minder ze kunnen groeien. Dit is eigenlijk hoeveel individuen van beide populaites samen de omgeving kan ondersteunen. Omdat ze allebei even veel "voedsel eten" of "ruimte in beslag nemen" hebben ze allebei even veel invloed op deze factor. 
+Dit is de dichtheidsafhankelijkheid, hoe meer individuen hoe minder ze kunnen groeien. Dit is eigenlijk hoeveel individuen van beide populaties samen de omgeving kan ondersteunen. Omdat ze allebei even veel "voedsel eten" of "ruimte in beslag nemen" hebben ze allebei even veel invloed op deze factor. 
 
 Deze term zorgt dus voor competitie tussen de twee soorten. Door ze een gedeelde carrying capacity te geven kunnen we onderzoeken wanneer ze kunnen samenleven.
 
-**c.*** 
+**c.**
 Als we een grid van 100x100 hokjes hebben, dan zijn er in totaal 10,000 hokjes. Als deze allemaal gevuld zijn en $C_1+C_2$ dus 10,000 is, dan moet $1-\frac{C_1+C_2}{K}$ gelijk zijn aan 0. Want op het moment dat alle hokjes gevuld zijn moet de populatiegroei volledig gestopt zijn: 
 $$1-\frac{C_1+C_2}{K}=0$$
 $$1=\frac{C_1+C_2}{K}$$
@@ -1518,7 +1533,7 @@ De resultaten zijn nagenoeg hetzelfde met slechts kleine verschillen als je in *
 @exr-aapjes
 
 **a.**
-Na een tijdje is al het eten dichtbij de groep op en dan rennen de aapjes telkens terug naar het midden van de groep, waar geen eten meer is. Het wordt dan steeds moeilijker voor de appjes om eten te vinden. Als je lang genoeg wacht zie je vaak dat de aapjes toch wel weer nieuw eten vinden doordat de groep soms toevallig in de richting van het eten beweegt.
+Na een tijdje wordt het steeds moeilijker voor de aapjes om eten te vinden, omdat al het eten dichtbij het midden van de groep op is. De aapjes rennen dan al terug naar het midden van de groep voordat ze genoeg eten hebben gevonden, omdat er minder dan 10 aapjes in de buurt zijn. Als je lang genoeg wacht zie je vaak dat de aapjes toch wel weer nieuw eten vinden doordat de groep soms toevallig in de richting van het eten beweegt. Dit gebeurt echter niet altijd, omdat alle aapjes een willekeurige kant oplopen om te zoeken naar fruit. Vaak zullen ze dus allemaal een andere kant oplopen, waardoor de groep als geheel op ongeveer dezelfde plek blijft.
 
 **b.**
 Zorg dat je de uitkomsten met je groepje bespreekt en dat je begrijpt wat er gebeurt.
@@ -1636,7 +1651,7 @@ De radii van birth/toxiciteit zijn vergelijkbaar met hogere/lagere diffusiesnelh
 Doordat er meerdere groepjes bacteriën zijn ontstaan, kan een virus niet gemakkelijk overspringen naar de andere groepen. Hierdoor is het onwaarschijnlijk dat alle individuen besmet worden.
 
 **d.**
-De andere groepjes kunnen zich uitbreiden in de richting van weggehaalde groepjes. Vaak zie je daarbij dat ze zich "vanzelf" weer opsplitsen. Na een verstoring zullen er dus dankzij zelf-organistatie keer op keer ongeveer hetzelfde aantal groepjes ontstaan!
+De andere groepjes kunnen zich uitbreiden in de richting van weggehaalde groepjes. Vaak zie je daarbij dat ze zich "vanzelf" weer opsplitsen. Na een verstoring zullen er dus dankzij zelf-organistatie keer op keer ongeveer hetzelfde aantal groepjes ontstaan! Voor de "ziekteuitbraak" (het weghalen van groepjes met de muis), konden de omringende groepjes moeilijk uitbreiden naar deze gebieden, omdat de sterftekans daar te hoog was door de toxiciteit. Na de uitbraak is de concentratie toxines rondom de verdwenen groepjes (die je overigens niet kan zien!) lager, waardoor bestaande groepjes zich weer in die richtingen uit kunnen breiden.
 
 @exr-modelkeuzes
 
@@ -1788,7 +1803,7 @@ run(tmax=5000)
 ```
 
 **f.**
-Er is nu nog maar één evenwicht, en de pijlen wijzen er niet meer naar toe, dus het is een instabiel evenwicht (`Grind.R` bevestigd dit ook). Er is dus ook geen 'drempelwaarde' meer, omdat er geen stabiel evenwicht (rustpotentiaal) is. In plaats daarvan blijft dit systeem oscilleren.
+Er is nu nog maar één evenwicht, en de pijlen wijzen er niet meer naar toe, dus het is een instabiel evenwicht (`Grind.R` bevestigt dit ook). Er is dus ook geen 'drempelwaarde' meer, omdat er geen stabiel evenwicht (rustpotentiaal) is. In plaats daarvan blijft dit systeem oscilleren.
 
 **g.**
 De sinusknoop van het hart zou een voorbeeld kunnen zijn. De sinusknoop genereert continu actiepotentialen.
