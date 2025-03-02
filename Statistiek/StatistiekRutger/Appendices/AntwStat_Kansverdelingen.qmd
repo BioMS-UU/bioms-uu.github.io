@@ -184,15 +184,80 @@ b.  De kans van het deel $X < 170$ lijkt ongeveer even groot als die van $X > 18
 
 a.  --
 
-b.  
+b.  Formule @eq-mean-rel-freq uit @exr-gemiddelde-frequentietabel drukt uit 
+    hoe je het gemiddelde van een reeks getallen kunt uitrekenen op basis
+    van de relatieve frequenties $f(x)$ van alle uitkomsten $x$. 
+
+    In @sec-frequentistisch hebben we kansen $\pr{X = x}$ gedefineerd als relatieve 
+    frequenties in de uitkomsten van een (oneindig) lange reeks herhalingen 
+    van hetzelfde kansexperiment.
+    Het gemiddelde van zo'n oneindig lange reeks kans dus met @eq-mean-rel-freq
+    worden berekend, waarbij we de kans $\pr{X = x}$ invullen op de plek van $f(x)$.
+    Dat levert precies @eq-verwachtingswaarde-discreet op.
 
 
 ### @exr-verwachtingswaarde
 
+We moeten steeds iedere uitkomst vermenigvuldingen met zijn kans,
+en de resultaten optellen.
+Deze code voert de berekeningen uit:
 
+```{r}
+aantal_gelegenheden <- 9
+
+uitkomsten <- seq(0, aantal_gelegenheden) #alle mogelijke uitkomsten
+kansen <- c( # de kansen die in de tabel van de opgeva gegeven zijn 
+  0.009, 0.054, 0.151, 0.244, 0.255, 
+  0.177, 0.082, 0.024, 0.004,0.000
+  )
+
+( E <- sum( kansen * uitkomsten) ) # verwachtingswaarde
+```
 
 ### @exr-variantie
 
+We vervolgen het script van @exr-verwachtingswaarde.
+
+a.  De afwijkingen van het gemiddelde
+    
+    ```{r}
+    ( afwijkingen <- uitkomsten - E )
+    ```
+    
+    De verwachtingswaarde `E` wordt zo van iedere uitkomst afgetrokken. 
+    Het resultaat is dus weer een vector.
+
+b.  Kwadrateren:
+
+    ```{r}
+    ( afwijkingen_kwadraat <- afwijkingen^2 )
+    ```
+    
+c.  Product:
+
+    ```{r}
+    ( prod <- kansen * afwijkingen_kwadraat )
+    ```
+    
+d.  Variantie:
+
+    ```{r}
+    ( variantie <- sum(prod) )
+    ```
+    
+    We hadden alle stappen ook in één regel kunnen uitvoeren:
+    
+    ```{r}
+    ( variantie <- sum( kansen * (uitkomsten - E)^2 ) )
+    ```
+    
+e.  Standaarddeviatie:
+
+    ```{r}
+    ( standaarddeviatie <- sqrt(variantie) )
+    ```
+
+    
 
 ### @exr-normale-verdeling
 
