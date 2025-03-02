@@ -63,28 +63,128 @@ d.  Het is precies dezelfde berekening!
 
 ### @exr-cumul
 
+We berekenen de cumulatieve kansen:
+
+$F_X(0) = \pr{0} = \frac{1}{4}.$
+
+$F_X(1) = \pr{0} + \pr{1} = \frac{3}{4}.$
+
+$F_X(2) = \pr{0} + \pr{1} + \pr{2} = 1.$
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.width: 4
+#| fig.height: 3
+#| out.width: 57%
+
+# Controleer of de benodigde pakketten zijn geladen
+if (!("ggplot2" %in% .packages())) {
+  library("ggplot2")
+}
+
+# Voeg extra punten toe om de cumulatieve kansen buiten het bereik van 2-12 te tonen
+kansen_dobbelsteen_cumulatief <- data.frame(
+  uitkomsten = c(-1, 0, 1, 2, 3), # Voeg 1 en 13 toe als grenzen
+  kansen = c(0, 1/4, 3/4, 1, 1)   # Voeg 0 en 1 toe aan de kansen
+)
+
+# Genereer de datapunten voor de open cirkels
+open_cirkels <- data.frame(
+  uitkomsten = c(0, 1, 2),
+  kansen = c(0, 1/4, 3/4)
+)
+
+# Maak een data frame voor de horizontale lijnen (stappen van de cumulatieve kans)
+lijnen_data <- data.frame(
+  x_start = kansen_dobbelsteen_cumulatief$uitkomsten[-nrow(kansen_dobbelsteen_cumulatief)],
+  x_end = kansen_dobbelsteen_cumulatief$uitkomsten[-1] - .05,
+  y = kansen_dobbelsteen_cumulatief$kansen[-nrow(kansen_dobbelsteen_cumulatief)]
+)
+
+# Maak de plot
+ggplot() +
+  # Voeg de horizontale lijnen toe
+  geom_segment(
+    data = lijnen_data,
+    aes(x = x_start, xend = x_end, y = y, yend = y),
+    color = "darkorange",        # Kleur van de lijnen
+    size = 1                     # Dikte van de lijnen
+  ) +
+  # Voeg gesloten cirkels (linkerkanten) toe
+  geom_point(
+    data = kansen_dobbelsteen_cumulatief[-c(1, nrow(kansen_dobbelsteen_cumulatief)), ],
+    aes(x = uitkomsten, y = kansen),
+    shape = 16,                  # Gesloten cirkel
+    size = 3,
+    color = "darkorange"
+  ) +
+  # Voeg open cirkels (rechterkanten) toe
+  geom_point(
+    data = open_cirkels,
+    aes(x = uitkomsten, y = kansen),
+    shape = 1,                 # Open cirkel
+    size = 1.8,
+    stroke = 1.4,
+    color = "darkorange"
+  ) +
+  scale_x_continuous(
+    breaks = 0:2,               # Ticks alleen bij gehele getallen van 2 tot 12
+    minor_breaks = NULL          # Verwijder alle minor ticks
+  ) +
+  labs(
+    title = "",
+    x = "Aantal keer kop",    # Titel voor de x-as
+    y = "Cumulatieve kans"       # Titel voor de y-as
+  ) +
+  theme_minimal()                 # Minimalistisch thema
+```
+
+
 
 ### @exr-schat-kansen {.unnumbered}
 
-a.   De kans is ongeveer 0.5. Dit is duidelijk te zien, omdat het gearceerde gebied
-begint bij de piek van de verdeling en de verdeling symmetrisch lijkt.
+a.  De vakjes zijn 1 eenheid breed en 0,05 hoog.
+    De oppervlakte is dus $1\times 0{,}05 = 0{,}05$. 
+    Daarom staat één vakje dus voor een kans van 0,05.
+    
+b.  Paneel (a):\ 
+    De kans is ongeveer 0,5. Dit is duidelijk te zien, 
+    omdat het ingekleurde gebied begint bij de piek van de verdeling 
+    en de verdeling er symmetrisch uitziet.
 
-b.   De kans is ongeveer 0.25. Dit kun je afleiden door hokjes onder de grafiek te 
-tellen en vervolgens het aantal hokjes in het paarse gebied te delen door het
-totaal aantal hokjes onder de grafiek.
+    Paneel (b):\
+    De kans is ongeveer 0,25. 
+    Dit kun je afleiden door het aantal hele hokjes in het paarse gebied te schatten,
+    ongeveer 5,
+    en het totaal te vermenigvuldigen met 0,05.
+    
+    Paneel (c):\
+    De paarse oppervlakjes van (b) en (c) zijn samen precies 
+    even groot als die van (a).
+    De oppervlakte van (c) is dus 0,5 - 0,25 = 0,25.
+    Natuurlijk kun je ook weer gewoon hokjes tellen.
+    
+    Paneel (d):\
+    De kans is ongeveer 0,5. 
+    We hebben hier twee keer de oppervlakte van het paarse
+    gebied in (c).
 
-c.   De kans is ongeveer 0.25. We weten dat het gebied bij $a$ ongeveer de helft van
-de oppervlakte was, en bij $b$ een kwart. Bij deze grafiek hebben we 
-$a - b = 0.5 - 0.25 = 0.25$. Een andere methode is natuurlijk weer om hokjes te
-tellen.
-
-d.   De kans is ongeveer 0.5. We hebben hier twee keer de oppervlakte van het paarse
-gebied in $c$.
 
 ### @exr-complement
 
+a.  De kans $\pr{X < 170 \text{ of } X > 182} = 1 - \pr{170 < X < 182} = 1 - 0{,}59 = 0{,}41$.
+
+b.  De kans van het deel $X < 170$ lijkt ongeveer even groot als die van $X > 182$.
+    De kans $\pr{X < 170}$ is dus ongeveer de helft van 0,41. Inderdaad:
+    een exacte berekening geeft 0,21.
+
 
 ### @exr-gemiddelde-herhalen
+
+a.  --
+
+b.  
 
 
 ### @exr-verwachtingswaarde
