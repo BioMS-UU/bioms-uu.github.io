@@ -160,9 +160,28 @@ Dat betekent dat je een kansverdeling kunt interpreteren
 
 Stel dat we twee munten gooien.
 We gaan uit van een model waarbij de munten eerlijk zijn
-en de uitkomsten van beide munten onafhankelijk.
+en hun uitkomsten onafhankelijk.
 
 Teken de kansverdeling van het aantal keer dat je "kop" gooit.
+:::
+
+::: {#exr-genotypes .pepexr}
+## Genotypes
+<br>
+
+We kruisen twee heterozygote zoogdieren met genotype `aA`.
+Om de kansen op de verschillende genotypes `aa`, `aA` en `AA` in de nakomelingen
+in te schatten, maken we gebruik van een simpel model:
+
+- Iedere ouder geeft met gelijke kans `a` of `A` aan diens geslachtscellen mee.
+- Het allel heeft geen invloed op de kans op conceptie.
+- Het genotype heeft geen invloed op het succes van de zwangerschap.
+
+a.  Wat is de kans dat een nakomeling genotype `aa` heeft?
+b.  Wat is de kans dat een nakomeling genotype `aA` heeft?
+c.  Wat is de kans dat een nakomeling genotype `AA` heeft.
+d.  Wat is de relatie van deze opgave met @exr-munten?
+
 :::
 
 ## De vorm van een verdeling kwalitatief beschrijven
@@ -321,16 +340,18 @@ De kans op $7 < X < 11$ is namelijk de kans dat $X$
   kleiner of gelijk is aan 10
   min de kans dan $X$ kleiner of gelijk is aan 7.
   
-::: {#exr-cumul}
+::: {#exr-cumul .pepexr}
 
-## Kansen berekenen met de cumulatieve verdeling.
+## De cumulatieve verdeling van het aantal keer "kop"
+<br>
 
-Je gooit weer twee munten.
-Ga uit van een model waarbij de uitkomsten van beide munten onafhankelijk zijn
-en beide munten eerlijk zijn.
+Je gooit net als in @exr-munten met twee munten
+en gaat weer uit van een model waarbij beide munten eerlijk zijn
+en de uitkomsten van beide munten onafhankelijk.
 
 Teken de cumulatieve verdeling van het aantal keer "kop".
-Neem @fig-cumulverdeling-twee-dobbelstenen als voorbeeld.
+Gebruik je resultaten uit @exr-munten, en
+neem @fig-cumulverdeling-twee-dobbelstenen als voorbeeld.
 
 :::
 
@@ -501,13 +522,14 @@ Dat oppervlakte is 0,59.
 Dat is dus de kans dat een Amerikaanse man een lengte heeft
 tussen 170cm en 182cm.
 
+De totale oppervlakte onder de curve,
+van $-\infty$ tot $\infty$,
+is bij iedere kansverdeling van een numerieke variabele gelijk aan 1,
+want de kans dat een uitkomst *ergens* op de $x$-as ligt is 1.
+
 De waarde op de $y$-as is bij kansverdelingen van continue variabelen
 dus niet de kans op een specifieke waarde. 
 In plaats daarvan spreken we bij continue variabelen over de **kansdichtheid**.
-Bij een kansverdeling is de totale oppervlakte onder de curve,
-van $-\infty$ tot $\infty$, 
-altijd gelijk is aan 1,
-want de kans dat een uitkomst *ergens* op de $x$-as ligt is 1.
 
 In @sec-kansverdelingen vergeleken we een kansverdeling 
 met een histogram van een *enorm* (oneindig) aantal waarnemingen.
@@ -524,7 +546,7 @@ en het histogram een gladde curve wordt.
 Zie @fig-kansen-schatten hieronder. 
 
 a.  Het canvas van iedere grafiek is door grijze lijntjes verdeeld in vakjes.
-    Hoeveel kans correspondeert met de oppervlakte van één vakje?
+    Hoeveel kans representeert de oppervlakte van één vakje?
     
 b.  Schat voor ieder van de kansenverdelingen de kans op een waarneming 
     binnen het paars gearceerde gebied.
@@ -609,6 +631,7 @@ normaalGeneriek + oppervlak(qnorm(0.25), qnorm(0.75))
 
 ::: {#exr-complement .pepexr}
 ## Amerikaanse mannen
+<br>
 
 Kijk nog eens naar @fig-interval.
 
@@ -668,9 +691,10 @@ De sommatie gaat over alle mogelijke uitkomsten $x$.
     waarbij uitkomsten met een grotere kans
     een zwaarder gewicht krijgen.
     
-::: {#exr-gemiddelde-herhalen}
+::: {#exr-gemiddelde-herhalen .pepexr}
 
 ## De definitie van de verwachtingswaarde 
+<br>
 
 In @exr-gemiddelde-frequentietabel heb je een formule bestudeerd 
   (@eq-mean-rel-freq)
@@ -687,17 +711,52 @@ en leg uit waarom ze zo op elkaar lijken.
   in een zéér lange (oneindige) reeks herhalingen van het kansexperiment.)
 :::
     
-::: {#exr-verwachtingswaarde}
+::: {#exr-verwachtingswaarde .pepexr}
 
 ## Verwachtingswaarde
+<br>
 
+In een experiment krijgen dieren 9 keer de gelegenheid om een taak uit te voeren.
+De experimentatoren tellen hoe vaak dat lukt.
 
-::: {.todo-box}
+Vooraf is een kansmodel bedacht voor het aantal keer dat een dier
+de taak succesvol weet uit te voeren. Dat model levert de volgende kansen op:
 
-schrijven: simpele oefening met verwachtingswaarde.
+::: {#tbl-binom out.width="50%"}
+```{r}
+#| echo: false
 
+# Controleer of benodigde bibliotheken geladen zijn
+if (!("dplyr" %in% .packages())) { library(dplyr) }
+if (!("knitr" %in% .packages())) { library(knitr) }
+
+# Parameters instellen
+aantal_proeven <- 9
+kans_succes <- 0.41
+
+# Waarschijnlijkheden berekenen en afronden
+resultaten <- data.frame(
+  Aantal = 0:aantal_proeven,
+  Kans = round(
+    dbinom(
+      x = 0:aantal_proeven,
+      size = aantal_proeven,
+      prob = kans_succes
+    ),
+    3
+  )
+)
+
+# Controleer of de som der kansen 1 is
+som_kansen <- sum(resultaten$Kans)
+
+# Weergave als tabel
+knitr::kable(resultaten)
+```
 :::
 
+Bereken de verwachtingswaarde voor het aantal keer succes.
+Het is handig om R als rekenmachine te gebruiken.
 :::
 
 Als een variabele continu is
@@ -764,29 +823,34 @@ Daarom wordt de variantie van een kansvariabele $X$
     als $\sigma^2$ of $\sd{X}^2$ in plaats van $\var{X}$.
     
     
-::: {#exr-variantie}
+::: {#exr-variantie .Rexr}
 
 ## Variantie en standaarddeviatie van een kansvariabele
 <br>
 
-::: {.todo-box}
-schrijven?
+In deze opgave gaan we verder met de kansverdeling uit @exr-verwachtingswaarde.
+Je gaat voor deze kansverdeling de variantie en standaarddeviatie uitrekenen
+aan de hand van de definities @eq-variantie en @eq-sd-var.
+
+De verwachtingswaarde van deze kansverdeling heb je in @exr-verwachtingswaarde al berekend.
+
+a.  Bereken voor iedere mogelijke uitkomst de afwijking van de verwachtingswaarde.
+    Dat gaat handig in R.
+    Als de vector van mogelijke uitkomsten `uitkomsten` heet en de verwachtingswaarde `E`:
+    ```{r}
+    #| eval: false
+    afwijkingen <- uitkomsten - E
+    ```
+b.  Bereken het kwadraat van alle afwijkingen.
+
+c.  Vermenigvuldig nu de gekwadrateerde afwijkingen met hun kans.
+    De kans van iedere uitkomt is gegeven in @exr-verwachtingswaarde.
+    
+d.  De variantie is nu de som van de getallen die je in onderdeel c. hebt berekend.
+
+e.  Bereken de standaarddeviatie.
 :::
 
-:::
-
-::: {#exr-kwadraat }
-
-## Dimensies en eenheden van de variantie
-<br>
-
-$$ \var{\frac{X}{n}} = \frac{\var{X}}{n^2}. $$ {#eq-kwadraat}
-
-::: {.todo-box}
-schrijven
-:::
-
-:::
 
 ## De normale verdeling
   
@@ -907,7 +971,7 @@ De meeste kans ligt binnen twee standaarddeviaties van $\mu$.
 
 De precieze formule voor de normale verdeling zul je in deze cursus
 niet nodig hebben,
-maar het is toch handig deze een keer te zien:
+maar het is toch handig deze een keer gezien te zien hebben:
 $$ \pr{X = x} = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x - \mu)^2}{2\sigma^2}}.$$
 De normale verdeling heeft dus een precieze wiskundige definitie.
 Niet iedere verdeling die een klokvorm heeft is ook een normale verdeling
@@ -964,17 +1028,22 @@ normaalGeneriek + oppervlak(-2, 2) + proportie("0,95...")
 
 ::: {#exr-normale-verdeling .pepexr}
   
-## Kansen van de normale verdeling
+## Vuistregels voor de normale verdeling toepassen
 <br>
 
-Schatten van kansen op basis van vuistregels en geschetst plaatje.
-Bereken de kansen. Schets steeds eerst op papier een normale verdeling.
-Arceer de oppervlakte onder de curve die overeenkomt met de gevraagde kans.
-  
-- $\pr{X < \mu}$
-- $\pr{X > \mu + \sigma}$
-- $\pr{X < \mu - 2 \sigma}$
-- $\pr{X < \mu - 2 \sigma \text{ of } X > \mu + 2 \sigma}$
+Als je nadenkt over kansverdelingen
+kan het enorm helpen om een tekeningetje te schetsen. 
+
+a.  Schets @fig-normale-verdeling na. Arceer het oppervlak onder de curve
+    dat overeenkomt $\pr{X < \mu}$. Wat is die kans?
+    
+b.  Maak nog zo'n schets, maar nu voor $\pr{X > \mu + \sigma}$. 
+    Bepaal die kans met behulp van de vuistregel uit @sec-vuistregels.
+    
+c.  Wat is de kans $\pr{X < \mu - 2 \sigma}$? 
+    Maar weer gebruik van een schets en de vuistregels.
+    
+d.  Idem, maar nu voor $\pr{X < \mu - 2 \sigma \text{ of } X > \mu + 2 \sigma}$.
 
 :::
 
@@ -987,7 +1056,11 @@ is klokvormig.
 Een redelijk model is een normale verdeling met gemiddelde $\mu = 34{,5}$cm
 en standaarddeviatie $\sigma = 1{,}75$cm. 
 
-Wat is de kans dat een pasgeboren baby een hoofdomtrek heeft van meer dan $38$ cm?
+a.  Hoeveel standaarddeviaties boven het gemiddelde is een hoofdomtrek van 38 cm?
+
+b.  Wat is de kans dat een baby een hoofdomtrek heeft van *meer* dan 38 cm?
+
+    (Tip: Maak weer een schets!)
 :::
 
 ### Waarom de normale verdeling? De centrale limietstelling.
@@ -1249,6 +1322,61 @@ wordt **getransformeerd**
 naar een standaardnormaal verdeelde variabele.
 Die transformatie wordt in het volgende hoofdstuk heel belangrijk.
 
+::: {#exr-kansen-normaal .mixexr}
+
+## Kansen voor de normale verdeling in R
+
+Met R kun je de kansen voor een normale verdeling opvragen 
+met de functie `pnorm()`. 
+Die functie geeft de cumulatieve verdeling van de normale verdeling.
+Bijvoorbeeld:
+```{r}
+#| eval: false
+
+pnorm(0)
+```
+Dit commando geeft de kans op een waarneming kleiner dan 0
+volgens de standaardnormale verdeling.
+
+a.  Maak eerst een schets van de standaardnormale verdeling. 
+    Bedenk eerst wat de cumulatieve verdeling op $Z = 0$ moet zijn,
+    en voer dan het commando `pnorm(0)` uit
+    om dat te controleren.
+
+b.  Maak weer een schets van de standaardnormale verdeling.
+    Arceer het gedeelte $Z < -1$.
+    Wat is volgens de vuistregels de kans op een waarneming in dat interval?
+    Bereken de kans vervolgens met de functie `pnorm()`.
+
+c.  Bereken met `pnorm()` de kans dat $Z > 0{,}5$. Een schets helpt.
+    Hint: gebruik de complement-regel (@eq-complementregel).
+    
+d.  Maak weer een schets van de standaardnormale verdeling.
+    Arceer het gedeelte tussen $Z = -1$ en $Z = 1$.
+    Wat is volgens de vuistregels de kans op een waarneming in dat interval?
+    Bereken de kans vervolgens met de functie `pnorm()`.
+    
+    Hint: je hebt de functie twee keer nodig... 
+   
+Hierboven gingen de vragen steeds over de standaardnormale verdeling,
+maar je kunt `pnorm()` ook gebruiken voor andere normale verdelingen.
+Je moet de functie dan vertellen welk gemiddelde en welke standaarddeviatie
+gebruikt moeten worden.
+    
+Bijvoorbeeld, als $\mu = 170$ en $\sigma = 6$ is dit de kans op een waarneming 
+$X < 176$:
+
+```{r}
+#| eval: true
+pnorm(176, mean = 170, sd = 6)
+```
+    
+e.  De variabele IQ is ongeveer normaal verdeeld met gemiddelde $\mu = 100$
+    en $\sigma = 15$. Wat is de kans dat een willekeurige persoon
+    een hoogbegaafd IQ heeft van meer dan 140?
+
+:::
+
 ## De $t$-verdeling {#sec-t}
 
 Later in de cursus komen we ook een andere belangrijke verdeling tegen:
@@ -1360,6 +1488,16 @@ bij $\text{df} = 20$ zijn de $t$-verdeling en de standaardnormale verdeling
 op het oog al moeilijk te onderscheiden.
 In de limiet van $\text{df}\rightarrow \infty$ convergeert de $t$-verdeling
 ook echt naar de standaardnormale verdeling.
+
+::: {#exr-t-verdeling .Rexr}
+
+::: {.todo-box}
+
+Een verwerkingsvraag.
+
+:::
+
+:::
 
 ## Kritieke waarden {#sec-kritieke-waarde}
 
@@ -1625,7 +1763,6 @@ Binnen de grenzen ligt juist een kans $1 - \alpha$:
 
 $$\pr{-Z_{\alpha(2)} > Z > Z_{\alpha(2)}} = 1 - \alpha. $${#eq-crit-norm-2}
 
-
 :::
 
 
@@ -1764,9 +1901,14 @@ alpha <- 0.2
 qnorm(1 - alpha/2)
 ```
 
-::: {#exr-krit-norm-R}
+::: {#exr-krit-norm-R .Rexr}
 
 ## Kritieke waarden voor de normale verdeling.
+<br>
+
+::: {.todo-box}
+schrijven
+:::
 
 :::
 
@@ -1784,9 +1926,14 @@ qt(1 - alpha/2, df = 4)
 Hier komt precies de waarde van (afgerond) 1,53 uit die in de figuur
 is aangegeven.
 
-::: {#exr-krit-t-R}
+::: {#exr-krit-t-R .Rexr}
 
 ## Oefenen met kritieke waarden van de $t$-verdeling
+<br>
+
+::: {.todo-box}
+schrijven
+:::
 
 :::
 
@@ -1916,4 +2063,4 @@ Andere namen: normaalverdeling, Gaussische verdeling, Gausscurve.
 ## Opgaven
 
 
-## Voetnoten
+
