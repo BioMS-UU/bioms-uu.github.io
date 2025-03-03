@@ -873,11 +873,11 @@ $$
 \pr{1{,}96 \sd{\overline{X}} > \mu_X -\mean{X} > -1{,}96 \sd{\overline{X}}} = 0{,}95.
 $$
 Omdat we met een negatief getal vermenigvuldigd hebben, zijn de tekens van de ongelijkheden omgeklapt.
-Nu tellen we $\mean{X}$ bij alle kanten van de ongelijkheid op:
+Het is overzichtelijker om de volgorde van de ongelijkheden om te draaien:
 $$    
-\pr{\mean{X} + 1{,}96 \sd{\overline{X}}  > \mu_X > \mean{X} - 1{,}96 \sd{\overline{X}}} = 0{,}95.
+\pr{-1{,}96 \sd{\overline{X}} < \mu_X -\mean{X} < 1{,}96 \sd{\overline{X}}} = 0{,}95.
 $$
-Tot slot draaien we alleen de volgorde van de ongelijkheden even om:
+Ten slotte tellen we $\mean{X}$ bij alle kanten van de ongelijkheid op:
 $$
 \pr{\mean{X} -1{,}96\, \sd{\mean{X}} < \mu_X < \mean{X} + 1{,}96\, \sd{\mean{X}}} = 0{,}95.
 $$
@@ -999,7 +999,7 @@ Nu is het een multiple-choice; maak er een gewone vraag van.
 
 In de situatie dat $\sd{X}$ bekend was,
 konden we de kansvariabele $\mean{X}$ transformeren naar een standaard-normaal verdeelde variabele
-door middel van @eq-trans:
+door middel van @eq-trans-2:
 $$ Z = \frac{\mean{X} - \mu_X}{\sd{\mean{X}}}. $$
 Om uiteindelijk een formule voor een BHI te krijgen 
 waarin in plaats van $\sd{\mean{X}}$ de standaardfout $\se{\mean{X}}$ voorkomt, 
@@ -1011,23 +1011,23 @@ maar $t$:
 $$
 t = \frac{\mean{X} - \mu_X}{\se{\mean{X}}}.
 $$ {#eq-t}
-
-::: {.todo-box}
-*Ik had best weer even moeite om op te halen waar de $t$ nou precies voor stond, want als ik puur de text las dacht ik dat het om een verdeling zou gaan, maar het is toch echt maar 1 getal. Misschien dat het stukje hieronder toegevoegd kan worden? ~Yannick*
-
-Het getal $t$ dat je uit deze formule krijgt geeft aan hoe groot de kans is dat je een steekproefgemiddelde $\mean{X}$ vond uit de hele populatie $\mu_X$. De kans is dus groot dat je een $t$ vindt rond de 0, want daar ligt de piek van de t-verdeling. Als je een hele hoge of lage $t$ waarde vindt kan je concluderen dat je of een onwaarschijnlijke steekproef hebt gedaan (wat altijd mogelijk is), of dat je populatiegemiddelde ($\mu_X$) toch niet de waarde heeft die je dacht dat deze had. Deze informatie gaan we in de volgende paragraaf gebruiken om een betrouwbaarheidsinterval te berekenen. 
-:::
-
 De keuze voor $t$ als de naam van deze getransformeerde variabele is niet willekeurig.
 Er kan namelijk worden aangetoond
 dat $t$ onder het Normale Model
 een $t$-verdeling volgt met $n - 1$ vrijheidsgraden.
-(Kijk nog eens terug naar @sec-t als je de details over de $t$-verdeling
-niet meer helder hebt.)
+Dat wil zeggen: als je 
+
+-   een steekproef neemt ven $n$ eenheden,
+-   het gemiddelde $\mean{X}$ en de standaarddeviatie $s$ van die steekproef berekent
+-   en daarmee @eq-t invult om $t$ te berekenen
+
+dan is $t$ een kansvariabele met als kansverdeling 
+de $t$-verdeling met $n-1$ vrijheidsgraden.
+
 Helaas voert het bewijs voor deze stelling te ver voor deze cursus;
-je zult ons daarop moeten vertrouwen.
+je zult daarop moeten vertrouwen.
 Maar in de spirit van *trust, but verify* kun je de bewering wel 
-controleren met behulp van simulaties.
+controleren met behulp van *simulaties*.
 
 ::: {.callout-tip}
 
@@ -1038,13 +1038,12 @@ onder het Normale Model
 een $t$-verdeling volgt met $n - 1$ vrijheidsgraden.
 
 De code hieronder (klik op "Code" om die zichtbaar te maken) neemt $10^4$ keer een (kleine) steekproef ($n = 4$)
-uit een normale verdeling, en berekent op basis van die steekproeven steeds $t$.
-Het histogram van de verkregen $t$ waarden zou de $t$-verdeling met $\mathrm{df}= n -1 = 3$
+uit een normale verdeling, en berekent op basis van die steekproeven steeds 
+$\mean{X}$, $s$, $\se{X}$, en uiteindelijk $t$.
+Het histogram van de verkregen $t$ waarden zou dan de $t$-verdeling met $\mathrm{df}= n -1 = 3$
 vrijheidsgraden moeten volgen.
-Daarom plot de code bovenop het histogram ook die $t$-verdeling (in paars).
-Ter vergelijking is ook de standaard-normale verdeling toegevoegd (zwarte stippellijn).
-De $t$-verdeling heeft een lagere piek en dikkere staarten,
-waardoor zijn spreiding groter is.
+Om dat te verifieren plot de code bovenop het histogram ook die $t$-verdeling (in paars).
+
 
 ```{r}
 #| code-fold: true
@@ -1060,7 +1059,7 @@ if (!("ggplot2" %in% loadedNamespaces())) {
 }
 
 # Parameters instellen
-aantal_iteraties <- 10000   # Aantal herhalingen
+aantal_iteraties <- 10^4   # Aantal herhalingen
 steekproefgrootte <- 4      # Grootte van de steekproef
 mu <- 100                   # Populatiegemiddelde
 sigma <- 10                 # Populatiestandaarddeviatie
@@ -1129,7 +1128,19 @@ ggplot(data, aes(x = t_waarden)) +
   theme_minimal()
 ```
 
+Ter vergelijking is ook de standaardnormale verdeling toegevoegd (zwarte stippellijn).
+Zoals je geleerd hebt in @sec-t heeft de $t$-verdeling een lagere piek en dikkere staarten,
+en dus een grotere spreiding.
+In dit geval komt dat doordat in de noemer van @eq-t niet $\sd{\mean{X}}$ staat
+maar de schatter daarvan $\se{\mean{X}}$.
+Daardoor is nu niet alleen de teller maar ook de noemer onzeker.
+Het gevolg is dat $t$ (@eq-t) onzekerder is dan
+dan $Z$ (@eq-trans-2).
+
 :::
+
+
+We vatten de situatie weer even samen:
 
 ::: {.callout-important appearance="default" icon=false}
 ## Belangrijk:
@@ -1144,19 +1155,16 @@ is de $t$-verdeling met $n - 1$ vrijheidsgraden.
 
 ### Afleiding van het 95%-BHI
 
-Nu we dit alles weten, kunnen we de afleiding van het 95%-BHI eindelijk vervolgen.
+Nu we dit alles weten, kunnen we de afleiding van het 95%-BHI eindelijk afmaken.
 
-Voor iedere variabele $t$ die $t$-verdeeld is met df vrijheidsgraden geldt: 
-$$
-\pr{ -\ct{0{,}05}{2}{df} < t < \ct{0{,}05}{2}{df} } = 0{,}95.
-$$
-Als dat niet vanzelfsprekend voor je is, kijk dan eens terug naar @eq-crit-t en de paragraaf daaromheen.
+ @eq-crit-t en de paragraaf daaromheen.
 
-Specifiek voor de variabele $t$ van @eq-def-t geldt dus
+Omdat de $t$ uit @eq-def-t verdeeld is volgens de $t$-verdeling met $n-1$ vrijheidsgraden,
+geldt
 $$
 \pr{ -\ct{0{,}05}{2}{(n-1)} < t < \ct{0{,}05}{2}{(n-1)} } = 0{,}95.
 $$
-
+We hebben hier de kritieke waarden gebruikt voor de $t$-verdeling (zie @eq-crit-t).
 
 Als we @eq-def-t hierin invullen, krijgen we
 $$
@@ -1177,7 +1185,7 @@ $$
 \pr{\mean{X} -\ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}} < \mu_X < \mean{X} + \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}}} = 0{,}95.
 $$
 Dit is precies de vergelijking waarnaar we op zoek waren!
-De vergelijking zegt dat er iedere keer dat we een steekproef nemen een kans van 0{,}95 is
+De vergelijking zegt dat er iedere keer dat we een steekproef nemen een kans van 0,95 is
 dat de populatieparameter $\mu_X$ tussen de grenzen $\mean{X} -\ct{0{,}05}{2}{(n-1)}$ en $\mean{X} + \ct{0{,}05}{2}{(n-1)}$
 invalt. Oftewel, het 95\%-BHI is:
 $$
@@ -1187,9 +1195,8 @@ Dit wordt ook vaak geschreven als
 $$
     \mu_X = \mean{X} \pm \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}}.
 $$
-$\ct{0{,}05}{2}{(n-1)}$ hoef je niet met de hand uit te rekenen. Hiervoor kan je de functie `qt` in R gebruiken. Zie @exm-BHI voor een uitwerking hiervan. 
 
-Laten we dit maar weer eens samenvatten:
+Laten we dit eindresultaat maar weer eens samenvatten:
 
 ::: {.callout-important icon=false}
 ## 95%-BHI voor de situatie dat $\sd{X}$ onbekend is
@@ -1222,7 +1229,7 @@ in plaats van de kritieke waarde van de standaard-normale verdeling 1,96.
 Omdat de kritieke $t$-waarde altijd groter is dan 1,96
 zorgt dit voor bredere betrouwbaarheidsintervallen.
 Die bredere betrouwbaarheidsintervallen reflecteren het feit
-dat we zonder kennis van $\sigma$ ook onzekerder zijn over de waarde van $\mean{X}$.
+dat we zonder kennis van $\sd{X}$ ook onzekerder zijn over de waarde van $\mu_X$.
 
 Maar als het aantal waarnemingen niet al te klein is,
 is dat effect klein.
@@ -1284,7 +1291,7 @@ Bereken een BHI
 
 ### Een BHI berekenen met R
 
-In @exm-BHI bestond de dataset uit slechts vijf waarnemingen.
+In @exm-BHI bestond de dataset uit maar vijf waarnemingen.
 Daarom was het goed mogelijk om het BHI met de hand uit te rekenen.
 Maar zelfs dan moesten we van R gebruik maken 
 om de kritieke waarde op te zoeken.
@@ -1305,7 +1312,7 @@ Je maakt gebruik van de functie `t.test()`
 die we in de volgende hoofdstukken nog vaker gaan terugzien.
 Deze functie berekent allerlei statistieken,
 waaronder het BHI.
-We slaan eerst de uitvoer van `t.text()` op in een variabele.
+We slaan eerst de uitvoer van `t.test()` op in een variabele.
 Vervolgens vragen we uit deze uitvoer het betrouwbaarheidsinterval op.
 Als het goed is, komt de uitvoer precies overeen met de getallen
 die in @exm-BHI berekend hadden. Klopt dat? 
@@ -1368,6 +1375,9 @@ Wanneer je een BHI wilt uitrekenen van zo'n variabele
 #| label: fig-CBS-persoonlijk-inkomen
 #| fig-cap: "Verdeling van persoonlijk inkomen in Nederland, 2022"
 #| warning: false
+#| fig.width: 4
+#| fig.height: 3
+#| out.width: "57%"
 library(readr)
 VerdelingPersoonlijkInkomen_CBS_2022 <- read_csv("data/VerdelingPersoonlijkInkomen-CBS-2022.csv", 
     locale = locale(decimal_mark = ","))
@@ -1413,9 +1423,10 @@ ggplot(VerdelingPersoonlijkInkomen_CBS_2022,
 #| code-fold: true
 #| warning: false
 #| fig-cap: "Aantal eieren in 34 nesten van de vink *Fringilla Coelebs Africana*[^eggs]."
-#| fig-label: fig-vink
-#| fig.width: 5
-#| fig.height: 4
+#| label: fig-vink
+#| fig.width: 3
+#| fig.height: 2
+#| out.width: "43%"
 
 dataVink <- data.frame(
   aantal_eieren <- c(rep(1, 3), rep(2, 2), rep(3, 15), rep(4, 14))
@@ -1450,13 +1461,13 @@ Voorbeelden:
   liggen dan bij replicaties die daadwerkelijk onafhankelijk zijn uitgevoerd.
   Dat leidt onterecht tot een smaller BHI.
   
-- **Tijdseries.** Metingen over de tijd van dezelfde variabele, 
-  zoals de lichaamstemperatuur van één en dezelfde persoon
-  gemeten op opeenvolgende dagen,
+- **Tijdseries.** Metingen over de tijd van dezelfde variabele
   zullen vaak niet onafhankelijk zijn.
-  Wie vandaag koorts heeft,
+  Een voorbeeld is de lichaamstemperatuur van één en dezelfde persoon
+  gemeten op opeenvolgende dagen,
+  want wie vandaag koorts heeft,
   heeft dat vaak morgen ook.
-  Je kunt bij het berekenen van een tijdsgemiddelde
+  Je kunt bij het berekenen van een *tijdsgemiddelde*
   dus niet zomaar uitgaan van een model waarbij opeenvolgende metingen
   onafhankelijk zijn.
   
@@ -1468,10 +1479,10 @@ Voorbeelden:
   Dan is er een gevaar dat de mening van reisgezellen niet onafhankelijk zijn.
   
 Kortom, 
-  het is belangrijk om goed na te denken
-  over de aard van de variabele
-  en de manier waarop de gegevens tot stand zijn gekomen
-  om zo te bepalen of het Normale Model bij voorbaat van toepassing lijkt.
+het is belangrijk om goed na te denken
+over de aard van de variabele
+en de manier waarop de gegevens tot stand zijn gekomen
+om zo te bepalen of het Normale Model bij voorbaat van toepassing lijkt.
 
 ### Geven de gegevens aanleiding tot twijfel?
   
@@ -1515,11 +1526,6 @@ Dat wil zeggen:
   Deze grafiek heet de **Normale Kwantiel-Kwantiel-plot**,
   of *Normal QQ plot* in het Engels.
   We zullen die plot in het de volgende paragraaf even apart bespreken.
-  
-4. **Gebruik formele hypothesetoetsen om afwijkingen aan te tonen.**
-  Om deze methoden uit te leggen,
-  hebben we eerst de stof uit de hoofdstukken @sec-hypothesetoetsen en @sec-toetsen-gemiddelden nodig. 
-  We komen hier daarom in @sec-toetsen-gemiddelden op terug.
 
 Door altijd de bovenstaande beschrijvende statistieken en figuren te bestuderen
 krijg je een goed beeld van de toepasbaarheid van het Normale Model.
@@ -1531,6 +1537,12 @@ In een Normale Kwantiel-Kwantiel-plot
 worden de kwantielen van de waarnemingen
 uitgezet tegen de kwantielen die je zou verwachten 
 als de 
+
+::: {.todo-box}
+
+
+:::
+
 
 ::: {#exm-normale-QQ}
 
@@ -1760,6 +1772,7 @@ In figuur (d) en (e) de term "verdeling steekproefgemiddelden". Bovendien weer $
 #| label: fig-robuust-1
 #| fig.width: 3.5
 #| fig.height: 2.5
+#| out.width: "50%"
 
 # Controleer en laad benodigde pakketten
 if (!("ggplot2" %in% .packages())) {
@@ -1910,6 +1923,7 @@ boven_plot
 #| label: fig-robuust-2
 #| fig.width: 3.5
 #| fig.height: 2.5
+#| out.width: "100%"
 
 midden_plot
 ```
@@ -1921,6 +1935,7 @@ midden_plot
 #| label: fig-robuust-3
 #| fig.width: 3.5
 #| fig.height: 2.5
+#| out.width: "100%"
 
 midden_plot_b
 ```
@@ -1932,6 +1947,7 @@ midden_plot_b
 #| label: fig-robuust-4
 #| fig.width: 3.5
 #| fig.height: 2.5
+#| out.width: "100%"
 
 onder_plot
 ```
@@ -1943,6 +1959,7 @@ onder_plot
 #| label: fig-robuust-5
 #| fig.width: 3.5
 #| fig.height: 2.5
+#| out.width: "100%"
  
 onder_plot_b
 ```
@@ -1967,19 +1984,8 @@ Wiskundig kan daadwerkelijk worden aangetoond
   dat geldt ongeacht de verdeling van de populatie
   (behalve in heel pathologische gevallen
   waarover wij ons niet druk hoeven te maken).
-Dit volgt uit een wiskundige stelling 
-  die de **centrale limietstelling** heet:
-
-::: {.callout-important appearance="default" icon=false}
-
-## De centrale limietstelling 
-
-Trek onafhankelijk $n$ waarden
-  uit een kansverdeling.
-De kansverdeling van het gemiddelde $\mean{X}$ van die waarden
-  convergeert naar een normale verdeling
-  als $n \rightarrow \infty$.
-:::
+Dit volgt uit de **centrale limietstelling**,
+  die we ook al kort tegenkwamen in @eq-centrale-limietstelling.
 
 Een consequentie van deze stelling is dat de afleiding 
   van de formule voor het BHI (@sec-BHI-sigma-niet-bekend)
@@ -1995,7 +2001,7 @@ Als de populatieverdeling heel erg scheef is
 Als vuistregel kun je aannemen dat
   bij steekproeven van $n = 30$ of meer
   de formule voor het BHI ook van toepassing is
-  als de populatie niet normaalverdeeld is.
+  als de populatie niet normaal verdeeld is.
 In @exr-bhi-controleren hieronder zul je zien
   dat zelfs bij behoorlijk vreemde verdelingen
   het BHI al bij veel kleinere $n$ betrouwbaar is.
@@ -2139,8 +2145,8 @@ $\mu_X$ is het gemiddelde van de populatie, $\mean{X}$ is het gemiddelde van de 
 
 ## Terminologie
 
-| Nederlands                  | Engels                        | Betekenis |
-|---------------              |--------------------           |-------------------     |
+| Nederlands     | Engels              | Betekenis          |
+|:---------------|:--------------------|:-------------------|
 | betrouwbaarheidsinterval (BHI)        | confidence interval (CI)| Het interval rondom een punt waarbinnen een waarde zou kunnen vallen als je deze waarde niet exact weet. Een 95%-BHI is de interval waartussen de waarde in 95% van de gevallen zou vallen.           |
 | centrale limietstelling               | central limit theorem   | Trek onafhankelijk $n$ waarden uit een kansverdeling. De kansverdeling van het gemiddelde $\mean{X}$ van die waarden convergeert naar een normale verdeling |
 | gerepliceerd                          | replicated              | Herhaald (van een steekproef) |
@@ -2164,9 +2170,12 @@ Rutger nakijken
 :::
 
 ::: {.pepexr .Rexr #exr-tomaten-gewicht}
-Van zestien aselect gekozen tomaten uit een kas is het gewicht bepaald. Het gemiddelde gewicht is gelijk aan 44,1 g ; de
-standaardafwijking van de gewichten is gelijk aan 8,6 g . Bepaal het 95%-betrouwbaarheidsinterval voor het gemiddelde gewicht 𝜇 van dergelijke
-tomaten. (Neem aan dat de gewichten normaal verdeeld zijn en rond af op 1 decimaal.)
+Van zestien aselect gekozen tomaten uit een kas is het gewicht bepaald. 
+Het gemiddelde gewicht in de steekproef is gelijk aan 44,1 g; 
+de standaardafwijking van de steekproef is gelijk aan 8,6 g. 
+Bepaal het 95%-betrouwbaarheidsinterval voor het gemiddelde gewicht $\mu_X$ van dergelijke
+tomaten. 
+(Je mag uit gaan van het Normale Model. Rond af op 1 decimaal.)
 
 
 :::
