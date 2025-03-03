@@ -134,7 +134,7 @@ verdelingTweeDobbelstenen(kleur)
 ```
 
 De manier waarop kansen over alle mogelijke uitkomsten verdeeld zijn
-wordt de **kansverdeling** genoemd.
+wordt de **kansverdeling** (*probability distribution*) genoemd.
 Zowel @fig-uniform-dobbelsteen als @fig-kansverdeling-twee-dobbelstenen 
 geven dus ieder een kansverdeling weer.
 
@@ -529,7 +529,8 @@ want de kans dat een uitkomst *ergens* op de $x$-as ligt is 1.
 
 De waarde op de $y$-as is bij kansverdelingen van continue variabelen
 dus niet de kans op een specifieke waarde. 
-In plaats daarvan spreken we bij continue variabelen over de **kansdichtheid**.
+In plaats daarvan spreken we bij continue variabelen over de **kansdichtheid**
+(*probability density*).
 
 In @sec-kansverdelingen vergeleken we een kansverdeling 
 met een histogram van een *enorm* (oneindig) aantal waarnemingen.
@@ -557,7 +558,7 @@ b.  Schat voor ieder van de kansenverdelingen de kans op een waarneming
 library(ggplot2)
 
 # Definieer de standaardnormale verdeling
-x <- seq(-3.5, 3.5, length.out = 200)
+x <- seq(-3.5, 3.5, length.out = 350)
 data <- data.frame(x = x, y = dnorm(x))
 
 oppervlak <- function(a, b){# Gebied tussen a en b kleuren
@@ -675,7 +676,7 @@ Dat is dus ook de waarde waar de cumulatieve verdeling
   gelijk is aan $\frac{1}{2}$.
 
 Het **gemiddelde** van een kansverdeling van een kansvariabele $X$ 
-  wordt ook wel de **verwachtingswaarde** genoemd.
+  wordt ook wel de **verwachtingswaarde** (*expected value*) genoemd.
 Een nette notatie is $\ev{X}$;
   die bijzondere $\mathbb{E}$ staat voor *Expectation*.
 Vaak wordt ook het Griekse symbool $\mu$ (spreek uit: "mu") gebruikt,
@@ -857,7 +858,7 @@ e.  Bereken de standaarddeviatie.
 Kansverdelingen kunnen allerlei vormen hebben.
 Maar bepaalde kansverdelingen komen in theorie en praktijk steeds weer terug
 en hebben daarom een naam gekregen.
-De meest beroemde is de **normale verdeling**, 
+De meest beroemde is de **normale verdeling** (*normal distribution*), 
 ook wel de **normaalverdeling**, **Gaussische verdeling** of **Gausscurve** genoemd,
 naar de grote Wiskundige Carl Friedrich Gauss (1777--1855).
 
@@ -1028,7 +1029,7 @@ normaalGeneriek + oppervlak(-2, 2) + proportie("0,95...")
 
 ::: {#exr-normale-verdeling .pepexr}
   
-## Vuistregels voor de normale verdeling toepassen
+## Het toepassen van de vuistregels voor de normale verdeling
 <br>
 
 Als je nadenkt over kansverdelingen
@@ -1084,7 +1085,7 @@ door een groot aantal andere kansvariabelen vaak ongeveer normaal verdeeld zal z
 Dat geldt bijvoorbeeld als een variabele de *optelsom* is
 van een groot aantal kansvariabelen.
 De wiskundige stelling die dat bewijst
-wordt de **Centrale Limietstelling** genoemd. 
+wordt de **Centrale Limietstelling** (*Central Limit Theorem*) genoemd. 
 In @sec-centrale-limiet komen we daar nog even op terug.
 
 In de praktijk worden veel variabelen beïnvloed
@@ -1109,7 +1110,7 @@ dan je op basis van de normale verdeling zou verwachten.
 
 ## De standaardnormale verdeling
   
-De **standaardnormale verdeling** (@fig-std-normaal) 
+De **standaardnormale verdeling** (*standard normal distribution*) (@fig-std-normaal) 
 is een speciaal geval van de normale verdeling 
 waarbij de verwachtingswaarde $\mu$ gelijk is aan 0 
 en de standaarddeviatie $\sigma$ gelijk aan 1. 
@@ -1329,7 +1330,7 @@ Die transformatie wordt in het volgende hoofdstuk heel belangrijk.
 Met R kun je de kansen voor een normale verdeling opvragen 
 met de functie `pnorm()`. 
 Die functie geeft de cumulatieve verdeling van de normale verdeling.
-Bijvoorbeeld:
+Neem bijvoorbeeld:
 ```{r}
 #| eval: false
 
@@ -1339,7 +1340,7 @@ Dit commando geeft de kans op een waarneming kleiner dan 0
 volgens de standaardnormale verdeling.
 
 a.  Maak eerst een schets van de standaardnormale verdeling. 
-    Bedenk eerst wat de cumulatieve verdeling op $Z = 0$ moet zijn,
+    Bedenk wat de cumulatieve verdeling op $Z = 0$ moet zijn,
     en voer dan het commando `pnorm(0)` uit
     om dat te controleren.
 
@@ -1489,13 +1490,21 @@ op het oog al moeilijk te onderscheiden.
 In de limiet van $\text{df}\rightarrow \infty$ convergeert de $t$-verdeling
 ook echt naar de standaardnormale verdeling.
 
-::: {#exr-t-verdeling .Rexr}
+::: {#exr-t-verdeling .pepexr}
 
-::: {.todo-box}
+## Dijken
 
-Een verwerkingsvraag.
+Om te berekenen hoe hoog de zeedijken moeten zijn
+maken we gebruik van een model
+dat veronderstelt dat de waterstand bij vloed
+normaal verdeeld is.
 
-:::
+Stel dat in werkelijkheid de verdeling 
+meer lijkt op een $t$-verdeling.
+Welk effect heeft dat op onze risico-berekeningen?
+
+(Je hoeft niets te berekenen,
+alleen te beredeneren.)
 
 :::
 
@@ -1722,7 +1731,7 @@ Kritieke waarden van de standaardnormale verdeling en de $t$-verdeling.
 
 :::
 
-De grenswaarde van het rechter gebied wordt een **kritieke waarde** van de verdeling genoemd.
+De grenswaarde van het rechter gebied wordt een **kritieke waarde** (*critical value*) van de verdeling genoemd.
 In dit geval gaat het om de kritieke waarde die hoort bij een kans van 0,2
 (voor beide oranje gebieden samen).
 Deze kritieke waarde wordt daarom genoteerd als $Z_{0{,}2(2)}$.
@@ -1895,20 +1904,34 @@ qnorm(0.9)
 Het resultaat is precies de grenswaarde van (afgerond) 1,28
 die je in @fig-krit-1 aan de $x$-as ziet staan.
 
-Voor een algemene waarde van $\alpha$ kun je het als volgt aanpakken:
+Voor iedere willekeurige waarde van alfa 
+kun je het als volgt aanpakken:
 ```{r}
-alpha <- 0.2
-qnorm(1 - alpha/2)
+alfa <- 0.2
+qnorm(1 - alfa/2)
 ```
 
-::: {#exr-krit-norm-R .Rexr}
+::: {#exr-krit-norm-R .mixedexr}
 
 ## Kritieke waarden voor de normale verdeling.
 <br>
 
-::: {.todo-box}
-schrijven
-:::
+a.  Bekijk @fig-krit-1 nog eens. 
+    Dat is een illustratie voor de kritieke waarde
+    bij $\alpha = 0{,}2$.
+    
+    Schets net zo'n plaatje, maar nu voor
+    $\alpha = 0{,}1$.
+    
+    Gebruik `qnorm()` om de kritieke waarde uit te rekenen
+    en geef die aan op de $Z$-as.
+    
+b.  Beredeneer zonder te rekenen: is $Z_{0{,}5(2)}$ groter of kleiner
+    dan $Z_{0{,}1(2)}$?
+    
+    Tip: Schetsen helpt!
+
+c.  Beredeneer: wat is $Z_{1(2)}$?
 
 :::
 
@@ -1920,8 +1943,8 @@ Omdat de kritieke waarde afhangt van het aantal vrijheidsgraden
 zul je die aan de functie moeten meegeven:
 
 ```{r}
-alpha <- 0.2
-qt(1 - alpha/2, df = 4)
+alfa <- 0.2
+qt(1 - alfa/2, df = 4)
 ```
 Hier komt precies de waarde van (afgerond) 1,53 uit die in de figuur
 is aangegeven.
@@ -1931,9 +1954,18 @@ is aangegeven.
 ## Oefenen met kritieke waarden van de $t$-verdeling
 <br>
 
-::: {.todo-box}
-schrijven
-:::
+a.  Bereken met R de kritieke waarde $t_{0{,}05(2)2}$.
+
+    Is deze waarde kleiner of groter dan die van de 
+    normale verdeling bij dezelfde $\alpha$?
+    
+    Waarom?
+
+b.  Berekend met R de kritieke waarde $t_{0{,}05(2)100}$.
+    
+    Is deze waarde kleiner of groter dan bij 2 vrijheidsgraden?
+    
+    Waarom?
 
 :::
 
