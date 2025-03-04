@@ -1,0 +1,2671 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Uitwerkingen statistiek – Biologische Modellen en Statistiek</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Appendices/spiekbriefjes.html" rel="next">
+<link href="../Appendices/antwoorden_modellen.html" rel="prev">
+<link href="../figuren/favicon/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Appendices/antwoorden_R.html">Bijlagen</a></li><li class="breadcrumb-item"><a href="../Appendices/antwoorden_statistiek.html">Uitwerkingen statistiek</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../figuren/favicon/android-chrome-512x512.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Biologische <br>Modellen en Statistiek</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Schakel donkere modus"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Cursusinformatie</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inleiding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../cursusinformatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Algemene cursusinformatie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../planning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Studieplanning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../links.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Handige links</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Basisprincipes van R</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/introductie_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie en installatie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/introductie_R2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Programmeren in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/intro_R_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefenvragen R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Basiswiskunde</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/inleiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inleiding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/algebra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Algebra</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/breuken.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Breuken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/exponenten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Exponenten &amp; Logaritmen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/limieten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Asymptoten &amp; Limieten</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/afgeleiden.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Afgeleiden</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/schetsen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Functies schetsen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/wiskunde_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefenvragen wiskunde</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Biologische modellen</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/intro_modellen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introductie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/exponentielegroei.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Exponentiële groei</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/odes_basis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelleren met ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/dichtheidseffecten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Dichtheidseffecten</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/ruimtelijkegroei.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Ruimtelijke groei</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/predatorprooi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Predator-prooi interacties</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/odes_grind.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs modelleren in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/competitie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Competitie en evolutie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/zwermen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Zwermen en foerageren</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/reactiediffusie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reacties en diffusie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/exciteerbaremedia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Exciteerbare media</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mini-project</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/oefenvragen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefenvragen</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Statistiek</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/Inleiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Inleiding: Waarom (bio)statistiek?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/BeschrijvendeStatistiek.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Variabelen en hun verdelingen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/Onzekerheid.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Onzekerheid in schattingen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/Kansrekenen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Kansen en kansmodellen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/Kansverdelingen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Kansverdelingen</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Bijlagen</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_wiskunde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden wiskunde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_modellen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden modellen</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_statistiek.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Uitwerkingen statistiek</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/spiekbriefjes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spiekbriefjes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/dankwoord.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dankwoord</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="-1">
+    <h2 id="toc-title">Inhoudsopgave</h2>
+   
+  <ul class="collapse">
+  <li><a href="#uitwerkingen-sec-variabelen-verdelingen" id="toc-uitwerkingen-sec-variabelen-verdelingen" class="nav-link active" data-scroll-target="#uitwerkingen-sec-variabelen-verdelingen">Uitwerkingen <span>20&nbsp; Variabelen en hun verdelingen</span></a></li>
+  <li><a href="#uitwerkingen-sec-onzekerheid" id="toc-uitwerkingen-sec-onzekerheid" class="nav-link" data-scroll-target="#uitwerkingen-sec-onzekerheid">Uitwerkingen <span>21&nbsp; Onzekerheid in schattingen</span></a></li>
+  <li><a href="#uitwerkingen-sec-kans" id="toc-uitwerkingen-sec-kans" class="nav-link" data-scroll-target="#uitwerkingen-sec-kans">Uitwerkingen <span>22&nbsp; Kansen en kansmodellen</span></a></li>
+  <li><a href="#uitwerkingen-sec-kansverdelingen" id="toc-uitwerkingen-sec-kansverdelingen" class="nav-link" data-scroll-target="#uitwerkingen-sec-kansverdelingen">Uitwerkingen <span>23&nbsp; Kansverdelingen</span></a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Appendices/antwoorden_R.html">Bijlagen</a></li><li class="breadcrumb-item"><a href="../Appendices/antwoorden_statistiek.html">Uitwerkingen statistiek</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Uitwerkingen statistiek</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="uitwerkingen-sec-variabelen-verdelingen" class="level2">
+<h2 class="anchored" data-anchor-id="uitwerkingen-sec-variabelen-verdelingen">Uitwerkingen <a href="../Statistiek/BeschrijvendeStatistiek.html" class="quarto-xref"><span>20&nbsp; Variabelen en hun verdelingen</span></a></h2>
+<section id="exr-typen-vars" class="level3">
+<h3 class="anchored" data-anchor-id="exr-typen-vars"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-typen-vars" class="quarto-xref">Oefening&nbsp;<span>20.1</span></a></h3>
+<ol type="a">
+<li><p>categorisch &amp; nominaal</p></li>
+<li><p>numeriek &amp; discreet</p></li>
+<li><p>categorisch &amp; ordinaal</p></li>
+<li><p>numeriek &amp; continu</p></li>
+<li><p>numeriek &amp; continu</p></li>
+<li><p>discreet &amp; numeriek</p></li>
+</ol>
+</section>
+<section id="exr-nhanes" class="level3">
+<h3 class="anchored" data-anchor-id="exr-nhanes"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-NHANES" class="quarto-xref">Oefening&nbsp;<span>20.2</span></a></h3>
+<ol type="a">
+<li><p>–</p></li>
+<li><p>–</p></li>
+<li><p><code>MaritalStatus</code> is een nominale variabele met niveaus “Divorced”, “LivePartner”, “Married”, “NeverMarried”, “Separated”, of “Widowed”.</p></li>
+<li><p><code>Height</code> is een numerieke, continue variabele. De eenheid is cm.</p></li>
+<li><p><code>nBabies</code> is een numerieke, discrete variabele. Bij mannen is <code>NA</code> ingevuld, voor <em>Not Available</em>. Dit is de nette manier om in R missende gegevens aan te geven.</p>
+<p>Er zijn 5020 vrouwen in de dataset:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(NHANES)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(NHANES)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(NHANES<span class="sc">$</span>Gender <span class="sc">==</span> <span class="st">"female"</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5020</code></pre>
+</div>
+</div>
+<p>Bij een klein aantal vrouwen is 0 ingevuld:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(NHANES<span class="sc">$</span>nBabies <span class="sc">==</span> <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+</div>
+<p>Dat zijn er wel erg weinig voor zo’n grote groep. Het vermoeden is dus dat bij vrouwen zonder kinderen ook vaak <code>NA</code> is ingevuld.</p></li>
+<li><p>De eerste regel van de uitvoer is:</p>
+<pre><code>Classes ‘tbl_df’, ‘tbl’ and 'data.frame':    10000 obs. of  76 variables:</code></pre>
+<p>We lezen hier af dat er 10000 waarnemingen zijn van 76 variabelen.</p></li>
+</ol>
+</section>
+<section id="exr-termen" class="level3">
+<h3 class="anchored" data-anchor-id="exr-termen"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-termen" class="quarto-xref">Oefening&nbsp;<span>20.3</span></a></h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 16%">
+<col style="width: 17%">
+<col style="width: 18%">
+<col style="width: 15%">
+<col style="width: 11%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Figuur</th>
+<th style="text-align: center;">Symmetrisch</th>
+<th style="text-align: center;">Links-scheef</th>
+<th style="text-align: center;">Rechts-scheef</th>
+<th style="text-align: center;">Klokvormig</th>
+<th style="text-align: center;">Uniform</th>
+<th style="text-align: center;">Bimodaal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">a.</td>
+<td style="text-align: center;"><span class="math inline">\(\checkmark\)</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span class="math inline">\(\checkmark\)</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">b.</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span class="math inline">\(\checkmark\)</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">c.</td>
+<td style="text-align: center;"><span class="math inline">\(\checkmark\)</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span class="math inline">\(\checkmark\)</span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">d.</td>
+<td style="text-align: center;"><span class="math inline">\(\checkmark\)</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span class="math inline">\(\checkmark\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">e.</td>
+<td style="text-align: center;"><span class="math inline">\(\checkmark\)</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">f.</td>
+<td style="text-align: center;"><span class="math inline">\(\checkmark\)</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="exr-cumul-verd" class="level3">
+<h3 class="anchored" data-anchor-id="exr-cumul-verd"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-cumul-verd" class="quarto-xref">Oefening&nbsp;<span>20.4</span></a></h3>
+<ol type="a">
+<li><p>Ongeveer 54%.</p></li>
+<li><p>Ongeveer 81%.</p></li>
+<li><p>Ongeveer 86% weegt hoogstens 100kg, en 54% weegt hoogstens 54%. Tussen die grenzen zit dus <span class="math inline">\(86\% - 54\% = 32\%\)</span>.</p></li>
+<li><p>Ongeveer 25kg.</p></li>
+</ol>
+</section>
+<section id="exr-cijfer" class="level3">
+<h3 class="anchored" data-anchor-id="exr-cijfer"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-cijfer" class="quarto-xref">Oefening&nbsp;<span>20.5</span></a></h3>
+<ol type="a">
+<li><p>Het gemiddelde gaat nu van een 6,6 naar een 7,8.</p></li>
+<li><p>De mediaan blijft hetzelfde. De “middelste” waarde van de dataset is namelijk niet veranderd.</p></li>
+<li><p>Het gemiddelde is een stuk gevoeliger voor uitbijters. In dit geval had het verschuiven van de uitbijter geen enkel effect op de mediaan.</p></li>
+</ol>
+</section>
+<section id="exr-centrummaten" class="level3">
+<h3 class="anchored" data-anchor-id="exr-centrummaten"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-centrummaten" class="quarto-xref">Oefening&nbsp;<span>20.6</span></a></h3>
+<ol type="a">
+<li><p>Gemiddelde: 6,78. Mediaan: 4.</p></li>
+<li><p>De sessie met 24 landingen is nogal een uitbijter. Die ene waarde heeft een groot effect op het gemiddelde. De mediaan geeft in dit geval misschien een representatiever beeld.</p></li>
+</ol>
+</section>
+<section id="exr-kwantielen" class="level3">
+<h3 class="anchored" data-anchor-id="exr-kwantielen"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-kwantielen" class="quarto-xref">Oefening&nbsp;<span>20.7</span></a></h3>
+<p><strong>a.</strong> en <strong>b.</strong> Een overzicht van de kwartielen:</p>
+<p><span class="math display">\[ 12\     15\     18\   20 \underset{\mathrm{Q1} = 20{,}5}{|} 21\    23\   25\    28 \underset{\mathrm{Q2} = 29}{|} 30\    32\    35\    38 \underset{\mathrm{Q3} = 39}{|} 40\    42\    45\    46 \]</span></p>
+<ol start="3" type="a">
+<li><p><span class="math inline">\(\text{IKA} = \text{Q3} - \text{Q1} = 39 - 20{,}5 = 18{,}5\)</span>.</p></li>
+<li><p>Nu worden de kwartielen:</p></li>
+</ol>
+<p><span class="math display">\[ 12\    15\    18\   19\underset{\mathrm{Q1} = 19{,}5}{|} 20 \    21\   23\    25\quad     \underset{\mathrm{Q2} = 29}{28\phantom{|}} \quad    30\    32\   35\    38 \underset{\mathrm{Q3} = 39}{|} 40\    42\    45\    46 \]</span> De IKA is dus: <span class="math display">\[\text{IKA} = \text{Q3} - \text{Q2} = 39 - 19{,}5 = 19{,}5. \]</span></p>
+</section>
+<section id="exr-poezen" class="level3">
+<h3 class="anchored" data-anchor-id="exr-poezen"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-poezen" class="quarto-xref">Oefening&nbsp;<span>20.8</span></a></h3>
+<p>Let op! In de berekeningen hieronder is het heel belangrijk dat je niet tussendoor afrondt. Als je een eerder resultaat later hergebruikt, gebruik dan het <em>onafgeronde</em> resultaat.</p>
+<ol type="a">
+<li><p>We tellen alle gewichten bij elkaar op: <span class="math display">\[\sum_{i=1}^3 Y_i = 3{,}0 \, \textrm{kg} + 3{,}4\,\textrm{kg} + 4{,}2\,\textrm{kg} = 10{,}6\,\textrm{kg}.\]</span></p></li>
+<li><p>Boven de deelstreep worden alle getallen bij elkaar opgeteld, eronder staat het aantal getallen, namelijk 3. Dit is dezelfde formule als die van het gemiddelde. Het resultaat is:</p>
+<p><span class="math display">\[\overline{Y} = \frac{\sum_{i=1}^3 Y_i}{3} = 3{,}53\,\text{kg}.\]</span></p></li>
+<li><p><span class="math inline">\(i=2\)</span> onder het sommatieteken geeft aan dat we beginnen met optellen bij het tweede datapunt. We tellen dus alleen <span class="math inline">\(Y_2\)</span> en <span class="math inline">\(Y_3\)</span> bij elkaar op:</p>
+<p><span class="math display">\[\sum_{i=2}^3 Y_i = 3{,}4\,\textrm{kg} + 4{,}2\,\textrm{kg}=7{,}6\,\text{kg}.\]</span></p></li>
+<li><p>Er staat nu niet 3 bovenin het sommatieteken, maar <span class="math inline">\(n\)</span>. Maar <span class="math inline">\(n\)</span> is hier gelijk aan 3, en dus we krijgen hier hetzelfde antwoord als bij <strong>a</strong>: <span class="math inline">\(10{,}6\,\textrm{kg}\)</span>.</p></li>
+<li><p>Omdat het kwadraat-teken hier binnen de sommatie staat moeten we elk datapunt eerst kwadrateren, en daarna de resultaten bij elkaar optellen:</p>
+<p><span class="math display">\[\sum^n_{i=1} Y_i^2 = (3{,}0\,\textrm{kg})^2 + (3{,}4\,\textrm{kg})^2 + (4{,}2\,\textrm{kg})^2 = 38{,}2\,\textrm{kg}^2\]</span></p></li>
+<li><p>Nu staat de hele sommatie tussen haken en het kwadraat daarbuiten. Tussen haken staat dus het resultaat van <strong>a</strong>, en dat moeten we kwadrateren:</p>
+<p><span class="math display">\[\left( \sum^n_{i=1} Y_i\right)^2 = (10,6\, \, \textrm{kg})^2 = 112\,\textrm{kg}^2.\]</span></p></li>
+<li><p>We tellen hier de afwijkingen van het gemiddelde (residuen) bij elkaar op. Deze som is altijd gelijk aan nul! Je kunt dat ook wiskundig aantonen: <span class="math display">\[ \sum_{i = 1}^n (Y_i - \overline{Y}) = \left(\sum_{i = 1}^n Y_i\right) - \sum_{i = 1}^n \overline{Y} = n \overline{Y} - n \overline{Y} = 0.\]</span></p></li>
+<li><p>Hier moeten we eerst het kwadraat van elk verschil uitrekenen. Hierdoor wordt het uiteindelijke resultaat niet meer 0 omdat de negatieve waardes die we eruit krijgen positief worden:</p></li>
+</ol>
+<p><span class="math display">\[\sum^n_{i=1} (Y_i - \overline{Y})^2 = (3{,}0\,\textrm{kg} - 3{,}53\,\textrm{kg})^2 + (3{,}4\,\textrm{kg} - 3{,}53\,\textrm{kg})^2 + (4{,}2\,\textrm{kg}-3{,}53\,\textrm{kg})^2 = 0{,}747\,\textrm{kg}^2.\]</span></p>
+<ol type="i">
+<li><p>De formule voor de variantie is: <span class="math display">\[V_X = \frac{\sum_i^n \left(x_i - \overline{x}\right)^2}{n-1}.\]</span> De teller in deze formule komt overeen met ons antwoord van <strong>h</strong>; deze hoeven we dus niet nog een keer uit te rekenen. We krijgen dus:</p>
+<p><span class="math display">\[V_X = \frac{0{,}747}{3-1} = 0{,}373\,\textrm{kg}^2.\]</span></p></li>
+</ol>
+</section>
+<section id="exr-schat-sd" class="level3">
+<h3 class="anchored" data-anchor-id="exr-schat-sd"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-schat-sd" class="quarto-xref">Oefening&nbsp;<span>20.9</span></a></h3>
+<ol type="a">
+<li><p>Standaarddeviate: 1,0. IKA: 1,3.</p></li>
+<li><p>Standaarddeviate: 2,8. IKA: 3,5.</p></li>
+<li><p>Standaarddeviate: 0,3. IKA: 0,5.</p></li>
+<li><p>Standaarddeviate: 1,8. IKA: 3,1.</p></li>
+<li><p>Standaarddeviate: 2,7. IKA: 4,7.</p></li>
+<li><p>Standaarddeviate: 0,2. IKA: 0,3.</p></li>
+</ol>
+</section>
+<section id="exr-gewogen-gemiddelden" class="level3">
+<h3 class="anchored" data-anchor-id="exr-gewogen-gemiddelden"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-gewogen-gemiddelden" class="quarto-xref">Oefening&nbsp;<span>20.10</span></a></h3>
+<p>We kunnen niet de gewone formule voor het gemiddelde gebruiken, want ieder cijfer heeft nu een ander “gewicht”. We kunnen het gewogen gemiddelde berekenen door elk cijfer te vermenigvuldigen met het bijbehorende gewicht, en het resultaat te delen door de som van de gewichten:</p>
+<p><span class="math display">\[\frac{10\times 5+60\times 8 + 30\times 7}{10 + 60 + 30}=\frac{10\times 5+60\times 8 + 30\times 7}{100}=7{,}4.\]</span> Het is dus net alsof je 10 keer een 5 hebt gehaald, 60 keer een 8, en 30 keer een 7, met in totaal 100 cijfers.</p>
+<p>We kunnen hetzelfde resultaat krijgen als we elk cijfer vermenigvuldigen met het kommagetal dat hoort bij het percentage, want:</p>
+<p><span id="eq-gew-gem"><span class="math display">\[
+\begin{align}
+\frac{10\times 5+60\times 8 + 30\times 7}{100} &amp;= 0{,}1\times 5+0{,}6\times 8 + 0{,}3\times 7\\
+&amp; = 7{,}4.
+\end{align}
+\tag{1}\]</span></span></p>
+</section>
+<section id="exr-gemiddelde-frequentietabel" class="level3">
+<h3 class="anchored" data-anchor-id="exr-gemiddelde-frequentietabel"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-gemiddelde-frequentietabel" class="quarto-xref">Oefening&nbsp;<span>20.11</span></a></h3>
+<ol type="a">
+<li><p>De waarnemingen zijn 5, 3, 6, 2, 4, 3, 3, 2, 2, 5. Het gemiddelde is <span class="math inline">\(\left(\sum_{i = 1}^10 x_i\right)/10 = 3{,}5\)</span>.</p></li>
+<li><p>We kunnen <span class="math inline">\(5 + 3 + 6 + 2 + 4 + 3 + 3 + 2 + 2 + 5\)</span> schrijven als <span class="math inline">\(3 \times 2 + 3\times 3 + 1 \times 4 + 2 \times 5 + 1 \times 6\)</span>. Daarom geldt ook: <span id="eq-gem-1"><span class="math display">\[ \overline{x} = \frac{\sum_{i = 1}^{10} x_i}{10} = \frac{3\times {\color{darkorange}2} + 3\times {\color{darkorange}3} + 1\times {\color{darkorange}4} + 2\times {\color{darkorange}5} + 1 \times {\color{darkorange}6} }{10}. \tag{2}\]</span></span></p>
+<p>Het tweede (oranje) getal in de vermenigvuldigingen is dus telkens waarde van de variabele (het aantal vogels), het eerste getal de absolute frequentie van die waarde.</p></li>
+<li><p>De noemer van <a href="#eq-gem-1" class="quarto-xref">Vergelijking&nbsp;<span>2</span></a> kunnen we verrekenen met de zwarte getallen in de teller:</p>
+<p><span id="eq-gem-2"><span class="math display">\[
+\begin{align}
+\frac{\sum_{i = 1}^{10} x_i}{10} &amp; = \frac{3\times {\color{darkorange}2} + 3\times {\color{darkorange}3} + 1\times {\color{darkorange}4} + 2\times {\color{darkorange}5} + 1 \times {\color{darkorange}6} }{10}\\
+&amp; = \left(\frac{3}{10}\right)\times {\color{darkorange}2} + \left(\frac{3}{10}\right)\times {\color{darkorange}3} + \left(\frac{1}{10}\right)\times {\color{darkorange}4} + \left(\frac{2}{10}\right)\times {\color{darkorange}5} +\left(\frac{1}{10}\right)\times {\color{darkorange}6}\\
+&amp; = 0{,}3 \times {\color{darkorange}2} + 0{,}3\times {\color{darkorange}3} + 0{,}1 \times {\color{darkorange}4} + 0{,}2\times {\color{darkorange}5} +0{,}1\times {\color{darkorange}6}.
+\end{align}
+\tag{3}\]</span></span></p>
+<p>Het gevolg is dat we uiteindelijk steeds de <em>relatieve frequentie</em> met de waarde van de variabele vermenigvuldigen.</p></li>
+<li><p><a href="#eq-gem-2" class="quarto-xref">Vergelijking&nbsp;<span>3</span></a> is niets anders dan de som over alle mogelijke uitkomsten, steeds vermenigvuldigd met hun relatieve frequentie. Dat is precies wat vergelijking <a href="../Statistiek/BeschrijvendeStatistiek.html#eq-mean-rel-freq" class="quarto-xref">Vergelijking&nbsp;<span>20.7</span></a> uitdrukt.</p></li>
+<li><p>Vergelijk <a href="#eq-gem-2" class="quarto-xref">Vergelijking&nbsp;<span>3</span></a> met <a href="#eq-gew-gem" class="quarto-xref">Vergelijking&nbsp;<span>1</span></a>. De boodschap is: als een frequentietabel gegeven is, kun je het gemiddelde uitrekenen door een <em>gewogen gemiddelde</em> uit te rekenen met de <em>relatieve frequenties</em> als de gewichten.</p></li>
+</ol>
+</section>
+<section id="exr-tuinvogeltelling" class="level3">
+<h3 class="anchored" data-anchor-id="exr-tuinvogeltelling"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-tuinvogeltelling" class="quarto-xref">Oefening&nbsp;<span>20.12</span></a></h3>
+<p><code>Vogelsoort</code> is een nominale variabele. Een histogram, cumulatieve frequentiepolygoon, of boxplot is dus niet van toepassing. Dan blijft antwoord D, het staafdiagram, over. Dat past ook: een staafdiagram kan voor iedere vogelsoort de frequentie laten zien.</p>
+</section>
+<section id="exr-zetelverdeling" class="level3">
+<h3 class="anchored" data-anchor-id="exr-zetelverdeling"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-zetelverdeling" class="quarto-xref">Oefening&nbsp;<span>20.13</span></a></h3>
+<ol type="a">
+<li><p>Aangezien we vooral geïnteresseerd zijn de relatieve frequenties van de zetelverdeling, zou een taartdiagram goed werken.</p></li>
+<li><p>Het is leuk dat deze visualisatie de zetelverdeling laat zien door letterlijk de opstelling van de zetels (stoelen) in de Tweede Kamer weer te geven. Een nadeel is dat het aantal zetels per partij niet direct in het oog springt; je moet een beetje zoeken naar de zetels van iedere kleur. Een subtieler punt: de zetels zijn niet allemaal even groot weergegeven! Het zetelaantal van een partij en de totale oppervlakte van de bijbehorende kleur komen daardoor niet precies overeen, wat misleidend kan zijn.</p></li>
+</ol>
+</section>
+<section id="exr-factoren" class="level3">
+<h3 class="anchored" data-anchor-id="exr-factoren"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-factoren" class="quarto-xref">Oefening&nbsp;<span>20.14</span></a></h3>
+<ol type="a">
+<li><p><code>naam</code>: nominaal<br>
+<code>level</code>: discreet<br>
+<code>totale_speeltijd</code>: continu<br>
+<code>klassement</code>: ordinaal<br>
+<code>console</code>: nominaal.</p></li>
+<li><p><code>naam</code>: character<br>
+<code>level</code>: numerical<br>
+<code>totale_speeltijd</code>: numerical<br>
+<code>klassement</code>: character<br>
+<code>console</code>: character.</p></li>
+<li><p>De variabelen <code>klassement</code> en <code>console</code> zijn categorisch en kunnen dus goed als factor worden opgeslagen. Dat geldt op zich ook voor variabele <code>naam</code>, maar omdat de namen uniek zijn wordt de lijst met niveaus dan even lang als de oorspronkelijke vector; deze variabele zal als factor dus niet efficiënter kunnen worden opgeslagen dan character string.</p></li>
+<li><p>Je kunt <code>klassement</code> direct als vector definieren:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>naam <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Mario"</span>, <span class="st">"Luigi"</span>, <span class="st">"Peach"</span>, <span class="st">"Toad"</span>, <span class="st">"Bowser"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>level <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">10</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>totale_speeltijd <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">57884</span>, <span class="dv">14841</span>, <span class="dv">7709</span>, <span class="dv">5513</span>, <span class="dv">109867</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># definieer klassement direct als factor:</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>klassement <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">"Goud"</span>, <span class="st">"Brons"</span>, <span class="st">"Zilver"</span>, <span class="st">"Zilver"</span>, <span class="st">"Goud"</span>))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>console <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Switch"</span>, <span class="st">"Switch"</span>, <span class="st">"Wii"</span>, <span class="st">"Wii"</span>, <span class="st">"Switch"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">data.frame</span>(naam, level, totale_speeltijd, klassement, console)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Alternatief is om de kolom eerst als character vector te definieren en achteraf om te zetten naar een factor:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>naam <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Mario"</span>, <span class="st">"Luigi"</span>, <span class="st">"Peach"</span>, <span class="st">"Toad"</span>, <span class="st">"Bowser"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>level <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">10</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>totale_speeltijd <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">57884</span>, <span class="dv">14841</span>, <span class="dv">7709</span>, <span class="dv">5513</span>, <span class="dv">109867</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># definieer klassement eerst als vector van type character:</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>klassement <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Goud"</span>, <span class="st">"Brons"</span>, <span class="st">"Zilver"</span>, <span class="st">"Zilver"</span>, <span class="st">"Goud"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>console <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Switch"</span>, <span class="st">"Switch"</span>, <span class="st">"Wii"</span>, <span class="st">"Wii"</span>, <span class="st">"Switch"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">data.frame</span>(naam, level, totale_speeltijd, klassement, console)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># kolom klassement omzetten naar factor</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>klassement <span class="ot">=</span> <span class="fu">factor</span>(df<span class="sc">$</span>klassement)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>Vraag de niveaus op:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(klassement)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Brons"  "Goud"   "Zilver"</code></pre>
+</div>
+</div></li>
+</ol>
+</section>
+<section id="exr-freqtab" class="level3">
+<h3 class="anchored" data-anchor-id="exr-freqtab"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-freqtab" class="quarto-xref">Oefening&nbsp;<span>20.15</span></a></h3>
+<ol type="a">
+<li><p>Het is een ordinale variabele. Deze is als een factor opgeslagen, met 5 niveaus:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(gezondheid)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Factor w/ 5 levels "Excellent","Vgood",..: 3 3 3 NA 3 NA NA 2 2 2 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(gezondheid)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Excellent" "Vgood"     "Good"      "Fair"      "Poor"     </code></pre>
+</div>
+</div></li>
+<li><p>Het valt op dat er veel regels zijn waar niet een van de niveuas maar <code>NA</code> is ingevuld.</p></li>
+<li><p>Deze code selecteerd alle waarden die niet gelijk zijn aan <code>NA</code>. De functie <code>is.na()</code> bekijkt alle waarden in de factor en produceert een boolean vector met <code>TRUE</code> voor elke <code>NA</code>, en anders <code>FALSE</code>. Voorbeeld:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>voorbeeld_vector <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Biologie van Dieren"</span>, <span class="cn">NA</span>, <span class="st">"Microbiologie"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.na</span>(voorbeeld_vector)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE  TRUE FALSE</code></pre>
+</div>
+</div>
+<p>Het uitroepteken in <code>!is.na()</code> maakt van elke <code>TRUE</code> een <code>FALSE</code> en <em>vice versa</em>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="sc">!</span><span class="fu">is.na</span>(voorbeeld_vector)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE FALSE  TRUE</code></pre>
+</div>
+</div>
+<p>Door die vector binnen de vierkante haken te plaatsen, selecteer je alleen waarden die niet <code>NA</code> zijn.</p></li>
+<li><p>Het resultaat is:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>gezondheid.t</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>gezondheid
+Excellent     Vgood      Good      Fair      Poor 
+      878      2508      2956      1010       187 </code></pre>
+</div>
+</div>
+<p>De functie <code>table()</code> heeft voor ieder niveau van <code>gezondheid</code> geteld hoe vaak die waarde voorkomt in <code>gezondheid</code>. Het resultaat is een absolutie frequentietabel; de waardes komen overeen met de tabel uit <a href="../Statistiek/BeschrijvendeStatistiek.html#exm-freq-gezondheidsstatus" class="quarto-xref">Voorbeeld&nbsp;<span>20.4</span></a>.</p></li>
+<li><p>Je uiteindelijke code zou er zo uit kunnen zien:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(NHANES)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>gezondheid <span class="ot">&lt;-</span> NHANES<span class="sc">$</span>HealthGen</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>gezondheid <span class="ot">&lt;-</span> gezondheid[<span class="sc">!</span><span class="fu">is.na</span>(gezondheid)]</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>gezondheid.t <span class="ot">&lt;-</span> <span class="fu">table</span>(gezondheid)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>(gezondheid.f <span class="ot">&lt;-</span> gezondheid.t<span class="sc">/</span><span class="fu">sum</span>(gezondheid.t))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>gezondheid
+ Excellent      Vgood       Good       Fair       Poor 
+0.11646107 0.33267012 0.39209444 0.13397002 0.02480435 </code></pre>
+</div>
+</div>
+<p>In de laatste regel delen we de gehele (absolutie) frequentietabel door het totaal aantal waarnemingen om zo de relatieve frequenties te krijgen.</p></li>
+</ol>
+</section>
+<section id="exr-staafdiagram-opleiding" class="level3">
+<h3 class="anchored" data-anchor-id="exr-staafdiagram-opleiding"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-staafdiagram-opleiding" class="quarto-xref">Oefening&nbsp;<span>20.16</span></a></h3>
+<p>De volgende code geeft het staafdiagram:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">table</span>(NHANES<span class="sc">$</span>Education))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-14-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exr-variab-bedenken" class="level3">
+<h3 class="anchored" data-anchor-id="exr-variab-bedenken"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-variab-bedenken" class="quarto-xref">Oefening&nbsp;<span>20.17</span></a></h3>
+<ol type="a">
+<li><p>Een voorbeeld is een classificatie van de historische waarde van archeologische vondsten op een schaal van 1 tot 5.</p></li>
+<li><p>Stel dat je de tijdsduur van een bepaald proces meet, maar je kunt om praktische redenen maar 1 keer per uur meten. Dan zal de tijdsduur—op zich een continue variabele—alleen discrete waarden aannemen (1 uur, 2 uur , … ). Hoe grover de resolutie van je meting, hoe meer je geneigd zou zijn om de gegevens als discreet op te vatten.</p></li>
+<li><p>Of je bepaalde klassen als natuurlijk geordend be- schouwt, hangt erg af van de focus van je onderzoek. Bedrijfsnamen hebben bijvoorbeeld een alfabetische ordening. Meestal is die volledig irrelevant en zou je die naam als nominale variabele beschouwen. Maar wat als je wilt onderzoeken of bedrijven die bovenaan de lijst staan in een bedrijvengids vaker als eerste door klanten worden gebeld?</p></li>
+</ol>
+</section>
+<section id="exr-pieken" class="level3">
+<h3 class="anchored" data-anchor-id="exr-pieken"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-pieken" class="quarto-xref">Oefening&nbsp;<span>20.18</span></a></h3>
+<p>Het volgende kort scriptje maakt eerst het (bimodale) histogram en plot daarna gewicht (<code>Weight</code>) tegen leeftijd <code>AgeMonths</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(NHANES) <span class="co"># library NHANES inladen</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(NHANES)    <span class="co"># dataset in dataframe zetten</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(NHANES<span class="sc">$</span>Weight, <span class="at">breaks =</span> <span class="dv">40</span>)  <span class="co"># histogram van Weight, met ongeveer 40 klassen</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-15-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  NHANES<span class="sc">$</span>AgeMonths, NHANES<span class="sc">$</span>Weight,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Leeftijd (maand)"</span>, <span class="at">ylab =</span> <span class="st">"Gewicht (kg)"</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-16-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" style="width:71.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Aan deze plot kun je aflezen dat vrijwel alle personen die minder dan 40 kg wegen jonger zijn dan 160 maanden. De bimodaliteit van de gegevens komt dus doordat de populatie grofweg uit twee groepen bestaat: volwassenen met een modus rond 75kg en kinderen met een modus rond 20kg. (Die onderverdeling is natuurlijk niet scherp: jongeren in de puberteit vallen tussen de wal en het schip.)</p>
+<p>We kunnen dat verder demonstreren door aparte histogrammen te tekenen voor volwassenen en voor kinderen/jongeren. We trekken de grens bij 15 jaar.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(NHANES) <span class="co"># library NHANES inladen</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(NHANES)    <span class="co"># dataset in dataframe zetten</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>grens <span class="ot">&lt;-</span> <span class="dv">15</span> <span class="co"># grens in jaren</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>volwassen <span class="ot">&lt;-</span> (NHANES<span class="sc">$</span>AgeMonths <span class="sc">&lt;</span> grens<span class="sc">*</span><span class="dv">12</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(NHANES<span class="sc">$</span>Weight[volwassen], <span class="at">breaks =</span> <span class="dv">40</span>)  <span class="co"># histogram volwassenen</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-17-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(NHANES<span class="sc">$</span>Weight[<span class="sc">!</span>volwassen], <span class="at">breaks =</span> <span class="dv">40</span>)  <span class="co"># histogram van de jeugd</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-17-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exr-sprinkhanen" class="level3">
+<h3 class="anchored" data-anchor-id="exr-sprinkhanen"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-sprinkhanen" class="quarto-xref">Oefening&nbsp;<span>20.19</span></a>:</h3>
+<ol type="a">
+<li><p>Het gemiddelde:</p>
+<p><span class="math display">\[\bar{x} = \frac{\sum^n_{i=1}x_i}{n} = \frac{(3{,}5+2{,}4+3{,}4+3{,}9+2{,}7)\,\textrm{in}}{5} = 3{,}2 \, \textrm{in}.\]</span></p>
+<p>De variantie:</p>
+<p><span class="math display">\[
+\begin{align}
+V_X &amp; = \frac{\sum_i^n \left(x_i - \overline{x}\right)^2}{n-1}\\
+&amp;= \frac{\sum_i^n \left(3{,}5\,\textrm{in} - 3{,}18\,\textrm{in}\right)^2 + \left(2{,}4\,\textrm{in} - 3{,}18\,\textrm{in}\right)^2 + \ldots}{5 - 1}\\
+&amp;= 0{,}38\,\textrm{in}^2.\\
+\end{align}
+\]</span></p>
+<p>(Let op dat je tussendoor niet afrondt!)</p>
+<p>De standaarddeviatie:</p>
+<p><span class="math display">\[s_X = \sqrt{V_X} = \sqrt{0{,}377}\,\textrm{in} = 0{,}61\,\textrm{in}.\]</span></p>
+<p>Verifieren in R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">3.5</span>, <span class="fl">2.4</span>, <span class="fl">3.4</span>, <span class="fl">3.9</span>, <span class="fl">2.7</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(data)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.18</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(data)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.377</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(data)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6140033</code></pre>
+</div>
+</div></li>
+<li><p>Als we van iedere lengte 2 in aftrekken, verschuiven alle datapunten evenveel. Het gemiddelde neemt dus met 2 inches af en wordt 1,2 in.</p>
+<p>Als alle punten evenveel opschuiven, blijft de spreiding van de gegevens gelijk. (Alle afstanden tussen punten bijven onveranderd, en het histogram blijft even breed.) Daarom moeten ook variantie en standaarddeviatie onveranderd blijven.</p>
+<p>Verifieren in R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>data_verschoven <span class="ot">&lt;-</span> data <span class="sc">-</span> <span class="dv">2</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(data_verschoven)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.18</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(data_verschoven)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.377</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(data_verschoven)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6140033</code></pre>
+</div>
+</div></li>
+<li><p>Als alle waarden in cm worden uitgedrukt, worden ze allemaal een factor 2,54 groter. Dat betekent dat ook het gemiddelde een factor 2,54 groter wordt. Je ziet dit vanzelf als je invult dat <span class="math inline">\(1\,\text{in} = 2{,}54\,\text{cm}\)</span>:</p>
+<p><span class="math display">\[\overline{x} = 3{,}18\,\text{in} = 3{,}18 \times (2{,}54\,\text{cm}) = 3{,}18 \times (2{,}54)^2\,\text{cm}^2 = 8{,}1\,\text{cm}.\]</span></p>
+<p>Hetzelfde geldt voor de standaarddeviatie: als alle getallen een factor 2,54 groter worden, dan worden ook alle afstanden diezelfde factor groter, en de breedte van de verdeling ook. Ook dat volgt direct als we invullen dat <span class="math inline">\(1\,\text{in} = 2{,}54\,\text{cm}\)</span>:</p>
+<p><span class="math display">\[s_X = 0{,}614\,\text{in} = 0{,}614\times(2{,}54\,\text{cm}) = 1{,}56\,\text{cm}.\]</span></p>
+<p>De variantie is iets ingewikkelder. De variantie heeft dimensie lengte-in-het-kwadraat, en eenheid <span class="math inline">\(\text{in}^2\)</span>. Als alle waarden een factor 2{,}54 groter worden, dan wordt de variantie dus een factor <span class="math inline">\(2{,}54^2\)</span> groter! Je kunt dat ook zien in de formule voor <span class="math inline">\(V_X\)</span>: de residuen worden gekwadrateerd, en dus ook de factor <span class="math inline">\(2{,}54\)</span>.</p>
+<p>Maar je krijgt het juiste resultaat ook door weer gewoon <span class="math inline">\(1\,\text{in} = 2{,}54\,\text{cm}\)</span> in te vullen:</p>
+<p><span class="math display">\[V_X = 0{,}377\,\text{in}^2 = 0{,}377\times(2{,}54\,\text{cm})^2 = 2{,}43\,\text{cm}^2.\]</span></p>
+<p>Verifieren in R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>data_cm <span class="ot">&lt;-</span> data<span class="sc">*</span><span class="fl">2.54</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(data_cm)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8.0772</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(data_cm)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.432253</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(data_cm)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.559568</code></pre>
+</div>
+</div></li>
+</ol>
+</section>
+<section id="exr-middelbare-mediaan" class="level3">
+<h3 class="anchored" data-anchor-id="exr-middelbare-mediaan"><a href="../Statistiek/BeschrijvendeStatistiek.html#exr-middelbare-mediaan" class="quarto-xref">Oefening&nbsp;<span>20.20</span></a></h3>
+<p>De mediaan zou als schoolcijfer een aantal voordelen hebben, omdat deze minder gevoelig is voor uitbijters. Als je het hele jaar goede cijfers hebt gehaald, maar één keer door omstandigheden niet hebt kunnen leren voor een proefwerk, dan zou die ene keer misschien niet al te zwaar hoeven meetellen op je rapport.</p>
+<p>Maar “ieder voordeel heb zijn nadeel”. Wat zou er gebeuren met het rapportcijfer als een leerling besluit alleen de eerste helft van het jaar zijn best te doen?</p>
+</section>
+</section>
+<section id="uitwerkingen-sec-onzekerheid" class="level2">
+<h2 class="anchored" data-anchor-id="uitwerkingen-sec-onzekerheid">Uitwerkingen <a href="../Statistiek/Onzekerheid.html" class="quarto-xref"><span>21&nbsp; Onzekerheid in schattingen</span></a></h2>
+<section id="exr-pop-var-par" class="level3">
+<h3 class="anchored" data-anchor-id="exr-pop-var-par"><a href="../Statistiek/Onzekerheid.html#exr-pop-var-par" class="quarto-xref">Oefening&nbsp;<span>21.1</span></a></h3>
+<ol type="a">
+<li><p><strong>Populatie:</strong> Sterren van het Virgo Cluster. <strong>Eenheden:</strong> Individuele sterren uit het cluster. <strong>Variabele:</strong> Temperatuur van een ster. <strong>Populatieparameter:</strong> De standaarddeviatie van de verdeling van temperaturen van sterren in de populatie.</p></li>
+<li><p><strong>Populatie:</strong> Bierflesjes geproduceerd door de fabriek. <strong>Eenheden:</strong> Individuele flesjes uit de fabriek. <strong>Variabele:</strong> Graad van vervuiling. <strong>Populatieparameter:</strong> Gemiddelde vervuilingsgraad in de “populatie” van geproduceerde flesjes.</p></li>
+<li><p><strong>Populatie:</strong> Kinesine-1 in neurons. <strong>Eenheden:</strong> Individuele motoren van Kinesine-1. <strong>Variabele:</strong> Stapsnelheid. <strong>Populatieparameter:</strong> Gemiddelde stapsnelheid van de populatie kinesines.</p></li>
+<li><p><strong>Populatie:</strong> Nederlandse bevolking. <strong>Eenheden:</strong> Individuele Nederlanders. <strong>Variabele:</strong> Steun voor het kabinetsbeleid (bijv. “Ja”/“Nee”). <strong>Populatieparameter:</strong> Proportie van de populatie dat het kabinetsbeleid steunt.</p></li>
+</ol>
+</section>
+<section id="exr-systematisch-of-toevallig" class="level3">
+<h3 class="anchored" data-anchor-id="exr-systematisch-of-toevallig"><a href="../Statistiek/Onzekerheid.html#exr-systematisch-of-toevallig" class="quarto-xref">Oefening&nbsp;<span>21.2</span></a></h3>
+<ol type="a">
+<li><p><strong>Toevallige fout.</strong> Ieder cijfer hangen af van de studentassistent die de opdracht toevallig nakijkt.</p></li>
+<li><p><strong>Systematische fout.</strong> Door de manier waarop de steekproef werd genomen (via de lijst van Literary Digest) was deze sterk gebiast. Dat levert een systematische fout op.</p></li>
+<li><p><strong>Systematische fout.</strong> De tijden wijken namelijk systematisch 4 min af van de werkelijke waarde.</p></li>
+<li><p><strong>Toevallige fout.</strong> Er is variatie in de concentraties door toevallige afwijkingen bij het pipetteren.</p></li>
+</ol>
+</section>
+<section id="exr-biases" class="level3">
+<h3 class="anchored" data-anchor-id="exr-biases"><a href="../Statistiek/Onzekerheid.html#exr-biases" class="quarto-xref">Oefening&nbsp;<span>21.3</span></a></h3>
+<ol type="a">
+<li><p><strong>Waarnemersbias</strong> ligt het meest voor de hand, omdat de psychiater de toestand van zijn eigen cliënten beoordeelt en daar mogelijk een verwachting of vooroordeel over heeft. Overlevingsbias kan een rol spelen als bij sommige cliënten de behandeling tussentijds wordt afgebroken; in dat geval zullen we alleen de klachten beoordelen van een specifieke selectie van de cliënten.</p></li>
+<li><p><strong>Vrijwilligersbias</strong> speelt daar een enorme rol, want de mensen die de moeite nemen om te stemmen zijn geen willekeurige steekproef uit de populatie. Stand.nl weet dit heel goed: deze disclaimer staat op hun website bij de uitslag:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/disclaimer stand.nl Screenshot 2025-02-21 at 22.26.55.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Disclaimer op de website van stand.nl (Screenshot d.d. 20250221, 22:26 uur)."><img src="figuren/disclaimer stand.nl Screenshot 2025-02-21 at 22.26.55.png" class="img-fluid figure-img" style="width:100.0%" alt="Disclaimer op de website van stand.nl (Screenshot d.d. 20250221, 22:26 uur)."></a></p>
+<figcaption>Disclaimer op de website van stand.nl (Screenshot d.d. 20250221, 22:26 uur).</figcaption>
+</figure>
+</div></li>
+<li><p><strong>Overlevingsbias</strong>. Bedrijven die tijdens de crisis failliet zijn gegaan staan mogelijk in 2024 niet meer ingeschreven bij de Kamer van Koophandel. Het effect van de steun op die bedrijven wordt in het onderzoek dus niet meegenomen. Dat levert bias op.</p></li>
+<li><p><strong>Non-respons-bias</strong>: typisch vult maar ongeveer 20% van de studenten de enquête in. Niemand weet welk effect dat heeft op de gemiddelde cijfers. (Vul jij de enquête na deze cursus wel in? Een grotere steekproef vermindert de bias.)</p></li>
+<li><p><strong>Overlevingsbias</strong>. Deze CEO schat het effect van stoppen met je studie in op basis van een heel bijzondere selectie personen: succesvolle managers in de ICT. Dat levert een vertekend beeld op. Het perspectief van de <em>drop-outs</em> die géén CEO zijn geworden wordt niet meegenomen.</p>
+<p>Mogelijk stopten deze succesvolle ICT-ers met hun studie omdat ze concrete mogelijkheden zagen op de arbeidsmarkt, of hadden ze een bijzonder talent. Dat maakt het niet per sé een goed idee voor anderen om hun voorbeeld te volgen.</p></li>
+</ol>
+</section>
+<section id="exr-aselect" class="level3">
+<h3 class="anchored" data-anchor-id="exr-aselect"><a href="../Statistiek/Onzekerheid.html#exr-aselect" class="quarto-xref">Oefening&nbsp;<span>21.4</span></a></h3>
+<ol type="a">
+<li><p>Het volgende scriptje werkt hiervoor:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># parameters</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>aantal_plotjes <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>aantal_selecteren <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="co"># selectie m</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>(bemesten <span class="ot">&lt;-</span> <span class="fu">sample</span>( <span class="fu">seq</span>(<span class="dv">1</span>, aantal_plotjes) , aantal_selecteren) )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>Zie het volgende script:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(NHANES)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(NHANES)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># parameters</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>n_steekproef <span class="ot">&lt;-</span> <span class="dv">30</span>    <span class="co"># grootte van de steekproef</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="co"># steekproef</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>steekproef <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>    NHANES<span class="sc">$</span>SleepHrsNight, n_steekproef</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>gemiddelde <span class="ot">&lt;-</span> <span class="fu">mean</span>(steekproef, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(steekproef)</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(gemiddelde)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Merk op dat er op op veel plekken <code>NA</code> is ingevuld—dat zijn missende gegevens.</p></li>
+<li><p>–</p></li>
+<li><p>De verschillende schattingen zijn verschillend door <em>steekproevenvariabiliteit</em>: toevallige verschillen in de samenstelling van steekproeven uit dezelfde populatie.</p></li>
+<li><p>Omdat we een aselecte steekproef hebben genomen, hebben de schattingen geen bias; de schattingen zijn nauwkeurig / zuiver. Dat wil zeggen dat de schattingen <em>gemiddeld</em> juist zijn. We kunnen het populatiegemiddelde dus schatten door het gemiddelde te bepalen van de schattingen in de histogram. Op het oog is dat ongeveer 6,9 uur.</p>
+<p>We kunnen dat gemiddelde van die schattingen ook rechtstreeks aan R vragen door deze regel toe te voegen aan de code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(gemiddelden)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Het gemiddelde van de hele populatie krijgen we als volgt:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(slaapuren)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Als het goed is, liggen deze getallen dicht bij elkaar, rond 6,9 uur.</p></li>
+<li><p>De onzekerheid of toevallige fout in één schatting hangt samen met de <em>spreiding</em> van de herhaalde schattingen. Een goede optie is dus om de standaarddeviatie van de schattingen te gebruiken:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(gemiddelden)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Het precieze resultaat hangt af van de toevallige steekproeven die jij hebt getrokken, maar zou dichtbij 0,25 moeten liggen. Dat wil zeggen: <em>typisch</em> ligt één schatting blijkbaar zo’n 0,25 van de werkelijke waarde van de populatieparameter af.</p></li>
+</ol>
+</section>
+</section>
+<section id="uitwerkingen-sec-kans" class="level2">
+<h2 class="anchored" data-anchor-id="uitwerkingen-sec-kans">Uitwerkingen <a href="../Statistiek/Kansrekenen.html" class="quarto-xref"><span>22&nbsp; Kansen en kansmodellen</span></a></h2>
+<section id="exr-begrippen-kans" class="level3">
+<h3 class="anchored" data-anchor-id="exr-begrippen-kans"><a href="../Statistiek/Kansrekenen.html#exr-begrippen-kans" class="quarto-xref">Oefening&nbsp;<span>22.1</span></a></h3>
+<ol type="a">
+<li><p>Kansexperiment: Het kruisen van twee heterozygote dieren en het bepalen van het genotype van een nakomeling.</p>
+<p>Kansvariabele: Het genotype van de nakomeling.</p>
+<p>Kansruimte: De verzameling {<code>aa</code>, <code>AA</code>, <code>aA</code>}.</p>
+<p>Gebeurtenis: <span class="math inline">\(X\)</span> = <code>aa</code>.</p></li>
+<li><p>Kansexperiment: Het tellen van het aantal teken op een ree aangetroffen in het bosgebied.</p>
+<p>Kansvariabele: Aantal teken.</p>
+<p>Kansruimte: Alle positieve gehele getallen. (<span class="math inline">\(\mathbb{Z}_+\)</span>)</p>
+<p>Gebeurtenis: <span class="math inline">\(X &gt; 0\)</span>.</p></li>
+<li><p>Kansexperiment: Het vaccineren van een persoon en kijken of TTS optreedt.</p>
+<p>Kansvariabele: Een Boolean variabele die aangeeft of TTS optrad.</p>
+<p>Kansruimte: {<code>TRUE</code>, <code>FALSE</code>}</p>
+<p>Gebeurtenis: <span class="math inline">\(X\)</span> = <code>TRUE</code>.</p></li>
+<li><p>Kansexperiment: Het vangen, markeren en teruggooien van 2000 brasems; opnieuw vangen van 2000 brasems; en het tellen van het aantal gemarkeerde brasems.</p>
+<p>Kansvariabele: Aantal teruggevangen gemarkeerde brasems.</p>
+<p>Kansruimte: Gehele getallen tussen van 0 tot 2000.</p>
+<p>Gebeurtenis: <span class="math inline">\(X = 0\)</span>.</p></li>
+</ol>
+</section>
+<section id="exr-simulatie-dobbelsteen" class="level3">
+<h3 class="anchored" data-anchor-id="exr-simulatie-dobbelsteen"><a href="../Statistiek/Kansrekenen.html#exr-simulatie-dobbelsteen" class="quarto-xref">Oefening&nbsp;<span>22.2</span></a></h3>
+<ol type="a">
+<li><p>Gebruik voor de absolute frequenties:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(resultaten)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>resultaten
+     1      2      3      4      5      6 
+166474 166755 166992 166813 166001 166965 </code></pre>
+</div>
+</div>
+<p>Voor de relatieve frequenties:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(resultaten)<span class="sc">/</span>aantal_keer_gooien</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>resultaten
+       1        2        3        4        5        6 
+0.166474 0.166755 0.166992 0.166813 0.166001 0.166965 </code></pre>
+</div>
+</div>
+<p>Jouw uikomsten zullen hier door steekproevenvariabiliteit iets van afwijken.</p></li>
+<li><p>Nee, want dan moest de relatieve frequentie gelijk zijn aan <span class="math inline">\(1/6 = 0.16666\ldots\)</span>.</p></li>
+<li><p>Die kans is 0, want een miljoen is niet deelbaar door 6. Dat is één reden waarom de relatieve frequentie zelfs bij een enorm grote steekproef zelden exact <span class="math inline">\(\frac{1}{6}\)</span> zal zijn: de meeste getallen zijn niet deelbaar door 6. Maar zelfs als <code>aantal_keer_gooien</code> 6 miljoen is en dus wél deelbaar door 6, is de kans heel klein dat we <em>precies</em> 1 miljoen keer een 6 vinden, en niet een paar meer of minder.</p></li>
+</ol>
+</section>
+<section id="exr-overlap-1" class="level3">
+<h3 class="anchored" data-anchor-id="exr-overlap-1"><a href="../Statistiek/Kansrekenen.html#exr-overlap-1" class="quarto-xref">Oefening&nbsp;<span>22.3</span></a></h3>
+<ol type="a">
+<li><p>–</p></li>
+<li><p>Venn-diagram:</p>
+<div class="cell" data-fig.label="fig-Venn-ingevuld">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-29-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="576"></a></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Ja, want 5 is oneven én groter dan 4.</p></li>
+<li><p>In dit geval geldt: <span class="math inline">\(\textrm{Pr}\!\left[A \text{ en } B\right] = \textrm{Pr}\!\left[X = 5\right] = \frac{1}{6}\)</span>.</p></li>
+</ol>
+</section>
+<section id="exr-in-of-exclusief" class="level3">
+<h3 class="anchored" data-anchor-id="exr-in-of-exclusief"><a href="../Statistiek/Kansrekenen.html#exr-in-of-exclusief" class="quarto-xref">Oefening&nbsp;<span>22.4</span></a></h3>
+<ol type="a">
+<li><p>Exclusief, want er wordt niet bedoeld dat één en dezelfde cursus zowel een studielast van 7,5 ECTS als een veelvoud daarvan kan hebben.</p></li>
+<li><p>Inclusief, want je mag vast ook feedback geven over zaken die anders én beter zouden kunnen.</p></li>
+<li><p>Inclusief, want het is vast ook niet toegestaan dat iemand met een managementfunctie lid én voorzitter wordt.</p></li>
+<li><p>Exclusief, want je krijgt maar één beoordeling, die niet zowel numeriek als categorisch (V/ONV) kan zijn.</p></li>
+</ol>
+</section>
+<section id="exr-overlap-2" class="level3">
+<h3 class="anchored" data-anchor-id="exr-overlap-2"><a href="../Statistiek/Kansrekenen.html#exr-overlap-2" class="quarto-xref">Oefening&nbsp;<span>22.5</span></a></h3>
+<ol type="a">
+<li><p>Venn-diagram:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-30-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="576"></a></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>{1, 3, 5, 6}</p></li>
+<li><p>Omdat het een eerlijke dobbelsteen is en er vier uitkomsten onder de gebeurtenis vallen: <span class="math inline">\(\textrm{Pr}\!\left[A \text{ of } B\right] = \frac{4}{6}\)</span>.</p></li>
+</ol>
+</section>
+<section id="exr-omdraaien-conditionele-kansen" class="level3">
+<h3 class="anchored" data-anchor-id="exr-omdraaien-conditionele-kansen"><a href="../Statistiek/Kansrekenen.html#exr-omdraaien-conditionele-kansen" class="quarto-xref">Oefening&nbsp;<span>22.6</span></a></h3>
+<ol type="a">
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[A\right] = \frac{3}{6} = \frac{1}{2}.\)</span></p></li>
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[B\right] = \frac{2}{6} = \frac{1}{3}.\)</span></p></li>
+<li><p>Zie <a href="../Statistiek/Kansrekenen.html#exr-overlap-1" class="quarto-xref">Oefening&nbsp;<span>22.3</span></a>: <span class="math inline">\(\textrm{Pr}\!\left[A \text{ en } B\right] = \frac{1}{6}.\)</span></p></li>
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[A|B\right] = \dfrac{\textrm{Pr}\!\left[A \text{ en } B\right]}{\textrm{Pr}\!\left[B\right]} = \dfrac{\frac{1}{6}}{\frac{1}{3}} = \frac{1}{2}.\)</span></p></li>
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[B|A\right] = \dfrac{\textrm{Pr}\!\left[A \text{ en } B\right]}{\textrm{Pr}\!\left[A\right]} = \dfrac{\frac{1}{6}}{\frac{1}{2}} = \frac{1}{3}.\)</span></p></li>
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[B|A\right]\)</span> is de kans op <span class="math inline">\(A\)</span> en <span class="math inline">\(B\)</span> relatief ten opzichte van de kans op <span class="math inline">\(A\)</span>, <span class="math inline">\(\textrm{Pr}\!\left[A|B\right]\)</span> de kans op <span class="math inline">\(A\)</span> en <span class="math inline">\(B\)</span> relatief ten opzichte van de kans op <span class="math inline">\(B\)</span>. Zolang de kans op <span class="math inline">\(A\)</span> niet gelijk is aan de kans op <span class="math inline">\(B\)</span> zijn beide conditionele kansen dus verschillend.</p></li>
+</ol>
+</section>
+<section id="exr-hartfalen" class="level3">
+<h3 class="anchored" data-anchor-id="exr-hartfalen"><a href="../Statistiek/Kansrekenen.html#exr-hartfalen" class="quarto-xref">Oefening&nbsp;<span>22.7</span></a></h3>
+<p>Het is handig om R als rekenmachine gebruiken. We voeren eerst netjes alle getallen in:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definieer de populatiegrootte en aantallen</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>nederlanders <span class="ot">&lt;-</span> <span class="fl">17.6</span><span class="sc">*</span><span class="dv">10</span><span class="sc">^</span><span class="dv">6</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>diabetes <span class="ot">&lt;-</span> <span class="fl">1.08</span><span class="sc">*</span><span class="dv">10</span><span class="sc">^</span><span class="dv">5</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>hartfalen <span class="ot">&lt;-</span> <span class="fl">2.5</span><span class="sc">*</span><span class="dv">10</span><span class="sc">^</span><span class="dv">5</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>beide <span class="ot">&lt;-</span> <span class="dv">4</span><span class="sc">*</span><span class="dv">10</span><span class="sc">^</span><span class="dv">3</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Bereken de aantallen voor ieder compartiment</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>alleen_diabetes   <span class="ot">&lt;-</span> diabetes <span class="sc">-</span> beide</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>alleen_hartfalen  <span class="ot">&lt;-</span> hartfalen <span class="sc">-</span> beide</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>geen_van_beide    <span class="ot">&lt;-</span> nederlanders <span class="sc">-</span> (alleen_diabetes <span class="sc">+</span> alleen_hartfalen <span class="sc">+</span> beide)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol type="a">
+<li><p>Het Venn-diagram ziet er dan als volgt out:</p>
+<div class="cell" data-fig.label="fig-Venn-ingevuld">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-33-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="576"></a></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>De kans dat een willekeurige Nederlander hartfalen heeft is:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>(prob_H <span class="ot">&lt;-</span> hartfalen <span class="sc">/</span> nederlanders)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.01420455</code></pre>
+</div>
+</div></li>
+<li><p>De kans dat een willekeurige Nederlander hartfalen heeft is:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>(prob_D <span class="ot">&lt;-</span> diabetes <span class="sc">/</span> nederlanders)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.006136364</code></pre>
+</div>
+</div></li>
+<li><p>De kans dat een diabetespatiënt ook hartfalen heeft:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>(prob_H_gegeven_D <span class="ot">&lt;-</span> beide <span class="sc">/</span> diabetes)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.03703704</code></pre>
+</div>
+</div>
+<p>Dit is precies wat bedoeld wordt met de kans <span class="math inline">\(\textrm{Pr}\!\left[H | D\right]\)</span>.</p></li>
+<li><p>Om te bepalen of het risico op hartfalen groter is voor mensen met diabetes, berekenen we de verhouding tussen <span class="math inline">\(\textrm{Pr}\!\left[H | D\right]\)</span> en <span class="math inline">\(\textrm{Pr}\!\left[H\right]\)</span>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>(risico_verhoging <span class="ot">&lt;-</span> prob_H_gegeven_D <span class="sc">/</span> prob_H)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.607407</code></pre>
+</div>
+</div>
+<p>Mensen met diabetes hebben volgens deze berekening een 2,6 keer zo hoog risico op hartfalen vergeleken met de algemene bevolking.</p></li>
+</ol>
+</section>
+<section id="exr-dobbel-ab-afhankelijk" class="level3">
+<h3 class="anchored" data-anchor-id="exr-dobbel-ab-afhankelijk"><a href="../Statistiek/Kansrekenen.html#exr-dobbel-AB-afhankelijk" class="quarto-xref">Oefening&nbsp;<span>22.8</span></a></h3>
+<p>In <a href="../Statistiek/Kansrekenen.html#exr-omdraaien-conditionele-kansen" class="quarto-xref">Oefening&nbsp;<span>22.6</span></a> was <span class="math inline">\(\textrm{Pr}\!\left[A\right] = \textrm{Pr}\!\left[A | B\right] = \frac{1}{2}\)</span>. Deze gebeurtenissen zijn dus onafhankelijk! Dit blijkt ook uit het feit dat <span class="math inline">\(\textrm{Pr}\!\left[B\right] = \textrm{Pr}\!\left[B | A\right] = \frac{1}{3}\)</span>.</p>
+</section>
+<section id="exr-bloedgroep" class="level3">
+<h3 class="anchored" data-anchor-id="exr-bloedgroep"><a href="../Statistiek/Kansrekenen.html#exr-bloedgroep" class="quarto-xref">Oefening&nbsp;<span>22.9</span></a></h3>
+<ol type="a">
+<li><p>Aflezen van de figuur: <span class="math inline">\(\textrm{Pr}\!\left[\text{O+}\right] = 0{,}382\)</span>.</p></li>
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[\text{O}\right] = \textrm{Pr}\!\left[\text{O+}\right] + \textrm{Pr}\!\left[\text{O-}\right] = 0{,}382 + 0{,}068 = 0{,}45\)</span>.</p></li>
+<li><p>We tellen de kansen van alle Rh+ bloedgroepen op:</p>
+<p><span class="math display">\[
+\begin{align}
+\textrm{Pr}\!\left[\text{+}\right] &amp;= \textrm{Pr}\!\left[\text{O+}\right] + \textrm{Pr}\!\left[\text{A+}\right] + \textrm{Pr}\!\left[\text{B+}\right] + \textrm{Pr}\!\left[\text{AB+}\right]\\
+              &amp;= 0{,}382 + 0{,}366 + 0{,}077 + 0{,}025 = 0{,}85.
+\end{align}
+\]</span></p></li>
+<li><p>Als antigen en rhesusfactor onafhankelijk zouden zijn, dan zou de vermenigvuldigingsregel gelden:</p>
+<p><span class="math display">\[
+\begin{align}
+\textrm{Pr}\!\left[\text{O+}\right] &amp;= \textrm{Pr}\!\left[\text{O en +}\right] = \textrm{Pr}\!\left[\text{O}\right]\cdot\textrm{Pr}\!\left[\text{+}\right]\\
+              &amp;= 0{,}45 \times 0{,}85\\
+              &amp;= 0{,}383.
+\end{align}
+\]</span></p>
+<p>Daarmee komen we heel dicht bij de werkelijke waarde van 0,382! Blijkbaar zijn gebeurtenissen O en + vrijwel onafhankelijk. Bij berekeningen aan bloedgroepen maken we slechts een kleine fout als we een kansmodel gebruiken dat aanneemt dat antigeen en rhesusfactor onafhankelijk zijn.</p></li>
+<li><p>De ABO-bloedgroep en de rhesusfactor worden bepaald door genen die op verschillende chromosomen liggen. Die segregeren dus onafhankelijk van elkaar en <em>linkage</em> is dus niet te verwachten. Kleine associaties kunnen wel optreden, bijvoorbeeld als bepaalde etnische bevolkingsgroepen onderling verschillen in hun proporties.</p></li>
+<li><p>Het plaatje ziet er mooi uit, maar geeft de getallen niet helder weer. De oppervlakte van de bloeddruppels is niet in proportie met het percentage dat erbij hoort. Dat is misleidend: het lijkt er bijvoorbeeld niet op dat de kans op O+ maar liefst 76 keer zo groot is als de kans op AB-.</p>
+<p>Deze figuur geeft de verhoudingen beter weer:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-38-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" style="width:80.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="hidden">
+<p>Maar een mosaicplot ligt meer voor de hand:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-39-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div></li>
+</ol>
+</section>
+<section id="exr-uitsluiten" class="level3">
+<h3 class="anchored" data-anchor-id="exr-uitsluiten"><a href="../Statistiek/Kansrekenen.html#exr-uitsluiten" class="quarto-xref">Oefening&nbsp;<span>22.10</span></a></h3>
+<ol type="a">
+<li><p>Nee, dat klopt niet. Je mag de kansen hier niet optellen. Dat zou betekenen dat de kans op een prijs na 10 keer meedoen gelijk zou zijn aan <span class="math inline">\(10\times \frac{1}{10} = 1\)</span>, alsof je na 10 keer zeker zou zijn van een prijs.</p>
+<p>Het probleem is dat de twee gebeurtenissen (eerste keer prijs en tweede keer prijs) elkaar niet uitsluiten. De optelregel is dan niet van toepassing.</p></li>
+<li><p>Ja, dat klopt. De gebeurtenissen O+, A+, B+ en AB+ sluiten elkaar uit en dus geldt de optelregel.</p></li>
+</ol>
+</section>
+<section id="exr-algemene-regel" class="level3">
+<h3 class="anchored" data-anchor-id="exr-algemene-regel"><a href="../Statistiek/Kansrekenen.html#exr-algemene-regel" class="quarto-xref">Oefening&nbsp;<span>22.11</span></a></h3>
+<ol type="a">
+<li><p>Als <span class="math inline">\(A\)</span> en <span class="math inline">\(B\)</span> elkaar uitsluiten is <span class="math inline">\(\textrm{Pr}\!\left[A \textrm{ en } B\right]\)</span> gelijk aan 0.</p></li>
+<li><p>Je kunt in dat geval ook de algemene regel gebruiken, want als je in de algemene regel <span class="math inline">\(\textrm{Pr}\!\left[A \textrm{ en } B\right] = 0\)</span> invult krijg je de optelregel. Voor gebeurtenissen die elkaar uitsluiten komen beide regels dus op hetzelfde neer.</p></li>
+</ol>
+</section>
+<section id="exr-resistentie" class="level3">
+<h3 class="anchored" data-anchor-id="exr-resistentie"><a href="../Statistiek/Kansrekenen.html#exr-resistentie" class="quarto-xref">Oefening&nbsp;<span>22.12</span></a></h3>
+<p>Een bacterie is resistent als deze mutatie 1 heeft (gebeurtenis <span class="math inline">\(M_1\)</span>) of mutatie 2 (gebeurtenis M2).</p>
+<p>Gegeven is: <span class="math display">\[
+\begin{gather}
+\textrm{Pr}\!\left[M_1\right] = 0{,}3, \\
+\textrm{Pr}\!\left[M_2\right] = 0{,}4, \\
+\textrm{Pr}\!\left[M_1 \text{ en } M_2\right] = 0{,}15.
+\end{gather}
+\]</span></p>
+<p>Regel <a href="../Statistiek/Kansrekenen.html#eq-AofBalgemeen" class="quarto-xref">Vergelijking&nbsp;<span>22.9</span></a> levert dan op:</p>
+<p><span class="math display">\[\textrm{Pr}\!\left[M_1 \text{ of } M_2\right] = \textrm{Pr}\!\left[M_1\right] + \textrm{Pr}\!\left[M_2\right] - \textrm{Pr}\!\left[M_1 \text{ en } M_2\right] = 0{,}3 + 0{,}4 - 0{,}15 = 0{,}55.\]</span></p>
+</section>
+<section id="exr-drie-gebeurtenissen" class="level3">
+<h3 class="anchored" data-anchor-id="exr-drie-gebeurtenissen"><a href="../Statistiek/Kansrekenen.html#exr-drie-gebeurtenissen" class="quarto-xref">Oefening&nbsp;<span>22.13</span></a></h3>
+<ol type="a">
+<li><p>Venn-diagram:</p>
+<div class="cell" data-fig.label="fig-Venn-ABC">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-40-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="576"></a></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Als je <span class="math inline">\(\textrm{Pr}\!\left[A\right]\)</span>, <span class="math inline">\(\textrm{Pr}\!\left[B\right]\)</span> en <span class="math inline">\(\textrm{Pr}\!\left[C\right]\)</span> optelt, worden de overlappende delen tussen <span class="math inline">\(A\)</span> en <span class="math inline">\(B\)</span>, tussen <span class="math inline">\(B\)</span> en <span class="math inline">\(C\)</span>, en tussen <span class="math inline">\(C\)</span> en <span class="math inline">\(D\)</span> dubbelgeteld. Die trek je er dus vanaf. Maar, door dat te doen trek je het gedeelte <span class="math inline">\(A\)</span> en <span class="math inline">\(B\)</span> en <span class="math inline">\(C\)</span> (de overlap tussen de drie cirkels) er drie keer vanaf. Om te zorgen dat dat deel ook één keer wordt meegeteld, moet die er weer bij opgeteld worden. Het resultaat is:</p>
+<p><span class="math display">\[
+\begin{align}
+\textrm{Pr}\!\left[A \text{ of } B \text{ of } C\right] = &amp; \ \textrm{Pr}\!\left[A\right] + \textrm{Pr}\!\left[B\right] + \textrm{Pr}\!\left[C\right] \\
+&amp; - \textrm{Pr}\!\left[A \text{ en } B\right]
+- \textrm{Pr}\!\left[B \text{ en } C\right]
+- \textrm{Pr}\!\left[A \text{ en } C\right]\\
+&amp; + \textrm{Pr}\!\left[A \text{ en } B  \text{ en } C\right].
+\end{align}
+\]</span></p></li>
+</ol>
+</section>
+<section id="exr-bayes" class="level3">
+<h3 class="anchored" data-anchor-id="exr-bayes"><a href="../Statistiek/Kansrekenen.html#exr-bayes" class="quarto-xref">Oefening&nbsp;<span>22.14</span></a></h3>
+<p>De eerdere resultaten waren (afgerond): <span class="math display">\[
+\begin{gather}
+\textrm{Pr}\!\left[H | D\right] = 0.037,\\
+\textrm{Pr}\!\left[H\right] = 0{,}014,\\
+\textrm{Pr}\!\left[D\right] = 0.0061. \\
+\end{gather}
+\]</span> De regel van Bayes zegt: <span class="math display">\[\textrm{Pr}\!\left[D | H\right] = \textrm{Pr}\!\left[H | D\right] \textrm{Pr}\!\left[D\right]/\textrm{Pr}\!\left[H\right].\]</span> Invullen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>(prob_D_gegeven_H <span class="ot">&lt;-</span> prob_H_gegeven_D <span class="sc">*</span> prob_D <span class="sc">/</span> prob_H)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.016</code></pre>
+</div>
+</div>
+</section>
+<section id="exr-dna" class="level3">
+<h3 class="anchored" data-anchor-id="exr-dna"><a href="../Statistiek/Kansrekenen.html#exr-DNA" class="quarto-xref">Oefening&nbsp;<span>22.15</span></a></h3>
+<ol type="a">
+<li><p>Het model nam aan dat iedere nucleotide onafhankelijk met kans <span class="math inline">\(1 - p\)</span> een C,T, of A was. Dat geldt ook voor het nucleotide direct na de G. De kans op lengte 1 is dus <span class="math inline">\(\textrm{Pr}\!\left[X = 1\right] = 1 - p\)</span>.</p></li>
+<li><p>De kans dat de volgende letter een G is, is volgens het model <span class="math inline">\(p\)</span>. De kans dat de letter dáárna geen G is, is <span class="math inline">\(1 - p\)</span>. Omdat beide gebeurtenissen onafhankelijk zijn (volgens het model) mogen we ze vermenigvuldigen: <span class="math inline">\(\textrm{Pr}\!\left[X = 2\right] = p (1 - p)\)</span>.</p></li>
+<li><p>De kans dat de volgende letter een G is, is volgens het model <span class="math inline">\(p\)</span>. De kans dat de letter daarna wéér een G is, is <span class="math inline">\(p\)</span>. De kans dat de letter daarna geen G is, is <span class="math inline">\(1 - p\)</span>. Omdat alle gebeurtenissen onafhankelijk zijn (volgens het model) mogen we ze vermenigvuldigen: <span class="math inline">\(\textrm{Pr}\!\left[X = 3\right] = p \cdot p \cdot (1 - p) = p^2 (1 - p)\)</span>.</p></li>
+<li><p>Invullen:</p>
+<p><span class="math inline">\(\textrm{Pr}\!\left[X = 1\right] = 1 - p = 0{,}795\)</span>,</p>
+<p><span class="math inline">\(\textrm{Pr}\!\left[X = 2\right] = p (1 - p) = 0{,}163\)</span>,</p>
+<p><span class="math inline">\(\textrm{Pr}\!\left[X = 3\right] = p^2 (1 - p) = 0{,}0334\)</span>,</p>
+<p><span class="math inline">\(\textrm{Pr}\!\left[X = 4\right] = p^3 (1 - p) = 0{,}00685\)</span>, etc.</p></li>
+<li><p>De paarse lijn komt aardig in de buurt van de echte gegevens. G-tracts van de lengte die we in chromosoom 11 vinden zouden we dus ook ongeveer verwachten op basis van toeval. Er is dus geen specifieke biologische functie of sterke natuurlijke selectie nodig om de gevonden G-tracts te verklaren.</p>
+<p>Als je in detail kijkt, is de kans op een lengte van 1 iets kleiner dan verwacht, en de kans op langere G-tracts juist iets groter dan verwacht. Dat duidt erop dat de neiging van G’s om gevolgd te worden door een andere G net iets groter is dan je zou verwachten als de opeenvolgende nucleotiden volledig onafhankelijk waren. Dat zou je verder kunnen onderzoeken; je zou je kunnen uitzoeken of dat effect komt door coderende sequenties, of door niet-coderende sequenties (of beiden).</p></li>
+</ol>
+</section>
+<section id="exr-bayes-screening" class="level3">
+<h3 class="anchored" data-anchor-id="exr-bayes-screening"><a href="../Statistiek/Kansrekenen.html#exr-bayes-screening" class="quarto-xref">Oefening&nbsp;<span>22.16</span></a></h3>
+<ol type="a">
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[K\right]\)</span> is de prevalentie. Gegeven is dat <span class="math inline">\(\textrm{Pr}\!\left[K\right] = 0{,}001\)</span>. Dat zijn naar verwachting dus <span class="math inline">\(120000\times\textrm{Pr}\!\left[K\right] = 120\)</span> vrouwen die borstkanker hebben.</p></li>
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[G\right] = 1 - \textrm{Pr}\!\left[K\right] = 0{,}999\)</span>. Dat komt neer op <span class="math inline">\(120000\times \textrm{Pr}\!\left[G\right] = 119880\)</span> gezonde vrouwen.</p></li>
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[P | K\right]\)</span> is de sensitiviteit. Gegeven is dat <span class="math inline">\(\textrm{Pr}\!\left[P | K\right]  = 0{,}9\)</span>.<br>
+Als we alle vrouwen van 30 jaar screenen, verwachten we dus <span class="math inline">\(120000\times \textrm{Pr}\!\left[P | K\right] = 108\)</span> keer borstkanker te ontdekken.</p></li>
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[N | G\right]\)</span> is de specificiteit. Die is ook gegeven: <span class="math inline">\(\textrm{Pr}\!\left[N | G\right] = 0{,}95\)</span>.</p></li>
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[P | G\right] = 1 - \textrm{Pr}\!\left[N | G\right]  = 0,05\)</span>. We testen naar verwachting 119880 gezonde vrouwen. (Zie onderdeel b.) De test valt dus <em>onterecht</em> positief uit bij <span class="math inline">\(119880 \times \textrm{Pr}\!\left[ P | G \right] = 5994\)</span> vrouwen. Dat zijn er veel meer dan de 108 <em>terecht</em> positieve testen!</p></li>
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[P\right] = 0{,}05085\)</span>.<br>
+Naar verwachting krijgen dus <span class="math inline">\(120000\times\textrm{Pr}\!\left[P\right] = 6102\)</span> vrouwen een positief testresultaat.</p></li>
+<li><p>Gebruik de regel van Bayes: <span class="math inline">\(\textrm{Pr}\!\left[P | K\right] = \textrm{Pr}\!\left[K | P\right] \textrm{Pr}\!\left[P\right]/\textrm{Pr}\!\left[K\right] = 0{,}0177\)</span>. Dat betekent: als de test positief terugkomt, is de kans dat je daadwerkelijk borstkanker hebt nog steeds maar <span class="math inline">\(0{,}018\)</span>, minder dan 2%!</p></li>
+<li><p>Een groot nadeel van vroegtijdig screenen is het grote aantal fout-positieve testresultaten. De overgrote meerderheid van de vrouwen die naar het ziekenhuis worden doorverwezen hebben in werkelijkheid geen borstkanker, wat leidt tot veel onnodige paniek en veel overbodige medische procedures.</p></li>
+<li><p>De screening-paradox treedt op wanneer een test een hoge sensitiviteit en specificiteit heeft, maar de prevalentie van de ziekte laag is. Hoewel de test goed werkt, is het absolute aantal fout-positieven dan vaak veel groter dan het aantal correct-positieven, waardoor de kans dat een positief geteste persoon daadwerkelijk ziek is verrassend laag blijft.</p></li>
+</ol>
+<p>Het volgende script in R voert alle berekeningen uit:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gegeven waarden</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>prevalentie <span class="ot">&lt;-</span> <span class="fl">0.001</span>  <span class="co"># P(K)</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>sensitiviteit <span class="ot">&lt;-</span> <span class="fl">0.9</span>   <span class="co"># P(P | K)</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>specificiteit <span class="ot">&lt;-</span> <span class="fl">0.95</span>  <span class="co"># P(N | G)</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>totaal_vrouwen <span class="ot">&lt;-</span> <span class="dv">120000</span></span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Berekeningen</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>prob_k <span class="ot">&lt;-</span> prevalentie</span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>prob_g <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> prevalentie</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>prob_n_gegeven_g <span class="ot">&lt;-</span> specificiteit</span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a>prob_p_gegeven_g <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> prob_n_gegeven_g</span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a>prob_p_gegeven_k <span class="ot">&lt;-</span> sensitiviteit</span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a>prob_p <span class="ot">&lt;-</span> prob_p_gegeven_g <span class="sc">*</span> prob_g <span class="sc">+</span> prob_p_gegeven_k <span class="sc">*</span> prob_k</span>
+<span id="cb65-15"><a href="#cb65-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-16"><a href="#cb65-16" aria-hidden="true" tabindex="-1"></a>aantal_k <span class="ot">&lt;-</span> totaal_vrouwen <span class="sc">*</span> prob_k</span>
+<span id="cb65-17"><a href="#cb65-17" aria-hidden="true" tabindex="-1"></a>aantal_g <span class="ot">&lt;-</span> totaal_vrouwen <span class="sc">*</span> prob_g</span>
+<span id="cb65-18"><a href="#cb65-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-19"><a href="#cb65-19" aria-hidden="true" tabindex="-1"></a>aantal_true_p <span class="ot">&lt;-</span> aantal_k <span class="sc">*</span> prob_p_gegeven_k</span>
+<span id="cb65-20"><a href="#cb65-20" aria-hidden="true" tabindex="-1"></a>aantal_false_p <span class="ot">&lt;-</span> aantal_g <span class="sc">*</span> prob_p_gegeven_g</span>
+<span id="cb65-21"><a href="#cb65-21" aria-hidden="true" tabindex="-1"></a>aantal_p <span class="ot">&lt;-</span> aantal_true_p <span class="sc">+</span> aantal_false_p</span>
+<span id="cb65-22"><a href="#cb65-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-23"><a href="#cb65-23" aria-hidden="true" tabindex="-1"></a><span class="co"># kans op borstkanker gegeven positieve test:</span></span>
+<span id="cb65-24"><a href="#cb65-24" aria-hidden="true" tabindex="-1"></a>(prob_k_gegeven_p <span class="ot">&lt;-</span> prob_p_gegeven_k <span class="sc">*</span> prob_k <span class="sc">/</span> prob_p) </span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.01769912</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="uitwerkingen-sec-kansverdelingen" class="level2">
+<h2 class="anchored" data-anchor-id="uitwerkingen-sec-kansverdelingen">Uitwerkingen <a href="../Statistiek/Kansverdelingen.html" class="quarto-xref"><span>23&nbsp; Kansverdelingen</span></a></h2>
+<section id="exr-munten" class="level3">
+<h3 class="anchored" data-anchor-id="exr-munten"><a href="../Statistiek/Kansverdelingen.html#exr-munten" class="quarto-xref">Oefening&nbsp;<span>23.1</span></a></h3>
+<p>Reken eerst de kansen uit. De uitkomst van de eerste munt noemen we <span class="math inline">\(X_1\)</span> en die van de tweede munt <span class="math inline">\(X_2\)</span>. De uitkomsten zijn K (voor kop) or M (voor munt).</p>
+<p>De kans op 0 keer kop: <span class="math display">\[\textrm{Pr}\!\left[0\right] = \textrm{Pr}\!\left[X_1 = \text{ M en } X_2 = \text{M}\right] = \left(\frac{1}{2}\right)^2 = \frac{1}{4}.\]</span> De kans op 1 keer kop <span class="math display">\[
+\begin{align}
+\textrm{Pr}\!\left[1\right] &amp;= \textrm{Pr}\!\left[\left(X_1 = \text{ M en } X_2 = \text{K}\right)\text{ of }\left(X_1 = \text{ K en } X_2 = \text{M}\right)\right]\\
+&amp; =  2 \times \left(\frac{1}{2}\right)^2\\
+&amp; = \frac{1}{2}.
+\end{align}
+\]</span> De kans op 2 keer kop: <span class="math display">\[\textrm{Pr}\!\left[2\right] = \textrm{Pr}\!\left[X_1 = \text{ K en } X_2 = \text{K}\right] = \left(\frac{1}{2}\right)^2 = \frac{1}{4}.\]</span></p>
+<p>Dat levert de volgende plot op:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-43-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" style="width:43.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exr-genotypes" class="level3">
+<h3 class="anchored" data-anchor-id="exr-genotypes"><a href="../Statistiek/Kansverdelingen.html#exr-genotypes" class="quarto-xref">Oefening&nbsp;<span>23.2</span></a></h3>
+<ol type="a">
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[\texttt{aa}\right] = \textrm{Pr}\!\left[X_1 = \texttt{a}\text{ en } X_2 = \texttt{a}\right] = \left(\frac{1}{2}\right)^2 = \frac{1}{4}.\)</span></p></li>
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[\texttt{aA}\right] =
+\textrm{Pr}\!\left[\left(X_1 = \texttt{a}\text{ en } X_2 = \texttt{A}\right)\text{ of     }\left(X_1 = \texttt{A}\text{ en } X_2 = \texttt{a}\right)\right]
+=  \left(\frac{1}{2}\right)^2 + \left(\frac{1}{2}\right)^2
+= \frac{1}{2}.\)</span></p></li>
+<li><p><span class="math inline">\(\textrm{Pr}\!\left[\texttt{AA}\right] = \textrm{Pr}\!\left[X_1 = \texttt{A}\text{ en } X_2 = \texttt{A}\right] = \left(\frac{1}{2}\right)^2 = \frac{1}{4}.\)</span></p></li>
+<li><p>Het is precies dezelfde berekening!<br>
+Waar het in <a href="../Statistiek/Kansverdelingen.html#exr-munten" class="quarto-xref">Oefening&nbsp;<span>23.1</span></a> ging over het aantal keer “kop” gaat het hier om het aantal keer <code>A</code>, maar verder zijn de modellen gelijk.</p></li>
+</ol>
+</section>
+<section id="exr-cumul" class="level3">
+<h3 class="anchored" data-anchor-id="exr-cumul"><a href="../Statistiek/Kansverdelingen.html#exr-cumul" class="quarto-xref">Oefening&nbsp;<span>23.3</span></a></h3>
+<p>We berekenen de cumulatieve kansen:</p>
+<p><span class="math inline">\(F_X(0) = \textrm{Pr}\!\left[0\right] = \frac{1}{4}.\)</span></p>
+<p><span class="math inline">\(F_X(1) = \textrm{Pr}\!\left[0\right] + \textrm{Pr}\!\left[1\right] = \frac{3}{4}.\)</span></p>
+<p><span class="math inline">\(F_X(2) = \textrm{Pr}\!\left[0\right] + \textrm{Pr}\!\left[1\right] + \textrm{Pr}\!\left[2\right] = 1.\)</span></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-44-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" style="width:57.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exr-schat-kansen" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="exr-schat-kansen"><a href="../Statistiek/Kansverdelingen.html#exr-schat-kansen" class="quarto-xref">Oefening&nbsp;<span>23.4</span></a></h3>
+<ol type="a">
+<li><p>De vakjes zijn 1 eenheid breed en 0,05 hoog. De oppervlakte is dus <span class="math inline">\(1\times 0{,}05 = 0{,}05\)</span>. Daarom staat één vakje dus voor een kans van 0,05.</p></li>
+<li><p>Paneel (a):&nbsp; De kans is ongeveer 0,5. Dit is duidelijk te zien, omdat het ingekleurde gebied begint bij de piek van de verdeling en de verdeling er symmetrisch uitziet.</p>
+<p>Paneel (b):<br>
+De kans is ongeveer 0,25. Dit kun je bepalen door het aantal hele hokjes in het paarse gebied te schatten (ongeveer 5), en het totaal te vermenigvuldigen met 0,05.</p>
+<p>Paneel (c):<br>
+De paarse oppervlakjes van (b) en (c) zijn samen precies even groot als die van (a). De oppervlakte van (c) is dus 0,5 - 0,25 = 0,25. Natuurlijk kun je ook weer gewoon hokjes tellen.</p>
+<p>Paneel (d):<br>
+De kans is ongeveer 0,5. We hebben hier twee keer de oppervlakte van het paarse gebied in (c).</p></li>
+</ol>
+</section>
+<section id="exr-complement" class="level3">
+<h3 class="anchored" data-anchor-id="exr-complement"><a href="../Statistiek/Kansverdelingen.html#exr-complement" class="quarto-xref">Oefening&nbsp;<span>23.5</span></a></h3>
+<ol type="a">
+<li><p>Gebruik de complementregel:</p>
+<p><span class="math inline">\(\textrm{Pr}\!\left[X &lt; 170 \text{ of } X &gt; 182\right] = 1 - \textrm{Pr}\!\left[170 &lt; X &lt; 182\right] = 1 - 0{,}59 = 0{,}41\)</span>.</p></li>
+<li><p>De kans van het deel <span class="math inline">\(X &lt; 170\)</span> lijkt ongeveer even groot als die van <span class="math inline">\(X &gt; 182\)</span>. De kans <span class="math inline">\(\textrm{Pr}\!\left[X &lt; 170\right]\)</span> is dus ongeveer de helft van 0,41. Inderdaad: een exacte meting van het oppervlak (die jij niet kunt nadoen) geeft 0,21.</p></li>
+</ol>
+</section>
+<section id="exr-gemiddelde-herhalen" class="level3">
+<h3 class="anchored" data-anchor-id="exr-gemiddelde-herhalen"><a href="../Statistiek/Kansverdelingen.html#exr-gemiddelde-herhalen" class="quarto-xref">Oefening&nbsp;<span>23.6</span></a></h3>
+<ol type="a">
+<li><p>–</p></li>
+<li><p>Formule <a href="../Statistiek/BeschrijvendeStatistiek.html#eq-mean-rel-freq" class="quarto-xref">Vergelijking&nbsp;<span>20.7</span></a> uit <a href="../Statistiek/BeschrijvendeStatistiek.html#exr-gemiddelde-frequentietabel" class="quarto-xref">Oefening&nbsp;<span>20.11</span></a> drukt uit hoe je het gemiddelde van een reeks getallen kunt uitrekenen op basis van de relatieve frequenties <span class="math inline">\(f(x)\)</span> van alle uitkomsten <span class="math inline">\(x\)</span>.</p>
+<p>In paragraaf <a href="../Statistiek/Kansrekenen.html#sec-frequentistisch" class="quarto-xref"><span>22.2 Kansen als frequenties van een lange serie identieke kansexperimenten</span></a> hebben we kansen <span class="math inline">\(\textrm{Pr}\!\left[X = x\right]\)</span> gedefineerd als relatieve frequentie van <span class="math inline">\(x\)</span> in de uitkomsten van een (oneindig) lange reeks herhalingen van hetzelfde kansexperiment. Het gemiddelde van zo’n oneindig lange reeks kans dus met <a href="../Statistiek/BeschrijvendeStatistiek.html#eq-mean-rel-freq" class="quarto-xref">Vergelijking&nbsp;<span>20.7</span></a> worden berekend, waarbij we de kans <span class="math inline">\(\textrm{Pr}\!\left[X = x\right]\)</span> invullen op de plek van <span class="math inline">\(f(x)\)</span>. Dat levert precies <a href="../Statistiek/Kansverdelingen.html#eq-verwachtingswaarde-discreet" class="quarto-xref">Vergelijking&nbsp;<span>23.3</span></a> op.</p></li>
+</ol>
+</section>
+<section id="exr-verwachtingswaarde" class="level3">
+<h3 class="anchored" data-anchor-id="exr-verwachtingswaarde"><a href="../Statistiek/Kansverdelingen.html#exr-verwachtingswaarde" class="quarto-xref">Oefening&nbsp;<span>23.7</span></a></h3>
+<p>We moeten steeds iedere uitkomst vermenigvuldingen met zijn kans, en de resultaten optellen. Deze code voert de berekeningen uit:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>aantal_gelegenheden <span class="ot">&lt;-</span> <span class="dv">9</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>uitkomsten <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, aantal_gelegenheden) <span class="co">#alle mogelijke uitkomsten</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>kansen <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="co"># de kansen die in de tabel van de opgeva gegeven zijn </span></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.009</span>, <span class="fl">0.054</span>, <span class="fl">0.151</span>, <span class="fl">0.244</span>, <span class="fl">0.255</span>, </span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.177</span>, <span class="fl">0.082</span>, <span class="fl">0.024</span>, <span class="fl">0.004</span>,<span class="fl">0.000</span></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a>( E <span class="ot">&lt;-</span> <span class="fu">sum</span>( kansen <span class="sc">*</span> uitkomsten) ) <span class="co"># verwachtingswaarde</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.685</code></pre>
+</div>
+</div>
+</section>
+<section id="exr-variantie" class="level3">
+<h3 class="anchored" data-anchor-id="exr-variantie"><a href="../Statistiek/Kansverdelingen.html#exr-variantie" class="quarto-xref">Oefening&nbsp;<span>23.8</span></a></h3>
+<p>We vervolgen het script van <a href="../Statistiek/Kansverdelingen.html#exr-verwachtingswaarde" class="quarto-xref">Oefening&nbsp;<span>23.7</span></a>.</p>
+<ol type="a">
+<li><p>De afwijkingen van het gemiddelde</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>( afwijkingen <span class="ot">&lt;-</span> uitkomsten <span class="sc">-</span> E )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] -3.685 -2.685 -1.685 -0.685  0.315  1.315  2.315  3.315  4.315  5.315</code></pre>
+</div>
+</div>
+<p>De verwachtingswaarde <code>E</code> wordt zo van iedere uitkomst afgetrokken. Het resultaat is dus weer een vector.</p></li>
+<li><p>Kwadrateren:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>( afwijkingen_kwadraat <span class="ot">&lt;-</span> afwijkingen<span class="sc">^</span><span class="dv">2</span> )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 13.579225  7.209225  2.839225  0.469225  0.099225  1.729225  5.359225
+ [8] 10.989225 18.619225 28.249225</code></pre>
+</div>
+</div></li>
+<li><p>Product:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>( prod <span class="ot">&lt;-</span> kansen <span class="sc">*</span> afwijkingen_kwadraat )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 0.12221303 0.38929815 0.42872298 0.11449090 0.02530237 0.30607282
+ [7] 0.43945645 0.26374140 0.07447690 0.00000000</code></pre>
+</div>
+</div></li>
+<li><p>Variantie:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>( variantie <span class="ot">&lt;-</span> <span class="fu">sum</span>(prod) )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.163775</code></pre>
+</div>
+</div>
+<p>We hadden alle stappen ook in één regel kunnen uitvoeren:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>( variantie <span class="ot">&lt;-</span> <span class="fu">sum</span>( kansen <span class="sc">*</span> (uitkomsten <span class="sc">-</span> E)<span class="sc">^</span><span class="dv">2</span> ) )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.163775</code></pre>
+</div>
+</div></li>
+<li><p>Standaarddeviatie:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>( standaarddeviatie <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(variantie) )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.470978</code></pre>
+</div>
+</div></li>
+</ol>
+</section>
+<section id="exr-normale-verdeling" class="level3">
+<h3 class="anchored" data-anchor-id="exr-normale-verdeling"><a href="../Statistiek/Kansverdelingen.html#exr-normale-verdeling" class="quarto-xref">Oefening&nbsp;<span>23.9</span></a></h3>
+<ol type="a">
+<li><p>Schets:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[1,2]]">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-53-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-15"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 66.7%;justify-content: flex-start;">
+<p>Omdat het gearceerde deel van de curve precies tot het gemiddelde loopt en de normale verdeling symmetrisch is, moet de kans 0,5 zijn.</p>
+</div>
+</div>
+</div></li>
+<li><p>Schets:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[1,1.7]]">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" style="flex-basis: 37.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-54-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 63.0%;justify-content: flex-start;">
+<p>De eerste vuistregel zegt dat de kans binnen 1 standaarddeviatie 0,68… is. Buiten die grenzen ligt dus, afgerond, 1 - 0,68 = 0,32. Maar daarbij worden beide staarten meegerekend, terwijl hier alleen de rechterstaart gearceerd is. De oppervlakte is dus 0,32/2 = 0,16.</p>
+</div>
+</div>
+</div></li>
+<li><p>Schets:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[1,1.7]]">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" style="flex-basis: 37.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-55-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-17"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 63.0%;justify-content: flex-start;">
+<p>De tweede vuistregel zegt dat de kans binnen 2 standaarddeviaties 0,954… is. Buiten die grenzen ligt dus, afgerond, 1 - 0,954 = 0,046. Maar daarbij worden beide staarten meegerekend, terwijl hier alleen de linkerstaart gearceerd is. De oppervlakte is dus 0,046/2 = 0,023.</p>
+</div>
+</div>
+</div></li>
+<li><p>Schets:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[1,1.7]]">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" style="flex-basis: 37.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-56-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-18"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-56-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 63.0%;justify-content: flex-start;">
+<p>De tweede vuistregel zegt dat de kans binnen 2 standaarddeviaties 0,954… is. Buiten die grenzen ligt dus, afgerond, 1 - 0,954 = 0,046. Dat is precies het gedeelte dat hier gearceerd is.</p>
+</div>
+</div>
+</div></li>
+</ol>
+</section>
+<section id="exr-normale-verdeling-babies" class="level3">
+<h3 class="anchored" data-anchor-id="exr-normale-verdeling-babies"><a href="../Statistiek/Kansverdelingen.html#exr-normale-verdeling-babies" class="quarto-xref">Oefening&nbsp;<span>23.10</span></a></h3>
+<ol type="a">
+<li><p>Een hoofdomtrek van 38 cm is <span class="math inline">\(38\textrm{\,cm} - 34{,}5\textrm{\,cm} = 3{,}5\textrm{\,cm}\)</span> boven het gemiddelde. Dat is <span class="math inline">\(3{,}5 / 1{,}75 = 2\)</span> standaarddeviaties. Kortom, de berekening is <span class="math display">\[ \text{aantal standaarddeviaties} = \frac{X - \mu_X}{\sigma_X} = \frac{38 - 34{,}5}{1{,}75} = 2.\]</span></p></li>
+<li><p>Schets:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[1,1.7]]">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" style="flex-basis: 37.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-57-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-19"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-57-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 63.0%;justify-content: flex-start;">
+<p>De tweede vuistregel zegt dat de kans binnen 2 standaarddeviaties 0,954… is. Buiten die grenzen ligt dus, afgerond, 1 - 0,954 = 0,046. Maar daarbij worden beide staarten meegerekend, terwijl hier alleen de rechterstaart gearceerd is. De oppervlakte is dus 0,046/2 = 0,023. Dus: de kans op een hoofdomtrek van meer dan 38cm is 0,023.</p>
+</div>
+</div>
+</div></li>
+</ol>
+</section>
+<section id="exr-kansen-normaal" class="level3">
+<h3 class="anchored" data-anchor-id="exr-kansen-normaal"><a href="../Statistiek/Kansverdelingen.html#exr-kansen-normaal" class="quarto-xref">Oefening&nbsp;<span>23.11</span></a></h3>
+<ol type="a">
+<li><p>Schets:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[1,1.7]]">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" style="flex-basis: 37.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-59-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-20"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 63.0%;justify-content: flex-start;">
+<p>De kans <span class="math inline">\(\textrm{Pr}\!\left[Z &lt; 0\right]\)</span> is in het plaatje ingetekend. Die kans is 0,5. Dus is <span class="math inline">\(F_Z(0) = 0{,}5\)</span>.</p>
+</div>
+</div>
+</div>
+<p>Uitvoeren code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="dv">0</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5</code></pre>
+</div>
+</div></li>
+<li><p>Schets:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[1,1.7]]">
+<div class="quarto-layout-row">
+<div class="column quarto-layout-cell" style="flex-basis: 37.0%;justify-content: flex-start;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-61-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-21"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-61-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="column quarto-layout-cell" style="flex-basis: 63.0%;justify-content: flex-start;">
+<p>De kans <span class="math inline">\(\textrm{Pr}\!\left[Z &lt; -1\right]\)</span> is in het plaatje ingetekend. Die kans is volgens de vuistregels <span class="math inline">\((1 - 0{,}68)/2 = 0{,}16\)</span>. Dus is <span class="math inline">\(F_Z(-1) = 0{,}16\)</span>.</p>
+</div>
+</div>
+</div>
+<p>Uitvoeren code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1586553</code></pre>
+</div>
+</div></li>
+<li><p>Schets:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[1,1.7]]">
+<div class="quarto-layout-row">
+<div class="column quarto-layout-cell" style="flex-basis: 37.0%;justify-content: flex-start;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-63-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-22"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-63-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="column quarto-layout-cell" style="flex-basis: 63.0%;justify-content: flex-start;">
+<p>De kans <span class="math inline">\(\textrm{Pr}\!\left[Z &gt; 0{,}5\right]\)</span> is in het plaatje ingetekend. Met <code>pnorm()</code> kunnen we de kans in een linkerstaart berekenen, maar nu willen we de kans in een rechterstaart.</p>
+</div>
+</div>
+</div>
+<p>Er zijn twee oplossingen. De eerste is om de complementregel te gebruiken:</p>
+<p><span class="math display">\[ \textrm{Pr}\!\left[Z &gt; 0{,}5\right] = 1 - \textrm{Pr}\!\left[Z &lt; 0{,}5\right].\]</span></p>
+<p>De tweede optie is om van de <em>symmetrie</em> van de normale verdeling gebruik te maken:</p>
+<p><span class="math display">\[\textrm{Pr}\!\left[Z &gt; 0{,}5\right] = \textrm{Pr}\!\left[Z &lt; -0{,}5\right].\]</span></p>
+<p>Beide opties zouden hetzelfde antwoord moeten geven.</p>
+<p>Uitvoeren code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># optie 1: gebruik de complementregel:</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="fl">0.5</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3085375</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co"># optie 2: gebruik de symmetrie:</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="sc">-</span><span class="fl">0.5</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3085375</code></pre>
+</div>
+</div></li>
+<li><p>Schets:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[1,1.7]]">
+<div class="quarto-layout-row">
+<div class="column quarto-layout-cell" style="flex-basis: 37.0%;justify-content: flex-start;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-65-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-23"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-65-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="column quarto-layout-cell" style="flex-basis: 63.0%;justify-content: flex-start;">
+<p>De kans <span class="math inline">\(\textrm{Pr}\!\left[-1 &lt; Z &lt; 1\right]\)</span> is in het plaatje ingetekend. Met <code>pnorm()</code> krijgen we de kans van de linkerstaart, maar nu willen we de kans in een middenstuk.</p>
+</div>
+</div>
+</div>
+<p>De oplossing is om eerst <span class="math inline">\(\textrm{Pr}\!\left[Z &lt; 1\right]\)</span> uit te rekenen,</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-66-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-24"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-66-1.png" class="img-fluid figure-img" style="width:36.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>en daar het stuk <span class="math inline">\(\textrm{Pr}\!\left[Z &lt; -1\right]\)</span> vanaf te trekken:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-67-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-25"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-67-1.png" class="img-fluid figure-img" style="width:36.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Immers: <span class="math inline">\(\textrm{Pr}\!\left[ -1 &lt; Z &lt; 1\right] = \textrm{Pr}\!\left[Z &lt; 1\right] - \textrm{Pr}\!\left[Z &lt; -1\right].\)</span></p>
+<p>Uitvoeren code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="dv">1</span>) <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6826895</code></pre>
+</div>
+</div>
+<p>De uitkomst had je kunnen voorspellen, want dit is precies vuistregel 1.</p></li>
+<li><p>Schets:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-70-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-26"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-70-1.png" class="img-fluid figure-img" style="width:50.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>De waarde 140 ligt ver in de staart, en dus is maar een heel klein deel van het oppervlak gearceerd. (Klik zo nodig even op het figuur om het te vergroten.) De kans moet dus erg klein zijn. Berekening:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="dv">140</span>, <span class="at">mean =</span> <span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">15</span>) <span class="co"># complementregel</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.003830381</code></pre>
+</div>
+</div></li>
+</ol>
+</section>
+<section id="exr-t-verdeling" class="level3">
+<h3 class="anchored" data-anchor-id="exr-t-verdeling"><a href="../Statistiek/Kansverdelingen.html#exr-t-verdeling" class="quarto-xref">Oefening&nbsp;<span>23.12</span></a></h3>
+<p>De staarten van de <span class="math inline">\(t\)</span>-verdeling zijn dikker. Extreme situaties waarbij een waarde veel groter is dan gemiddeld komen bij de <span class="math inline">\(t\)</span>-verdeling dus vaker voor dan bij de normale verdeling.</p>
+<p>Als het rekenmodel uitgaat van een normale verdeling schatten we de kans op extreme omstandigheden dus te laag in. Het model onderschat dan het risico op overstromingen.</p>
+</section>
+<section id="exr-krit-norm-r" class="level3">
+<h3 class="anchored" data-anchor-id="exr-krit-norm-r"><a href="../Statistiek/Kansverdelingen.html#exr-krit-norm-R" class="quarto-xref">Oefening&nbsp;<span>23.13</span></a></h3>
+<ol type="a">
+<li><p>De schets ziet er zo uit:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Functie om een plot te maken van de kritieke waarde</span></span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>crit_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(alpha) {</span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Kritieke waarde van Z</span></span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>  Z_crit <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha <span class="sc">/</span> <span class="dv">2</span>)  <span class="co"># Bereken de kritieke waarde</span></span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Coördinaten voor de pijlen</span></span>
+<span id="cb93-7"><a href="#cb93-7" aria-hidden="true" tabindex="-1"></a>  xstart <span class="ot">&lt;-</span> (Z_crit <span class="sc">+</span> <span class="fl">3.5</span>) <span class="sc">/</span> <span class="dv">2</span>         <span class="co"># Beginpunt x-coördinaat</span></span>
+<span id="cb93-8"><a href="#cb93-8" aria-hidden="true" tabindex="-1"></a>  ystart <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="dv">0</span>) <span class="sc">/</span> <span class="dv">4</span>               <span class="co"># Beginpunt y-coördinaat</span></span>
+<span id="cb93-9"><a href="#cb93-9" aria-hidden="true" tabindex="-1"></a>  xend <span class="ot">&lt;-</span> Z_crit <span class="sc">+</span> (<span class="fl">3.5</span> <span class="sc">-</span> Z_crit) <span class="sc">/</span> <span class="dv">7</span>  <span class="co"># Eindpunt x-coördinaat</span></span>
+<span id="cb93-10"><a href="#cb93-10" aria-hidden="true" tabindex="-1"></a>  yend <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(xend) <span class="sc">/</span> <span class="dv">3</span>              <span class="co"># Eindpunt y-coördinaat</span></span>
+<span id="cb93-11"><a href="#cb93-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-12"><a href="#cb93-12" aria-hidden="true" tabindex="-1"></a>  proportie <span class="ot">&lt;-</span> <span class="cf">function</span>(prop){</span>
+<span id="cb93-13"><a href="#cb93-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">annotate</span>(</span>
+<span id="cb93-14"><a href="#cb93-14" aria-hidden="true" tabindex="-1"></a>          <span class="st">"text"</span>, </span>
+<span id="cb93-15"><a href="#cb93-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="fl">0.15</span>, </span>
+<span id="cb93-16"><a href="#cb93-16" aria-hidden="true" tabindex="-1"></a>          <span class="at">label =</span> prop, <span class="co"># Dynamically include the variable</span></span>
+<span id="cb93-17"><a href="#cb93-17" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"black"</span>, </span>
+<span id="cb93-18"><a href="#cb93-18" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">5</span>, </span>
+<span id="cb93-19"><a href="#cb93-19" aria-hidden="true" tabindex="-1"></a>          <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
+<span id="cb93-20"><a href="#cb93-20" aria-hidden="true" tabindex="-1"></a>          <span class="at">vjust =</span> <span class="fl">0.5</span></span>
+<span id="cb93-21"><a href="#cb93-21" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb93-22"><a href="#cb93-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb93-23"><a href="#cb93-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-24"><a href="#cb93-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Plot de standaardnormale verdeling met staarten en annotaties</span></span>
+<span id="cb93-25"><a href="#cb93-25" aria-hidden="true" tabindex="-1"></a>  standaardNormaalGeneriek <span class="sc">+</span></span>
+<span id="cb93-26"><a href="#cb93-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Labels voor de assen</span></span>
+<span id="cb93-27"><a href="#cb93-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb93-28"><a href="#cb93-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">"Kansdichtheid"</span>, </span>
+<span id="cb93-29"><a href="#cb93-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(Z))</span>
+<span id="cb93-30"><a href="#cb93-30" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb93-31"><a href="#cb93-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ingekleurd oppervlak onder de curve</span></span>
+<span id="cb93-32"><a href="#cb93-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">oppervlak</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="sc">-</span>Z_crit, data) <span class="sc">+</span></span>
+<span id="cb93-33"><a href="#cb93-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">oppervlak</span>(Z_crit, <span class="dv">10</span>, data) <span class="sc">+</span></span>
+<span id="cb93-34"><a href="#cb93-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Schaalinstellingen voor de x-as</span></span>
+<span id="cb93-35"><a href="#cb93-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb93-36"><a href="#cb93-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span>Z_crit, <span class="dv">0</span>, Z_crit), </span>
+<span id="cb93-37"><a href="#cb93-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(</span>
+<span id="cb93-38"><a href="#cb93-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">paste0</span>(<span class="fu">round</span>(<span class="sc">-</span>Z_crit, <span class="dv">2</span>), <span class="st">"..."</span>), </span>
+<span id="cb93-39"><a href="#cb93-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">"0"</span>, </span>
+<span id="cb93-40"><a href="#cb93-40" aria-hidden="true" tabindex="-1"></a>        <span class="fu">paste0</span>(<span class="fu">round</span>(Z_crit, <span class="dv">2</span>), <span class="st">"..."</span>)</span>
+<span id="cb93-41"><a href="#cb93-41" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb93-42"><a href="#cb93-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">minor_breaks =</span> <span class="cn">NULL</span>  <span class="co"># Verwijder minor ticks</span></span>
+<span id="cb93-43"><a href="#cb93-43" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb93-44"><a href="#cb93-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Kromme pijltjes toevoegen</span></span>
+<span id="cb93-45"><a href="#cb93-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_curve</span>(</span>
+<span id="cb93-46"><a href="#cb93-46" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">-</span>xstart, <span class="at">y =</span> ystart, <span class="at">xend =</span> <span class="sc">-</span>xend, <span class="at">yend =</span> yend), </span>
+<span id="cb93-47"><a href="#cb93-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">curvature =</span> <span class="fl">0.2</span>, </span>
+<span id="cb93-48"><a href="#cb93-48" aria-hidden="true" tabindex="-1"></a>      <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"cm"</span>)), </span>
+<span id="cb93-49"><a href="#cb93-49" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"black"</span>, </span>
+<span id="cb93-50"><a href="#cb93-50" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="fl">0.7</span></span>
+<span id="cb93-51"><a href="#cb93-51" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb93-52"><a href="#cb93-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_curve</span>(</span>
+<span id="cb93-53"><a href="#cb93-53" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">x =</span> xstart, <span class="at">y =</span> ystart, <span class="at">xend =</span> xend, <span class="at">yend =</span> yend), </span>
+<span id="cb93-54"><a href="#cb93-54" aria-hidden="true" tabindex="-1"></a>      <span class="at">curvature =</span> <span class="sc">-</span><span class="fl">0.2</span>, </span>
+<span id="cb93-55"><a href="#cb93-55" aria-hidden="true" tabindex="-1"></a>      <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"cm"</span>)), </span>
+<span id="cb93-56"><a href="#cb93-56" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"black"</span>, </span>
+<span id="cb93-57"><a href="#cb93-57" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="fl">0.7</span></span>
+<span id="cb93-58"><a href="#cb93-58" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb93-59"><a href="#cb93-59" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Annotaties toevoegen</span></span>
+<span id="cb93-60"><a href="#cb93-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
+<span id="cb93-61"><a href="#cb93-61" aria-hidden="true" tabindex="-1"></a>      <span class="st">"text"</span>, </span>
+<span id="cb93-62"><a href="#cb93-62" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="sc">-</span>xstart, </span>
+<span id="cb93-63"><a href="#cb93-63" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> ystart <span class="sc">+</span> <span class="fl">0.02</span>,  <span class="co"># Plaats annotatie net boven de pijl</span></span>
+<span id="cb93-64"><a href="#cb93-64" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, <span class="st">","</span>, <span class="fu">round</span>(alpha <span class="sc">/</span> <span class="dv">2</span>, <span class="dv">3</span>)), </span>
+<span id="cb93-65"><a href="#cb93-65" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"black"</span>, </span>
+<span id="cb93-66"><a href="#cb93-66" aria-hidden="true" tabindex="-1"></a>      <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
+<span id="cb93-67"><a href="#cb93-67" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="dv">4</span></span>
+<span id="cb93-68"><a href="#cb93-68" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb93-69"><a href="#cb93-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
+<span id="cb93-70"><a href="#cb93-70" aria-hidden="true" tabindex="-1"></a>      <span class="st">"text"</span>, </span>
+<span id="cb93-71"><a href="#cb93-71" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> xstart, </span>
+<span id="cb93-72"><a href="#cb93-72" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> ystart <span class="sc">+</span> <span class="fl">0.02</span>,  <span class="co"># Plaats annotatie net boven de pijl</span></span>
+<span id="cb93-73"><a href="#cb93-73" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, <span class="st">","</span>, <span class="fu">round</span>(alpha <span class="sc">/</span> <span class="dv">2</span>, <span class="dv">3</span>)), </span>
+<span id="cb93-74"><a href="#cb93-74" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"black"</span>, </span>
+<span id="cb93-75"><a href="#cb93-75" aria-hidden="true" tabindex="-1"></a>      <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
+<span id="cb93-76"><a href="#cb93-76" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="dv">4</span></span>
+<span id="cb93-77"><a href="#cb93-77" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb93-78"><a href="#cb93-78" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Label in het midden</span></span>
+<span id="cb93-79"><a href="#cb93-79" aria-hidden="true" tabindex="-1"></a>    <span class="fu">proportie</span>(<span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, <span class="st">","</span>, <span class="fu">round</span>(<span class="dv">1</span> <span class="sc">-</span> alpha, <span class="dv">2</span>)))</span>
+<span id="cb93-80"><a href="#cb93-80" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb93-81"><a href="#cb93-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-82"><a href="#cb93-82" aria-hidden="true" tabindex="-1"></a><span class="co"># Voorbeeld: plot voor alpha = 0.1</span></span>
+<span id="cb93-83"><a href="#cb93-83" aria-hidden="true" tabindex="-1"></a><span class="fu">crit_plot</span>(<span class="fl">0.1</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="antwoorden_statistiek_files/figure-html/unnamed-chunk-72-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-27"><img src="antwoorden_statistiek_files/figure-html/unnamed-chunk-72-1.png" class="img-fluid figure-img" style="width:50.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>De kritieke waarde (dus de grens van het gekleurde gebied) kun je berekenen als:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>alfa <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alfa<span class="sc">/</span><span class="dv">2</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.644854</code></pre>
+</div>
+</div></li>
+<li><p>Als <span class="math inline">\(\alpha\)</span> groter is, dan is het gearceerde deel van de plot groter. Dat wil zeggen dat de kritieke waarde kleiner moet zijn.</p></li>
+<li><p>Als alfa gelijk is aan 1, dan is het volledige oppervlak onder de curve ingekleurd en moet de kritieke waarde dus 0 zijn.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>alfa <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alfa<span class="sc">/</span><span class="dv">2</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div></li>
+</ol>
+</section>
+<section id="exr-krit-t-r" class="level3">
+<h3 class="anchored" data-anchor-id="exr-krit-t-r"><a href="../Statistiek/Kansverdelingen.html#exr-krit-t-R" class="quarto-xref">Oefening&nbsp;<span>23.14</span></a></h3>
+<ol type="a">
+<li><p>Code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>alfa <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alfa<span class="sc">/</span><span class="dv">2</span>, <span class="at">df =</span> <span class="dv">2</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.302653</code></pre>
+</div>
+</div>
+<p>Deze waarde is groter dan de kritieke waarde voor de normale verdeling (1,96). Dat is omdat de staarten van de <span class="math inline">\(t\)</span>-verdeling dikker zijn.</p></li>
+<li><p>Code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>alfa <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alfa<span class="sc">/</span><span class="dv">2</span>, <span class="at">df =</span> <span class="dv">100</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.983972</code></pre>
+</div>
+</div>
+<p>Deze waarde is kleiner dan voor df = 2. Bij grote aantal vrijheidsgraden gaat de <span class="math inline">\(t\)</span>-verdeling steeds meer lijken op de standaardnormale verdeling. De kritieke waarde wordt dus kleiner als het aantal vrijheidsgraden groter wordt. De kritieke waarde is bij df = 100 al erg dicht bij die van de standaardnormale verdeling (1,96).</p></li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Gekopieerd!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Gekopieerd!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+          // default icon
+          link.classList.add("external");
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../Appendices/antwoorden_modellen.html" class="pagination-link" aria-label="Antwoorden modellen">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Antwoorden modellen</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../Appendices/spiekbriefjes.html" class="pagination-link" aria-label="Spiekbriefjes">
+        <span class="nav-page-text">Spiekbriefjes</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Vakgroep Theoretische Biologie, Universiteit Utrecht.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Dit boek is gemaakt met <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","closeEffect":"zoom","descPosition":"bottom","selector":".lightbox","loop":false});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>

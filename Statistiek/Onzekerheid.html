@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>21&nbsp; Onzekerheid in schattingen – Biologische Modellen en Statistiek</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Statistiek/Kansrekenen.html" rel="next">
+<link href="../Statistiek/BeschrijvendeStatistiek.html" rel="prev">
+<link href="../figuren/favicon/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Statistiek/Inleiding.html">Statistiek</a></li><li class="breadcrumb-item"><a href="../Statistiek/Onzekerheid.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Onzekerheid in schattingen</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../figuren/favicon/android-chrome-512x512.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Biologische <br>Modellen en Statistiek</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Schakel donkere modus"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Cursusinformatie</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inleiding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../cursusinformatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Algemene cursusinformatie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../planning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Studieplanning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../links.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Handige links</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Basisprincipes van R</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/introductie_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie en installatie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/introductie_R2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Programmeren in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Programmeren/intro_R_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefenvragen R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Basiswiskunde</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/inleiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inleiding</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/algebra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Algebra</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/breuken.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Breuken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/exponenten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Exponenten &amp; Logaritmen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/limieten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Asymptoten &amp; Limieten</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/afgeleiden.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Afgeleiden</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/schetsen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Functies schetsen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Wiskunde/wiskunde_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefenvragen wiskunde</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Biologische modellen</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/intro_modellen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introductie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/exponentielegroei.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Exponentiële groei</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/odes_basis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelleren met ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/dichtheidseffecten.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Dichtheidseffecten</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/ruimtelijkegroei.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Ruimtelijke groei</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/predatorprooi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Predator-prooi interacties</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/odes_grind.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs modelleren in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/competitie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Competitie en evolutie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/zwermen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Zwermen en foerageren</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/reactiediffusie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reacties en diffusie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/exciteerbaremedia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Exciteerbare media</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mini-project</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Modellen/oefenvragen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefenvragen</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Statistiek</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/Inleiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Inleiding: Waarom (bio)statistiek?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/BeschrijvendeStatistiek.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Variabelen en hun verdelingen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/Onzekerheid.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Onzekerheid in schattingen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/Kansrekenen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Kansen en kansmodellen</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Statistiek/Kansverdelingen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Kansverdelingen</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Bijlagen</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_wiskunde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden wiskunde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_modellen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Antwoorden modellen</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/antwoorden_statistiek.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Uitwerkingen statistiek</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/spiekbriefjes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spiekbriefjes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/dankwoord.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dankwoord</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="-1">
+    <h2 id="toc-title">Inhoudsopgave</h2>
+   
+  <ul class="collapse">
+  <li><a href="#onzekerheid-in-schattingen-op-basis-van-steekproeven" id="toc-onzekerheid-in-schattingen-op-basis-van-steekproeven" class="nav-link active" data-scroll-target="#onzekerheid-in-schattingen-op-basis-van-steekproeven"><span class="header-section-number">21.1</span> Onzekerheid in schattingen op basis van steekproeven</a></li>
+  <li><a href="#onzekerheid-door-meetfouten" id="toc-onzekerheid-door-meetfouten" class="nav-link" data-scroll-target="#onzekerheid-door-meetfouten"><span class="header-section-number">21.2</span> Onzekerheid door meetfouten</a></li>
+  <li><a href="#schattingen-precisie-nauwkeurigheid-zuiverheid-en-bias" id="toc-schattingen-precisie-nauwkeurigheid-zuiverheid-en-bias" class="nav-link" data-scroll-target="#schattingen-precisie-nauwkeurigheid-zuiverheid-en-bias"><span class="header-section-number">21.3</span> Schattingen: precisie, nauwkeurigheid, zuiverheid en bias</a></li>
+  <li><a href="#sec-toevallige-fouten" id="toc-sec-toevallige-fouten" class="nav-link" data-scroll-target="#sec-toevallige-fouten"><span class="header-section-number">21.4</span> Toevallige fouten in schattingen op basis van steekproeven</a></li>
+  <li><a href="#systematische-fouten-in-schattingen-op-basis-van-steekproeven" id="toc-systematische-fouten-in-schattingen-op-basis-van-steekproeven" class="nav-link" data-scroll-target="#systematische-fouten-in-schattingen-op-basis-van-steekproeven"><span class="header-section-number">21.5</span> Systematische fouten in schattingen op basis van steekproeven</a></li>
+  <li><a href="#kansen-en-de-interpretatie-van-onzekere-gegevens" id="toc-kansen-en-de-interpretatie-van-onzekere-gegevens" class="nav-link" data-scroll-target="#kansen-en-de-interpretatie-van-onzekere-gegevens"><span class="header-section-number">21.6</span> Kansen en de interpretatie van onzekere gegevens</a></li>
+  <li><a href="#samenvatting" id="toc-samenvatting" class="nav-link" data-scroll-target="#samenvatting"><span class="header-section-number">21.7</span> Samenvatting</a></li>
+  <li><a href="#terminologie" id="toc-terminologie" class="nav-link" data-scroll-target="#terminologie"><span class="header-section-number">21.8</span> Terminologie</a></li>
+  <li><a href="#extra-informatie" id="toc-extra-informatie" class="nav-link" data-scroll-target="#extra-informatie"><span class="header-section-number">21.9</span> Extra informatie</a></li>
+  <li><a href="#opgaven" id="toc-opgaven" class="nav-link" data-scroll-target="#opgaven"><span class="header-section-number">21.10</span> Opgaven</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Statistiek/Inleiding.html">Statistiek</a></li><li class="breadcrumb-item"><a href="../Statistiek/Onzekerheid.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Onzekerheid in schattingen</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-onzekerheid" class="quarto-section-identifier"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Onzekerheid in schattingen</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In de inleiding hebben we benadrukt dat biologische gegevens onzeker zijn. Dat komt doordat gegevens vaak het resultaat zijn van <strong>steekproeven</strong> (<em>samples</em>), en daarnaast geplaagd worden door <strong>meetfouten</strong> (<em>measurement error</em>). Beide situaties gaan we apart bekijken. We beginnen bij steekproeven.</p>
+<section id="onzekerheid-in-schattingen-op-basis-van-steekproeven" class="level2" data-number="21.1">
+<h2 data-number="21.1" class="anchored" data-anchor-id="onzekerheid-in-schattingen-op-basis-van-steekproeven"><span class="header-section-number">21.1</span> Onzekerheid in schattingen op basis van steekproeven</h2>
+<p>Na iedere cursus word je gevraagd om een Caracal-enquête in te vullen. Een belangrijk doel van die enquête is om te bepalen hoe studenten de cursus gemiddeld beoordelen. In de praktijk vult een minderheid van de studenten de enquête daadwerkelijk in, en dus rijst de vraag: wat kunnen we leren over het gemiddelde oordeel van <em>alle deelnemers</em> van een cursus op basis van <em>een beperkt aantal respondenten</em>?</p>
+<p>Laten we wat begrippen doornemen die helpen om over dit probleem na te denken.</p>
+<p>In veel onderzoeken zijn we geïnteresseerd in een bepaalde <strong>populatie</strong>. Dat kan bijvoorbeeld de studentenpopulatie zijn, of een populatie eksters, of alle Nederlandse diabetespatiënten. Een populatie is een verzameling van <strong>eenheden</strong> (<em>units</em>). De eenheden hoeven geen personen of organismen te zijn; we kunnen ook onderzoek doen naar de “populatie” van zakken chips. Zit er gemiddeld wel echt 200g chips in, zoals de fabrikant beweert?</p>
+<p>Het onderzoek gaat vervolgens over één of meerdere <strong>variabelen</strong>. In deze context is een variabele een eigenschap van de eenheden in de populatie, zoals bloedgroep, bloedsuikerwaarde na tenminste 8 uur vasten — of de inhoud van een zak chips.</p>
+<p>De waarde van een variabele verschilt meestal per eenheid in de populatie. We kunnen ons daarom afvragen wat de <strong>verdeling</strong> is van de variabele in de populatie.</p>
+<p>Zoals je in <a href="BeschrijvendeStatistiek.html" class="quarto-xref"><span>Hoofdstuk 20</span></a> hebt gezien, kunnen je je de verdeling van de variabele in de populatie voorstellen als een staafdiagram (als variabele categorisch is) of als een histogram (als de variabele numeriek is). We kunnen die verdeling ook karakteriseren met kengetallen, zoals gemiddelde en standaardafwijking. Dit soort kenmerken van de verdeling <em>van een populatie</em> worden ook wel <strong>populatieparameters</strong> genoemd.</p>
+<p>Het doel van veel onderzoeken is om een populatieparameter te bepalen. Zo kan een onderzoek uitzoeken wat de gemiddelde opbrengst is van aardappelplanten van een bepaald ras, of wat de standaarddeviatie is van de dikte van schroeven die in een bepaalde fabriek worden geproduceerd.</p>
+<p>Om een populatieparameter exact te bepalen zouden we de waarde van de variabele moeten meten voor <em>iedere eenheid</em> in de populatie. In de praktijk is dat meestal onmogelijk, omdat populaties vaak groot zijn en de onderzoeksmiddelen (geld, menskracht, tijd, …) beperkt. Bovendien zijn metingen vaak destructief: planten moeten worden geoogst, proefdieren geofferd, en proefpersonen blootgesteld aan risico’s. Daarom onderzoeken we meestal een beperkt aantal individuen uit de populatie—een <strong>steekproef</strong>. De waarden uit de steekproef gebruiken we vervolgens om de populatieparameter te <strong>schatten</strong> (<em>to estimate</em>). Dat doen we door een bepaalde statistieken uit te rekenen, zoals het gemiddelde. Als we een bepaalde statistiek gebruiken om een parameter te schatten dan noemen we die statistiek een <strong>schatter</strong> (<strong>an estimate</strong>).</p>
+<p>Dat we alleen toegang hebben tot een steekproef betekent helaas dat het resultaat nooit exact is. Ten eerste hange de schatting af van de specifieke steekproef. Als je het onderzoek opnieuw zou uitvoeren, op dezelfde manier, dan zou de steekproef anders uitpakken en je schatting dus ook. Deze variatie tussen steekproeven noemt men <strong>steekproevenvariabiliteit</strong> (<em>sampling variability</em>). Ten tweede kan het zijn dat je steekproef niet <strong>representatief</strong> is voor de populatie. Door beide oorzaken zal een schatting op basis van een steekproef meestal afwijken van de ware populatieparameter.</p>
+<div id="exr-pop-var-par" class="pepexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 21.1 (De terminologie van steekproeven)</strong></span> <br></p>
+<p>De begrippen die hierboven zijn behandeld zijn enorm belangrijk. Benoem daarom van de onderstaande onderzoeken</p>
+<ul>
+<li>de populatie,</li>
+<li>de eenheden van de populatie,</li>
+<li>de variabele waarnaar onderzoek wordt gedaan,</li>
+<li>de populatieparameter die geschat wordt.</li>
+</ul>
+<ol type="a">
+<li><p>Om te bepalen of de sterren in het “Virgo Cluster” tegelijk zijn ontstaan bepalen sterrenkundigen hun temperatuur. Als de temperatuur van deze sterren niet te veel varieert kunnen ze de conclusie trekken dat de sterren ongeveer even oud zijn.</p></li>
+<li><p>In een glasfabriek wordt glas gerecycled. Het is moeilijk te voorkomen dat daarbij glas gemengd wordt met andere materialen, zoals keramiek. Voor gebruik in bierflesjes mag die verontreiniging gemiddeld niet meer zijn dan 2,5%. Om dat te garanderen neemt de fabriek regelmatig een steekproef van bierflesjes en meet daarin de verontreiniging.</p></li>
+<li><p>Kinesin-1 is een moleculaire machine die binnen de neurons materiaal verplaatsen door over microtubili te “lopen”. Een bioloog wil bepalen hoe snel kinesin-1 gemiddeld loopt.</p></li>
+<li><p>Onderzoekers doen een steekproef om te bepalen welk deel van de populatie bepaalde kabinetsplannen steunt.</p></li>
+</ol>
+</div>
+</section>
+<section id="onzekerheid-door-meetfouten" class="level2" data-number="21.2">
+<h2 data-number="21.2" class="anchored" data-anchor-id="onzekerheid-door-meetfouten"><span class="header-section-number">21.2</span> Onzekerheid door meetfouten</h2>
+<p>In de vorige paragraaf hebben we besproken hoe onzekerheid ontstaat bij schattingen die zijn gebaseerd op steekproeven. In andere situaties maken we echter geen gebruik van steekproeven, maar gebruiken we meetinstrumenten om een grootheid te bepalen. Denk bijvoorbeeld aan het meten van een fysische constante, zoals de lichtsnelheid, of het meten van een individuele eigenschap, zoals je ochtendgewicht vandaag.</p>
+<p>Wanneer je dezelfde meting meerdere keren uitvoert, zul je merken dat de uitkomsten niet altijd exact gelijk zijn. Dit komt door <strong>meetfouten</strong>: afwijkingen die ontstaan door imperfecties in het meetproces. Sommige meetfouten zijn willekeurig, veroorzaakt door fluctuaties in omgevingsfactoren of ruis in het meetinstrument. Andere meetfouten zijn systematisch, bijvoorbeeld doordat het meetinstrument niet perfect gekalibreerd is en dus consistent een te hoge of te lage waarde geeft. Deze meetfouten maken dat schattingen op basis van metingen ook onzeker zijn.</p>
+<p>In sommige onderzoeken spelen meetfouten en steekproevenvariabiliteit allebei een rol. Stel dat we voor een bepaald gebied de gemiddelde totale biomassa willen weten van de planten die groeien op één vierkante meter. We nemen dan een steekproef in het gebied—willekeurig gekozen “plotjes” van één vierkante meter—en meten de biomassa op die plotjes. Nu speelt steekproevenvariabiliteit en rol, omdat het resultaat afhangt van de willekeurig gekozen plotjes, maar gaan ook meetfouten meespelen, omdat bij het afmeten, oogsten en wegen van de planten toevallige afwijkingen zullen ontstaan.</p>
+<p>Kortom, meetfouten zijn een belangrijke oorzaak van onzekerheid, zowel in individuele metingen als in schattingen die gebaseerd zijn op steekproeven.</p>
+</section>
+<section id="schattingen-precisie-nauwkeurigheid-zuiverheid-en-bias" class="level2" data-number="21.3">
+<h2 data-number="21.3" class="anchored" data-anchor-id="schattingen-precisie-nauwkeurigheid-zuiverheid-en-bias"><span class="header-section-number">21.3</span> Schattingen: precisie, nauwkeurigheid, zuiverheid en bias</h2>
+<p>Schattingen kunnen op verschillende manieren afwijken van de ware parameter. Daarbij maken we onderscheid tussen <strong>precisie</strong> (<em>precision</em>) en <strong>nauwkeurigheid</strong> (<em>accuracy</em>). Deze begrippen worden in <a href="#fig-precisie-vs-nauwkeurig" class="quarto-xref">Figuur&nbsp;<span>21.1</span></a> hieronder geïllustreerd.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Controleer of benodigde pakketten zijn geladen</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>(<span class="st">"ggplot2"</span> <span class="sc">%in%</span> <span class="fu">.packages</span>())) { <span class="fu">library</span>(ggplot2) }</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>(<span class="st">"dplyr"</span> <span class="sc">%in%</span> <span class="fu">.packages</span>())) { <span class="fu">library</span>(dplyr) }</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>(<span class="st">"MASS"</span> <span class="sc">%in%</span> <span class="fu">.packages</span>())) { <span class="fu">library</span>(MASS) }</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>(<span class="st">"gridExtra"</span> <span class="sc">%in%</span> <span class="fu">.packages</span>())) { <span class="fu">library</span>(gridExtra) }</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>(<span class="st">"grid"</span> <span class="sc">%in%</span> <span class="fu">.packages</span>())) { <span class="fu">library</span>(grid) }</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Functie om een ring (donut) te genereren als polygon</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>genereer_ring <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, straal_binnen, straal_buiten, <span class="at">punten =</span> <span class="dv">100</span>) {</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  theta <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span> <span class="sc">*</span> pi, <span class="at">length.out =</span> punten)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(x <span class="sc">+</span> straal_buiten <span class="sc">*</span> <span class="fu">cos</span>(theta), <span class="cn">NA</span>, x <span class="sc">+</span> straal_binnen <span class="sc">*</span> <span class="fu">cos</span>(<span class="fu">rev</span>(theta))),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(y <span class="sc">+</span> straal_buiten <span class="sc">*</span> <span class="fu">sin</span>(theta), <span class="cn">NA</span>, y <span class="sc">+</span> straal_binnen <span class="sc">*</span> <span class="fu">sin</span>(<span class="fu">rev</span>(theta)))</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Functie om een volledig doelwit te genereren</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>genereer_doelwit <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">punten =</span> <span class="dv">100</span>) {</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  kleuren <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"white"</span>, <span class="st">"red"</span>, <span class="st">"white"</span>, <span class="st">"red"</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  straal_randen <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">5</span>), <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>), <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(<span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="cf">function</span>(i) {</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">genereer_ring</span>(<span class="dv">0</span>, <span class="dv">0</span>, straal_randen[[i]][<span class="dv">1</span>], straal_randen[[i]][<span class="dv">2</span>], punten) <span class="sc">%&gt;%</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">kleur =</span> kleuren[i], <span class="at">groep =</span> i)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  }))</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Functie om een steekproef te schalen en verschuiven</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>scale_and_shift_sample <span class="ot">&lt;-</span> <span class="cf">function</span>(n, desired_mean, desired_variance) {</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(n, <span class="at">mu =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">Sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>)))</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  scaled_sample <span class="ot">&lt;-</span> <span class="fu">sweep</span>(sample, <span class="dv">2</span>, <span class="fu">sqrt</span>(desired_variance <span class="sc">/</span> <span class="fu">apply</span>(sample, <span class="dv">2</span>, var)), <span class="st">`</span><span class="at">*</span><span class="st">`</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sweep</span>(scaled_sample, <span class="dv">2</span>, desired_mean, <span class="st">`</span><span class="at">+</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>))</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Genereer gegevens voor het doelwit</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>doelwit_data <span class="ot">&lt;-</span> <span class="fu">genereer_doelwit</span>(<span class="at">punten =</span> <span class="dv">200</span>)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Maak een basisplot voor het doelwit</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>basis_doelwit <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> doelwit_data,</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">group =</span> groep, <span class="at">fill =</span> kleur),</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">0.5</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_identity</span>() <span class="sc">+</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">size =</span> <span class="dv">1</span>))</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Genereer steekproeven</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">134</span>)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>steekproeven <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">links_boven =</span> <span class="fu">scale_and_shift_sample</span>(<span class="dv">10</span>, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="fl">0.15</span>),</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">rechts_boven =</span> <span class="fu">scale_and_shift_sample</span>(<span class="dv">10</span>, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dv">2</span>),</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  <span class="at">links_onder =</span> <span class="fu">scale_and_shift_sample</span>(<span class="dv">10</span>, <span class="fu">c</span>(<span class="sc">-</span><span class="fl">2.5</span>, <span class="sc">-</span><span class="fl">2.5</span>), <span class="fl">0.15</span>),</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>  <span class="at">rechts_onder =</span> <span class="fu">scale_and_shift_sample</span>(<span class="dv">10</span>, <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>), <span class="dv">2</span>)</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Functie om doelwit met steekproef te maken</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>maak_plot_met_steekproef <span class="ot">&lt;-</span> <span class="cf">function</span>(basis, steekproef) {</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  basis <span class="sc">+</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> steekproef, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y),</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>               <span class="at">shape =</span> <span class="dv">4</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">stroke =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"black"</span>)</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Maak de individuele doelwitplots</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>doelwit_plots <span class="ot">&lt;-</span> <span class="fu">lapply</span>(steekproeven, <span class="cf">function</span>(sp) <span class="fu">maak_plot_met_steekproef</span>(basis_doelwit, sp))</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="co"># Labels en lege grob</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>labels <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">prec =</span> <span class="fu">textGrob</span>(<span class="st">"Precies"</span>, <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">14</span>)),</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>  <span class="at">not_prec =</span> <span class="fu">textGrob</span>(<span class="st">"Niet precies"</span>, <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">14</span>)),</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>  <span class="at">acc =</span> <span class="fu">textGrob</span>(<span class="st">"Nauwkeurig"</span>, <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">14</span>), <span class="at">rot =</span> <span class="dv">90</span>),</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>  <span class="at">not_acc =</span> <span class="fu">textGrob</span>(<span class="st">"Niet nauwkeurig"</span>, <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">14</span>), <span class="at">rot =</span> <span class="dv">90</span>)</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>empty_grob <span class="ot">&lt;-</span> <span class="fu">rectGrob</span>(<span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">col =</span> <span class="cn">NA</span>))</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="co"># Combineer in grid</span></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>gridExtra<span class="sc">::</span><span class="fu">grid.arrange</span>(</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>  <span class="at">grobs =</span> <span class="fu">list</span>(</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>    empty_grob, labels<span class="sc">$</span>prec, labels<span class="sc">$</span>not_prec,</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>    labels<span class="sc">$</span>acc, doelwit_plots[[<span class="dv">1</span>]], doelwit_plots[[<span class="dv">2</span>]],</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>    labels<span class="sc">$</span>not_acc, doelwit_plots[[<span class="dv">3</span>]], doelwit_plots[[<span class="dv">4</span>]]</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">3</span>,</span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>  <span class="at">widths =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>  <span class="at">heights =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-precisie-vs-nauwkeurig" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-precisie-vs-nauwkeurig-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="Onzekerheid_files/figure-html/fig-precisie-vs-nauwkeurig-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figuur&nbsp;21.1: Illustratie van de begrippen precies en nauwkeurig."><img src="Onzekerheid_files/figure-html/fig-precisie-vs-nauwkeurig-1.png" class="img-fluid figure-img" style="width:60.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-precisie-vs-nauwkeurig-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;21.1: Illustratie van de begrippen precies en nauwkeurig.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Stel je voor dat je heel vaak dezelfde methode gebruikt om een parameter te schatten. Het resultaat zal iedere keer net iets anders uitvallen. De methode of schatting wordt <strong>precies</strong> genoemd als de verschillende resultaten weinig van elkaar verschillen. Precisie heeft dus te maken met de <em>spreiding</em> van resultaten bij herhaling. Je kunt je dat vast voorstellen: als je direct na elkaar meerdere keren op dezelfde weegschaal gaat staan en de resultaten meerdere kilo’s van elkaar verschillen, dan zul je concluderen dat de weegschaal niet erg precies is.</p>
+<p>Als de verschillende schattingen dicht bij elkaar liggen wil dat nog niet zeggen dat ze ook dicht bij de waarde van de ware parameter liggen. In beide plaatjes in de linker-kolom van <a href="#fig-precisie-vs-nauwkeurig" class="quarto-xref">Figuur&nbsp;<span>21.1</span></a> is de methode precies, want de verschillende schattingen liggen dicht bij elkaar. Toch wijken in het onderste plaatje de waarden sterk af van de juiste waarde (gesymboliseerd door de <em>bull’s-eye</em>).</p>
+<p>Een methode wordt <strong>nauwkeurig</strong> genoemd als het gemiddelde van de verschillende resultaten dicht bij de juiste waarde ligt. Nauwkeurigheid heeft dus te maken met de <em>locatie</em> van de resultaten bij herhaling. In beide plaatjes in de eerste rij van <a href="#fig-precisie-vs-nauwkeurig" class="quarto-xref">Figuur&nbsp;<span>21.1</span></a> zijn de resultaten geclusterd rond de <em>bull’s-eye</em>. In die gevallen is de methode dus nauwkeurig. Merk op dat een nauwkeurige methode niet precies hoeft te zijn, zoals in het plaatje rechtsboven.</p>
+<p>Twee verschillende aspecten dragen dus bij aan de afwijking van schattingen van de juiste waarde. De eerste is er de <strong>toevallige fout</strong> (<em>random error</em>): wanneer dezelfde methode herhaaldelijk wordt toegepast, levert dit steeds een iets andere waarde op. Een precieze methode geeft een kleine toevallige fout.</p>
+<p>Ten tweede is er een <strong>systematische fout</strong> (<em>systematic error</em>): daar is sprake van als de methode <em>gemiddeld</em> een te hoge of te lage waarde oplevert. Een nauwkeurige methode geeft een kleine systematische fout.</p>
+<p>Als een methode of een schatter een systematische fout heeft dan zegt men ook wel dat deze <strong>bias</strong> heeft of “gebiast” is. Bias is een Engels woord; de beste vertalingen zijn misschien “vertekening” of “vooroordeel”. Maar omdat de Nederlandse woorden de lading vaak niet goed dekken zullen we de Engelse term bias ook blijven gebruiken. Bias kan op heel veel manieren ontstaan en is een heel belangrijk onderwerp. Daarom komen we er hieronder nog uitgebreid op terug.</p>
+<p>Als een methode of schatter geen bias heeft dan noemen we de schatter <strong>zuiver</strong>.</p>
+<div id="exr-systematisch-of-toevallig" class="pepexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 21.2 (Systematische fout of toevallige fout?)</strong></span> <br></p>
+<p>Geef van de volgende voorbeelden aan of het systematische of toevallige fouten zijn.</p>
+<ol type="a">
+<li><p>Vier studentassistenten kijken dezelfde opdracht na aan de hand van dezelfde rubric, maar komen toch op verschillende cijfers uit.</p></li>
+<li><p>Amerikaanse <em>pollsters</em> probeerden in 1936 en de uitslag van de presidentsverkiezingen te voorspellen door een groot aantal mensen per telefoon te benaderen. Ze gebruikten daarvoor de telefoonlijst met abonnees van het tijdsschift <em>Literary Digest</em>. Op basis van die enquête werd verwacht dat Landon ruim van Roosevelt zou winnen. Het liep heel anders: Landon won alleen in Maine en Vermont en sleepte zo maar 8 van de 531 kiesmannen binnen.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Achteraf bleek dat de leden van <em>Literary Digest</em> die zich een telefoon konden permitteren geen representatieve doorsnede waren van de Amerikaanse: zij stemden veel vaker Republikeins dan de gehele bevolking.</p></li>
+<li><p>Het exacte tijdstip van aardschokken wordt bijgehouden, maar de klok die daarbij gebruikt wordt staat 4 minuten voor.</p></li>
+<li><p>Bij het bepalen van een chemische reactiesnelheid speelt de concentratie van de reactanten een cruciale rol. Ondanks heel precies pipetteren verschillen die concentraties een klein beetje tussen herhalingen van het experiment.</p></li>
+</ol>
+</div>
+<p>Gewapend met deze begrippen keren we terug naar schattingen op basis van steekproeven. Waar komen bij schattingen op basis van steekproeven de toevallige en de systematische fouten vandaan?</p>
+</section>
+<section id="sec-toevallige-fouten" class="level2" data-number="21.4">
+<h2 data-number="21.4" class="anchored" data-anchor-id="sec-toevallige-fouten"><span class="header-section-number">21.4</span> Toevallige fouten in schattingen op basis van steekproeven</h2>
+<p>We beginnen met <em>toevallige</em> fouten in steekproeven.</p>
+<p>In de aanloop naar de Tweede Kamerverkiezingen voeren we een peiling uit. We nemen een steekproef van 1000 stemgerechtigde Nederlanders en vragen hen op welke partij zij zouden stemmen als de verkiezingen vandaag zouden plaatsvinden. Van deze 1000 mensen geven er 33 aan CDA te gaan stemmen. Op basis hiervan schatten we dat het CDA momenteel 3,3% van de stemmen zou krijgen.</p>
+<p>Stel je nu voor dat we op dezelfde dag op exact dezelfde manier nóg een steekproef zouden nemen. Zouden we in die tweede steekproef weer precies 33 personen aantreffen die voor het CDA kiezen?</p>
+<p>Dat hoeft natuurlijk niet zo te zijn. Het is best mogelijk dat we de tweede keer toevallig maar 25 CDA-stemmers vinden, of juist 40. In dat geval zouden we op basis van de tweede steekproef uitkomen op een schatting van 2,5% of juist 4,0%. Schattingen op basis van steekproeven worden dus geplaagd door toevallige fouten, simpelweg omdat het resultaat afhangt van de toevallige steekproef. Omdat het woord “toeval” op verschillende manieren geïnterpreteerd kan worden, hebben we het liever over <strong>steekproevenvariabiliteit</strong>. Steekproevenvariabiliteit is het verschijnsel dat verschillende identiek uitgevoerde steekproeven van elkaar verschillen en dus ook verschillende schattingen opleveren voor populatieparameters.</p>
+<p>Dat steekproeven variabel zijn wil niet zeggen dat we op basis van een steekproef helemaal geen betrouwbare schattingen kunnen maken. Als in de gehele populatie 20% van de stemgerechtigden op de VVD wil stemmen, dan is de kans om in een steekproef van 1000 personen maar 33 VVD-stemmers aan te treffen <em>enorm klein</em>. (We verwachten er namelijk zo’n 200.) Die redenering kun je ook omdraaien: als we in die steekproef 33 VVD-stemmers vinden dan kunnen we vrijwel uitsluiten dat het in de gehele populatie om 20% gaat. (Dan hadden we er namelijk zo’n 200 verwacht).</p>
+<p>Het punt is: schattingen kunnen ondanks hun onzekerheid heel informatief zijn, maar bij het interpreteren moeten we ons wel bewust zijn van de <em>mate</em> van onzekerheid. In <span class="quarto-unresolved-ref">?sec-schatten</span> leer je te berekenen hoe groot de onzekerheid in een schatting is.</p>
+</section>
+<section id="systematische-fouten-in-schattingen-op-basis-van-steekproeven" class="level2" data-number="21.5">
+<h2 data-number="21.5" class="anchored" data-anchor-id="systematische-fouten-in-schattingen-op-basis-van-steekproeven"><span class="header-section-number">21.5</span> Systematische fouten in schattingen op basis van steekproeven</h2>
+<p>Systematische fouten en bias ontstaan als individuen met bepaalde eigenschappen een grotere kans hebben om in de steekproef terecht te komen. Bijvoorbeeld, om de gezondheid van een populatie vogels te onderzoeken, vang je er een aantal in netten. In dat geval zou het kunnen dat zieke vogels zich gemakkelijker laten vangen en daarom een grotere kans hebben om te worden opgenomen in je steekproef. Het gevolg is dat je steekproef een vertekend beeld geeft van de populatie als geheel. In andere woorden, de steekproef is dan niet <strong>representatief</strong> voor de populatie. Dat levert systematische fouten op, oftewel bias.</p>
+<section id="eenvoudige-aselecte-steekproeven" class="level3">
+<h3 class="anchored" data-anchor-id="eenvoudige-aselecte-steekproeven">Eenvoudige aselecte steekproeven</h3>
+<p>Om bias te voorkomen is het dus belangrijk om ervoor te zorgen dat je bij het samenstellen van een steekproef niet bewust of onbewust eenheden met bepaalde eigenschappen een grotere kans geeft geselecteerd te worden. Dit kun je doen door de steekproef willekeurig te kiezen. Stel dat we een steekproef van <span class="math inline">\(n\)</span> eenheden samenstellen. Als de manier van selecteren ervoor zorgt dat iedere mogelijke verzameling van <span class="math inline">\(n\)</span> eenheden een gelijke kans heeft om te worden gekozen, dan noemen we dit een <strong>eenvoudige aselecte steekproef</strong> (EAS; <em>simple random sample</em>). Een gevolg daarvan is dat iedere eenheid gelijke kans heeft om in de steekproef opgenomen te worden.</p>
+<p>Een EAS heeft verschillende voordelen. De eerste is dat zo’n steekproef geen bias introduceert. Hoewel de verdeling van een variabele in een EAS meestal niet perfect overeen komt met die van de populatie, is er geen <em>systematische</em> afwijking. Dat maakt het mogelijk om nauwkeurige schattingen te maken. De tweede is dat je voor een eenvoudige aselecte steekproef vaak kunt uitrekenen hoe precies de schatting is. Dat wil zeggen dat je de precisie van je schattingen kunt kwantificeren. (We gaan daar in <span class="quarto-unresolved-ref">?sec-schatten</span> verder op in.) Vanwege deze voordelen gaan veel statistische analyses ervan uit dat de steekproef eenvoudig aselect is.</p>
+<p>Maar in de praktijk is het vaak niet gemakkelijk om een eenvoudige aselecte steekproef te organiseren. Dat kan wel als je een lijst hebt van alle eenheden in de populatie. Iedere eenheid wordt dan genummerd, en we vragen een computer om uit de lijst met nummers er willekeurig <span class="math inline">\(n\)</span> te kiezen, op basis van random getallen.</p>
+<p>In veel gevallen bestaat zo’n lijst met alle eenheden uit de populatie niet, en in dat geval is de eenvoudige aselecte steekproef vaak niet exact mogelijk. Wel kun je er dan bij het ontwerp van je experiment naar streven om het ideaal van een eenvoudige aselecte steekproef zoveel mogelijk te <em>benaderen</em>.</p>
+<p>Overigens maken veel onderzoeken gebruik van meer ingewikkelde steekproeven, zoals een gestratificeerde steekproef. We gaan daar in deze cursus niet op in.</p>
+</section>
+<section id="sec-bias" class="level3">
+<h3 class="anchored" data-anchor-id="sec-bias">Oorzaken van bias in schattingen op basis van steekproeven</h3>
+<p>Bias in steekproeven kan op allerlei manieren ontstaan. We noemen hieronder een paar oorzaken die zo vaak voorkomen dat ze een naam hebben gekregen.</p>
+<ul>
+<li><p><strong>Vrijwilligers-bias</strong> (<em>volunteer bias</em>) of <strong>zelfselectiebias</strong> (<em>self-selection bias</em>): Wanneer de steekproef bestaat uit personen die daar zelf voor hebben gekozen, kan vrijwilligers-bias optreden. Individuen die vrijwillig aan een onderzoek deelnemen verschillen vaak van de algehele populatie in sommigen van hun eigenschappen. Dat kan bijvoorbeeld zijn omdat ze speciaal interesse hebben in het onderwerp van het onderzoek, of een kleinere afkeer.</p>
+<p>Vrijwilligers-bias is vaak een gevaar in onderzoek in de psychologie. Dat komt doordat veel onderzoeken worden uitgevoerd met als proefpersonen studenten psychologie die zich vrijwillig voor dat onderzoek inschrijven. (Bij veel opleidingen psychologie moeten studenten tijdens hun studie punten verdienen door als proefpersoon deel te nemen aan onderzoeken. Ze kunnen dan wel zelf kiezen voor <em>welk</em> onderzoek ze zich inschrijven.)</p>
+<p>Een specifiek voorbeeld dat goed onderzocht is, is vrijwilligers-bias in psychologisch onderzoek naar seksualiteit. In een grote studie<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> kregen studenten de kans zich vrijwillig op te geven voor één tot drie verschillende onderzoeken naar hun houding ten opzichte van seksualiteit, de effecten van erotica, of fysieke metingen van opwinding. De vrijwilligers bleken, in vergelijking met de studenten die hier niet voor kozen, meer ervaring te hebben met seks, en minder seksuele schuldgevoelens. Het is niet vanzelfsprekend dat resultaten behaald met zo’n groep vrijwilligers representatief zijn voor de gehele populatie.</p></li>
+<li><p><strong>Non-respons-bias</strong>: Dit kan een rol spelen wanneer een deel van de benaderde groep mensen niet reageert op een enquête of onderzoek. Als de mensen die niet reageren verschillen in mening of kenmerken van degenen die wel reageren, kan dit leiden tot een vertekend beeld in de resultaten. Het onderzoek kan dan bijvoorbeeld alleen de standpunten van een specifieke groep vertegenwoordigen, terwijl de perspectieven van de niet-reagerende groep ontbreken. Merk op: non-response-bias heeft veel weg van vrijwilligers-bias.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/sfogalc384z81.jpg.webp" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Bron: Sketchplanations"><img src="figuren/sfogalc384z81.jpg.webp" class="img-fluid figure-img" style="width:80.0%" alt="Bron: Sketchplanations"></a></p>
+<figcaption>Bron: <a href="https://sketchplanations.com/">Sketchplanations</a></figcaption>
+</figure>
+</div></li>
+<li><p><strong>Overlevingsbias</strong> (<em>survivorship bias</em>) treedt op wanneer de focus in een analyse ligt op eenheden die een bepaalde selectie of gebeurtenis hebben doorstaan, terwijl eenheden die niet door de selectie zijn gekomen buiten beschouwing worden gelaten. Hierdoor ontstaat een vertekend beeld, omdat alleen de kenmerken van de “overlevers” worden meegenomen, wat tot onjuiste conclusies kan leiden.</p>
+<p>Een klassiek voorbeeld van overlevingsbias komt uit de Tweede Wereldoorlog. Tijdens de oorlog wilden de geallieerden de bepantsering van hun gevechtsvliegtuigen verbeteren om verliezen te verminderen. Onderzoekers bekeken de teruggekeerde vliegtuigen en noteerden waar de meeste kogelgaten zaten. Hun eerste gedachte was om extra pantser aan te brengen op die beschadigde plekken, omdat de vliegtuigen blijkbaar op die plekken het vaakst werden geraakt.</p>
+<p>De statisticus Abraham Wald realiseerde zich dat het anders zat. Hij besefte dat overlevingsbias hier een belangrijke rol speelde. De vliegtuigen die terugkeerden waren immers alleen de toestellen die ondanks hun schade in staat waren geweest om veilig terug te keren. De plekken waar zij beschadigd waren, waren dus niet de meest kwetsbare delen van het vliegtuig. De zwakste plekken waren juist de delen die, in de teruggekeerde vliegtuigen, géén kogelgaten hadden: de vliegtuigen die niet terugkeerden waren waarschijnlijk juist op die plekken fataal geraakt.</p>
+<p>Dit inzicht leidde tot een tegen-intuïtieve conclusie: juist die onbeschadigde plekken moesten worden versterkt om de overlevingskansen van de vliegtuigen te vergroten.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/ce000ac3-b8f1-4612-8c86-28f5d65442f7_SP+674+-+Survivorship+bias.webp" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Bron: Sketchplanations"><img src="figuren/ce000ac3-b8f1-4612-8c86-28f5d65442f7_SP+674+-+Survivorship+bias.webp" class="img-fluid figure-img" alt="Bron: Sketchplanations"></a></p>
+<figcaption>Bron: <a href="https://sketchplanations.com/">Sketchplanations</a></figcaption>
+</figure>
+</div></li>
+<li><p><strong>Waarnemersbias</strong> (<em>observer bias</em>) is een vertekening die optreedt als de verwachtingen, overtuigingen of vooroordelen van een waarnemer invloed hebben op de manier waarop deze gegevens verzamelt of interpreteert. Dit kan bijvoorbeeld gebeuren als een onderzoeker resultaten <em>verwacht</em> die passen bij een bepaalde hypothese en daardoor informatie niet meer volledig objectief kan beoordelen.</p>
+<p>Een voorbeeld komt van een studie waarbij experimentatoren de opdracht kregen om volgens een vast protocol te meten hoe goed ratten een taak konden leren.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> De helft van de experimentatoren kreeg vooraf te horen dat hun ratten speciaal gefokt waren voor intelligentie, de andere helft dat hun dieren juist geselecteerd waren op hun sloomheid. In werkelijkheid waren de ratten willekeurig verdeeld. Toch lieten de resultaten betere prestaties zien voor de “intelligente” dieren dan voor de “slome” dieren. Dat geeft aan dat, op een of andere manier, de verwachting van de experimentatoren effect had op de scores van de ratten.</p>
+<p>Waarnemers-bias speelt waarschijnlijk vaker een rol in onderzoek naar diergedrag, omdat experimentatoren in de gedragsbiologie kennis of veronderstelingen hebben over de hypotheses van het onderzoek en voorkennis hebben over de onderzochte dieren.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> Bijvoorbeeld, studenten diergeneeskunde kregen de opdracht een kwalitatieve gedragsbeoordeling uit te voeren op basis van video’s van kippen. Over dezelfde video’s rapporteerden de studenten gemiddeld meer positieve en minder negatieve emoties als hen vooraf was verteld dat de video’s afkomstig waren van een biologische boerderij.</p></li>
+</ul>
+<p>Het risico op bias kan worden verminderd door experimenten zorgvuldig te ontwerpen. In <span class="quarto-unresolved-ref">?sec-associaties</span> gaan we daar verder op in.</p>
+<div id="exr-biases" class="theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 21.3 (Risico op bias)</strong></span> Leg voor de volgende casussen uit welke soorten bias je zou kunnen verwachten.</p>
+<ol type="a">
+<li><p>In een onderzoek beoordelen psychiaters na een behandeling van 10 weken in hoeverre de klachten van hun cliënten zijn gewijzigd.</p></li>
+<li><p>Dagelijks kunnen luisteraars van NPO Radio 1 <em>Stand.nl</em> via telefoon of een website stemmen op een actuele stelling, zoals “Alle roofkunst moet terug naar het land van herkomst”. De respons wordt op de radio besproken.</p></li>
+<li><p>Tijdens de pandemie kregen veel bedrijven financiële ondersteuning van de overheid, de <em>coronasteun</em>. Om te beoordelen of die steun het gewenste effect heeft gehad wordt in 2024 een steekproef van bedrijven bestudeerd. De steekproef wordt getrokken uit het register van de Kamer van Koophandel uit 2024.</p></li>
+<li><p>De opleidingsadviescommissie Biologie (OAC-B) evalueert na afloop van ieder vak van de bachelor Biologie de resultaten van de Caracal-enquête, waaronder het gemiddelde cijfer dat het vak van de respondenten krijgt.</p></li>
+<li><p>Op een conferentie voor managers uit de ICT sector concludeert de CEO van een succesvol bedrijf dat het slim is om je studie niet af te maken, aangezien hij en veel van zijn succesvolle collega’s dat ook niet hebben gedaan.</p></li>
+</ol>
+</div>
+</section>
+</section>
+<section id="kansen-en-de-interpretatie-van-onzekere-gegevens" class="level2" data-number="21.6">
+<h2 data-number="21.6" class="anchored" data-anchor-id="kansen-en-de-interpretatie-van-onzekere-gegevens"><span class="header-section-number">21.6</span> Kansen en de interpretatie van onzekere gegevens</h2>
+<p>Hierboven gebruikten we het voorbeeld van een peiling voor de Tweede Kamerverkiezingen:</p>
+<p><em>“Als in de gehele populatie 20% van de stemgerechtigden op de VVD wil stemmen, dan is de kans om in een steekproef van 1000 personen maar 33 VVD-stemmers aan te treffen <em>enorm klein</em>. (We verwachten er namelijk zo’n 200.)”</em></p>
+<p>Een kritische lezer kan hier hebben gedacht: Is dat wel zo? Hoe klein is die kans dan, en hoe klein moet een kans zijn om <em>enorm klein</em> genoemd te worden?</p>
+<p>Vervolgens concludeerden we:</p>
+<p><em>“Die redenering kun je ook omdraaien: als we in die steekproef 33 VVD-stemmers vinden dan kunnen we vrijwel uitsluiten dat het in de gehele populatie om 20% gaat. (Dan hadden we er namelijk zo’n 200 verwacht).”</em></p>
+<p>De kritische lezer heeft daar vast gedacht: Kunnen we ook uitsluiten het in de gehele populatie om 10% gaat? Of 5%? Of is de kans op 33 VVD-ers in een steekproef van 1000 dan niet “enorm klein”? Waar trek je dan de grens?</p>
+<p>De kritische lezer heeft gelijk. Als we onderbouwd keuzes willen maken, dan moeten we de kansen waarover we redeneren ook echt berekenen, en preciezer uitwerken welke conclusies we vervolgens kunnen trekken. Daarom gaan de volgende twee hoofdstukken over kansen en kansverdelingen. Daarna zijn we goed voorbereid om de draad weer op te pakken!</p>
+</section>
+<section id="samenvatting" class="level2" data-number="21.7">
+<h2 data-number="21.7" class="anchored" data-anchor-id="samenvatting"><span class="header-section-number">21.7</span> Samenvatting</h2>
+<section id="onzekerheid-in-gegevens-ontstaat-door" class="level3">
+<h3 class="anchored" data-anchor-id="onzekerheid-in-gegevens-ontstaat-door">Onzekerheid in gegevens ontstaat door</h3>
+<ul>
+<li><p><strong>variabiliteit</strong> en <strong>bias</strong> in steekproeven</p></li>
+<li><p><strong>meetfouten</strong></p></li>
+</ul>
+<p>Meetfouten kunnen <strong>systematisch</strong> of <strong>toevallig</strong> zijn.</p>
+</section>
+<section id="terminologie-van-steekproeven" class="level3">
+<h3 class="anchored" data-anchor-id="terminologie-van-steekproeven">Terminologie van steekproeven</h3>
+<p>Ieder onderzoek gaat over een <strong>populatie</strong> die bestaat uit <strong>eenheden</strong>, en focust op zekere <strong>variabelen</strong> van die eenheden. Die variabelen hebben een <strong>verdeling in de populatie</strong> die wordt gekarakteriseerd door <strong>populatieparameters</strong>. Het doel van menig onderzoek is het <strong>schatten</strong> van zo’n populatieparameter op basis van een <strong>steekproef</strong>. De statistiek die we gebruiken voor de schatting wordt de <strong>schatter</strong> genoemd.</p>
+<ul>
+<li><p><strong>steekproevenvariabiliteit:</strong> De samenstelling van een steekproef wordt (deels) bepaald door toeval, en zal dus <em>toevallig</em> afwijken van die van de populatie. Dit draagt bij aan de onzekerheid in schattingen.</p></li>
+<li><p><strong>Bias</strong>: De samenstelling van een steekproef kan ook, door de manier waarop de steekproef is ontstaan of wordt uitgevoerd, <em>systematisch</em> afwijken van die van de populatie. Dan is de steekproef niet <strong>representatief</strong>, wat kan leiden tot <strong>bias</strong> in de schatting.</p></li>
+</ul>
+<p>Voorbeelden zijn:</p>
+<ul>
+<li><p><strong>Vrijwilligersbias</strong> (zelfselectiebias)</p></li>
+<li><p><strong>Non-respons-bias</strong></p></li>
+<li><p><strong>Overlevingsbias</strong></p></li>
+<li><p><strong>Waarnemersbias</strong></p></li>
+</ul>
+</section>
+<section id="eenvoudige-aselecte-steekproeven-eas" class="level3">
+<h3 class="anchored" data-anchor-id="eenvoudige-aselecte-steekproeven-eas">Eenvoudige aselecte steekproeven (EAS)</h3>
+<p>Een EAS van grootte <span class="math inline">\(n\)</span> is een steekproef die zo wordt uitgevoerd dat iedere mogelijke verzameling van <span class="math inline">\(n\)</span> eenheden een gelijke kans heeft om te worden gekozen. Dit elimineert bias en maakt het mogelijk steekproevenvariabiliteit te berekenen.</p>
+</section>
+<section id="terminologie-van-afwijkingen" class="level3">
+<h3 class="anchored" data-anchor-id="terminologie-van-afwijkingen">Terminologie van afwijkingen</h3>
+<p>Om de afwijking van schattingen of metingen van de ware parameter te beschrijven maken we onderscheid tussen <strong>precisie</strong> en <strong>nauwkeurigheid</strong>. Daarvoor stellen we ons voor dat we dezelfde schatting heel vaak herhalen.</p>
+<ul>
+<li><p><strong>Precisie:</strong> De methode/schatter/meting wordt <strong>precies</strong> genoemd als de resultaten dicht bij elkaar liggen. Precisie heeft dus te maken met de <em>spreiding</em> van resultaten. Toevallige meetfouten en steekproevenvariabiliteit verlagen dus de precisie.</p></li>
+<li><p><strong>Nauwkeurigheid:</strong> De methode/schatter/meting wordt <strong>nauwkeurig</strong> genoemd als het gemiddelde van de resultaten dicht bij de ware parameter ligt. Nauwkeurigheid heeft dus te maken met de <em>locatie</em> van de resultaten. Systematische meetfouten en bias verlagen dus de nauwkeurigheid.</p></li>
+</ul>
+<p>Een schatting is bruikbaar ondanks onzekerheid als we ons bewust zijn van de mate van precisie en nauwkeurigheid.</p>
+<p><em>Andersom:</em></p>
+<p><strong>Een schatting is nutteloos als we geen beeld hebben van de precisie en nauwkeurigheid.</strong></p>
+</section>
+</section>
+<section id="terminologie" class="level2" data-number="21.8">
+<h2 data-number="21.8" class="anchored" data-anchor-id="terminologie"><span class="header-section-number">21.8</span> Terminologie</h2>
+<div id="tbl-woorden-onzekerheid" class="striped hover quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-woorden-onzekerheid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;21.1: Woordenlijst <a href="#sec-onzekerheid" class="quarto-xref"><span>Hoofdstuk 21</span></a>.
+</figcaption>
+<div aria-describedby="tbl-woorden-onzekerheid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 30%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Nederlands</th>
+<th style="text-align: left;">Engels</th>
+<th style="text-align: left;">Beschrijving</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">bias (of “vertekening” of “vooroordeel”)</td>
+<td style="text-align: left;">bias</td>
+<td style="text-align: left;">Een systematische afwijking in een methode of schatter.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">eenheid (in de context van een populatie)</td>
+<td style="text-align: left;">unit</td>
+<td style="text-align: left;">Een populatie kan zijn samengesteld uit allerlei soorten objecten en subjecten, van personen tot voorwerpen. In het algemeen gebruiken we het woord eenheid.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">eenvoudige aselecte steekproef</td>
+<td style="text-align: left;">simple random sampling</td>
+<td style="text-align: left;">Een steekproef die genomen is zodanig dat alle mogelijk steekproeven even waarschijnlijk zijn.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">meetfout</td>
+<td style="text-align: left;">measurement error</td>
+<td style="text-align: left;">Het verschil tussen het resultaat van een meting en de daadwerkelijke waarde van de variabele.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nauwkeurigheid</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">Bij een nauwkeurige methode of schatter is het resultaat <em>gemiddeld</em> dicht bij de echte waarde van de te schatten parameter.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">non-respons-bias</td>
+<td style="text-align: left;">nonresponse bias</td>
+<td style="text-align: left;">Een bias die optreedt wanneer de kenmerken van mensen die niet reageren op een enquête of informatieverzoek verschillen van die van mensen die wel reageren.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">overlevingsbias</td>
+<td style="text-align: left;">survival bias</td>
+<td style="text-align: left;">Een bias die ontstaat wanneer de steekproef genomen wordt uit eenheden die door een selectieproces zijn gegaan en dus mogelijk niet representatief zijn voor de populatie.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">populatie</td>
+<td style="text-align: left;">population</td>
+<td style="text-align: left;">Een groep eenheden (objecten/dieren/mensen) waarvan we bepaalde variabelen statistisch onderzoeken.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">populatieparameter</td>
+<td style="text-align: left;">population parameter</td>
+<td style="text-align: left;">Statistisch kenmerk van de verdeling van variabelen in een populatie, zoals het gemiddelde of de standaardafwijking.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">precisie</td>
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">Een methode of schatter is precies als resultaten bij herhaling dicht bij elkaar liggen.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">representatief</td>
+<td style="text-align: left;">representative</td>
+<td style="text-align: left;">Een representatieve steekproef heeft een samenstelling die wat betreft de relevante variabelen lijkt op de populatie.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">schatten</td>
+<td style="text-align: left;">to estimate</td>
+<td style="text-align: left;">De waarde van een populatieparameter proberen te bepalen op basis van onvolledige informatie.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">schatter</td>
+<td style="text-align: left;">estimate</td>
+<td style="text-align: left;">Statistiek de gebruikt wordt om een populatieparameter te schatten.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">steekproef</td>
+<td style="text-align: left;">sample</td>
+<td style="text-align: left;">Een selectie van eenheden uit een populatie.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">steekproevenvariabiliteit</td>
+<td style="text-align: left;">sampling variability</td>
+<td style="text-align: left;">Onzekerheid in schattingen die het gevolg is van toevallige verschillen tussen steekproeven.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">systematische fout</td>
+<td style="text-align: left;">systematic error</td>
+<td style="text-align: left;">Een systematische fout is een afwijking in het gemiddelde resultaat van een methode of schatter ten opzichte van de werkelijke waarde van de grootheid.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">toevallige fout</td>
+<td style="text-align: left;">random error</td>
+<td style="text-align: left;">Een toevallige fout is een afwijking van een methode of schatter van de werkelijke waarde van een grootheid die bij herhaling steeds verschilt.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">variabele</td>
+<td style="text-align: left;">variable</td>
+<td style="text-align: left;">Een eigenschap die de eenheden van een populatie hebben.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">verdeling</td>
+<td style="text-align: left;">distribution</td>
+<td style="text-align: left;">De manier waarop de waarden die een variabele aanneemt binnen een populatie over de mogelijk waarden verspreid zijn.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vrijwilligers-bias/zelfselectiebias</td>
+<td style="text-align: left;">volunteerbias/self-selection bias</td>
+<td style="text-align: left;">Een bias die ontstaat doordat mensen die aan een onderzoek mee willen doen niet representatief zijn voor de gehele populatie, mogelijk door een speciale interesse in het onderwerp.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">waarnemersbias</td>
+<td style="text-align: left;">observer bias</td>
+<td style="text-align: left;">Een bias die ontstaat doordat onderzoekers zelf bepaalde verwachtingen hebben en (onbewust) geneigd zijn daarvan bevestiging te zien.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">zuiver</td>
+<td style="text-align: left;">unbiased</td>
+<td style="text-align: left;">Een methode of schatter is zuiver als deze geen bias / systematische fout heeft.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="extra-informatie" class="level2" data-number="21.9">
+<h2 data-number="21.9" class="anchored" data-anchor-id="extra-informatie"><span class="header-section-number">21.9</span> Extra informatie</h2>
+<p>Als de verschillende voorbeelden van bias je interesse hebben gewekt, zijn de volgende populair-wetenschappelijke boeken de moeite waard:</p>
+<ul>
+<li><p>“How to Lie with Statistics”* door Darrell Huff (1954)</p></li>
+<li><p>“The Flaw of Averages”* door Sam L. Savage (2009).</p></li>
+<li><p>“Thinking Fast and Slow”*, door Daniel Kahneman (2011)</p></li>
+<li><p>“How Not to Be Wrong: The Power of Mathematical Thinking”* door Jordan Ellenberg (2014).</p></li>
+</ul>
+<p>Zie daarnaast de voetnoten hieronder.</p>
+</section>
+<section id="opgaven" class="level2" data-number="21.10">
+<h2 data-number="21.10" class="anchored" data-anchor-id="opgaven"><span class="header-section-number">21.10</span> Opgaven</h2>
+<div id="exr-aselect" class="Rexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 21.4 (Een eenvoudige aselecte steekproef nemen met R)</strong></span> <br></p>
+<p>Als je een lijst hebt van alle eenheden in je populatie, dan kan R je gemakkelijk helpen om een eenvoudige aselecte steekproef te nemen. De functie <code>sample()</code> is daar speciaal voor bedoeld.</p>
+<p>Als <code>v</code> een vector is, en <code>n</code> een integer, dan geeft <code>sample(v, n)</code> een willekeurige selectie van <code>n</code> eenheden uit <code>v</code>. Iedere eenheid komt hoogstens één keer in de steekproef voor. (Dat betekent ook dat <code>n</code> niet groter mag zijn dan de lengte van <code>v</code>, want anders kun je niet <code>n</code> elementen uit <code>v</code> selecteren.)</p>
+<p>Voorbeeld:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Mike"</span>, <span class="st">"Dustin"</span>, <span class="st">"Lucas"</span>, <span class="st">"Eleven"</span>, <span class="st">"Will"</span>, </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Max"</span>, <span class="st">"Jim"</span>, <span class="st">"Joyce"</span>, <span class="st">"Steven"</span>, <span class="st">"Nancy"</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(v, n)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Eleven" "Nancy"  "Dustin" "Mike"  </code></pre>
+</div>
+</div>
+<ol type="a">
+<li><p>Stel je hebt twintig plotjes land, waarmee je wilt testen wat het effect is van bemesting op de biodiversiteit. Om dit te testen, ben je van plan de helft van de plotjes wel te bemesten en de andere helft niet. Je hebt de plotjes genummerd. Schrijf een simpele R-code met de functie <code>sample()</code> om aselect 10 plotjes uit te kiezen die bemest gaan worden.</p></li>
+<li><p>Laad de dataset NHANES in, zoals je al vaker hebt gedaan. Selecteer nu aselect 30 individuen uit deze lijst en geef voor deze steekproef weer hoeveel uren zij op doordeweekse dagen zeggen te slapen (<code>SleepHrsNight</code>). Geef ook het gemiddelde voor de steekproef. Dat is een schatting voor het gemiddelde van de populatie.</p></li>
+<li><p>Om te onderzoeken hoe onzeker zo’n schatting op basis van één steekproef is, herhalen we de schatting heel vaak. Dan kunnen we zien hoeveel de resultaten van elkaar verschillen.</p>
+<p>Het volgende script herhaalt de EAS 1000 keer, berekent steeds het gemiddelde binnen de steekproef, en tekent vervolgens een histogram van de resultaten.</p>
+<p>Om er voor te zorgen dat de steekproeven geen <code>NA</code> bevatten, filteren we de dataset eerst.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(NHANES)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(NHANES)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># selecteer gegevens die niet NA zijn</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>slaapuren <span class="ot">&lt;-</span> NHANES<span class="sc">$</span>SleepHrsNight[ <span class="sc">!</span><span class="fu">is.na</span>(NHANES<span class="sc">$</span>SleepHrsNight) ]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Instellen van parameters</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>n_herhalingen <span class="ot">&lt;-</span> <span class="dv">10000</span>  <span class="co"># Aantal steekproeven</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>n_steekproef  <span class="ot">&lt;-</span> <span class="dv">30</span>    <span class="co"># Grootte van elke steekproef</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>gemiddelden   <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_herhalingen)  <span class="co"># Vector voor opslag van gemiddelden</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Herhaal steekproeven en bereken gemiddelden</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_herhalingen) {</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  steekproef <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    slaapuren, <span class="at">size =</span> n_steekproef</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  gemiddelden[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(steekproef, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot histogram van de gemiddelden</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  gemiddelden, <span class="at">col =</span> <span class="st">"darkorange"</span>, <span class="at">breaks =</span> <span class="dv">20</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Zorg dat je het script begrijpt en voer het dan uit op je computer.</p></li>
+<li><p>Bestudeer het histogram.</p>
+<p>Iedere steekproef geeft een schatting van het populatiegemiddelde van <code>SleepHrsNight</code> in de populatie van NHANES. Maar iedere steekproef geeft net een andere schatting. Hoe komt dat?</p></li>
+<li><p>Wat is, op basis van het histogram, jouw beste schatting van het gemiddelde van <code>SleepHrsNight</code> in de gehele populatie?</p>
+<p>Voeg een regel toe aan de code om het gemiddelde van de populatie daadwerkelijk te berekenen. Zat je er dicht bij?</p></li>
+<li><p>Kijk nog eens naar het histogram. Wat zou een goede maat zijn van de onzekerheid in een schatting op basis van één steekproef van 30 personen?</p>
+<p>Voeg een regel toe aan het script om die maat uit te rekenen.</p></li>
+</ol>
+</div>
+
+
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Tegenwoordig zijn er 538 kiesmannen te verdienen, maar dat is pas sinds 1961 het geval.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Strassberg, Donald S., and Kristi Lowe. “Volunteer Bias in Sexuality Research.” Archives of Sexual Behavior 24, no. 4 (August 1, 1995): 369–82. https://doi.org/10.1007/BF01541853.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Rosenthal, Robert. “On the Social Psychology of the Psychological Experiment: The Experimenter’s Hypothesis as Unintended Determinant of Experimental Results.” American Scientist 51, no. 2 (1963): 268–83.</p>
+<p>Rosenthal, Robert, and Kermit L. Fode. “Psychology of the Scientist: V. Three Experiments in Experimenter Bias.” Psychological Reports 12, no. 2 (April 1, 1963): 491–511. https://doi.org/10.2466/pr0.1963.12.2.491.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Tuyttens, F. A. M., S. de Graaf, J. L. T. Heerkens, L. Jacobs, E. Nalon, S. Ott, L. Stadig, E. Van Laer, and B. Ampe. “Observer Bias in Animal Behaviour Research: Can We Believe What We Score, If We Score What We Believe?” Animal Behaviour 90 (April 1, 2014): 273–80. https://doi.org/10.1016/j.anbehav.2014.02.007.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Gekopieerd!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Gekopieerd!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+          // default icon
+          link.classList.add("external");
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../Statistiek/BeschrijvendeStatistiek.html" class="pagination-link" aria-label="Variabelen en hun verdelingen">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Variabelen en hun verdelingen</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../Statistiek/Kansrekenen.html" class="pagination-link" aria-label="Kansen en kansmodellen">
+        <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Kansen en kansmodellen</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Vakgroep Theoretische Biologie, Universiteit Utrecht.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Dit boek is gemaakt met <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","loop":false,"descPosition":"bottom","openEffect":"zoom","closeEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
