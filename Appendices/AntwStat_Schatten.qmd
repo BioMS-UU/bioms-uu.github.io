@@ -1,0 +1,62 @@
+## Uitwerkingen @sec-schatten
+
+@exr-75-procent-interval Kort gezegd: om historische redenen. Er is
+niets speciaals of magisch aan het 95% betrouwbaarheids-
+interval. In feite zou je in elke situatie opnieuw moeten
+beslissen welk interval voor jouw doeleinden het meest
+geschikt is. In de praktijk gebeurt dat zelden en wordt
+bijna altijd het 95% betrouwbaarheidsinterval gepresen-
+teerd – simpelweg uit gewoonte.
+
+@exr-tomaten-gewicht
+Het 95%-betrouwbaarheidsinterval wordt met deze formule berekend: 
+$$
+\left[\mean{X} -\ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}}, \mean{X} + \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}} \right].
+$$
+
+$\mean{X}$ weten we al, die is gegeven als 44,1 g. We moeten dus nog $t_{0,05(2)(n-1)}\se{\mean{X}}$ berekenen. 
+
+Eerst rekenen we $\se{\mean{X}}$ uit met de formule: 
+
+$$\se{X} = \frac{s_X}{\sqrt{n}}$$
+
+$s_X = 8,6$ en $n=16$, dus $\se{x} = 8,6/\sqrt{16} =2,15$ g
+
+Om $t_{0,05(2)(n-1)}$ te berekenen hebben we eerst het aantal vrijheidsgraden nodig: $n-1=15$. Nu kunnen we t in R uitrekenen: 
+```{r}
+alpha <- 0.05 #95% interval, dus alpha is 0.05
+qt(1 - alpha/2, df = 15)
+```
+
+Ons 95%-betrouwbaarheidsinterval is dus: 
+$$
+\left[\mean{X} -\ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}}, \mean{X} + \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}} \right]
+$$
+$$
+=\left[44,1 -2,13\times 2,15, 44,1 +2,13\times 2,15 \right] = [39,5 \textrm{g}, 48.7\textrm{g}]
+$$
+
+Als we het volledig in R zouden doen zou je script er zo uit kunnen zien: 
+```{r}
+#Waardes 
+X_mean <- 44.1
+s_X <- 8.6
+n <- 16
+
+#SE berekenen
+SE <- s_X/sqrt(n)
+
+
+#t-waarde berekenen
+df = n-1
+
+alpha <- 0.05 #95% interval, dus alpha is 0.05
+t_waarde <- qt(1 - alpha/2, df = df)
+
+#Betrouwbaarheidsinterval berekenen en deze bijvoorbeeld in een vector weergeven:
+c(X_mean-t_waarde*SE, X_mean+t_waarde*SE)
+
+#Optie als je R ook af wilt laten ronden: 
+round(c(X_mean-t_waarde*SE, X_mean+t_waarde*SE), digits=1)
+
+```

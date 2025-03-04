@@ -2,40 +2,40 @@
 
 # Het schatten van parameters en betrouwbaarheidsintervallen {#sec-schatten}
 
-::: {.todo-box}
-Deze paragraaf verdient aandacht.
-:::
-
 Nu je de basis van kansrekenen onder de knie hebt
   is het tijd je kennis toe te passen op de statistiek.
 Laten we even terugpakken waar we gebleven waren.
 
 In @sec-onzekerheid hebben we het gehad over schattingen.
-Het doel van een groot aantal onderzoeken is 
-  om bepaalde grootheid of populatieparameter te schatten.
-Bijna alle getallen die je leest zijn zulke schattingen.
+Het doel van een veel onderzoeken is 
+  om een bepaalde grootheid of populatieparameter te schatten.
+Bijna alle getallen die in de krant of in de wetenschappelijk literatuur
+tegenkomt, zijn zulke schattingen.
+
 We hebben benadrukt dat schattingen onzeker zijn.
 Bij schattingen op basis van steekproeven komt dat
   door steekproefvariabiliteit
   en mogelijk door bias in de samenstelling van de steekproef.
-Bij metingen spelen de calibratie van de meetmethode
-  en meetfouten een rol.
-Daarom is het heel belangrijk dat je je bij ieder getal dat je tegenkomt
-  afvraagt wat de onzekerheid in dat getal is.
+Bij metingen spelen systematische en toevallige meetfouten een rol.
+Daarom is het heel belangrijk je bij ieder getal dat je tegenkomt
+  af te vragen wat de onzekerheid in dat getal is.
+  
+:::{.callout-important appearance="simple"}
+Een getal zonder indicatie van de nauwkeurigheid en precisie is nutteloos.
+:::
 
-*Een getal zonder indicatie van de precisie is nutteloos.*
 
 In dit hoofdstuk leer je voor een specifieke situatie 
   hoe je die onzekerheid kwantificeert.
 We doen dit door *betrouwbaarheidsintervallen* uit te rekenen.
-In het volgende hoofdstukje leggen we uit wat die zijn.
+In de volgende paragraaf leggen we uit wat dat zijn.
 
 ## Betrouwbaarheidsintervallen
 
-Het idee van een **betrouwbaarheidsinterval** (BHI) is
+Het idee van een **betrouwbaarheidsinterval** (BHI, *confidence interval*) is
   dat we bij het maken van een schatting niet alleen één getal berekenen
   (een zogenaamde **puntschatting**)
-  maar ook een interval om dat punt dat aangeeft hoe precies je schatting is.
+  maar ook een interval om dat punt dat aangeeft wat de onzekerheid in die schatting is.
 In deze cursus en daarbuiten wordt vaak een 95%-BHI gebruikt.
 Een 95%-BHI is een interval dat zo berekend wordt
   dat de ware parameter in 95% van de gevallen
@@ -45,7 +45,7 @@ Een 95%-BHI is een interval dat zo berekend wordt
 
 ## Wat is een BHI?
 
-Een 95%-BHI is een interval rondom een puntschatter,
+Een 95%-BHI is een interval rondom een puntschatting,
 berekend op zo’n manier dat in 95% van de gevallen
 de ware parameter binnen dat interval ligt.
 :::
@@ -59,10 +59,9 @@ Iedere onderzoeker neemt een steekproef van 10 planten
 en meet daarin de chlorofylconcentratie.
 
 Laten we even aannemen dat in werkelijkheid 
-het gemiddelde voor deze planten, 
-onder deze omstandigheden, gelijk is
+het gemiddelde voor deze planten (de populatieparameter) gelijk is
 aan 2,0 mg per gram vers bladgewicht.
-De onderzoekers weten dat alleen niet;
+De onderzoekers weten dat niet;
 die hebben alleen toegang tot hun eigen steekproef.
 Het gemiddelde van die steekproef zal over het algemeen afwijken 
 van het werkelijke gemiddelde voor deze planten.
@@ -70,14 +69,17 @@ Iedere onderzoeker krijgt door steekproefvariabiliteit
 dus een andere schatting uit zijn experiment.
 
 Op basis van ieders eigen steekproef berekent iedere onderzoeker
-de gemiddelde chlorofylconcentratie van zijn steekproef
-(de puntschatter)
-en ook een 95%-BHI.
+de gemiddelde chlorofylconcentratie van zijn steekproef.
+Dat is de puntschatting.
+Maar ze berekenen ook allemaal een 95%-BHI.
 @Fig-bhi laat zien wat het resultaat zou kunnen zijn.
+Van alle 20 steekproeven zijn de waarnemingen in het grijs geplot. 
 De gemiddelden van alle 20 steekproeven zijn als paarse punten weergegeven,
-het ware gemiddelde als een oranje horizontale lijn.
+de ware populatieparameter als een oranje horizontale lijn.
+Zwarte lijnen geven voor iedere puntschatter het bijbehorende BHI aan.
+
 Ieder BHI bevat met 95% zekerheid het ware gemiddelde.
-Dat betekent helaas ook dat, bij een groot aantal herhalingen,
+Dat betekent helaas ook dat
 5% van de intervallen het gemiddelde *niet* bevatten.
 Bij 20 herhalingen komt dat gemiddeld één keer voor.
 In dit geval heeft onderzoeker 9 pech:
@@ -92,6 +94,7 @@ een verkeerde indruk.
 #| warning: false
 #| fig-cap: "Illustratie van het concept van een betrouwbaarheidsinterval. Getoond worden de 95%-betrouwbaarheidsintervallen van twintig onderzoekers die hetzelfde onderzoek hebben uitgevoerd om de gemiddelde chlorofylconcentratie te bepalen in de bladeren van tarweplanten. De ruwe datapunten zijn in lichtgrijs weergegeven, en de oranje lijn geeft het ware gemiddelde aan -- de populatieparameter."
 #| label: fig-bhi
+#| out.width: "100%"
 
 # Laad ggplot2 indien nodig
 if (!("ggplot2" %in% loadedNamespaces())) {
@@ -173,10 +176,6 @@ Maar, we willen graag dat je ook begrijpt *waarom* de formule werkt,
 en onder welke aannames.
 Om dat voor elkaar te krijgen zullen we wat dieper de theorie in moeten.
 
-::: {exr-waarom-gemiddelde}
-Opgave waaruit duidelijk wordt waarom we vaak geïnteresseerd zijn in het populatiegemiddelde.
-::: 
-
 ## Het interpreteren van onzekere gegevens vereist een statistisch model
 
 Wanneer we conclusies proberen te trekken uit onzekere gegevens
@@ -209,15 +208,23 @@ In de statistiek gaan de aannames met name over de kansenprocessen
   zoals de manier waarop de steekproef is uitgevoerd
   of de aard van de meetfouten.
 Men heeft het daarom in deze context vaak over **statistische modellen**.
+Een statistisch model is dus een kansmodel
+dat gebruikt wordt om onzekere gegevens te interpreteren.
 
 Dit klinkt allemaal erg abstract,
 maar we gaan het nu gelijk concreet maken.
 
-## Het Normale Model voor volledig willekeurige steekproeven uit grote populaties {#sec-Normale-Model} 
+## Het Normale Model voor eenvoudige willekeurige steekproeven uit grote populaties {#sec-Normale-Model} 
 
-Binnen de biologie en daarbuiten zijn we vaak geïnteresseerd 
-in een variabele $X$ die een eigenschap is van de eenheden in een bepaalde populatie.
-Specifiek willen we vaak het *gemiddelde* van $X$ weten
+In @sec-schatten hebben we het uitgebreid gehad over steekproeven 
+en steekproevenvariabiliteit.
+We hebben daar gezien dat we 
+binnen en buiten de biologie
+onderzoek vaak gaan over een bepaalde populatie
+die bestaat uit zekere eenheden.
+Onze interesse gaat dan uit naar een eigenschap $X$,
+van die eenheden.
+Specifiek willen we vaak het *gemiddelde* van variabele $X$ weten
 in de volledige populatie.
 We noemen die populatieparameter $\mu_X$.
 
@@ -225,42 +232,39 @@ Als we in staat zouden zijn om de waarde van $X$ te meten
   voor *alle* eenheden in de populatie,
   dan zouden we $\mu_X$ precies kunnen berekenen 
   en zouden steekproefvariabiliteit en bias geen rol spelen.
-In de praktijk is dat helaas zelden mogelijk
+In de praktijk is dat zelden mogelijk
   en kunnen we enkel een steekproef van $n$ eenheden bestuderen.
-In veruit de meeste situaties is de populatie véél groter
-dan de steekproef.
-Iedere schatting op basis van een dergelijke eindige steekproef
-  wordt nu geplaagd door steekproefvariabiliteit:
-  iedere keer dat we op dezelfde manier een steekproef uitvoeren
-  krijgen we een andere steekproef.
+Schatters op basis van zo'n steekproef zijn onzeker
+als gevolg van steekproevenvariabiliteit.
+Hoe kunnen we die onzekerheid kwantificeren?
 
-Dit is waar onze kennis van kansrekenen uit @sec-kans van pas komt.
-*Het idee is dat we het uitvoeren van een steekproef 
-gaan beschouwen als een kansexperiment,
-en de waarde van iedere waarneming $x_i$ in onze steekproef als de waarde 
-van een kansvariabele $X_i$.*
+Dit is waar onze kennis van kansrekenen uit @sec-kans en @sec-kansverdelingen van pas komt.
+*Het idee is dat we het nemen van een steekproef 
+gaan beschouwen als een kansexperiment, 
+en iedere waarneming binnen de steekproef
+als een kansvariabele.*
 
 Om dat te kunnen doen, 
 hebben we een statistisch model nodig
 die de eigenschappen van de kansvariabelen vastlegt
 zodat we eraan kunnen rekenen.
-In deze cursus zullen we veel gebruik maken van 
+In de statistiek wordt vaak gebruik gemaakt van 
 het volgende model, 
-dat we het Normale Model zullen noemen.
+dat we in dit boek het **Normale Model** zullen noemen.
 
 ::: {.callout-important appearance="default" icon=false}
 
-## Definitie: Het Normale Model voor steekproeven.
+## Definitie: Het **Normale Model** van steekproeven.
 
 Het Normale Model is gebaseerd op de volgende aannames:
 
 1. **De variabele $X$ is normaal verdeeld in de populatie.** We zagen eerder
 dat veel variabelen een klokvormige verdeling hebben. 
 Dit model gaat ervan uit dat de verdeling benaderd kan worden 
-met een normale verdeling. 
+door een normale verdeling. 
 
-2. **Iedere waarde $X_i$ van onze steekproef is *onafhankelijk* uit deze normale verdeling getrokken.** 
-Dit is een redelijke benadering als we een eenvoudige willekeurige steekproef uitvoeren 
+2. **Iedere waarde $X_i$ van de steekproef is *onafhankelijk* uit deze normale verdeling getrokken.** 
+Dit is een redelijke benadering als we in werkelijkheid een eenvoudige willekeurige steekproef uitvoeren 
 en bovendien de populatie veel groter is dan de steekproef, 
 zodat de populatie niet wezenlijk verandert als we al een deel van onze steekproef hebben gekozen.
 
@@ -275,49 +279,51 @@ We komen hier in @sec-aannames op terug.
 
 ## Het Normale Model is ook geschikt voor herhaalde experimenten met meetfouten
 
-Een andere situatie die binnen de biologie veel voorkomt
-is dat we een bepaalde grootheid proberen te meten
-door middel van experimenten.
-Je kunt bijvoorbeeld denken aan de groeisnelheid van een bepaalde bacterie in een specifiek medium,
-of de activiteit van een bepaald enzym.
-
-Zulke metingen woorden vaak geplaagd door meetfouten.
-Wanneer je dezelfde meting meerdere keren uitvoert,
-krijg je dus steeds een iets andere uitkomst.
+In ander onderzoek in de biologie maken we geen gebruik van steekproeven
+maar proberen we een bepaalde grootheid te meten.
+In  @sec-schatten hebben we besproken
+dat zulke metingen vaak worden geplaagd door meetfouten.
 Als de meetmethode goed gekalibreerd is,
 is de toevallige fout het grootste probleem.
-Daarom wordt dezelfde meting meerdere keren **gerepliceerd** (herhaald)
+
+Om de toevallige fout te verminderen
+wordt meestal dezelfde meting meerdere keren **gerepliceerd** (herhaald)
 en de uitkomsten gemiddeld.
-Het idee is dat bij een zeer groot (oneindig!) aantal replicaties
-de toevallige fout uitmiddelt
+Als we een heel erg groot aantal replicaties zouden kunnen uitvoeren
+zou de toevallige fout uitmiddelen
 en het gemiddelde van de meetwaarden dus de échte waarde van grootheid
-aangeeft.
-Maar in de praktijk zijn we natuurlijk niet in staat 
-om een oneindig aantal metingen uit te voeren 
-en zullen we het moeten doen met een beperkt aantal van $n$ replicaties.
+aangeven.
+Maar in de praktijk moeten doen met een beperkt aantal replicaties.
 
 In andere woorden, 
-de uitkomst van iedere meting is een kansvariabele 
-die we weer $X$ kunnen noemen,
-en we zijn weer geïnteresseerd in de verwachtingswaarde (het gemiddelde)
-van die kansvariabele, $\mu_X$.
+iedere meting is een kansexperiment,
+het meetresultaat is een kansvariabele,
+en we zijn geïnteresseerd in de verwachtingswaarde
+van die kansvariabele, $\mu_X$,
+die we zouden vinden als we de meting oneindig vaak zouden herhalen.
 Ons doel is om die parameter te schatten op basis van een eindig aantal experimenten.
 
 Om dat te doen, hebben we weer een statistisch model nodig.
 Vaak worden daarbij de volgende aannames gemaakt:
 
-1. **Als gevolg van meetfouten zijn de uitkomsten van de metingen normaal verdeeld.** 
-Omdat herhaalde meetwaarden vaak een unimodale, klokvormige verdeling vormen,
-is dit vaak een redelijke benadering.
 
-2. **Iedere meting is onafhankelijk uit die normale verdeling getrokken.** 
+::: {.callout-important appearance="default" icon=false}
+
+## Definitie: het Normale Model voor herhaalde metingen
+
+1. **De uitkomsten van de metingen zijn normaal verdeeld.** 
+Resultaten van herhaalde metingen hebben vaak een klokvormige verdeling. 
+Dit model gaat ervan uit dat die verdeling benaderd kan worden door een normale verdeling.
+
+2. **Iedere meting is *onafhankelijk* uit die normale verdeling getrokken.** 
 Dit is het geval als de verschillende replicaties
 daadwerkelijk onafhankelijk van elkaar zijn uitgevoerd.
 Dat is niet altijd het geval.
 We gaan het hier uitgebreid over hebben in @sec-pseudoreplicatie, over **pseudoreplicatie**.
+:::
 
 Als je deze modelaannames vergelijkt
-met het Normale Model (@sec-Normale-Model)
+met het Normale Model voor steekproeven (@sec-Normale-Model)
 dan zie je dat die twee modellen precies overeenkomen!
 In beide gevallen behandelen we de gegevens
 als uitkomsten van een kansexperiment.
@@ -326,19 +332,20 @@ uit het trekken van een willekeurig individu uit een populatie,
 in het andere geval uit het uitvoeren van een meting
 met toevallige fout.
 Maar in beide gevallen veronderstelt het model 
-dat de waarnemingen onafhankelijk getrokken zijn uit een normale verdeling.
+dat de waarnemingen *onafhankelijk* getrokken zijn uit een *normale* verdeling.
 
 ::: {.callout-important appearance="default" icon=false}
 
 ## Conclusie: 
 
-Het Normale Model (@sec-Normale-Model) is zowel van toepassing op steekproeven 
-als op herhaalde experimenten.
+Het Normale Model voor steekproeven en het Normale Model voor herhaalde metingen 
+komen op hetzelfde neer.
+
 :::
 
 Hieronder zullen we uitgebreid ingaan op de eigenschappen van steekproeven.
 Maar precies dezelfde resultaten en analyses gelden dus
-ook voor gegevens die afkomstig zijn van herhaald uitgevoerde metingen.
+ook voor gegevens die afkomstig zijn van herhaald uitgevoerde metingen!
 
 ## De kansverdeling van het steekproefgemiddelde
 
@@ -353,25 +360,14 @@ $$ {#eq-steekproefgemiddelde}
 Het steekproefgemiddelde gebruiken we als *schatter* voor het populatiegemiddelde.
 
 Het is belangrijk te beseffen dat het gemiddelde van de steekproef
-$\mean{X}$ zelf ook een kansvariabele is.
-Als je meerdere keren op dezelfde manier een steekproef zou uitvoeren 
+$\mean{X}$ zelf óók een kansvariabele is.
+Want als je meerdere keren op dezelfde manier een steekproef zou uitvoeren 
 en steeds het steekproefgemiddelde zou uitrekenen,
 dan zou je steeds een ander gemiddelde vinden.
-
-Het steekproefgemiddelde is onder het Normale Model een zuivere schatter van $\mu_X$,
-want de verwachtingswaarde van $\mean{X}$ is precies $\mu_X$. 
-Je kunt dit zelf nagaan met wat je in geleerd hebt in @sec-optellen 
-over het optellen van meerdere kansvariabelen). 
-Ga maar na:
-$$
-\mathbb{E}\left(\mean{X}\right) = \frac{\sum_{i=1}^n \mathbb{E}(X_i)}{n} = \frac{n \mu_X}{n} = \mu_X.
-$$ {#eq-vw-gemiddelde}
-De schatter $\mean{X}$ heeft dus geen *systematische* fout,
-maar wel een *toevallige* fout. 
-Kunnen we iets zeggen over hoe groot die toevallige fout is?
+Kunnen we iets zeggen over hoe groot de onzekerheid is?
 
 Om daar meer inzicht in te krijgen 
-gaan we het nemen van een steekproef simuleren.
+gaan we het nemen van steekproeven eerst eens simuleren.
 
 ### Simulaties van het Normale Model {#sec-sim-normale-model}
 
@@ -379,7 +375,7 @@ Stel dat het populatiegemiddelde gelijk is aan $\mu_X = 100$,
 met standaarddeviatie $\sd{X} = 10$.
 Dan ziet de verdeling van de populatie er dus zo uit:
 
-```{r, fig.width = 5, fig.height = 3}
+```{r, fig.width = 5, fig.height = 3, out.width = "71%"}
 #| code-fold: true
 #| warning: false
 #| fig-cap: "Een normaalverdeelde populatie met gemiddelde 100 en standaarddeviatie 10."
@@ -410,7 +406,7 @@ data <- data.frame(
 )
 
 # Plot de normale verdeling
-ggplot(data, aes(x = x, y = kansdichtheid)) +
+populatie <- ggplot(data, aes(x = x, y = kansdichtheid)) +
   geom_line(color = "#e8601d", size = 1) +  # Lijn voor de curve
   labs(
     x = expression(italic(X)),                # Label voor de x-as
@@ -418,6 +414,8 @@ ggplot(data, aes(x = x, y = kansdichtheid)) +
     title = NULL                              # Geen titel
   ) +
   theme_minimal()                             # Minimalistisch thema
+
+populatie
 ```
 
 In de praktijk weten we de waardes van $\mu_X$ en $\sd{X}$ niet
@@ -432,6 +430,7 @@ met een verticale lijn.
 ```{r}
 #| fig-width: 2.5
 #| fig-height: 2.5
+#| out-width: "100%"
 #| fig-cap: "Histogram van steekproef 1."
 #| label: fig-drie-steekproeven-1
 #| code-fold: true
@@ -528,6 +527,7 @@ histogrammen[[1]]
 ```{r}
 #| fig-width: 2.25
 #| fig-height: 2.5
+#| out-width: "100%"
 #| fig-cap: "Histogram van steekproef 2."
 #| label: fig-drie-steekproeven-2
 #| code-fold: true
@@ -540,6 +540,7 @@ histogrammen[[2]]
 ```{r}
 #| fig-width: 2.25
 #| fig-height: 2.5
+#| out-width: "100%"
 #| fig-cap: "Histogram van steekproef 3."
 #| label: fig-drie-steekproeven-3
 #| code-fold: true
@@ -573,25 +574,28 @@ Als $\mean{X}$ typisch juist heel dicht bij $\mu_X$ ligt,
 dan is die schatting blijkbaar juist heel precies.
 
 Om daar een beeld van te krijgen
-trekken we nu heel vaak opnieuw een steekproef,
+trekken we nu *heel vaak opnieuw* een steekproef,
 steeds met steekproefgrootte $n = 10$,
 en rekenen elke keer opnieuw het gemiddelde $\mean{X}$ uit.
 (In werkelijkheid zouden we dat natuurlijk nooit zo doen,
 maar dit is een gedachtenexperiment.)
-Vervolgens tekenen we een histogram op basis van alle steekproefgemiddelden die we gevonden hebben.
-We noemen dit de **steekproevenverdeling van het steekproefgemiddelde**.
+Vervolgens tekenen we een histogram van alle steekproefgemiddelden die we gevonden hebben.
+We noemen dit de **steekproevenverdeling van het steekproefgemiddelde**
+(*sampling distribution of the sample mean*).
 We simuleren dit proces weer met de computer;
-het resultaat staat in @fig-steekproevenverdeling-1.
+het resultaat staat in @fig-steekproevenverdeling-2.
+Ter vergelijking is in @fig-steekproevenverdeling-1 weer de populatie weergegeven.
 
-::: {#fig-steekproevenverdeling layout="[[2.5,2.25,2.25]]"}
+::: {#fig-steekproevenverdeling layout="[[1],[1],[1], [1]]"}
 
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig-cap: "Verdeling van steekproefgemiddelden bij $n = 10$."
+#| fig-cap: "Verdeling van de variabele in de populatie."
 #| label: fig-steekproevenverdeling-1
 #| fig-height: 2
-#| fig-width: 2.5
+#| fig-width: 4
+#| out-width: "57%"
 
 # Laad ggplot2 indien nodig
 if (!("ggplot2" %in% loadedNamespaces())) { 
@@ -662,8 +666,20 @@ data_n100 <- subset(steekproef_gemiddelden, groep == "n = 100")
 
 # Maak afzonderlijke histogrammen
 plot_n10 <- maak_verdelingsplot(data_n10, label = "n = 10", y_as_label = TRUE)
-plot_n40 <- maak_verdelingsplot(data_n40, label = "n = 40", y_as_label = FALSE)
-plot_n100 <- maak_verdelingsplot(data_n100, label = "n = 100", y_as_label = FALSE)
+plot_n40 <- maak_verdelingsplot(data_n40, label = "n = 40", y_as_label = TRUE)
+plot_n100 <- maak_verdelingsplot(data_n100, label = "n = 100", y_as_label = TRUE)
+
+populatie
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-cap: "Verdeling van steekproefgemiddelden bij $n = 10$."
+#| label: fig-steekproevenverdeling-2
+#| fig-height: 2
+#| fig-width: 4
+#| out-width: "57%"
 
 plot_n10
 ```
@@ -672,9 +688,10 @@ plot_n10
 #| code-fold: true
 #| warning: false
 #| fig-cap: "Verdeling van steekproefgemiddelden bij $n = 40$"
-#| label: fig-steekproevenverdeling-2
+#| label: fig-steekproevenverdeling-3
 #| fig-height: 2
-#| fig-width: 2.25
+#| fig-width: 4
+#| out-width: "57%"
 
 plot_n40
 
@@ -684,33 +701,37 @@ plot_n40
 #| code-fold: true
 #| warning: false
 #| fig-cap: "Verdeling van steekproefgemiddelden bij $n = 100$"
-#| label: fig-steekproevenverdeling-3
+#| label: fig-steekproevenverdeling-4
 #| fig-height: 2
-#| fig-width: 2.25
+#| fig-width: 4
+#| out-width: "57%"
 
 plot_n100
 
 ```
 
-Steekproevenverdelingen voor $n = 10$, $n = 40$, en $n = 100$.
+(a) Populatieverdeling, en steekproevenverdelingen voor (b) $n = 10$, (c) $n = 40$, en (d) $n = 100$.
 
 :::
 
-Het eerste wat opvalt aan de steekproevenverdeling in @fig-steekproevenverdeling-1
-is dat de piek van de verdeling op $\mean{X} = 100$ ligt
-en dus op $\mean{X} = \mu_X$. 
-Dat bevestigd wat we in @eq-vw-gemiddelde al hadden berekend:
-dat de verwachtingswaarde van het steekproefgemiddelde, $\ev{\mean{X}}$,
-gelijk is aan het populatiegemiddelde $\mu_X$.
+Het eerste wat opvalt aan de steekproevenverdeling in @fig-steekproevenverdeling-2
+is dat het gemiddelde van de verdeling op $\mean{X} = 100$ ligt
+en dus gelijk is aan de populatieparameter $\mu_X$.
+Dat wil zeggen dat $\mean{X}$ een zuivere schatter is:
+*gemiddeld* is die gelijk aan het populatiegemiddelde.
+(Anders gezegd: de verwachtingswaarde van $\mean{X}$ is $\mu_X$.)
+Dat komt doordat het Normale Model uitgaat van een steekproef zonder bias.
+De schatter $\mean{X}$ heeft dus geen *systematische* fout,
+maar wel een *toevallige* fout. 
 
 Misschien viel je ook op dat de steekproevenverdeling van het gemiddelde
-(@fig-steekproevenverdeling-1) 
+(@fig-steekproevenverdeling-2) 
 een mooie klokvorm heeft die lijkt op een normale verdeling.
 Dat klopt: als de populatie normaal verdeeld is,
 is de steekproevenverdeling van het gemiddelde dat ook.
 
-Vergelijk tot slot de steekproevenverdeling van het gemiddelde (@fig-steekproevenverdeling-1)
-eens met de verdeling van de populatie (@fig-populatie).
+Vergelijk tot slot de steekproevenverdeling van het gemiddelde (@fig-steekproevenverdeling-2)
+eens met de verdeling van de variabele in de populatie (@fig-steekproevenverdeling-1).
 Het is duidelijk te zien dat de steekproevenverdeling een veel kleinere spreiding heeft.
 (De klokvorm is bij de steekproevenverdeling smaller.)
 
@@ -728,11 +749,11 @@ We nemen dus weer héél veel steekproeven,
 maar nu van $n = 40$ eenheden.
 Vervolgens berekenen we weer het gemiddelde van iedere steekproef,
 en geven al die steekproefgemiddelden weer in een histogram.
-Het resultaat staat in @fig-steekproevenverdeling-2. 
+Het resultaat staat in @fig-steekproevenverdeling-3. 
 Zoals je ziet is de piek van de steekproevenverdeling 
 bij $n = 40$ smaller dan bij $n = 10$.
 En de verdeling wordt nog smaller als $n = 100$;
-zie @fig-steekproevenverdeling-3.
+zie @fig-steekproevenverdeling-4.
 De conclusie is:
 hoe groter de steekproeven zijn,
 hoe dichter de gemiddelden van de steekproeven bij elkaar liggen,
@@ -750,71 +771,40 @@ en hoe kleiner dus de toevallige fout is.
 
 ## De standaarddeviatie van het steekproefgemiddelde.
 
-We zagen net dat de spreiding van de steekproevenverdeling van het gemiddelde
+We zagen net dat de spreiding van de steekproevenverdeling van het steekproefgemiddelde
 aangeeft hoe ver een typische schatting van het populatiegemiddelde ligt.
 Het is daarom nuttig om die spreiding te kwantificeren.
-Een goede maat voor de spreiding in de steekproevenverdeling van het gemiddelde
-is de standaarddeviatie van die verdeling.
+Een goede maat
+is de *standaarddeviatie* van de verdeling van het steekproefgemiddelde.
+Die standaarddeviatie noteren we als $\sd{\overline{X}}$. 
 
-Hierbij komt onze kennis van kansrekenen weer erg van pas.
-Zoals je weet is dit de formule voor het het gemiddelde van een steekproef:
+Met wat wiskunde (die we je hier zullen besparen)
+kan de volgende formule voor $\sd{\overline{X}}$ worden afgeleid: 
 $$
-\overline{X} = \frac{\sum_{i = 1}^n X_i}{n}.
-$$
-In de teller staat de som van alle waarnemingen.
-Dat is dus een som van kansvariabelen. 
-Volgens het Normale Model waren die kansvariabelen bovendien onafhankelijk van elkaar.
-In hoofdstuk @sec-som-ev hebben we geleerd dat de variantie
-van een som van onafhankelijke kansvariabelen
-gelijk is aan de som van de varianties (@eq-somvarianties).
-Dat kunnen we hier perfect toepassen!
-Hieruit volgt dat
-$$
-\begin{aligned}
-\var{\overline{X}} 
-&= \var{\frac{\sum_{i = 1}^n X_i}{n}} \\ 
-&= \frac{\var{\sum_{i = 1}^n X_i}}{n^2} \\ 
-&= \frac{\sum_{i = 1}^n \var{X_i}}{n^2} \\ 
-&= \frac{\sum_{i = 1}^n \sd{X}^2}{n^2} \\ 
-&= \frac{n \sd{X}^2}{n^2} \\ 
-&= \frac{\sd{X}^2}{n}.
-\end{aligned}
-$$ {#eq-steekproefvariantie}
-De volgende tips helpen misschien bij het begrijpen van deze afleiding: 
-
-- In de eerste stap vullen we de definitie van het steekproefgemiddelde in, @eq-steekproefgemiddelde.
-- Voor de tweede stap gebruiken we @eq-kwadraat (afgeleid in @exr-kwadraat) om $n$ buiten de haken te halen.
-- In de derde stap passen we @eq-somvarianties toe, over de variantie van een som van onafhankelijke variabelen.
-- In de vierde stap gebruiken we dat volgens het Normale Model alle $X_i$ uit dezelfde normale verdeling zijn getrokken, met variantie $\sigma^2_X$.
-- De vijfde stap gebruikt dat in de sommatie $n$ keer dezelfde waarde wordt opgeteld.
-
-De standaarddeviatie van de steekproevenverdeling van het gemiddelde
-noteren we als $\sigma_\overline{X}$. Deze is simpelweg de wortel van de variantie, en wordt dus
-$$
-\sigma_\overline{X} = \sqrt{\var{\overline{X}}} = \frac{\sd{X}}{\sqrt{n}}.
+\sd{\overline{X}} = \frac{\sd{X}}{\sqrt{n}}.
 $$ {#eq-sigmaM}
 Dit is een belangrijk resultaat!
 Het bevestigt wat we in @fig-steekproevenverdeling al zagen:
 de standaarddeviatie van de steekproevenverdeling neemt af naarmate $n$ groter wordt.
-Nu weten we echter *precies* hoe sterk die afname is: in de noemer van @eq-sigmaM staat $\sqrt{n}$.
-Dat wortelteken heeft grote gevolgen.
-Als we de standaarddeviatie bijvoorbeeld 2 keer zo klein willen maken,
-hebben we een steekproef nodig die 4 keer zo groot is.
-Voor een standaarddeviatie die 10 keer zo klein is,
-moeten we zelfs een 100 keer zo grote steekproef nemen.
+Maar nu weten we *precies* hoe sterk die afname is: 
+de afname komt door de $\sqrt{n}$ in de noemer van @eq-sigmaM.
 
-Deze verhouding maakt duidelijk dat er grenzen zijn aan wat haalbaar is;  
-het vergroten van de steekproefomvang brengt al snel praktische uitdagingen met zich mee.
+Dat wortelteken heeft grote gevolgen.
+Bijvoorbeeld, als we de toevallige fout twee keer zo klein willen maken,
+hebben we een vier keer zo grote steekproef nodig.
+Willen we de toevallige fout 10 keer zo klein hebben,
+dan moeten we zelfs een 100 keer zo grote steekproef nemen.
+Dat loopt snel uit hand.
 
 Wat hebben we met al dit rekenwerk bereikt? 
-We vatten de conclusies samen:
+We vatten de voorlopige conclusies samen:
 
 ::: {.callout-important}
 
 ## Conclusies over de steekproevenverdeling van het gemiddelde
 
 We gaan uit van het Normale Model:
-we trekken onafhankelijk $n$ eenheden uit een normaal-verdeelde populatie
+we trekken onafhankelijk $n$ eenheden uit een normaalverdeelde populatie
 met parameters $\mu_X$ en $\sd{X}$.
 
 1. Het gemiddelde van $X$ in de steekproef, dus $\mean{X}$, is een kansvariabele.
@@ -827,13 +817,13 @@ met parameters $\mu_X$ en $\sd{X}$.
 :::
 
 In @sec-vuistregels (vuistregels) hebben we gezien dat bij een normale verdeling
-ongeveer 95% van de waarnemingen binnen twee standaarddeviaties van het gemiddelde valt.
+95% van de waarnemingen binnen 1,96 standaarddeviaties van het gemiddelde valt.
 Daaruit kunnen we concluderen dat een gemiddelde van een steekproef
-met ongeveer 95% zekerheid binnen $2 \sigma_{\overline{X}}$
+met 95% zekerheid binnen $1,96 \sigma_{\overline{X}}$
 van de ware populatieparameter $\mu_X$ afligt!
 
 *Andersom betekent dit dat met ongeveer 95% zekerheid $\mu_X$ binnen 
-$2 \sigma_{\overline{X}}$ van $\overline{X}$ afligt.*
+$1{,}96 \sigma_{\overline{X}}$ van $\overline{X}$ afligt.*
 
 Dit is het idee achter het BHI van het gemiddelde. 
 We kunnen dat idee nu precies maken.
@@ -848,55 +838,55 @@ De waarde van het populatiegemiddelde $\mu_X$ is onbekend.
 Om die waarde te schatten
 hebben we voor een steekproef van $n$ eenheden genomen.
 
-We beginnen met een situatie die niet vaak voorkomt,
+In deze paragraaf behandelen we een situatie die niet vaak voorkomt,
 maar waarbij de berekening van het BHI gemakkelijk te begrijpen is.
 We gaan er namelijk vanuit dat we de standaarddeviatie van de populatie, 
 $\sd{X}$,
 precies weten.
 Het is moeilijk een situatie te bedenken waarbij we $\mu_X$ niet weten,
-maar $\sd{X}$ wel.
+maar $\sd{X}$ wel, dus erg realistisch is deze situatie niet.
 Maar dit is een opstapje naar de iets ingewikkeldere situatie waarbij we $\sd{X}$ *niet* kennen;
-die situatie wordt in de volgende paragraaf behandeld.
+die situatie behandelen we in de volgende paragraaf.
 
 We hebben net gezien dat het steekproefgemiddelde $\mean{X}$
 zelf een kansvariabele is.
 Deze kansvariabele is normaal verdeeld 
-met gemiddelde $\mu_X$ en standaarddeviatie $\sd{\mean{X}} = \sd{X}/\sqrt{n}$.
-Dit betekent dat we $\mean{X}$ kunnen transformeren naar een standaard-normaal verdeelde variabele
-door het gemiddelde eraf te trekken en dan te delen door de standaarddeviatie:
-$$Z = \frac{\mean{X} - \mu_X}{\sd{\mean{X}}}.$$ {#eq-trans}
-(Als je dit verwarrend vindt, 
-blader dan nog eens terug naar @sec-transformeren!)
+met verwachtingswaarde $\mu_X$ en standaarddeviatie $\sd{\mean{X}}$.
+We hebben geleerd dat wel elke normaalverdeelde variabele 
+kunnen transformeren naar een standaardnormaal verdelede variabele $Z$
+door het gemiddelde eraf te trekken en te delen door de standaarddeviatie.
+Oftewel,
+$$ Z = \frac{\mean{X} - \mu_X}{\sd{\overline{X}}}$$ {#eq-trans-2}
+is standaardnormaal verdeeld.
 
-Van de standaard-normale verdeling weten we dat de kans 
-op een waarneming tussen -1,96 en 1,96 gelijk is aan 0,95:
+Van de standaardnormale verdeling weten we dat 
+tussen -1,96 en 1,96 een kans van 0,95 ligt:
 $$    
-\pr{-1{,}96 < Z < 1{,}96} = 0{,}95.  
-$$ {#eq-kritieke}
-(Weet je nog dat we het in @sec-kritieke-waarde 
-over de kritieke waarde $Z_{0{,}05(2)} = 1{,}96$ hebben gehad?)
-Invullen van @eq-trans in @eq-kritieke levert op:
-$$    
-\pr{-1{,}96 < \frac{\mean{X} - \mu_X}{\sd{\mean{X}}} < 1{,}96} = 0{,}95.
+\pr{-1{,}96 < Z < 1{,}96} = 0{,}95.
 $$
-Nu vermenigvuldigen we de ongelijkheid binnen de haken met $- \sd{X}$.
-Dat is een negatief getal, en dus worden de kleiner-dan tekens ($<$) nu groter-dan tekens ($>$):
+We vullen @eq-trans-2 in en krijgen:
 $$    
-\pr{ 1{,}96\, \sd{\mean{X}} >  \mu_X - \mean{X} > - 1{,}96\,\sd{\mean{X}}} = 0{,}95.
+\pr{-1{,}96 < \frac{\mean{X} - \mu_X}{\sd{\overline{X}}} < 1{,}96} = 0{,}95.
 $$
+We gaan de ongelijkheid verder uitwerken. 
+Eerst vermenigvuldigen we alle kanten van de ongelijkheid met $-\sd{\mean{X}}$:
+$$    
+\pr{1{,}96 \sd{\overline{X}} > \mu_X -\mean{X} > -1{,}96 \sd{\overline{X}}} = 0{,}95.
+$$
+Omdat we met een negatief getal vermenigvuldigd hebben, zijn de tekens van de ongelijkheden omgeklapt.
 Het is overzichtelijker om de volgorde van de ongelijkheden om te draaien:
 $$    
-\pr{- 1{,}96\, \sd{\mean{X}} <  \mu_X - \mean{X} < 1{,}96\,\sd{\mean{X}}} = 0{,}95.
+\pr{-1{,}96 \sd{\overline{X}} < \mu_X -\mean{X} < 1{,}96 \sd{\overline{X}}} = 0{,}95.
 $$
-Tot slot tellen we bij alle termen van de ongelijkheid $\mean{X}$ op:
+Ten slotte tellen we $\mean{X}$ bij alle kanten van de ongelijkheid op:
 $$
 \pr{\mean{X} -1{,}96\, \sd{\mean{X}} < \mu_X < \mean{X} + 1{,}96\, \sd{\mean{X}}} = 0{,}95.
 $$
 
-Dit is de vergelijking waarnaar we op zoek waren!
+Dit is precies de vergelijking waarnaar we op zoek waren!
 De vergelijking zegt: 
-elke keer dat we een steekproef nemen,
-hebben we een kans van 0{,}95 dat het populatiegemiddelde $\mu_X$
+elke keer dat we een steekproef nemen en $\mean{X}$ uitrekenen,
+hebben we een kans van 0,95 dat het populatiegemiddelde $\mu_X$
 tussen de grenzen $\mean{X} -1{,}96\, \sd{\mean{X}}$ en $\mean{X} + 1{,}96\, \sd{\mean{X}}$ in valt.
 Dat betekent dat het volgende interval een 95%-BHI is:
 $$\left[\mean{X} -1{,}96\, \sd{\mean{X}}, \mean{X} + 1{,}96\, \sd{\mean{X}} \right].$$
@@ -1010,7 +1000,7 @@ Nu is het een multiple-choice; maak er een gewone vraag van.
 
 In de situatie dat $\sd{X}$ bekend was,
 konden we de kansvariabele $\mean{X}$ transformeren naar een standaard-normaal verdeelde variabele
-door middel van @eq-trans:
+door middel van @eq-trans-2:
 $$ Z = \frac{\mean{X} - \mu_X}{\sd{\mean{X}}}. $$
 Om uiteindelijk een formule voor een BHI te krijgen 
 waarin in plaats van $\sd{\mean{X}}$ de standaardfout $\se{\mean{X}}$ voorkomt, 
@@ -1022,23 +1012,23 @@ maar $t$:
 $$
 t = \frac{\mean{X} - \mu_X}{\se{\mean{X}}}.
 $$ {#eq-t}
-
-::: {.todo-box}
-*Ik had best weer even moeite om op te halen waar de $t$ nou precies voor stond, want als ik puur de text las dacht ik dat het om een verdeling zou gaan, maar het is toch echt maar 1 getal. Misschien dat het stukje hieronder toegevoegd kan worden? ~Yannick*
-
-Het getal $t$ dat je uit deze formule krijgt geeft aan hoe groot de kans is dat je een steekproefgemiddelde $\mean{X}$ vond uit de hele populatie $\mu_X$. De kans is dus groot dat je een $t$ vindt rond de 0, want daar ligt de piek van de t-verdeling. Als je een hele hoge of lage $t$ waarde vindt kan je concluderen dat je of een onwaarschijnlijke steekproef hebt gedaan (wat altijd mogelijk is), of dat je populatiegemiddelde ($\mu_X$) toch niet de waarde heeft die je dacht dat deze had. Deze informatie gaan we in de volgende paragraaf gebruiken om een betrouwbaarheidsinterval te berekenen. 
-:::
-
 De keuze voor $t$ als de naam van deze getransformeerde variabele is niet willekeurig.
 Er kan namelijk worden aangetoond
 dat $t$ onder het Normale Model
 een $t$-verdeling volgt met $n - 1$ vrijheidsgraden.
-(Kijk nog eens terug naar @sec-t als je de details over de $t$-verdeling
-niet meer helder hebt.)
+Dat wil zeggen: als je 
+
+-   een steekproef neemt ven $n$ eenheden,
+-   het gemiddelde $\mean{X}$ en de standaarddeviatie $s$ van die steekproef berekent
+-   en daarmee @eq-t invult om $t$ te berekenen
+
+dan is $t$ een kansvariabele met als kansverdeling 
+de $t$-verdeling met $n-1$ vrijheidsgraden.
+
 Helaas voert het bewijs voor deze stelling te ver voor deze cursus;
-je zult ons daarop moeten vertrouwen.
+je zult daarop moeten vertrouwen.
 Maar in de spirit van *trust, but verify* kun je de bewering wel 
-controleren met behulp van simulaties.
+controleren met behulp van *simulaties*.
 
 ::: {.callout-tip}
 
@@ -1049,13 +1039,12 @@ onder het Normale Model
 een $t$-verdeling volgt met $n - 1$ vrijheidsgraden.
 
 De code hieronder (klik op "Code" om die zichtbaar te maken) neemt $10^4$ keer een (kleine) steekproef ($n = 4$)
-uit een normale verdeling, en berekent op basis van die steekproeven steeds $t$.
-Het histogram van de verkregen $t$ waarden zou de $t$-verdeling met $\mathrm{df}= n -1 = 3$
+uit een normale verdeling, en berekent op basis van die steekproeven steeds 
+$\mean{X}$, $s$, $\se{X}$, en uiteindelijk $t$.
+Het histogram van de verkregen $t$ waarden zou dan de $t$-verdeling met $\mathrm{df}= n -1 = 3$
 vrijheidsgraden moeten volgen.
-Daarom plot de code bovenop het histogram ook die $t$-verdeling (in paars).
-Ter vergelijking is ook de standaard-normale verdeling toegevoegd (zwarte stippellijn).
-De $t$-verdeling heeft een lagere piek en dikkere staarten,
-waardoor zijn spreiding groter is.
+Om dat te verifieren plot de code bovenop het histogram ook die $t$-verdeling (in paars).
+
 
 ```{r}
 #| code-fold: true
@@ -1071,7 +1060,7 @@ if (!("ggplot2" %in% loadedNamespaces())) {
 }
 
 # Parameters instellen
-aantal_iteraties <- 10000   # Aantal herhalingen
+aantal_iteraties <- 10^4   # Aantal herhalingen
 steekproefgrootte <- 4      # Grootte van de steekproef
 mu <- 100                   # Populatiegemiddelde
 sigma <- 10                 # Populatiestandaarddeviatie
@@ -1140,7 +1129,19 @@ ggplot(data, aes(x = t_waarden)) +
   theme_minimal()
 ```
 
+Ter vergelijking is ook de standaardnormale verdeling toegevoegd (zwarte stippellijn).
+Zoals je geleerd hebt in @sec-t heeft de $t$-verdeling een lagere piek en dikkere staarten,
+en dus een grotere spreiding.
+In dit geval komt dat doordat in de noemer van @eq-t niet $\sd{\mean{X}}$ staat
+maar de schatter daarvan $\se{\mean{X}}$.
+Daardoor is nu niet alleen de teller maar ook de noemer onzeker.
+Het gevolg is dat $t$ (@eq-t) onzekerder is dan
+dan $Z$ (@eq-trans-2).
+
 :::
+
+
+We vatten de situatie weer even samen:
 
 ::: {.callout-important appearance="default" icon=false}
 ## Belangrijk:
@@ -1155,19 +1156,16 @@ is de $t$-verdeling met $n - 1$ vrijheidsgraden.
 
 ### Afleiding van het 95%-BHI
 
-Nu we dit alles weten, kunnen we de afleiding van het 95%-BHI eindelijk vervolgen.
+Nu we dit alles weten, kunnen we de afleiding van het 95%-BHI eindelijk afmaken.
 
-Voor iedere variabele $t$ die $t$-verdeeld is met df vrijheidsgraden geldt: 
-$$
-\pr{ -\ct{0{,}05}{2}{df} < t < \ct{0{,}05}{2}{df} } = 0{,}95.
-$$
-Als dat niet vanzelfsprekend voor je is, kijk dan eens terug naar @eq-crit-t en de paragraaf daaromheen.
+ @eq-crit-t en de paragraaf daaromheen.
 
-Specifiek voor de variabele $t$ van @eq-def-t geldt dus
+Omdat de $t$ uit @eq-def-t verdeeld is volgens de $t$-verdeling met $n-1$ vrijheidsgraden,
+geldt
 $$
 \pr{ -\ct{0{,}05}{2}{(n-1)} < t < \ct{0{,}05}{2}{(n-1)} } = 0{,}95.
 $$
-
+We hebben hier de kritieke waarden gebruikt voor de $t$-verdeling (zie @eq-crit-t).
 
 Als we @eq-def-t hierin invullen, krijgen we
 $$
@@ -1188,7 +1186,7 @@ $$
 \pr{\mean{X} -\ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}} < \mu_X < \mean{X} + \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}}} = 0{,}95.
 $$
 Dit is precies de vergelijking waarnaar we op zoek waren!
-De vergelijking zegt dat er iedere keer dat we een steekproef nemen een kans van 0{,}95 is
+De vergelijking zegt dat er iedere keer dat we een steekproef nemen een kans van 0,95 is
 dat de populatieparameter $\mu_X$ tussen de grenzen $\mean{X} -\ct{0{,}05}{2}{(n-1)}$ en $\mean{X} + \ct{0{,}05}{2}{(n-1)}$
 invalt. Oftewel, het 95\%-BHI is:
 $$
@@ -1198,9 +1196,8 @@ Dit wordt ook vaak geschreven als
 $$
     \mu_X = \mean{X} \pm \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}}.
 $$
-$\ct{0{,}05}{2}{(n-1)}$ hoef je niet met de hand uit te rekenen. Hiervoor kan je de functie `qt` in R gebruiken. Zie @exm-BHI voor een uitwerking hiervan. 
 
-Laten we dit maar weer eens samenvatten:
+Laten we dit eindresultaat maar weer eens samenvatten:
 
 ::: {.callout-important icon=false}
 ## 95%-BHI voor de situatie dat $\sd{X}$ onbekend is
@@ -1233,7 +1230,7 @@ in plaats van de kritieke waarde van de standaard-normale verdeling 1,96.
 Omdat de kritieke $t$-waarde altijd groter is dan 1,96
 zorgt dit voor bredere betrouwbaarheidsintervallen.
 Die bredere betrouwbaarheidsintervallen reflecteren het feit
-dat we zonder kennis van $\sigma$ ook onzekerder zijn over de waarde van $\mean{X}$.
+dat we zonder kennis van $\sd{X}$ ook onzekerder zijn over de waarde van $\mu_X$.
 
 Maar als het aantal waarnemingen niet al te klein is,
 is dat effect klein.
@@ -1287,15 +1284,23 @@ Het betrouwbaarheidsinterval is dus $[91{,}7; 127{,}1]$, oftewel $109{,}4 \pm 17
 
 :::
 
-::: {#exr-BHI}
+::: {.pepexr .Rexr #exr-tomaten-gewicht}
 
-Bereken een BHI
+## BHI van een steekproef tomaten
+<br>
+
+Van zestien aselect gekozen tomaten uit een kas is het gewicht bepaald. 
+Het gemiddelde gewicht in de steekproef is gelijk aan 44,1 g; 
+de standaardafwijking van de steekproef is gelijk aan 8,6 g. 
+Bepaal het 95%-betrouwbaarheidsinterval voor het gemiddelde gewicht $\mu_X$ van dergelijke
+tomaten. 
+(Je mag uit gaan van het Normale Model. Rond af op 1 decimaal.)
 
 :::
 
 ### Een BHI berekenen met R
 
-In @exm-BHI bestond de dataset uit slechts vijf waarnemingen.
+In @exm-BHI bestond de dataset uit maar vijf waarnemingen.
 Daarom was het goed mogelijk om het BHI met de hand uit te rekenen.
 Maar zelfs dan moesten we van R gebruik maken 
 om de kritieke waarde op te zoeken.
@@ -1316,7 +1321,7 @@ Je maakt gebruik van de functie `t.test()`
 die we in de volgende hoofdstukken nog vaker gaan terugzien.
 Deze functie berekent allerlei statistieken,
 waaronder het BHI.
-We slaan eerst de uitvoer van `t.text()` op in een variabele.
+We slaan eerst de uitvoer van `t.test()` op in een variabele.
 Vervolgens vragen we uit deze uitvoer het betrouwbaarheidsinterval op.
 Als het goed is, komt de uitvoer precies overeen met de getallen
 die in @exm-BHI berekend hadden. Klopt dat? 
@@ -1379,6 +1384,9 @@ Wanneer je een BHI wilt uitrekenen van zo'n variabele
 #| label: fig-CBS-persoonlijk-inkomen
 #| fig-cap: "Verdeling van persoonlijk inkomen in Nederland, 2022"
 #| warning: false
+#| fig.width: 4
+#| fig.height: 3
+#| out.width: "57%"
 library(readr)
 VerdelingPersoonlijkInkomen_CBS_2022 <- read_csv("data/VerdelingPersoonlijkInkomen-CBS-2022.csv", 
     locale = locale(decimal_mark = ","))
@@ -1424,9 +1432,10 @@ ggplot(VerdelingPersoonlijkInkomen_CBS_2022,
 #| code-fold: true
 #| warning: false
 #| fig-cap: "Aantal eieren in 34 nesten van de vink *Fringilla Coelebs Africana*[^eggs]."
-#| fig-label: fig-vink
-#| fig.width: 5
-#| fig.height: 4
+#| label: fig-vink
+#| fig.width: 3
+#| fig.height: 2
+#| out.width: "43%"
 
 dataVink <- data.frame(
   aantal_eieren <- c(rep(1, 3), rep(2, 2), rep(3, 15), rep(4, 14))
@@ -1461,13 +1470,13 @@ Voorbeelden:
   liggen dan bij replicaties die daadwerkelijk onafhankelijk zijn uitgevoerd.
   Dat leidt onterecht tot een smaller BHI.
   
-- **Tijdseries.** Metingen over de tijd van dezelfde variabele, 
-  zoals de lichaamstemperatuur van één en dezelfde persoon
-  gemeten op opeenvolgende dagen,
+- **Tijdseries.** Metingen over de tijd van dezelfde variabele
   zullen vaak niet onafhankelijk zijn.
-  Wie vandaag koorts heeft,
+  Een voorbeeld is de lichaamstemperatuur van één en dezelfde persoon
+  gemeten op opeenvolgende dagen,
+  want wie vandaag koorts heeft,
   heeft dat vaak morgen ook.
-  Je kunt bij het berekenen van een tijdsgemiddelde
+  Je kunt bij het berekenen van een *tijdsgemiddelde*
   dus niet zomaar uitgaan van een model waarbij opeenvolgende metingen
   onafhankelijk zijn.
   
@@ -1479,10 +1488,10 @@ Voorbeelden:
   Dan is er een gevaar dat de mening van reisgezellen niet onafhankelijk zijn.
   
 Kortom, 
-  het is belangrijk om goed na te denken
-  over de aard van de variabele
-  en de manier waarop de gegevens tot stand zijn gekomen
-  om zo te bepalen of het Normale Model bij voorbaat van toepassing lijkt.
+het is belangrijk om goed na te denken
+over de aard van de variabele
+en de manier waarop de gegevens tot stand zijn gekomen
+om zo te bepalen of het Normale Model bij voorbaat van toepassing lijkt.
 
 ### Geven de gegevens aanleiding tot twijfel?
   
@@ -1523,14 +1532,8 @@ Dat wil zeggen:
 3. **Maak een Normale Kwantiel-Kwantiel-plot.**
   Er bestaat een grafiek
   die speciaal ontworpen is om afwijkingen van de normale verdeling beter zichtbaar te maken.
-  Deze grafiek heet de **Normale Kwantiel-Kwantiel-plot**,
-  of *Normal QQ plot* in het Engels.
+  Deze grafiek heet de **Normale Kwantiel-Kwantiel-plot** (*Normal QQ plot*).
   We zullen die plot in het de volgende paragraaf even apart bespreken.
-  
-4. **Gebruik formele hypothesetoetsen om afwijkingen aan te tonen.**
-  Om deze methoden uit te leggen,
-  hebben we eerst de stof uit de hoofdstukken @sec-hypothesetoetsen en @sec-toetsen-gemiddelden nodig. 
-  We komen hier daarom in @sec-toetsen-gemiddelden op terug.
 
 Door altijd de bovenstaande beschrijvende statistieken en figuren te bestuderen
 krijg je een goed beeld van de toepasbaarheid van het Normale Model.
@@ -1542,6 +1545,12 @@ In een Normale Kwantiel-Kwantiel-plot
 worden de kwantielen van de waarnemingen
 uitgezet tegen de kwantielen die je zou verwachten 
 als de 
+
+::: {.todo-box}
+
+
+:::
+
 
 ::: {#exm-normale-QQ}
 
@@ -1771,6 +1780,7 @@ In figuur (d) en (e) de term "verdeling steekproefgemiddelden". Bovendien weer $
 #| label: fig-robuust-1
 #| fig.width: 3.5
 #| fig.height: 2.5
+#| out.width: "50%"
 
 # Controleer en laad benodigde pakketten
 if (!("ggplot2" %in% .packages())) {
@@ -1921,6 +1931,7 @@ boven_plot
 #| label: fig-robuust-2
 #| fig.width: 3.5
 #| fig.height: 2.5
+#| out.width: "100%"
 
 midden_plot
 ```
@@ -1932,6 +1943,7 @@ midden_plot
 #| label: fig-robuust-3
 #| fig.width: 3.5
 #| fig.height: 2.5
+#| out.width: "100%"
 
 midden_plot_b
 ```
@@ -1943,6 +1955,7 @@ midden_plot_b
 #| label: fig-robuust-4
 #| fig.width: 3.5
 #| fig.height: 2.5
+#| out.width: "100%"
 
 onder_plot
 ```
@@ -1954,6 +1967,7 @@ onder_plot
 #| label: fig-robuust-5
 #| fig.width: 3.5
 #| fig.height: 2.5
+#| out.width: "100%"
  
 onder_plot_b
 ```
@@ -1978,19 +1992,8 @@ Wiskundig kan daadwerkelijk worden aangetoond
   dat geldt ongeacht de verdeling van de populatie
   (behalve in heel pathologische gevallen
   waarover wij ons niet druk hoeven te maken).
-Dit volgt uit een wiskundige stelling 
-  die de **centrale limietstelling** heet:
-
-::: {.callout-important appearance="default" icon=false}
-
-## De centrale limietstelling 
-
-Trek onafhankelijk $n$ waarden
-  uit een kansverdeling.
-De kansverdeling van het gemiddelde $\mean{X}$ van die waarden
-  convergeert naar een normale verdeling
-  als $n \rightarrow \infty$.
-:::
+Dit volgt uit de **centrale limietstelling**,
+  die we ook al kort tegenkwamen in @sec-centrale-limietstelling.
 
 Een consequentie van deze stelling is dat de afleiding 
   van de formule voor het BHI (@sec-BHI-sigma-niet-bekend)
@@ -2006,7 +2009,7 @@ Als de populatieverdeling heel erg scheef is
 Als vuistregel kun je aannemen dat
   bij steekproeven van $n = 30$ of meer
   de formule voor het BHI ook van toepassing is
-  als de populatie niet normaalverdeeld is.
+  als de populatie niet normaal verdeeld is.
 In @exr-bhi-controleren hieronder zul je zien
   dat zelfs bij behoorlijk vreemde verdelingen
   het BHI al bij veel kleinere $n$ betrouwbaar is.
@@ -2117,9 +2120,8 @@ cat(
 ::: {.todo-box}
 
 Schrijven.
-De variantie van de steekproevenverdeling: (@eq-steekproefvariantie)
-$$\var{\overline{X}} = \frac{\sd{X}^2}{n}.$$
-$\var{\overline{X}}$ is variantie in de gevonden steekproefgemiddelden, $\sigma^2_X$ is de standaarddeviatie van de populatie en $n$ is de steekproefgrootte. 
+
+$\sigma^2_X$ is de standaarddeviatie van de populatie en $n$ is de steekproefgrootte. 
 
 De standaarddeviatie van de steekproevenverdeling van het gemiddelde: (@eq-sigmaM)
 $$
@@ -2150,8 +2152,8 @@ $\mu_X$ is het gemiddelde van de populatie, $\mean{X}$ is het gemiddelde van de 
 
 ## Terminologie
 
-| Nederlands                  | Engels                        | Betekenis |
-|---------------              |--------------------           |-------------------     |
+| Nederlands   | Engels           | Betekenis                   |
+|:-------------|:-----------------|:----------------------------|
 | betrouwbaarheidsinterval (BHI)        | confidence interval (CI)| Het interval rondom een punt waarbinnen een waarde zou kunnen vallen als je deze waarde niet exact weet. Een 95%-BHI is de interval waartussen de waarde in 95% van de gevallen zou vallen.           |
 | centrale limietstelling               | central limit theorem   | Trek onafhankelijk $n$ waarden uit een kansverdeling. De kansverdeling van het gemiddelde $\mean{X}$ van die waarden convergeert naar een normale verdeling |
 | gerepliceerd                          | replicated              | Herhaald (van een steekproef) |
@@ -2167,17 +2169,12 @@ $\mu_X$ is het gemiddelde van de populatie, $\mean{X}$ is het gemiddelde van de 
 
 
 ::: {.pepexr #exr-75-procent-interval}
+
+### Waarom 95%?
+<br>
+
 Waarom berekenen we meestal een 95%-betrouwbaarheidsinterval, en niet, zeg, een 75%-betrouwbaarheidsinterval?
 :::
 
-::: {.todo-box}
-Rutger nakijken
-:::
-
-::: {.pepexr .Rexr #exr-tomaten-gewicht}
-Van zestien aselect gekozen tomaten uit een kas is het gewicht bepaald. Het gemiddelde gewicht is gelijk aan 44,1 g ; de
-standaardafwijking van de gewichten is gelijk aan 8,6 g . Bepaal het 95%-betrouwbaarheidsinterval voor het gemiddelde gewicht 𝜇 van dergelijke
-tomaten. (Neem aan dat de gewichten normaal verdeeld zijn en rond af op 1 decimaal.)
 
 
-:::

@@ -134,7 +134,7 @@ verdelingTweeDobbelstenen(kleur)
 ```
 
 De manier waarop kansen over alle mogelijke uitkomsten verdeeld zijn
-wordt de **kansverdeling** genoemd.
+wordt de **kansverdeling** (*probability distribution*) genoemd.
 Zowel @fig-uniform-dobbelsteen als @fig-kansverdeling-twee-dobbelstenen 
 geven dus ieder een kansverdeling weer.
 
@@ -160,9 +160,28 @@ Dat betekent dat je een kansverdeling kunt interpreteren
 
 Stel dat we twee munten gooien.
 We gaan uit van een model waarbij de munten eerlijk zijn
-en de uitkomsten van beide munten onafhankelijk.
+en hun uitkomsten onafhankelijk.
 
 Teken de kansverdeling van het aantal keer dat je "kop" gooit.
+:::
+
+::: {#exr-genotypes .pepexr}
+## Genotypes
+<br>
+
+We kruisen twee heterozygote zoogdieren met genotype `aA`.
+Om de kansen op de verschillende genotypes `aa`, `aA` en `AA` in de nakomelingen
+in te schatten, maken we gebruik van een simpel model:
+
+- Iedere ouder geeft met gelijke kans `a` of `A` aan diens geslachtscellen mee.
+- Het allel heeft geen invloed op de kans op conceptie.
+- Het genotype heeft geen invloed op het succes van de zwangerschap.
+
+a.  Wat is de kans dat een nakomeling genotype `aa` heeft?
+b.  Wat is de kans dat een nakomeling genotype `aA` heeft?
+c.  Wat is de kans dat een nakomeling genotype `AA` heeft.
+d.  Wat is de relatie van deze opgave met @exr-munten?
+
 :::
 
 ## De vorm van een verdeling kwalitatief beschrijven
@@ -216,7 +235,7 @@ verdelingTweeDobbelstenen(kleur)
 
 ```
 
-In het algemeen geldt dat de kans dat de uitkomst binnen een bepaald interval $(a, b)$ valt,
+In het algemeen geldt dat de kans dat de uitkomst binnen een bepaald interval valt,
 gelijk is aan de totale oppervlakte van de staven die horen bij dit interval.
 
 In dit voorbeeld is de kansvariabele discreet. 
@@ -235,7 +254,7 @@ Het verschil is dat we het nu over kansverdelingen hebben,
   niet over een rij waarnemingen van een variabele.
 @Fig-cumulverdeling-twee-dobbelstenen is een voorbeeld.
 Dat is de cumulatieve kansverdeling die hoort bij
-  de kansverdeling in @fig-fig-kansverdeling-twee-dobbelstenen-2 
+  de kansverdeling in @fig-kansverdeling-twee-dobbelstenen
   voor het totaal aantal ogen van twee dobbelstenen.
 De cumulatieve verdeling maakt in dit geval sprongen omdat de uitkomst 
   alleen een geheel aantal ogen kan zijn.
@@ -321,17 +340,18 @@ De kans op $7 < X < 11$ is namelijk de kans dat $X$
   kleiner of gelijk is aan 10
   min de kans dan $X$ kleiner of gelijk is aan 7.
   
-::: {#exr-cumul}
+::: {#exr-cumul .pepexr}
 
-## Kansen berekenen met de cumulatieve verdeling.
+## De cumulatieve verdeling van het aantal keer "kop"
+<br>
 
-  a.  x
-  b.  y
-  
+Je gooit net als in @exr-munten met twee munten
+en gaat weer uit van een model waarbij beide munten eerlijk zijn
+en de uitkomsten van beide munten onafhankelijk.
 
-::: {.todo-box}
-schrijven? Heel eenvoudig houden -- puur het concept.
-:::
+Teken de cumulatieve verdeling van het aantal keer "kop".
+Gebruik je resultaten uit @exr-munten, en
+neem @fig-cumulverdeling-twee-dobbelstenen als voorbeeld.
 
 :::
 
@@ -502,13 +522,15 @@ Dat oppervlakte is 0,59.
 Dat is dus de kans dat een Amerikaanse man een lengte heeft
 tussen 170cm en 182cm.
 
+De totale oppervlakte onder de curve,
+van $-\infty$ tot $\infty$,
+is bij iedere kansverdeling van een numerieke variabele gelijk aan 1,
+want de kans dat een uitkomst *ergens* op de $x$-as ligt is 1.
+
 De waarde op de $y$-as is bij kansverdelingen van continue variabelen
 dus niet de kans op een specifieke waarde. 
-In plaats daarvan spreken we bij continue variabelen over de **kansdichtheid**.
-Bij een kansverdeling is de totale oppervlakte onder de curve,
-van $-\infty$ tot $\infty$, 
-altijd gelijk is aan 1,
-want de kans dat een uitkomst *ergens* op de $x$-as ligt is 1.
+In plaats daarvan spreken we bij continue variabelen over de **kansdichtheid**
+(*probability density*).
 
 In @sec-kansverdelingen vergeleken we een kansverdeling 
 met een histogram van een *enorm* (oneindig) aantal waarnemingen.
@@ -525,7 +547,7 @@ en het histogram een gladde curve wordt.
 Zie @fig-kansen-schatten hieronder. 
 
 a.  Het canvas van iedere grafiek is door grijze lijntjes verdeeld in vakjes.
-    Hoeveel kans correspondeert met de oppervlakte van één vakje?
+    Hoeveel kans representeert de oppervlakte van één vakje?
     
 b.  Schat voor ieder van de kansenverdelingen de kans op een waarneming 
     binnen het paars gearceerde gebied.
@@ -536,7 +558,7 @@ b.  Schat voor ieder van de kansenverdelingen de kans op een waarneming
 library(ggplot2)
 
 # Definieer de standaardnormale verdeling
-x <- seq(-3.5, 3.5, length.out = 200)
+x <- seq(-3.5, 3.5, length.out = 350)
 data <- data.frame(x = x, y = dnorm(x))
 
 oppervlak <- function(a, b){# Gebied tussen a en b kleuren
@@ -610,6 +632,7 @@ normaalGeneriek + oppervlak(qnorm(0.25), qnorm(0.75))
 
 ::: {#exr-complement .pepexr}
 ## Amerikaanse mannen
+<br>
 
 Kijk nog eens naar @fig-interval.
 
@@ -653,7 +676,7 @@ Dat is dus ook de waarde waar de cumulatieve verdeling
   gelijk is aan $\frac{1}{2}$.
 
 Het **gemiddelde** van een kansverdeling van een kansvariabele $X$ 
-  wordt ook wel de **verwachtingswaarde** genoemd.
+  wordt ook wel de **verwachtingswaarde** (*expected value*) genoemd.
 Een nette notatie is $\ev{X}$;
   die bijzondere $\mathbb{E}$ staat voor *Expectation*.
 Vaak wordt ook het Griekse symbool $\mu$ (spreek uit: "mu") gebruikt,
@@ -669,9 +692,10 @@ De sommatie gaat over alle mogelijke uitkomsten $x$.
     waarbij uitkomsten met een grotere kans
     een zwaarder gewicht krijgen.
     
-::: {#exr-gemiddelde-herhalen}
+::: {#exr-gemiddelde-herhalen .pepexr}
 
 ## De definitie van de verwachtingswaarde 
+<br>
 
 In @exr-gemiddelde-frequentietabel heb je een formule bestudeerd 
   (@eq-mean-rel-freq)
@@ -688,17 +712,52 @@ en leg uit waarom ze zo op elkaar lijken.
   in een zéér lange (oneindige) reeks herhalingen van het kansexperiment.)
 :::
     
-::: {#exr-verwachtingswaarde}
+::: {#exr-verwachtingswaarde .pepexr}
 
 ## Verwachtingswaarde
+<br>
 
+In een experiment krijgen dieren 9 keer de gelegenheid om een taak uit te voeren.
+De experimentatoren tellen hoe vaak dat lukt.
 
-::: {.todo-box}
+Vooraf is een kansmodel bedacht voor het aantal keer dat een dier
+de taak succesvol weet uit te voeren. Dat model levert de volgende kansen op:
 
-schrijven: simpele oefening met verwachtingswaarde.
+::: {#tbl-binom out.width="50%"}
+```{r}
+#| echo: false
 
+# Controleer of benodigde bibliotheken geladen zijn
+if (!("dplyr" %in% .packages())) { library(dplyr) }
+if (!("knitr" %in% .packages())) { library(knitr) }
+
+# Parameters instellen
+aantal_proeven <- 9
+kans_succes <- 0.41
+
+# Waarschijnlijkheden berekenen en afronden
+resultaten <- data.frame(
+  Aantal = 0:aantal_proeven,
+  Kans = round(
+    dbinom(
+      x = 0:aantal_proeven,
+      size = aantal_proeven,
+      prob = kans_succes
+    ),
+    3
+  )
+)
+
+# Controleer of de som der kansen 1 is
+som_kansen <- sum(resultaten$Kans)
+
+# Weergave als tabel
+knitr::kable(resultaten)
+```
 :::
 
+Bereken de verwachtingswaarde voor het aantal keer succes.
+Het is handig om R als rekenmachine te gebruiken.
 :::
 
 Als een variabele continu is
@@ -765,36 +824,41 @@ Daarom wordt de variantie van een kansvariabele $X$
     als $\sigma^2$ of $\sd{X}^2$ in plaats van $\var{X}$.
     
     
-::: {#exr-variantie}
+::: {#exr-variantie .Rexr}
 
 ## Variantie en standaarddeviatie van een kansvariabele
 <br>
 
-::: {.todo-box}
-schrijven?
+In deze opgave gaan we verder met de kansverdeling uit @exr-verwachtingswaarde.
+Je gaat voor deze kansverdeling de variantie en standaarddeviatie uitrekenen
+aan de hand van de definities @eq-variantie en @eq-sd-var.
+
+De verwachtingswaarde van deze kansverdeling heb je in @exr-verwachtingswaarde al berekend.
+
+a.  Bereken voor iedere mogelijke uitkomst de afwijking van de verwachtingswaarde.
+    Dat gaat handig in R.
+    Als de vector van mogelijke uitkomsten `uitkomsten` heet en de verwachtingswaarde `E`:
+    ```{r}
+    #| eval: false
+    afwijkingen <- uitkomsten - E
+    ```
+b.  Bereken het kwadraat van alle afwijkingen.
+
+c.  Vermenigvuldig nu de gekwadrateerde afwijkingen met hun kans.
+    De kans van iedere uitkomt is gegeven in @exr-verwachtingswaarde.
+    
+d.  De variantie is nu de som van de getallen die je in onderdeel c. hebt berekend.
+
+e.  Bereken de standaarddeviatie.
 :::
 
-:::
-
-::: {#exr-kwadraat }
-
-## Dimensies en eenheden van de variantie
-<br>
-
-$$ \var{\frac{X}{n}} = \frac{\var{X}}{n^2}. $$ {#eq-kwadraat}
-
-::: {.todo-box}
-schrijven
-:::
-
-:::
 
 ## De normale verdeling
   
 Kansverdelingen kunnen allerlei vormen hebben.
 Maar bepaalde kansverdelingen komen in theorie en praktijk steeds weer terug
 en hebben daarom een naam gekregen.
-De meest beroemde is de **normale verdeling**, 
+De meest beroemde is de **normale verdeling** (*normal distribution*), 
 ook wel de **normaalverdeling**, **Gaussische verdeling** of **Gausscurve** genoemd,
 naar de grote Wiskundige Carl Friedrich Gauss (1777--1855).
 
@@ -908,7 +972,7 @@ De meeste kans ligt binnen twee standaarddeviaties van $\mu$.
 
 De precieze formule voor de normale verdeling zul je in deze cursus
 niet nodig hebben,
-maar het is toch handig deze een keer te zien:
+maar het is toch handig deze een keer gezien te zien hebben:
 $$ \pr{X = x} = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x - \mu)^2}{2\sigma^2}}.$$
 De normale verdeling heeft dus een precieze wiskundige definitie.
 Niet iedere verdeling die een klokvorm heeft is ook een normale verdeling
@@ -924,12 +988,12 @@ Als $X$ normaal verdeeld is, dan geldt:
 1.  De kans dat de uitkomst
 binnen één standaarddeviatie van het gemiddelde valt is iets meer dan \frac{2}{3}.
 Om precies te zijn:
-$$\pr{\mu - \sigma < X < \mu + \sigma} = 0.683\ldots.$$
+$$\pr{\mu - \sigma < X < \mu + \sigma} = 0.683\ldots.$$ {#eq-vuistregel-1-precies}
 2.  De kans dat de uitkomst
 binnen twee standaarddeviaties van het gemiddelde valt is *ietsje* groter dan 0,95.
 Op precies te zijn:
 
-$$\pr{\mu - 2\sigma < X < \mu + 2\sigma} = 0{,}954\ldots.$$
+$$\pr{\mu - 2\sigma < X < \mu + 2\sigma} = 0{,}954\ldots.$$ {#eq-vuistregel-2-precies}
 @Fig-vuistregels laat beide eigenschappen zien.
 
 ```{r}
@@ -965,17 +1029,22 @@ normaalGeneriek + oppervlak(-2, 2) + proportie("0,95...")
 
 ::: {#exr-normale-verdeling .pepexr}
   
-## Kansen van de normale verdeling
+## Het toepassen van de vuistregels voor de normale verdeling
 <br>
 
-Schatten van kansen op basis van vuistregels en geschetst plaatje.
-Bereken de kansen. Schets steeds eerst op papier een normale verdeling.
-Arceer de oppervlakte onder de curve die overeenkomt met de gevraagde kans.
-  
-- $\pr{X < \mu}$
-- $\pr{X > \mu + \sigma}$
-- $\pr{X < \mu - 2 \sigma}$
-- $\pr{X < \mu - 2 \sigma \text{ of } X > \mu + 2 \sigma}$
+Als je nadenkt over kansverdelingen
+kan het enorm helpen om een tekeningetje te schetsen. 
+
+a.  Schets @fig-normale-verdeling na. Arceer het oppervlak onder de curve
+    dat overeenkomt $\pr{X < \mu}$. Wat is die kans?
+    
+b.  Maak nog zo'n schets, maar nu voor $\pr{X > \mu + \sigma}$. 
+    Bepaal die kans met behulp van de vuistregel uit @sec-vuistregels.
+    
+c.  Wat is de kans $\pr{X < \mu - 2 \sigma}$? 
+    Maar weer gebruik van een schets en de vuistregels.
+    
+d.  Idem, maar nu voor $\pr{X < \mu - 2 \sigma \text{ of } X > \mu + 2 \sigma}$.
 
 :::
 
@@ -988,22 +1057,60 @@ is klokvormig.
 Een redelijk model is een normale verdeling met gemiddelde $\mu = 34{,5}$cm
 en standaarddeviatie $\sigma = 1{,}75$cm. 
 
-Wat is de kans dat een pasgeboren baby een hoofdomtrek heeft van meer dan $38$ cm?
+a.  Hoeveel standaarddeviaties boven het gemiddelde is een hoofdomtrek van 38 cm?
+
+b.  Wat is de kans dat een baby een hoofdomtrek heeft van *meer* dan 38 cm?
+
+    (Tip: Maak weer een schets!)
 :::
 
-### Waarom de normale verdeling?
+### Waarom de normale verdeling? De centrale limietstelling. {#sec-centrale-limietstelling}
 
-::: {.todo-box}
-Uitleggen waarom de normale verdeling zo belangrijk is:
+De normale verdeling neemt in de waarschijnlijkheidsleer
+en statistiek een heel bijzondere plek in.
+Dat heeft verschillende redenen.
+
+Om te beginnen hebben veel variabelen binnen en buiten de biologie een klokvorm.
+Voor zulke variabelen kan de normale verdeling een goed model zijn.
+Voorbeelden zijn de lichaamslengte en IQ van volwassen mannen of vrouwen
+die onder vergelijkbare omstandigheden zijn opgegroeid,
+de gemiddelde CITO-score op verschillende basisscholen in Nederland,
+maar ook de afstand die een diffunderend molecuul aflegt in een vaste tijd.
+
+Dat we de normale verdeling zowel in theorie als in de praktijk 
+vaak terugzien, heeft een wiskundige reden.
+Je kunt namelijk aantonen dat
+een kansvariabele die beïnvloed wordt
+door een groot aantal andere kansvariabelen vaak ongeveer normaal verdeeld zal zijn.
+Dat geldt bijvoorbeeld als een variabele de *optelsom* is
+van een groot aantal kansvariabelen.
+De wiskundige stelling die dat bewijst
+wordt de **Centrale Limietstelling** (*Central Limit Theorem*) genoemd. 
+In @sec-centrale-limiet komen we daar nog even op terug.
+
+In de praktijk worden veel variabelen beïnvloed
+door een groot aantal factoren.
+Lichaamslengte wordt bijvoorbeeld beïnvloed door verschillende genen
+en allerlei omgevingsfactoren tijdens de groei,
+zoals voeding, slaap, en hygiëne.
+Omdat al die variabelen per individu verschillen
+valt te verwachten dat het resultaat ongeveer normaal verdeeld is.
+
+Veel variabelen zien er trouwens op het eerste gezicht normaal verdeeld uit
+maar wijken toch op belangrijke punten af.
+Het komt bijvoorbeeld vaak voor dat één of twee staarten van de verdeling 
+dikker zijn dan bij de normale verdeling.
+De geboortegewichten van baby's die na een goed verlopen zwangerschap geboren worden
+zijn mooi normaal verdeeld. 
+Maar kijken we naar alle geboortegewichten,
+dan zien we ook het effect van zwangerschappen met complicaties,
+waardoor kinderen vaak te vroeg geboren worden met een te laag geboortegewicht.
+Daardoor is de staart aan de linkerkant van de verdeling veel dikker
+dan je op basis van de normale verdeling zou verwachten.
+
+## De standaardnormale verdeling
   
-- Veel variabelen in de biologie en daarbuiten ongeveer normaal verdeeld.
-- Laat voorbeelden zien.
-- We zullen later, in @sec-centrale-limiet uitleggen hoe dit komt.
-:::
-    
-## De standaard-normale verdeling
-  
-De **standaard-normale verdeling** (@fig-std-normaal) 
+De **standaardnormale verdeling** (*standard normal distribution*) (@fig-std-normaal) 
 is een speciaal geval van de normale verdeling 
 waarbij de verwachtingswaarde $\mu$ gelijk is aan 0 
 en de standaarddeviatie $\sigma$ gelijk aan 1. 
@@ -1012,12 +1119,12 @@ en de standaarddeviatie $\sigma$ gelijk aan 1.
 #| code-fold: true
 #| warning: false
 #| label: fig-std-normaal
-#| fig-cap: "Standaard-normale verdeling"
+#| fig-cap: "Standaardnormale verdeling"
 #| fig.width: 4.5
 #| fig.height: 3
 #| out.width: 64%
 
-# Plot de standaard-normale verdeling
+# Plot de standaardnormale verdeling
 plotNormaal(0, 1) +
   # Labels voor de assen
   labs(
@@ -1040,20 +1147,14 @@ plotNormaal(0, 1) +
 ```
 
 Eerder hebben we kansvariabelen vaak $X$ genoemd.
-Voor een standaard-normaal-verdeelde variabele wordt vaak de letter $Z$ gebruikt. 
+Voor een standaardnormaal verdeelde variabele wordt vaak de letter $Z$ gebruikt. 
 Dit is niet meer dan een gewoonte;
 je zou net zo goed een andere letter kunnen kiezen, 
 zoals $X$, $Y$ of $W$. 
 Toch is het handig: kom je in een statistische formule een kansvariabele $Z$ tegen,
-dan is dat een hint dat die variabele waarschijnlijk standaard-normaal verdeeld is.
+dan is dat een hint dat die variabele waarschijnlijk standaardnormaal verdeeld is.
 
-### Transformeren naar de standaard-normale verdeling {#sec-transformeren}
-
-::: {.todo-box}
-
-Ik zou dit graag vereenvoudigen of weglaten, maar weet nog niet hoe.
-
-:::
+### Transformeren naar de standaardnormale verdeling {#sec-transformeren}
 
 Normale verdelingen hebben altijd dezelfde klokvorm,
 maar kunnen natuurlijk verschillen in hun gemiddelde 
@@ -1074,18 +1175,19 @@ Deze laat twee normale verdelingen zien.
     Het zou een model kunnen zijn voor de lichaamslengte 
     van Nederlandse volwassen vrouwen, in centimeters.
 -   Het onderste figuur toont de verdeling van variabele $Z$,
-    die standaard-normaal verdeeld is (met $\mu_Z=0$ en $\sd{Z} = 1$).
+    die standaardnormaal verdeeld is (dus met $\mu_Z=0$ en $\sd{Z} = 1$).
 
 Hoewel de parameters van beide verdelingen verschillen, 
 hebben beide grafieken exact dezelfde vorm. 
-Alleen de $x$- en $y$-assen zijn geschaald en verschoven.
+Dee $x$- en $y$-assen van de figuren zijn wel 
+ten opzichte van elkaar uitgerekt en verschoven.
 
 ```{r}
 #| code-fold: true
 #| warning: false
 #| label: fig-transformeren
-#| fig-cap: "Kansen voor een normaal-verdeelde variabele $X$ hangen samen 
-#| met kansen voor standaard-normaal-verdeelde variabele $Z$."
+#| fig-cap: "Kansen voor een normaal verdeelde variabele $X$ hangen samen 
+#| met kansen voor standaardnormaal verdeelde variabele $Z$."
 #| fig.width: 3.75
 #| out.width: 55%
 
@@ -1100,11 +1202,11 @@ if (!("cowplot" %in% loadedNamespaces())) {
 # Basisparameters instellen
 mu_x <- 170             # Gemiddelde voor X
 sigma_x <- 6            # Standaarddeviatie voor X
-x_threshold <- mu_x + sigma_x / 2    # Drempelwaarde voor X
+x_threshold <- mu_x + sigma_x    # Drempelwaarde voor X
 
 mu_z <- 0               # Gemiddelde voor Z
 sigma_z <- 1            # Standaarddeviatie voor Z
-z_threshold <- mu_z + sigma_z / 2      # Drempelwaarde voor Z
+z_threshold <- mu_z + sigma_z      # Drempelwaarde voor Z
 
 nr_sd <- 3.5            # Aantal standaarddeviaties om te tonen
 
@@ -1177,7 +1279,7 @@ combined_plot <- plot_grid(
 # Voeg een verticale lijn toe over beide plots
 final_plot <- ggdraw(combined_plot) +
   draw_line(
-    x = c(0.62, 0.62),  # Relatieve positie op de x-as (0-1 schaal)
+    x = c(0.675, 0.675),  # Relatieve positie op de x-as (0-1 schaal)
     y = c(0.09, 1),  # Relatieve positie op de y-as (0-1 schaal)
     color = "DarkOrchid", 
     size = 1, 
@@ -1189,65 +1291,92 @@ print(final_plot)
 
 ```
 
-Stel nu dat we geïnteresseerd zijn in de kans dat $X > 
-173$:
-$$ \pr{X > 173}.$$ 
-In de *bovenste* plot van @fig-transformeren komt die kans komt overeen met de oppervlakte van het oranje gekleurde gebied.    
-Maar dezelfde kans kan ook worden berekend aan de hand van de variabele $Z$.
-In de *onderste* plot van @fig-transformeren is namelijk precies hetzelfde gebied
-ingekleurd.
-(De paarse stippellijn laat zien 
+Stel nu dat we geïnteresseerd zijn in de kans dat $X > 176$, 
+dus $\pr{X > 176}$. 
+In de *bovenste* grafiek van @fig-transformeren is dat de oppervlakte van het oranje gekleurde gebied.
+Omdat de twee grafieken dezelfde vorm hebben, kunnen we exact hetzelfde oppervlak
+ook intekenen in de *onderste* grafiek; dat hebben we weer met oranje gedaan.
+De paarse stippellijn laat zien 
 dat de grenzen van de oranje gebieden in beide plots
-precies zijn uitgelijnd.)
-In de onderste plot komt het oranje gebied precies overeen met de kans
-$$ \pr{Z > 0{,}5}.$$
-We zien dus dat
-$$ \pr{X > 173} = \pr{Z > 0{,}5}. $$
+precies zijn uitgelijnd.
+
+In de bovenste plot is het gemiddelde $\mu_X = 170$ en de standaarddeviatie $\sd{X} = 6$.
+De grens van het oranje gebied, 176 cm,
+is dus precies één standaarddeviatie boven het gemiddelde.
+In de onderste plot moet de grens dus ook getrokken worden
+op één standaarddeviatie boven het gemiddeld, 
+en dat is $Z = 1$.
+Hieruit kunnen we concluderen dat
+$$ \pr{X > 176} = \pr{Z > 1}. $$
+
 Dit werkt in het algemeen: 
 kansen voor iedere
 normaalverdeelde variabele $X$ kunnen worden gerelateerd 
-aan kansen voor de standaard-normaalverdeelde variabele $Z$.
+aan kansen voor de standaardnormaal verdeelde variabele $Z$.
+De grens voor $Z$ moet dan steeds
+gelijk zijn aan het aantal standaarddeviaties
+dat $X$ van het gemiddelde afligt.
+Dat wil zeggen:
+$$ Z = \frac{X - \mu_X}{\sd{X}}. $$ {#eq-trans}
+In het statistisch jargon zeggen we dat $X$ in deze vergelijking
+wordt **getransformeerd**
+naar een standaardnormaal verdeelde variabele.
+Die transformatie wordt in het volgende hoofdstuk heel belangrijk.
 
-Laten we dat preciezer maken.
-Als kansvariabele $X$ normaal verdeeld is met gemiddelde $\mu_X$
-en standaarddeviatie $\sd{X}$,
-dan kunnen we een andere kansvariabele definiëren als 
-$$ Z = \frac{X - \mu_X}{\sd{X}}. $$
-In deze formule wordt de verdeling van $X$ eerst verschoven 
-door $\mu_X$ van $X$ af te trekken, waardoor het gemiddelde 0 wordt. 
-Vervolgens wordt de wordt de klokvorm uitgerekt of ingedrukt
-door te delen door $\sigma_X$, waardoor de standaarddeviatie 1 wordt. 
-In het statistisch jargon zeggen we dat $X$ is **getransformeerd**
-naar een standaard-normaalverdeelde variabele.
+::: {#exr-kansen-normaal .mixexr}
 
-Doordat je het gemiddelde van $X$ hebt afgetrokken,
-  is het gemiddelde van $Z$ gelijk aan $0$,
-  en doordat je vervolgens door de standaarddeviatie van $X$ gedeeld hebt,
-  is de standaarddeviatie $\sd{Z} = 1$.
-$Z$ is dus *standaard*-normaal verdeeld. 
+## Kansen voor de normale verdeling in R
 
-Laten we als voorbeeld teruggaan naar de kans op $X > 173$. 
-Door de transformatie naar $Z$ toe te passen, krijgen we:
-$$
-\begin{aligned}
-\pr{X > 173} 
-  & = \pr{\frac{X - \mu_X}{\sd{X}} > \frac{173 - \mu_X}{\sd{X}}}\\
-  & = 
-  \pr{Z > \frac{173 - \mu_X}{\sd{X}}}\\
-  &  = 
-  \pr{Z > \frac{173 - 170}{6}}\\
-  & = 
-  \pr{Z > 0{,}5}. 
-\end{aligned}
-$$
-Op die manier hebben we laten zien dat de kans
-op gebeurtenis $X > 173$ 
-gelijk moet zijn aan de kans op gebeurtenis $Z > 0.5$
-de standaard-normaal verdeelde variabele $Z$.
+Met R kun je de kansen voor een normale verdeling opvragen 
+met de functie `pnorm()`. 
+Die functie geeft de cumulatieve verdeling van de normale verdeling.
+Neem bijvoorbeeld:
+```{r}
+#| eval: false
 
-Het feit dat ieder normale verdeling kan worden getransformeerd 
-naar een standaard-normale verdeling
-wordt in het volgende hoofdstuk heel belangrijk.
+pnorm(0)
+```
+Dit commando geeft de kans op een waarneming kleiner dan 0
+volgens de standaardnormale verdeling.
+
+a.  Maak eerst een schets van de standaardnormale verdeling. 
+    Bedenk wat de cumulatieve verdeling op $Z = 0$ moet zijn,
+    en voer dan het commando `pnorm(0)` uit
+    om dat te controleren.
+
+b.  Maak weer een schets van de standaardnormale verdeling.
+    Arceer het gedeelte $Z < -1$.
+    Wat is volgens de vuistregels de kans op een waarneming in dat interval?
+    Bereken de kans vervolgens met de functie `pnorm()`.
+
+c.  Bereken met `pnorm()` de kans dat $Z > 0{,}5$. Een schets helpt.
+    Hint: gebruik de complement-regel (@eq-complementregel).
+    
+d.  Maak weer een schets van de standaardnormale verdeling.
+    Arceer het gedeelte tussen $Z = -1$ en $Z = 1$.
+    Wat is volgens de vuistregels de kans op een waarneming in dat interval?
+    Bereken de kans vervolgens met de functie `pnorm()`.
+    
+    Hint: je hebt de functie twee keer nodig... 
+   
+Hierboven gingen de vragen steeds over de standaardnormale verdeling,
+maar je kunt `pnorm()` ook gebruiken voor andere normale verdelingen.
+Je moet de functie dan vertellen welk gemiddelde en welke standaarddeviatie
+gebruikt moeten worden.
+    
+Bijvoorbeeld, als $\mu = 170$ en $\sigma = 6$ is dit de kans op een waarneming 
+$X < 176$:
+
+```{r}
+#| eval: true
+pnorm(176, mean = 170, sd = 6)
+```
+    
+e.  De variabele IQ is ongeveer normaal verdeeld met gemiddelde $\mu = 100$
+    en $\sigma = 15$. Wat is de kans dat een willekeurige persoon
+    een hoogbegaafd IQ heeft van meer dan 140?
+
+:::
 
 ## De $t$-verdeling {#sec-t}
 
@@ -1262,16 +1391,16 @@ De index wordt het aantal **vrijheidsgraden** genoemd.
 Je kunt $t_8$ dus ook omschrijven als de $t$-verdeling 
 met 8 vrijheidsgraden,
 of met df = 8.
-(Hier staat df voor *degrees of freedom**.)
+(Hier staat df voor **degrees of freedom**.)
 Een variabele met een $t$-verdeling wordt vaak $t$ genoemd.
 
-De $t$-verdelingen lijken behoorlijk op de standaard-normale verdeling.
+De $t$-verdelingen lijken behoorlijk op de standaardnormale verdeling.
 In @fig-t hieronder laten we drie $t$-verdelingen zien,
-en in het oranje de standaard-normale verdeling:
+en in het oranje de standaardnormale verdeling.
 
 ```{r}
 #| label: fig-t
-#| fig-cap: "Verschillende $t$-verdelingen en de standaard-normale verdeling"
+#| fig-cap: "Verschillende $t$-verdelingen en de standaardnormale verdeling"
 #| warning: false
 #| fig-height: 3
 #| fig-width: 6
@@ -1295,10 +1424,10 @@ dataframe <- data.frame(
   ),
   df = factor(
     rep(
-      c("standaard-normaal", "df = 2", "df = 5", "df = 20"), 
+      c("standaardnormaal", "df = 2", "df = 5", "df = 20"), 
       each = length(t_values)
     ),
-    levels = c("df = 2", "df = 5", "df = 20", "standaard-normaal")
+    levels = c("df = 2", "df = 5", "df = 20", "standaardnormaal")
   )
 )
 
@@ -1326,7 +1455,7 @@ ggplot(
       "df = 2" = "dotted", 
       "df = 5" = "dashed", 
       "df = 20" = "longdash",
-      "standaard-normaal" = "solid"
+      "standaardnormaal" = "solid"
     )
   ) +
   # Labels toevoegen
@@ -1341,9 +1470,9 @@ ggplot(
   theme_minimal()
 ```
 
-Net als bij de standaard-normale verdeling
+Net als bij de standaardnormale verdeling
 is het gemiddelde altijd 0.
-Vergeleken met de standaard-normale verdeling
+Vergeleken met de standaardnormale verdeling
 heeft de $t$-verdeling wel een lagere piek
 en "dikkere staarten".
 Dat zorgt ervoor dat de spreiding van de $t$-verdeling groter is.^[Voor wie 
@@ -1352,22 +1481,39 @@ van het aantal vrijheidsgraden en is gelijk aan $\mathrm{df}/(\mathrm{df} - 2)$.
 In de limiet waarbij het aantal vrijheidsgraden naar oneindig gaat,
 convergeert dit naar 1. Dat moet ook,
 want in die limiet convergeert de $t$-verdeling naar de 
-standaard-normale verdeling, en die heeft variantie $\sigma = 1$.]
-Het verschil tussen de $t$-verdeling en de standaard-normale verdeling
-wordt echter kleiner naarmate het aantal vrijheidsgraden groter wordt.
+standaardnormale verdeling, en die heeft variantie $\sigma = 1$.]
+Maar, het verschil tussen de $t$-verdeling en de standaardnormale verdeling
+wordt kleiner naarmate het aantal vrijheidsgraden groter wordt.
 Dat kun je in @fig-t duidelijk zien:
-bij $\text{df} = 20$ zijn de $t$-verdeling en de standaard-normale verdeling
+bij $\text{df} = 20$ zijn de $t$-verdeling en de standaardnormale verdeling
 op het oog al moeilijk te onderscheiden.
 In de limiet van $\text{df}\rightarrow \infty$ convergeert de $t$-verdeling
-ook echt naar de standaard-normale verdeling.
+ook echt naar de standaardnormale verdeling.
+
+::: {#exr-t-verdeling .pepexr}
+
+## Dijken
+
+Om te berekenen hoe hoog de zeedijken moeten zijn
+maken we gebruik van een model
+dat veronderstelt dat de waterstand bij vloed
+normaal verdeeld is.
+
+Stel dat in werkelijkheid de verdeling 
+meer lijkt op een $t$-verdeling.
+Welk effect heeft dat op onze risico-berekeningen?
+
+(Je hoeft niets te berekenen,
+alleen te beredeneren.)
+
+:::
 
 ## Kritieke waarden {#sec-kritieke-waarde}
-
 
 ### Kritieke waarden van de standaardnormale verdeling
 
 In figuur @fig-krit-1 is weer 
-een standaard-normale verdeling weergegeven.
+de standaardnormale verdeling weergegeven.
 In beide staarten van de verdeling is een gebied oranje gekleurd.
 De oppervlakte van elk van deze gebieden is 0,1; 
 samen representeren ze dus een kans van 0,2.
@@ -1376,9 +1522,8 @@ Om ervoor te zorgen dat die kans precies 0,2 is,
 is de grens van het rechtergebied ingesteld op (afgerond) 1,28
 en de grens van het linkergebied op (afgerond) -1,28.
 De kans op een waarneming die extremer is (meer afwijkt van het gemiddelde)
-dan 1,28 is dus precies 0,2.
-De kans op een waarneming die minder extreem is (minder afwijkt van het gemiddelde)
-is dus precies 1 - 0,2 = 0,8.
+dan 1,28 is dus precies 0,2,
+en de kans op een waarneming die minder extreem is 1 - 0,2 = 0,8.
 
 ::: {#fig-krit layout-nrow=2}
 
@@ -1386,7 +1531,7 @@ is dus precies 1 - 0,2 = 0,8.
 #| code-fold: true
 #| warning: false
 #| label: fig-krit-1
-#| fig-cap: "De kritieke waarde van de standaard-normale verdeling $Z_{0{,}2(2)} \\approx 1{,}28$."
+#| fig-cap: "De kritieke waarde van de standaardnormale verdeling $Z_{0{,}2(2)} \\approx 1{,}28$."
 #| fig.width: 3.75
 #| fig.height: 2.75
 #| out.width: 100%
@@ -1401,7 +1546,7 @@ crit_plot <- function(alpha) {
   xend <- Z_crit + (3.5 - Z_crit) / 7  # Eindpunt x-coördinaat
   yend <- dnorm(xend) / 3              # Eindpunt y-coördinaat
   
-  # Plot de standaard-normale verdeling met staarten en annotaties
+  # Plot de standaardnormale verdeling met staarten en annotaties
   plotNormaal(0, 1) +
     # Labels voor de assen
     labs(
@@ -1467,7 +1612,7 @@ crit_plot(0.2)
 #| code-fold: true
 #| warning: false
 #| label: fig-krit-2
-#| fig-cap: "De kritieke waarde van de standaard-normale verdeling $Z_{0{,}05(2)} \\approx 1{,}96$."
+#| fig-cap: "De kritieke waarde van de standaardnormale verdeling $Z_{0{,}05(2)} \\approx 1{,}96$."
 #| fig.width: 3.75
 #| fig.height: 2.75
 #| out.width: 100%
@@ -1582,19 +1727,19 @@ crit_plot_t(0.2, 4)
 crit_plot_t(0.05, 4)
 ```
 
-Kritieke waarden van de standaard-normale verdeling en de $t$-verdeling.
+Kritieke waarden van de standaardnormale verdeling en de $t$-verdeling.
 
 :::
 
-De grenswaarde van het rechter gebied wordt een **kritieke waarde** van de verdeling genoemd.
-In dit geval gaat het om de kritieke waarde die hoort bij een totale kans van 0,2
+De grenswaarde van het rechter gebied wordt een **kritieke waarde** (*critical value*) van de verdeling genoemd.
+In dit geval gaat het om de kritieke waarde die hoort bij een kans van 0,2
 (voor beide oranje gebieden samen).
 Deze kritieke waarde wordt daarom genoteerd als $Z_{0{,}2(2)}$.
 Hierin verwijst 0,2 naar de totale oppervlakte van de oranje gebieden,
 en de (2) geeft aan dat daarbij beide staarten worden meegeteld.
 
 Op dezelfde manier is $Z_{0{,}05(2)}$ de grenswaarde 
-die hoort bij oranje gebieden met een totale oppervlakte van 0,05. 
+die hoort bij oranje gebieden met een oppervlakte van 0,05. 
 Deze situatie is weergegeven in @fig-krit-2.
 De kritieke waarde is nu $Z_{0{,}05(2)} \approx 1{,}96$. 
 Dat deze kritieke waarde dicht bij 2 ligt,
@@ -1616,10 +1761,17 @@ tussen 0 en 1. Samengevat:
 
 ## Definitie: Kritieke waarden van de standaardnormale verdeling
 
-De kritieke waarde $Z_{\alpha(2)}$ is de waarde zodat
+De kritieke waarde $Z_{\alpha(2)}$ is de grenswaarde zodat
 de kans op een waarneming extremer dan $Z_{\alpha(2)}$ gelijk is aan $\alpha$.
 
+Je kunt dit schrijven als
+
 $$\pr{Z < -Z_{\alpha(2)} \text{ of } Z > Z_{\alpha(2)}} = \alpha. $${#eq-crit-norm}
+
+Binnen de grenzen ligt juist een kans $1 - \alpha$:
+
+$$\pr{-Z_{\alpha(2)} > Z > Z_{\alpha(2)}} = 1 - \alpha. $${#eq-crit-norm-2}
+
 :::
 
 
@@ -1644,7 +1796,7 @@ met df vrijheidsgraden is de waarde waarvoor geldt:
 
 $$\pr{t < -\ct{\alpha}{2}{df} \text{ of } t > \ct{\alpha}{2}{df}} = \alpha. $$ {#eq-crit-t}
 
-Hieruit volgt direct dat
+Binnen de grenzen ligt juist een kans $1 - \alpha$:
 
 $$\pr{-\ct{\alpha}{2}{df} < t < \ct{\alpha}{2}{df}} = 1 - \alpha. $$ {#eq-crit-t-2}
 :::
@@ -1659,7 +1811,7 @@ Of vergelijk @fig-krit-2 met @fig-krit-4:
 $Z_{0.05(2)}\approx 1{,}96$, terwijl $\ct{0{,}05}{2}{4} \approx 2.78$.
 
 In @sec-t zagen we ook 
-dat de $t$-verdeling naar de standaard-normale verdeling convergeert
+dat de $t$-verdeling naar de standaardnormale verdeling convergeert
 als het aantal vrijheidsgraden groot wordt.
 Dat betekent dat ook de kritieke waarden van de $t$-verdeling 
 convergeren naar de kritieke waarden van de standaardnormale verdeling.
@@ -1727,7 +1879,7 @@ ggplot(data, aes(x = df, y = kritieke_t)) +
   theme_minimal()
 ```
 
-De kritieke waarden van de standaard-normale verdeling
+De kritieke waarden van de standaardnormale verdeling
 en de $t$-verdeling
 zullen een belangrijke rol spelen in @sec-schatten en @sec-hypothesetoetsen.
 
@@ -1742,7 +1894,7 @@ De kritieke waarde is de grenswaarde van $Z$
 zodanig het gebied rechts ervan een oppervlakte heeft van $\alpha/2 = 0{,}1$,
 en het hele gebied links ervan dus een oppervlak van $1 - \alpha/2 = 0{,}9$.
 Dat betekent dat de kritieke waarde gelijk aan kwantiel 0,9, 
-oftewel het 90e percentiel, van de standaard-normale verdeling.
+oftewel het 90e percentiel, van de standaardnormale verdeling.
 Die waarde kunnen we aan R vragen met de functie `qnorm()`.
 In de naam van die functie staat `q` voor *quantile*, en `norm` voor 
 de normale verdeling. Het werkt zo:
@@ -1752,15 +1904,34 @@ qnorm(0.9)
 Het resultaat is precies de grenswaarde van (afgerond) 1,28
 die je in @fig-krit-1 aan de $x$-as ziet staan.
 
-Voor een algemene waarde van $\alpha$ kun je het als volgt aanpakken:
+Voor iedere willekeurige waarde van alfa 
+kun je het als volgt aanpakken:
 ```{r}
-alpha <- 0.2
-qnorm(1 - alpha/2)
+alfa <- 0.2
+qnorm(1 - alfa/2)
 ```
 
-::: {#exr-krit-norm-R}
+::: {#exr-krit-norm-R .mixedexr}
 
 ## Kritieke waarden voor de normale verdeling.
+<br>
+
+a.  Bekijk @fig-krit-1 nog eens. 
+    Dat is een illustratie voor de kritieke waarde
+    bij $\alpha = 0{,}2$.
+    
+    Schets net zo'n plaatje, maar nu voor
+    $\alpha = 0{,}1$.
+    
+    Gebruik `qnorm()` om de kritieke waarde uit te rekenen
+    en geef die aan op de $Z$-as.
+    
+b.  Beredeneer zonder te rekenen: is $Z_{0{,}5(2)}$ groter of kleiner
+    dan $Z_{0{,}1(2)}$?
+    
+    Tip: Schetsen helpt!
+
+c.  Beredeneer: wat is $Z_{1(2)}$?
 
 :::
 
@@ -1772,139 +1943,29 @@ Omdat de kritieke waarde afhangt van het aantal vrijheidsgraden
 zul je die aan de functie moeten meegeven:
 
 ```{r}
-alpha <- 0.2
-qt(1 - alpha/2, df = 4)
+alfa <- 0.2
+qt(1 - alfa/2, df = 4)
 ```
 Hier komt precies de waarde van (afgerond) 1,53 uit die in de figuur
 is aangegeven.
 
-::: {#exr-krit-t-R}
+::: {#exr-krit-t-R .Rexr}
 
 ## Oefenen met kritieke waarden van de $t$-verdeling
+<br>
 
-:::
+a.  Bereken met R de kritieke waarde $t_{0{,}05(2)2}$.
 
-::: {.hidden}
-
-## Optellen van meerdere kansvariabelen {#sec-optellen}
-
-We zullen in deze cursus regelmatig
-    situaties tegenkomen waarbij
-    we kansvariabelen bij elkaar optellen.
-Bijvoorbeeld, 
-    als we met twee dobbelstenen gooien
-    en geïnteresseerd zijn in het totaal aantal ogen,
-    dan tellen we in feite twee kansvariabelen op:
-    het aantal ogen van de eerste dobbelsteen 
-    en het aantal ogen van de tweede dobbelsteen.
-Als we die twee kansvariabelen $X_1$ en $X_2$ noemen,
-    dan gaat onze interesse dus uit naar
-$$ Y = X_1 + X_2.$$ {#eq-som-1}
-We hebben op deze manier een nieuwe kansvariabele $Y$ gedefinieerd.
-De vraag is nu:
-    wat kunnen we zeggen over de kansverdeling van $Y$?
-
-Meer in het algemeen kan het zijn dat we niet twee
-    maar $n$ kansvariabelen optellen.
-We kunnen die variabelen $X_i$ noemen.
-In dat algemene geval is $Y$ dus:
-$$ Y = \sum_{i=1}^n X_i.$$ {#eq-som-2}
-De vraag is weer wat we kunnen zeggen over de kansverdeling van $Y$.
-
-### De verwachtingswaarde van een som {#sec-som-ev}
-
-Om te beginnen kijken we naar 
-    de verwachtingswaarde van $Y$, dus $\ev{Y}$.
-(Verwachtingswaarde is een ander woord voor het gemiddelde van een kansvariabele,
-  weet je nog?)
-Hier is de regel heel eenvoudig:
-    de verwachtingswaarde van de som
-    is de som verwachtingswaarden, dus
-$$
-\ev{Y} = \sum_{i = 1}^n \ev{X_i}.
-$$ {#eq-evsom}
-Dit is niet erg verrassend.
-Bijvoorbeeld:
-Als het aantal ogen bij het gooien van één dobbelsteen 
-gemiddeld $3 \frac{1}{2}$ is (zie @fig-uniform-dobbelsteen),
-dan is het aantal ogen van twee dobbelstenen gemiddeld
-$3 \frac{1}{2} + 3 \frac{1}{2} = 7$
-(zoals te zien was in @fig-kansverdeling-twee-dobbelstenen).
-
-### De variantie van de som
-
-En hoe zit het met de variantie van $Y$, oftewel $\var{Y}$?
-
-Het berekenen van de variantie van $Y$ is eenvoudig als de kansvariabelen $X_i$ **onafhankelijk** zijn. In @sec-onafhankelijk hebben we besproken wat het betekent als twee *gebeurtenissen* onafhankelijk zijn. Hier gaat het echter om de onafhankelijkheid van *variabelen*, wat om een specifieke uitleg vraagt.
-
-Twee kansvariabelen zijn onafhankelijk 
-  als de kansverdeling van de ene variabele niet afhangt 
-  van de uitkomst van de andere. 
-Met andere woorden: 
-  de kans op een bepaalde uitkomst van $X_1$ verandert niet, 
-  ongeacht wat je weet over de uitkomsten van $X_2$. 
-Dit betekent dat elke mogelijke gebeurtenis van $X_1$ 
-  onafhankelijk is van elke mogelijke gebeurtenis van $X_2$.
-
-::: {#exr-onafhankelijk}
-Verwerkingsopgave over onafhankelijkheid.
-
-**a.**
-
-**b.**
-
-:::
-
-Terug naar de variantie van $Y$,
-    waarbij $Y$ de som was van $n$ kansvariabelen $X_i$.
-Als alle variabelen $X_i$ onafhankelijk zijn van elkaar,
-    dan is de variantie van $Y$ simpelweg
-    de som van de varianties van de variabelen $X_i$:
-$$
-\var{Y} = \var{\sum_{i = 1}^n X_i} = \sum_{i = 1}^n \var{X_i}.
-$$ {#eq-somvarianties}
-Als je meerdere onafhankelijke variabelen optelt
-    wordt de variantie dus steeds groter.
-
-Zoals je weet is de standaarddeviatie 
-    simpelweg de wortel van de variantie.
-De standaarddeviatie van $Y$ is in dit geval dus
-$$ 
-\sd{Y} = \sqrt{\var{Y}} = \sqrt{\sum_{i = 1}^n \var{X_i}}.
-$$ {#eq-somvarianties}
-Het is belangrijk te zien dat je eerst de varianties van de $X_i$ optelt
-    en daarna pas de wortel neemt.
-De standaarddeviatie van $Y$ is dus *niet*
-    de som van de standaarddeviaties van de $X_i$!
-  
-Als de $X_i$ niet onafhankelijk zijn,
-kun je niets algemeens zeggen over de variantie van $Y$.
-
-::: {#exr-wortel}
-Verwerkingsopgave over $\sqrt{a + b} \neq \sqrt{a} + \sqrt{b}$.
-:::
-
-
-::: {#exr-psychologisch-experiment}
-Psychologisch experiment. 
-Twee proefpersonen (mensen? zijn er voorbeelden met primaten?). 
-Eerste proefpersoon krijgt 10 euro (of iets anders)
-    maar krijgt de gelegenheid om dat bedrag te delen
-    met de tweede proefpersoon.
-$X_1$ is het bedrag dat proefpersoon 1 zelf houdt,
-$X_2$ is het bedrag dat deze aan proefpersoon 2 geeft.
-Zowel $X_1$ als $X_2$ zijn kansvariabelen,
-    want verschillende proefpersonen maken verschillende beslissingen.
-
-**a.** Zijn $X_1$ en $X_2$ onafhankelijk?
-
-**b.** Stel dat de standaarddeviatie van variabele $X_1$ gelijk is aan 5\,€.  Wat is de variantie van variabele $X_2$?
+    Is deze waarde kleiner of groter dan die van de 
+    normale verdeling bij dezelfde $\alpha$?
     
-**c.** De variabele $Y$ is gedefinieerd als de som van $X_1$ en $X_2$, dus $Y = X_1 + X_2$. Wat is de variantie van $Y$?
+    Waarom?
 
-**d.** Zie je waarom je de varianties van $X_1$ en $X_2$ in dit geval niet mag optellen?
-
-:::
+b.  Berekend met R de kritieke waarde $t_{0{,}05(2)100}$.
+    
+    Is deze waarde kleiner of groter dan bij 2 vrijheidsgraden?
+    
+    Waarom?
 
 :::
 
@@ -1986,49 +2047,31 @@ Andere namen: normaalverdeling, Gaussische verdeling, Gausscurve.
         is *ietsje* groter dan 0,95.
         
 -   Standaard-normale verdeling: normale verdeling met $\mu = 1$ en $\sigma = 1$.
-
--   Transformeren normaal-verdeelde variabele $X$ naar standaard-normaal verdeelde variabele $Z$:
+-   **Transformeren** normaal verdeelde variabele $X$ naar standaardnormaal verdeelde variabele $Z$:
 
     $$ Z = \frac{X - \mu_X}{\sd{X}}.$$
-
+    
+-   **Centrale Limietstelling:* kansvariabelen die de optelsom zijn van veel andere kansvariabelen
+    zijn bij benadering normaal verdeeld.
+    
         
 #### $t$-verdeling
 
 -   Familie van verdelingen met als index het aantal vrijheidsgraden df.
 -   Gemiddelde is altijd 0.
--   Latere piek en dikkere "staarten" dan de standaard-normale verdeling;
+-   Latere piek en dikkere "staarten" dan de standaardnormale verdeling;
     dus grotere variantie.
--   Convergeert naar de standaard-normale verdeling voor $\text{df}\rightarrow \infty$$.
-
+-   Convergeert naar de standaardnormale verdeling voor $\text{df}\rightarrow \infty$$.
 
 
 ### Kritieke waarden
 
 -   De kritieke waarde $Z_{\alpha(2)}$ voor de normale verdeling is de waarde zodat
     de kans op een waarneming die *extremer* is dan $Z_{\alpha{2}}$ precies $\alpha$ is.
-    
 -   De kritieke waarde $\ct{\alpha}{2}{df}$ voor de $t$-verdeling met df vrijheidsgraden
     is de waarde zodat de kans op een waarneming $t$ die extremer is dan $\ct{\alpha}{2}{df}$
     precies $\alpha$ is.
 
-::: [.hidden]
-    
-### Optellen van kansvariabelen
-
-Als $Y$ de optelsom is van $n$ andere variabelen $X_i$, dan geldt:
-$$
-\ev{Y} = \sum_{i = 1}^n \ev{X_i}.
-$$
-Oftewel: het gemiddelde van de som is de som van de gemiddelden.
-
-Als de $X_i$ onafhankelijk zijn, geldt ook:
-$$
-\var{Y} = \var{\sum_{i = 1}^n X_i} = \sum_{i = 1}^n \var{X_i}.
-$$
-Oftewel: de variantie van de som is de som van de varianties.
-Als de $X_i$ niet onafhankelijk zijn, geldt deze regel niet!
-
-:::
 
   
 ## Terminologie
@@ -2041,7 +2084,7 @@ Als de $X_i$ niet onafhankelijk zijn, geldt deze regel niet!
 | kansverdeling         | probability distribution  | De manier waarop kans over de mogelijke uitkomsten van een kansproces zijn verdeeld. |
 | kritieke waarde       | critical value            | Voor een kansverdeling, een grenswaarde zodanig dat de kans op een extremere waarde gelijk is aan een gegeven kans. |
 | normale verdeling      |  normal distribution      | Een specifieke klokvormige en symmetrische kansverdeling met twee parameters: gemiddelde en standaarddeviatie.| 
-| standaard-normale verdeling |  standard normal distribution       | Een normale verdeling met verwachtingswaarde 0 en standaarddeviatie 1. |
+| standaardnormale verdeling |  standard normal distribution       | Een normale verdeling met verwachtingswaarde 0 en standaarddeviatie 1. |
 | *t*-verdeling         | *t* distribution          | Een familie klokvormige kansverdelingen met als parameter het aantal vrijheidsgraden. |
 | transformeren        | to transform               | Het omzetten van een kansvariabele in een andere variable door middel van een functie $f(X)$. |
 | verwachtingswaarde    | expected value            | De gemiddelde waarde van een kansverdeling. |
@@ -2052,4 +2095,4 @@ Als de $X_i$ niet onafhankelijk zijn, geldt deze regel niet!
 ## Opgaven
 
 
-## Voetnoten
+
