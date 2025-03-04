@@ -1,0 +1,834 @@
+## Uitwerkingen @sec-kans
+
+### @exr-begrippen-kans
+
+a.  Kansexperiment: Het kruisen van twee heterozygote dieren en het bepalen van het genotype van een nakomeling.
+
+    Kansvariabele: Het genotype van de nakomeling.
+    
+    Kansruimte: De verzameling {`aa`, `AA`, `aA`}.
+    
+    Gebeurtenis: $X$ = `aa`.
+
+b.  Kansexperiment: Het tellen van het aantal teken op een ree aangetroffen in het bosgebied.
+
+    Kansvariabele: Aantal teken.
+    
+    Kansruimte: Alle positieve gehele getallen. ($\mathbb{Z}_+$)
+    
+    Gebeurtenis: $X > 0$.
+
+c.  Kansexperiment: Het vaccineren van een persoon en kijken of TTS optreedt.
+
+    Kansvariabele: Een Boolean variabele die aangeeft of TTS optrad.
+    
+    Kansruimte: {`TRUE`, `FALSE`}
+    
+    Gebeurtenis: $X$ = `TRUE`.
+
+d.  Kansexperiment: Het vangen, markeren en teruggooien van 2000 brasems; opnieuw vangen van 2000 brasems; en het tellen van het aantal gemarkeerde brasems.
+
+    Kansvariabele: Aantal teruggevangen gemarkeerde brasems.
+    
+    Kansruimte: Gehele getallen tussen van 0 tot 2000.
+    
+    Gebeurtenis: $X = 0$.
+
+
+
+### @exr-simulatie-dobbelsteen
+
+a.  Gebruik voor de absolute frequenties:
+
+    ```{r}
+    #| echo: FALSE
+    set.seed(125)
+    aantal_keer_gooien <- 10^6
+    resultaten <- sample(
+      seq(1:6), # kies uit 1 tot 6
+      size = aantal_keer_gooien, 
+      replace = TRUE
+      )
+    ```
+
+    ```{r}
+    table(resultaten)
+    ```
+    
+    Voor de relatieve frequenties:
+    ```{r}
+    table(resultaten)/aantal_keer_gooien
+    ```
+    
+    Jouw uikomsten zullen hier door steekproevenvariabiliteit iets van afwijken.
+
+b.  Nee, want dan moest de relatieve frequentie gelijk zijn aan $1/6 = 0.16666\ldots$.
+
+c.  Die kans is 0, want een miljoen is niet deelbaar door 6. Dat is één reden 
+    waarom de relatieve frequentie zelfs bij een enorm grote steekproef zelden
+    exact $\frac{1}{6}$ zal zijn: de meeste getallen zijn niet deelbaar door 6.
+    Maar zelfs als `aantal_keer_gooien` 6 miljoen is en dus wél deelbaar door 6,
+    is de kans heel klein dat we *precies* 1 miljoen keer een 6 vinden, en niet 
+    een paar meer of minder.
+
+### @exr-overlap-1
+
+a.  --
+
+b.  Venn-diagram:
+
+    ```{r}
+    #| echo: FALSE
+    #| warning: FALSE
+    #| fig.width: 6
+    #| fig.height: 4
+    #| fig.label: fig-Venn-ingevuld
+    
+    if (!("ggplot2" %in% .packages())){ 
+      library(ggplot2) 
+      }
+    if (!("ggforce" %in% .packages())){ 
+      library(ggforce) 
+      }
+    
+    kleurKansruimte <- "FloralWhite"
+    
+    kansruimte <- ggplot() +  
+      geom_rect(
+        aes(xmin = 0, ymin = 0, xmax= 100, ymax = 100),
+        fill = kleurKansruimte, color = "black", size = .8
+        ) +
+      annotate(
+        "text", 
+        x = 2, y = 94, 
+        label = "kansruimte                       2      4", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        ) +
+      theme_void()
+      
+    kleurA <- "Gold"
+
+    A <- list(
+      geom_ellipse(
+        aes(x0 = 34, y0 = 47, a = 28,  b = 40,  angle = 0), 
+        fill = kleurA , alpha = 0.7, linewidth = .8
+        ),
+      annotate(
+        "text", 
+        x = 25, y = 45, 
+        label = "1    3", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        )
+      )
+      
+    kleurB <- "DodgerBlue"
+
+    B <- list( 
+      geom_ellipse(
+        aes(x0 = 66, y0 = 47, a = 28,  b = 40,  angle = 0), 
+        fill = kleurB, alpha = 0.75, linewidth = .8
+        ),
+      annotate(
+        "text", 
+        x = 75, y = 45, 
+        label = "6", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        )
+    )
+    
+    labelInAenB <- annotate(
+      "text",
+      x = 50, y = 50, 
+      label = "5",
+      color = "black",
+      size = 5
+    )
+
+    kansruimte + A + B + labelInAenB
+    ```
+
+c.  Ja, want 5 is oneven én groter dan 4.
+
+d.  In dit geval geldt: $\pr{A \text{ en } B} = \pr{X = 5} = \frac{1}{6}$.
+
+
+
+### @exr-in-of-exclusief
+
+a.  Exclusief, want er wordt niet bedoeld dat één en dezelfde cursus 
+    zowel een studielast van 7,5 ECTS als een veelvoud daarvan kan hebben.
+
+b.  Inclusief, want je mag vast ook feedback geven over zaken die anders én beter zouden kunnen.
+
+c.  Inclusief, want het is vast ook niet toegestaan dat iemand met een managementfunctie lid én voorzitter wordt.
+
+d.  Exclusief, want je krijgt maar één beoordeling, die niet zowel numeriek als categorisch (V/ONV) kan zijn.
+
+
+### @exr-overlap-2
+
+a.  Venn-diagram:
+
+    ```{r}
+    #| echo: FALSE
+    #| warning: FALSE
+    #| fig.width: 6
+    #| fig.height: 4
+    
+    if (!("ggplot2" %in% .packages())){ 
+      library(ggplot2) 
+      }
+    if (!("ggforce" %in% .packages())){ 
+      library(ggforce) 
+      }
+    
+    kleurKansruimte <- "FloralWhite"
+    
+    kansruimte <- ggplot() +  
+      geom_rect(
+        aes(xmin = 0, ymin = 0, xmax= 100, ymax = 100),
+        fill = kleurKansruimte, color = "black", size = .8
+        ) +
+      annotate(
+        "text", 
+        x = 2, y = 94, 
+        label = "kansruimte", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        ) +
+      theme_void()
+      
+    kleurA <- "darkorange"
+
+    A <- list(
+      geom_ellipse(
+        aes(x0 = 34, y0 = 47, a = 28,  b = 40,  angle = 0), 
+        fill = kleurA , alpha = 1, linewidth = .8
+        )
+      )
+    
+    Anl <- list(
+      geom_ellipse(
+        aes(x0 = 34, y0 = 47, a = 27,  b = 39,  angle = 0), 
+        fill = kleurA , alpha = 1, linewidth = 0, color = kleurA
+        )
+      )
+      
+    kleurB <- "DodgerBlue"
+
+    B <- list( 
+      geom_ellipse(
+        aes(x0 = 66, y0 = 47, a = 28,  b = 40,  angle = 0), 
+        fill = kleurA, alpha = 1, linewidth = .8
+        )
+    )
+    
+    labelInAenB <- annotate(
+      "text",
+      x = 50, y = 50, 
+      label = expression(italic(A) ~ "of" ~ italic(B)),
+      color = "black",
+      size = 5
+    )
+
+    kansruimte + A + B + Anl +  labelInAenB
+    ```
+
+b.  {1, 3, 5, 6}
+
+c.  Omdat het een eerlijke dobbelsteen is en er vier uitkomsten onder 
+    de gebeurtenis vallen: $\pr{A \text{ of } B} = \frac{4}{6}$.
+    
+
+### @exr-omdraaien-conditionele-kansen
+
+a.  $\pr{A} = \frac{3}{6} = \frac{1}{2}.$
+
+b.  $\pr{B} = \frac{2}{6} = \frac{1}{3}.$
+
+c.  Zie @exr-overlap-1: $\pr{A \text{ en } B} = \frac{1}{6}.$
+
+d.  $\pr{A|B} = \dfrac{\pr{A \text{ en } B}}{\pr{B}} = \dfrac{\frac{1}{6}}{\frac{1}{3}} = \frac{1}{2}.$
+
+e.  $\pr{B|A} = \dfrac{\pr{A \text{ en } B}}{\pr{A}} = \dfrac{\frac{1}{6}}{\frac{1}{2}} = \frac{1}{3}.$
+
+f.  $\pr{B|A}$ is de kans op $A$ en $B$ relatief ten opzichte van 
+    de kans op $A$, $\pr{A|B}$ de kans op $A$ en $B$ relatief ten opzichte van 
+    de kans op $B$. Zolang de kans op $A$ niet gelijk is aan de kans op $B$
+    zijn beide conditionele kansen dus verschillend.
+
+
+### @exr-hartfalen
+
+Het is handig om R als rekenmachine gebruiken. 
+We voeren eerst netjes alle getallen in:
+
+```{r}
+#| echo: false
+#| output: false
+#| warning: false
+if (!("VennDiagram" %in% .packages())) { library(VennDiagram) }
+if (!("grid" %in% .packages())) { library(grid) }
+```
+
+```{r}
+#| warning: false
+
+# Definieer de populatiegrootte en aantallen
+nederlanders <- 17.6*10^6
+diabetes <- 1.08*10^5
+hartfalen <- 2.5*10^5
+beide <- 4*10^3
+
+# Bereken de aantallen voor ieder compartiment
+alleen_diabetes   <- diabetes - beide
+alleen_hartfalen  <- hartfalen - beide
+geen_van_beide    <- nederlanders - (alleen_diabetes + alleen_hartfalen + beide)
+```
+    
+a.  Het Venn-diagram ziet er dan als volgt out: 
+
+    ```{r}
+    #| echo: FALSE
+    #| warning: FALSE
+    #| fig.width: 6
+    #| fig.height: 4
+    #| fig.label: fig-Venn-ingevuld
+    
+    if (!("ggplot2" %in% .packages())){ 
+      library(ggplot2) 
+      }
+    if (!("ggforce" %in% .packages())){ 
+      library(ggforce) 
+      }
+    
+    kleurKansruimte <- "FloralWhite"
+    
+    kansruimte <- ggplot() +  
+      geom_rect(
+        aes(xmin = 0, ymin = 0, xmax= 100, ymax = 100),
+        fill = kleurKansruimte, color = "black", size = .8
+        ) +
+      annotate(
+        "text", 
+        x = 41, y = 94, 
+        label = "17,246 miljoen", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        ) +
+      theme_void()
+      
+    kleurA <- "Gold"
+
+    A <- list(
+      geom_ellipse(
+        aes(x0 = 34, y0 = 47, a = 28,  b = 40,  angle = 0), 
+        fill = kleurA , alpha = 0.7, linewidth = .8
+        ),
+      annotate(
+        "text", 
+        x = 20, y = 45, 
+        label = "246000", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        ),
+      annotate(
+        "text", 
+        x = 25, y = 60, 
+        label = "D", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        )
+      )
+      
+    kleurB <- "DodgerBlue"
+
+    B <- list( 
+      geom_ellipse(
+        aes(x0 = 66, y0 = 47, a = 28,  b = 40,  angle = 0), 
+        fill = kleurB, alpha = 0.75, linewidth = .8
+        ),
+      annotate(
+        "text", 
+        x = 70, y = 45, 
+        label = "104000", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        ),
+      annotate(
+        "text", 
+        x = 65, y = 60, 
+        label = "H", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        )
+    )
+    
+    labelInAenB <- annotate(
+      "text",
+      x = 50, y = 50, 
+      label = "4000",
+      color = "black",
+      size = 5
+    )
+
+    kansruimte + A + B + labelInAenB
+ 
+    ```
+
+
+b.  De kans dat een willekeurige Nederlander hartfalen heeft is:  
+
+    ```{r}
+    (prob_H <- hartfalen / nederlanders)
+    ```
+
+c.  De kans dat een willekeurige Nederlander hartfalen heeft is:
+
+    ```{r}
+    (prob_D <- diabetes / nederlanders)
+    
+    ```
+
+d.  De kans dat een diabetespatiënt ook hartfalen heeft:  
+
+    ```{r}
+    (prob_H_gegeven_D <- beide / diabetes)
+    ```
+    
+    Dit is precies wat bedoeld wordt met de kans $\pr{H | D}$.
+
+e.  Om te bepalen of het risico op hartfalen groter is voor mensen met diabetes, 
+    berekenen we de verhouding tussen $\pr{H | D}$ en $\pr{H}$:
+
+    ```{r}
+    (risico_verhoging <- prob_H_gegeven_D / prob_H)
+    ```
+
+    Mensen met diabetes hebben volgens deze berekening
+    een 2,6 keer zo hoog risico op hartfalen vergeleken met de algemene bevolking.
+
+
+### @exr-dobbel-AB-afhankelijk
+
+In  @exr-omdraaien-conditionele-kansen was $\pr{A} = \pr{A | B} = \frac{1}{2}$.
+Deze gebeurtenissen zijn dus onafhankelijk!
+Dit blijkt ook uit het feit dat $\pr{B} = \pr{B | A} = \frac{1}{3}$.
+
+
+### @exr-bloedgroep
+
+a.  Aflezen van de figuur: $\pr{\text{O+}} = 0{,}382$.
+
+b.  $\pr{\text{O}} = \pr{\text{O+}} + \pr{\text{O-}} = 0{,}382 + 0{,}068 = 0{,}45$.
+
+c.  We tellen de kansen van alle Rh+ bloedgroepen op:
+
+    $$
+    \begin{align}
+    \pr{\text{+}} &= \pr{\text{O+}} + \pr{\text{A+}} + \pr{\text{B+}} + \pr{\text{AB+}}\\
+                  &= 0{,}382 + 0{,}366 + 0{,}077 + 0{,}025 = 0{,}85.
+    \end{align}
+    $$
+
+d.  Als antigen en rhesusfactor onafhankelijk zouden zijn, dan zou de
+    vermenigvuldigingsregel gelden:
+
+    $$
+    \begin{align}
+    \pr{\text{O+}} &= \pr{\text{O en +}} = \pr{\text{O}}\cdot\pr{\text{+}}\\
+                  &= 0{,}45 \times 0{,}85\\
+                  &= 0{,}383.
+    \end{align}
+    $$
+    
+    Daarmee komen we heel dicht bij de werkelijke waarde van 0,382!
+    Blijkbaar zijn gebeurtenissen O en + vrijwel onafhankelijk.
+    Bij berekeningen aan bloedgroepen maken we slechts een kleine fout
+    als we een kansmodel gebruiken dat aanneemt 
+    dat antigeen en rhesusfactor onafhankelijk zijn.
+    
+f.  De ABO-bloedgroep en de rhesusfactor worden bepaald door genen 
+    die op verschillende chromosomen liggen.
+    Die segregeren dus onafhankelijk van elkaar
+    en *linkage* is dus niet te verwachten.
+    Kleine associaties kunnen wel optreden,
+    bijvoorbeeld als bepaalde etnische bevolkingsgroepen onderling
+    verschillen in hun proporties.
+
+e.  Het plaatje ziet er mooi uit, maar geeft de getallen niet helder weer.
+    De oppervlakte van de bloeddruppels is niet in proportie met het percentage
+    dat erbij hoort. Dat is misleidend: het lijkt er bijvoorbeeld niet op
+    dat de kans op O+ maar liefst 76 keer zo groot is als de kans op AB-.
+    
+    Deze figuur geeft de verhoudingen beter weer:
+    
+    ```{r}
+    #| echo: FALSE
+    #| warning: FALSE
+    #| fig-width: 5
+    #| fig-height: 3.2
+    #| out-width: "80%"
+
+    # Controleer of de benodigde pakketten zijn geladen
+    if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+    if (!("tidyverse" %in% .packages())) { library(tidyverse) }
+    if (!("vcd" %in% .packages())) { library(vcd) }
+    
+    # Definieer de bloedgroepverdeling in Nederland (Sanquin-data)
+    bloedgroepen <- data.frame(
+      rhesus = factor(rep(c("Rh+", "Rh-"), each = 4), c("Rh+", "Rh-")),
+      antigeen = factor(rep(c("A", "B", "AB", "O"), times = 2), levels = c("A", "B", "AB", "O")),
+      percentage = c(36.6, 7.7, 2.5, 38.2, 6.4, 1.3, 0.5, 6.8)
+    )
+    
+    # Maak een kruistabel
+    kruistabel_bloedgroep <- as.table(
+      matrix(
+        c(36.6, 6.4, 7.7, 1.3, 2.5, 0.5, 38.2, 6.8), 
+        nrow = 2)
+      )
+    
+    rownames(kruistabel_bloedgroep) <- c("+", "-")
+    colnames(kruistabel_bloedgroep) <- c("A", "B", "AB", "O")
+    
+    # Maak een cirkelgrootte-plot
+    circle_plot <- ggplot(bloedgroepen, aes(x = antigeen, y = rhesus)) +
+      geom_point(aes(size = percentage), shape = 21, fill = "red", color = "black") +
+      scale_size_area(max_size = 20) +
+      labs(title = NULL,
+           x = "Antigeen", y = "Rhesus", size = "Percentage") +
+      theme_minimal() +
+      theme(legend.position = "bottom")
+    
+    # Toon de cirkelgrootte-plot
+    circle_plot
+    
+    ```
+
+    ::: {.hidden}
+    Maar een mosaicplot ligt meer voor de hand:
+    
+    ```{r}
+    #| echo: FALSE
+    #| warning: FALSE
+    #| fig-width: 5
+    #| fig-height: 3.2
+    #| out-width: "100%"
+
+    mosaicplot(
+      t(kruistabel_bloedgroep),
+           main = NULL,
+           xlab = "Antigen", ylab = "Rhesus",
+           col = c("darkorange", "DarkOrchid"), border = "black"
+      )
+    ```
+    :::
+
+
+    
+### @exr-uitsluiten
+
+a.  Nee, dat klopt niet. Je mag de kansen hier niet optellen.
+    Dat zou betekenen dat de kans op een prijs
+    na 10 keer meedoen gelijk zou zijn aan $10\times \frac{1}{10} = 1$,
+    alsof je na 10 keer zeker zou zijn van een prijs.
+    
+    Het probleem is dat de twee gebeurtenissen 
+    (eerste keer prijs en tweede keer prijs)
+    elkaar niet uitsluiten.
+    De optelregel is dan niet van toepassing.
+    
+b.  Ja, dat klopt. De gebeurtenissen O+, A+, B+ en AB+ sluiten elkaar uit
+    en dus geldt de optelregel.
+
+
+### @exr-algemene-regel
+
+a.  Als $A$ en $B$ elkaar uitsluiten is $\pr{A \textrm{ en } B}$ gelijk aan 0.
+
+b.  Je kunt in dat geval ook de algemene regel gebruiken,
+    want als je in de algemene regel $\pr{A \textrm{ en } B} = 0$ invult
+    krijg je de optelregel.
+    Voor gebeurtenissen die elkaar uitsluiten komen beide regels dus op hetzelfde neer.
+    
+### @exr-resistentie
+
+Een bacterie is resistent als deze mutatie 1 heeft (gebeurtenis $M_1$)
+of mutatie 2 (gebeurtenis M2).
+
+Gegeven is:
+$$
+\begin{gather}
+\pr{M_1} = 0{,}3, \\
+\pr{M_2} = 0{,}4, \\
+\pr{M_1 \text{ en } M_2} = 0{,}15.
+\end{gather}
+$$
+
+Regel @eq-AofBalgemeen levert dan op:
+
+$$\pr{M_1 \text{ of } M_2} = \pr{M_1} + \pr{M_2} - \pr{M_1 \text{ en } M_2} = 0{,}3 + 0{,}4 - 0{,}15 = 0{,}55.$$
+
+
+### @exr-drie-gebeurtenissen
+
+a.  Venn-diagram:
+
+    ```{r}
+    #| echo: FALSE
+    #| warning: FALSE
+    #| fig.width: 6
+    #| fig.height: 4
+    #| fig.label: fig-Venn-ABC
+    
+    if (!("ggplot2" %in% .packages())){ 
+      library(ggplot2) 
+      }
+    if (!("ggforce" %in% .packages())){ 
+      library(ggforce) 
+      }
+    
+    kleurKansruimte <- "FloralWhite"
+    
+    kansruimte <- ggplot() +  
+      geom_rect(
+        aes(xmin = 0, ymin = 0, xmax= 100, ymax = 100),
+        fill = kleurKansruimte, color = "black", size = .8
+        ) +
+      annotate(
+        "text", 
+        x = 2, y = 94, 
+        label = "kansruimte", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        ) +
+      theme_void()
+      
+    kleurA <- "Gold"
+
+    A <- list(
+      geom_ellipse(
+        aes(x0 = 37, y0 = 66, a = 18,  b = 27,  angle = 0), 
+        fill = kleurA , alpha = 0.7, linewidth = .8
+        ),
+      annotate(
+        "text", 
+        x = 37, y = 66, 
+        label = "A", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        )
+      )
+      
+    kleurB <- "DodgerBlue"
+
+    B <- list( 
+      geom_ellipse(
+        aes(x0 = 63, y0 = 66, a = 18,  b = 27,  angle = 0), 
+        fill = kleurB, alpha = 0.75, linewidth = .8
+        ),
+      annotate(
+        "text", 
+        x = 63, y = 66, 
+        label = "B", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        )
+    )
+    
+    kleurC <- "darkorange"
+
+    C <- list( 
+      geom_ellipse(
+        aes(x0 = 50, y0 = 33, a = 18,  b = 27,  angle = 0), 
+        fill = kleurC, alpha = 0.75, linewidth = .8
+        ),
+      annotate(
+        "text", 
+        x = 50, y = 33, 
+        label = "C", 
+        color = "black", 
+        hjust = 0, 
+        size = 5
+        )
+    )
+
+    kansruimte + A + B + C
+    ```
+
+b.  Als je $\pr{A}$, $\pr{B}$ en $\pr{C}$ optelt, worden
+    de overlappende delen tussen $A$ en $B$, tussen $B$ en $C$,
+    en tussen $C$ en $D$ dubbelgeteld.
+    Die trek je er dus vanaf.
+    Maar, door dat te doen trek je het gedeelte $A$ en $B$ en $C$
+    (de overlap tussen de drie cirkels) er drie keer vanaf.
+    Om te zorgen dat dat deel ook één keer wordt meegeteld,
+    moet die er weer bij opgeteld worden.
+    Het resultaat is:
+
+    $$
+    \begin{align}
+    \pr{A \text{ of } B \text{ of } C} = & \ \pr{A} + \pr{B} + \pr{C} \\
+    & - \pr{A \text{ en } B} 
+    - \pr{B \text{ en } C}
+    - \pr{A \text{ en } C}\\
+    & + \pr{A \text{ en } B  \text{ en } C}.
+    \end{align}
+    $$
+    
+### @exr-bayes
+
+De eerdere resultaten waren (afgerond): 
+$$
+\begin{gather}
+\pr{H | D} = 0.037,\\
+\pr{H} = 0{,}014,\\
+\pr{D} = 0.0061. \\
+\end{gather}
+$$
+De regel van Bayes zegt:
+$$\pr{D | H} = \pr{H | D} \pr{D}/\pr{H}.$$
+Invullen:
+```{r}
+(prob_D_gegeven_H <- prob_H_gegeven_D * prob_D / prob_H)
+```
+
+    
+### @exr-DNA
+
+a.  Het model nam aan dat iedere nucleotide onafhankelijk met kans $1 - p$ een C,T, of A was. 
+    Dat geldt ook voor het nucleotide direct na de G.
+    De kans op lengte 1 is dus $\pr{X = 1} = 1 - p$.
+    
+b.  De kans dat de volgende letter een G is, is volgens het model $p$.
+    De kans dat de letter dáárna geen G is, is $1 - p$.
+    Omdat beide gebeurtenissen onafhankelijk zijn (volgens het model)
+    mogen we ze vermenigvuldigen: $\pr{X = 2} = p (1 - p)$.
+    
+c.  De kans dat de volgende letter een G is, is volgens het model $p$.
+    De kans dat de letter daarna wéér een G is, is $p$.
+    De kans dat de letter daarna geen G is, is $1 - p$.
+    Omdat alle gebeurtenissen onafhankelijk zijn (volgens het model)
+    mogen we ze vermenigvuldigen: $\pr{X = 3} = p \cdot p \cdot (1 - p) = p^2 (1 - p)$.
+
+d.  Invullen: 
+    
+    $\pr{X = 1} = 1 - p = 0{,}795$, 
+    
+    $\pr{X = 2} = p (1 - p) = 0{,}163$, 
+    
+    $\pr{X = 3} = p^2 (1 - p) = 0{,}0334$,
+
+    $\pr{X = 4} = p^3 (1 - p) = 0{,}00685$, etc. 
+    
+e.  De paarse lijn komt aardig in de buurt van de echte gegevens.
+    G-tracts van de lengte die we in chromosoom 11 vinden
+    zouden we dus ook ongeveer verwachten op basis van toeval.
+    Er is dus geen specifieke biologische functie of sterke natuurlijke selectie nodig
+    om de gevonden G-tracts te verklaren.
+    
+    Als je in detail kijkt,
+    is de kans op een lengte van 1 iets kleiner dan verwacht,
+    en de kans op langere G-tracts juist iets groter dan verwacht.
+    Dat duidt erop dat de neiging van G's om gevolgd te worden door een andere G
+    net iets groter is dan je zou verwachten als de opeenvolgende nucleotiden
+    volledig onafhankelijk waren.
+    Dat zou je verder kunnen onderzoeken;
+    je zou je kunnen uitzoeken of dat effect komt door
+    coderende sequenties, of door niet-coderende sequenties (of beiden).
+    
+### @exr-bayes-screening
+
+a.  $\pr{K}$ is de prevalentie. 
+    Gegeven is dat $\pr{K} = 0{,}001$. 
+    Dat zijn naar verwachting dus $120000\times\pr{K} = 120$ vrouwen
+    die borstkanker hebben.
+
+b.  $\pr{G} = 1 - \pr{K} = 0{,}999$. 
+    Dat komt neer op $120000\times \pr{G} = 119880$ gezonde vrouwen.
+
+c.  $\pr{P | K}$ is de sensitiviteit. 
+    Gegeven is dat $\pr{P | K}  = 0{,}9$.  
+    Als we alle vrouwen van 30 jaar screenen,
+    verwachten we dus $120000\times \pr{P | K} = 108$
+    keer borstkanker te ontdekken.
+
+d.  $\pr{N | G}$ is de specificiteit. 
+    Die is ook gegeven: $\pr{N | G} = 0{,}95$.
+
+e.  $\pr{P | G} = 1 - \pr{N | G}  = 0,05$.
+    We testen naar verwachting 119880 gezonde vrouwen. 
+    (Zie onderdeel b.)
+    De test valt dus *onterecht* positief uit 
+    bij $119880 \times \pr{ P | G } = 5994$ vrouwen.
+    Dat zijn er veel meer dan de 108 *terecht* positieve testen!
+
+f.  $\pr{P} = 0{,}05085$.  
+    Naar verwachting krijgen dus $120000\times\pr{P} = 6102$ vrouwen
+    een positief testresultaat.
+
+g.  Gebruik de regel van Bayes: $\pr{P | K} = \pr{K | P} \pr{P}/\pr{K} = 0{,}0177$.
+    Dat betekent: als de test positief terugkomt, 
+    is de kans dat je daadwerkelijk borstkanker hebt
+    nog steeds maar $0{,}018$, minder dan 2%!
+
+h.  Een groot nadeel van vroegtijdig screenen 
+    is het grote aantal fout-positieve testresultaten. 
+    De overgrote meerderheid van de vrouwen die 
+    naar het ziekenhuis worden doorverwezen 
+    hebben in werkelijkheid geen borstkanker,
+    wat leidt tot veel onnodige paniek en veel overbodige medische procedures.
+
+i.  De screening-paradox treedt op 
+    wanneer een test een hoge sensitiviteit en specificiteit heeft, 
+    maar de prevalentie van de ziekte laag is. 
+    Hoewel de test goed werkt,
+    is het absolute aantal fout-positieven dan vaak veel groter 
+    dan het aantal correct-positieven, 
+    waardoor de kans dat een positief geteste persoon daadwerkelijk ziek is 
+    verrassend laag blijft.
+
+Het volgende script in R voert alle berekeningen uit:
+
+```{r, echo=TRUE, message=FALSE}
+# Gegeven waarden
+prevalentie <- 0.001  # P(K)
+sensitiviteit <- 0.9   # P(P | K)
+specificiteit <- 0.95  # P(N | G)
+totaal_vrouwen <- 120000
+
+# Berekeningen
+prob_k <- prevalentie
+prob_g <- 1 - prevalentie
+
+prob_n_gegeven_g <- specificiteit
+prob_p_gegeven_g <- 1 - prob_n_gegeven_g
+prob_p_gegeven_k <- sensitiviteit
+prob_p <- prob_p_gegeven_g * prob_g + prob_p_gegeven_k * prob_k
+
+aantal_k <- totaal_vrouwen * prob_k
+aantal_g <- totaal_vrouwen * prob_g
+
+aantal_true_p <- aantal_k * prob_p_gegeven_k
+aantal_false_p <- aantal_g * prob_p_gegeven_g
+aantal_p <- aantal_true_p + aantal_false_p
+
+# kans op borstkanker gegeven positieve test:
+(prob_k_gegeven_p <- prob_p_gegeven_k * prob_k / prob_p) 
+```
