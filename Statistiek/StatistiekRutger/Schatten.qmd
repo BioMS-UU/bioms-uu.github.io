@@ -1474,7 +1474,7 @@ Bereken in R het 95%-betrouwbaarheidsinterval voor de smelttemeratuur.
 :::
 
 
-## Afwijkingen van het Normale Model
+## Afwijkingen van het Normale Model {#sec-afwijkingen}
 
 Bij de afleiding van de formule voor het BHI (@eq-BHI-t)
   zijn we steeds uitgegaan van het Normale Model.
@@ -1490,17 +1490,17 @@ Omdat het Normale Model niet altijd van toepassing is
   eerst zorgvuldig na te gaan of dat wel verstandig is.
 We zullen het daarom eerst hebben over manieren waarop 
   je afwijkingen van het Normale Model kunt herkennen.
-Daarna laten we zien dat dat afwijkingen van het Normale Model
+Daarna laten we zien dat zulke afwijkingen
   niet altijd een probleem zijn;
-  de formule voor het BHI is behoorlijk "robuust".
+  de formule voor het BHI is behoorlijk "robuust" voor afwijkingen.
   
 ### Is het Normale Model bij voorbaat wel plausibel? {#sec-plausibel}
 
 Een eerste stap voordat je een BHI uitrekent 
   is om te bedenken of de aannames van het Normale Model
-  bij voorbaat wel plausibel zijn.
+  bij voorbaat wel plausibel zijn voor de toepassing.
 
-Een belangrijke aanname is dat de variabel in de populatie
+Een belangrijke aanname is dat de variabele in de populatie
   normaal verdeeld is.
 Voor sommige variabelen is dat bij voorbaat niet aannemelijk.
 Dat kan verschillende redenen hebben; hier zijn er een paar:
@@ -1682,7 +1682,7 @@ zoals een normale verdeling.
 
 Stel, je hebt in een experiment 101 waarnemingen verzameld.
 We sorteren de waarden van klein naar groot.
-De mediaan is dan waarde 51e waarde.
+De mediaan is dan de 51e waarde.
 
 We willen controleren of deze gegevens uit een normale verdeling getrokken zijn.
 Als dat zo is, dan verwachten we dat de mediaan van de waarnemingen in de buurt ligt van 
@@ -1690,6 +1690,7 @@ het gemiddelde van de waarnemingen,
 want de normale verdeling is symmetrisch.
 Het eerste kwartiel (Q1) van de waarnemingen verwachten we ongeveer 0,67 standaarddeviaties
 onder het gemiddelde, want daar ligt voor de normale verdeling het eerste kwartiel.
+
 Op deze manier kunnen we de kwantielen van de *gegevens*
 vergelijken met de kwantielen die we theoretisch hadden *verwacht* als de gegevens
 uit een normale verdeling getrokken waren.
@@ -1741,9 +1742,10 @@ Die van de rechts-scheve verdeling wijkt systematisch af
 
 Als de gegevens uit een normale verdeling getrokken zijn
 komen de kwantielen van de waarnemingen grofweg overeen met de theoretische kwantielen.
-In dat geval vallen de datapunten grofweg op een rechte lijn, zoals in @fig-qqplots-1.
+In dat geval vallen de datapunten ongeveer op een rechte lijn, zoals in @fig-qqplots-1.
 Systematische afwijkingen van die rechte lijn geven aan
 dat de gegevens afwijkingen vertonen van een normale verdeling, zoals in @fig-qqplots-2.
+Zo kun je beoordelen of de gegevens er "normaal" uitzien.
 
 Het tekenen van een QQ-plot is met behulp van R erg gemakkelijk.
 Als `gegevens` een numerieke vector is, dan werkt het zo:
@@ -1841,103 +1843,6 @@ grid.arrange(grobs = all_plots, ncol = 2)
 ```
 
 :::
-
-
-::: {#exm-normale-QQ}
-
-## Is `Pulse` (rusthartslag) ongeveer normaal verdeeld?
-
-Hierboven hebben we uitgelegd hoe je kunt onderzoeken
-of een steekproef van een variabele afwijkingen laat zien
-van een normale verdeling.
-Als voorbeeld zullen we de variabele `Pulse` (rusthartslag) onderzoeken
-uit de NHANES-database.
-
-
-### De dataset
-
-We laden het pakket NHANES in:
-```{r}
-library(NHANES) 
-```
-Niet voor iedere persoon in de dataset is de hartslag ingevoerd.
-In sommige regels staat daarom `NA` (*not available*).
-We selecteren alle gegevens die wel beschikbaar zijn:
-```{r}
-# Verwijder missende waarden van de variabele 'Pulse'
-pulse_data <- na.omit(NHANES$Pulse)
-length(pulse_data) # aantal datapunten dat overblijft
-```
-Het zijn dus 8563 waarnemingen.
-
-### Kengetallen
-
-We vatten de gegevens eerst samen met kengetallen:
-```{r}
-summary(pulse_data)
-```
-De mediaan is iets kleiner dan het gemiddelde. De afstand van Q1 naar de mediaan (8,00)
-is ook kleiner dan van de mediaan naar Q3 (10,00). Dat suggereert een 
-iets rechts-scheve verdeling. 
-
-Hoe variabel zijn de gegevens?
-```{r}
-sd(pulse_data) #standaarddeviatie
-IQR(pulse_data) # interkwartielafstand
-```
-
-### Visualisaties van de verdeling
-
-We maken nu achtereenvolgens een histogram en een boxplot:
-
-:::{layout="[[4.5,2.5]]"}
-```{r}
-#| fig.width: 4.5
-#| fig.height: 4
-#| out.width: "100%"
-hist(pulse_data, main = NULL)
-```
-
-```{r}
-#| fig.width: 2.5
-#| fig.height: 4
-#| out.width: "100%"
-boxplot(pulse_data)
-```
-:::
-
-Beide plots bevestigen dat de verdeling iets scheef is. 
-De histogram ziet er klokvormig uit,
-maar heeft een dikkere rechter staart.
-De box plot laat dat nog duidelijker zien:
-de box ziet er symmetrisch uit, maar er zijn veel uitbijters aan de bovenkant.
-
-
-### Normale Kwantielen-kwantielen-plot (QQ-plot)
-
-Tot slot voegen we een Normale QQ-plot toe:
-```{r}
-#| fig.width: 3
-#| fig.height: 3.3
-#| out.width: "43%"
-qqnorm(pulse_data)
-qqline(pulse_data)
-```
-Het midden van de verdeling volgt netjes een rechte lijn,
-maar in de staarten van de verdeling
-zijn de waargenomen waarden groter
-dan op basis van de normale verdeling verwacht zou worden. 
-(De punten liggen boven de diagonale lijn.)
-Dat laat zien dat ten opzichte van de normale verdeling
-de punten in beide staarten een te hoge waarde hebben.
-De linkerstaart van de verdeling is dus korter, de rechterstaart juist langer.
-
-We concluderen dat de verdeling van rusthartslag rechts-scheef is.
-Dat is niet zo gek:
-ziekte, inspanning, of stress kunnen gemakkelijk tot een abnormaal hoge
-hartslag leiden.
-:::
-
 
 
 ### De centrale limietstelling en de robuustheid van het Normale Model {#sec-centrale-limiet}
@@ -2229,90 +2134,7 @@ In @exr-bhi-controleren hieronder zul je zien
   dat zelfs bij behoorlijk vreemde verdelingen
   het BHI al bij veel kleinere $n$ betrouwbaar is.
 
-::: {#exr-bhi-controleren}
 
-## Robuustheid van het Normale Model controleren
-
-We hebben gezien dat de verdeling van het steekproefgemiddelde
-bij benadering normaal verdeeld is
-zelfs als de populatie dat niet is,
-mits de steekproef niet al te klein is.
-Dat suggereert dat de formule voor het BHI
-gebaseerd op het Normale Model
-bij $n = 30$
-ook goed zou moeten werken
-voor de variabele lichaamsgewicht (`Weight`)
-uit de NHANES dataset.
-
-Dat kunnen we met simulaties controleren!
-
-  a. Maak een nieuw script in R. Laad daarin de library NHANES:
-```{r}
-#| eval: false
-library("NHANES")
-```
-  b. Voor sommige personen in de dataset mist het gewicht.  In dat geval is `NA` ingevuld. Die regels halen we weg:
-```{r}
-#| eval: false
-data <- data[!is.na(data$Weight), ]
-```
-  c. Voeg een regel toe die het gemiddelde van de populatie berekent.
-  d. Voeg een regel toe waarmee je een steekproef neemt uit de populatie:
-```{r}
-#| eval: false
-
-steekproefgrootte <- 30
-sample(
-    data$Weight, size = steekproefgrootte
-  )
-```
-  e. Bereken van die steekproef het BHI, zoals je dat hierboven geleerd hebt, met de functie `t.test()`. Ligt het ware populatiegemiddelde in het berekende BHI? Als de formule van het Normale Model werkt, zou dat in 95% van de gevallen zo moeten zijn. Voer de code een paar keer uit om te zien of dat ongeveer kan kloppen.
-  f. Om het BHI goed te controleren, willen we de code heel vaak uitvoeren en tellen hoe vaak het populatiegemiddelde in het interval ligt. Het script hieronder doet dat. Kopieer het en voer het uit op je laptop. Lijkt de formule voor het BHI goed te werken?
-```{r}
-#| code-fold: true
-#| eval: false
-
-library("NHANES")
-
-# Parameters
-aantal_steekproeven <- 50000  # Aantal steekproeven
-steekproefgrootte <- 30        # Grootte van elke steekproef
-
-# Populatiegegevens (filter op NA's)
-data <- NHANES
-data <- data[!is.na(data$Weight), ]
-
-populatiegemiddelde <- mean(data$Weight)
-
-# Functie om te controleren of het populatiegemiddelde in het betrouwbaarheidsinterval valt
-controleer_bhi <- function(
-  steekproef, populatiegemiddelde
-) {
-  bhi <- t.test(steekproef)$conf.int
-  return(
-    populatiegemiddelde >= bhi[1] && populatiegemiddelde <= bhi[2]
-  )
-}
-
-# Simuleer steekproeven
-resultaten <- logical(aantal_steekproeven)
-
-for (i in seq_len(aantal_steekproeven)) {
-  steekproef <- sample(
-    data$Weight, size = steekproefgrootte, replace = FALSE
-  )
-  resultaten[i] <- controleer_bhi(steekproef, populatiegemiddelde)
-}
-
-# Bereken en print percentage
-cat(
-  "Percentage waarbij populatiegemiddelde binnen het BHI valt:", 
-  mean(resultaten)*100, "%\n"
-)
-```
-
-  g. Bij kleine steekproeven verwachten we dat het BHI zou kunnen afwijken. Voer het script opnieuw uit, maar dan met steekproeven van grootte 4. Wat concludeer je?
-:::
 
 ### Wat als het statistische model echt niet van toepassing is? {#sec-aannames}
 
@@ -2497,17 +2319,6 @@ dat het gemiddelde van een groot aantal kansvariabelen convergeert naar een norm
 
 ## Opgaven
 
-
-::: {.pepexr #exr-75-procent-interval}
-
-### Waarom 95%?
-<br>
-
-Waarom berekenen we meestal een 95%-betrouwbaarheidsinterval, en niet, zeg, een 75%-betrouwbaarheidsinterval?
-:::
-
-
-
 ::: {.pepexr .Rexr #exr-tomaten-gewicht}
 
 ## BHI van een steekproef tomaten
@@ -2520,4 +2331,152 @@ Bepaal het 95%-betrouwbaarheidsinterval voor het gemiddelde gewicht $\mu_X$ van 
 tomaten. 
 (Je mag uit gaan van het Normale Model.)
 
+:::
+
+::: {#exr-normale-QQ .Rexr}
+
+## Een schatting voor de gemiddelde rusthartslag.
+<br>
+
+In @sec-afwijkingen hebben we gezien hoe je kunt onderzoeken
+of een steekproef van een variabele afwijkingen laat zien
+van de normale verdeling.
+Als voorbeeld ga je de variabele `Pulse` (rusthartslag) onderzoeken
+uit de NHANES-database.
+
+
+a.  Om te beginnen: zou je verwachten dat rusthartslag in de bevolking
+    ongeveer normaal verdeeld is? Zijn er redenen om daarover te twijfelen?
+
+b.  Laad eerst het pakket NHANES in zoals je dat al vaak hebt gedaan.
+
+c.  Voor sommige personen in de dataset is geen hartslag ingevoerd.
+    In sommige regels staat daarom `NA` (*not available*).
+    Selecteer alle gegevens die wel beschikbaar zijn:
+    
+    ```{r}
+    #| eval: false
+    # Verwijder missende waarden van de variabele 'Pulse'
+    pulse_data <- na.omit(NHANES$Pulse)
+    ```
+    
+    Hoeveel waarnemingen blijven er over?
+    
+d.  Bestudeer kengetallen voor de gegevens.
+    
+    - Zijn de maten van locatie zoals verwacht?
+    - Vergelijk de mediaan met het gemiddelde; wat zegt je dat?
+    - Zijn de maten van spreiding (standaarddeviatie, IKA) ongeveer wat je had verwacht?
+    
+e.  Visualiseer de verdeling met een histogram en een boxplot.
+    Zie je afwijkingen van een normale verdeling?
+
+f.  Voeg een Normale QQ-plot toe en beoordeel die.
+
+g.  Gebruik de functie `t.test()` om het BHI te berekenen.
+
+    Kun je de formule @eq-BHI-t voor het berekenen van het BHI
+    met een gerust hart voor deze dataset gebruiken?
+:::
+
+::: {#exr-bhi-controleren .Rexr}
+
+## Robuustheid van het Normale Model controleren
+<br>
+
+In @sec-centrale-limiet heb je geleerd over de
+Centrale Limietstelling.
+Die stelling zegt dat bij grote steekproeven
+de steekproevenverdeling van het gemiddelde
+bij benadering normaal verdeeld is,
+zelfs als de verdeling van populatie dat niet is.
+
+Dat suggereert dat de formule voor het BHI
+gebaseerd op het Normale Model
+bij $n = 30$
+ook goed zou moeten werken
+voor de variabele lichaamsgewicht (`Weight`)
+uit de NHANES dataset,
+ook al is die bimodaal en verre van normaal verdeeld.
+Dat kunnen we met simulaties controleren!
+
+a.  Maak een nieuw script in R. Laad daarin de library NHANES.
+
+b.  Voor sommige personen in de dataset mist het gewicht en is `NA` ingevuld. 
+    Sla de gewichten op in een vector `gewichten`, maar verwijder de `NA`'s, 
+    op dezelfde manier als in @exr-normale-QQ.
+
+We gaan de gewichten in de dataset nu gebruiken als een populatie
+waaruit we een kleinere steekproef nemen.
+
+c.  Voeg een regel toe die het gemiddelde van deze "populatie" berekent.
+
+d.  Voeg een regel toe waarmee je een aselecte steekproef van 30 gewichten selecteert uit de populatie:
+
+    ```{r}
+    #| eval: false
+    
+    steekproefgrootte <- 30
+    steekproef <- sample(
+        gewichten, size = steekproefgrootte, replace = FALSE
+      )
+    steekproef
+    ```
+
+e.  Bereken van die steekproef het BHI, zoals je dat hierboven geleerd hebt, met de functie `t.test()`. 
+
+    Ligt het ware populatiegemiddelde in het berekende BHI? 
+    
+Als de formule van het Normale Model werkt, zou bij 95% van de keren
+dat je een steekproef en een BHI berekent,
+het ware populatiegemiddelde in het interval moeten liggen.
+
+f.  Voer de code een paar keer uit om te zien of dat ongeveer kan kloppen.
+
+g.  Om het BHI goed te controleren, willen we de code heel vaak uitvoeren en tellen hoe vaak het populatiegemiddelde in het interval ligt. Het script hieronder doet dat. Kopieer het, bestudeer het, en voer het uit op je laptop. Lijkt de formule voor het BHI goed te werken?
+
+    ```{r}
+    #| code-fold: true
+    #| eval: false
+    
+    library("NHANES")
+    data(NHANES)
+    
+    # PARAMETERS
+    aantal_steekproeven <- 50000   # Aantal steekproeven
+    steekproefgrootte <- 30        # Grootte van elke steekproef
+    
+    # POPULATIEGEGEVENS 
+    gewichten <- na.omit(NHANES$Weight)      # filter NA's weg
+    populatiegemiddelde <- mean(gewichten)   # bereken populatiegemiddelde
+    
+    # SIMULATIE VOORBEREIDEN
+    
+    # Functie om het BHI voor een steekproef te berekenen
+    # en te controleren of het populatiegemiddelde 
+    # binnen het betrouwbaarheidsinterval valt.
+    controleer_bhi <- function( steekproef, populatiegemiddelde) {
+      bhi <- t.test(steekproef)$conf.int
+      in_interval <- populatiegemiddelde >= bhi[1] && populatiegemiddelde <= bhi[2]
+      
+      return(in_interval)
+    }
+    
+    # Logical vector om de resultaten in op te slaan
+    resultaten <- logical(aantal_steekproeven)
+    
+    # SIMULEER STEEKPROEVEN
+    for (i in 1:aantal_steekproeven) {
+      steekproef <- sample(
+        gewichten, size = steekproefgrootte, replace = FALSE
+      )
+      resultaten[i] <- controleer_bhi(steekproef, populatiegemiddelde)
+    }
+    
+    # Bereken en print percentage
+    print("Percentage steekproeven waarbij populatiegemiddelde binnen het BHI valt:")
+    print(mean(resultaten)*100)
+    ```
+
+g.  Bij kleine steekproeven verwachten we dat het BHI zou kunnen afwijken. Voer het script opnieuw uit, maar dan met steekproeven van grootte 4. Wat concludeer je?
 :::
