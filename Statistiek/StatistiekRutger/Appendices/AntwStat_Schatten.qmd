@@ -247,6 +247,15 @@ T_m <- c(60.7, 58.3, 60.0, 62.7, 61.7, 60.5, 57.5, 59.1, 59.3, 55.9)
 t.test(T_m)$conf.int
 ```
 
+### @exr-matching-QQs
+
+- Histogram **a** hoort bij QQ-plot **f**.
+- Histogram **b** hoort bij QQ-plot **h**.
+- Histogram **c** hoort bij QQ-plot **g**.
+- Histogram **d** hoort bij QQ-plot **i**.
+- Histogram **e** hoort bij QQ-plot **j**.
+
+
 ### @exr-tomaten-gewicht
 
 **Formule:**
@@ -301,11 +310,201 @@ c( m - t_crit*SEM, m + t_crit*SEM)
 
 ### @exr-normale-QQ
 
+a.  Lijkt een normale verdeling bij voorbaat een redelijke optie? Overwegingen:
+    
+    - Hartfrequentie is een continue variabele;
+      wat dat betreft is een normale verdeling niet uitgesloten.
+    - Hartfrequentie kan niet negatief worden; 
+      in vergelijking met een normale verdeling zal de linkerstaart dus afwijken.
+      Maar de bulk van de verdeling zal vrij ver van 0 afliggen
+      (een frequentie onder de 30 is zeer ongebruikelijk)
+      en dus zal het "afsnijden" van de staart waarschijnlijk
+      geen groot effect hebben. 
+      (In een normale verdeling met hetzelfde gemiddelde en dezelfde standaarddeviatie
+      zou de kans op negatieve waarden ook klein zijn.)
+    - Een hartslagfrequentie in rust ligt typisch rond de 70-80/min.
+      Een abnormaal lage frequentie (bijv. bij een extreem sporthart)
+      kan 35/min zijn, maar niet veel lager. 
+      Een abnormaal hoge frequentie (bij gezondheidsproblemen)
+      kan zeker oplopen tot 120/min.
+      Ik verwacht dus dat de afwijkingen naar boven groter zijn
+      dan die naar beneden.
+      Vermoedelijk is de verdeling dus wat rechts-scheef.
+      Dat pleit tegen een normaal model.
+    - De populatie waaruit de steekproef afkomstig is
+      bevat ook kinderen. 
+      Kinderen hebben een hogere rusthartslag dan volwassenen.
+      Ook dat kan bijdragen aan de rechter-staart.
+      
+    Al met al lijkt een normaal model bij voorbaat niet erg gepast.
+    
+b.  Code:
+    
+    ```{r}
+    library("NHANES")
+    data("NHANES")
+    ```
+
+c.  Code:
+
+    ```{r}
+    hartslagfrequenties <- na.omit(NHANES$Pulse)
+    length(hartslagfrequenties)
+    ```
+    
+    Er blijven na verwijderen van `NA`'s dus 8563 waarnemingen over.
+    Dat zou je zorgen over de toepasbaarheid van het Normale Model moeten verzachten:
+    bij zo enorm veel gegevens is het model erg robuust.
+    
+d.  We maken een histogram en een boxplot:
+
+    :::{layout="[[4.5,2.5]]"}
+    ```{r}
+    #| fig.width: 4.5
+    #| fig.height: 4
+    #| out.width: "100%"
+    hist(hartslagfrequenties, main = NULL)
+    ```
+    
+    ```{r}
+    #| fig.width: 2.5
+    #| fig.height: 4
+    #| out.width: "100%"
+    boxplot(hartslagfrequenties)
+    ```
+    :::
+    
+    Beide plots bevestigen dat de verdeling iets scheef is. 
+    De histogram ziet er klokvormig uit,
+    maar heeft een dikkere rechterstaart.
+    De boxplot laat dat nog duidelijker zien:
+    de box ziet er symmetrisch uit, maar er zijn veel uitbijters aan de bovenkant.
+    
+    Verder zien we geen vreemde zaken, zoals frequenties die bij voorbaat 
+    onmogelijk zijn.
+    
+e.  Code:
+
+    ```{r}
+    mean(hartslagfrequenties)
+    median(hartslagfrequenties)
+    ```
+
+    Of, handig:
+    ```{r}
+    summary(hartslagfrequenties)
+    ```
+    
+    De mediaan is iets kleiner dan het gemiddelde. 
+    De afstand van Q1 naar de mediaan (8,00)
+    is ook kleiner dan van de mediaan naar Q3 (10,00). 
+    Dat is in lijn met de iets rechts-scheve verdeling.  
+
+    ```{r}
+    sd(hartslagfrequenties)    # standaarddeviatie
+    IQR(hartslagfrequenties)   # interkwartielafstand
+    ```
+    
+    De meeste gegevens liggen in het gebied van 64 (Q1) tot 82 (Q3),
+    in lijn met de verwachting. 
+    
+f.  Tot slot bestuderen we de Normale QQ-plot:
+
+    ```{r}
+    #| fig.width: 3
+    #| fig.height: 3.3
+    #| out.width: "43%"
+    qqnorm(hartslagfrequenties)
+    qqline(hartslagfrequenties)
+    ```
+
+    Het midden van de verdeling volgt netjes de kwartielen van de normale verdeling,
+    maar in beide staarten
+    zijn de waargenomen waarden groter
+    dan op basis van de normale verdeling verwacht zou worden. 
+    (De punten liggen boven de diagonale lijn.)
+    Dat laat zien dat ten opzichte van de normale verdeling
+    de punten in beide staarten een te hoge waarde hebben.
+    De linkerstaart van de verdeling is dus korter, de rechterstaart juist langer
+    dan bij een normale verdeling.
+
+g.  Code:
+
+    ```{r}
+    resultaat.t.test <- t.test(hartslagfrequenties)
+    resultaat.t.test$conf.int
+    ```
+
+h.  Ja! Hoewel de verdeling duidelijk scheef is (zoals verwacht!)
+    is het aantal datapunten zó groot 
+    dat een BHI op basis van het Normale Model prima zou moeten werken.
+    We weten de gemiddelde hartslagfrequentie behoorlijk precies:
+    het ligt met 95% zekerheid ergens tussen 73,3 en 73,8 per minuut.
+    
+    Er is wel een belangrijke caveat:
+    Er waren behoorlijk veel regels waar `NA` was ingevuld,
+    en die hebben we verwijderd.
+    De vraag is: waarom is bij deze mensen niets ingevuld?
+    Is er iets bijzonders aan de hand met deze groep?
+    Als dat zo is, dan kan er bias in de de overige gegevens zijn geslopen.
+
 
 ### @exr-bhi-controleren
 
+Code voor onderdelen **a** tot **f**:
 
+```{r}
+#| eval: false
 
+library("NHANES")
+data("NHANES")
 
+# POPULATIEGEGEVENS 
+gewichten <- na.omit(NHANES$Weight)     # filter NA's weg
+populatiegemiddelde <- mean(gewichten)  # bereken populatiegemiddelde
+populatiegemiddelde # print populatiegemiddelde
 
+# STEEKPROEF
+# replace = FALSE zorgt ervoor dat we niet twee keer dezelfde persoon
+# in de steekproef kunnen opnemen
+steekproefgrootte <- 30
 
+# !!! code vanaf hier herhalen om meerdere steekproeven te proberen
+steekproef <- sample(
+    gewichten, size = steekproefgrootte, replace = FALSE
+  )
+steekproef # steekproef printen
+
+# BHI UITREKENEN
+resultaten.t.test <- t.test(steekproef)
+bhi <- resultaten.t.test$conf.int
+bhi # bhi printen
+
+# Ligt het populatiegemiddelde binnen het BHI?
+populatiegemiddelde >= bhi[1] && populatiegemiddelde <= bhi[2]
+
+```
+
+Als je deze code meerdere keren runt, trek je steeds een andere steekproef.
+In de meeste gevallen zou het populatiegemiddelde in het interval moeten liggen.
+Om precies te zijn: als de berekening van het BHI voor deze bimodale populatie werkt,
+zou dat in precies 95% van de gevallen zo moeten zijn. Dat test je in **g**.
+
+g.  De code voert $5\cdot 10^4$ steekproeven uit en berekent het percentage
+    van de herhalingen waarbij de populatieparameter in het BHI ligt.
+    Als het goed is, ligt dat percentage erg dicht bij 95%.
+    
+    De formule voor het BHI werkt dus bij $n = 30$,
+    ondanks dat de populatie niet normaal verdeeld is.
+
+h.  Pas in de code enkel de steekproefgrootte aan:
+
+    ```{r}
+    steekproefgrootte <- 4  # Grootte van elke steekproef
+    ```
+
+    In alle redelijkheid mogen we nu niet verwachten dat de methode robuust is,
+    want de steekproef is nu wel erg klein.
+    Toch valt de schade mee: het percentage ligt nu rond 95,8%.
+    (Bij $5\cdot 10^4$ herhalingen kun je er een paar tienden naast zitten.)
+    Dat is nog niet eens zo slecht!

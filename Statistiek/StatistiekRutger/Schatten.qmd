@@ -1801,7 +1801,7 @@ generate_histogram <- function(var_name, label, binwidth) {
   filtered_data <- filter_na(NHANES, var_name)
   ggplot(filtered_data, aes(x = .data[[var_name]])) +
     geom_histogram(binwidth = binwidth, fill = "darkorange", color = "black", alpha = 0.7) +
-    labs(x = "Variabele", y = "Frequentie", subtitle = label) +
+    labs(x = var_name, y = "Frequentie", subtitle = label) +
     theme_minimal()
 }
 
@@ -2342,16 +2342,19 @@ tomaten.
 In @sec-afwijkingen hebben we gezien hoe je kunt onderzoeken
 of een steekproef van een variabele afwijkingen laat zien
 van de normale verdeling.
-Als voorbeeld ga je de variabele `Pulse` (rusthartslag) onderzoeken
+Als voorbeeld ga je de variabele `Pulse` (hartslagfrequentie) onderzoeken
 uit de NHANES-database.
 
 
-a.  Om te beginnen: zou je verwachten dat rusthartslag in de bevolking
-    ongeveer normaal verdeeld is? Zijn er redenen om daarover te twijfelen?
+a.  Om te beginnen: zou je bij voorbaat verwachten dat
+    een normale verdeling een redelijk model is
+    voor de verdeling van hartslagfrequenties? 
+    
+    Zijn er redenen om daaraan te twijfelen?
 
 b.  Laad eerst het pakket NHANES in zoals je dat al vaak hebt gedaan.
 
-c.  Voor sommige personen in de dataset is geen hartslag ingevoerd.
+c.  Voor sommige personen in de dataset is geen hartslagfrequentie ingevoerd.
     In sommige regels staat daarom `NA` (*not available*).
     Selecteer alle gegevens die wel beschikbaar zijn:
     
@@ -2363,21 +2366,21 @@ c.  Voor sommige personen in de dataset is geen hartslag ingevoerd.
     
     Hoeveel waarnemingen blijven er over?
     
-d.  Bestudeer kengetallen voor de gegevens.
+d.  Visualiseer de verdeling met een histogram en een boxplot.
+    Zie je afwijkingen van een normale verdeling?
+
+e.  Bestudeer kengetallen voor de gegevens.
     
     - Zijn de maten van locatie zoals verwacht?
     - Vergelijk de mediaan met het gemiddelde; wat zegt je dat?
     - Zijn de maten van spreiding (standaarddeviatie, IKA) ongeveer wat je had verwacht?
-    
-e.  Visualiseer de verdeling met een histogram en een boxplot.
-    Zie je afwijkingen van een normale verdeling?
 
 f.  Voeg een Normale QQ-plot toe en beoordeel die.
 
 g.  Gebruik de functie `t.test()` om het BHI te berekenen.
 
-    Kun je de formule @eq-BHI-t voor het berekenen van het BHI
-    met een gerust hart voor deze dataset gebruiken?
+h.  Kun je de het berekende BHI
+    met een gerust hart gebruiken?
 :::
 
 ::: {#exr-bhi-controleren .Rexr}
@@ -2391,15 +2394,19 @@ Die stelling zegt dat bij grote steekproeven
 de steekproevenverdeling van het gemiddelde
 bij benadering normaal verdeeld is,
 zelfs als de verdeling van populatie dat niet is.
+We gaan dat in deze opgave met een voorbeeld controleren.
 
-Dat suggereert dat de formule voor het BHI
-gebaseerd op het Normale Model
-bij $n = 30$
-ook goed zou moeten werken
-voor de variabele lichaamsgewicht (`Weight`)
-uit de NHANES dataset,
-ook al is die bimodaal en verre van normaal verdeeld.
-Dat kunnen we met simulaties controleren!
+We zagen dat de variabele lichaamsgewicht (`Weight`)
+in de dataset NHANES 
+bimodaal was (@fig-robuust-1).
+Het idee is om de personen in deze dataset te beschouwen als een
+populatie,
+en uit deze populatie een steekproef van $n = 30$ personen te nemen.
+Op basis van deze steekproef berekenen we een BHI.
+Als de berekening van het BHI robuust is
+(ondanks de bimodale verdeling),
+ligt het ware gemiddelde van de populatie
+95% van de keren dat we dit doen binnen het BHI. 
 
 a.  Maak een nieuw script in R. Laad daarin de library NHANES.
 
@@ -2416,7 +2423,8 @@ d.  Voeg een regel toe waarmee je een aselecte steekproef van 30 gewichten selec
 
     ```{r}
     #| eval: false
-    
+    # replace = FALSE zorgt ervoor dat we niet twee keer dezelfde persoon
+# in de steekproef kunnen opnemen
     steekproefgrootte <- 30
     steekproef <- sample(
         gewichten, size = steekproefgrootte, replace = FALSE
@@ -2457,7 +2465,8 @@ g.  Om het BHI goed te controleren, willen we de code heel vaak uitvoeren en tel
     # en te controleren of het populatiegemiddelde 
     # binnen het betrouwbaarheidsinterval valt.
     controleer_bhi <- function( steekproef, populatiegemiddelde) {
-      bhi <- t.test(steekproef)$conf.int
+      resultaten.t.test <- t.test(steekproef)
+      bhi <- resultaten.t.test$conf.int
       in_interval <- populatiegemiddelde >= bhi[1] && populatiegemiddelde <= bhi[2]
       
       return(in_interval)
@@ -2479,5 +2488,5 @@ g.  Om het BHI goed te controleren, willen we de code heel vaak uitvoeren en tel
     print(mean(resultaten)*100)
     ```
 
-g.  Bij kleine steekproeven verwachten we dat het BHI zou kunnen afwijken. Voer het script opnieuw uit, maar dan met steekproeven van grootte 4. Wat concludeer je?
+h.  Bij kleine steekproeven verwachten we dat het BHI zou kunnen afwijken. Voer het script opnieuw uit, maar dan met steekproeven van grootte 4. Wat concludeer je?
 :::
