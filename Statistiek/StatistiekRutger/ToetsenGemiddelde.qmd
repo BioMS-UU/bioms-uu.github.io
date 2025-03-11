@@ -10,141 +10,168 @@
 library(ggplot2)
 library(tidyverse)
 
-opvulkleur <- "#e8601d"
+opvulkleur <- "darkorange"
 lijnkleur1 <- "darkorchid"
 lijnkleur2 <- "red"
 lijnkleur3 <- "blue"
 
 ```
 
-Veelvoorkomende situatie: continue variabele, vragen over het gemiddelde
-van die variabele. Dat kan zijn: het gemiddelde van een variabele in een
-populatie; of het gemiddelde van een meetwaarde in een serie metingen
-onder dezelfde condities.
+In het vorige hoofdstuk heb je kennisgemaakt met hypothesetoetsen.
+In dit hoofdstuk gaan we een aantal specifieke toetsen behandelen 
+voor situaties
+die in de praktijk vaak voorkomen.
+Dat zijn situaties waarin de variabele $X$ waarin we geïnteresseerd zijn
+numeriek en continu is, 
+en waarbij onze hypotheses gaan over parameter $\mu_X$, 
+het gemiddelde van die variabele.
 
-Merk op: gemiddelde alleen van toepassing op numerieke gegevens. Het is
-niet zinvol om te praten of het gemiddelde van, zeg, bloedgroepen.
-
-Hier een aantal standaardtoetsen.
-
-## Statistische model: willekeurige steekproeven uit normale verdeling
-
-D.w.z.: Als het om een steekproef gaat uit een daadwerkelijke populatie,
-dan nemen we aan dat de variabele in de populatie normaal verdeeld is.
-Als het gaat om metingen met toevallige meetfouten, dan nemen we aan dat
-metingen een gemiddelde waarde $\mu$ hebben, maar iedere meting daarvan
-afwijkt met een normaal verdeelde toevallige fout. Komt op hetzelfde
-neer.
+Het is misschien het beste om direct met de eerste toets te beginnen:
+de $t$-toets voor één steekproef.
 
 ## Toets van het gemiddelde: $t$-toets voor één steekproef
 
-Aantal waarnemingen $n$. (Dus grootte van steekproef of aantal
-experimenten.) Iedere waarneming is een waarde $X_i$. Gemiddelde is
-$\mean{X}$.
+### Een casus: Is de gemiddelde lichaamstemperatuur van gezonde mensen wel 37$\degree$C?
 
-### Stap 1: De nulhypothese
+De meeste Nederlanders hebben geleerd dat gezonde mensen 
+een lichaamstemperatuur hebben van 37$\degree$C.
+Die wijsheid is het resultaat van klassiek onderzoek door Carl Reinhold August Wunderlich
+dat werd gepubliceerd in 1868.
+In die tijd waren de meetmethoden lang niet zo precies als nu.
+Het is dus niet gek om je af te vragen: klopt die waarde eigenlijk wel?
 
-Nul-hypothese: $\HO: \mu = \mu_0$.
+Om dat te achterhalen 
+zouden we een steekproef kunnen nemen van een aantal gezonde personen.
+Als de gemiddelde temperatuur van die proefpersonen sterk afwijkt van 37$\degree$C,
+dan is dat een indicatie dat de standaardtemperatuur misschien herzien moet worden.[^temp]
 
-### Stap 2: Het statistische model
+Stel dat we een steekproef nemen van $n = 10$ personen.
+De resultaten zijn:
 
-Model: iedere waarde $X_i$ is onafhankelijk getrokken uit een normale
-verdeling met een zeker gemiddelde $\mu$ en standaarddeviatie $\sigma$.
-De waardes van $\mu$ en $\sigma$ zijn ons onbekend.
+35.7 35.8 37.0 36.5 37.1 36.4 36.1 36.8 36.5 37.1
 
-```{r}
-#| code-fold: true
-#| warning: false
-#| echo: false
-#| fig-width: 4
-#| fig-height: 3
-#| out-width: "57%"
-#| fig-cap: "Met behulp van een $t$-toets kunnen we onderzoeken of het gemiddelde van een steekproef (bijvoorbeeld n = 10) significant verschilt van een verwachte waarde. De $t$-toets gaat ervan uit dat de data normaal verdeeld zijn."
-#| label: fig-t-toets-1-var
+en een steekproefgemiddelde vinden van $\mean{X} = 36{,}5\degree$C.
+Is dit dan sterk bewijs tegen de standaardtemperatuur van 37$\degree$C?
+Verschillende personen hebben een verschillende normale temperatuur,
+en de lichaamstemperatuur van personen fluctueert bovendien gedurende de dag 
+(door je biologische klok) en van dag tot dag (bijvoorbeeld door de menstruatiecyclus).
+Een steekproefgemiddelde dat wat lager is dan 37$\degree$C
+kan dus ook het gevolg zijn van de toevallige steekproef.
+Het is dus duidelijk dat we een hypothesetoets nodig hebben
+om te bepalen in hoeverre de gevonden afwijking
+bewijs levert tegen een populatiegemiddelde van 37$\degree$C.
 
-library(ggplot2)
+[^temp]: In de praktijk heeft dat onderzoek allerlei haken en ogen. Hoe selecteren we gezonde personen? 
+  Hoe ga je om met het feit dat de lichaamstemperatuur 's ochtends gemiddeld lager is dan 's middags, of
+  het verschil tussen mannen en vrouwen?
+  
+  Toch zijn er pogingen gedaan om de norm van 37$\degree$C te toetsen:
 
-# Trek 10 getallen uit een normaalverdeling met gemiddelde mu en sd sigma
-mu <- 6.5 # Gemiddelde van de normaalverdeling
-sigma <- 1.5 # Standaarddeviatie van de normaalverdeling
-x <- rnorm(10, mu, sigma)
-data <- data.frame(y = x,
-                   x = seq(10))
-m <- mean(x) # Steekproefgemiddelde
+  Mackowiak, P. A., S. S. Wasserman, and M. M. Levine. “A Critical Appraisal of 98.6 Degrees F, the Upper Limit of the Normal Body Temperature, and Other Legacies of Carl Reinhold August Wunderlich.” JAMA 268, no. 12 (September 23, 1992): 1578–80.
+  
+### Hypotheses over het gemiddelde van een variable
 
-ggplot(data, aes(x = x, y = y)) +
-  # Verticale lijnen naar het gemiddelde
-  geom_segment(
-    aes(
-      x = x, xend = x, 
-      y = y, yend = m
-    ),
-    color = "SlateGray",
-    linetype = "solid",
-    size = 1
-  ) +
-  # Punten
-  geom_point(
-    shape = 21, 
-    fill = "SlateGray", 
-    size = 5
-  ) +
-  # Gemiddelde lijn
-  annotate(
-    "segment",
-    x = 0.5, xend = 10.5, 
-    y = m, 
-    color = opvulkleur,
-    size = 1
-  ) +
-  # Label bij de gemiddelde lijn
-  annotate(
-    "text",
-    x = 10.2, 
-    y = m + 0.2,
-    label = expression(bar(italic(x))),
-    color = opvulkleur,
-    hjust = 0,
-    size = 6
-  ) +
-  # Y-as instellen
-  scale_y_continuous(
-    breaks = x, 
-    limits = c(min(x), max(x)),
-    labels = scales::number_format(accuracy = 0.1)
-  ) +
-  ylab("Tentamencijfers") +
-  # Geen x-as, geen gridlijnen
-  theme_classic() +
-  theme(
-    axis.title = element_blank(),
-    axis.text = element_blank(),
-    axis.line = element_blank(),
-    axis.ticks = element_blank(),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank()
-  )
-```
+De casus over de normale lichaamstemperatuur is een voorbeeld
+van veelvoorkomende situatie.
+We zijn geïnteresseerd in een continue variabele 
+(in het voorbeeld: lichaamstemperatuur),
+en hebben een hypothese over het gemiddelde van die variabele in de populatie
+(in het voorbeeld: het populatiegemiddelde van de lichaamstemperatuur).
+Om die hypothese te onderzoeken
+nemen we een steekproef en meten de variabele voor iedere eenheid in de steekproef. 
+Dat levert een steekproefgemiddelde op
+dat typisch wat afwijkt van de waarde volgens onze hypothese.
+De vraag is hoe opmerkelijk die afwijking is.
+Kan die verklaard worden door steekproevenvariabiliteit,
+of is de afwijking daarvoor te groot?
 
-### Stap 3: De toetsingsgrootheid
+De **$t$-toets voor één steekproef** is de standaardtoets die voor dit soort situaties
+ontwikkeld is.
 
+### De $t$-toets in zes stappen.
+
+In @sec-algemene-vorm hebben we al gezien dat alle hypothesetoetsen dezelfde 
+logische structuur hebben. 
+In @imp-stappen hebben we die structuur in zes stappen opgedeeld.
+We gaan die zes stappen nu doorlopen voor de $t$-toets voor één steekproef.
+Daarbij passen we de berekening direct toe op de casus van de lichaamstemperatuur.
+Laten we daarbij aannemen we in de steekproef de 
+
+
+**Stap 1: Kies een statistisch model**\
+De eerste stap van iedere toets bestaat uit het kiezen van een statistisch model.
+De $t$-toets gaat uit van het Normale Model (@sec-Normale-Model) 
+dat we in @sec-schatten ook hebben gebruikt.
+
+We nemen dus aan:
+
+1.  De variabele is in de populatie normaal verdeeld,
+    met gemiddelde $\mu_X$ en standaarddeviatie $\sigma_X$.
+    De waarden van $\mu_X$ en $\sigma_X$ zijn ons onbekend.
+    
+2.  Iedere waarde $X_i$ in onze steekproef is onafhankelijk uit die normale verdeling getrokken.
+    Dat vereist dat we een eenvoudige aselecte steekproef hebben uitgevoerd.
+    
+Het is weer belangrijk dat we kritisch nagaan of die aannames
+redelijk zijn voor de toepassing.
+We hebben in @sec-afwijkingen uitgebreid besproken hoe je dat kunt doen.
+
+**Stap 2: Stel de hypotheses $\HO$ en $\HA$ op.**\
+Stap 2 is het opstellen van de nulhypothese en de alternatieve hypothese.
+
+In de casus was de nulhypothese dat het populatiegemiddelde
+van de variable lichaamstemperatuur 37$\degree$C is.
+Die hypothese gaat over de parameter $\mu_X$ van de populatieverdeling
+en kan kort opgeschreven worden als:
+
+$\HO:\qquad\mu_X = 37\degree$C.
+
+De alternatieve hypothese is de ontkenning daarvan:
+
+$\HA:\qquad\mu_X \neq 37\degree$C.
+
+De waarde van $\mu_X$ onder de nulhypothese wordt in het algemeen vaak $\mu_0$ genoemd.
+In het algemeen kunnen we de hypotheses dus opschrijven als
+
+$\HO:\qquad\mu_X = \mu_0.$\
+$\HA:\qquad\mu_X \neq \mu_0.$
+
+**Stap 3: De toetsingsgrootheid en zijn kansverdeling onder $\HO$**\
 We hebben een toetsingsgrootheid nodig die weergeeft hoe ver het
-steekproefgemiddelde afwijkt van het gemiddelde volgens $\HO$. We
-gebruiken:
-
-Toetsingsgrootheid: $$
+steekproefgemiddelde $\mean{X}$ afwijkt van de verwachting onder $\HO$.
+De $t$-toets maakt daarvoor gebruik van 
+$$
 t = \frac{\mean{X} - \mu_0}{\se{X}}.
-$$ Dit is het waargenomen verschil tussen het gemiddelde van de
+$$ {#eq-t-t-test}
+Dit is het waargenomen verschil tussen het gemiddelde van de
 waarnemingen en het gemiddelde van de populatie volgens $\HO$, relatief
 ten opzichte van de standaardfout.
 
-### Stap 4: Kansverdeling onder $\HO$
+Dat $t$ een goede keuze is voor de toetsingsgrootheid, kun je als volgt inzien.
+We hebben in @sec-schatten gezien dat de standaardfout 
+een maat is voor de onzekerheid in $\mean{X}$ als gevolg van steekproevenvariabiliteit.
+Als het waargenomen verschil tussen $\mean{X}$ en $\mu_0$ niet veel groter is dan de standaardfout,
+dan is dat verschil goed te verklaren
+door toevallige steekproevenvariabiliteit. 
+Inderdaad is $t$ dan klein (dicht bij 0).
+Als het waargenomen verschil tussen $\mean{X}$ en $\mu_0$ juist veel groter is dan de standaardfout,
+dan is dat verschil erg opmerkelijk onder $\HO$
+en dus bewijs tegen $\HO$.
+Inderdaad is $t$ dan groot.
+Extreme waarden van $t$ zijn dus een indicatie dat er iets mis is met $\HO$.
 
-We hebben in paragraaf\~\ref{?} gezien dat $t$ onder de nulhypothese een
-$t$-verdeling volgt met $n - 1$ vrijheidsgraden (dus $\df = n - 1$). Zie
-@fig-P-t-toets.
+De volgende uitdaging is om de kansverdeling van $t$ onder $\HO$ te bepalen.
+Gelukkig hebben we in @sec-t-verdeling-n-1 al het lastige voorwerk al gedaan.
+Daar hebben we namelijk al besproken dat 
+de verdeling van $t$,
+zoals gedefinieerd in @eq-t-t-test,
+onder het Normale Model
+een $t$-verdeling volgt met $n - 1$ vrijheidsgraden!
 
-### Stap 5: Bepaal de $P$-waarde
+**Stap 4: Bereken de $P$-waarde.**
+
+
+
 
 ::: {#fig-P-t-toets out-width="40%" fig-width=3}
 ![](figuren/dummy)
@@ -160,6 +187,62 @@ dan de waarde die berekend is uit waarnemingen."
 Als de $P$-waarde klein is, dan vormt dat een aanwijzing dat de
 nulhypothese niet juist is. Als $P$ niet kleiner is dan $0{,}05$ wordt
 het resultaat meestal niet als significant gezien.
+
+::: {#exm-t-toets}
+
+## Voorbeeld van de $t$-toets voor één steekproef
+
+Lichaamsgewicht is een belangrijke eigenschap bij dieren, omdat het invloed 
+heeft op hun fysiologie, gedrag en ecologische rol. In dit voorbeeld gebruiken 
+we een 
+[dataset](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273) 
+over vogels en zoogdieren in Colombia, waarin het lichaamsgewicht van meer dan 
+42.000 vogels en 7.400 zoogdieren is vastgelegd^[[Ocampo, D., Borja-Acosta, K. G., Lozano-Flórez, J., Cifuentes-Acevedo, S., Arbeláez-Cortés, E., Bayly, N. J., ... & Acevedo-Charry, O. (2021). *Body mass data set for 1,317 bird and 270 mammal species from Colombia.* Ecology, 102(3), e03273.](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273)]. 
+We focussen op de Bonte manakin (*Manacus manacus*) en we willen met behulp van
+een $t$-toets onderzoeken wat het gemiddelde gewicht van een Bonte manakin is.
+
+Voordat we de $t$-toets mogen toepassen, moeten we eerst kijken of de data aan
+de aannames van de $t$-toets voldoet. Voor een $t$-toets voor één steekproef is
+de aanname alleen dat de data normaalverdeeld is.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.width: 3.5
+#| fig.height: 2
+#| out.width: "50%"
+#| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins (n = 641)."
+#| label: fig-dist-manakin
+
+massa_manacus <- read.csv("data/massa_manacus.csv")
+
+ggplot(massa_manacus,
+       aes(x = Weight)) +
+    geom_histogram(fill = opvulkleur, 
+                   color = "black",
+                   binwidth = 1, 
+                   position = "dodge") +  
+    theme_minimal() +
+    xlab("Gewicht (g)") +
+    ylab("Aantal observaties")
+```
+
+Gebaseerd op @fig-dist-manakin lijkt de verdeling van gewichten grofweg normaal.
+Dit kunnen we beter controleren met behulp van een QQ-plot:
+
+```{r}
+qqnorm(massa_manacus$Weight)
+qqline(massa_manacus$Weight)
+```
+Zoals je ziet is de data wel wat links-scheef, maar de data is voldoende
+normaalverdeeld om een $t$-toets uit te kunnen voeren.
+
+```{r}
+t.test(massa_manacus$Weight)
+```
+
+:::
+
 
 ## De $t$-toets voor twee onafhankelijke steekproeven {#sec-t-toets-twee-steekproeven}
 
@@ -403,56 +486,7 @@ normaalGeneriek + pijl1 + pijl2 +
 
 ### Stap 6: Conclusies
 
-## Voorbeeld van de $t$-toets voor één steekproef
 
-Lichaamsgewicht is een belangrijke eigenschap bij dieren, omdat het invloed 
-heeft op hun fysiologie, gedrag en ecologische rol. In dit voorbeeld gebruiken 
-we een 
-[dataset](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273) 
-over vogels en zoogdieren in Colombia, waarin het lichaamsgewicht van meer dan 
-42.000 vogels en 7.400 zoogdieren is vastgelegd^[[Ocampo, D., Borja-Acosta, K. G., Lozano-Flórez, J., Cifuentes-Acevedo, S., Arbeláez-Cortés, E., Bayly, N. J., ... & Acevedo-Charry, O. (2021). *Body mass data set for 1,317 bird and 270 mammal species from Colombia.* Ecology, 102(3), e03273.](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273)]. 
-We focussen op de Bonte manakin (*Manacus manacus*) en we willen met behulp van
-een $t$-toets onderzoeken wat het gemiddelde gewicht van een Bonte manakin is.
-
-Voordat we de $t$-toets mogen toepassen, moeten we eerst kijken of de data aan
-de aannames van de $t$-toets voldoet. Voor een $t$-toets voor één steekproef is
-de aanname alleen dat de data normaalverdeeld is.
-
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.width: 3.5
-#| fig.height: 2
-#| out.width: "50%"
-#| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins (n = 641)."
-#| label: fig-dist-manakin
-
-massa_manacus <- read.csv("data/massa_manacus.csv")
-
-ggplot(massa_manacus,
-       aes(x = Weight)) +
-    geom_histogram(fill = opvulkleur, 
-                   color = "black",
-                   binwidth = 1, 
-                   position = "dodge") +  
-    theme_minimal() +
-    xlab("Gewicht (g)") +
-    ylab("Aantal observaties")
-```
-
-Gebaseerd op @fig-dist-manakin lijkt de verdeling van gewichten grofweg normaal.
-Dit kunnen we beter controleren met behulp van een QQ-plot:
-
-```{r}
-qqnorm(massa_manacus$Weight)
-qqline(massa_manacus$Weight)
-```
-Zoals je ziet is de data wel wat links-scheef, maar de data is voldoende
-normaalverdeeld om een $t$-toets uit te kunnen voeren.
-
-```{r}
-t.test(massa_manacus$Weight)
-```
 
 ## Voorbeeld voor de $t$-toets voor twee onafhankelijke steekproeven
 
@@ -767,6 +801,8 @@ Alleen aannames en toepassing.
 -   Wilcoxon's signed-rank test
 -   tekentoets
 -   Mann-Whitney $U$-test / Wilcoxon rank-sum test.
+
+## ANOVA
 
 ## Samenvatting
 
