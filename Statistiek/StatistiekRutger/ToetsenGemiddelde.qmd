@@ -76,8 +76,8 @@ bewijs levert tegen een populatiegemiddelde van 37$\degree$C.
   
 ### Hypotheses over het gemiddelde van een variable
 
-De situatie hierboven over de normale lichaamstemperatuur is een voorbeeld
-van veelvoorkomende situatie.
+De casus hierboven over de normale lichaamstemperatuur is een voorbeeld
+van een veelvoorkomende situatie.
 We zijn geïnteresseerd in een continue variabele 
 (in het voorbeeld: lichaamstemperatuur),
 en hebben een hypothese over het gemiddelde van die variabele in de populatie
@@ -93,7 +93,7 @@ of is de afwijking daarvoor te groot?
 De **$t$-toets voor één steekproef** is de standaardtoets die voor dit soort situaties
 ontwikkeld is.
 
-### De $t$-toets in zes stappen.
+### De $t$-toets in zes stappen
 
 In @sec-algemene-vorm hebben we al gezien dat alle hypothesetoetsen dezelfde 
 logische structuur hebben. 
@@ -101,7 +101,7 @@ Daar hebben we die structuur in zes stappen opgedeeld.
 We gaan die zes stappen nu doorlopen voor de $t$-toets voor één steekproef.
 Daarbij passen we de berekening direct toe op @exm-casus-temp van de lichaamstemperatuur.
 
-**Stap 1: Kies een statistisch model**\
+**Stap 1: Kies een statistisch model.**\
 De eerste stap van iedere toets bestaat uit het kiezen van een gepast statistisch model.
 De $t$-toets gaat uit van het Normale Model (@sec-Normale-Model) 
 dat we in @sec-schatten ook hebben gebruikt.
@@ -136,13 +136,13 @@ In het algemeen kunnen we de hypotheses dus opschrijven als
 $\HO:\qquad\mu_X = \mu_0.$\
 $\HA:\qquad\mu_X \neq \mu_0.$
 
-**Stap 3: De toetsingsgrootheid en zijn kansverdeling onder $\HO$**\
+**Stap 3: Kies de toetsingsgrootheid en bepaal zijn kansverdeling onder $\HO$.**\
 We hebben een toetsingsgrootheid nodig die weergeeft hoe ver het
 steekproefgemiddelde $\mean{X}$ afwijkt van de verwachting onder $\HO$.
 
 De $t$-toets maakt daarvoor gebruik van 
 $$
-t = \frac{\mean{X} - \mu_0}{\se{X}}.
+t = \frac{\mean{X} - \mu_0}{\se{\mean{X}}}.
 $$ {#eq-t-t-test}
 Dit is het verschil tussen het steekproefgemiddelde $\mean{X}$
 en het populatiegemiddelde volgens $\HO$, 
@@ -181,9 +181,9 @@ kunnen we bereken:
 $$\mean{X} = 36{,}5\degree\text{C},$$
 $$s_X = 0{,}512\degree\text{C},$$
 $$n = 10,$$
-$$\se{X} = s/\sqrt{n} = 0{,}512\degree\text{C} / \sqrt{10} = 0{,}162\degree\text{C},$$
+$$\se{\mean{X}} = s/\sqrt{n} = 0{,}512\degree\text{C} / \sqrt{10} = 0{,}162\degree\text{C},$$
 en dus
-$$t = \frac{\mean{X} - \mu_0}{\se{X}} = \frac{36{,}5 - 37}{0{,}162} = -3{,}09.$$
+$$t = \frac{\mean{X} - \mu_0}{\se{\mean{X}}} = \frac{36{,}5 - 37}{0{,}162} = -3{,}09.$$
 
 We kunnen ook de bijbehorende kansverdeling plotten.
 Dat is de $t$-verdeling met $\df = n - 1 = 9$ vrijheidsgraden.
@@ -255,6 +255,7 @@ daadwerkelijk hebben gevonden.
 Dat komt overeen met de oppervlakte van 
 de staarten van de verdeling die in @fig-t-df9-staarten hieronder 
 met paars zijn aangegeven.
+(Het is maar een klein oppervlak---het is daardoor misschien lastig te zien!)
 
 ```{r}
 #| label: fig-t-df9-staarten
@@ -360,56 +361,181 @@ ggplot(
   theme_minimal()
 ```
 
-Om deze oppervlakte te berekenen, maken we gebruik van de functie `pt()` in R,
-voor de cumulatieve verdeling van de $t$-verdeling.
-De kans in de rechterstaart van de verdeling wordt gegeven door
+Om deze oppervlakte te berekenen, 
+kun je gebruik maken van de functie `pt()` in R.
+Deze functie geeft de cumulatieve verdeling van de $t$-verdeling.
+(In @exr-kansen-normaal heb je de functie `pnorm()` al gebruikt,
+die hetzelfde doet voor de normale verdeling.)
+
+Bijvoorbeeld, `pt(0, df = 9)` geeft de kans op een waarde van $t$
+kleiner dan 0 volgens de $t$-verdeling met 9 vrijheidsgraden.
+(Het antwoord moet 0,5 zijn, omdat alle $t$-verdelingen symmetrisch zijn
+rond 0.)
+
+De oppervlakte in de paarse linkerstaart van de verdeling kan worden berekend met
 ```{r}
-#| eval: false
-t <- 3.087701
-1 - pt(t, df = 9)
+t <- -3.087701
+n <- 10
+pt(-abs(t), df = n - 1)
 ```
-Om ook de linkerstaart mee te rekenen, moeten we die kans twee keer nemen.
+De functie `abs(t)` haalt het minteken weg van $t$ zodat de waarde positief wordt.
+
+Om ook de rechterstaart mee te rekenen, moeten we die kans verdubbelen.
 Dat levert op:
 ```{r}
-t <- 3.087701
-P <- 2*(1 - pt(t, df = 9))
+P <- 2 * pt(-abs(t), df = n - 1)
 P
 ```
+Dat is dus de $P$-waarde waarnaar we op zoek waren!
 
+**Stap 6: Trek je Conclusies**\
+Nu we de $P$-waarde hebben, kunnen we onze conclusies trekken.
 
-**Stap 6: Trek je Conclusies**
+De $P$-waarde van 0,013 is behoorlijk klein.
+Omdat deze kleiner is dan 0,05 wordt deze "statistisch significant" genoemd.
+De $P$-waarde zegt:
+Als $\HO$ waar is (en het ware populatiegemiddelde is dus $37\degree$C),
+dan komt zo'n extreme waarde (of nog extremer) voor bij iets meer dan 1 op de 100
+steekproeven.
+Dat is een sterke indicatie dat de standaardwaarde van $37\degree$C
+aan de hoge kant is.
 
+### De stappen voor de $t$-toets voor één steekproef in het kort
 
+We vatten de stappen van de $t$-toets nog even kort samen:
 
+::: {.callout-important}
+## De $t$-toets voor één steekproef in 6 stappen
 
-:::{#exr-t-toets-hand}
+We zijn geïnteresseerd in een continue variabele $X$
+en willen de hypothese toetsen dat 
+het populatiegemiddelde van $X$ gelijk is aan 
+een bepaalde waarde $\mu_0$.
+We nemen daarom een steekproef van $n$ eenheden.
 
-## bla
+Dan zijn dit de stappen van de toets:
 
-handmatig t-toets
+1.  **Kies het kansmodel:** het Normale Model.
+2.  **Formuleer de hypotheses:**\
+    $\HO:\qquad \mu_X = \mu_0$,\
+    $\HA:\qquad \mu_X \neq \mu_0$.
+3.  **Kies de toetsingsgrootheid:**
+    $t = \cfrac{\mean{X} - \mu_0}{\se{\mean{X}}}$.
+    
+    **Verdeling van de toetsingsgrootheid onder $\HO$:**\
+    De $t$-verdeling met $\df = n - 1$.
+4.  **Bereken de toetsingsgrootheid op basis van de steekproef.**
+    Achtereenvolgens: $\mean{X}$, $s_X$, $\se{\mean{X}}$, en dan $t$.
+5.  **Bereken de $P$-waarde:** Gebruik R.
+    ```{r}
+    P <- 2 * pt(-abs(t), df = n - 1)
+    ```
+6.  **Trek je conclusies.**
 
 :::
 
-### De $t$-toets helemaal met R uitvoeren
+::: {#exr-kippeneieren .mixedexr}
+## Kippen-eieren
+<br>
+
+Een kippenboerderij beweert dat de geleverde eieren gemiddeld 52 g
+wegen. Wij geloven dat niet zomaar en besluiten onderzoek te doen.
+
+We wegen vier eieren, met de volgende gewichten: 51,7 g; 50,3 g; 48,4 g; en 51,9 g. 
+Gebruik het stappenplan hierboven om de volledige $t$-toets uit te voeren.
+:::
+
+### De $t$-toets helemaal door R laten uitvoeren
+
+Hierboven hebben we de hele $t$-toets handmatig uitgevoerd,
+en R enkel gebruikt om de $P$-waarde op te vragen.
+Het is efficiënter om de hele berekening door R te laten uitvoeren.
+Het script zou er zo uit kunnen zien:
 
 ```{r}
-temp <- c(35.7, 35.8, 37.0, 36.5, 37.1, 36.4, 36.1, 36.8, 36.5, 37.1)
-n <- length(temp)
-m <- mean(temp)
-s <- sd(temp)
+temperaturen <- c(35.7, 35.8, 37.0, 36.5, 37.1, 36.4, 36.1, 36.8, 36.5, 37.1)
 mu0 <- 37
+
+n <- length(temperaturen)
+m <- mean(temperaturen)
+s <- sd(temperaturen)
 sem <- s/sqrt(n)
-t <- (m - 37)/ sem
-P <- 2*(1 - pt(abs(t), df = n -1))
+t <- (m - mu0) / sem
+P <- 2*pt(-abs(t), df = n -1)
 P
 ```
 
+Maar het kan nog veel gemakkelijker. 
+De functie `t.test()` de we in @sec-schatten 
+ook hadden gebruikt om het 95%-betrouwbaarheidsinterval uit te rekenen,
+voert de hele berekening in één keer uit:
+
 ```{r}
-temp <- c(35.7, 35.8, 37.0, 36.5, 37.1, 36.4, 36.1, 36.8, 36.5, 37.1)
-t.test(temp, mu = 37)
+t.test(temperaturen, mu = 37)
 ```
 
-### Relatie met betrouwbaarheidsinterval
+Merk op dat we de functie nu moeten vertellen wat onze nulhypothese is;
+dat gebeurt met het argument `mu = 37`.
+
+Het is belangrijk om even stil te staan bij de uitvoer van deze functie.
+We doen dat in de volgende opgave.
+
+::: {#exr-uitvoer .Rexr}
+
+## De uitvoer van de funtie `t.test()` bij één steekproef
+<br>
+
+a.  Neem de code hierboven, waarin de $t$-test wordt uitgevoerd,
+    over in een script en voer het uit.
+    
+Bestudeer de uitvoer.
+
+b.  Waar in de uitvoer vind je het steekproefgemiddelde?
+
+c.  Waar vind je de waarden van $t$, df, en de $P$-waarde?
+    Komen die overeen met onze handmatige berekeningen hierboven?
+
+d.  De functie geeft ook het 95%-BHI. Wat zijn de onder- en bovengrens?
+
+:::
+
+
+### Relatie tussen toetsen en betrouwbaarheidsintervallen
+
+In @sec-schatten hebben we het uitgebreid gehad over
+betrouwbaarheidsintervallen.
+Je hebt geleerd dat een 95%-BHI een interval is 
+waarbinnen de ware parameter zich met 95% zekerheid bevindt.
+Dat wil zeggen: als $\HO$ waar is,
+dan zou $\mu_0$ in 95% van de keren dat we een steekproef trekken
+en het 95%-BHI uitrekenen 
+binnen het BHI moeten liggen,
+en maar 5% van de keren daarbuiten.
+
+Als we dus vinden dat $\mu_0$ buiten het 95%-BHI ligt,
+dan kunnen we concluderen dat het waargenomen verschil
+tussen $\mean{X}$ en $\mu_0$ zo extreem is
+dat het onder $\HO$ 
+in minder dan 5% van de gevallen plaatsvindt.
+*Dat betekent dat de $P$-waarde kleiner moet zijn dan 0,05.*
+
+Er is dus een nauw verband tussen het 95%-BHI en de $P$-waarde:
+
+:::{.callout-important}
+
+## Verband tussen 95%-BHI en $P$-waarde
+
+Neem een steekproef en bereken het 95%-BHI voor $\mu_X$.
+
+-   Als $\mu_0$ buiten het 95%-BHI valt, 
+    dan moet $P$ kleiner zijn dan 0,05
+    en is de afwijking dus sowieso "statistisch significant".
+
+-   Als $\mu_0 binnen het 95%-BHI valt,
+    dan moet $P$ groter zijn dan 0,05
+    en is de afwijking dus sowieso niet "statistisch significant".
+
+:::
 
 ::: {#exm-t-toets}
 
@@ -469,9 +595,237 @@ t.test(massa_manacus$Weight)
 
 ## De $t$-toets voor twee onafhankelijke steekproeven {#sec-t-toets-twee-steekproeven}
 
-### Stap 1: De nulhypothese
+De $t$-toets voor één steekproef was bedoeld om te toetsen
+of het populatiegemiddelde van een variabele $X$
+afwijkt van een specifieke waarde $\mu_0$.
 
-### Stap 2: Het statistische model
+We gaan het nu hebben over een andere situatie, 
+waarin we willen
+onderzoeken of de populatiegemiddelden van *twee* populaties 
+van elkaar *verschillen*.
+Bijvoorbeeld,
+we zouden ons kunnen afvragen of bacteriën mét een bepaalde mutatie
+gemiddeld resistenter zijn voor antibiotica dan bacteriën zonder die mutatie.
+Of, of de gemiddelde hoeveelheid fijnstof aangetroffen in woningen
+verschilt tussen IJmond en Amsterdam.
+
+Om de twee populaties te vergelijken,
+nemen we een steekproef uit populatie 1 
+en een steekproef uit populatie 2.
+Dat levert twee *steekproefgemiddelden* op, 
+die waarschijnlijk van elkaar zullen verschillen.
+De vraag is vervolgens of we daaruit kunnen concluderen
+dat de *populatiegemiddelden* van beide populaties van elkaar verschillen,
+of dat de verschillen in het steekproefgemiddelde 
+ook verklaard kunnen worden door toevallige steekproevenvariabiliteit.
+Dat is de taak van de **$t$-toets voor twee onafhankelijke steekproeven**.
+
+We gaan deze toets weer uitleggen door de zes stappen één voor éen door te lopen.
+
+**Stap 1: Kies een statistisch model.**\
+Bij de $t$-toets voor één steekproef
+gingen we uit van het Normale Model.
+Dat doen we nu weer, maar met twee kleine *twists*:
+
+1.  Omdat we nu te maken hebben met twee populaties en twee steekproeven
+    in plaats van één,
+    moeten we aannames maken over beide steekproeven.
+    We nemen daarom aan dat het Normale Model van toepassing is op *beide*
+    steekproeven.
+    Dat wil zeggen dat de variabele $X$ normaal verdeeld is in beide populaties,
+    en dat de waarnemingen in beide steekproeven onafhankelijk
+    uit die normale verdeling getrokken zijn.
+    
+    
+2.  We nemen bovendien aan dat de standaarddeviaties van beide populaties
+    gelijk zijn; we zullen die $\sigma$ noemen.
+    
+    Deze aanname is vaak redelijk en maakt de berekeningen gemakkelijker.
+    Maar, er bestaat ook een versie van de toets die deze aanname niet maakt,
+    en die kan in sommige gevallen dus geschikter zijn;
+    daar komen we in @sec-Welch op terug.
+    
+    De populatiegemiddelden van beide populaties kunnen wél verschillend zijn;
+    we zullen ze $\mu_1$ en $\mu_2$ noemen. 
+    
+Het statistisch model kan dus in het volgende plaatje worden samengevat:
+
+```{r}
+#| label: fig-model-t-test-2-var
+#| fig-cap: "Illustratie van het statistisch model van de $t$-toets voor 2 steekproeven. 
+#| Aangenomen wordt dat beide populaties normaal verdeeld zijn, 
+#| met gelijke standaarddeviatie $\\sigma$."
+#| fig-width: 4.5
+#| fig-height: 2.5
+#| out-width: "64%"
+#| echo: false
+#| code-fold: true
+#| warning: false
+
+# Controleer of ggplot2 geladen is, zo niet, laad het pakket
+if (!("ggplot2" %in% .packages())) {
+  library(ggplot2)
+}
+
+# Parameters instellen
+verschil <- 2.2  # Verschuiving t.o.v. normaalverdeling 1
+waarden_x <- seq(-3.5, 3.5, length.out = 350)
+
+# Maak dataframes voor beide normaalverdelingen
+data_normaal_1 <- data.frame(
+  x = waarden_x,
+  kansdichtheid = dnorm(waarden_x)
+)
+
+data_normaal_2 <- data.frame(
+  x = waarden_x + verschil,
+  kansdichtheid = dnorm(waarden_x)
+)
+
+# Hoogte van de pijl bepalen
+hoogte_pijl <- exp(-0.5) / sqrt(2 * pi)
+
+# Plot de normaalverdelingen
+ggplot() +
+  # Voeg eerste normaalverdeling toe
+  geom_line(
+    data = data_normaal_1, aes(x, kansdichtheid),
+    color = "darkorange", linewidth = 1
+  ) +
+  geom_area(
+    data = data_normaal_1, aes(x, kansdichtheid),
+    fill = "darkorange", alpha = 0.4
+  ) +
+  # Voeg tweede normaalverdeling toe
+  geom_line(
+    data = data_normaal_2, aes(x, kansdichtheid),
+    color = "darkorchid", linewidth = 1
+  ) +
+  geom_area(
+    data = data_normaal_2, aes(x, kansdichtheid),
+    fill = "darkorchid", alpha = 0.4
+  ) +
+  # Voeg pijlen toe voor standaarddeviatie
+  geom_segment(
+    aes(x = 0, xend = 1, y = hoogte_pijl, yend = hoogte_pijl),
+    arrow = arrow(length = unit(0.2, "cm")),
+    color = "black", linewidth = 0.7
+  ) +
+  geom_segment(
+    aes(x = verschil, xend = verschil + 1, y = hoogte_pijl, yend = hoogte_pijl),
+    arrow = arrow(length = unit(0.2, "cm")),
+    color = "black", linewidth = 0.7
+  ) +
+  # Voeg annotaties toe
+  annotate(
+    "text", x = 0.5, y = 0.91 * hoogte_pijl,
+    label = expression(italic(sigma)),
+    color = "black", size = 4.5, hjust = 0.5, vjust = 0.5
+  ) +
+  annotate(
+    "text", x = verschil + 0.5, y = 0.91 * hoogte_pijl,
+    label = expression(italic(sigma)),
+    color = "black", size = 4.5, hjust = 0.5, vjust = 0.5
+  ) +
+  annotate(
+    "text", x = 0, y = -0.03,
+    label = expression(mu[1]),
+    color = "black", size = 5
+  ) +
+  annotate(
+    "text", x = verschil, y = -0.03,
+    label = expression(mu[2]),
+    color = "black", size = 5
+  ) +
+  annotate(
+    "segment", x = 0, y = 0, yend = max(data_normaal_1$kansdichtheid),
+    color = "black", linetype = 2
+  ) +
+  annotate(
+    "segment", x = verschil, y = 0, yend = max(data_normaal_2$kansdichtheid),
+    color = "black", linetype = 2
+  ) +
+  # Labels toevoegen
+  labs(
+    x = expression(italic(X)),
+    y = "Kansdichtheid"
+  ) +
+  scale_y_continuous(labels = NULL) + # getallen van y-as weglaten
+  scale_x_continuous(labels = NULL) + # getallen van x-as weglaten
+  # Thema toepassen
+  theme_minimal()
+```
+
+
+**Stap 2: Formuleer de hypotheses.**\
+De sceptische hypothese is in dit geval 
+dat de populatiegemiddelden van beide populaties gelijk zijn.
+Dat wil zeggen:
+
+$\HO:\qquad \mu_1 = \mu_2,$\
+$\HA:\qquad \mu_1 \ne \mu_2.$
+
+
+**Stap 3: Kies de toetsingsgrootheid en bepaal diens verdeling onder $\HO$.**\
+Bij de $t$-toets voor één steekproef
+gebruikten we als toetsingsgrootheid
+de afwijking van $\mean{X}$ van $\mu_0$, relatief
+ten opzichte van de standaardfout van het gemiddelde, $\se{\mean{X}}$.
+Het intuitieve idee daarachter was
+dat we de afwijking van $\mean{X}$ wilden vergelijken
+met de onzekerheid in $\mean{X}$ als gevolg van steekproevenvariabiliteit.
+
+Bij de $t$-toets voor twee steekproeven volgen we dezelfde logica.
+De toetsingsgrootheid die we gaan gebruiken
+moet weer aangeven hoe het verschil dat is aangetroffen tussen de 
+twee steekproefgemiddelden, $\mean{X}_1 - \mean{X}_2$,
+zich verhoudt tot de onzekerheid in dat verschil
+als gevolg van steekproevenvariabiliteit.
+Maar wat is die onzekerheid?
+
+Om die onzekerheid te kunnen kwantificeren,
+moeten we ons voorstellen dat we heel vaak 
+een steekproef nemen uit populatie 1 en uit populatie 2,
+en steeds $\mean{X}_1 - \mean{X}_2$ uitrekenen.
+Dat levert de steekproevenverdeling van het verschil in de gemiddelden op.
+De standaarddeviatie van die verdeling is de standaardfout van $\mean{X}_1 - \mean{X}_2$.
+Deze standaardfout noteren we als $\se{\mean{X}_1 - \mean{X}_2}$.
+
+De toetsingsgrootheid voor de $t$-toets voor twee steekproeven is dus
+$$ t = \frac{\mean{X}_1 - \mean{X}_2}{\se{\mean{X}_1 - \mean{X}_2}}.$$ {#eq-t-twee}
+
+Je kunt de waarde van $\se{\mean{X}_1 - \mean{X}_2}$ zelf berekenen,
+maar de formule is niet zo elegant als voor de standaardfout
+van het gemiddelde, $\se{\mean{X}}$.
+Het werkt als volgt.
+
+-   Eerst berekenen we de standaarddeviaties $s_1$ en $s_2$ van beide steekproeven.
+-   Daarmee berekenen we de **gepoolde steekproefvariantie** $s\ped{p}^2$ met de volgende formule:
+    
+    $$ s\ped{p}^2 = \frac{(n_1 - 1) s_1^2 + (n_1 - 1) s_2^2}{n_1 + n_2 - 2}.$$
+  
+    In deze formule zijn $n_1$ en $n_2$ de steekproefgroottes van beide steekproeven.
+    Merk op dat $s\ped{p}^2$ eigenlijk gewoon een gewogen gemiddelde is tussen 
+    de steekproefvarianties van beide steekproeven,
+    waarbij een grotere steekproef een groter gewicht krijgt.
+-   Tot slot kun je de volgende formule invullen:
+    $$ \se{\mean{X}_1 - \mean{X}_2} = \sqrt{s\ped{p}^2 \left( \frac{1}{n_1} + \frac{1}{n_2}\right)}.$$
+
+Het is goed om deze formules eens bestudeerd te hebben, 
+maar in de praktijk 
+zul je ze niet vaak met de hand uitrekenen; 
+wees blij dat we R hebben...
+
+Nu we weten wat de toetsingsgrootheid is,
+is de volgende stap om te bepalen wat de verdeling van 
+de toetsingsgrootheid is onder $\HO$.
+Wiskundig kan worden aangetoond dat de $t$ van @eq-t-twee
+onder $\HO$ een $t$-verdeling volgt met $\df = n_1 + n_2 - 2$ vrijheidsgraden.
+
+
+
+
+
 
 ```{r}
 #| code-fold: true
@@ -573,126 +927,6 @@ ggplot(data, aes(x = x, y = y)) +
     panel.grid.minor.x = element_blank()
   )
 ```
-
-```{r}
-#| label: fig-model-t-test-2-var
-#| fig-cap: "CAPTION"
-#| fig-width: 4.5
-#| fig-height: 3.5
-#| out-width: "64%"
-#| echo: false
-#| code-fold: true
-#| warning: false
-
-# Controleer of ggplot2 geladen is, zo niet, laad het pakket
-if (!("ggplot2" %in% .packages())) {
-  library(ggplot2)
-}
-
-verschil <- 2.2 # Verschuiving t.o.v. normaalverdeling 1
-
-# Definieer de standaardnormale verdeling
-x1 <- seq(-3.5, 3.5, length.out = 350)
-data1 <- data.frame(x1 = x1, y1 = dnorm(x1))
-
-# Definieer de standaardnormale verdeling
-x2 <- seq(-3.5, 3.5, length.out = 350)
-data2 <- data.frame(x2 = x2 + verschil, y2 = dnorm(x2))
-
-normaalGeneriek <- 
-  # Plot maken
-  ggplot() +
-  geom_line(data = data1, aes(x1, y1), color = "#e8601d", linewidth = 1) + # Curve van de standaardnormale verdeling
-  geom_area(data = data1, aes(x1, y1), fill = "#e8601d", alpha = 0.4) +
-  geom_line(data = data2, aes(x2, y2), color = "darkorchid", linewidth = 1) + # Curve van de standaardnormale verdeling
-  geom_area(data = data2, aes(x2, y2), fill = "darkorchid", alpha = 0.4) +
-  scale_y_continuous(labels = NULL) + # getallen van y-as weglaten
-  scale_x_continuous(labels = NULL) + # getallen van x-as weglaten
-  labs(
-    y = "Kansdichtheid", 
-    x = expression(italic(X))
-  ) + # Labels voor de assen
-  theme_minimal()
-
-# Hoogte van de pijl bepalen
-h <- exp(-0.5) / sqrt(2 * pi)
-
-pijl1 <- geom_segment(
-    aes(x = 0, xend = 1, y = h, yend = h), 
-    arrow = arrow(length = unit(0.2, "cm")), 
-    color = "black", 
-    linewidth = 0.7
-  ) # Pijl voor standaarddeviatie verdeling 1
-pijl2 <- geom_segment(
-    aes(x = verschil, xend = verschil + 1, y = h, yend = h), 
-    arrow = arrow(length = unit(0.2, "cm")), 
-    color = "black", 
-    linewidth = 0.7
-  ) # Pijl voor standaarddeviatie verdeling 2
-
-normaalGeneriek + pijl1 + pijl2 +
-  annotate(
-    "text", 
-    x = 0.5, 
-    y = 0.95 * h, # Use the variable h to scale the y-coordinate
-    label = expression(italic(sigma)[1]), # Use expression() for mathematical notation
-    color = "black", 
-    size = 5, 
-    hjust = 0.5, 
-    vjust = 0.5
-  ) +
-  annotate(
-    "text", 
-    x = verschil + 0.5, 
-    y = 0.95 * h, # Use the variable h to scale the y-coordinate
-    label = expression(italic(sigma)[2]), # Use expression() for mathematical notation
-    color = "black", 
-    size = 5, 
-    hjust = 0.5, 
-    vjust = 0.5
-  ) +
-  annotate(
-    "text",
-    x = 0,
-    y = -0.01,
-    label = expression(mu[1]),
-    color = "black",
-    size = 5
-  ) +
-  annotate(
-    "text",
-    x = verschil,
-    y = -0.01,
-    label = expression(mu[2]),
-    color = "black",
-    size = 5
-  ) +
-  annotate(
-    "segment",
-    x = 0,
-    y = 0,
-    yend = max(data1$y1),
-    color = "black",
-    linetype = 2
-  ) +
-  annotate(
-    "segment",
-    x = verschil,
-    y = 0,
-    yend = max(data2$y2),
-    color = "black",
-    linetype = 2
-  )
-  
-```
-
-### Stap 3: De toetsingsgrootheid
-
-### Stap 4: Kansverdeling onder $\HO$
-
-### Stap 5: Bepaal de $P$-waarde
-
-### Stap 6: Conclusies
 
 
 ## De $t$-toets voor gepaarde steekproeven
@@ -1033,23 +1267,7 @@ Alleen aannames en toepassing.
 
 ## Opgaven
 
-::: {.todo-box}
-Rutger: 
-Ik heb de uitwerking van deze opgave in R gedaan in de antwoorden. Naar d moet nog gekeken worden gezien we de tabel niet hebben. 
-:::
 
-::: {#exr-kippeneieren}
-We veronderstellen dat het gewicht van kippeneieren normaal verdeeld is. Een poelier beweert dat zijn eieren gemiddeld 52 g
-wegen. Wij geloven dat niet zomaar.
-**a.** We wegen daarom aselect één van zijn eieren; het weegt 51,7 g. Bereken het gemiddelde en de variantie van deze kleine steekproef.
-
-**b.** We wegen nog drie eieren, met de volgende gewichten: 50,3 g; 48,4 g; en 51,9 g. (Je hebt nu dus vier metingen.) Formuleer een nulhypothese en een alternatieve hypothese. Welke statistische toets zou je willen uitvoeren? Wat is de toetsingsgrootheid en wat is zijn verdeling onder de nulhypothese? Wat is de kritieke waarde van de toetsingsgrootheid? Teken het verwerpingsgebied. (Een vector met de metingen: `data <- c(51.7, 50.3, 48.4, 51.9)`)
-
-
-**c.** Voer de toets uit. Zou je $H_0$ op grond van deze waarnemingen verwerpen?
-
-**d.** Gebruik Tabel C uit W&S om de overschrijdingskans te schatten.
-:::
 
 ::: {.todo-box}
 Madelon en/of Yannick:

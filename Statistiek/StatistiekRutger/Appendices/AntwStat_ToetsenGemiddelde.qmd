@@ -1,51 +1,68 @@
 ## Antwoorden @sec-toetsen-gemiddelden
 
-
-@exr-kippeneieren
-
-**a.** Het gemiddelde is 51,7 g. De variantie kun je niet berekenen: daar heb je tenminste twee waarnemingen
-voor nodig! Dat is ook eigenlijk wel logisch. De variantie van een steekproef is immers een schatter voor
-de variantie van de populatie, en een enkele waarneming bevat geen informatie over de spreiding in die populatie
-
-**b.** Onze nulhypothese is: $H_0: \mu=52$ g. Onze alternatieve hypothese is dat dit niet klopt: $H_A: \mu\neq 52g$. 
-
-We willen een t-toets voor één steekproef uitvoeren. De toetsingsgrootheid is: 
-$$t = \frac{\mean{X} - \mu_0}{\se{\mean{X}}}$$
-De toetsingsgrootheid $t$ is verdeeld volgens de t-verdeling met $n-1=3$ vrijheidsgraden. De kritieke waarde is dus 3,18 (zie de code hieronder). 
+### @exr-kippeneieren
 
 ```{r}
-alpha <- 0.05 #95% interval, dus alpha is 0.05
-t_kritiek <- qt(1 - alpha/2, df = 3)
-t_kritiek
+#| echo: false
+#| output: false
+gewicht_eieren <- c(51.7, 50.3, 48.4, 51.9)
+mu0 <- 52
+n <- length(gewicht_eieren)
+m <- mean(gewicht_eieren)
+s <- sd(gewicht_eieren)
+sem <- s/sqrt(n)
+t <- (m - mu0)/ sem
+P <- 2*(1 - pt(abs(t), df = n -1))
 ```
 
-**c.** We berekenen $t$, met R en de formules voor $\se{\mean{X}}$ en $t$: 
 
-```{r}
-#Onze data
-data <- c(51.7, 50.3, 48.4, 51.9)
+1.  **Kansmodel:** het Normale Model.
+2.  **Hypotheses:**\
+    $\HO:\qquad \mu_X = 52\unit{g}$,\
+    $\HA:\qquad \mu_X \neq 52\unit{g}$.
+3.  **Toetsingsgrootheid:**
+    $t = \cfrac{\mean{X} - 52\unit{g}}{\se{\mean{X}}}$.
+    
+    **Verdeling van $t$ onder $\HO$:**\
+    De $t$-verdeling met $\df = n - 1 = 3$.
+4.  **Bereken de toetsingsgrootheid op basis van de waarnemingen.**
+    Achtereenvolgens: 
+    
+    - $\mean{X} = 50{,}6\unit{g}$, 
+    - $s_X = 1{,}62\unit{g}$, 
+    - $\se{\mean{X}} = 0{,}808\unit{g}$, en dan 
+    - $t = -1{,}76$.
+    
+    De resultaten hierboven zijn afgerond; maar zorg ervoor dat je 
+    altijd met de onafgeronde tussenresultaten doorrekent.
+5.  **$P$-waarde:** Gebruik R.
+    ```{r}
+    P <- 2*pt(-abs(t), df = n - 1)
+    P
+    ```
+6.  **Conclusies:** De $P$-waarde is 0,18. 
+    Dat is geen opvallend kleine waarde; 
+    de waargenomen afwijking van $\mean{X}$ van $\mu_0$ 
+    verwacht je onder $\HO$ bij bijna 1 op de 5 steekproeven van deze grootte.
+    Deze gegevens geven dus geen aanleiding om de claim van het bedrijf
+    in twijfel te trekken.
+    
+    De steekproef was ook wel erg klein; daardoor is de onzekerheid
+    in $\mu_X$ behoorlijk groot.
+    Met een grotere steekproef kunnen we de standaardfout $\se{\mean{X}}$
+    omlaag brengen.
+    Het zou kunnen dat we dan wél een statistisch significante afwijking vinden.
 
-#Waardes berekenen
-X_mean <- mean(data)
-s_X <- sd(data)
-n <- length(data)
+### @exr-uitvoer
 
-#SE berekenen
-SE <- s_X/sqrt(n)
+a.  --
 
-mu_0 <- 52
+b.  Helemaal onderaan staat "Mean of x", met waarde 36,5 (in $\degree$C).
 
-#t brekenen
-t <- (X_mean - mu_0)/SE
-
-t
-
-```
-Als $|t| >  \ct{0{,}05}{2}{(n-1)}$ kunnen we de nulhypothese verwerpen. $|t|  = 1,76 < 3,18 =  \ct{0{,}05}{2}{(n-1)}$, dus $t$ ligt niet in het verwerpingsgebied. Daarom kunnen we op basis van deze warnemingen $H_0$ niet verwerpen. Vooralsnog is er dus geen aanleiding om de poelier te wantrouwen. 
-
-**d.** De waarde van $|t|$ die we gevonden hebben ($|t|  = 1,76$) ligt tussen $\ct{0{,}1}{2}{3}$ en $\ct{0{,}2}{2}{3}$in. We concluderen
-daarom dat $0,1 < 𝑃 < 0,2$. Preciezer kunnen we de
-schatting met behulp van deze tabel niet maken
+c.  Deze drie waarden staan op dezelfde regel; je hebt ze vast gevonden.
+    Na afronden komen deze resultaten precies overeen met onze eigen berekeningen.
+    
+d.  Het BHI loopt van 36,13$\degree$C tot 36,87$\degree$C. Je kunt dit ook schrijven als $(36{,}50\pm 0{,}37)\degree$C.
 
 
 @exr-diastolische-bloeddruk
