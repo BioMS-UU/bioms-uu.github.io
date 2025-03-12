@@ -17,7 +17,7 @@ In het vorige onderdeel heb je geleerd dat diffusie niet altijd patronen vervaag
 
 ![Afbeelding ontleend aan Pearson education (2011)](figuren/action_potential.png){#fig-actpot width="80%" fig-align="center"}
 
-Actiepotentialen zijn kortdurende verandering in de elektrische lading over het membraan van neuronen of hartcellen (zie @fig-actpot). Zonder prikkels is er een rustpotentiaal (fase 1), waarbij de binnenkant van de cel negatiever is geladen dan de buitenkant (onderhouden door de natrium/kalium pomp, die ATP gebruikt om drie natrium naar buiten te pompen en tegelijkertijd twee kalium naar binnen). Kleine fluctuaties van het membraanpotentiaal worden onmiddelijk hersteld tot de rustpotentiaal. Als er echter een groot genoege prikkel is (fase 2), openen er spanningsafhankelijke natriumkanalen, waardoor er door de hogere concentratie van natrium van buiten tov binnenin de cel natrium de cel in stroomt. Nu is er sprake een positieve feedback: de potentiaal neemt nog verder toe en wordt zelfs even positief (de binnenkant van de cel heeft een hogere lading dan de buitenkant). De fase tot dit punt, wordt de depolarisatiefase genoemd (fase 3). Kort na de depolarisatie sluiten de natriumkanalen en openen er spanningsafhankelijke kaliumkanalen. Omdat voor kalium de concentratie in de cel juist hoger is dan daarbuiten stromen kaliumionen juist de cel uit, waardoor de binnenkant van de cel weer negatiever wordt. Dit heet repolarisatie (fase 4). Na een kleine doorschieter naar beneden (hyperpolarisatie, fase 5), herstelt de rustpotentiaal. 
+Actiepotentialen zijn kortdurende veranderingen in de elektrische lading over het membraan van neuronen of hartcellen (zie @fig-actpot). Zonder prikkels is er een rustpotentiaal (fase 1), waarbij de binnenkant van de cel negatiever is geladen dan de buitenkant (onderhouden door de natrium/kalium pomp, die ATP gebruikt om drie natrium naar buiten te pompen en tegelijkertijd twee kalium naar binnen). Kleine fluctuaties van het membraanpotentiaal worden onmiddelijk herstelt tot de rustpotentiaal. Als er echter een groot genoege prikkel is (fase 2), openen er spanningsafhankelijke natriumkanalen, waardoor er door de hogere concentratie van natrium van buiten tov binnenin de cel natrium de cel in stroomt. Nu is er sprake een positieve feedback: de potentiaal neemt nog verder toe en wordt zelfs even positief (de binnenkant van de cel heeft een hogere lading dan de buitenkant). De fase tot dit punt, wordt de depolarisatiefase genoemd (fase 3). Kort na de depolarisatie sluiten de natriumkanalen en openen er spanningsafhankelijke kaliumkanalen. Omdat voor kalium de concentratie in de cel juist hoger is dan daarbuiten stromen kaliumionen juist de cel uit, waardoor de binnenkant van de cel weer negatiever wordt. Dit heet repolarisatie (fase 4). Na een kleine doorschieter naar beneden (hyperpolarisatie, fase 5), herstelt de rustpotentiaal. 
 
 ## Hodgkin-Huxley model voor actiepotentialen
 
@@ -76,6 +76,7 @@ s <- c(V=0.5,m=0.06,h=0.16,n=0.3)
 par(mfrow=c(3,2), mar=c(2.5,1,1.5,1))
 run(tmax=60,ymin=30,ymax=-120,tstep=0.1,show=c("V"),ylab="V",xlab="Time (ms)")
 title("Potentiaal (geen prikkel)")
+abline(h=-5,lty=3)
 run(tmax=60,ymin=0,ymax=1,tstep=0.1,show=c("h","m","n"),ylab="V",xlab="Time (ms)")
 title("Toestand Na+/K+ kanalen")
 
@@ -252,7 +253,7 @@ Samengevat laat dit simpele 2D vectorveld alle hierboven genoemde eigenschappen 
 
 ## Actiepotentialen als PDE
 
-In het vorige hoofdstuk hebben we diffusie toegevoegd aan ODEs zodat deze PDEs worden (of platter uitgedrukt hebben we "differentiaalvergelijkingen in hokjes gestopt"). Nogmaals, met PDEs kunnen we naast veranderingen over de tijd, ook veranderingen door de ruimte bestuderen. We zagen dat dit mooie patronen op kan leveren. Wat gebeurt er als we de ODEs van het Fitzhugh-Nagumo nemen, en deze in een PDE bestuderen? 
+In het vorige hoofdstuk hebben we diffusie toegevoegd aan ODEs zodat deze PDEs worden (of platter uitgedrukt hebben we "differentiaalvergelijkingen in hokjes gestopt"). Nogmaals, met PDEs kunnen we naast veranderingen over de tijd, ook veranderingen door de ruimte bestuderen. We zagen dat dit mooie patronen op kan leveren. Wat gebeurt er als we de ODEs van het Fitzhugh-Nagumo model nemen, en deze in een PDE bestuderen? 
 
 Dit zou een soort simulatie kunnen zijn van een axon, of van hartweefsel waarbij het actiepotentiaal zorgt voor samentrekking van de hartspier. Om dit te laten zien, geeft de onderstaande simulatie aan wat er gebeurt in een "weefsel" van 60 hoog en 150 lang. In het begin is de linker kolom sterk geprikkeld ($V=1$), en de rest van het weefsel in rust ($V=0,W=0$). 
 
@@ -271,7 +272,7 @@ Dit zou een soort simulatie kunnen zijn van een axon, of van hartweefsel waarbij
 ...
 :::
 
-Zoals je ziet vormt er zich een golf van $V$ (rood), die van links naar rechts doorgegeven wordt door het weefsel. Daarachter volgt bredere band van $W$, dat er voor zorgt dat het actiepotentiaal niet meteen opnieuw geactiveerd kan worden. Dit kan je zelf testen: met de muis kun je prikkels geven aan het medium. Als je vóór een golf een prikkel geeft ontstaat er een nieuwe golf voor de bestaande golf. Deze golf gaat twee kanten op en annihileert de oorspronkelijke golf! Als je echter vlak ná een bestaande golf probeert het weefsel een prikkel te geven, dooft deze meteen uit!
+Zoals je ziet vormt er zich een golf van $V$ (rood), die van links naar rechts doorgegeven wordt door het weefsel. Daarachter volgt een bredere band van $W$, dat er voor zorgt dat het actiepotentiaal niet meteen opnieuw geactiveerd kan worden. Dit kan je zelf testen: met de muis kun je prikkels geven aan het medium. Als je vóór een golf een prikkel geeft ontstaat er een nieuwe golf voor de bestaande golf. Deze golf gaat twee kanten op en annihileert de oorspronkelijke golf! Als je echter vlak ná een bestaande golf probeert het weefsel een prikkel te geven, dooft deze meteen uit!
 
 ## Ophopingen, blokkades, en spiralen {#sec-spiral}
 
@@ -349,7 +350,7 @@ De simulaties van hartritmestoornissen lijken wellicht een beetje oversimplistis
 
 ## Exciteerbare media en andere type golven
 
-Het bovenstaande systeem van actie-potentialen in een weefsel is deel van een klasse systemen genaamd exciteerbare media (*excitable media*). Exciteerbare media hebben devolgende kenmerken: 
+Het bovenstaande systeem van actie-potentialen in een weefsel is deel van een klasse systemen genaamd exciteerbare media (*excitable media*). Exciteerbare media hebben de volgende kenmerken: 
 
 * Er is een drempelwaarde, 
 * Door een positieve feedback, is er een *all-or-nothing* respons als de drempelwaarde wordt bereikt
@@ -484,7 +485,7 @@ c. Teken de hoeveelheid afgebrand bos als functie van de boom-dichtheid. Leg de 
 d. Wat zou je aanraden om ernstige bosbranden te voorkomen?
 e. Bomen planten zich ook voort. Wat denk je dat er kan gebeuren als de afgebrande bomen na een tijdje weer vruchtbare grond voor nieuwe bomen vormt? 
 
-Brand is meestal een heel snel proces ten opzichte van de voortplanting van bomen. Bestudeerd devolgende simulatie:
+Brand is meestal een heel snel proces ten opzichte van de voortplanting van bomen. Bestudeer de volgende simulatie:
 
 ::: {.content-visible when-format="html"}
 ```{=html}
@@ -499,7 +500,7 @@ title="Simulation"></iframe>
 ...
 :::
 
-f. Is brand een groter of een kleine probleem als planten zich snel voort kunnen planten? 
+f. Is brand een groter of een kleiner probleem als planten zich snel voort kunnen planten? 
 
 :::
 
@@ -507,7 +508,7 @@ f. Is brand een groter of een kleine probleem als planten zich snel voort kunnen
 
 | Nederlands              | Engels                    | Beschrijving |
 |------------------|--------------------|-----------------------------------|
-| Exciteerbare media | Exctiable media | Systemen waarin een stimulus een lokale reactie verzaken die zich vervolgens kan verspreiden, zoals in zenuwcellen of chemische reacties. Een belangrijke eigenschap is een refractaire periode waardoor de golven in één richting propageren.
+| Exciteerbare media | Exctiable media | Systemen waarin een stimulus een lokale reactie veroorzaakt die zich vervolgens kan verspreiden, zoals in zenuwcellen of chemische reacties. Een belangrijke eigenschap is een refractaire periode waardoor de golven in één richting propageren.
 | Virtueel experimenteren | Virtual experimentation | Experimenten uitvoeren a.d.h.v. computersimulaties in plaats van in echte (biologische) systemen. 
 :  {.striped .hover}
 
