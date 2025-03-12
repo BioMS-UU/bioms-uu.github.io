@@ -4,16 +4,13 @@
 
 In het vorige hoofdstuk hebben we de basisbegrippen en -regels besproken
 voor het rekenen met kansen.
-In dit hoofdstuk bespreken we *kansverdelingen*,
+In dit hoofdstuk introduceeren we *kansverdelingen*,
 een begrip dat in de rest van het boek een grote rol speelt.
 
-## Wat zijn kansverdelingen?
+## Wat zijn kansverdelingen? {#sec-wat-zijn-kansverdelingen}
 
 We hebben het in het vorige hoofdstuk vaak gehad
-over het werpen van een dobbelsteen.
-Als goede dobbelsteen eerlijk is en op de juiste manier 
-wordt gegooid kunnen we aannemen dat alle uitkomsten 
-even waarschijnlijk zijn.
+over het werpen van een eerlijke dobbelsteen.
 We kunnen de kansen weergeven in een grafiek:
   
 ```{r}
@@ -68,7 +65,7 @@ Stel je nu voor dat het kansexperiment bestaat
     zeg,
     een blauwe en een rode.
 Deze keer zijn we geïnteresseerd in de som van het aantal ogen.
-De kansruimte is nu de verzameling van getallen van 2 tot 12.
+De kansruimte is nu de verzameling van de gehele getallen van 2 tot 12.
 Het is gemakkelijk te zien dat de verschillende uitkomsten 
   nu niet meer even waarschijnlijk zijn.
 Er is maar één manier om de uitkomst 2 te krijgen,
@@ -80,7 +77,7 @@ Je zult met twee dobbelstenen dus veel vaker 7 gooien dan 2.
 
 We gaan uit van een kansmodel waarin de uitkomsten van beide dobbelstenen
 onafhankelijk zijn en beide dobbelstenen eerlijk zijn.
-De kunnen we de kansen weer uitrekenen en in een grafiek laten zien:
+Dan  kunnen we de kansen weer uitrekenen en in een grafiek laten zien:
 
 ```{r}
 #| code-fold: true
@@ -133,10 +130,10 @@ verdelingTweeDobbelstenen(kleur)
 
 ```
 
-De manier waarop kansen over alle mogelijke uitkomsten verdeeld zijn
+De manier waarop kansen over alle mogelijke uitkomsten verdeeld zijn,
 wordt de **kansverdeling** (*probability distribution*) genoemd.
 Zowel @fig-uniform-dobbelsteen als @fig-kansverdeling-twee-dobbelstenen 
-geven dus ieder een kansverdeling weer.
+geven dus een kansverdeling weer.
 
 ::: {.callout-tip}
 
@@ -155,7 +152,7 @@ Dat betekent dat je een kansverdeling kunt interpreteren
 :::
 
 ::: {#exr-munten .pepexr}
-## De kansverdeling van het aantal koppen
+## De kansverdeling van het aantal keer "kop"
 <br>
 
 Stel dat we twee munten gooien.
@@ -173,13 +170,13 @@ We kruisen twee heterozygote zoogdieren met genotype `aA`.
 Om de kansen op de verschillende genotypes `aa`, `aA` en `AA` in de nakomelingen
 in te schatten, maken we gebruik van een simpel model:
 
-- Iedere ouder geeft met gelijke kans `a` of `A` aan diens geslachtscellen mee.
+- Iedere ouder geeft met gelijke kans `a` of `A` aan de geslachtscellen mee.
 - Het allel heeft geen invloed op de kans op conceptie.
 - Het genotype heeft geen invloed op het succes van de zwangerschap.
 
 a.  Wat is de kans dat een nakomeling genotype `aa` heeft?
 b.  Wat is de kans dat een nakomeling genotype `aA` heeft?
-c.  Wat is de kans dat een nakomeling genotype `AA` heeft.
+c.  Wat is de kans dat een nakomeling genotype `AA` heeft?
 d.  Wat is de relatie van deze opgave met @exr-munten?
 
 :::
@@ -190,15 +187,14 @@ In @sec-terminologie heb je verschillende termen geleerd
 waarmee je een verdeling kunt beschrijven:
 **symmetrisch** en **scheef**, **klokvormig**, **uniform**, **unimodaal** en 
 **bimodaal**.
-Die woorden kunnen net zo goed gebruikt woorden voor het beschrijven van een kansverdeling.
+Die woorden kunnen net zo goed gebruikt worden voor kansverdelingen.
 De kansverdeling van @fig-uniform-dobbelsteen is uniform;
 die van @fig-kansverdeling-twee-dobbelstenen is symmetrisch en unimodaal.
 
 ## Kansen als oppervlakten onder de grafiek van de kansverdeling
 
-We kijken nog even terug naar de kansverdeling 
-    voor het totaal aantal ogen bij twee dobbelstenen.
-
+Kijk nog eens terug naar de kansverdeling 
+voor het totaal aantal ogen bij het gooien met twee dobbelstenen (@fig-kansverdeling-twee-dobbelstenen).
 Stel dat we willen weten wat de kans is
     dat het aantal ogen groter is dan 7
     maar kleiner dan 11, oftewel dat
@@ -212,7 +208,7 @@ Omdat de verschillende uitkomsten $X = 8$, $9$ en $10$ elkaar uitsluiten
 $$ \pr{7 < X < 11}  = \pr{X = 8} + \pr{X = 9} + \pr{X = 10}. $$ {#eq-som8_9_10}
 
 In de grafiek van de kansverdeling (@fig-kansverdeling-twee-dobbelstenen)
-    is de kans op een uitkomst
+    was de kans op een uitkomst
     weergegeven als de oppervlakte van de bijbehorende staaf.
 De kans $\pr{7 < X < 11}$ 
     komt dus overeen met de totale oppervlakte van de staven
@@ -235,11 +231,13 @@ verdelingTweeDobbelstenen(kleur)
 
 ```
 
-In het algemeen geldt dat de kans dat de uitkomst binnen een bepaald interval valt,
-gelijk is aan de totale oppervlakte van de staven die horen bij dit interval.
+In het algemeen geldt: de kans dat de uitkomst binnen een bepaald interval valt,
+is gelijk aan de totale oppervlakte van de staven die horen bij dit interval.
 
 In dit voorbeeld is de kansvariabele discreet. 
-We zullen hieronder zien dat voor kansen van continue variabelen iets vergelijkbaars geldt.
+We zullen straks zien dat ook voor continue variabelen geldt
+dat de kans op een waarneming in een bepaald interval
+gegeven is door de oppervlakte "onder" de grafiek.
     
 ## De cumulatieve kansverdeling
     
@@ -247,14 +245,9 @@ De **cumulatieve kansverdeling** $F_X(x)$ van kansvariabele $X$
   is de functie die aangeeft wat de kans is dat de uitkomst kleiner of gelijk is 
   aan de waarde $x$:
 $$ F_X(x) = \pr{X\le x}. $$ {#eq-cumverdeling}
-Dit zou je bekend moeten voorkomen,
-  want in @sec-cumul hebben we de cumulatieve verdeling 
-  van een variabele besproken.
-Het verschil is dat we het nu over kansverdelingen hebben,
-  niet over een rij waarnemingen van een variabele.
 @Fig-cumulverdeling-twee-dobbelstenen is een voorbeeld.
 Dat is de cumulatieve kansverdeling die hoort bij
-  de kansverdeling in @fig-kansverdeling-twee-dobbelstenen
+  de kansverdeling in @fig-kansverdeling-twee-dobbelstenen,
   voor het totaal aantal ogen van twee dobbelstenen.
 De cumulatieve verdeling maakt in dit geval sprongen omdat de uitkomst 
   alleen een geheel aantal ogen kan zijn.
@@ -370,7 +363,7 @@ oneindig veel mogelijke uitkomsten.
 (Om precies te zijn, *onaftelbaar oneindig*![^onaftelbaar])
 Tussen elke twee getallen die je kiest
 bestaan namelijk altijd weer andere getallen.
-Bij de meeste kansverdelingen van continue kansvariabelen
+Bij kansverdelingen van continue kansvariabelen
 is de kans op iedere *specifieke* uitkomst daarom 0.
 Bijvoorbeeld, de kans dat een willekeurig gekozen persoon
   een lichaamslengte heeft van 180,00... cm, 
@@ -392,9 +385,7 @@ Bijvoorbeeld, de kans dat een willekeurig gekozen persoon
 Bij continue variabelen zijn we daarom niet geïnteresseerd
 in de kans op een specifieke uitkomst,
 maar in de kans dat de uitkomst binnen een bepaald *interval* valt.
-Stel bijvoorbeeld dat we weer kijken
-naar de lichaamslengte van een willekeurig persoon.
-De kans dat deze lengte
+De kans dat de lichaamslengte van een willekeurig persoon
 tussen 170 en 182cm ligt
 is wél groter dan 0.
   
@@ -407,7 +398,7 @@ Toch mogen we de waarde op de $y$-as
 niet interpreteren als de *kans* op een bepaalde $x$-waarde,
 want we hebben net geconcludeerd dat de kans op iedere specifieke waarde
 gelijk is aan 0.
-Hoe moeten we deze kansverdeling dan interpreteren?
+Wat is dan wél de juiste interpretatie?
 
 ```{r}
 #| code-fold: true
@@ -517,8 +508,8 @@ een lengte heeft tussen
 170cm en 182cm, 
 wordt gegeven door de oppervlakte onder de grafiek
 tussen die grenzen.
-Dit gebied is in de grafiek ingekleurd met paars.
-Dat oppervlakte is 0,59.
+Dit gebied is in de grafiek ingekleurd met paars
+en heeft een oppervlakte van 0,59.
 Dat is dus de kans dat een Amerikaanse man een lengte heeft
 tussen 170cm en 182cm.
 
@@ -527,14 +518,15 @@ van $-\infty$ tot $\infty$,
 is bij iedere kansverdeling van een numerieke variabele gelijk aan 1,
 want de kans dat een uitkomst *ergens* op de $x$-as ligt is 1.
 
-De waarde op de $y$-as is bij kansverdelingen van continue variabelen
+Bij kansverdelingen van continue variabelen is de waarde op de $y$-as 
 dus niet de kans op een specifieke waarde. 
-In plaats daarvan spreken we bij continue variabelen over de **kansdichtheid**
+In plaats daarvan spreken we over de **kansdichtheid**
 (*probability density*).
 
-In @sec-kansverdelingen vergeleken we een kansverdeling 
-met een histogram van een *enorm* (oneindig) aantal waarnemingen.
-Die vergelijking gaat ook op bij continue variabelen.
+In @sec-wat-zijn-kansverdelingen zagen we dat je over een kansverdeling 
+kunt denken als over
+een histogram van een *enorm* (oneindig) aantal waarnemingen.
+Dat werkt ook bij continue variabelen.
 Je kunt je voorstellen dat het aantal waarnemingen zo groot is
 dat we de klassen van het histogram extreem smal hebben kunnen maken ---
 zo smal dat de rechthoekige staven niet meer zichtbaar zijn
@@ -549,7 +541,7 @@ Zie @fig-kansen-schatten hieronder.
 a.  Het canvas van iedere grafiek is door grijze lijntjes verdeeld in vakjes.
     Hoeveel kans representeert de oppervlakte van één vakje?
     
-b.  Schat voor ieder van de kansenverdelingen de kans op een waarneming 
+b.  Schat voor ieder van de kansenverdelingen de kans op een uitkomst 
     binnen het paars gearceerde gebied.
 
 ```{r}
@@ -661,7 +653,7 @@ zijn dus volledig analoog aan de maten uit @sec-variabelen-verdelingen.
 
 We beginnen met de centrummaten.
 
-De **modus** van de kansverdeling van een kansvariabele $X$ 
+De **modus** van een kansverdeling 
     is die uitkomst
     die de grootste kans of kansdichtheid heeft.
 Als de kansverdeling één piek heeft,
@@ -672,7 +664,7 @@ De **mediaan** van een kansvariabele $X$
     is de waarde zodanig
     dat de kans op een uitkomst kleiner of gelijk aan die waarde
     precies gelijk is aan $\frac{1}{2}$.
-Dat is dus ook de waarde waar de cumulatieve verdeling 
+Dat is dus de waarde waar de cumulatieve verdeling 
   gelijk is aan $\frac{1}{2}$.
 
 Het **gemiddelde** van een kansverdeling van een kansvariabele $X$ 
@@ -688,10 +680,10 @@ Als de variabele discreet is
 $$ \mu_X = \ev{X} = \sum_x \pr{X = x}\, x. $$ {#eq-verwachtingswaarde-discreet}
 De sommatie gaat over alle mogelijke uitkomsten $x$.
 @Eq-verwachtingswaarde-discreet wil dus zeggen:
-    we nemen het gemiddelde van alle mogelijke uitkomsten $x$,
-    waarbij uitkomsten met een grotere kans
-    een zwaarder gewicht krijgen.
-    
+we nemen het *gewogen* gemiddelde van alle mogelijke uitkomsten $x$,
+waarbij uitkomsten met een grotere kans
+een zwaarder gewicht krijgen.
+
 ::: {#exr-gemiddelde-herhalen .pepexr}
 
 ## De definitie van de verwachtingswaarde 
@@ -760,10 +752,10 @@ Bereken de verwachtingswaarde voor het aantal keer succes.
 Het is handig om R als rekenmachine te gebruiken.
 :::
 
-Als een variabele continu is
+Als een variabele continu is,
   dan kunnen we niet sommeren over alle mogelijke uitkomsten
-  want er zijn oneindig veel mogelijke uitkomsten
-  en iedere individuele uitkomst heeft kans 0.
+  omdat er oneindig veel mogelijke uitkomsten zijn
+  en iedere individuele uitkomst kans 0 heeft.
 In plaats daarvan verandert de sommatie in een integraal:
 $$ \mu_X = \ev{X} = \int_{-\infty}^\infty \pr{X = x}\, x\,  \diffn x. $$ {#eq-verwachtingswaarde-continu}
 Gelukkig hoef je in dit soort integralen in deze cursus niet zelf uit te voeren.
@@ -783,7 +775,7 @@ $$
 V_X = \frac{\sum_{i=1}^n \left(x_i - \mean{x}\right)^2}{n-1}.
 $$
 Dat is dus het gemiddelde van de gekwadrateerde afwijkingen
-van het gemiddelde van de waarnemingen.
+van het gemiddelde.
 (Dat er in de noemer $n - 1$ staat in plaats van $n$ negeren we nog even.)
 
 De **variantie** van een kansvariabele $X$
@@ -795,7 +787,7 @@ De definitie daarvan is weer de gemiddelde gekwadrateerde afwijking
 $$ 
     \var{X} = \ev{ \left( X - \mu_X \right)^2}.
 $$ {#eq-variantie}
-Van iedere mogelijke uitkomst wordt dus het gemiddelde van $X$ afgetrokken,
+Van iedere mogelijke uitkomst wordt dus het gemiddelde $\mu_X$ afgetrokken,
   en die afwijking wordt gekwadrateerd.
 Vervolgens nemen we het gemiddelde van die gekwadrateerde afwijkingen,
   waarbij uitkomsten met een grotere kans zwaarder worden meegewogen.
@@ -803,7 +795,7 @@ Als $X$ een discrete kansvariabele is, dan komt dat neer op
 $$ 
     \var{X} = \sum_x \pr{X = x} \left( x - \mu_X \right)^2.
 $$ {#eq-variantie-discreet}
-Bij een continue variabele wordt dat weer een integraa.
+Bij een continue variabele wordt dat weer een integraal.
 
 De **standaarddeviatie** van $X$
     is de wortel van de variantie van $X$.
@@ -833,7 +825,8 @@ In deze opgave gaan we verder met de kansverdeling uit @exr-verwachtingswaarde.
 Je gaat voor deze kansverdeling de variantie en standaarddeviatie uitrekenen
 aan de hand van de definities @eq-variantie en @eq-sd-var.
 
-De verwachtingswaarde van deze kansverdeling heb je in @exr-verwachtingswaarde al berekend.
+De verwachtingswaarde $\ev{X}$ of $\mu_X$ 
+van deze kansverdeling heb je in @exr-verwachtingswaarde al berekend.
 
 a.  Bereken voor iedere mogelijke uitkomst de afwijking van de verwachtingswaarde.
     Dat gaat handig in R.
@@ -847,7 +840,7 @@ b.  Bereken het kwadraat van alle afwijkingen.
 c.  Vermenigvuldig nu de gekwadrateerde afwijkingen met hun kans.
     De kans van iedere uitkomt is gegeven in @exr-verwachtingswaarde.
     
-d.  De variantie is nu de som van de getallen die je in onderdeel c. hebt berekend.
+d.  De variantie is nu de som van de getallen die je in onderdeel **c* hebt berekend.
 
 e.  Bereken de standaarddeviatie.
 :::
@@ -858,7 +851,7 @@ e.  Bereken de standaarddeviatie.
 Kansverdelingen kunnen allerlei vormen hebben.
 Maar bepaalde kansverdelingen komen in theorie en praktijk steeds weer terug
 en hebben daarom een naam gekregen.
-De meest beroemde is de **normale verdeling** (*normal distribution*), 
+De beroemdste is de **normale verdeling** (*normal distribution*), 
 ook wel de **normaalverdeling**, **Gaussische verdeling** of **Gausscurve** genoemd,
 naar de grote Wiskundige Carl Friedrich Gauss (1777--1855).
 
@@ -986,7 +979,7 @@ uit je hoofd te leren; je hebt ze vaak nodig.
 Als $X$ normaal verdeeld is, dan geldt:
 
 1.  De kans dat de uitkomst
-binnen één standaarddeviatie van het gemiddelde valt is iets meer dan \frac{2}{3}.
+binnen één standaarddeviatie van het gemiddelde valt is iets meer dan $\frac{2}{3}$.
 Om precies te zijn:
 $$\pr{\mu - \sigma < X < \mu + \sigma} = 0.683\ldots.$$ {#eq-vuistregel-1-precies}
 2.  De kans dat de uitkomst
@@ -1024,7 +1017,7 @@ proportie <- function(prop){
 
 normaalGeneriek + oppervlak(-1,1) + proportie("0,68...")
 
-normaalGeneriek + oppervlak(-2, 2) + proportie("0,95...")
+normaalGeneriek + oppervlak(-2, 2) + proportie("0,954...")
 ```
 
 ::: {#exr-normale-verdeling .pepexr}
@@ -1042,7 +1035,7 @@ b.  Maak nog zo'n schets, maar nu voor $\pr{X > \mu + \sigma}$.
     Bepaal die kans met behulp van de vuistregel uit @sec-vuistregels.
     
 c.  Wat is de kans $\pr{X < \mu - 2 \sigma}$? 
-    Maar weer gebruik van een schets en de vuistregels.
+    Maak weer gebruik van een schets en de vuistregels.
     
 d.  Idem, maar nu voor $\pr{X < \mu - 2 \sigma \text{ of } X > \mu + 2 \sigma}$.
 
@@ -1052,7 +1045,7 @@ d.  Idem, maar nu voor $\pr{X < \mu - 2 \sigma \text{ of } X > \mu + 2 \sigma}$.
 ## Hoofd-omtrek van pasgeboren babies
 <br>
 
-De verdeling van de hoofdomtrek van pasgeboren babies die voldragen zijn
+De verdeling van de hoofdomtrek van pasgeboren babies die voldragen zijn (d.w.z., niet prematuur geboren),
 is klokvormig.
 Een redelijk model is een normale verdeling met gemiddelde $\mu = 34{,5}$cm
 en standaarddeviatie $\sigma = 1{,}75$cm. 
@@ -1072,10 +1065,10 @@ Dat heeft verschillende redenen.
 
 Om te beginnen hebben veel variabelen binnen en buiten de biologie een klokvorm.
 Voor zulke variabelen kan de normale verdeling een goed model zijn.
-Voorbeelden zijn de lichaamslengte en IQ van volwassen mannen of vrouwen
-die onder vergelijkbare omstandigheden zijn opgegroeid,
-de gemiddelde CITO-score op verschillende basisscholen in Nederland,
-maar ook de afstand die een diffunderend molecuul aflegt in een vaste tijd.
+Voorbeelden zijn de lichaamslengte en het IQ van volwassen mannen of vrouwen
+die onder vergelijkbare omstandigheden zijn opgegroeid;
+de gemiddelde CITO-score op verschillende basisscholen in Nederland;
+maar ook de afstand die een molecuul in een oplossing door diffusie aflegt in een vaste tijd.
 
 Dat we de normale verdeling zowel in theorie als in de praktijk 
 vaak terugzien, heeft een wiskundige reden.
@@ -1090,19 +1083,19 @@ In @sec-centrale-limiet komen we daar nog even op terug.
 
 In de praktijk worden veel variabelen beïnvloed
 door een groot aantal factoren.
-Lichaamslengte wordt bijvoorbeeld beïnvloed door verschillende genen
+Lichaamslengte is bijvoorbeeld het resultaat van een groot aantal genen
 en allerlei omgevingsfactoren tijdens de groei,
 zoals voeding, slaap, en hygiëne.
 Omdat al die variabelen per individu verschillen
 valt te verwachten dat het resultaat ongeveer normaal verdeeld is.
 
-Veel variabelen zien er trouwens op het eerste gezicht normaal verdeeld uit
+Veel variabelen zien er trouwens op het eerste gezicht normaal verdeeld uit,
 maar wijken toch op belangrijke punten af.
 Het komt bijvoorbeeld vaak voor dat één of twee staarten van de verdeling 
 dikker zijn dan bij de normale verdeling.
 De geboortegewichten van baby's die na een goed verlopen zwangerschap geboren worden
 zijn mooi normaal verdeeld. 
-Maar kijken we naar alle geboortegewichten,
+Maar kijken we naar *alle* geboortegewichten,
 dan zien we ook het effect van zwangerschappen met complicaties,
 waardoor kinderen vaak te vroeg geboren worden met een te laag geboortegewicht.
 Daardoor is de staart aan de linkerkant van de verdeling veel dikker
@@ -1111,9 +1104,9 @@ dan je op basis van de normale verdeling zou verwachten.
 ## De standaardnormale verdeling
   
 De **standaardnormale verdeling** (*standard normal distribution*) (@fig-std-normaal) 
-is een speciaal geval van de normale verdeling 
-waarbij de verwachtingswaarde $\mu$ gelijk is aan 0 
-en de standaarddeviatie $\sigma$ gelijk aan 1. 
+is een speciaal geval van de normale verdeling:
+het is de normale verdeling met $\mu = 0$ en $\sigma = 1$.
+Deze verdeling is hieronder (@fig-std-normaal) weergegeven.
 
 ```{r}
 #| code-fold: true
@@ -1149,15 +1142,14 @@ plotNormaal(0, 1) +
 Eerder hebben we kansvariabelen vaak $X$ genoemd.
 Voor een standaardnormaal verdeelde variabele wordt vaak de letter $Z$ gebruikt. 
 Dit is niet meer dan een gewoonte;
-je zou net zo goed een andere letter kunnen kiezen, 
-zoals $X$, $Y$ of $W$. 
+je zou net zo goed een andere letter kunnen kiezen. 
 Toch is het handig: kom je in een statistische formule een kansvariabele $Z$ tegen,
 dan is dat een hint dat die variabele waarschijnlijk standaardnormaal verdeeld is.
 
 ### Transformeren naar de standaardnormale verdeling {#sec-transformeren}
 
-Normale verdelingen hebben altijd dezelfde klokvorm,
-maar kunnen natuurlijk verschillen in hun gemiddelde 
+Alle normale verdelingen hebben dezelfde klokvorm,
+maar ze verschillen in hun gemiddelde 
 en hun standaarddeviatie.
 Als twee normale verdelingen verschillen in hun gemiddelde,
 dan zijn ze ten opzichte van elkaar verschoven.
@@ -1170,17 +1162,17 @@ Horizontaal uitrekken gaat dus altijd samen met verticaal samendrukken.
 Bekijk @fig-transformeren eens.
 Deze laat twee normale verdelingen zien.
 
--   De bovenste figuur toont de verdeling van een variabele $X$, 
+-   De bovenste figuur toont de verdeling van een variabele $X$ 
     met gemiddelde $\mu_X = 170$ en standaarddeviatie $\sd{X} = 6$.
     Het zou een model kunnen zijn voor de lichaamslengte 
     van Nederlandse volwassen vrouwen, in centimeters.
 -   Het onderste figuur toont de verdeling van variabele $Z$,
-    die standaardnormaal verdeeld is (dus met $\mu_Z=0$ en $\sd{Z} = 1$).
+    die standaardnormaal verdeeld is (dus $\mu_Z=0$ en $\sd{Z} = 1$).
 
 Hoewel de parameters van beide verdelingen verschillen, 
 hebben beide grafieken exact dezelfde vorm. 
-Dee $x$- en $y$-assen van de figuren zijn wel 
-ten opzichte van elkaar uitgerekt en verschoven.
+(De $x$- en $y$-assen van de figuren zijn wel 
+ten opzichte van elkaar uitgerekt en verschoven.)
 
 ```{r}
 #| code-fold: true
@@ -1311,7 +1303,7 @@ $$ \pr{X > 176} = \pr{Z > 1}. $$
 
 Dit werkt in het algemeen: 
 kansen voor iedere
-normaalverdeelde variabele $X$ kunnen worden gerelateerd 
+normaal verdeelde variabele $X$ kunnen altijd worden gerelateerd 
 aan kansen voor de standaardnormaal verdeelde variabele $Z$.
 De grens voor $Z$ moet dan steeds
 gelijk zijn aan het aantal standaarddeviaties
@@ -1347,7 +1339,7 @@ a.  Maak eerst een schets van de standaardnormale verdeling.
 b.  Maak weer een schets van de standaardnormale verdeling.
     Arceer het gedeelte $Z < -1$.
     Wat is volgens de vuistregels de kans op een waarneming in dat interval?
-    Bereken de kans vervolgens met de functie `pnorm()`.
+    Bereken die kans vervolgens met de functie `pnorm()`.
 
 c.  Bereken met `pnorm()` de kans dat $Z > 0{,}5$. Een schets helpt.
     Hint: gebruik de complement-regel (@eq-complementregel).
@@ -1493,6 +1485,7 @@ ook echt naar de standaardnormale verdeling.
 ::: {#exr-t-verdeling .pepexr}
 
 ## Dijken
+<br>
 
 Om te berekenen hoe hoog de zeedijken moeten zijn
 maken we gebruik van een model
