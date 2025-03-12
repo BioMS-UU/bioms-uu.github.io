@@ -532,7 +532,7 @@ window.Quarto = {
   <li><a href="#de-overschrijdingskans-of-p-waarde" id="toc-de-overschrijdingskans-of-p-waarde" class="nav-link" data-scroll-target="#de-overschrijdingskans-of-p-waarde"><span class="header-section-number">25.4</span> De overschrijdingskans of <span class="math inline">\(P\)</span>-waarde</a></li>
   <li><a href="#significant-bewijs-tegen-h_textrm0" id="toc-significant-bewijs-tegen-h_textrm0" class="nav-link" data-scroll-target="#significant-bewijs-tegen-h_textrm0"><span class="header-section-number">25.5</span> Significant bewijs tegen <span class="math inline">\(H_\textrm{0}\)</span></a></li>
   <li><a href="#iedere-toets-is-gebaseerd-op-een-statistisch-model" id="toc-iedere-toets-is-gebaseerd-op-een-statistisch-model" class="nav-link" data-scroll-target="#iedere-toets-is-gebaseerd-op-een-statistisch-model"><span class="header-section-number">25.6</span> Iedere toets is gebaseerd op een statistisch model</a></li>
-  <li><a href="#de-algemene-vorm-van-een-hypothesetoets" id="toc-de-algemene-vorm-van-een-hypothesetoets" class="nav-link" data-scroll-target="#de-algemene-vorm-van-een-hypothesetoets"><span class="header-section-number">25.7</span> De algemene vorm van een hypothesetoets</a></li>
+  <li><a href="#sec-algemene-vorm" id="toc-sec-algemene-vorm" class="nav-link" data-scroll-target="#sec-algemene-vorm"><span class="header-section-number">25.7</span> De algemene vorm van een hypothesetoets</a></li>
   <li><a href="#hypothesetoetsen-als-besluitprocedures" id="toc-hypothesetoetsen-als-besluitprocedures" class="nav-link" data-scroll-target="#hypothesetoetsen-als-besluitprocedures"><span class="header-section-number">25.8</span> Hypothesetoetsen als besluitprocedures</a></li>
   <li><a href="#voor-welke-hypotheses-bestaan-er-toetsen" id="toc-voor-welke-hypotheses-bestaan-er-toetsen" class="nav-link" data-scroll-target="#voor-welke-hypotheses-bestaan-er-toetsen"><span class="header-section-number">25.9</span> Voor welke hypotheses bestaan er toetsen?</a></li>
   <li><a href="#samenvatting" id="toc-samenvatting" class="nav-link" data-scroll-target="#samenvatting"><span class="header-section-number">25.10</span> Samenvatting</a></li>
@@ -588,46 +588,40 @@ Figuur&nbsp;25.1: John Arbuthnot, geschilderd door John Kneller. Bron: WikiMedia
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"tidyr"</span>) </span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(HistData)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'HistData' was built under R version 4.3.3</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Laad de Arbuthnot-data</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Arbuthnot"</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Zet de data om in lang formaat voor ggplot2</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>arbuthnot_lang <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  Arbuthnot,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Males"</span>, <span class="st">"Females"</span>),</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">names_to =</span> <span class="st">"Geslacht"</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">values_to =</span> <span class="st">"Geboorten"</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Maak de plot</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(arbuthnot_lang, <span class="fu">aes</span>(</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> Year, </span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> Geboorten, </span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> Geslacht</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>)) <span class="sc">+</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span>  <span class="co"># Voeg punten toe voor ruwe data</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span>   <span class="co"># Voeg lijnen toe om trends te laten zien</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="cn">NULL</span>,</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Jaar"</span>,</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Aantal geboorten volgens doopregister"</span>,</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Geslacht"</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Males"</span> <span class="ot">=</span> <span class="st">"DarkOrchid"</span>, <span class="st">"Females"</span> <span class="ot">=</span> <span class="st">"darkorange"</span>),</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Males"</span> <span class="ot">=</span> <span class="st">"Jongens"</span>, <span class="st">"Females"</span> <span class="ot">=</span> <span class="st">"Meisjes"</span>)</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(HistData)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Laad de Arbuthnot-data</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Arbuthnot"</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Zet de data om in lang formaat voor ggplot2</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>arbuthnot_lang <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  Arbuthnot,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Males"</span>, <span class="st">"Females"</span>),</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">names_to =</span> <span class="st">"Geslacht"</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">values_to =</span> <span class="st">"Geboorten"</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Maak de plot</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(arbuthnot_lang, <span class="fu">aes</span>(</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> Year, </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> Geboorten, </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> Geslacht</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>)) <span class="sc">+</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span>  <span class="co"># Voeg punten toe voor ruwe data</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span>   <span class="co"># Voeg lijnen toe om trends te laten zien</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="cn">NULL</span>,</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Jaar"</span>,</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Aantal geboorten volgens doopregister"</span>,</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Geslacht"</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Males"</span> <span class="ot">=</span> <span class="st">"DarkOrchid"</span>, <span class="st">"Females"</span> <span class="ot">=</span> <span class="st">"darkorange"</span>),</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Males"</span> <span class="ot">=</span> <span class="st">"Jongens"</span>, <span class="st">"Females"</span> <span class="ot">=</span> <span class="st">"Meisjes"</span>)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-arbuthnot" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -699,54 +693,54 @@ Definitie: hypothesetoets
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Controleer of de benodigde pakketten zijn geladen</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>(<span class="st">"ggplot2"</span> <span class="sc">%in%</span> <span class="fu">.packages</span>())) {</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(<span class="st">"ggplot2"</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters definiëren voor de binomiale verdeling</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">82</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>mean <span class="ot">&lt;-</span> n <span class="sc">*</span> p</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(n <span class="sc">*</span> p <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p))</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>standaard_deviaties <span class="ot">&lt;-</span> <span class="dv">4</span>  <span class="co"># Aantal standaarddeviaties als parameter</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Limieten voor de x-as bepalen (ongeveer 3 standaarddeviaties rond het gemiddelde)</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>x_min <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(mean <span class="sc">-</span> standaard_deviaties <span class="sc">*</span> sd)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>x_max <span class="ot">&lt;-</span> <span class="fu">floor</span>(mean <span class="sc">+</span> standaard_deviaties <span class="sc">*</span> sd)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Mogelijke uitkomsten en kansen berekenen</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>uitkomsten <span class="ot">&lt;-</span> <span class="fu">seq</span>(x_min, x_max)</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>kansen <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(uitkomsten, <span class="at">size =</span> n, <span class="at">prob =</span> p)</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Data frame maken met de uitkomsten en kansen</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>kansen_binomiaal <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">uitkomsten =</span> <span class="fu">factor</span>(uitkomsten),</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">kansen =</span> kansen</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Maak de plot</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>verdelingBinomiaal <span class="ot">&lt;-</span> <span class="cf">function</span>(kleur) {</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(kansen_binomiaal, <span class="fu">aes</span>(<span class="at">x =</span> uitkomsten, <span class="at">y =</span> kansen)) <span class="sc">+</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">stat =</span> <span class="st">"identity"</span>,     <span class="co"># Balken representeren kanswaarden direct</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">width =</span> <span class="dv">1</span>,              <span class="co"># Volledige breedte van de categorie</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> kleur,           <span class="co"># Kleur voor de balken</span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"black"</span>         <span class="co"># Randkleur voor de balken</span></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">""</span>,</span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="fu">expression</span>(Aantal<span class="sc">~</span>jaren<span class="sc">~</span><span class="fu">italic</span>(X)<span class="sc">~</span>waarin<span class="sc">~</span>meer<span class="sc">~</span>jongetjes<span class="sc">~</span>dan<span class="sc">~</span>meisjes<span class="sc">~</span>geboren<span class="sc">~</span>worden), <span class="co"># Titel voor de x-as</span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">"Kans onder de nulhypothese"</span>              <span class="co"># Titel voor de y-as</span></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()           <span class="co"># Minimalistisch thema voor de plot</span></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Kleur voor de balken</span></span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>kleur <span class="ot">&lt;-</span> <span class="st">"darkorange"</span></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot de binomiale verdeling</span></span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="fu">verdelingBinomiaal</span>(kleur)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Controleer of de benodigde pakketten zijn geladen</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>(<span class="st">"ggplot2"</span> <span class="sc">%in%</span> <span class="fu">.packages</span>())) {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(<span class="st">"ggplot2"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters definiëren voor de binomiale verdeling</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">82</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>mean <span class="ot">&lt;-</span> n <span class="sc">*</span> p</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(n <span class="sc">*</span> p <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>standaard_deviaties <span class="ot">&lt;-</span> <span class="dv">4</span>  <span class="co"># Aantal standaarddeviaties als parameter</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Limieten voor de x-as bepalen (ongeveer 3 standaarddeviaties rond het gemiddelde)</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>x_min <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(mean <span class="sc">-</span> standaard_deviaties <span class="sc">*</span> sd)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>x_max <span class="ot">&lt;-</span> <span class="fu">floor</span>(mean <span class="sc">+</span> standaard_deviaties <span class="sc">*</span> sd)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Mogelijke uitkomsten en kansen berekenen</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>uitkomsten <span class="ot">&lt;-</span> <span class="fu">seq</span>(x_min, x_max)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>kansen <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(uitkomsten, <span class="at">size =</span> n, <span class="at">prob =</span> p)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Data frame maken met de uitkomsten en kansen</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>kansen_binomiaal <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">uitkomsten =</span> <span class="fu">factor</span>(uitkomsten),</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">kansen =</span> kansen</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Maak de plot</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>verdelingBinomiaal <span class="ot">&lt;-</span> <span class="cf">function</span>(kleur) {</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(kansen_binomiaal, <span class="fu">aes</span>(<span class="at">x =</span> uitkomsten, <span class="at">y =</span> kansen)) <span class="sc">+</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">stat =</span> <span class="st">"identity"</span>,     <span class="co"># Balken representeren kanswaarden direct</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">width =</span> <span class="dv">1</span>,              <span class="co"># Volledige breedte van de categorie</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> kleur,           <span class="co"># Kleur voor de balken</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"black"</span>         <span class="co"># Randkleur voor de balken</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">""</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="fu">expression</span>(Aantal<span class="sc">~</span>jaren<span class="sc">~</span><span class="fu">italic</span>(X)<span class="sc">~</span>waarin<span class="sc">~</span>meer<span class="sc">~</span>jongetjes<span class="sc">~</span>dan<span class="sc">~</span>meisjes<span class="sc">~</span>geboren<span class="sc">~</span>worden), <span class="co"># Titel voor de x-as</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">"Kans onder de nulhypothese"</span>              <span class="co"># Titel voor de y-as</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()           <span class="co"># Minimalistisch thema voor de plot</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Kleur voor de balken</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>kleur <span class="ot">&lt;-</span> <span class="st">"darkorange"</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot de binomiale verdeling</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="fu">verdelingBinomiaal</span>(kleur)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-binomiale-kans" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -791,55 +785,55 @@ Definitie: de <span class="math inline">\(P\)</span>-waarde
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">41</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="dv">47</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>y_pijl <span class="ot">&lt;-</span> <span class="fl">0.025</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>y_end_pijl <span class="ot">&lt;-</span> <span class="fl">0.012</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Maak een vector van kleuren</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>kleur_vector <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(uitkomsten <span class="sc">-</span> m) <span class="sc">&lt;</span> <span class="fu">abs</span>(m <span class="sc">-</span> X), </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"darkorange"</span>, </span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"DarkOrchid"</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">verdelingBinomiaal</span>(kleur_vector) <span class="sc">+</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Kromme pijltjes toevoegen</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">"curve"</span>,</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="dv">7</span>, <span class="at">y =</span> y_pijl, <span class="at">xend =</span> <span class="dv">9</span>, <span class="at">yend =</span> y_end_pijl, </span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">curvature =</span> <span class="fl">0.2</span>, </span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"cm"</span>)), </span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"darkorchid"</span>, </span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="fl">0.9</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>      <span class="st">"curve"</span>,</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="dv">31</span>, <span class="at">y =</span> y_pijl, <span class="at">xend =</span> <span class="dv">29</span>, <span class="at">yend =</span> y_end_pijl, </span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">curvature =</span> <span class="sc">-</span><span class="fl">0.2</span>, </span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"cm"</span>)), </span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"darkorchid"</span>, </span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="fl">0.9</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Annotaties toevoegen</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>      <span class="st">"text"</span>, </span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="dv">7</span>, </span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> y_pijl <span class="sc">+</span> <span class="fl">0.01</span>,  <span class="co"># Plaats annotatie net boven de pijl</span></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">frac</span>(<span class="fu">italic</span>(P),<span class="dv">2</span>)), </span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"darkorchid"</span>, </span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="dv">5</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>      <span class="st">"text"</span>, </span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="dv">31</span>, </span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> y_pijl <span class="sc">+</span> <span class="fl">0.01</span>,  <span class="co"># Plaats annotatie net boven de pijl</span></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">frac</span>(<span class="fu">italic</span>(P),<span class="dv">2</span>)), </span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"darkorchid"</span>, </span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="dv">5</span></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">41</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="dv">47</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>y_pijl <span class="ot">&lt;-</span> <span class="fl">0.025</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>y_end_pijl <span class="ot">&lt;-</span> <span class="fl">0.012</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Maak een vector van kleuren</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>kleur_vector <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(uitkomsten <span class="sc">-</span> m) <span class="sc">&lt;</span> <span class="fu">abs</span>(m <span class="sc">-</span> X), </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"darkorange"</span>, </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"DarkOrchid"</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">verdelingBinomiaal</span>(kleur_vector) <span class="sc">+</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Kromme pijltjes toevoegen</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">"curve"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="dv">7</span>, <span class="at">y =</span> y_pijl, <span class="at">xend =</span> <span class="dv">9</span>, <span class="at">yend =</span> y_end_pijl, </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">curvature =</span> <span class="fl">0.2</span>, </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"cm"</span>)), </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"darkorchid"</span>, </span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="fl">0.9</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>      <span class="st">"curve"</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="dv">31</span>, <span class="at">y =</span> y_pijl, <span class="at">xend =</span> <span class="dv">29</span>, <span class="at">yend =</span> y_end_pijl, </span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">curvature =</span> <span class="sc">-</span><span class="fl">0.2</span>, </span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"cm"</span>)), </span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"darkorchid"</span>, </span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="fl">0.9</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Annotaties toevoegen</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>      <span class="st">"text"</span>, </span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="dv">7</span>, </span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> y_pijl <span class="sc">+</span> <span class="fl">0.01</span>,  <span class="co"># Plaats annotatie net boven de pijl</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">frac</span>(<span class="fu">italic</span>(P),<span class="dv">2</span>)), </span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"darkorchid"</span>, </span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="dv">5</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>      <span class="st">"text"</span>, </span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="dv">31</span>, </span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> y_pijl <span class="sc">+</span> <span class="fl">0.01</span>,  <span class="co"># Plaats annotatie net boven de pijl</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">frac</span>(<span class="fu">italic</span>(P),<span class="dv">2</span>)), </span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"darkorchid"</span>, </span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="dv">5</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-binomiale-P-waarde" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -865,7 +859,8 @@ P = 0{,}224.
 <p>Laten we even stilstaan bij de betekenis van dit resultaat. De <span class="math inline">\(P\)</span>-waarde zegt dat, als <span class="math inline">\(H_\textrm{0}\)</span> waar is, een <span class="math inline">\(X\)</span>-waarde die minstens zo extreem is als <span class="math inline">\(X = 47\)</span> een kans heeft van <span class="math inline">\(P = 0{,}224\)</span>. Dat wil zeggen dat <span class="math inline">\(X = 47\)</span> onder <span class="math inline">\(H_\textrm{0}\)</span> niet heel erg verrassend is; gebeurtenissen die zo ver afwijken zien we vaker dan 1 op de 5 keer. Dat betekent dat deze <span class="math inline">\(P\)</span>-waarde nauwelijks bewijs vormt tegen <span class="math inline">\(H_\textrm{0}\)</span>. Als in de geboortecijfers van Arbuthnot de jongens dus <span class="math inline">\(X = 47\)</span> jaren in de meerderheid waren, dan had Arbuthnot niet kunnen uitsluiten dat dit simpelweg toeval was.</p>
 <p>In werkelijkheid waren jongens in alle 82 jaren in de meerderheid. De <span class="math inline">\(P\)</span>-waarde van die bevinding is <span class="math display">\[P = \textrm{Pr}\!\left[X = 82\right] + \textrm{Pr}\!\left[X = 0\right] = 4\times 10^{-25}.\]</span> (De gebeurtenis <span class="math inline">\(X = 0\)</span> is precies even onwaarschijnlijk als de gebeurtenis <span class="math inline">\(X = 82\)</span> en moet in de berekening van de <span class="math inline">\(P\)</span>-waarde dus ook worden meegenomen.) Die kans is zo klein dat <span class="math inline">\(H_\textrm{0}\)</span> er volstrekt ongeloofwaardig door wordt. <span class="math inline">\(X = 82\)</span> is dus wél sterk bewijs tegen <span class="math inline">\(H_\textrm{0}\)</span>.</p>
 <div id="exr-p-waarde" class="pepexr theorem exercise">
-<p><span class="theorem-title"><strong>Oefening 25.4 (<span class="math inline">\(P\)</span>-waarde voor <span class="math inline">\(X = 34\)</span>)</strong></span> Stel dat de jongens in 34 jaren in de meerderheid waren, en in de andere jaren in de minderheid. (Oftewel: de toetsingsgrootheid is <span class="math inline">\(X = 34\)</span>.)</p>
+<p><span class="theorem-title"><strong>Oefening 25.4 (<span class="math inline">\(P\)</span>-waarde voor <span class="math inline">\(X = 34\)</span>)</strong></span> <br></p>
+<p>Stel dat de jongens in 34 jaren in de meerderheid waren, en in de andere jaren in de minderheid. (Oftewel: de toetsingsgrootheid is <span class="math inline">\(X = 34\)</span>.)</p>
 <ol type="a">
 <li><p>Welke uitkomsten zijn net zo extreem of extremer dan <span class="math inline">\(X = 34\)</span>?</p></li>
 <li><p>Welke staven in <a href="#fig-binomiale-P-waarde" class="quarto-xref">Figuur&nbsp;<span>25.4</span></a> horen bij die uitkomsten?</p></li>
@@ -925,8 +920,8 @@ Het nulmodel
 </ul>
 <p>Deze aannames leggen samen de kansverdeling van <span class="math inline">\(X\)</span> vast; daarmee kan dus ook de <span class="math inline">\(P\)</span>-waarde berekend worden.</p>
 </section>
-<section id="de-algemene-vorm-van-een-hypothesetoets" class="level2" data-number="25.7">
-<h2 data-number="25.7" class="anchored" data-anchor-id="de-algemene-vorm-van-een-hypothesetoets"><span class="header-section-number">25.7</span> De algemene vorm van een hypothesetoets</h2>
+<section id="sec-algemene-vorm" class="level2" data-number="25.7">
+<h2 data-number="25.7" class="anchored" data-anchor-id="sec-algemene-vorm"><span class="header-section-number">25.7</span> De algemene vorm van een hypothesetoets</h2>
 <p>Voor het uitvoeren van de hypothesetoets van Arbuthnot hebben we niet gebruik gemaakt van de alle details van de gegevens. We weten voor ieder jaar het aantal jongetjes en meisjes dat geboren werd, maar bij de berekening maakten we alleen gebruik van het kengetal <span class="math inline">\(X\)</span>. Zo’n kengetal dat gebruikt wordt binnen een statistische toets wordt een <strong>toetsingsgrootheid</strong> genoemd.</p>
 <p>Welke toetsingsgrootheid gebruikt wordt hangt af van de nulhypothese die getoetst wordt en van de methode die wordt toegepast.</p>
 <p>Hoewel iedere toetsmethode een andere toetsingsgrootheid en andere berekeningen vereist, is de logische structuur van een hypothesetoets altijd hetzelfde. We presenteren die hier in het volgende zes-stappenplan.</p>
@@ -943,7 +938,7 @@ De structuur van hypothesetoetsen in 6 stappen
 <ol type="1">
 <li>Kies een statistisch model dat past bij de casus.</li>
 <li>Stel de hypotheses <span class="math inline">\(H_\textrm{0}\)</span> en <span class="math inline">\(H_\textrm{A}\)</span> op in termen van een parameter van het statistisch model.</li>
-<li>Bepaal de kansverdeling van de toetsinggrootheid aangenomen dat <span class="math inline">\(H_\textrm{0}\)</span> waar is (“onder <span class="math inline">\(H_\textrm{0}\)</span>”).</li>
+<li>Kies een toetsingsgrootheid en bepaal de kansverdeling van de toetsinggrootheid aangenomen dat <span class="math inline">\(H_\textrm{0}\)</span> waar is (“onder <span class="math inline">\(H_\textrm{0}\)</span>”).</li>
 <li>Bereken de toetsingsgrootheid op basis van de daadwerkelijke waarnemingen.</li>
 <li>Bereken de <span class="math inline">\(P\)</span>-waarde.</li>
 <li>Trek je conclusies: hoe sterk is het bewijs tegen <span class="math inline">\(H_\textrm{0}\)</span>?</li>
@@ -1097,10 +1092,10 @@ Figuur&nbsp;25.5: <span class="math inline">\(P\)</span>-waarden voor verschille
 <div id="fig-alfa" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-alfa-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="Hypothesetoetsen_files/figure-html/fig-alfa-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Figuur&nbsp;25.6: De totale oppervlakte van de rode staafjes is precies lpha = 0{,}15."><img src="Hypothesetoetsen_files/figure-html/fig-alfa-1.png" class="img-fluid figure-img" style="width:57.0%"></a>
+<a href="Hypothesetoetsen_files/figure-html/fig-alfa-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Figuur&nbsp;25.6: De totale oppervlakte van de rode staafjes is precies \alpha = 0{,}15."><img src="Hypothesetoetsen_files/figure-html/fig-alfa-1.png" class="img-fluid figure-img" style="width:57.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-alfa-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;25.6: De totale oppervlakte van de rode staafjes is precies <span class="math inline">\(lpha = 0{,}15\)</span>.
+Figuur&nbsp;25.6: De totale oppervlakte van de rode staafjes is precies <span class="math inline">\(\alpha = 0{,}15\)</span>.
 </figcaption>
 </figure>
 </div>
@@ -1176,7 +1171,7 @@ Het significantieniveau en de kans op een type-1-fout
 <ol type="1">
 <li>Kies een statistisch model dat past bij de casus.</li>
 <li>Stel de hypotheses <span class="math inline">\(H_\textrm{0}\)</span> en <span class="math inline">\(H_\textrm{A}\)</span> op in termen van een parameter van het statistisch model.</li>
-<li>Bepaal de kansverdeling van de toetsinggrootheid aangenomen dat <span class="math inline">\(H_\textrm{0}\)</span> waar is (“onder <span class="math inline">\(H_\textrm{0}\)</span>”).</li>
+<li>Kies een toetsingsgrootheid en bepaal de kansverdeling van de toetsinggrootheid aangenomen dat <span class="math inline">\(H_\textrm{0}\)</span> waar is (“onder <span class="math inline">\(H_\textrm{0}\)</span>”).</li>
 <li>Bereken de toetsingsgrootheid op basis van de daadwerkelijke waarnemingen.</li>
 <li>Bereken de <span class="math inline">\(P\)</span>-waarde.</li>
 <li>Trek je conclusies: hoe sterk is het bewijs tegen <span class="math inline">\(H_\textrm{0}\)</span>?</li>
@@ -1220,7 +1215,13 @@ Het significantieniveau en de kans op een type-1-fout
 </section>
 <section id="terminologie" class="level2" data-number="25.11">
 <h2 data-number="25.11" class="anchored" data-anchor-id="terminologie"><span class="header-section-number">25.11</span> Terminologie</h2>
-<table class="caption-top table">
+<div id="tbl-woorden-schatten" class="striped hover quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-woorden-schatten-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;25.2: Woordenlijst <a href="Schatten.html" class="quarto-xref"><span>Hoofdstuk 24</span></a> .
+</figcaption>
+<div aria-describedby="tbl-woorden-schatten-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table-striped table-hover caption-top table">
 <colgroup>
 <col style="width: 38%">
 <col style="width: 26%">
@@ -1247,12 +1248,73 @@ Het significantieniveau en de kans op een type-1-fout
 <tr class="odd">
 <td style="text-align: left;">Hypothese</td>
 <td style="text-align: left;">Hypothesis</td>
-<td style="text-align: left;">Veronderstelling of voorlopige verklaring die</td>
+<td style="text-align: left;">Veronderstelling of voorlopige verklaring die getoetst kan worden door middel van onderzoek, experimenten of observaties.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hypothesetoets</td>
+<td style="text-align: left;">Hypothesis test</td>
+<td style="text-align: left;">Een methode die gebruikt wordt om te evalueren in hoeverre een verzameling waarnemingen bewijs levert tegen een specifieke hypothese.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Juist-positief</td>
+<td style="text-align: left;">True-positive</td>
+<td style="text-align: left;">De nulhypothese wordt terecht verworpen.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Juist-negatief</td>
+<td style="text-align: left;">True-negative</td>
+<td style="text-align: left;">De nulhypothese wordt terecht niet verworpen.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nulhypothese <span class="math inline">\(H_\textrm{0}\)</span></td>
+<td style="text-align: left;">null hypothesis</td>
+<td style="text-align: left;">De hypothese die met de hypothesetoets onderzocht wordt. Typisch de “sceptische” hypothese die veronderstelt dat de waarnemingen te verklaren zijn als toevallige steekproefvariatie.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nulmodel</td>
+<td style="text-align: left;">Null model</td>
+<td style="text-align: left;">Een kansmodel dat gebruikt wordt om een hypothese mee te toetsen.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Overschrijdingskans / <span class="math inline">\(P\)</span>-waarde</td>
+<td style="text-align: left;"><span class="math inline">\(P\)</span>-value</td>
+<td style="text-align: left;">De kans onder <span class="math inline">\(H_\textrm{0}\)</span> dat de toetsingsgrootheid minstens zo onwaarschijnlijk is als de daadwerkelijk waargenomen waarde van de toetsingsgrootheid.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Significantieniveau <span class="math inline">\(\alpha\)</span></td>
+<td style="text-align: left;">Significance level</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Statistisch significant</td>
+<td style="text-align: left;">Statistically significant</td>
+<td style="text-align: left;">Een resultaat wordt statistisch significant genoemd als de <span class="math inline">\(P \le \alpha\)</span>.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Toetsingsgrootheid</td>
+<td style="text-align: left;">Test statistic</td>
+<td style="text-align: left;">Het kengetal dat in een hypothesetoets gebruikt wordt om te bepalen of de waarnemingen opmerkelijk zijn onder <span class="math inline">\(H_\textrm{0}\)</span>.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">type-1-fout</td>
+<td style="text-align: left;">Type 1 error</td>
+<td style="text-align: left;">De nulhypothese wordt onterecht verworpen.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">type-2-fout</td>
+<td style="text-align: left;">Type 2 error</td>
+<td style="text-align: left;">De nulhypothese wordt niet verworpen, maar is in werkelijkheid onjuist.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Verwerpen van <span class="math inline">\(H_\textrm{0}\)</span></td>
+<td style="text-align: left;">To reject <span class="math inline">\(H_\textrm{0}\)</span></td>
+<td style="text-align: left;">Het concluderen dat <span class="math inline">\(HO\)</span> niet meer geloofwaardig is.</td>
 </tr>
 </tbody>
 </table>
-<p>getoetst kan worden door middel van onderzoek, experimenten of observaties. | |Hypothesetoets | Hypothesis test | Een methode die gebruikt wordt om te evalueren in hoeverre een verzameling waarnemingen bewijs levert tegen een specifieke hypothese. | | Juist-positief | True-positive | De nulhypothese wordt terecht verworpen. | | Juist-negatief | True-negative | De nulhypothese wordt terecht niet verworpen. | | Nulhypothese <span class="math inline">\(H_\textrm{0}\)</span> | null hypothesis | De hypothese die met de hypothesetoets onderzocht wordt. Typisch de “sceptische” hypothese die veronderstelt dat de waarnemingen te verklaren zijn als toevallige steekproefvariatie. | | Nulmodel | Null model | Een kansmodel dat gebruikt wordt om een hypothese mee te toetsen. | | Overschrijdingskans / <span class="math inline">\(P\)</span>-waarde | <span class="math inline">\(P\)</span>-value | De kans onder <span class="math inline">\(H_\textrm{0}\)</span> dat de toetsingsgrootheid minstens zo onwaarschijnlijk is als de daadwerkelijk waargenomen waarde van de toetsingsgrootheid. | | Significantieniveau <span class="math inline">\(\alpha\)</span> | Significance level | | Grenswaarde die aangeeft hoe klein de <span class="math inline">\(P\)</span>-waarde moet zijn om significant te heten. In besluitprocedures wordt <span class="math inline">\(H_\textrm{0}\)</span> verworpen als <span class="math inline">\(P\le \alpha\)</span>; <span class="math inline">\(\alpha\)</span> bepaalt dan de kans op een type-1-fout. Meestal wordt <span class="math inline">\(\alpha = 0{,}05\)</span> aangehouden. | | Statistisch significant | Statistically significant | Een resultaat wordt statistisch significant genoemd als de <span class="math inline">\(P \le \alpha\)</span>. | | Toetsingsgrootheid | Test statistic | Het kengetal dat in een hypothesetoets gebruikt wordt om te bepalen of de waarnemingen opmerkelijk zijn onder <span class="math inline">\(H_\textrm{0}\)</span>. | | type-1-fout | Type 1 error | De nulhypothese wordt onterecht verworpen. | | type-2-fout | Type 2 error | De nulhypothese wordt niet verworpen, maar is in werkelijkheid onjuist. | | Verwerpen van <span class="math inline">\(H_\textrm{0}\)</span>| To reject <span class="math inline">\(H_\textrm{0}\)</span> | Het concluderen dat <span class="math inline">\(HO\)</span> niet meer geloofwaardig is. |</p>
-<p>: Woordenlijst <a href="Schatten.html" class="quarto-xref"><span>Hoofdstuk 24</span></a> . {#tbl-woorden-schatten .striped .hover}</p>
+</div>
+</figure>
+</div>
 </section>
 <section id="opgaven" class="level2" data-number="25.12">
 <h2 data-number="25.12" class="anchored" data-anchor-id="opgaven"><span class="header-section-number">25.12</span> Opgaven</h2>
@@ -1893,7 +1955,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","loop":false,"descPosition":"bottom","openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","closeEffect":"zoom","loop":false,"descPosition":"bottom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
