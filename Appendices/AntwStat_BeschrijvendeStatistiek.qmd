@@ -141,7 +141,7 @@ g.  We tellen hier de afwijkingen van het gemiddelde (residuen) bij elkaar op. D
     Je kunt dat ook wiskundig aantonen:
     $$ \sum_{i = 1}^n (Y_i - \mean{Y}) = \left(\sum_{i = 1}^n Y_i\right) - \sum_{i = 1}^n \mean{Y} = n \mean{Y} - n \mean{Y} = 0.$$ 
 
-h.  Hier moeten we eerst het kwadraat van elk verschil uitrekenen. Hierdoor wordt het uiteindelijke resultaat niet meer 0 omdat de negatieve waardes die we eruit krijgen positief worden: 
+h.  Hier moeten we eerst het kwadraat van elk verschil uitrekenen. Hierdoor wordt het uiteindelijke resultaat niet meer 0 omdat de negatieve residuen door het kwadrateren positief worden: 
 
 $$\sum^n_{i=1} (Y_i - \mean{Y})^2 = (3{,}0\,\textrm{kg} - 3{,}53\,\textrm{kg})^2 + (3{,}4\,\textrm{kg} - 3{,}53\,\textrm{kg})^2 + (4{,}2\,\textrm{kg}-3{,}53\,\textrm{kg})^2 = 0{,}747\,\textrm{kg}^2.$$
 
@@ -150,6 +150,10 @@ i.  De formule voor de variantie is: $$V_X = \frac{\sum_i^n \left(x_i - \mean{x}
     We krijgen dus: 
     
     $$V_X = \frac{0{,}747}{3-1} = 0{,}373\,\textrm{kg}^2.$$
+    
+    Voor de standaarddeviatie nemen we hier de wortel van:
+    
+    $$s_X = \sqrt{V_X} = 0{,}373.$$
 
 ### @exr-schat-sd
 
@@ -459,6 +463,9 @@ Het volgende kort scriptje maakt eerst het (bimodale) histogram
 en plot daarna gewicht (`Weight`) tegen leeftijd `AgeMonths`.
 
 ```{r}
+#| fig-width: 4
+#| fig-height: 4
+#| out-width: "57%"
 library(NHANES) # library NHANES inladen
 data(NHANES)    # dataset in dataframe zetten
 
@@ -467,9 +474,9 @@ hist(NHANES$Weight, breaks = 40)  # histogram van Weight, met ongeveer 40 klasse
 
 
 ```{r}
-#| fig-width: 5
-#| fig-height: 6
-#| out-width: "71%"
+#| fig-width: 4
+#| fig-height: 4.5
+#| out-width: "57%"
 plot(
   NHANES$AgeMonths, NHANES$Weight,
   xlab = "Leeftijd (maand)", ylab = "Gewicht (kg)"
@@ -491,16 +498,19 @@ voor volwassenen en voor kinderen/jongeren.
 We trekken de grens bij 15 jaar.
 
 ```{r}
+#| fig-width: 4
+#| fig-height: 4
+#| out-width: "57%"
 library(NHANES) # library NHANES inladen
 data(NHANES)    # dataset in dataframe zetten
 
 grens <- 15 # grens in jaren
 
-volwassen <- (NHANES$AgeMonths < grens*12)
+volwassen <- (NHANES$AgeMonths > grens*12)
 
-hist(NHANES$Weight[volwassen], breaks = 40)  # histogram volwassenen
+hist(NHANES$Weight[volwassen], breaks = 40, main = NULL)  # histogram volwassenen
 
-hist(NHANES$Weight[!volwassen], breaks = 40)  # histogram van de jeugd
+hist(NHANES$Weight[!volwassen], breaks = 40, main = NULL)  # histogram van de jeugd
 ```
 
 
