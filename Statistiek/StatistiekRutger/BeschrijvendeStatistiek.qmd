@@ -219,7 +219,7 @@ Je kunt de dataset ook gemakkelijk zelf onderzoeken met R.
       en voer ze dan uit.
   c.  Bekijk de gegevens in RStudio. 
       (Met het commando `View(NHANES)` is een tab geopend binnen
-      RStudio waar je door de gegeven heen kunt scrollen.)
+      RStudio waar je door de gegevens heen kunt scrollen.)
       Je zult zien dat de dataset bestaat uit een groot aantal regels en kolommen. 
       Iedere regel beschrijft één persoon; 
       iedere kolom bevat de informatie voor één variabele.
@@ -1394,44 +1394,6 @@ de positie met minimale potentiële energie. Dat is precies de positie
 waar de kwadratensom minimaal is, oftewel het gemiddelde.
 :::
 
-::: {#exr-centrummaten .pepexr}
-
-## Prosociaal gedrag van de dikbekkraai
-<br>
-
-::: {#fig-corvus-macrorhynchos}
-![](figuren/Corvus_macrorhynchos_(looking_back).jpg){width=60%}
-
-*Corvus macrorhynchos*. Foto: Gebruiker Alpsdake van [WikiCommons](https://commons.wikimedia.org/wiki/File:Corvus_macrorhynchos_(looking_back).JPG)
-:::
-
-In een studie naar prosociaal gedrag[^dikbek] in verschillende soorten kraaien
-gebruiken de onderzoekers een speciale opstelling
-waardoor de vogels elkaar aan voedsel kunnen helpen
-zonder daar zelf direct baat bij te hebben.
-Het werkt zo: als een vogel op een specifieke zitstok landt
-en blijft zitten, gaat er iets verderop een luikje open
-waardoor andere vogels toegang krijgen tot een iets lekkers.
-De vogel op de zitstok kan dit zien, maar kan zelf niet bij de traktatie.
-
-[^dikbek]: Horn, Lisa, Thomas Bugnyar, Michael Griesser, Marietta Hengl, Ei-Ichi Izawa, Tim Oortwijn, Christiane Rössler, et al. “Sex-Specific Effects of Cooperative Breeding and Colonial Nesting on Prosociality in Corvids.” eLife. eLife Sciences Publications Limited, October 20, 2020. https://doi.org/10.7554/eLife.58139.
-
-In verschillende sessies wordt bijgehouden 
-hoe vaak vogels op de zitstok landen.
-
-Bij de dikbekkraai (*Corvus macrorhynchos*) waren de resultaten
-in de verschillende sessies:
-
-| Aantal landingen op de zitstok in 9 sessies |
-|-------------------------------|
-| 2,  9,  4,  11,  4,  5,  1, 24, 1 |
-
-  a.  Bereken (met de hand) het gemiddelde en de mediaan van het aantal landingen.
-  b.  Welke waarde vind je het meest representatief voor deze gegevens?
-
-:::
-
-
 ## Maten voor de spreiding van een verdeling
 
 Na de centrummaten zijn nu de
@@ -2069,7 +2031,7 @@ standaarddeviatie met een pijl aangegeven.
 ```{r}
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Histogram van `Pulse` (rusthartslag) in de NHANES dataset. De standaarddeviatie is aangegeven met een pijl. Deze komt ongeveer overeen met de helft van de breedte van de piek, gemeten halverwege de hoogte van de piek."
+#| fig.cap: "Histogram van `Pulse` (rusthartslag) in de NHANES dataset. De standaarddeviatie is aangegeven met een pijl. Deze komt ongeveer overeen met de helft van de breedte van de piek, gemeten iets boven de helft van de hoogte van de piek."
 #| label: fig-histogram-pulse
 #| fig.width: 5
 #| fig.height: 2.5
@@ -2105,12 +2067,12 @@ ggplot(NHANES, aes(x = Pulse)) +
   ) +
   
   # Voeg een verticale stippellijn toe voor het gemiddelde
-  geom_vline(
-    xintercept = mean_pulse, 
-    linetype = "dashed", 
-    color = "black", 
-    size = 1
-  ) +
+  #geom_vline(
+  #  xintercept = mean_pulse, 
+  #  linetype = "dashed", 
+  #  color = "black", 
+  #  size = 1
+  #) +
   
   # Voeg een horizontale stippenlijn toe op de hoogte van de pijl
   geom_hline(
@@ -2139,19 +2101,19 @@ ggplot(NHANES, aes(x = Pulse)) +
   # Voeg een label toe voor de standaarddeviatie (s_X)
   annotate(
     "text", 
-    x = mean_pulse + sd_pulse / 2.5, 
-    y = 950, 
+    x = mean_pulse + sd_pulse / 2.5 -1, 
+    y = 960, 
     label = expression(italic(s[X])), 
     color = "DarkOrchid", 
-    size = 5, 
+    size = 4.5, 
     parse = TRUE
   ) +
   
   # Pas de x-as aan met automatische ticks en het gemiddelde als extra
   scale_x_continuous(
     name = "Hartslag in rust",
-    breaks = all_breaks, 
-    labels = labels,
+#    breaks = all_breaks, 
+#    labels = labels,
     minor_breaks = NULL # Schakel minor ticks uit
   ) +
   
@@ -2170,18 +2132,18 @@ ggplot(NHANES, aes(x = Pulse)) +
 <br>
 
 Het wegen van $n = 3$ volwassen poezen levert de volgende gewichten op: 
-$Y_1 = 3{,}0\,$kg, $Y_2 = 3{,}4\,$kg en $Y_3=4{,}2$\,kg.
+$X_1 = 3{,}0\,$kg, $X_2 = 3{,}4\,$kg en $X_3=4{,}2$\,kg.
 
-  a. Bereken $\sum_{i=1}^3 Y_i$.
-  b. Leg uit dat het gemiddelde gewicht $\mean{Y}$ kan worden geschreven als: 
-     $$\mean{Y} = \frac{\sum_{i=1}^3 Y_i}{3}.$$
-     Bereken $\mean{Y}$.
-  c. Bereken $\sum_{i=2}^3 Y_i$.
-  d. Bereken $\sum^n_{i=1} Y_i$.
-  e. Bereken $\sum^n_{i=1} Y_i^2$.
-  f. Bereken $\left( \sum^n_{i=1} Y_i\right)^2$.
-  g. Bereken $\sum^n_{i=1} \left(Y_i - \mean{Y}\right)$.
-  h. Bereken $\sum^n_{i=1} \left(Y_i - \mean{Y}\right)^2$.
+  a. Bereken $\sum_{i=1}^3 X_i$.
+  b. Leg uit dat het gemiddelde gewicht $\mean{X}$ kan worden geschreven als: 
+     $$\mean{X} = \frac{\sum_{i=1}^3 X_i}{3}.$$
+     Bereken $\mean{X}$.
+  c. Bereken $\sum_{i=2}^3 X_i$.
+  d. Bereken $\sum^n_{i=1} X_i$.
+  e. Bereken $\sum^n_{i=1} X_i^2$.
+  f. Bereken $\left( \sum^n_{i=1} X_i\right)^2$.
+  g. Bereken $\sum^n_{i=1} \left(X_i - \mean{X}\right)$.
+  h. Bereken $\sum^n_{i=1} \left(X_i - \mean{X}\right)^2$.
   i. Bereken de variantie en de standaarddeviatie van de gewichten. Maak daarbij gebruik
      van je eerdere antwoorden.
 :::
@@ -3159,10 +3121,11 @@ vogelsoorten weer te geven?
 Je wilt in een figuur laten zien hoe de zetels van de Tweede Kamer
 verdeeld zijn over de partijen.
 
-  a. Welke van de bovenstaande diagrammen lijkt je daarvoor het meest geschikt?
+a.  Welk van de diagrammen die we in dit hoofdstuk behandeld hebben
+    lijkt je daarvoor het meest geschikt?
   
-  b. Zie de visualisatie hieronder, afkomstig van Wikipedia.
-  Wat zijn de voor- en nadelen van deze representatie?
+b.  Zie de visualisatie hieronder, afkomstig van Wikipedia.
+    Wat zijn de voor- en nadelen van deze representatie?
   
 ![Zetelverdeling Tweede Kamer in februari 2025. Screenshot van [Wikipedia](https://commons.wikimedia.org/w/index.php?curid=141637170), CC BY-SA 4.0](figuren/Screenshot 2025-02-20 at 12.04.07.png){width=40%}
 
@@ -3406,24 +3369,24 @@ data(NHANES)        # laad de gegevens in een dataframe
 gezondheid <- NHANES$HealthGen # kopieer de kolom HealthGen naar een vector
 ```
   
-  a. Van welk type is variabele `gezondheid`? 
-      Als welk type is deze variabele in R opgeslagen?
-      
-      Tip: Voeg `str(gezondheid)` en `levels(gezondheid)` toe aan je code.
-  
-  b. Bekijk de eerste 20 waarden van `gezondheid` met het commando `head(gezondheid, 20)`. Wat valt je op?
-  
+a. Van welk type is variabele `gezondheid`? 
+    Als welk type is deze variabele in R opgeslagen?
+    
+    Tip: Voeg `str(gezondheid)` en `levels(gezondheid)` toe aan je code.
+
+b. Bekijk de eerste 20 waarden van `gezondheid` met het commando `head(gezondheid, 20)`. Wat valt je op?
+
 In plaats van een gezondheidstoestand is vaak de waarde `NA` ingevuld. 
 Dat staat voor "Not Available"; voor deze personen is de gezondheidsstatus dus onbekend.
 
-  c. Voeg `gezondheid <- gezondheid[!is.na(gezondheid)]` onderaan je code toe. Wat is er veranderd? Wat doet de functie `is.na()`? 
-  
-  d. Voeg `gezondheid.t <- table(gezondheid)` toe aan je code. Bekijk `gezondheid.t`. Wat heeft de functie `table()` gedaan?
-  
-  e. Bereken nu ook de *relatieve* frequenties van alle niveaus. 
-  Sla deze op in een nieuwe variabele `gezondheid.f`. Hoe ziet `gezondheid.f` eruit? 
-  
-     Tip: Gebruik de functie `sum()` en het feit dat je een hele tabel kunt delen door een getal.
+c. Voeg `gezondheid <- na.omit(gezondheid)` onderaan je code toe. Wat is er veranderd? Wat doet de functie `is.omit()`? 
+
+d. Voeg `gezondheid.t <- table(gezondheid)` toe aan je code. Bekijk `gezondheid.t`. Wat heeft de functie `table()` gedaan?
+
+e. Bereken nu ook de *relatieve* frequenties van alle niveaus. 
+   Sla deze op in een nieuwe variabele `gezondheid.f`. Hoe ziet `gezondheid.f` eruit? 
+
+   Tip: Gebruik de functie `sum()` en het feit dat je een hele tabel kunt delen door een getal.
 :::
 
 ### Grafieken en figuren in R
@@ -3705,17 +3668,7 @@ We vinden: 3,5 inches, 2,4 inches, 3,4 inches, 3,9 inches, en 2,7 inches.
       verifieer dan met R.
 :::
 
-::: {#exr-middelbare-mediaan .pepexr}
-## Gemiddelde of mediaan voor cijfers van de middelbare school
-<br>
 
-Tijdens de middelbare school stond op je rapporten
-waarschijnlijk voor ieder vak het gemiddelde vermeld van alle cijfers
-die je in de betreffende periode had gehaald. In plaats daarvan zouden
-scholen ook kunnen kiezen voor de mediaan. Welke voor- en nadelen
-zou dat hebben? Waar zou jij voor kiezen?
-
-:::
 
 
 
