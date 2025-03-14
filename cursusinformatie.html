@@ -71,6 +71,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -564,7 +593,17 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p><strong>Statistiek</strong>:</p>
 <ul>
-<li>Aan het onderdeel Statistiek wordt momenteel nog gewerkt. De leerdoelen kun je binnenkort hier zien.</li>
+<li>Gegevens over verschillende typen variabelen correct samenvatten en visualiseren.</li>
+<li>De basisregels van het kansrekenen toepassen om kansen te berekenen.</li>
+<li>Kansen bepalen voor normale verdelingen en <span class="math inline">\(t\)</span>-verdelingen.</li>
+<li>Kritisch beoordelen wat de gevaren zijn op verschillende soorten bias in schattingen.</li>
+<li>De onzekerheid in schattingen kwantificeren d.m.v. betrouwbaarheidsintervallen.</li>
+<li>Verschillende statistische toetsen uitvoeren (o.a. <span class="math inline">\(t\)</span>-toetsen) en de resultaten, waaronder de <span class="math inline">\(P\)</span>-waarde, correct interpreteren.</li>
+<li>Controleren of het statistische model van een toets geschikt is voor de toepassing.</li>
+<li>Aan de hand van causale diagrammen evalueren of confounders of colliders een rol kunnen spelen bij het ontstaan van associaties tussen variabelen.</li>
+<li>Het belang van controlegroepen uitleggen en bepalen of regression to the mean resultaten kan beïnvloeden.</li>
+<li>Lineaire relaties tussen variabelen aantonen en interpreteren (correlatie en regressie).</li>
+<li>Eenvoudige statistische analyses uitvoeren in R de uitvoer correct interpreteren.</li>
 </ul>
 </section>
 <section id="vaardigheden" class="level2">
