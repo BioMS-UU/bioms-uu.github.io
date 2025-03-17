@@ -427,7 +427,7 @@ We nemen daarom een steekproef van $n$ eenheden.
 
 Dan zijn dit de stappen van de toets:
 
-1.  **Kies het kansmodel:** het Normale Model.
+1.  **Kies het statistische model:** het Normale Model.
 2.  **Formuleer de hypotheses:**\
     $\HO:\qquad \mu_X = \mu_0$,\
     $\HA:\qquad \mu_X \neq \mu_0$.
@@ -811,10 +811,6 @@ namelijk $\df = n_1 + n_2 - 2$:
 Trek op basis van $P$ je conclusies!
 
 
-
-
-
-
 We vatten de stappen weer even samen:
 
 ::: {.callout-important}
@@ -830,7 +826,7 @@ van $n_1$ en $n_2$ eenheden.
 
 Dan zijn dit de stappen van de toets:
 
-1.  **Kies het kansmodel:**\
+1.  **Kies het statistische model:**\
     - Beide populaties en steekproeven voldoen aan het Normale Model.
     - De standaarddeviaties van beide populaties zijn gelijk.
 2.  **Formuleer de hypotheses:**\
@@ -1061,14 +1057,14 @@ t.test(snavel_Chinstrap, snavel_Gentoo, var.equal = FALSE)
 ```
 
 Sterker nog, de setting `FALSE` is in R de default;
-als je niets specificeert wordt dus standaard Welch's test uitgevoerd:
+als je niets specificeert wordt dus standaard de toets van Welch uitgevoerd:
 
 ```{r}
 #| eval: false
 t.test(snavel_Chinstrap, snavel_Gentoo)
 ```
 
-Het enige nadeel van de toets van Welch is dat die iets minder gevoelig is
+Het enige nadeel van de toets van Welch is dat die iets minder krachtig is
 dan de standaard $t$-toets voor twee steekproeven.
 De $P$-waarde zal typisch dus iets groter zijn bij de toets van Welch 
 dan bij de standaard toets.
@@ -1089,267 +1085,66 @@ b. Vergelijk de 95%-BHI's. Welke interval is breder? Hoe komt dat?
 
 ## De $t$-toets voor gepaarde steekproeven
 
-### Stap 1: De nulhypothese
-
-### Stap 2: Het statistische model
-
-### Stap 3: De toetsingsgrootheid
-
-### Stap 4: Kansverdeling onder $\HO$
-
-### Stap 5: Bepaal de $P$-waarde
-
-### Stap 6: Conclusies
-
-## De drie $t$-toetsen in plaatjes
+**Stap 1: Kies een statistisch model.**\
 
 
+**Stap 2: Formuleer de hypotheses.**\
 
 
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig-width: 4.5
-#| fig-height: 3
-#| out-width: "64%"
-#| fig-cap: "Met een $t$-toets voor twee steekproeven kun je toetsen of het gemiddelde van twee groepen significant van elkaar verschilt. Dit is nuttig wanneer je bijvoorbeeld wilt weten of een bepaalde behandeling een meetbaar effect heeft in vergelijking met een controlegroep."
-#| label: fig-t-toets-2-var
+**Stap 3: Kies de toetsingsgrootheid en bepaal diens verdeling onder $\HO$.**\
 
-set.seed(125)
 
-mu <- 330 # Gemiddelde van de normaalverdeling
-sigma <- 20 # Standaarddeviatie van de normaalverdeling
-n <- 10 # Steekproefgrootte
+**Stap 4: Bereken $t$ op basis van de twee steekproeven.**\
 
-# Steekproef 1
-x1 <- rnorm(n, mu, sigma)
-m1 <- mean(x1) # Steekproefgemiddelde
 
-# Steekproef 2
-x2 <- rnorm(n, mu, sigma)
-m2 <- mean(x2) # Steekproefgemiddelde
+**Stap 5: Bereken de $P$-waarde:**\
 
-# Maak dataframe met beide steekproeven
-data <- data.frame(y = c(x1, x2),
-                   x = seq(2*n),
-                   z = c(rep(1, n), rep(2, n)),
-                   m = c(rep(m1, n), rep(m2, n)))
 
-ggplot(data, aes(x = x, y = y)) +
-  # Verticale lijnen naar het gemiddelde
-  geom_segment(
-    aes(
-      x = x, xend = x, 
-      y = y, yend = m
-    ),
-    color = "SlateGray",
-    linetype = "solid",
-    size = 1
-  ) +
-  # Punten
-  geom_point(
-    shape = 21, 
-    fill = "SlateGray", 
-    size = 5
-  ) +
-  # Gemiddelde lijn voor steekproef 1
-  annotate(
-    "segment",
-    x = 0.75, xend = 10.25, 
-    y = m1, 
-    color = opvulkleur,
-    size = 1
-  ) +
-  # Label bij de gemiddelde lijn
-  annotate(
-    "text",
-    x = 10.25, 
-    y = m1,
-    label = expression(bar(italic(`x`))[1]),
-    color = opvulkleur,
-    hjust = 0,
-    size = 6
-  ) +  
-  # Gemiddelde lijn voor steekproef 2
-  annotate(
-    "segment",
-    x = 10.75, xend = 20.25, 
-    y = m2, 
-    color = opvulkleur,
-    size = 1
-  ) +
-  # Label bij de gemiddelde lijn
-  annotate(
-    "text",
-    x = 20.25, 
-    y = m2,
-    label = expression(bar(italic(`x`))[2]),
-    color = opvulkleur,
-    hjust = 0,
-    size = 6
-  ) +
-  # Y-as instellen
-  scale_y_continuous(
-   # breaks = data$y, 
-    limits = c(min(data$y), max(data$y)),
-    labels = scales::number_format(accuracy = 1)
-  ) +
-  ylab("Vleugelspanwijdte van de Grote albatros (cm)") +
-  # Geen x-as, geen gridlijnen
-  theme_classic() +
-  theme(
-    axis.title = element_blank(),
-    axis.text = element_blank(),
-    axis.line = element_blank(),
-    axis.ticks = element_blank(),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank()
-  )
-```
+**Stap 6: Trek je conclusies.**\
 
-## Voorbeeld voor de $t$-toets voor twee onafhankelijke steekproeven
 
-In het voorbeeld hierboven hebben we onderzocht wat het gemiddelde 
-lichaamsgewicht van een Bonte manakin is op basis van één steekproef van 641
-Bonte manakins in Colombia. Hierbij hebben we echter geen rekening gehouden met
-een factor die mogelijk van belang kan zijn voor het gewicht: geslacht. Zoals je
-in @fig-manacus kunt zien hebben de mannetjes en vrouwtjes een heel ander
-uiterlijk. Daarom willen we in dit voorbeeld onderzoeken of er ook een
-statistisch significant verschil is in de gewichten van mannelijke en 
-vrouwelijke Bonte manakins. Hiervoor gebruiken we de $t$-toets voor twee
-onafhankelijke steekproeven. Zoals je in @fig-manakin-distributie kunt zien,
-is het gewicht van 252 vrouwtjes en 201 mannetjes gerapporteerd in de dataset.
-Bij elkaar is dit minder dan de volledige dataset uit het vorige voorbeeld,
-doordat er een aantal individuen is waarvoor het geslacht niet bepaald is.
+::: {.callout-important}
+## De $t$-toets voor twee gepaarde steekproeven in 6 stappen
 
-::: {#fig-manacus layout-ncol=2 layout-valign="bottom"}
+We zijn geïnteresseerd in een continue variabele $X$.
+Er zijn twee steekproeven genomen van grootte $n$,
+maar ieder punt in steekproef 1
+is gepaard aan een punt in steekproef 2.
+We willen de hypothese toetsen
+dat het populatiegemiddelde van het verschil
+binnen de paren $mu_d$ gelijk is aan 0.
 
-[![Vrouwelijke Bonte manakin. Foto gemaakt door Dario Sanches uit São Paulo, Brazil](figuren/manacus_manacus_female.jpg)](https://www.flickr.com/photos/dariosanches/5833840567/){#fig-manacus-female}
+Dan zijn dit de stappen van de toets:
 
-[![Mannelijke Bonte manakin. Foto gemaakt door Félix Uribe uit Rionegro, Antioquia, Colombia](figuren/manacus_manacus_male.jpg)](https://www.flickr.com/photos/24201429@N04/8254939982/){#fig-manacus-male}
+1.  **Kies het statistische model:**\
+    We nemen aan dat de verschillen $d_i$ binnen de paren
+    voldoen aan het Normale Model.
+2.  **Formuleer de hypotheses:**\
+    $\HO:\qquad \mu_d = 0$,\
+    $\HA:\qquad \mu_d \neq 0$.
+3.  **Kies de toetsingsgrootheid:**
 
-De Bonte manakin (*Manacus manacus*). [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0)
+    $$t = \cfrac{\mean{d}}{\se{\mean{d}}}$$.
+    
+    **Verdeling van de toetsingsgrootheid onder $\HO$:**\
+    De $t$-verdeling met $\df = n - 1$.
+4.  **Bereken de toetsingsgrootheid op basis van de steekproef.**\
+    Achtereenvolgens: alle verschillen $d_i$, $\mean{d}$, $s_d$, $\se{\mean{d}}$, en dan $t$.
+5.  **Bereken de $P$-waarde:**\
+    
+    Gebruik R:
+    
+    ```{r}
+    P <- 2 * pt(-abs(t), df = n - 1)
+    ```
+
+6.  **Trek je conclusies.**
 
 :::
 
-::: {#fig-manakin-distributie layout-ncol="2" out-width="100%"}
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.width: 3.5
-#| fig.height: 4
-#| out-width: "100%"
-#| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins, per geslacht."
-#| label: fig-dist-manakin-1
+::: {#exm-slaap collapse=true}
 
-massa_manacus <- read.csv("data/massa_manacus.csv")
-
-massa_manacus %>%
-  filter(Sex != "Undetermined") %>%
-  ggplot(aes(x = Sex, y = Weight, fill = Sex)) +  
-  geom_boxplot() + 
-  theme_minimal() +
-  ylab("Gewicht (g)") +
-  scale_fill_discrete(name = "Geslacht",
-                      labels = c("Vrouwelijk", "Mannelijk")) +
-  theme(legend.position = "top",
-        axis.title.x = element_blank()) +  
-  guides(fill = guide_legend(nrow = 2)) +  
-  scale_x_discrete(
-    labels = c("Female" = paste("n =", sum(massa_manacus$Sex == "Female")),
-               "Male" = paste("n =", sum(massa_manacus$Sex == "Male"))))  
-
-
-```
-
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.width: 3.5
-#| fig.height: 4
-#| out.width: "100%"
-#| fig-cap: "Histogram van het gewicht van vrouwelijke en mannetlijke Bonte manakins."
-#| label: fig-dist-manakin-2
-
-massa_manacus %>%
-  filter(Sex != "Undetermined") %>%
-  ggplot(aes(x = Weight, fill = Sex)) +
-    geom_histogram(color = "black", 
-                   binwidth = 1, 
-                   position = "dodge") +  
-    theme_minimal() +
-      theme(legend.position = "none") +  
-    xlab("Gewicht (g)") +
-    ylab("Aantal observaties") +
-    facet_wrap(vars(Sex), nrow = 2, 
-               labeller = as_labeller(c("Female" = "Vrouwelijk", 
-                                        "Male" = "Mannelijk")))  
-
-```
-
-Verdeling van gemeten gewichten van de Bonte manakin in Colombia.
-:::
-
-De gemeten gewichten van de Bonte manakins zijn per geslacht weergegeven in 
-@fig-manakin-distributie. Naast de visualisatie van de data vatten we deze 
-samen met kengetallen. 
-Voor de mannetjes:
-
-```{r}
-summary(massa_manacus$Weight[massa_manacus$Sex == "Male"])
-```
-
-En voor de vrouwtjes:
-
-```{r}
-summary(massa_manacus$Weight[massa_manacus$Sex == "Female"])
-```
-Daarnaast is het voor de $t$-toets belangrijk om te kijken of de variatie in 
-beide groepen ongeveer gelijk is. Hiervoor gebruiken we de standaarddeviatie.
-
-```{r}
-sd(massa_manacus$Weight[massa_manacus$Sex == "Male"])
-```
-```{r}
-sd(massa_manacus$Weight[massa_manacus$Sex == "Female"])
-```
-Zoals je ziet is de standaarddeviatie van de vrouwelijke Bonte manakins iets
-groter dan van de mannelijke dieren. De standaard $t$-toets neemt aan dat de 
-variantie van beide groepen gelijk is, Welch's $t$-toets doet dat niet.
-Beide $t$-toetsen hebben de assumptie dat de data normaalverdeeld is. Het is dus
-belangrijk om te testen of de data in beide groepen normaalverdeeld is. Dat doen
-we met de volgende code:
-
-```{r}
-qqnorm(massa_manacus$Weight[massa_manacus$Sex == "Male"])
-qqline(massa_manacus$Weight[massa_manacus$Sex == "Male"])
-```
-
-```{r}
-qqnorm(massa_manacus$Weight[massa_manacus$Sex == "Female"])
-qqline(massa_manacus$Weight[massa_manacus$Sex == "Female"])
-```
-Uit bovenstaande QQ-plots kunnen we afleiden dat de verdeling voor de gewichten 
-van de mannelijke manakins niet helemaal symmetrisch is, maar een klein beetje 
-links-scheef. Dit kun je ook zien in @fig-dist-manakin-2: de staart aan de 
-linkerkant van de schaal is wat langer dan die aan de rechterkant. 
-We concluderen dat de verdeling symmetrisch genoeg is om een $t$-toets uit te
-voeren.
-
-```{r}
-# Standaard gepaarde t-toets
-t.test(massa_manacus$Weight[massa_manacus$Sex == "Male"],
-       massa_manacus$Weight[massa_manacus$Sex == "Female"],
-       var.equal = TRUE)
-```
-```{r}
-# Welch's gepaarde t-toets
-t.test(massa_manacus$Weight[massa_manacus$Sex == "Male"],
-       massa_manacus$Weight[massa_manacus$Sex == "Female"],
-       var.equal = FALSE)
-```
-
-## Voorbeeld van de $t$-toets gepaarde steekproeven
+## Voorbeeld van de $t$-toets voor gepaarde steekproeven
 
 ```{r}
 #| include: false
@@ -1366,7 +1161,7 @@ slaap <- data.frame(ID = as.factor(seq(8)),
                     MWT_d7 = c(1.7, 5.5, 4.7, 3.6, 10.3, 6.8, 8.5, 5.2))
 ```
 
-![De gevolgen van weinig slapen zijn niet mals.](figuren/slapende_student.jpg){#fig-slapende-student fig-cap="D. Sharon Pruitt, owner of [Pink Sherbet Photography](https://www.pinksherbet.com) [CC BY 2.0](https://creativecommons.org/licenses/by/2.0), via Wikimedia Commons"}
+![De gevolgen van weinig slapen zijn niet mals.](figuren/slapende_student.jpg){#fig-slapende-student fig-cap="D. Sharon Pruitt, owner of [Pink Sherbet Photography](https://www.pinksherbet.com) [CC BY 2.0](https://creativecommons.org/licenses/by/2.0), via Wikimedia Commons" width="50%"}
 
 De gepaarde $t$-toets zullen we illustreren aan de hand van een onderzoek naar
 slaap^[[Guilleminault, C., Powell, N. B., Martinez, S., Kushida, C., Raffray, T., Palombini, L., & Philip, P. (2003). Preliminary observations on the effects of sleep time in a sleep restriction paradigm. Sleep medicine, 4(3), 177-184.](https://doi.org/10.1016/S1389-9457(03)00061-3)]. 
@@ -1506,17 +1301,185 @@ t.test(slaap$MWT_d0, slaap$MWT_d6, paired = TRUE)
 We kunnen de nul-hypothese van geen verschil tussen de MWT-scores op dag 0 en 
 dag 6 dus verwerpen.
 
+:::
+
+## De drie $t$-toetsen in plaatjes
+
+
+
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig-width: 4.5
+#| fig-height: 3
+#| out-width: "64%"
+#| fig-cap: "Met een $t$-toets voor twee steekproeven kun je toetsen of het gemiddelde van twee groepen significant van elkaar verschilt. Dit is nuttig wanneer je bijvoorbeeld wilt weten of een bepaalde behandeling een meetbaar effect heeft in vergelijking met een controlegroep."
+#| label: fig-t-toets-2-var
+
+set.seed(125)
+
+mu <- 330 # Gemiddelde van de normaalverdeling
+sigma <- 20 # Standaarddeviatie van de normaalverdeling
+n <- 10 # Steekproefgrootte
+
+# Steekproef 1
+x1 <- rnorm(n, mu, sigma)
+m1 <- mean(x1) # Steekproefgemiddelde
+
+# Steekproef 2
+x2 <- rnorm(n, mu, sigma)
+m2 <- mean(x2) # Steekproefgemiddelde
+
+# Maak dataframe met beide steekproeven
+data <- data.frame(y = c(x1, x2),
+                   x = seq(2*n),
+                   z = c(rep(1, n), rep(2, n)),
+                   m = c(rep(m1, n), rep(m2, n)))
+
+ggplot(data, aes(x = x, y = y)) +
+  # Verticale lijnen naar het gemiddelde
+  geom_segment(
+    aes(
+      x = x, xend = x, 
+      y = y, yend = m
+    ),
+    color = "SlateGray",
+    linetype = "solid",
+    size = 1
+  ) +
+  # Punten
+  geom_point(
+    shape = 21, 
+    fill = "SlateGray", 
+    size = 5
+  ) +
+  # Gemiddelde lijn voor steekproef 1
+  annotate(
+    "segment",
+    x = 0.75, xend = 10.25, 
+    y = m1, 
+    color = opvulkleur,
+    size = 1
+  ) +
+  # Label bij de gemiddelde lijn
+  annotate(
+    "text",
+    x = 10.25, 
+    y = m1,
+    label = expression(bar(italic(`x`))[1]),
+    color = opvulkleur,
+    hjust = 0,
+    size = 6
+  ) +  
+  # Gemiddelde lijn voor steekproef 2
+  annotate(
+    "segment",
+    x = 10.75, xend = 20.25, 
+    y = m2, 
+    color = opvulkleur,
+    size = 1
+  ) +
+  # Label bij de gemiddelde lijn
+  annotate(
+    "text",
+    x = 20.25, 
+    y = m2,
+    label = expression(bar(italic(`x`))[2]),
+    color = opvulkleur,
+    hjust = 0,
+    size = 6
+  ) +
+  # Y-as instellen
+  scale_y_continuous(
+   # breaks = data$y, 
+    limits = c(min(data$y), max(data$y)),
+    labels = scales::number_format(accuracy = 1)
+  ) +
+  ylab("Vleugelspanwijdte van de Grote albatros (cm)") +
+  # Geen x-as, geen gridlijnen
+  theme_classic() +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.line = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  )
+```
+
+## Het Normale Model
+
+De $t$-toetsen maken allemaal de aanname dat het Normale Model van toepassing is.
+Het Normale Model wordt wel steeds net iets anders toegepast. 
+
+- Bij de $t$-toets voor één steekproef gaat het Normale Model over de verdeling
+  van de variabele in de populatie en de manier waarop de ene steekproef tot stand is gekomen.
+- Bij de $t$-toets voro twee onafhankelijke steekproeven wordt verondersteld
+  dat het Normale Model van toepassing is op *beide* steekproeven.
+- Bij de $t$-toets voor gepaarde steekproeven beschrijft het Normale Model de verschillen 
+  binnen de paren.
+
 ## Wat is er nog meer?
+
+We hebben in dit hoofdstuk drie $t$-toetsen behandeld
+die allemaal te maken hebben met het gemiddelde van een continue variabele.
+In deze cursus moeten we het daarbij laten.
+
+Maar, er bestaan nog veel meer toetsen die gebruikt kunnen worden 
+om de ligging van een verdeling te toetsen.
+We kunnen die onmogelijk allemaal bespreken,
+maar willen wel dat je nog een paar namen gezien hebt.
 
 ### Niet-parametrische alternatieve
 
-Alleen aannames en toepassing.
+In sommige situaties zijn we niet bereid
+om aan te nemen dat het Normale Model van toepassing is.
+Dat kan zijn omdat de normale verdeling bij voorbaat niet plausibel is,
+of omdat de data zelf aanleiding geven om aan de normale verdeling te twijfelen,
+bijvoorbeeld vanwege een scheve verdeling of opvallende uitbijters.
+We hebben het hier in @sec-afwijkingen uitgebreid over gehad.
 
--   Wilcoxon's signed-rank test
--   tekentoets
--   Mann-Whitney $U$-test / Wilcoxon rank-sum test.
+Voor dit soort situaties zijn speciale toetsen ontwikkeld
+die minder specifieke aannames maken dan de $t$-toets over de verdeling van de variabele
+in de populatie.
+Deze toetsen worden **verdelingsvrije** of **non-parametrische toetsen** genoemd.
 
-### ANOVA
+Omdat deze toetsen minder specifieke aannames maken,
+zijn ze minder krachtig.
+Dat wil zeggen, als je voor dezelfde situatie zowel een $t$-toets 
+als een verdelingsvrije toets uitvoert,
+zal de $t$-toets meestal een kleinere $P$-waarde opleveren.
+Maar als de $t$-toets niet van toepassing is, 
+komt zo'n minder krachtige toets toch goed van pas.
+
+In de tabel hieronder is kort een overzicht gegeven van de meest gebruikte 
+verdelingsvrije alternatieven voor de $t$-toetsen.
+De alternatieven voor de $t$-toets voor één steekproef 
+en de $t$-toets voor gepaarde steekproeven zijn gelijk;
+dat is omdat, zoals we gezien hebben,
+het in feite om dezelfde toets gaat.
+
+| Type $t$-toets          | Verdelingsvrije alternatief   |
+|----------------------------|------------------------------|
+| $t$-toets voor één steekproef  | Wilcoxon signed-rank test, Tekentoets |
+| $t$-toets voor gepaarde steekproeven      | Wilcoxon signed-rank test, Tekentoets |
+| $t$-toets voor twee onafhankelijke steekproeven | Mann-Whitney $U$-test (of Wilcoxon rank-sum test) |
+
+### Drie of meer groepen: ANOVA
+
+Met de $t$-toets voor twee onafhankelijke steekproeven
+kunnen we de gemiddelden van twee populaties vergelijken.
+In de praktijk vraagt een onderzoek vaak om het vergelijken van 
+meer dan twee groepen.
+Om dat op een consistente manier te kunnen doen,
+is ANOVA ontwikkeld. 
+ANOVA staat voor *analysis of variance*.
+De nulhypothese van de standaard ANOVA
+(ook wel "eenweg ANOVA" genoemd)
+is dat de populatiegemiddelden van *alle* populaties
+gelijk zijn.
 
 ## Samenvatting
 
@@ -1524,134 +1487,105 @@ Alleen aannames en toepassing.
 
 ## Opgaven
 
-::: {#exr-t-toets .mixedexr}
-## Voorbeeld van de $t$-toets voor één steekproef
+::: {#exr-manakin .Rexr}
+## Het gemiddelde gewicht van de Bonte manakin
 <br>
 
-Lichaamsgewicht is een belangrijke eigenschap bij dieren, omdat het invloed 
-heeft op hun fysiologie, gedrag en ecologische rol. In dit voorbeeld gebruiken 
-we een 
-[dataset](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273) 
-over vogels en zoogdieren in Colombia, waarin het lichaamsgewicht van meer dan 
+Lichaamsgewicht is een belangrijke eigenschap bij dieren,  
+omdat het invloed heeft op hun fysiologie, gedrag en ecologische rol. 
+In deze opgave gebruiken we een uitgebreide dataset
+over vogels en zoogdieren in Colombia, 
+waarin het lichaamsgewicht van meer dan 
 42.000 vogels en 7.400 zoogdieren is vastgelegd^[[Ocampo, D., Borja-Acosta, K. G., Lozano-Flórez, J., Cifuentes-Acevedo, S., Arbeláez-Cortés, E., Bayly, N. J., ... & Acevedo-Charry, O. (2021). *Body mass data set for 1,317 bird and 270 mammal species from Colombia.* Ecology, 102(3), e03273.](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273)]. 
-We focussen op de Bonte manakin (*Manacus manacus*) en we willen met behulp van
-een $t$-toets onderzoeken wat het gemiddelde gewicht van een Bonte manakin is.
+We focussen op de Bonte manakin (*Manacus manacus*).
 
-Voordat we de $t$-toets mogen toepassen, moeten we eerst kijken of de data aan
-de aannames van de $t$-toets voldoet. Voor een $t$-toets voor één steekproef is
-de aanname alleen dat de data normaalverdeeld is.
+In eerder onderzoek wordt beweerd dat het gewicht van 
+de Bonte manakin gemiddeld gelijk is aan 16,5g.
+Wij willen de Colombiaanse dataset gebruiken of die bewering juist is.
 
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.width: 3.5
-#| fig.height: 2
-#| out.width: "50%"
-#| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins (n = 641)."
-#| label: fig-dist-manakin
+a.  Welke $t$-toets zou je moeten gebruiken om die bewering te testen?
 
-massa_manacus <- read.csv("data/massa_manacus.csv")
+b.  Formuleer $\HO$ en $\HA$.
 
-ggplot(massa_manacus,
-       aes(x = Weight)) +
-    geom_histogram(fill = opvulkleur, 
-                   color = "black",
-                   binwidth = 1, 
-                   position = "dodge") +  
-    theme_minimal() +
-    xlab("Gewicht (g)") +
-    ylab("Aantal observaties")
-```
+Begin een nieuw R script om de analyse te programmeren.
 
-Gebaseerd op @fig-dist-manakin lijkt de verdeling van gewichten grofweg normaal.
-Dit kunnen we beter controleren met behulp van een QQ-plot:
+c.  We hebben de gegevens online gezet; voeg de volgende regel toe aan je script om de gegevens te importeren:
 
-```{r}
-qqnorm(massa_manacus$Weight)
-qqline(massa_manacus$Weight)
-```
-Zoals je ziet is de data wel wat links-scheef, maar de data is voldoende
-normaalverdeeld om een $t$-toets uit te kunnen voeren.
+    ```{r}
+    #| eval: false
+    massa_manacus <- read.csv(
+      "https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data/massa_manacus.csv"
+      )
+    ```
+    
+    Bekijk de dataset even. Welke variabelen zijn er? Hoeveel datapunten?
+    
+d.  Onderzoek de dataset. Bereken maten van ligging en spreiding voor de variabele, 
+    en visualiseer de verdeling met een boxplot en een histogram. 
 
-```{r}
-t.test(massa_manacus$Weight, mu = 16.5)
-```
+e.  Voeg ook een QQ-plot toe om te zien of de verdeling sterk afwijkt van een normale verdeling.
+    Alles overziend, lijkt de $t$-toets geschikt voor deze situatie?
+    
+f.  Voer de $t$-toets uit met de functie `t.test()`. 
+
+    Bekijk eerst het 95%-BHI.  Wat zegt die?
+    
+g.  Bekijk de $P$-waarde en trek je conclusies.
 
 :::
 
 
-::: {.todo-box}
-Madelon en/of Yannick:
+::: {#exr-manakin-2 .Rexr}
+## Gewichtsverschillen tussen mannetjes en vrouwtjes bij de Bonte mannakin
 
-Voeg in Week 3, opgave 5, plus uitwerking. Ik zal het daarna herschrijven.
-Geef de output niet, maar laat het ze zelf genereren.
-De data misschien gewoon als vector geven die ze kunnen kopiëren?
+In @exr-manakin hierboven hebben we het gemiddelde 
+lichaamsgewicht van een Bonte manakin onderzocht. 
+Hierbij hebben we echter geen rekening gehouden met
+een factor die mogelijk van belang kan zijn voor het gewicht: geslacht. 
+Zoals je in @fig-manacus kunt zien hebben de mannetjes en vrouwtjes een heel ander
+uiterlijk. 
+Daarom willen we in deze opgave onderzoeken of er ook een verschil is in de gewichten van mannelijke en 
+vrouwelijke Bonte manakins.
+Je kunt doorwerken in het script dat je gemaakt hebt voor @exr-manakin.
+
+::: {#fig-manacus layout-ncol=2 layout-valign="bottom"}
+
+[![Vrouwelijke Bonte manakin. Foto gemaakt door Dario Sanches uit São Paulo, Brazil](figuren/manacus_manacus_female.jpg)](https://www.flickr.com/photos/dariosanches/5833840567/){#fig-manacus-female}
+
+[![Mannelijke Bonte manakin. Foto gemaakt door Félix Uribe uit Rionegro, Antioquia, Colombia](figuren/manacus_manacus_male.jpg)](https://www.flickr.com/photos/24201429@N04/8254939982/){#fig-manacus-male}
+
+De Bonte manakin (*Manacus manacus*). [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0)
+
 :::
 
-::: {#exr-diastolische-bloeddruk}
+a.  Welke $t$-toets zou je voor deze situatie willen gebruiken?
 
-**a.** 
+b.  Formuleer $\HO$ en $\HA$.
 
-Hieronder staan diastolische bloeddrukwaarden die gemeten zijn bij een steekproef van 50 mannen. Hierna is er een $t$-test uitgevoerd. 
+c.  Maak een vector met alleen de gewichten van de mannetjes, 
+    en een vector met alleen de gewichten van de vrouwtjes.
+    Verwijder de eventuele waarden `NA` met de functie `na.omit()`.
+    
+d.  Van hoeveel mannetjes en vrouwtjes heb je gegevens?
 
-``` {r}
-bloeddruk <- c(94, 94, 82, 100, 112,
-110, 84, 78, 92, 112,
-94, 92, 86, 84, 90,
-72, 88, 92, 88, 84,
-98, 98, 84, 90, 90,
-70, 80, 90, 80, 106,
-74, 95, 100, 94, 84,
-70, 102, 92, 84, 80,
-84, 86, 98, 82, 80,
-88, 80, 84, 100, 86)
+e.  Maak een boxplot en een histogram voor zowel de mannetjes en de vrouwtjes.
+    Bereken ook maten voor ligging en spreiding.
 
-t.test(bloeddruk, mu=90)
-```
-Bestudeer de uitvoer; zorg dat je de structuur en de inhoud ervan begrijpt. 
+f.  Wat is het statistisch model van deze $t$-toets? 
+    Maak de QQ-plot of -plots waarmee je kunt bekijken of
+    het statistisch model van toepassing lijkt.
+    
+    Ziet het er goed uit?
+    
+g.  Gebruik de `t.test()` functie
+    om de toets uit te voeren.
+    
+    Welk geslacht is groter, en hoeveel?
+    Wat is het 95%-BHI voor het verschil tussen de gemiddelden van de geslachten?
+     
+h.  Bekijk de $P$-waarde en trek je conclusies.
 
-**a.** Welke toets wordt precies uitgevoerd? Stel de nulhypothese en de alternatieve hypothese op. Welke aannames moet men maken om deze toets uit te voeren? 
 
-**b.** Lees de toetsingsgrootheid en bijbehorende overschrijdingskans af. Wat is je conclusie ten aanzien van de gestelde hypotheses, aangenomen dat aan de voorwaarden is voldaan? 
-
-**c.** Lees het 95%-betrouwbaarheidsinterval voor het populatiegemiddelde af uit de uitvoer.
-
-**d.** Wat is het verband tussen de antwoorden op onderdelen **b** en **c**?
-:::
-
-::: {.todo-box}
-Madelon en/of Yannick:
-
-Voeg in Week 3, opgave 8, plus uitwerking. Ik zal het daarna herschrijven.
-Geef de output niet, maar laat het ze zelf genereren.
-De data misschien gewoon als twee vector geven die ze kunnen kopiëren?
-:::
-::: {.Rexr #exr-zuurgraad}
-Een onderzoeker vermoedt dat onder invloed van zonlicht de zuurgraad van vijvers kan veranderen. Om dit vermoeden te
-toetsen meet hij in negen vijvers zowel ’s ochtends als ’s avonds de pH.
-De verkregen gegevens zijn in de volgende vectoren weergegeven:
-```{r}
-zuurgraadOchtend <- c(4.89, 5.28, 5.24, 5.27, 4.92, 5.35, 4.76, 5.72, 4.62)
-zuurgraadAvond <- c(5.29, 5.51, 5.75, 5.62, 5.42, 6.09, 4.92, 6.01, 5.34)
-```
-
-**a.** Welke statistische toets zou hier gepast zijn? Voer deze toets uit in R.  
-
-**b.** Geef een schatting van de effectgrootte. Geef er ook een 95% betrouwbaarheidsinterval bij, aannemend dat aan de aannames is voldaan.
-
-**c.** Formuleer de hypotheses die de onderzoeker wil toetsen. Welke toets
-hoort hierbij? Wat is op grond van de uitvoer je conclusie ten aanzien
-van deze hypotheses? Geef hierbij ook de overschrijdingskans.
-:::
-
-::: {.todo-box}
-Madelon en/of Yannick:
-Voeg in uit het oude werkboek: computerpracticum 1, opgave 1.
-data staan in folder "data".
-
-Ik ga de boel daarna nog herschrijven.
-
-kurk.csv linken
 :::
 
 ::: {#exr-kurk}
@@ -1683,10 +1617,3 @@ in ligging en spreiding tussen oost en west?
 
 :::
 
-::: {.todo-box}
-Madelon en/of Yannick:
-Voeg in uit het oude werkboek: computerpracticum 1, opgave 2.
-data staan in folder "data".
-
-Ik ga de boel daarna nog herschrijven.
-:::

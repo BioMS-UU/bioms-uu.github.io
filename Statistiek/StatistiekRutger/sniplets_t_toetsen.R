@@ -73,3 +73,53 @@ ggplot(data, aes(x = x, y = y)) +
     panel.grid.minor.x = element_blank()
   )
 ```
+
+
+::: {.Rexr #exr-zuurgraad}
+  Een onderzoeker vermoedt dat onder invloed van zonlicht de zuurgraad van vijvers kan veranderen. Om dit vermoeden te
+  toetsen meet hij in negen vijvers zowel ’s ochtends als ’s avonds de pH.
+  De verkregen gegevens zijn in de volgende vectoren weergegeven:
+    ```{r}
+  zuurgraadOchtend <- c(4.89, 5.28, 5.24, 5.27, 4.92, 5.35, 4.76, 5.72, 4.62)
+  zuurgraadAvond <- c(5.29, 5.51, 5.75, 5.62, 5.42, 6.09, 4.92, 6.01, 5.34)
+  ```
+  
+  **a.** Welke statistische toets zou hier gepast zijn? Voer deze toets uit in R.  
+  
+  **b.** Geef een schatting van de effectgrootte. Geef er ook een 95% betrouwbaarheidsinterval bij, aannemend dat aan de aannames is voldaan.
+  
+  **c.** Formuleer de hypotheses die de onderzoeker wil toetsen. Welke toets
+  hoort hierbij? Wat is op grond van de uitvoer je conclusie ten aanzien
+  van deze hypotheses? Geef hierbij ook de overschrijdingskans.
+  :::
+
+::: {#exr-diastolische-bloeddruk}
+
+**a.** 
+  
+  Hieronder staan diastolische bloeddrukwaarden die gemeten zijn bij een steekproef van 50 mannen. Hierna is er een $t$-test uitgevoerd. 
+
+``` {r}
+bloeddruk <- c(94, 94, 82, 100, 112,
+               110, 84, 78, 92, 112,
+               94, 92, 86, 84, 90,
+               72, 88, 92, 88, 84,
+               98, 98, 84, 90, 90,
+               70, 80, 90, 80, 106,
+               74, 95, 100, 94, 84,
+               70, 102, 92, 84, 80,
+               84, 86, 98, 82, 80,
+               88, 80, 84, 100, 86)
+
+t.test(bloeddruk, mu=90)
+```
+Bestudeer de uitvoer; zorg dat je de structuur en de inhoud ervan begrijpt. 
+
+**a.** Welke toets wordt precies uitgevoerd? Stel de nulhypothese en de alternatieve hypothese op. Welke aannames moet men maken om deze toets uit te voeren? 
+  
+  **b.** Lees de toetsingsgrootheid en bijbehorende overschrijdingskans af. Wat is je conclusie ten aanzien van de gestelde hypotheses, aangenomen dat aan de voorwaarden is voldaan? 
+  
+  **c.** Lees het 95%-betrouwbaarheidsinterval voor het populatiegemiddelde af uit de uitvoer.
+
+**d.** Wat is het verband tussen de antwoorden op onderdelen **b** en **c**?
+  :::

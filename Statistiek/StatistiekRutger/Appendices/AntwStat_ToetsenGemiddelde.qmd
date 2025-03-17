@@ -64,7 +64,162 @@ c.  Deze drie waarden staan op dezelfde regel; je hebt ze vast gevonden.
     
 d.  Het BHI loopt van 36,13$\degree$C tot 36,87$\degree$C. Je kunt dit ook schrijven als $(36{,}50\pm 0{,}37)\degree$C.
 
+### @exr-manakin
 
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.width: 3.5
+#| fig.height: 2
+#| out.width: "50%"
+#| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins (n = 641)."
+#| label: fig-dist-manakin
+
+massa_manacus <- read.csv("data/massa_manacus.csv")
+
+ggplot(massa_manacus,
+       aes(x = Weight)) +
+    geom_histogram(fill = opvulkleur, 
+                   color = "black",
+                   binwidth = 1, 
+                   position = "dodge") +  
+    theme_minimal() +
+    xlab("Gewicht (g)") +
+    ylab("Aantal observaties")
+```
+
+Gebaseerd op @fig-dist-manakin lijkt de verdeling van gewichten grofweg normaal.
+Dit kunnen we beter controleren met behulp van een QQ-plot:
+
+```{r}
+qqnorm(massa_manacus$Weight)
+qqline(massa_manacus$Weight)
+```
+Zoals je ziet is de data wel wat links-scheef, maar de data is voldoende
+normaalverdeeld om een $t$-toets uit te kunnen voeren.
+
+```{r}
+t.test(massa_manacus$Weight, mu = 16.5)
+```
+
+@exr-manakin-2
+
+::: {#fig-manakin-distributie layout-ncol="2" out-width="100%"}
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.width: 3.5
+#| fig.height: 4
+#| out-width: "100%"
+#| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins, per geslacht."
+#| label: fig-dist-manakin-1
+
+massa_manacus <- read.csv("data/massa_manacus.csv")
+
+massa_manacus %>%
+  filter(Sex != "Undetermined") %>%
+  ggplot(aes(x = Sex, y = Weight, fill = Sex)) +  
+  geom_boxplot() + 
+  theme_minimal() +
+  ylab("Gewicht (g)") +
+  scale_fill_discrete(name = "Geslacht",
+                      labels = c("Vrouwelijk", "Mannelijk")) +
+  theme(legend.position = "top",
+        axis.title.x = element_blank()) +  
+  guides(fill = guide_legend(nrow = 2)) +  
+  scale_x_discrete(
+    labels = c("Female" = paste("n =", sum(massa_manacus$Sex == "Female")),
+               "Male" = paste("n =", sum(massa_manacus$Sex == "Male"))))  
+
+
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.width: 3.5
+#| fig.height: 4
+#| out.width: "100%"
+#| fig-cap: "Histogram van het gewicht van vrouwelijke en mannetlijke Bonte manakins."
+#| label: fig-dist-manakin-2
+
+massa_manacus %>%
+  filter(Sex != "Undetermined") %>%
+  ggplot(aes(x = Weight, fill = Sex)) +
+    geom_histogram(color = "black", 
+                   binwidth = 1, 
+                   position = "dodge") +  
+    theme_minimal() +
+      theme(legend.position = "none") +  
+    xlab("Gewicht (g)") +
+    ylab("Aantal observaties") +
+    facet_wrap(vars(Sex), nrow = 2, 
+               labeller = as_labeller(c("Female" = "Vrouwelijk", 
+                                        "Male" = "Mannelijk")))  
+
+```
+
+Verdeling van gemeten gewichten van de Bonte manakin in Colombia.
+:::
+
+De gemeten gewichten van de Bonte manakins zijn per geslacht weergegeven in 
+@fig-manakin-distributie. Naast de visualisatie van de data vatten we deze 
+samen met kengetallen. 
+Voor de mannetjes:
+
+```{r}
+summary(massa_manacus$Weight[massa_manacus$Sex == "Male"])
+```
+
+En voor de vrouwtjes:
+
+```{r}
+summary(massa_manacus$Weight[massa_manacus$Sex == "Female"])
+```
+Daarnaast is het voor de $t$-toets belangrijk om te kijken of de variatie in 
+beide groepen ongeveer gelijk is. Hiervoor gebruiken we de standaarddeviatie.
+
+```{r}
+sd(massa_manacus$Weight[massa_manacus$Sex == "Male"])
+```
+```{r}
+sd(massa_manacus$Weight[massa_manacus$Sex == "Female"])
+```
+Zoals je ziet is de standaarddeviatie van de vrouwelijke Bonte manakins iets
+groter dan van de mannelijke dieren. De standaard $t$-toets neemt aan dat de 
+variantie van beide groepen gelijk is, de $t$-toets van Welch doet dat niet.
+Beide $t$-toetsen hebben de assumptie dat de data normaalverdeeld is. Het is dus
+belangrijk om te testen of de data in beide groepen normaalverdeeld is. Dat doen
+we met de volgende code:
+
+```{r}
+qqnorm(massa_manacus$Weight[massa_manacus$Sex == "Male"])
+qqline(massa_manacus$Weight[massa_manacus$Sex == "Male"])
+```
+
+```{r}
+qqnorm(massa_manacus$Weight[massa_manacus$Sex == "Female"])
+qqline(massa_manacus$Weight[massa_manacus$Sex == "Female"])
+```
+Uit bovenstaande QQ-plots kunnen we afleiden dat de verdeling voor de gewichten 
+van de mannelijke manakins niet helemaal symmetrisch is, maar een klein beetje 
+links-scheef. Dit kun je ook zien in @fig-dist-manakin-2: de staart aan de 
+linkerkant van de schaal is wat langer dan die aan de rechterkant. 
+We concluderen dat de verdeling symmetrisch genoeg is om een $t$-toets uit te
+voeren.
+
+```{r}
+# Standaard gepaarde t-toets
+t.test(massa_manacus$Weight[massa_manacus$Sex == "Male"],
+       massa_manacus$Weight[massa_manacus$Sex == "Female"],
+       var.equal = TRUE)
+```
+```{r}
+# Welch's gepaarde t-toets
+t.test(massa_manacus$Weight[massa_manacus$Sex == "Male"],
+       massa_manacus$Weight[massa_manacus$Sex == "Female"],
+       var.equal = FALSE)
+```
 
 
 @exr-diastolische-bloeddruk
