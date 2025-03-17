@@ -500,12 +500,12 @@ dat gebeurt met het argument `mu = 37`.
 Het is belangrijk om even stil te staan bij de uitvoer van deze functie.
 We doen dat in de volgende opgave.
 
-::: {#exr-uitvoer .Rexr}
+::: {#exr-uitvoer-t-test .Rexr}
 
 ## De uitvoer van de funtie `t.test()` bij één steekproef
 <br>
 
-a.  Neem de code hierboven, waarin de $t$-test wordt uitgevoerd,
+a.  Neem de code hierboven, waarin de $t$-toets wordt uitgevoerd,
     over in een script en voer het uit.
     
 Bestudeer de uitvoer:
@@ -815,6 +815,296 @@ Trek op basis van $P$ je conclusies!
 
 
 
+We vatten de stappen weer even samen:
+
+::: {.callout-important}
+## De $t$-toets voor twee onafhankelijke steekproeven in 6 stappen
+
+We zijn geïnteresseerd in een continue variabele $X$.
+We willen de hypothese toetsen dat 
+de populatiegemiddelden $\mu_1$ en $\mu_2$
+van twee populaties gelijk zijn.
+
+We nemen daarom uit beide populaties een steekproef,
+van $n_1$ en $n_2$ eenheden.
+
+Dan zijn dit de stappen van de toets:
+
+1.  **Kies het kansmodel:**\
+    - Beide populaties en steekproeven voldoen aan het Normale Model.
+    - De standaarddeviaties van beide populaties zijn gelijk.
+2.  **Formuleer de hypotheses:**\
+    $\HO:\qquad \mu_1 = \mu_2$,\
+    $\HA:\qquad \mu_1 \neq \mu_2$.
+3.  **Kies de toetsingsgrootheid:**
+
+    $$t = \frac{\mean{X}_1 - \mean{X}_2}{\se{\mean{X}_1 - \mean{X}_2}},$$
+    
+    met de standaardfout
+    
+    $$ \se{\mean{X}_1 - \mean{X}_2} = \sqrt{s\ped{p}^2 \left( \frac{1}{n_1} + \frac{1}{n_2}\right)}$$
+
+    en de gepoolde steekproefvariantie
+    
+    $$ s\ped{p}^2 = \frac{(n_1 - 1) s_1^2 + (n_1 - 1) s_2^2}{n_1 + n_2 - 2}.$$
+    
+    **Verdeling van de toetsingsgrootheid onder $\HO$:**\
+    De $t$-verdeling met $\df = n_1 + n_2 - 2$.
+4.  **Bereken de toetsingsgrootheid op basis van de steekproeven.**\
+    Achtereenvolgens: $\mean{X}_1$,$\mean{X}_2$, $s_1$, $s_2$, $s\ped{p}^2$, $\se{\mean{X}_1 - \mean{X}_2}$, en dan $t$.
+5.  **Bereken de $P$-waarde:**\
+    
+    Gebruik R:
+    
+    ```{r}
+    #| eval: false
+    P <- 2 * pt(-abs(t), df = n1 + n2 - 2)
+    ```
+
+6.  **Trek je conclusies.**
+
+:::
+
+### De $t$-toets voor twee steekproeven met R uitvoeren
+
+De $t$-toets voor twee steekproeven is één van de meest eenvoudige toetsen 
+die er bestaan.
+Maar als je 'm met de hand moet uitrekenen,
+ben je toch een tijd bezig, en de kans op fouten is erg groot.
+Het is dus veel handiger om gebruik te maken van R.
+
+Het is niet moeilijk om de formules zelf in R in te programmeren,
+maar dat is niet nodig. 
+Ook deze $t$-toets kan namelijk met de functie `t.test()`
+worden uitgevoerd!
+
+Laten we aannemen dat je de resultaten van je twee steekproeven
+in R hebt ingevoerd als twee vectoren, `steekproef1` en `steekproef2`.
+Dan ben je daarna in één regel klaar:
+
+```{r}
+#| eval: false
+t.test(steekproef1, steekproef2, var.equal = TRUE)
+```
+
+Het argument `var.equal = TRUE` is nodig om de functie te vertellen
+dat we hebben aangenomen dat beide populaties een gelijke variantie hebben.
+
+:::{#exm-penguins}
+## Verschillen de snavellengtes tussen pinguins van de soorten Chinstrap en Gentoo?
+
+![Figuur en data: Horst et al (2020)](figuren/penguins.png){width="70%"}
+
+Op drie eilanden in the Palmerarchipel (Antarctica) zijn metingen verricht 
+aan pinguins van drie verschillende soorten.^[Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. https://allisonhorst.github.io/palmerpenguins/. doi: 10.5281/zenodo.3960218.]
+We vragen ons af: verschillen de soorten in de gemiddelde lengte van hun snavel?
+
+We zullen hieronder de een analyse in R gebruiken om twee soorten te vergelijken: Chinstrap en Gentoo.
+
+### De data
+
+We lezen eerst de gegevens in; die zijn beschikbaar gesteld via de library "pelmerpenquins".
+
+```{r}
+library("palmerpenguins")
+```
+
+We selecteren de snavellengtes van de twee soorten en verwijderen `NA`s:
+```{r}
+snavel_Chinstrap <- na.omit(
+  penguins$bill_length_mm[penguins$species == "Chinstrap"]
+  )
+snavel_Gentoo <- na.omit(
+  penguins$bill_length_mm[penguins$species == "Gentoo"]
+  )
+```
+
+### Bestudeer de gegevens
+
+Voordat we een toets uitvoeren, moeten we de gegevens altijd eerst goed bekijken.
+Hoeveel datapunten zijn er?
+```{r}
+(n1 <- length(snavel_Chinstrap))
+```
+```{r}
+(n2 <- length(snavel_Gentoo))
+```
+Dit is dus een flinke dataset, met snavelmetingen voor 68 Chinstrap-pinguins en 123 Gentoo-pinguins. 
+
+Wat beschrijvende statistieken voor beide soorten:
+```{r}
+summary(snavel_Chinstrap)
+```
+```{r}
+summary(snavel_Gentoo)
+```
+De mediaan en het gemiddelde van de Gentoos zijn net iets kleiner dan die van de Chinstraps.
+
+Maten van spreiding:
+```{r}
+sd(snavel_Chinstrap)
+sd(snavel_Gentoo)
+
+IQR(snavel_Chinstrap) #interkwartielafstand
+IQR(snavel_Gentoo)
+```
+De spreiding is voor beide soorten vergelijkbaar, maar iets kleiner voor de Gentoos. 
+
+We genereren ook voor beide soorten een histogram:
+
+:::{layout="[1,1]"}
+
+```{r}
+#| fig-width: 3.5
+#| fig-height: 3
+#| out-width: 100%
+
+
+hist(snavel_Chinstrap, main = NULL)
+```
+
+```{r}
+#| fig-width: 3.5
+#| fig-height: 3
+#| out-width: 100%
+hist(snavel_Gentoo, main = NULL)
+```
+:::
+De verdelingen lijken lichtelijk rechts-scheef.
+
+Het Normale Model neemt aan dat de variabele in beide populaties normaal verdeeld is.
+We controleren dit met twee QQ-plots:
+
+:::{layout="[1,1]"}
+
+```{r}
+#| fig-width: 3
+#| fig-height: 3.5
+#| out-width: 80%
+qqnorm(snavel_Chinstrap, main = NULL)
+qqline(snavel_Chinstrap)
+```
+
+```{r}
+#| fig-width: 3
+#| fig-height: 3.5
+#| out-width: 80%
+qqnorm(snavel_Gentoo, main = NULL)
+qqline(snavel_Gentoo)
+```
+:::
+
+Er zijn zeker wat milde afwijkingen te zien,
+maar bij zo'n grote dataset zou de $t$-toets robuust moeten zijn
+voor zulke afwijkingen.
+
+### De $t$-toets uitvoeren
+
+Tot slot voeren we de toets uit:
+```{r}
+t.test(snavel_Chinstrap, snavel_Gentoo, var.equal = TRUE)
+```
+
+### Conclusies
+
+Gezien de kleine $P$-waarde van 0,006
+komt het kleine verschil in de gemiddelde snavellengte dus waarschijnlijk niet 
+door steekproevenvariatie; Gentoo-pinguins hebben waarschijnlijk daadwerkelijk
+een iets korter snavel.
+
+:::
+
+::: {#exr-uitvoer-t-test-2}
+## De uitvoer van de functie `t.test()` bij twee onafhankelijke steekproeven
+
+In @exm-penguins wordt uiteindelijk een $t$-toets voor twee steekproeven uitgevoerd
+me de functie `t.test()`. Bekijk de uitvoer goed.
+
+a.  Hoeveel vrijheidsgraden heeft R gebruikt? Klopt dat?
+
+b.  Er wordt in de uitvoer een 95%-BHI gegeven.
+    Hoe moet je dat interval interpreteren?
+    
+c.  Ligt het getal 0 in het 95%-BHI bevat? Wat zegt dat over de $P$-waarde? 
+
+:::
+
+
+### De $t$-toets van Welch voor twee onafhankelijke steekproeven {#sec-Welch}
+
+De standaard $t$-toets voor twee steekproeven 
+maakt de aanname dat de variantie van de variabele
+in beide populaties gelijk is.
+In veel praktische situaties is dat niet het geval.
+Wat dan?
+
+De $t$-toets is op zich niet heel gevoelig voor kleine afwijkingen
+tussen beide standaarddeviaties,
+vooral als de steekproeven groot zijn.
+Als beide steekproeven groter zijn dan 30,
+is een verschil in standaarddeviatie van een factor 2
+vaak nog geen groot probleem.
+
+Maar, bij twijfel is het beter om gebruik te maken van 
+een versie van de $t$-toets die **de $t$-toets van Welch** wordt genoemd.
+Deze toets maakt de aanname dat beide standaarddeviaties gelijk zijn *niet*.
+
+In deze cursus bespreken we de precieze formules voor de $t$-toets van Welch niet.
+Maar het is binnen R heel gemakkelijk om de toets uit te voeren.
+Voor de standaard $t$-toets moesten we aan de `t.test()` functie 
+het argument `var.equal = TRUE` meegeven. 
+Als we in plaats daarvan `var.equal = FALSE` invoeren,
+wordt de toets van Welch uitgevoerd:
+
+```{r}
+t.test(snavel_Chinstrap, snavel_Gentoo, var.equal = FALSE)
+```
+
+Sterker nog, de setting `FALSE` is in R de default;
+als je niets specificeert wordt dus standaard Welch's test uitgevoerd:
+
+```{r}
+#| eval: false
+t.test(snavel_Chinstrap, snavel_Gentoo)
+```
+
+Het enige nadeel van de toets van Welch is dat die iets minder gevoelig is
+dan de standaard $t$-toets voor twee steekproeven.
+De $P$-waarde zal typisch dus iets groter zijn bij de toets van Welch 
+dan bij de standaard toets.
+Maar als de steekproeven groter zijn, is het verschil te verwaarlozen.
+
+::: {#exr-welch .pepexr}
+## Verschil in interpretatie tussen de toets van Welch en de standaardtoets
+<br> 
+
+In de tekst hierboven zijn zowel de toets van Welch als de standaard $t$-toets 
+toegepast op de pinguindata. Vergelijk de uitvoer van beide toetsen.
+
+a. Vergelijk de $P$-waardes. Verschillen die betekenisvol van elkaar?
+
+b. Vergelijk de 95%-BHI's. Welke interval is breder? Hoe komt dat?
+
+:::
+
+## De $t$-toets voor gepaarde steekproeven
+
+### Stap 1: De nulhypothese
+
+### Stap 2: Het statistische model
+
+### Stap 3: De toetsingsgrootheid
+
+### Stap 4: Kansverdeling onder $\HO$
+
+### Stap 5: Bepaal de $P$-waarde
+
+### Stap 6: Conclusies
+
+## De drie $t$-toetsen in plaatjes
+
+
+
 
 ```{r}
 #| code-fold: true
@@ -822,7 +1112,7 @@ Trek op basis van $P$ je conclusies!
 #| fig-width: 4.5
 #| fig-height: 3
 #| out-width: "64%"
-#| fig-cap: "Met een $t$-toets voor twee steekproeven kun je testen of het gemiddelde van twee groepen significant van elkaar verschilt. Dit is nuttig wanneer je bijvoorbeeld wilt weten of een bepaalde behandeling een meetbaar effect heeft in vergelijking met een controlegroep."
+#| fig-cap: "Met een $t$-toets voor twee steekproeven kun je toetsen of het gemiddelde van twee groepen significant van elkaar verschilt. Dit is nuttig wanneer je bijvoorbeeld wilt weten of een bepaalde behandeling een meetbaar effect heeft in vergelijking met een controlegroep."
 #| label: fig-t-toets-2-var
 
 set.seed(125)
@@ -916,202 +1206,6 @@ ggplot(data, aes(x = x, y = y)) +
     panel.grid.minor.x = element_blank()
   )
 ```
-
-We vatten de stappen weer even samen:
-
-::: {.callout-important}
-## De $t$-toets voor twee onafhankelijke steekproeven in 6 stappen
-
-We zijn geïnteresseerd in een continue variabele $X$.
-We willen de hypothese toetsen dat 
-de populatiegemiddelden $\mu_1$ en $\mu_2$
-van twee populaties gelijk zijn.
-
-We nemen daarom uit beide populaties een steekproef,
-van $n_1$ en $n_2$ eenheden.
-
-Dan zijn dit de stappen van de toets:
-
-1.  **Kies het kansmodel:**\
-    - Beide populaties en steekproeven voldoen aan het Normale Model.
-    - De standaarddeviaties van beide populaties zijn gelijk.
-2.  **Formuleer de hypotheses:**\
-    $\HO:\qquad \mu_1 = \mu_2$,\
-    $\HA:\qquad \mu_1 \neq \mu_2$.
-3.  **Kies de toetsingsgrootheid:**
-
-    $$t = \frac{\mean{X}_1 - \mean{X}_2}{\se{\mean{X}_1 - \mean{X}_2}},$$
-    
-    met de standaardfout
-    
-    $$ \se{\mean{X}_1 - \mean{X}_2} = \sqrt{s\ped{p}^2 \left( \frac{1}{n_1} + \frac{1}{n_2}\right)}$$
-
-    en de gepoolde steekproefvariantie
-    
-    $$ s\ped{p}^2 = \frac{(n_1 - 1) s_1^2 + (n_1 - 1) s_2^2}{n_1 + n_2 - 2}.$$
-    
-    **Verdeling van de toetsingsgrootheid onder $\HO$:**\
-    De $t$-verdeling met $\df = n_1 + n_2 - 2$.
-4.  **Bereken de toetsingsgrootheid op basis van de steekproeven.**\
-    Achtereenvolgens: $\mean{X}_1$,$\mean{X}_2$, $s_1$, $s_2$, $s\ped{p}^2$, $\se{\mean{X}_1 - \mean{X}_2}$, en dan $t$.
-5.  **Bereken de $P$-waarde:**\
-    
-    Gebruik R:
-    
-    ```{r}
-    #| eval: false
-    P <- 2 * pt(-abs(t), df = n1 + n2 - 2)
-    ```
-
-6.  **Trek je conclusies.**
-
-:::
-
-### De $t$-toets voor twee steekproeven met R uitvoeren
-
-De $t$-toets voor twee steekproeven is één van de meest eenvoudige toetsen 
-die er bestaan.
-Maar als je 'm met de hand moet uitrekenen,
-ben je toch een tijd bezig, en de kans op fouten is erg groot.
-Het is dus veel handiger om gebruik te maken van R.
-
-Het is niet moeilijk om de formules zelf in R in te programmeren,
-maar dat is niet nodig. 
-Ook deze $t$-toets kan namelijk met dezelfde functie `t.test()`
-worden uitgevoerd!
-
-Laten we aannemen dat je de resultaten van je twee steekproeven
-in R hebt ingevoerd als twee vectoren, `steekproef1` en `steekproef2`.
-Dan ben je daarna in één regel klaar:
-
-```{r}
-#| eval: false
-t.test(steekproef1, steekproef2, var.equal = TRUE)
-```
-
-Het argument `var.equal = TRUE` is nodig om de functie te vertellen
-dat we hebben aangenomen dat beide populaties een gelijke variantie hebben.
-
-:::{#exm-penguins}
-## Verschillen de flipper-lengtes tussen pinguins van de soorten Chinstrap en Gentoo?
-
-![Figuur en data: Horst et al (2020)](figuren/penguins.png){width="70%"}
-
-Op drie eilanden in the Palmerarchipel (Antarctica) zijn metingen verricht 
-aan pinguins van verschillende soorten.^[Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. https://allisonhorst.github.io/palmerpenguins/. doi: 10.5281/zenodo.3960218.]
-We vragen ons af: verschillen de soorten in de gemiddelde lengte van hun snavel?
-We vergelijken hier twee soorten: Chinstrap en Gentoo.
-
-We lezen eerst de gegevens in; die staan in een library "pelmerpenquins":
-
-```{r}
-library("palmerpenguins")
-```
-
-We selecteren de metingen van de twee soorten:
-```{r}
-snavel_Chinstrap <- na.omit(penguins$bill_length_mm[penguins$species == "Chinstrap"])
-snavel_Gentoo <- na.omit(penguins$bill_length_mm[penguins$species == "Gentoo"])
-```
-
-Voordat we een toets uitvoeren, moeten we de gegevens altijd eerst bekijken.
-We genereren wat statistieken:
-```{r}
-(n1 <- length(snavel_Chinstrap))
-```
-```{r}
-(n2 <- length(snavel_Gentoo))
-```
-
-
-```{r}
-summary(snavel_Chinstrap)
-```
-```{r}
-summary(snavel_Gentoo)
-```
-
-```{r}
-sd(snavel_Chinstrap)
-sd(snavel_Gentoo)
-```
-
-We genereren ook voor beide soorten een histogram:
-
-:::{layout="[1,1]"}
-
-```{r}
-#| fig-width: 3.5
-#| fig-height: 3
-#| out-width: 100%
-
-
-hist(snavel_Chinstrap, main = NULL)
-```
-
-```{r}
-#| fig-width: 3.5
-#| fig-height: 3
-#| out-width: 100%
-hist(snavel_Gentoo, main = NULL)
-```
-:::
-
-:::{layout="[1,1]"}
-
-```{r}
-#| fig-width: 3.5
-#| fig-height: 3
-#| out-width: 100%
-
-
-qqnorm(snavel_Chinstrap, main = NULL)
-qqline(snavel_Chinstrap)
-```
-
-```{r}
-#| fig-width: 3.5
-#| fig-height: 3
-#| out-width: 100%
-qqnorm(snavel_Gentoo, main = NULL)
-qqline(snavel_Gentoo)
-```
-:::
-
-```{r}
-t.test(snavel_Chinstrap, snavel_Gentoo, var.equal = TRUE)
-```
-
-:::
-
-
-### De Welch $t$-toets voor twee onafhankelijke steekproeven {#sec-Welch}
-
-```{r}
-t.test(snavel_Chinstrap, snavel_Gentoo, var.equal = FALSE)
-```
-
-```{r}
-#| eval: false
-t.test(snavel_Chinstrap, snavel_Gentoo)
-```
-
-
-## De $t$-toets voor gepaarde steekproeven
-
-### Stap 1: De nulhypothese
-
-### Stap 2: Het statistische model
-
-### Stap 3: De toetsingsgrootheid
-
-### Stap 4: Kansverdeling onder $\HO$
-
-### Stap 5: Bepaal de $P$-waarde
-
-### Stap 6: Conclusies
-
-
 
 ## Voorbeeld voor de $t$-toets voor twee onafhankelijke steekproeven
 
@@ -1210,7 +1304,7 @@ En voor de vrouwtjes:
 ```{r}
 summary(massa_manacus$Weight[massa_manacus$Sex == "Female"])
 ```
-Daarnaast is het voor de $t$-test belangrijk om te kijken of de variatie in 
+Daarnaast is het voor de $t$-toets belangrijk om te kijken of de variatie in 
 beide groepen ongeveer gelijk is. Hiervoor gebruiken we de standaarddeviatie.
 
 ```{r}
@@ -1220,9 +1314,9 @@ sd(massa_manacus$Weight[massa_manacus$Sex == "Male"])
 sd(massa_manacus$Weight[massa_manacus$Sex == "Female"])
 ```
 Zoals je ziet is de standaarddeviatie van de vrouwelijke Bonte manakins iets
-groter dan van de mannelijke dieren. De standaard $t$-test neemt aan dat de 
-variantie van beide groepen gelijk is, Welch's $t$-test doet dat niet.
-Beide $t$-testen hebben de assumptie dat de data normaalverdeeld is. Het is dus
+groter dan van de mannelijke dieren. De standaard $t$-toets neemt aan dat de 
+variantie van beide groepen gelijk is, Welch's $t$-toets doet dat niet.
+Beide $t$-toetsen hebben de assumptie dat de data normaalverdeeld is. Het is dus
 belangrijk om te testen of de data in beide groepen normaalverdeeld is. Dat doen
 we met de volgende code:
 
@@ -1239,17 +1333,17 @@ Uit bovenstaande QQ-plots kunnen we afleiden dat de verdeling voor de gewichten
 van de mannelijke manakins niet helemaal symmetrisch is, maar een klein beetje 
 links-scheef. Dit kun je ook zien in @fig-dist-manakin-2: de staart aan de 
 linkerkant van de schaal is wat langer dan die aan de rechterkant. 
-We concluderen dat de verdeling symmetrisch genoeg is om een $t$-test uit te
+We concluderen dat de verdeling symmetrisch genoeg is om een $t$-toets uit te
 voeren.
 
 ```{r}
-# Standaard gepaarde t-test
+# Standaard gepaarde t-toets
 t.test(massa_manacus$Weight[massa_manacus$Sex == "Male"],
        massa_manacus$Weight[massa_manacus$Sex == "Female"],
        var.equal = TRUE)
 ```
 ```{r}
-# Welch's gepaarde t-test
+# Welch's gepaarde t-toets
 t.test(massa_manacus$Weight[massa_manacus$Sex == "Male"],
        massa_manacus$Weight[massa_manacus$Sex == "Female"],
        var.equal = FALSE)
@@ -1386,7 +1480,7 @@ in bed tot vier uur per nacht leidt tot een lagere MWT-score. Om te
 onderzoeken of dit inderdaad een significant verschil in MWT-score geeft, kunnen
 we gebruik maken van een gepaarde $t$-toets. We voeren dan een $t$-toets uit op
 de verschillen in MWT-scores per deelnemer tussen dag 0 en dag 6. Voordat we
-deze test uit kunnen voeren, moeten we eerst onderzoeken of de data aan de
+deze toets uit kunnen voeren, moeten we eerst onderzoeken of de data aan de
 aannames voor een gepaarde $t$-toets voldoet.
 
 Ten eerste moeten de metingen gepaard zijn voor een gepaarde $t$-toets. Dit is
@@ -1402,7 +1496,7 @@ qqline(slaap$MWT_d0 - slaap$MWT_d6)
 ```
 
 Uit de plot hierboven kunnen we afleiden dat we aan de aanname van
-normaalverdeelde verschillen voldoen. Dit betekent dat we de gepaarde $t$-test 
+normaalverdeelde verschillen voldoen. Dit betekent dat we de gepaarde $t$-toets 
 mogen uitvoeren:
 
 ```{r}
@@ -1412,16 +1506,9 @@ t.test(slaap$MWT_d0, slaap$MWT_d6, paired = TRUE)
 We kunnen de nul-hypothese van geen verschil tussen de MWT-scores op dag 0 en 
 dag 6 dus verwerpen.
 
-## Welch's $t$-toets voor twee onafhankelijke steekproeven
+## Wat is er nog meer?
 
-Maakt minder aannames.
-
-Power.
-
-Advies: gebruik Welch tenzij je bijzondere redenen hebt om dat niet te
-doen.
-
-## Niet-parametrische alternatieve
+### Niet-parametrische alternatieve
 
 Alleen aannames en toepassing.
 
@@ -1429,7 +1516,7 @@ Alleen aannames en toepassing.
 -   tekentoets
 -   Mann-Whitney $U$-test / Wilcoxon rank-sum test.
 
-## ANOVA
+### ANOVA
 
 ## Samenvatting
 
