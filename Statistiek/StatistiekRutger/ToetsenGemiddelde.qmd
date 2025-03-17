@@ -351,6 +351,17 @@ ggplot(
     label = expression(italic(t) == -3.09),
     color = "DarkOrchid", angle = 90, vjust = -0.5, hjust = 1
   ) +
+  # Voeg ook een verticale, gestippelde lijn toe bij t = 3.09
+  geom_vline(
+    xintercept = 3.09, color = "DarkOrchid",
+    linewidth = 1, linetype = "dotted"
+  ) +
+  # Voeg een label toe op de x-as met een juiste wiskundige notatie
+  annotate(
+    "text", x = 3, y = 0.3,
+    label = expression(italic(t) == 3.09),
+    color = "DarkOrchid", angle = 90, vjust = -0.5, hjust = 1
+  ) +
   # Labels toevoegen
   labs(
     x = expression(italic(t)),
@@ -372,13 +383,14 @@ kleiner dan 0 volgens de $t$-verdeling met 9 vrijheidsgraden.
 (Het antwoord moet 0,5 zijn, omdat alle $t$-verdelingen symmetrisch zijn
 rond 0.)
 
-De oppervlakte in de paarse linkerstaart van de verdeling kan worden berekend met
+De oppervlakte in de paarse linkerstaart van de verdeling kan dus worden berekend met
 ```{r}
 t <- -3.087701
 n <- 10
 pt(-abs(t), df = n - 1)
 ```
 De functie `abs(t)` haalt het minteken weg van $t$ zodat de waarde positief wordt.
+Op deze manier werkt de code ongeacht of de $t$-waarde positief of negatief is.
 
 Om ook de rechterstaart mee te rekenen, moeten we die kans verdubbelen.
 Dat levert op:
@@ -420,16 +432,21 @@ Dan zijn dit de stappen van de toets:
     $\HO:\qquad \mu_X = \mu_0$,\
     $\HA:\qquad \mu_X \neq \mu_0$.
 3.  **Kies de toetsingsgrootheid:**
-    $t = \cfrac{\mean{X} - \mu_0}{\se{\mean{X}}}$.
+
+    $$t = \cfrac{\mean{X} - \mu_0}{\se{\mean{X}}}$$.
     
     **Verdeling van de toetsingsgrootheid onder $\HO$:**\
     De $t$-verdeling met $\df = n - 1$.
-4.  **Bereken de toetsingsgrootheid op basis van de steekproef.**
+4.  **Bereken de toetsingsgrootheid op basis van de steekproef.**\
     Achtereenvolgens: $\mean{X}$, $s_X$, $\se{\mean{X}}$, en dan $t$.
-5.  **Bereken de $P$-waarde:** Gebruik R.
+5.  **Bereken de $P$-waarde:**\
+    
+    Gebruik R:
+    
     ```{r}
     P <- 2 * pt(-abs(t), df = n - 1)
     ```
+
 6.  **Trek je conclusies.**
 
 :::
@@ -453,20 +470,23 @@ Het is efficiënter om de hele berekening door R te laten uitvoeren.
 Het script zou er zo uit kunnen zien:
 
 ```{r}
+# gegevens:
 temperaturen <- c(35.7, 35.8, 37.0, 36.5, 37.1, 36.4, 36.1, 36.8, 36.5, 37.1)
 mu0 <- 37
 
+# berekening:
 n <- length(temperaturen)
 m <- mean(temperaturen)
 s <- sd(temperaturen)
 sem <- s/sqrt(n)
 t <- (m - mu0) / sem
-P <- 2*pt(-abs(t), df = n -1)
-P
+
+# bereken en print P-waarde:
+(P <- 2*pt(-abs(t), df = n -1))
 ```
 
 Maar het kan nog veel gemakkelijker. 
-De functie `t.test()` de we in @sec-schatten 
+De functie `t.test()` die we in @sec-schatten 
 ook hadden gebruikt om het 95%-betrouwbaarheidsinterval uit te rekenen,
 voert de hele berekening in één keer uit:
 
@@ -488,7 +508,7 @@ We doen dat in de volgende opgave.
 a.  Neem de code hierboven, waarin de $t$-test wordt uitgevoerd,
     over in een script en voer het uit.
     
-Bestudeer de uitvoer.
+Bestudeer de uitvoer:
 
 b.  Waar in de uitvoer vind je het steekproefgemiddelde?
 
@@ -527,70 +547,21 @@ Er is dus een nauw verband tussen het 95%-BHI en de $P$-waarde:
 
 Neem een steekproef en bereken het 95%-BHI voor $\mu_X$.
 
--   Als $\mu_0$ buiten het 95%-BHI valt, 
+-   Als $\mu_0$ *buiten* het 95%-BHI valt, 
     dan moet $P$ kleiner zijn dan 0,05
     en is de afwijking dus sowieso "statistisch significant".
 
--   Als $\mu_0 binnen het 95%-BHI valt,
+-   Als $\mu_0$ *binnen* het 95%-BHI valt,
     dan moet $P$ groter zijn dan 0,05
-    en is de afwijking dus sowieso niet "statistisch significant".
+    en is de afwijking dus sowieso *niet* "statistisch significant".
+    
+Je kunt het 95%-BHI dus ook interpreteren
+als de verzameling van alle mogelijke waarden van $\mu_0$
+waar volgens de $t$-toets geen "statistisch significant" bewijs tegen is.
 
 :::
 
-::: {#exm-t-toets}
 
-## Voorbeeld van de $t$-toets voor één steekproef
-
-Lichaamsgewicht is een belangrijke eigenschap bij dieren, omdat het invloed 
-heeft op hun fysiologie, gedrag en ecologische rol. In dit voorbeeld gebruiken 
-we een 
-[dataset](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273) 
-over vogels en zoogdieren in Colombia, waarin het lichaamsgewicht van meer dan 
-42.000 vogels en 7.400 zoogdieren is vastgelegd^[[Ocampo, D., Borja-Acosta, K. G., Lozano-Flórez, J., Cifuentes-Acevedo, S., Arbeláez-Cortés, E., Bayly, N. J., ... & Acevedo-Charry, O. (2021). *Body mass data set for 1,317 bird and 270 mammal species from Colombia.* Ecology, 102(3), e03273.](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273)]. 
-We focussen op de Bonte manakin (*Manacus manacus*) en we willen met behulp van
-een $t$-toets onderzoeken wat het gemiddelde gewicht van een Bonte manakin is.
-
-Voordat we de $t$-toets mogen toepassen, moeten we eerst kijken of de data aan
-de aannames van de $t$-toets voldoet. Voor een $t$-toets voor één steekproef is
-de aanname alleen dat de data normaalverdeeld is.
-
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.width: 3.5
-#| fig.height: 2
-#| out.width: "50%"
-#| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins (n = 641)."
-#| label: fig-dist-manakin
-
-massa_manacus <- read.csv("data/massa_manacus.csv")
-
-ggplot(massa_manacus,
-       aes(x = Weight)) +
-    geom_histogram(fill = opvulkleur, 
-                   color = "black",
-                   binwidth = 1, 
-                   position = "dodge") +  
-    theme_minimal() +
-    xlab("Gewicht (g)") +
-    ylab("Aantal observaties")
-```
-
-Gebaseerd op @fig-dist-manakin lijkt de verdeling van gewichten grofweg normaal.
-Dit kunnen we beter controleren met behulp van een QQ-plot:
-
-```{r}
-qqnorm(massa_manacus$Weight)
-qqline(massa_manacus$Weight)
-```
-Zoals je ziet is de data wel wat links-scheef, maar de data is voldoende
-normaalverdeeld om een $t$-toets uit te kunnen voeren.
-
-```{r}
-t.test(massa_manacus$Weight)
-```
-
-:::
 
 
 ## De $t$-toets voor twee onafhankelijke steekproeven {#sec-t-toets-twee-steekproeven}
@@ -598,7 +569,6 @@ t.test(massa_manacus$Weight)
 De $t$-toets voor één steekproef was bedoeld om te toetsen
 of het populatiegemiddelde van een variabele $X$
 afwijkt van een specifieke waarde $\mu_0$.
-
 We gaan het nu hebben over een andere situatie, 
 waarin we willen
 onderzoeken of de populatiegemiddelden van *twee* populaties 
@@ -612,12 +582,13 @@ verschilt tussen IJmond en Amsterdam.
 Om de twee populaties te vergelijken,
 nemen we een steekproef uit populatie 1 
 en een steekproef uit populatie 2.
-Dat levert twee *steekproefgemiddelden* op, 
+Dat levert *twee steekproefgemiddelden* op, 
 die waarschijnlijk van elkaar zullen verschillen.
 De vraag is vervolgens of we daaruit kunnen concluderen
 dat de *populatiegemiddelden* van beide populaties van elkaar verschillen,
 of dat de verschillen in het steekproefgemiddelde 
 ook verklaard kunnen worden door toevallige steekproevenvariabiliteit.
+
 Dat is de taak van de **$t$-toets voor twee onafhankelijke steekproeven**.
 
 We gaan deze toets weer uitleggen door de zes stappen één voor éen door te lopen.
@@ -642,18 +613,18 @@ Dat doen we nu weer, maar met twee kleine *twists*:
     
     Deze aanname is vaak redelijk en maakt de berekeningen gemakkelijker.
     Maar, er bestaat ook een versie van de toets die deze aanname niet maakt,
-    en die kan in sommige gevallen dus geschikter zijn;
+    en die kan in veel gevallen dus geschikter zijn;
     daar komen we in @sec-Welch op terug.
     
-    De populatiegemiddelden van beide populaties kunnen wél verschillend zijn;
-    we zullen ze $\mu_1$ en $\mu_2$ noemen. 
+De populatiegemiddelden van beide populaties kunnen wél verschillend zijn;
+we zullen ze $\mu_1$ en $\mu_2$ noemen. 
     
 Het statistisch model kan dus in het volgende plaatje worden samengevat:
 
 ```{r}
 #| label: fig-model-t-test-2-var
 #| fig-cap: "Illustratie van het statistisch model van de $t$-toets voor 2 steekproeven. 
-#| Aangenomen wordt dat beide populaties normaal verdeeld zijn, 
+#| Aangenomen wordt dat de variabele in beide populaties normaal verdeeld is, 
 #| met gelijke standaarddeviatie $\\sigma$."
 #| fig-width: 4.5
 #| fig-height: 2.5
@@ -771,8 +742,8 @@ Bij de $t$-toets voor één steekproef
 gebruikten we als toetsingsgrootheid
 de afwijking van $\mean{X}$ van $\mu_0$, relatief
 ten opzichte van de standaardfout van het gemiddelde, $\se{\mean{X}}$.
-Het intuitieve idee daarachter was
-dat we de afwijking van $\mean{X}$ wilden vergelijken
+Het intuïtieve idee daarachter was
+dat we de afwijking van $\mean{X} - \mu_0$ moesten vergelijken
 met de onzekerheid in $\mean{X}$ als gevolg van steekproevenvariabiliteit.
 
 Bij de $t$-toets voor twee steekproeven volgen we dezelfde logica.
@@ -781,26 +752,29 @@ moet weer aangeven hoe het verschil dat is aangetroffen tussen de
 twee steekproefgemiddelden, $\mean{X}_1 - \mean{X}_2$,
 zich verhoudt tot de onzekerheid in dat verschil
 als gevolg van steekproevenvariabiliteit.
-Maar wat is die onzekerheid?
+Daarom is de toetsingsgrootheid
+$$ t = \frac{\mean{X}_1 - \mean{X}_2}{\se{\mean{X}_1 - \mean{X}_2}},$$ {#eq-t-twee}
+waarin $\se{\mean{X}_1 - \mean{X}_2}$ de standaardfout is van het verschil in de steekproefgemiddelden, 
+$\mean{X}_1 - \mean{X}_2$.
 
-Om die onzekerheid te kunnen kwantificeren,
+Om te begrijpen wat die standaardfout voorstelt,
 moeten we ons voorstellen dat we heel vaak 
-een steekproef nemen uit populatie 1 en uit populatie 2,
+steekproeven nemen uit zowel populatie 1 en populatie 2,
 en steeds $\mean{X}_1 - \mean{X}_2$ uitrekenen.
-Dat levert de steekproevenverdeling van het verschil in de gemiddelden op.
-De standaarddeviatie van die verdeling is de standaardfout van $\mean{X}_1 - \mean{X}_2$.
-Deze standaardfout noteren we als $\se{\mean{X}_1 - \mean{X}_2}$.
-
-De toetsingsgrootheid voor de $t$-toets voor twee steekproeven is dus
-$$ t = \frac{\mean{X}_1 - \mean{X}_2}{\se{\mean{X}_1 - \mean{X}_2}}.$$ {#eq-t-twee}
+Dat levert de steekproevenverdeling van $\mean{X}_1 - \mean{X}_2$ op.
+De standaarddeviatie van die verdeling geeft aan hoe onzeker $\mean{X}_1 - \mean{X}_2$ is
+door steekproevenvariabiliteit.
+De standaardfout $\se{\mean{X}_1 - \mean{X}_2}$ is een schatter van die standaarddeviatie
+van de steekproevenverdeling,
+op dezelfde manier dat $\se{\mean{X}}$ een schatter was voor $\sigma_{\mean{X}}$.
 
 Je kunt de waarde van $\se{\mean{X}_1 - \mean{X}_2}$ zelf berekenen,
-maar de formule is niet zo elegant als voor de standaardfout
-van het gemiddelde, $\se{\mean{X}}$.
-Het werkt als volgt.
+maar de formule is niet zo elegant.
+In de praktijk zul je de berekening dus aan R over laten.
+We laten de formules toch even zien:
 
--   Eerst berekenen we de standaarddeviaties $s_1$ en $s_2$ van beide steekproeven.
--   Daarmee berekenen we de **gepoolde steekproefvariantie** $s\ped{p}^2$ met de volgende formule:
+-   Eerst bereken je de standaarddeviaties $s_1$ en $s_2$ van beide steekproeven.
+-   Daarmee bereken je de **gepoolde steekproefvariantie** $s\ped{p}^2$ met de volgende formule:
     
     $$ s\ped{p}^2 = \frac{(n_1 - 1) s_1^2 + (n_1 - 1) s_2^2}{n_1 + n_2 - 2}.$$
   
@@ -811,16 +785,31 @@ Het werkt als volgt.
 -   Tot slot kun je de volgende formule invullen:
     $$ \se{\mean{X}_1 - \mean{X}_2} = \sqrt{s\ped{p}^2 \left( \frac{1}{n_1} + \frac{1}{n_2}\right)}.$$
 
-Het is goed om deze formules eens bestudeerd te hebben, 
-maar in de praktijk 
-zul je ze niet vaak met de hand uitrekenen; 
-wees blij dat we R hebben...
-
 Nu we weten wat de toetsingsgrootheid is,
 is de volgende stap om te bepalen wat de verdeling van 
 de toetsingsgrootheid is onder $\HO$.
 Wiskundig kan worden aangetoond dat de $t$ van @eq-t-twee
 onder $\HO$ een $t$-verdeling volgt met $\df = n_1 + n_2 - 2$ vrijheidsgraden.
+
+**Stap 4: Bereken $t$ op basis van de twee steekproeven.**\
+Je vult in deze stap dus @eq-t-twee in.
+
+**Stap 5: Bereken de $P$-waarde:**\
+Nu kunnen we de $P$-waarde weer berekenen met R.
+Dat gaat weer precies zoals bij de $t$-toets voor één steekproef,
+behalve dat we nu een ander aantal vrijheidsgraden moeten specificeren,
+namelijk $\df = n_1 + n_2 - 2$:  
+
+```{r}
+#| eval: false
+# Zorg dat t, n1, en n2 al gedefineerd zijn.
+# Bereken en print de P-waarde
+(P <- 2 * pt(-abs(t), df = n1 + n2 - 2))
+```
+
+**Stap 6: Trek je conclusies.**\
+Trek op basis van $P$ je conclusies!
+
 
 
 
@@ -928,6 +917,188 @@ ggplot(data, aes(x = x, y = y)) +
   )
 ```
 
+We vatten de stappen weer even samen:
+
+::: {.callout-important}
+## De $t$-toets voor twee onafhankelijke steekproeven in 6 stappen
+
+We zijn geïnteresseerd in een continue variabele $X$.
+We willen de hypothese toetsen dat 
+de populatiegemiddelden $\mu_1$ en $\mu_2$
+van twee populaties gelijk zijn.
+
+We nemen daarom uit beide populaties een steekproef,
+van $n_1$ en $n_2$ eenheden.
+
+Dan zijn dit de stappen van de toets:
+
+1.  **Kies het kansmodel:**\
+    - Beide populaties en steekproeven voldoen aan het Normale Model.
+    - De standaarddeviaties van beide populaties zijn gelijk.
+2.  **Formuleer de hypotheses:**\
+    $\HO:\qquad \mu_1 = \mu_2$,\
+    $\HA:\qquad \mu_1 \neq \mu_2$.
+3.  **Kies de toetsingsgrootheid:**
+
+    $$t = \frac{\mean{X}_1 - \mean{X}_2}{\se{\mean{X}_1 - \mean{X}_2}},$$
+    
+    met de standaardfout
+    
+    $$ \se{\mean{X}_1 - \mean{X}_2} = \sqrt{s\ped{p}^2 \left( \frac{1}{n_1} + \frac{1}{n_2}\right)}$$
+
+    en de gepoolde steekproefvariantie
+    
+    $$ s\ped{p}^2 = \frac{(n_1 - 1) s_1^2 + (n_1 - 1) s_2^2}{n_1 + n_2 - 2}.$$
+    
+    **Verdeling van de toetsingsgrootheid onder $\HO$:**\
+    De $t$-verdeling met $\df = n_1 + n_2 - 2$.
+4.  **Bereken de toetsingsgrootheid op basis van de steekproeven.**\
+    Achtereenvolgens: $\mean{X}_1$,$\mean{X}_2$, $s_1$, $s_2$, $s\ped{p}^2$, $\se{\mean{X}_1 - \mean{X}_2}$, en dan $t$.
+5.  **Bereken de $P$-waarde:**\
+    
+    Gebruik R:
+    
+    ```{r}
+    #| eval: false
+    P <- 2 * pt(-abs(t), df = n1 + n2 - 2)
+    ```
+
+6.  **Trek je conclusies.**
+
+:::
+
+### De $t$-toets voor twee steekproeven met R uitvoeren
+
+De $t$-toets voor twee steekproeven is één van de meest eenvoudige toetsen 
+die er bestaan.
+Maar als je 'm met de hand moet uitrekenen,
+ben je toch een tijd bezig, en de kans op fouten is erg groot.
+Het is dus veel handiger om gebruik te maken van R.
+
+Het is niet moeilijk om de formules zelf in R in te programmeren,
+maar dat is niet nodig. 
+Ook deze $t$-toets kan namelijk met dezelfde functie `t.test()`
+worden uitgevoerd!
+
+Laten we aannemen dat je de resultaten van je twee steekproeven
+in R hebt ingevoerd als twee vectoren, `steekproef1` en `steekproef2`.
+Dan ben je daarna in één regel klaar:
+
+```{r}
+#| eval: false
+t.test(steekproef1, steekproef2, var.equal = TRUE)
+```
+
+Het argument `var.equal = TRUE` is nodig om de functie te vertellen
+dat we hebben aangenomen dat beide populaties een gelijke variantie hebben.
+
+:::{#exm-penguins}
+## Verschillen de flipper-lengtes tussen pinguins van de soorten Chinstrap en Gentoo?
+
+![Figuur en data: Horst et al (2020)](figuren/penguins.png){width="70%"}
+
+Op drie eilanden in the Palmerarchipel (Antarctica) zijn metingen verricht 
+aan pinguins van verschillende soorten.^[Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. https://allisonhorst.github.io/palmerpenguins/. doi: 10.5281/zenodo.3960218.]
+We vragen ons af: verschillen de soorten in de gemiddelde lengte van hun snavel?
+We vergelijken hier twee soorten: Chinstrap en Gentoo.
+
+We lezen eerst de gegevens in; die staan in een library "pelmerpenquins":
+
+```{r}
+library("palmerpenguins")
+```
+
+We selecteren de metingen van de twee soorten:
+```{r}
+snavel_Chinstrap <- na.omit(penguins$bill_length_mm[penguins$species == "Chinstrap"])
+snavel_Gentoo <- na.omit(penguins$bill_length_mm[penguins$species == "Gentoo"])
+```
+
+Voordat we een toets uitvoeren, moeten we de gegevens altijd eerst bekijken.
+We genereren wat statistieken:
+```{r}
+(n1 <- length(snavel_Chinstrap))
+```
+```{r}
+(n2 <- length(snavel_Gentoo))
+```
+
+
+```{r}
+summary(snavel_Chinstrap)
+```
+```{r}
+summary(snavel_Gentoo)
+```
+
+```{r}
+sd(snavel_Chinstrap)
+sd(snavel_Gentoo)
+```
+
+We genereren ook voor beide soorten een histogram:
+
+:::{layout="[1,1]"}
+
+```{r}
+#| fig-width: 3.5
+#| fig-height: 3
+#| out-width: 100%
+
+
+hist(snavel_Chinstrap, main = NULL)
+```
+
+```{r}
+#| fig-width: 3.5
+#| fig-height: 3
+#| out-width: 100%
+hist(snavel_Gentoo, main = NULL)
+```
+:::
+
+:::{layout="[1,1]"}
+
+```{r}
+#| fig-width: 3.5
+#| fig-height: 3
+#| out-width: 100%
+
+
+qqnorm(snavel_Chinstrap, main = NULL)
+qqline(snavel_Chinstrap)
+```
+
+```{r}
+#| fig-width: 3.5
+#| fig-height: 3
+#| out-width: 100%
+qqnorm(snavel_Gentoo, main = NULL)
+qqline(snavel_Gentoo)
+```
+:::
+
+```{r}
+t.test(snavel_Chinstrap, snavel_Gentoo, var.equal = TRUE)
+```
+
+:::
+
+
+### De Welch $t$-toets voor twee onafhankelijke steekproeven {#sec-Welch}
+
+```{r}
+#| eval: false
+t.test(, var.equal = FALSE)
+
+```
+
+```{r}
+#| eval: false
+t.test()
+
+```
+
 
 ## De $t$-toets voor gepaarde steekproeven
 
@@ -979,6 +1150,8 @@ De Bonte manakin (*Manacus manacus*). [CC BY-SA 2.0](https://creativecommons.org
 #| out-width: "100%"
 #| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins, per geslacht."
 #| label: fig-dist-manakin-1
+
+massa_manacus <- read.csv("data/massa_manacus.csv")
 
 massa_manacus %>%
   filter(Sex != "Undetermined") %>%
@@ -1267,6 +1440,60 @@ Alleen aannames en toepassing.
 
 ## Opgaven
 
+::: {#exr-t-toets .mixedexr}
+## Voorbeeld van de $t$-toets voor één steekproef
+<br>
+
+Lichaamsgewicht is een belangrijke eigenschap bij dieren, omdat het invloed 
+heeft op hun fysiologie, gedrag en ecologische rol. In dit voorbeeld gebruiken 
+we een 
+[dataset](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273) 
+over vogels en zoogdieren in Colombia, waarin het lichaamsgewicht van meer dan 
+42.000 vogels en 7.400 zoogdieren is vastgelegd^[[Ocampo, D., Borja-Acosta, K. G., Lozano-Flórez, J., Cifuentes-Acevedo, S., Arbeláez-Cortés, E., Bayly, N. J., ... & Acevedo-Charry, O. (2021). *Body mass data set for 1,317 bird and 270 mammal species from Colombia.* Ecology, 102(3), e03273.](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273)]. 
+We focussen op de Bonte manakin (*Manacus manacus*) en we willen met behulp van
+een $t$-toets onderzoeken wat het gemiddelde gewicht van een Bonte manakin is.
+
+Voordat we de $t$-toets mogen toepassen, moeten we eerst kijken of de data aan
+de aannames van de $t$-toets voldoet. Voor een $t$-toets voor één steekproef is
+de aanname alleen dat de data normaalverdeeld is.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.width: 3.5
+#| fig.height: 2
+#| out.width: "50%"
+#| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins (n = 641)."
+#| label: fig-dist-manakin
+
+massa_manacus <- read.csv("data/massa_manacus.csv")
+
+ggplot(massa_manacus,
+       aes(x = Weight)) +
+    geom_histogram(fill = opvulkleur, 
+                   color = "black",
+                   binwidth = 1, 
+                   position = "dodge") +  
+    theme_minimal() +
+    xlab("Gewicht (g)") +
+    ylab("Aantal observaties")
+```
+
+Gebaseerd op @fig-dist-manakin lijkt de verdeling van gewichten grofweg normaal.
+Dit kunnen we beter controleren met behulp van een QQ-plot:
+
+```{r}
+qqnorm(massa_manacus$Weight)
+qqline(massa_manacus$Weight)
+```
+Zoals je ziet is de data wel wat links-scheef, maar de data is voldoende
+normaalverdeeld om een $t$-toets uit te kunnen voeren.
+
+```{r}
+t.test(massa_manacus$Weight, mu = 16.5)
+```
+
+:::
 
 
 ::: {.todo-box}
