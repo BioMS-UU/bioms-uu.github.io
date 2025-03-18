@@ -1,5 +1,20 @@
 ## Antwoorden @sec-toetsen-gemiddelden
 
+```{r}
+#| eval: true
+#| echo: false
+#| output: false
+
+library(ggplot2)
+library(tidyverse)
+
+opvulkleur <- "darkorange"
+lijnkleur1 <- "darkorchid"
+lijnkleur2 <- "red"
+lijnkleur3 <- "blue"
+
+```
+
 ### @exr-kippeneieren
 
 ```{r}
@@ -20,12 +35,12 @@ P <- 2*(1 - pt(abs(t), df = n -1))
 2.  **Formuleer de hypotheses:**\
     $\HO:\qquad \mu_X = 52\unit{g}$,\
     $\HA:\qquad \mu_X \neq 52\unit{g}$.
-3.  **Kies de toetsingsgrootheid:**
+3.  **Kies de toetsingsgrootheid:**\
     $t = \cfrac{\mean{X} - 52\unit{g}}{\se{\mean{X}}}$.
     
     **Verdeling van $t$ onder $\HO$:**\
     De $t$-verdeling met $\df = n - 1 = 3$.
-4.  **Bereken de toetsingsgrootheid op basis van de steekproef.**
+4.  **Bereken de toetsingsgrootheid op basis van de steekproef.**\
     Achtereenvolgens: 
     
     - $\mean{X} = 50{,}6\unit{g}$, 
@@ -35,11 +50,13 @@ P <- 2*(1 - pt(abs(t), df = n -1))
     
     De resultaten hierboven zijn afgerond; maar zorg ervoor dat je 
     altijd met de onafgeronde tussenresultaten doorrekent.
-5.  **Bereken de $P$-waarde:** Gebruik R.
+5.  **Bereken de $P$-waarde:**\ Gebruik R:
+
     ```{r}
     P <- 2*pt(-abs(t), df = n - 1)
     P
     ```
+    
 6.  **Conclusies:** De $P$-waarde is 0,18. 
     Dat is geen opvallend kleine waarde; 
     de waargenomen afwijking van $\mean{X}$ van $\mu_0$ 
@@ -53,114 +70,271 @@ P <- 2*(1 - pt(abs(t), df = n -1))
     omlaag brengen.
     Het zou kunnen dat we dan wél een statistisch significante afwijking vinden.
 
-### @exr-uitvoer
+### @exr-uitvoer-t-test
 
-a.  --
+a.  De uitvoer is:
+    
+    ```{r}
+    #| echo: FALSE
+    temperaturen <- c(35.7, 35.8, 37.0, 36.5, 37.1, 36.4, 36.1, 36.8, 36.5, 37.1)
+    mu0 <- 37
+    t.test(temperaturen, mu = mu0)
+    ```
 
-b.  Helemaal onderaan staat "Mean of x", met waarde 36,5 (in $\degree$C).
+b.  Helemaal onderaan staat "mean of x", met waarde 36,5 (in $\degree$C).
 
-c.  Deze drie waarden staan op dezelfde regel; je hebt ze vast gevonden.
+c.  Deze drie waarden staan op dezelfde regel:
+    
+        t = -3.0877, df = 9, p-value = 0.01298
+
     Na afronden komen deze resultaten precies overeen met onze eigen berekeningen.
     
-d.  Het BHI loopt van 36,13$\degree$C tot 36,87$\degree$C. Je kunt dit ook schrijven als $(36{,}50\pm 0{,}37)\degree$C.
+d.  Het BHI loopt van 36,13$\degree$C tot 36,87$\degree$C. Je kunt dit ook schrijven als $\mu_X = (36{,}50\pm 0{,}37)\degree$C.
+
+
+### @exr-uitvoer-t-test-2
+
+```{r}
+#| echo: false
+library("palmerpenguins")
+snavel_Chinstrap <- na.omit(
+  penguins$bill_length_mm[penguins$species == "Chinstrap"]
+  )
+snavel_Gentoo <- na.omit(
+  penguins$bill_length_mm[penguins$species == "Gentoo"]
+  )
+```
+
+De uitvoer is:
+
+```{r}
+#| echo: false
+t.test(snavel_Chinstrap, snavel_Gentoo, var.equal = TRUE)
+```
+    
+a.  Lees af: $\df = 189$. Er waren metingen voor 
+    68 Chinstrap-pinguins en 123 Gentoo-pinguins.
+    Het juiste aantal is $n_1 + n_2 - 2 = 68 + 123 - 2 = 189$.
+    R heeft dus het juiste aantal vrijheidsgraden gebruikt.
+    
+b.  Het interval is $(0,38\unit{mm}; 2,28\unit{mm})$. 
+    Dit is het 95%-BHI van het *verschil* in de gemiddelden 
+    tussen beide populaties, dus $\mu_1$ - $\mu_2$. 
+    
+c.  Het getal 0 ligt niet binnen het BHI. 
+    Dat vertelt ons dat de $P$-waarde kleiner is dan 0,05.
+
+### @exr-welch
+
+a.  De $P$-waarde van de gewone $t$-toets is 0,0062, 
+    die van de test van Welch is met 0,0077 iets groter,
+    zoals verwacht. 
+    
+    Hoewel er dus een klein verschil te zien is,
+    verschilt de interpretatie nauwelijks: 
+    in beide gevallen is het bewijs sterk dat 
+    er een verschil is in de gemiddelde snavellengte 
+    tussen beide soorten.
+    Het heeft dus geen serious nadeel om de test van Welch te gebruiken,
+    terwijl die wel robuuster is voor afwijkingen van de
+    standaarddeviaties.
+    
+b.  Omdat de test van Welch minder aannames maakt,
+    is er meer onzekerheid in de schatting.
+    Daarom verwachten we een breder BHI.
+    Dat klopt:
+    
+    95%-BHI voor de standaard toets: $(0,38\unit{mm}; 2,28\unit{mm})$.
+
+    95%-BHI voor de toets van Welch: $(0,36\unit{mm}; 2,30\unit{mm})$.
+
 
 ### @exr-manakin
 
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.width: 3.5
-#| fig.height: 2
-#| out.width: "50%"
-#| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins (n = 641)."
-#| label: fig-dist-manakin
+a.  We willen een hypothese toetsen over het gemiddelde van de populatie;
+    dat is de taak van de $t$-toets voor één steekproef.
+    
+b.  $\HO:\qquad \mu_X = 16{,}5,$\
+    $\HA:\qquad \mu_X \neq 16{,}5.$\
 
-massa_manacus <- read.csv("data/massa_manacus.csv")
+c.  We importeren de dataset:
 
-ggplot(massa_manacus,
-       aes(x = Weight)) +
-    geom_histogram(fill = opvulkleur, 
-                   color = "black",
-                   binwidth = 1, 
-                   position = "dodge") +  
-    theme_minimal() +
-    xlab("Gewicht (g)") +
-    ylab("Aantal observaties")
-```
+    ```{r}
+    massa_manacus <- read.csv(
+      "https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data/massa_manacus.csv"
+      )
+    ```
+    
+    Welke variabelen? Gebruik `str()`:
+    
+    ```{r}
+    str(massa_manacus)
+    ```  
+    
+    Aantal datapunten? Vraag het aantal regels op:
+    
+    ```{r}
+    nrow(massa_manacus)
+    ```  
+    
+    Dit is duidelijk een erg grote dataset.
+    
+d.  We zijn geïnteresseerd in de variabele `Weight`. 
 
-Gebaseerd op @fig-dist-manakin lijkt de verdeling van gewichten grofweg normaal.
-Dit kunnen we beter controleren met behulp van een QQ-plot:
+    **Ligging:**
+ 
+    ```{r}
+    summary(massa_manacus$Weight)
+    ```
+    
+    De mediaan en het gemiddelde zijn bijna gelijk,
+    en ietsje kleiner dan $\mu_0 = 16{,}5$.
+    De vraag is of dat kleine verschil statistisch significant is.
+    
+    **Spreiding:**
+    
+    ```{r}
+    sd(massa_manacus$Weight)
+    IQR(massa_manacus$Weight)
+    ```  
+    
+    **Visualiseren:**
+    
+    :::{layout="[[1,1]]" width="100%"}
+    
+    ```{r}
+    #| out-width: "100%"
+    hist(massa_manacus$Weight)
+    ```
+    
+    ```{r}
+    #| out-width: "100%"
+    boxplot(massa_manacus$Weight)
+    ```     
+    
+    :::
+    
+    Beide plots laten een symmetrische, klokvormige verdeling zien,
+    zonder opvallende uitbijters.
+    
+e.  We passen het Normale Model toe op de populatie en de steekproef.
+    We nemen dus onder andere aan dat gewicht
+    in de populatie normaal verdeeld is.
+    
+f.  Bij voorbaat is het  niet vreemd om lichaamsgewicht te modelleren 
+    met een normale verdeling,
+    omdat dat een continue variabele is die vaak een klokvormige verdeling heeft. 
+    
+    Een probleem zou kunnen zijn dat een lichaamsgewicht niet negatief kan worden,
+    maar zolang de ligging van de verdeling ver genoeg van 0 afligt
+    is het ontbreeken van die staart niet zo relevant.
+    
+    Er is in deze opgave niet veel informatie gegeven over de manier 
+    waarop de steekproef heeft plaatsgevonden.
+    We kunnen dus niet goed beoordelen of de vogels bij benadering
+    aselect geselecteerd zijn.
+    Dat is iets om in gedachte te houden; er kan bias bestaan
+    in deze steekproef.
+    
+    **QQ-plot:**
+    
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 55%
 
-```{r}
-qqnorm(massa_manacus$Weight)
-qqline(massa_manacus$Weight)
-```
-Zoals je ziet is de data wel wat links-scheef, maar de data is voldoende
-normaalverdeeld om een $t$-toets uit te kunnen voeren.
+    qqnorm(massa_manacus$Weight)
+    qqline(massa_manacus$Weight)
+    ```
 
-```{r}
-t.test(massa_manacus$Weight, mu = 16.5)
-```
+    De QQ-plot laat zien dat de verdeling grotendeels 
+    in lijn is met de kwantielen van de normale verdeling. 
+    
+    Alles overziend kan de verdeling goed beschreven worden
+    met de normale verdeling.
+    Gezien de grootte van de dataset zouden zelfs veel grotere
+    afwijkingen geen probleem moeten zijn.
+    
+g.  De $t$-toets uitvoeren:
 
-@exr-manakin-2
+    ```{r}
+    t.test(massa_manacus$Weight, mu = 16.5)
+    ```
+    
+h.  Het 95%-BHI is $(16{,}14\unit{g}; 16{,}42\unit{g})$. 
+    We zijn dus 95% zeker dat het ware gemiddelde
+    in dat interval ligt. 
+    
+    Omdat $16,5\unit{g}$ niet in het 95%-BHI ligt,
+    kunnen we ook al concluderen dat $P < 0{,}05$.
+    
+i.  De $P$-waarde 0,0018. Dat is sterk bewijs tegen de nulhypothese.
+    (Als $\HO$ waar is, krijg je zo'n grote afwijking maar eens in de ~500
+    steekproeven!)
+    
+j.  De BHI geeft je een schatting van het lichaamsgewicht van deze vogels,
+    plus je onzekerheid daarin. Je kunt daarmee dus ook inschatten
+    hoe ver de werkelijkheid van $\mu_0 = 16{,}5$g afligt. 
+    Met een geschat gemiddelde van
+    $16{,}3$g is het verschil eigenlijk maar klein.
+    
+    De $P$-waarde vertelt je precies hoe onwaarschijnlijk het waargenomen
+    steekproefgemiddelde is onder $\HO$, 
+    en dus hoe zwaarwegend dit bewijs is tegen $\HO$. 
+    Het 95%-BHI vertelt ons dat $P < 0,05$, maar niet hoe groot $P$ precies is.
+    
 
-::: {#fig-manakin-distributie layout-ncol="2" out-width="100%"}
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.width: 3.5
-#| fig.height: 4
-#| out-width: "100%"
-#| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins, per geslacht."
-#| label: fig-dist-manakin-1
+### @exr-manakin-2
 
-massa_manacus <- read.csv("data/massa_manacus.csv")
+a.  We willen de gemiddelden van twee populaties vergelijken;
+    we hebben dus een $t$-toets voor twee onafhankelijke steekproeven nodig
 
-massa_manacus %>%
-  filter(Sex != "Undetermined") %>%
-  ggplot(aes(x = Sex, y = Weight, fill = Sex)) +  
-  geom_boxplot() + 
-  theme_minimal() +
-  ylab("Gewicht (g)") +
-  scale_fill_discrete(name = "Geslacht",
-                      labels = c("Vrouwelijk", "Mannelijk")) +
-  theme(legend.position = "top",
-        axis.title.x = element_blank()) +  
-  guides(fill = guide_legend(nrow = 2)) +  
-  scale_x_discrete(
-    labels = c("Female" = paste("n =", sum(massa_manacus$Sex == "Female")),
-               "Male" = paste("n =", sum(massa_manacus$Sex == "Male"))))  
+b.  $\HO:\qquad \mu_1 = \mu_2,$
+
+    $\HA:\qquad \mu_1 \neq \mu_2.$
+
+c.  Code:
+
+    ```{r}
+    man <- massa_manacus$Weight[massa_manacus$Sex == "Male"]
+    vrouw <- massa_manacus$Weight[massa_manacus$Sex == "Female"]
+    ```
+
+d.  Code:
+
+    ```{r}
+    length(man)
+    length(vrouw)
+    ```
+
+e.  **Mannetjes:**
+
+    ```{r}
+    boxplot(man)
+    ```
+    
+    ```{r}
+    hist(man)
+    ```
+    
+    ```{r}
+    boxplot(vrouw)
+    ```
+    
+    ```{r}
+    hist(vrouw)
+    ```
+
+f.  
+
+g.  
+
+h.  
+
+i.  
 
 
-```
 
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.width: 3.5
-#| fig.height: 4
-#| out.width: "100%"
-#| fig-cap: "Histogram van het gewicht van vrouwelijke en mannetlijke Bonte manakins."
-#| label: fig-dist-manakin-2
-
-massa_manacus %>%
-  filter(Sex != "Undetermined") %>%
-  ggplot(aes(x = Weight, fill = Sex)) +
-    geom_histogram(color = "black", 
-                   binwidth = 1, 
-                   position = "dodge") +  
-    theme_minimal() +
-      theme(legend.position = "none") +  
-    xlab("Gewicht (g)") +
-    ylab("Aantal observaties") +
-    facet_wrap(vars(Sex), nrow = 2, 
-               labeller = as_labeller(c("Female" = "Vrouwelijk", 
-                                        "Male" = "Mannelijk")))  
-
-```
-
-Verdeling van gemeten gewichten van de Bonte manakin in Colombia.
-:::
 
 De gemeten gewichten van de Bonte manakins zijn per geslacht weergegeven in 
 @fig-manakin-distributie. Naast de visualisatie van de data vatten we deze 

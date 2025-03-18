@@ -458,7 +458,7 @@ Dan zijn dit de stappen van de toets:
 Een kippenboerderij beweert dat de geleverde eieren gemiddeld 52 g
 wegen. Wij geloven dat niet zomaar en besluiten onderzoek te doen.
 
-We wegen vier eieren, met de volgende gewichten: 51,7 g; 50,3 g; 48,4 g; en 51,9 g. 
+We wegen vier eieren, met de volgende gewichten: 51,7g; 50,3g; 48,4g; en 51,9g. 
 Gebruik het stappenplan hierboven om de volledige $t$-toets uit te voeren.
 :::
 
@@ -491,7 +491,9 @@ ook hadden gebruikt om het 95%-betrouwbaarheidsinterval uit te rekenen,
 voert de hele berekening in één keer uit:
 
 ```{r}
-t.test(temperaturen, mu = 37)
+temperaturen <- c(35.7, 35.8, 37.0, 36.5, 37.1, 36.4, 36.1, 36.8, 36.5, 37.1)
+mu0 <- 37
+t.test(temperaturen, mu = mu0)
 ```
 
 Merk op dat we de functie nu moeten vertellen wat onze nulhypothese is;
@@ -501,11 +503,10 @@ Het is belangrijk om even stil te staan bij de uitvoer van deze functie.
 We doen dat in de volgende opgave.
 
 ::: {#exr-uitvoer-t-test .Rexr}
-
 ## De uitvoer van de funtie `t.test()` bij één steekproef
 <br>
 
-a.  Neem de code hierboven, waarin de $t$-toets wordt uitgevoerd,
+a.  Neem de code hierboven, waarin de $t$-toets wordt uitgevoerd met de functie `t.test()`,
     over in een script en voer het uit.
     
 Bestudeer de uitvoer:
@@ -515,7 +516,7 @@ b.  Waar in de uitvoer vind je het steekproefgemiddelde?
 c.  Waar vind je de waarden van $t$, df, en de $P$-waarde?
     Komen die overeen met onze handmatige berekeningen hierboven?
 
-d.  De functie geeft ook het 95%-BHI. Wat zijn de onder- en bovengrens?
+d.  De functie geeft ook het 95%-BHI voor $\mu_X$. Wat zijn de onder- en bovengrens?
 
 :::
 
@@ -559,9 +560,19 @@ Je kunt het 95%-BHI dus ook interpreteren
 als de verzameling van alle mogelijke waarden van $\mu_0$
 waar volgens de $t$-toets geen "statistisch significant" bewijs tegen is.
 
+
 :::
 
+Ondanks dit verband vullen het 95%-BHI en de $P$-waarde elkaar aan.
 
+- Het 95%-BHI kan je vertellen of de $P$-waarde voor een bepaalde 
+  nulhypothese kleiner is dan 0,05,
+  maar niet hoe klein dan precies. 
+  Je kunt er de mate van bewijs tegen $\HO$ dus niet precies mee bepalen.
+  
+- De $P$-waarde kan je de mate van bewijs tegen $\HO$ vertellen,
+  maar niet hoe ver de ware $\mu_X$ van $\mu_0$ verwijderd is.
+  Vaak is dat minstens zo belangrijk.
 
 
 ## De $t$-toets voor twee onafhankelijke steekproeven {#sec-t-toets-twee-steekproeven}
@@ -914,6 +925,8 @@ snavel_Gentoo <- na.omit(
   penguins$bill_length_mm[penguins$species == "Gentoo"]
   )
 ```
+Uit de naam van de variabele valt op te maken
+dat de eenheid van snavellengte mm is.
 
 ### Bestudeer de gegevens
 
@@ -1010,18 +1023,20 @@ een iets korter snavel.
 
 :::
 
-::: {#exr-uitvoer-t-test-2}
+::: {#exr-uitvoer-t-test-2 .Pexr}
 ## De uitvoer van de functie `t.test()` bij twee onafhankelijke steekproeven
+<br>
 
 In @exm-penguins wordt uiteindelijk een $t$-toets voor twee steekproeven uitgevoerd
-me de functie `t.test()`. Bekijk de uitvoer goed.
+met de functie `t.test()`. 
+Bekijk de uitvoer goed.
 
 a.  Hoeveel vrijheidsgraden heeft R gebruikt? Klopt dat?
 
 b.  Er wordt in de uitvoer een 95%-BHI gegeven.
     Hoe moet je dat interval interpreteren?
     
-c.  Ligt het getal 0 in het 95%-BHI bevat? Wat zegt dat over de $P$-waarde? 
+c.  Ligt het getal 0 binnen het 95%-BHI? Wat zegt dat over de $P$-waarde? 
 
 :::
 
@@ -1483,7 +1498,7 @@ gelijk zijn.
 
 ## Samenvatting
 
-## Terminologie in het Engels
+## Terminologie
 
 ## Opgaven
 
@@ -1518,25 +1533,35 @@ c.  We hebben de gegevens online gezet; voeg de volgende regel toe aan je script
       )
     ```
     
-    Bekijk de dataset even. Welke variabelen zijn er? Hoeveel datapunten?
+    Bekijk de dataset even.
+    Welke variabelen zijn er? Hoeveel datapunten?
     
 d.  Onderzoek de dataset. Bereken maten van ligging en spreiding voor de variabele, 
-    en visualiseer de verdeling met een boxplot en een histogram. 
+    en visualiseer de verdeling met een boxplot en een histogram.
+    
+e.  Wat is het statistische model dat bij deze $t$-toets hoort?
 
-e.  Voeg ook een QQ-plot toe om te zien of de verdeling sterk afwijkt van een normale verdeling.
+f.  Lijkt het Normale Model in dit geval bij voorbaat redelijk?
+
+    Voeg een QQ-plot toe om te zien of de verdeling van de gegevens sterk afwijkt van een normale verdeling.
+    
     Alles overziend, lijkt de $t$-toets geschikt voor deze situatie?
     
-f.  Voer de $t$-toets uit met de functie `t.test()`. 
+g.  Voer de $t$-toets uit met de functie `t.test()`. 
 
-    Bekijk eerst het 95%-BHI.  Wat zegt die?
+h.  Bekijk eerst het 95%-BHI.  Wat zegt die?
     
-g.  Bekijk de $P$-waarde en trek je conclusies.
+i.  Bekijk de $P$-waarde en trek je conclusies.
 
+j.  Wat vertelt het 95%-BHI je wat je niet uit de $P$-waarde kunt opmaken?
+    
+    En wat vertelt de $P$-waarde wat je niet uit het betrouwbaarheidsinterval kunt opmaken?
 :::
 
 
 ::: {#exr-manakin-2 .Rexr}
 ## Gewichtsverschillen tussen mannetjes en vrouwtjes bij de Bonte mannakin
+<br>
 
 In @exr-manakin hierboven hebben we het gemiddelde 
 lichaamsgewicht van een Bonte manakin onderzocht. 
@@ -1564,8 +1589,7 @@ b.  Formuleer $\HO$ en $\HA$.
 
 c.  Maak een vector met alleen de gewichten van de mannetjes, 
     en een vector met alleen de gewichten van de vrouwtjes.
-    Verwijder de eventuele waarden `NA` met de functie `na.omit()`.
-    
+
 d.  Van hoeveel mannetjes en vrouwtjes heb je gegevens?
 
 e.  Maak een boxplot en een histogram voor zowel de mannetjes en de vrouwtjes.
@@ -1585,35 +1609,80 @@ g.  Gebruik de `t.test()` functie
      
 h.  Bekijk de $P$-waarde en trek je conclusies.
 
+i.  Wat vertelt het 95%-BHI je wat je niet uit de $P$-waarde kunt opmaken?
+    
+    En wat vertelt de $P$-waarde wat je niet uit het betrouwbaarheidsinterval kunt opmaken?
 
 :::
 
-::: {#exr-kurk}
-In de file “kurk.csv” (te vinden op Blackboard) is van 28
-bomen het gewicht aan kurkafzetting (in centigrammen) aan de oost- en
-aan de westzijde van de boom gegeven. De onderzoekers willen weten
-of aan beide zijden van de bomen evenveel kurk wordt afgezet.
+::: {#exr-kurk .Rexr}
+## Kurkafzetting
+<br>
 
-**a.** lees het bestand in als dataframe genaamd `kurk`. 
+Onderzoekers vragen zich af of aan alle kanten van bomen
+evenveel kurk wordt afgezet.
+Om dat te bepalen selecteren ze uit een groot bosgebied 
+aselect 28 bomen en meten aan de noord-, zuid-, oost- en westkant
+de dikte van de kurkafzetting.
 
-**b.** Gebruik  `str(kurk)`, `head(kurk)` en/of `View(kurk)` om de volgende vragen te beantwoorden: 
-1. Hoeveel kolommen heeft de dataframe? 
-2. Hoeveel regels zijn er? 
-3. Van welk datatype is elke kolom?
-4. Kloppen de datatypes? 
+In deze opgave negeren we de metingen van de noord- en zuid-kant
+en onderzoeken we het verschil tussen de oost- en de westkant.
 
-**c.** 
-Voordat je een analyses of toetsen gaat uitvoeren, is het belangrijk
-om de data eerst eens goed te bekijken. Maak daarom een boxplot
-voor de waarden van kolommen OOST en WEST en bestudeer ze. Maak
-ook histogrammen voor beide kolommen. Beschrijf de verdelingen
-in woorden. Zijn de verdelingen symmetrisch of scheef? Zijn ze
-bel-vormig? Zijn er uitbijters? Zie je verschillen tussen oost een
-west?
+a.  Welke $t$-toets zou je willen uitvoeren om de onderzoeksvraag te beantwoorden?
 
-**d.** Bereken kengetallen (gemiddelde, mediaan, standaardafwijking, etc.)
-voor OOST en WEST. (Het is handig om onder andere de functie `summary()` te gebruiken.) Vallen je dingen op? Zijn er opvallende verschillen
-in ligging en spreiding tussen oost en west?
+b.  Stel $\HO$ en $\HA$ op. 
+
+Start een nieuw script voor deze analyse.
+
+c.  De gegevens staan online; importeer ze door de volgende regel
+    aan je script toe te voegen:
+
+    ```{r}
+    #| eval: false
+    kurk <- read.csv(
+      "https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data/kurk.csv"
+      )
+    ```
+    
+    De kurkafzetting is gegeven in mm.
+
+b.  Gebruik  `str(kurk)`, `head(kurk)` en/of `View(kurk)` om de volgende vragen te beantwoorden: 
+    
+    1. Hoeveel kolommen heeft de dataset? 
+    2. Hoeveel regels zijn er? 
+    3. Van welk datatype is elke kolom? Controleer dat R de juiste datatypes heeft gebruikt.
+
+e.  Voordat je een analyses of toetsen gaat uitvoeren, 
+    is het belangrijk om de data eerst eens goed te bekijken. 
+    Maak daarom boxplots en histogrammen voor de waarden van kolommen `OOST` en `WEST` 
+    en bestudeer ze.
+
+f.  Bereken ook kengetallen voor de ligging en spreiding van `OOST` en `WEST`. 
+    Vallen je dingen op? 
+    Zijn er opvallende verschillen tussen de kurkafzetting aan de oost- en westkant?
+
+g.  Wat is het statistisch model van de $t$-toets die je wilt gebruiken?
+
+    Lijkt je dat bij voorbaat een redelijk model voor deze variabele?
+
+    Maak een QQ-plot en een boxplot of histogram om te controleren
+    dat het model van toepassing is op deze situatie.
+    
+    Is dat wat jou betreft het geval?
+    
+h.  Voer de $t$-toets uit met de functie `t.test()`.
+
+Bestudeer de uitvoer van `t.test()`.
+
+i.  Bekijk het 95%-BHI dat gegeven wordt. 
+    Wat is de interpretatie van dat interval?
+
+j.  Zoek de $P$-waarde op en trek je conclusies.
+
+k.  Wat vertelt het 95%-BHI je wat je niet uit de $P$-waarde kunt opmaken?
+    
+    En wat vertelt de $P$-waarde wat je niet uit het betrouwbaarheidsinterval kunt opmaken?
+    
 
 :::
 

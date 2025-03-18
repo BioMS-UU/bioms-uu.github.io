@@ -123,3 +123,61 @@ Bestudeer de uitvoer; zorg dat je de structuur en de inhoud ervan begrijpt.
 
 **d.** Wat is het verband tussen de antwoorden op onderdelen **b** en **c**?
   :::
+  
+  ::: {#fig-manakin-distributie layout-ncol="2" out-width="100%"}
+    ```{r}
+    #| code-fold: true
+    #| warning: false
+    #| fig.width: 3.5
+    #| fig.height: 4
+    #| out-width: "100%"
+    #| fig-cap: "Histogram van de gemeten gewichten van de Bonte manakins, per geslacht."
+    #| label: fig-dist-manakin-1
+    
+    massa_manacus <- read.csv("https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data/massa_manacus.csv")
+    
+    massa_manacus %>%
+      filter(Sex != "Undetermined") %>%
+      ggplot(aes(x = Sex, y = Weight, fill = Sex)) +  
+      geom_boxplot() + 
+      theme_minimal() +
+      ylab("Gewicht (g)") +
+      scale_fill_discrete(name = "Geslacht",
+                          labels = c("Vrouwelijk", "Mannelijk")) +
+      theme(legend.position = "top",
+            axis.title.x = element_blank()) +  
+      guides(fill = guide_legend(nrow = 2)) +  
+      scale_x_discrete(
+        labels = c("Female" = paste("n =", sum(massa_manacus$Sex == "Female")),
+                   "Male" = paste("n =", sum(massa_manacus$Sex == "Male"))))  
+    
+    
+    ```
+    
+    ```{r}
+    #| code-fold: true
+    #| warning: false
+    #| fig.width: 3.5
+    #| fig.height: 4
+    #| out.width: "100%"
+    #| fig-cap: "Histogram van het gewicht van vrouwelijke en mannetlijke Bonte manakins."
+    #| label: fig-dist-manakin-2
+    
+    massa_manacus %>%
+      filter(Sex != "Undetermined") %>%
+      ggplot(aes(x = Weight, fill = Sex)) +
+      geom_histogram(color = "black", 
+                     binwidth = 1, 
+                     position = "dodge") +  
+      theme_minimal() +
+      theme(legend.position = "none") +  
+      xlab("Gewicht (g)") +
+      ylab("Aantal observaties") +
+      facet_wrap(vars(Sex), nrow = 2, 
+                 labeller = as_labeller(c("Female" = "Vrouwelijk", 
+                                          "Male" = "Mannelijk")))  
+    
+    ```
+    
+    Verdeling van gemeten gewichten van de Bonte manakin in Colombia.
+    :::
