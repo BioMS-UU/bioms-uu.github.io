@@ -24,13 +24,12 @@ die in de praktijk vaak voorkomen.
 Dat zijn situaties waarin de variabele $X$ waarin we geïnteresseerd zijn
 numeriek en continu is, 
 en waarbij onze hypotheses gaan over parameter $\mu_X$, 
-het gemiddelde van die variabele.
+het populatiegemiddelde van die variabele.
 
 Laten we direct met de eerste toets te beginnen:
 de $t$-toets voor één steekproef.
 
 ## Toets van het gemiddelde: $t$-toets voor één steekproef
-
 
 ::: {#exm-casus-temp}
 ## Is de lichaamstemperatuur van gezonde mensen wel 37$\degree$C? {#sec-casus}
@@ -55,12 +54,12 @@ $$35{,}7\quad 35{,}8\quad 37{,}0\quad 36{,}5\quad 37{,}1\quad 36{,}4\quad 36{,}1
 Het gemiddelde van deze steekproef is $\mean{X} = 36{,}5\degree$C.
 Is dit dan sterk bewijs tegen de standaardtemperatuur van 37$\degree$C?
 
-Verschillende personen hebben een verschillende normale temperatuur,
-en de lichaamstemperatuur van personen fluctueert bovendien gedurende de dag 
+Mensen verschillen onderling in hun normale temperatuur,
+en ieders lichaamstemperatuur fluctueert bovendien gedurende de dag 
 (door je biologische klok) en van dag tot dag (bijvoorbeeld door de menstruatiecyclus).
 Een steekproefgemiddelde dat wat lager is dan 37$\degree$C
 kan dus ook het gevolg zijn van de toevallige steekproef.
-Het is dus duidelijk dat we een hypothesetoets nodig hebben
+We hebben dus een hypothesetoets nodig
 om te bepalen in hoeverre de gevonden afwijking
 bewijs levert tegen een populatiegemiddelde van 37$\degree$C.
 
@@ -93,17 +92,17 @@ of is de afwijking daarvoor te groot?
 De **$t$-toets voor één steekproef** is de standaardtoets die voor dit soort situaties
 ontwikkeld is.
 
-### De $t$-toets in zes stappen
+### De $t$-toets voor één steekproef in zes stappen
 
 In @sec-algemene-vorm hebben we al gezien dat alle hypothesetoetsen dezelfde 
 logische structuur hebben. 
 Daar hebben we die structuur in zes stappen opgedeeld.
 We gaan die zes stappen nu doorlopen voor de $t$-toets voor één steekproef.
-Daarbij passen we de berekening direct toe op @exm-casus-temp van de lichaamstemperatuur.
+Daarbij passen we de berekening direct toe op @exm-casus-temp over de lichaamstemperatuur.
 
 **Stap 1: Kies een statistisch model.**\
 De eerste stap van iedere toets bestaat uit het kiezen van een gepast statistisch model.
-De $t$-toets gaat uit van het Normale Model (@sec-Normale-Model) 
+De $t$-toets voor één steekproef gaat uit van het Normale Model (@sec-Normale-Model) 
 dat we in @sec-schatten ook hebben gebruikt.
 We nemen dus aan:
 
@@ -120,9 +119,8 @@ We hebben in @sec-afwijkingen uitgebreid besproken hoe je dat kunt doen.
 **Stap 2: Stel de hypotheses $\HO$ en $\HA$ op.**\
 Stap 2 is het opstellen van de nulhypothese en de alternatieve hypothese.
 In de casus was de nulhypothese dat het populatiegemiddelde
-van de variabele lichaamstemperatuur 37$\degree$C is.
-Die hypothese gaat over de parameter $\mu_X$ van de populatieverdeling
-en kan kort opgeschreven worden als:
+van de variabele lichaamstemperatuur gelijk is aan 37$\degree$C.
+Die hypothese kan kort opgeschreven worden als:
 
 $\HO:\qquad\mu_X = 37\degree$C.
 
@@ -140,8 +138,7 @@ $\HA:\qquad\mu_X \neq \mu_0.$
 **Stap 3: Kies de toetsingsgrootheid en bepaal zijn kansverdeling onder $\HO$.**\
 We hebben een toetsingsgrootheid nodig die weergeeft hoe ver het
 steekproefgemiddelde $\mean{X}$ afwijkt van de verwachting onder $\HO$.
-
-De $t$-toets maakt daarvoor gebruik van 
+De $t$-toets voor één steekproef gebruikt daarvoor 
 $$
 t = \frac{\mean{X} - \mu_0}{\se{\mean{X}}}.
 $$ {#eq-t-t-test}
@@ -255,7 +252,7 @@ daadwerkelijk hebben gevonden.
 Dat komt overeen met de oppervlakte van 
 de staarten van de verdeling die in @fig-t-df9-staarten hieronder 
 met paars zijn aangegeven.
-(Het is maar een klein oppervlak---het is daardoor misschien lastig te zien!)
+(Die oppervlakten zijn maar klein---ze zijn daardoor misschien lastig te zien!)
 
 ```{r}
 #| label: fig-t-df9-staarten
@@ -395,8 +392,7 @@ Op deze manier werkt de code ongeacht of de $t$-waarde positief of negatief is.
 Om ook de rechterstaart mee te rekenen, moeten we die kans verdubbelen.
 Dat levert op:
 ```{r}
-P <- 2 * pt(-abs(t), df = n - 1)
-P
+(P <- 2 * pt(-abs(t), df = n - 1))
 ```
 Dat is dus de $P$-waarde waarnaar we op zoek waren!
 
@@ -433,7 +429,7 @@ Dan zijn dit de stappen van de toets:
     $\HA:\qquad \mu_X \neq \mu_0$.
 3.  **Kies de toetsingsgrootheid:**
 
-    $$t = \cfrac{\mean{X} - \mu_0}{\se{\mean{X}}}$$.
+    $$t = \cfrac{\mean{X} - \mu_0}{\se{\mean{X}}}.$$
     
     **Verdeling van de toetsingsgrootheid onder $\HO$:**\
     De $t$-verdeling met $\df = n - 1$.
@@ -452,7 +448,7 @@ Dan zijn dit de stappen van de toets:
 :::
 
 ::: {#exr-kippeneieren .mixedexr}
-## Kippen-eieren
+## Kippen-eieren.
 <br>
 
 Een kippenboerderij beweert dat de geleverde eieren gemiddeld 52 g
@@ -496,14 +492,14 @@ mu0 <- 37
 t.test(temperaturen, mu = mu0)
 ```
 
-Merk op dat we de functie nu moeten vertellen wat onze nulhypothese is;
-dat gebeurt met het argument `mu = 37`.
+Merk op dat we `t.test()` nu moeten vertellen wat onze nulhypothese is;
+dat gebeurt met het argument `mu = mu0`.
 
 Het is belangrijk om even stil te staan bij de uitvoer van deze functie.
 We doen dat in de volgende opgave.
 
 ::: {#exr-uitvoer-t-test .Rexr}
-## De uitvoer van de funtie `t.test()` bij één steekproef
+## De uitvoer van de funtie `t.test()` bij één steekproef.
 <br>
 
 a.  Neem de code hierboven, waarin de $t$-toets wordt uitgevoerd met de functie `t.test()`,
@@ -603,6 +599,7 @@ ook verklaard kunnen worden door toevallige steekproevenvariabiliteit.
 Dat is de taak van de **$t$-toets voor twee onafhankelijke steekproeven**.
 
 We gaan deze toets weer uitleggen door de zes stappen één voor éen door te lopen.
+Daarna passen we het toe op een voorbeeld.
 
 **Stap 1: Kies een statistisch model.**\
 Bij de $t$-toets voor één steekproef
@@ -615,20 +612,18 @@ Dat doen we nu weer, maar met twee kleine *twists*:
     We nemen daarom aan dat het Normale Model van toepassing is op *beide*
     steekproeven.
     Dat wil zeggen dat de variabele $X$ normaal verdeeld is in beide populaties,
+    met gemiddelden $\mu_1$ en $\mu_2$,
     en dat de waarnemingen in beide steekproeven onafhankelijk
     uit die normale verdeling getrokken zijn.
     
     
 2.  We nemen bovendien aan dat de standaarddeviaties van beide populaties
-    gelijk zijn; we zullen die $\sigma$ noemen.
+    gelijk zijn; we zullen die standaarddeviatie $\sigma$ noemen.
     
     Deze aanname is vaak redelijk en maakt de berekeningen gemakkelijker.
     Maar, er bestaat ook een versie van de toets die deze aanname niet maakt,
     en die kan in veel gevallen dus geschikter zijn;
     daar komen we in @sec-Welch op terug.
-    
-De populatiegemiddelden van beide populaties kunnen wél verschillend zijn;
-we zullen ze $\mu_1$ en $\mu_2$ noemen. 
     
 Het statistisch model kan dus in het volgende plaatje worden samengevat:
 
@@ -636,7 +631,7 @@ Het statistisch model kan dus in het volgende plaatje worden samengevat:
 #| label: fig-model-t-test-2-var
 #| fig-cap: "Illustratie van het statistisch model van de $t$-toets voor 2 steekproeven. 
 #| Aangenomen wordt dat de variabele in beide populaties normaal verdeeld is, 
-#| met gelijke standaarddeviatie $\\sigma$."
+#| met dezelfde standaarddeviatie $\\sigma$."
 #| fig-width: 4.5
 #| fig-height: 2.5
 #| out-width: "64%"
@@ -787,10 +782,10 @@ We laten de formules toch even zien:
 -   Eerst bereken je de standaarddeviaties $s_1$ en $s_2$ van beide steekproeven.
 -   Daarmee bereken je de **gepoolde steekproefvariantie** $s\ped{p}^2$ met de volgende formule:
     
-    $$ s\ped{p}^2 = \frac{(n_1 - 1) s_1^2 + (n_1 - 1) s_2^2}{n_1 + n_2 - 2}.$$
+    $$ s\ped{p}^2 = \frac{(n_1 - 1) s_1^2 + (n_2 - 1) s_2^2}{n_1 + n_2 - 2}.$$
   
     In deze formule zijn $n_1$ en $n_2$ de steekproefgroottes van beide steekproeven.
-    Merk op dat $s\ped{p}^2$ eigenlijk gewoon een gewogen gemiddelde is tussen 
+    Merk op dat $s\ped{p}^2$ eigenlijk gewoon een gewogen gemiddelde is van 
     de steekproefvarianties van beide steekproeven,
     waarbij een grotere steekproef een groter gewicht krijgt.
 -   Tot slot kun je de volgende formule invullen:
@@ -806,7 +801,7 @@ onder $\HO$ een $t$-verdeling volgt met $\df = n_1 + n_2 - 2$ vrijheidsgraden.
 Je vult in deze stap dus @eq-t-twee in.
 
 **Stap 5: Bereken de $P$-waarde:**\
-Nu kunnen we de $P$-waarde weer berekenen met R.
+Nu kunnen we de $P$-waarde berekenen met R.
 Dat gaat weer precies zoals bij de $t$-toets voor één steekproef,
 behalve dat we nu een ander aantal vrijheidsgraden moeten specificeren,
 namelijk $\df = n_1 + n_2 - 2$:  
@@ -853,7 +848,7 @@ Dan zijn dit de stappen van de toets:
 
     en de gepoolde steekproefvariantie
     
-    $$ s\ped{p}^2 = \frac{(n_1 - 1) s_1^2 + (n_1 - 1) s_2^2}{n_1 + n_2 - 2}.$$
+    $$ s\ped{p}^2 = \frac{(n_1 - 1) s_1^2 + (n_2 - 1) s_2^2}{n_1 + n_2 - 2}.$$
     
     **Verdeling van de toetsingsgrootheid onder $\HO$:**\
     De $t$-verdeling met $\df = n_1 + n_2 - 2$.
@@ -906,7 +901,7 @@ Op drie eilanden in the Palmerarchipel (Antarctica) zijn metingen verricht
 aan pinguins van drie verschillende soorten.^[Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. https://allisonhorst.github.io/palmerpenguins/. doi: 10.5281/zenodo.3960218.]
 We vragen ons af: verschillen de soorten in de gemiddelde lengte van hun snavel?
 
-We zullen hieronder de een analyse in R gebruiken om twee soorten te vergelijken: Chinstrap en Gentoo.
+Hieronder zullen we met een analyse in R twee soorten vergelijken: Chinstrap en Gentoo.
 
 ### De data
 
@@ -916,6 +911,8 @@ We lezen eerst de gegevens in; die zijn beschikbaar gesteld via de library "pelm
 library("palmerpenguins")
 ```
 
+De variabele heet `bill_length_mm`. Uit de naam van de variabele valt op te maken
+dat de snavellengte gegeven is in mm.
 We selecteren de snavellengtes van de twee soorten en verwijderen `NA`s:
 ```{r}
 snavel_Chinstrap <- na.omit(
@@ -925,8 +922,7 @@ snavel_Gentoo <- na.omit(
   penguins$bill_length_mm[penguins$species == "Gentoo"]
   )
 ```
-Uit de naam van de variabele valt op te maken
-dat de eenheid van snavellengte mm is.
+
 
 ### Bestudeer de gegevens
 
@@ -940,7 +936,7 @@ Hoeveel datapunten zijn er?
 ```
 Dit is dus een flinke dataset, met snavelmetingen voor 68 Chinstrap-pinguins en 123 Gentoo-pinguins. 
 
-Wat beschrijvende statistieken voor beide soorten:
+We bekijken wat kengetallen voor beide soorten. Eerst de ligging:
 ```{r}
 summary(snavel_Chinstrap)
 ```
@@ -949,7 +945,7 @@ summary(snavel_Gentoo)
 ```
 De mediaan en het gemiddelde van de Gentoos zijn net iets kleiner dan die van de Chinstraps.
 
-Maten van spreiding:
+Dan de spreiding:
 ```{r}
 sd(snavel_Chinstrap)
 sd(snavel_Gentoo)
@@ -957,7 +953,7 @@ sd(snavel_Gentoo)
 IQR(snavel_Chinstrap) #interkwartielafstand
 IQR(snavel_Gentoo)
 ```
-De spreiding is voor beide soorten vergelijkbaar, maar iets kleiner voor de Gentoos. 
+De spreiding is voor beide soorten vergelijkbaar, maar iets kleiner voor de Gentoo's. 
 
 We genereren ook voor beide soorten een histogram:
 
@@ -980,9 +976,9 @@ hist(snavel_Gentoo, main = NULL)
 ```
 :::
 De verdelingen lijken lichtelijk rechts-scheef.
-
-Het Normale Model neemt aan dat de variabele in beide populaties normaal verdeeld is.
-We controleren dit met twee QQ-plots:
+Dat is jammer, want
+het Normale Model neemt aan dat de variabele in beide populaties normaal verdeeld is.
+We onderzoeken dit verder met twee QQ-plots:
 
 :::{layout="[1,1]"}
 
@@ -1003,9 +999,12 @@ qqline(snavel_Gentoo)
 ```
 :::
 
-Er zijn zeker wat milde afwijkingen te zien,
-maar bij zo'n grote dataset zou de $t$-toets robuust moeten zijn
-voor zulke afwijkingen.
+Er zijn zeker wat milde afwijkingen te zien.
+Maar, in @sec-schatten hebben we gezien
+dat bij grote steekproeven afwijkingen van het Normale Model
+minder belangrijk zijn.
+In dit geval zijn beide steekproeven groot
+en zouden deze milde afwijkingen geen probleem moeten zijn.
 
 ### De $t$-toets uitvoeren
 
@@ -1016,15 +1015,17 @@ t.test(snavel_Chinstrap, snavel_Gentoo, var.equal = TRUE)
 
 ### Conclusies
 
-Gezien de kleine $P$-waarde van 0,006
-komt het kleine verschil in de gemiddelde snavellengte dus waarschijnlijk niet 
-door steekproevenvariatie; Gentoo-pinguins hebben waarschijnlijk daadwerkelijk
-een iets korter snavel.
+De $P$-waarde is 0,006. 
+Dat is behoorlijk klein en dus sterk bewijs tegen $\HO$.
+Het (kleine) verschil in de gemiddelde snavellengte is dus moeilijk te verklaren
+door steekproevenvariatie.
+Gentoo-pinguins hebben dus waarschijnlijk daadwerkelijk
+gemiddeld een iets kortere snavel.
 
 :::
 
 ::: {#exr-uitvoer-t-test-2 .Pexr}
-## De uitvoer van de functie `t.test()` bij twee onafhankelijke steekproeven
+## De uitvoer van de functie `t.test()` bij twee onafhankelijke steekproeven.
 <br>
 
 In @exm-penguins wordt uiteindelijk een $t$-toets voor twee steekproeven uitgevoerd
@@ -1086,7 +1087,7 @@ dan bij de standaard toets.
 Maar als de steekproeven groter zijn, is het verschil te verwaarlozen.
 
 ::: {#exr-welch .pepexr}
-## Verschil in interpretatie tussen de toets van Welch en de standaardtoets
+## Verschil in interpretatie tussen de toets van Welch en de standaardtoets.
 <br> 
 
 In de tekst hierboven zijn zowel de toets van Welch als de standaard $t$-toets 
@@ -1503,7 +1504,7 @@ gelijk zijn.
 ## Opgaven
 
 ::: {#exr-manakin .Rexr}
-## Het gemiddelde gewicht van de Bonte manakin
+## Het gemiddelde gewicht van de Bonte manakin.
 <br>
 
 Lichaamsgewicht is een belangrijke eigenschap bij dieren,  
@@ -1560,7 +1561,7 @@ j.  Wat vertelt het 95%-BHI je wat je niet uit de $P$-waarde kunt opmaken?
 
 
 ::: {#exr-manakin-2 .Rexr}
-## Gewichtsverschillen tussen mannetjes en vrouwtjes bij de Bonte mannakin
+## Gewichtsverschillen tussen mannetjes en vrouwtjes bij de Bonte mannakin.
 <br>
 
 In @exr-manakin hierboven hebben we het gemiddelde 
@@ -1595,28 +1596,34 @@ d.  Van hoeveel mannetjes en vrouwtjes heb je gegevens?
 e.  Maak een boxplot en een histogram voor zowel de mannetjes en de vrouwtjes.
     Bereken ook maten voor ligging en spreiding.
 
-f.  Wat is het statistisch model van deze $t$-toets? 
-    Maak de QQ-plot of -plots waarmee je kunt bekijken of
-    het statistisch model van toepassing lijkt.
+f.  Wat is het statistisch model van deze $t$-toets?
+    (Wat zijn de aannames van het model?)
+
+    Lijkt dat model je bij voorbaat plausibel?
+    
+    Bepaal of je op de waarnemingen zelf
+    aanleiding geven om aan het model te twijfelen.
+    Maak daarvoor ook een QQ-plot of -plots.
     
     Ziet het er goed uit?
     
 g.  Gebruik de `t.test()` functie
     om de toets uit te voeren.
     
-    Welk geslacht is groter, en hoeveel?
-    Wat is het 95%-BHI voor het verschil tussen de gemiddelden van de geslachten?
+Bestudeer de uitvoer:
+    
+h.  Wat is het 95%-BHI voor het verschil tussen de gemiddelden van de geslachten? Welk geslachten heeft het grotere gewicht.
      
-h.  Bekijk de $P$-waarde en trek je conclusies.
+i.  Bekijk de $P$-waarde en trek je conclusies.
 
-i.  Wat vertelt het 95%-BHI je wat je niet uit de $P$-waarde kunt opmaken?
+j.  Wat vertelt het 95%-BHI je wat je niet uit de $P$-waarde kunt opmaken?
     
     En wat vertelt de $P$-waarde wat je niet uit het betrouwbaarheidsinterval kunt opmaken?
 
 :::
 
 ::: {#exr-kurk .Rexr}
-## Kurkafzetting
+## Kurkafzetting.
 <br>
 
 Onderzoekers vragen zich af of aan alle kanten van bomen
@@ -1646,7 +1653,7 @@ c.  De gegevens staan online; importeer ze door de volgende regel
     
     De kurkafzetting is gegeven in mm.
 
-b.  Gebruik  `str(kurk)`, `head(kurk)` en/of `View(kurk)` om de volgende vragen te beantwoorden: 
+d.  Gebruik  `str(kurk)`, `head(kurk)` en/of `View(kurk)` om de volgende vragen te beantwoorden: 
     
     1. Hoeveel kolommen heeft de dataset? 
     2. Hoeveel regels zijn er? 
@@ -1661,7 +1668,7 @@ f.  Bereken ook kengetallen voor de ligging en spreiding van `OOST` en `WEST`.
     Vallen je dingen op? 
     Zijn er opvallende verschillen tussen de kurkafzetting aan de oost- en westkant?
 
-g.  Wat is het statistisch model van de $t$-toets die je wilt gebruiken?
+g.  Wat is het statistische model van de $t$-toets die je wilt gebruiken?
 
     Lijkt je dat bij voorbaat een redelijk model voor deze variabele?
 
@@ -1685,4 +1692,33 @@ k.  Wat vertelt het 95%-BHI je wat je niet uit de $P$-waarde kunt opmaken?
     
 
 :::
+
+::: {#exr-aapjes-2}
+## Eten trage aapjes significant meer gele pixels?
+<br>
+
+In @exr-aapjes van het onderdeel Biologische Modellen
+heb je een *individual-based* model onderzocht
+van aapjes die naar fruit zoeken. 
+Specifiek heb je gekeken naar het effect van de *eetsnelheid*
+op de totale hoeveelheid fruit die na 1000 stappen tijdstappen gevonden is.
+
+Als je de simulatie meerdere keren herhaalt bij dezelfde eetsnelheid,
+krijg je elke keer net een ander resultaat.
+Toch leek het erop dat de aapjes bij een kleine eetsnelheid
+(zoals 0,5)
+typisch meer fruit vonden dan bij een hoge eetsnelheid (zoals 5).
+Maar is dat verschil daadwerkelijk statistisch significant?
+Of kunnen de gevonden verschillen ook worden verklaard doordat
+de resultaten "toevallig" bij de ene parameter wat hoger zijn uitgevallen
+dan bij de andere?
+
+Als het goed is, heb je series experimenten uitgevoerd voor drie verschillende waarden
+van de eetsnelheid,
+en heb je je resultaten bewaard.
+Gebruik $t$-toetsen om te onderzoeken of je op basis van deze gegevens kunt concluderen
+dat de hoeveelheid fruit die gemiddeld gevonden wordt
+verschilt tussen deze drie condities.
+:::
+
 

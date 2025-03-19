@@ -448,56 +448,63 @@ c. Of je bepaalde klassen als natuurlijk geordend be-
 Het volgende kort scriptje maakt eerst het (bimodale) histogram
 en plot daarna gewicht (`Weight`) tegen leeftijd `AgeMonths`.
 
-```{r}
-#| fig-width: 4
-#| fig-height: 4
-#| out-width: "57%"
-library(NHANES) # library NHANES inladen
-data(NHANES)    # dataset in dataframe zetten
+a.  Code:
 
-hist(NHANES$Weight, breaks = 40)  # histogram van Weight, met ongeveer 40 klassen
-```
+    ```{r}
+    library(NHANES) # library NHANES inladen
+    data(NHANES)    # dataset in dataframe zetten
+    ```
 
+b.  Code:
 
-```{r}
-#| fig-width: 4
-#| fig-height: 4.5
-#| out-width: "57%"
-plot(
-  NHANES$AgeMonths, NHANES$Weight,
-  xlab = "Leeftijd (maand)", ylab = "Gewicht (kg)"
-  ) 
-```
+    ```{r}
+    #| fig-width: 4
+    #| fig-height: 4
+    #| out-width: "57%"
+    hist(NHANES$Weight, breaks = 40)  # histogram van Weight, met ongeveer 40 klassen
+    ```
 
-Aan deze plot kun je aflezen dat vrijwel alle personen
-die minder dan 40 kg wegen
-jonger zijn dan 160 maanden.
-De bimodaliteit van de gegevens
-komt dus doordat de populatie grofweg uit twee groepen bestaat:
-volwassenen met een modus rond 75kg
-en kinderen met een modus rond 20kg.
-(Die onderverdeling is natuurlijk niet scherp:
-jongeren in de puberteit vallen tussen de wal en het schip.)
+c.  Code:
 
-We kunnen dat verder demonstreren door aparte histogrammen te tekenen
-voor volwassenen en voor kinderen/jongeren.
-We trekken de grens bij 15 jaar.
+    ```{r}
+    #| fig-width: 4
+    #| fig-height: 4.5
+    #| out-width: "57%"
+    plot(
+      NHANES$AgeMonths, NHANES$Weight,
+      xlab = "Leeftijd (maand)", ylab = "Gewicht (kg)"
+      ) 
+    ```
 
-```{r}
-#| fig-width: 4
-#| fig-height: 4
-#| out-width: "57%"
-library(NHANES) # library NHANES inladen
-data(NHANES)    # dataset in dataframe zetten
+    Aan deze plot kun je aflezen dat vrijwel alle personen
+    die minder dan 40 kg wegen
+    jonger zijn dan 160 maanden.
+    De bimodaliteit van de gegevens
+    komt dus doordat de populatie grofweg uit twee groepen bestaat:
+    volwassenen met een modus rond 75kg
+    en kinderen met een modus rond 20kg.
+    (Die onderverdeling is natuurlijk niet scherp:
+    jongeren in de puberteit vallen tussen de wal en het schip.)
 
-grens <- 15 # grens in jaren
+    We kunnen dat verder demonstreren door aparte histogrammen te tekenen
+    voor volwassenen en voor kinderen/jongeren.
+    We trekken de grens bij 15 jaar.
 
-volwassen <- (NHANES$AgeMonths > grens*12)
-
-hist(NHANES$Weight[volwassen], breaks = 40, main = NULL)  # histogram volwassenen
-
-hist(NHANES$Weight[!volwassen], breaks = 40, main = NULL)  # histogram van de jeugd
-```
+    ```{r}
+    #| fig-width: 4
+    #| fig-height: 4
+    #| out-width: "57%"
+    library(NHANES) # library NHANES inladen
+    data(NHANES)    # dataset in dataframe zetten
+    
+    grens <- 15 # grens in jaren
+    
+    volwassen <- (NHANES$AgeMonths > grens*12)
+    
+    hist(NHANES$Weight[volwassen], breaks = 40, main = NULL)  # histogram volwassenen
+    
+    hist(NHANES$Weight[!volwassen], breaks = 40, main = NULL)  # histogram van de jeugd
+    ```
 
 
 ### @exr-sprinkhanen: 
