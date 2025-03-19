@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -74,6 +108,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -458,8 +521,21 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="-1">
+    <h2 id="toc-title">Inhoudsopgave</h2>
+   
+  <ul class="collapse">
+  <li><a href="#toets-van-het-gemiddelde-t-toets-voor-één-steekproef" id="toc-toets-van-het-gemiddelde-t-toets-voor-één-steekproef" class="nav-link active" data-scroll-target="#toets-van-het-gemiddelde-t-toets-voor-één-steekproef"><span class="header-section-number">26.1</span> Toets van het gemiddelde: <span class="math inline">\(t\)</span>-toets voor één steekproef</a></li>
+  <li><a href="#sec-t-toets-twee-steekproeven" id="toc-sec-t-toets-twee-steekproeven" class="nav-link" data-scroll-target="#sec-t-toets-twee-steekproeven"><span class="header-section-number">26.2</span> De <span class="math inline">\(t\)</span>-toets voor twee onafhankelijke steekproeven</a></li>
+  <li><a href="#de-t-toets-voor-gepaarde-steekproeven" id="toc-de-t-toets-voor-gepaarde-steekproeven" class="nav-link" data-scroll-target="#de-t-toets-voor-gepaarde-steekproeven"><span class="header-section-number">26.3</span> De <span class="math inline">\(t\)</span>-toets voor gepaarde steekproeven</a></li>
+  <li><a href="#de-drie-t-toetsen-en-het-normale-model" id="toc-de-drie-t-toetsen-en-het-normale-model" class="nav-link" data-scroll-target="#de-drie-t-toetsen-en-het-normale-model"><span class="header-section-number">26.4</span> De drie <span class="math inline">\(t\)</span>-toetsen en het Normale Model</a></li>
+  <li><a href="#wat-is-er-nog-meer" id="toc-wat-is-er-nog-meer" class="nav-link" data-scroll-target="#wat-is-er-nog-meer"><span class="header-section-number">26.5</span> Wat is er nog meer?</a></li>
+  <li><a href="#samenvatting" id="toc-samenvatting" class="nav-link" data-scroll-target="#samenvatting"><span class="header-section-number">26.6</span> Samenvatting</a></li>
+  <li><a href="#terminologie" id="toc-terminologie" class="nav-link" data-scroll-target="#terminologie"><span class="header-section-number">26.7</span> Terminologie</a></li>
+  <li><a href="#opgaven" id="toc-opgaven" class="nav-link" data-scroll-target="#opgaven"><span class="header-section-number">26.8</span> Opgaven</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -483,14 +559,1143 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>In het vorige hoofdstuk heb je kennisgemaakt met hypothesetoetsen. In dit hoofdstuk gaan we een aantal specifieke toetsen behandelen voor situaties die in de praktijk vaak voorkomen. Dat zijn situaties waarin de variabele <span class="math inline">\(X\)</span> waarin we geïnteresseerd zijn numeriek en continu is, en waarbij onze hypotheses gaan over parameter <span class="math inline">\(\mu_X\)</span>, het populatiegemiddelde van die variabele.</p>
+<p>Laten we direct met de eerste toets te beginnen: de <span class="math inline">\(t\)</span>-toets voor één steekproef.</p>
+<section id="toets-van-het-gemiddelde-t-toets-voor-één-steekproef" class="level2" data-number="26.1">
+<h2 data-number="26.1" class="anchored" data-anchor-id="toets-van-het-gemiddelde-t-toets-voor-één-steekproef"><span class="header-section-number">26.1</span> Toets van het gemiddelde: <span class="math inline">\(t\)</span>-toets voor één steekproef</h2>
+<div id="exm-casus-temp" class="theorem example">
+<p><span class="theorem-title"><strong>Voorbeeld 26.1 (Is de lichaamstemperatuur van gezonde mensen wel 37<span class="math inline">\(\degree\)</span>C?)</strong></span> Waarschijnlijk heb je lang geleden geleerd dat gezonde mensen een “normale” lichaamstemperatuur hebben van 37<span class="math inline">\(\degree\)</span>C. Die wijsheid is het resultaat van klassiek onderzoek door Carl Reinhold August Wunderlich dat werd gepubliceerd in 1868. In die tijd waren de meetmethoden lang niet zo precies als nu. Het is dus niet gek om je af te vragen: klopt die waarde eigenlijk wel?</p>
+<p>Om dat te achterhalen zouden we een steekproef kunnen nemen van een aantal gezonde personen. Als de gemiddelde temperatuur van die proefpersonen sterk afwijkt van 37<span class="math inline">\(\degree\)</span>C, dan is dat een indicatie dat de standaardtemperatuur misschien herzien moet worden.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>Stel dat we inderdaad een steekproef nemen van <span class="math inline">\(n = 10\)</span> personen en de volgende resultaten vinden, in <span class="math inline">\(\degree\)</span>C:</p>
+<p><span class="math display">\[35{,}7\quad 35{,}8\quad 37{,}0\quad 36{,}5\quad 37{,}1\quad 36{,}4\quad 36{,}1\quad 36{,}8\quad 36{,}5\quad 37{,}1\]</span></p>
+<p>Het gemiddelde van deze steekproef is <span class="math inline">\(\overline{X} = 36{,}5\degree\)</span>C. Is dit dan sterk bewijs tegen de standaardtemperatuur van 37<span class="math inline">\(\degree\)</span>C?</p>
+<p>Mensen verschillen onderling in hun normale temperatuur, en ieders lichaamstemperatuur fluctueert bovendien gedurende de dag (door je biologische klok) en van dag tot dag (bijvoorbeeld door de menstruatiecyclus). Een steekproefgemiddelde dat wat lager is dan 37<span class="math inline">\(\degree\)</span>C kan dus ook het gevolg zijn van de toevallige steekproef. We hebben dus een hypothesetoets nodig om te bepalen in hoeverre de gevonden afwijking bewijs levert tegen een populatiegemiddelde van 37<span class="math inline">\(\degree\)</span>C.</p>
+</div>
+<section id="hypotheses-over-het-gemiddelde-van-een-variable" class="level3">
+<h3 class="anchored" data-anchor-id="hypotheses-over-het-gemiddelde-van-een-variable">Hypotheses over het gemiddelde van een variable</h3>
+<p>De casus hierboven over de normale lichaamstemperatuur is een voorbeeld van een veelvoorkomende situatie. We zijn geïnteresseerd in een continue variabele (in het voorbeeld: lichaamstemperatuur), en hebben een hypothese over het gemiddelde van die variabele in de populatie (in het voorbeeld: het populatiegemiddelde van de lichaamstemperatuur). Om die hypothese te onderzoeken nemen we een steekproef en meten de variabele voor iedere eenheid in de steekproef. Dat levert een <em>steekproefgemiddelde</em> op dat typisch wat afwijkt van het <em>populatiegemiddelde volgens onze hypothese</em>. De vraag is hoe opmerkelijk die afwijking is. Kan die verklaard worden door steekproevenvariabiliteit, of is de afwijking daarvoor te groot?</p>
+<p>De <strong><span class="math inline">\(t\)</span>-toets voor één steekproef</strong> is de standaardtoets die voor dit soort situaties ontwikkeld is.</p>
+</section>
+<section id="de-t-toets-voor-één-steekproef-in-zes-stappen" class="level3">
+<h3 class="anchored" data-anchor-id="de-t-toets-voor-één-steekproef-in-zes-stappen">De <span class="math inline">\(t\)</span>-toets voor één steekproef in zes stappen</h3>
+<p>In <a href="Hypothesetoetsen.html#sec-algemene-vorm" class="quarto-xref"><span>Paragraaf 25.7</span></a> hebben we al gezien dat alle hypothesetoetsen dezelfde logische structuur hebben. Daar hebben we die structuur in zes stappen opgedeeld. We gaan die zes stappen nu doorlopen voor de <span class="math inline">\(t\)</span>-toets voor één steekproef. Daarbij passen we de berekening direct toe op <a href="#exm-casus-temp" class="quarto-xref">Voorbeeld&nbsp;<span>26.1</span></a> over de lichaamstemperatuur.</p>
+<p><strong>Stap 1: Kies een statistisch model.</strong><br>
+De eerste stap van iedere toets bestaat uit het kiezen van een gepast statistisch model. De <span class="math inline">\(t\)</span>-toets voor één steekproef gaat uit van het Normale Model (<a href="Schatten.html#sec-Normale-Model" class="quarto-xref"><span>Paragraaf 24.3</span></a>) dat we in <a href="Schatten.html" class="quarto-xref"><span>Hoofdstuk 24</span></a> ook hebben gebruikt. We nemen dus aan:</p>
+<ol type="1">
+<li><p>De variabele is in de populatie normaal verdeeld, met gemiddelde <span class="math inline">\(\mu_X\)</span> en standaarddeviatie <span class="math inline">\(\sigma_X\)</span>.</p></li>
+<li><p>Iedere waarde <span class="math inline">\(X_i\)</span> in onze steekproef is onafhankelijk uit die normale verdeling getrokken. Dat vereist dat we een eenvoudige aselecte steekproef hebben uitgevoerd.</p></li>
+</ol>
+<p>Het is weer belangrijk dat we kritisch nagaan of die aannames redelijk zijn voor de toepassing. We hebben in <a href="Schatten.html#sec-afwijkingen" class="quarto-xref"><span>Paragraaf 24.9</span></a> uitgebreid besproken hoe je dat kunt doen.</p>
+<p><strong>Stap 2: Stel de hypotheses <span class="math inline">\(H_\textrm{0}\)</span> en <span class="math inline">\(H_\textrm{A}\)</span> op.</strong><br>
+Stap 2 is het opstellen van de nulhypothese en de alternatieve hypothese. In de casus was de nulhypothese dat het populatiegemiddelde van de variabele lichaamstemperatuur gelijk is aan 37<span class="math inline">\(\degree\)</span>C. Die hypothese kan kort opgeschreven worden als:</p>
+<p><span class="math inline">\(H_\textrm{0}:\qquad\mu_X = 37\degree\)</span>C.</p>
+<p>De alternatieve hypothese is de ontkenning daarvan:</p>
+<p><span class="math inline">\(H_\textrm{A}:\qquad\mu_X \neq 37\degree\)</span>C.</p>
+<p>De waarde van <span class="math inline">\(\mu_X\)</span> volgens de nulhypothese wordt in het algemeen vaak <span class="math inline">\(\mu_0\)</span> genoemd.</p>
+<p>In het algemeen kunnen we de hypotheses dus opschrijven als</p>
+<p><span class="math inline">\(H_\textrm{0}:\qquad\mu_X = \mu_0.\)</span><br>
+<span class="math inline">\(H_\textrm{A}:\qquad\mu_X \neq \mu_0.\)</span></p>
+<p><strong>Stap 3: Kies de toetsingsgrootheid en bepaal zijn kansverdeling onder <span class="math inline">\(H_\textrm{0}\)</span>.</strong><br>
+We hebben een toetsingsgrootheid nodig die weergeeft hoe ver het steekproefgemiddelde <span class="math inline">\(\overline{X}\)</span> afwijkt van de verwachting onder <span class="math inline">\(H_\textrm{0}\)</span>. De <span class="math inline">\(t\)</span>-toets voor één steekproef gebruikt daarvoor <span id="eq-t-t-test"><span class="math display">\[
+t = \frac{\overline{X} - \mu_0}{\mathrm{SE}_{\overline{X}}}.
+\tag{26.1}\]</span></span> Dit is het verschil tussen het steekproefgemiddelde <span class="math inline">\(\overline{X}\)</span> en het populatiegemiddelde volgens <span class="math inline">\(H_\textrm{0}\)</span>, relatief ten opzichte van de standaardfout.</p>
+<p>Dat <span class="math inline">\(t\)</span> een goede keuze is voor de toetsingsgrootheid, kun je als volgt inzien. We hebben in <a href="Schatten.html" class="quarto-xref"><span>Hoofdstuk 24</span></a> gezien dat de standaardfout een maat is voor de onzekerheid in <span class="math inline">\(\overline{X}\)</span> als gevolg van steekproevenvariabiliteit. De waarde van <span class="math inline">\(t\)</span> is <em>klein</em> als het waargenomen verschil tussen <span class="math inline">\(\overline{X}\)</span> en <span class="math inline">\(\mu_0\)</span> niet veel groter is dan de standaardfout. (Controleer dat je dat begrijpt op basis <a href="#eq-t-t-test" class="quarto-xref">Vergelijking&nbsp;<span>26.1</span></a>!) In dat geval is dat verschil goed te verklaren door toevallige steekproevenvariabiliteit. De waarde van <span class="math inline">\(t\)</span> is juist <em>groot</em> als het waargenomen verschil tussen <span class="math inline">\(\overline{X}\)</span> en <span class="math inline">\(\mu_0\)</span> veel groter is dan de standaardfout. In dat geval is dat verschil erg opmerkelijk onder <span class="math inline">\(H_\textrm{0}\)</span> en dus bewijs tegen <span class="math inline">\(H_\textrm{0}\)</span>. Extreme waarden van <span class="math inline">\(t\)</span> zijn dus een indicatie dat er iets mis is met <span class="math inline">\(H_\textrm{0}\)</span>.</p>
+<p>De volgende uitdaging is om de kansverdeling van <span class="math inline">\(t\)</span> onder <span class="math inline">\(H_\textrm{0}\)</span> te bepalen. Gelukkig hebben we in <a href="Schatten.html#sec-t-verdeling-n-1" class="quarto-xref"><span>Paragraaf 24.7.2</span></a> al het lastige voorwerk al gedaan. Daar hebben we namelijk al besproken dat de verdeling van <span class="math inline">\(t\)</span>, zoals gedefinieerd in <a href="#eq-t-t-test" class="quarto-xref">Vergelijking&nbsp;<span>26.1</span></a>, onder het Normale Model een <span class="math inline">\(t\)</span>-verdeling volgt met <span class="math inline">\(n - 1\)</span> vrijheidsgraden!</p>
+<p><strong>Stap 4: Bereken de toetsingsgrootheid op basis van de daadwerkelijke waarnemingen.</strong></p>
+<p>We gaan <span class="math inline">\(t\)</span> berekenen voor de lichaamstemperaturen. Uit de resultaten die in <a href="#exm-casus-temp" class="quarto-xref">Voorbeeld&nbsp;<span>26.1</span></a> gegeven waren, kunnen we bereken:</p>
+<p><span class="math display">\[\overline{X} = 36{,}5\degree\text{C},\]</span> <span class="math display">\[s_X = 0{,}512\degree\text{C},\]</span> <span class="math display">\[n = 10,\]</span> <span class="math display">\[\mathrm{SE}_{\overline{X}} = s_X/\sqrt{n} = 0{,}512\degree\text{C} / \sqrt{10} = 0{,}162\degree\text{C},\]</span> en dus <span class="math display">\[t = \frac{\overline{X} - \mu_0}{\mathrm{SE}_{\overline{X}}} = \frac{36{,}5 - 37}{0{,}162} = -3{,}09.\]</span></p>
+<p>We kunnen ook de bijbehorende kansverdeling plotten. Dat is de <span class="math inline">\(t\)</span>-verdeling met <span class="math inline">\(\mathrm{df}= n - 1 = 9\)</span> vrijheidsgraden. Die ziet er zo uit:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Genereer t-waarden</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>waarden_t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="at">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Maak een dataframe voor de kansdichtheid</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>dataframe <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">t =</span> waarden_t,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">kansdichtheid =</span> <span class="fu">dt</span>(waarden_t, <span class="at">df =</span> <span class="dv">9</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot de t-verdeling</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  dataframe,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> t, <span class="at">y =</span> kansdichtheid</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg de lijn toe</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"darkorange"</span>, <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een verticale, gestippelde lijn toe bij t = -3.09</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">xintercept =</span> <span class="sc">-</span><span class="fl">3.09</span>, <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dotted"</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een label toe op de x-as met een juiste wiskundige notatie</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">3.09</span>, <span class="at">y =</span> <span class="fl">0.2</span>,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t) <span class="sc">==</span> <span class="sc">-</span><span class="fl">3.09</span>),</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Labels toevoegen</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t)),</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Kansdichtheid"</span>,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="cn">NULL</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Thema toepassen</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-t-df9" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-t-df9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="ToetsenGemiddelde_files/figure-html/fig-t-df9-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figuur&nbsp;26.1: t-verdeling met 9 vrijheidsgraden"><img src="ToetsenGemiddelde_files/figure-html/fig-t-df9-1.png" class="img-fluid figure-img" style="width:57.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-t-df9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;26.1: <span class="math inline">\(t\)</span>-verdeling met 9 vrijheidsgraden
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>De <span class="math inline">\(t\)</span>-waarde die we gevonden hebben, is met een paarse stippellijn aangegeven. Die waarde ligt aardig ver in de staart van de verdeling. Dat betekent dat deze waarde onder <span class="math inline">\(H_\textrm{0}\)</span> vrij verrassend is. We kunnen zien aankomen dat de <span class="math inline">\(P\)</span>-waarde klein gaat worden.</p>
+<p><strong>Stap 5: Bereken de <span class="math inline">\(P\)</span>-waarde.</strong></p>
+<p>De volgende stap is om de <span class="math inline">\(P\)</span>-waarde te berekenen.</p>
+<p>De <span class="math inline">\(P\)</span>-waarde is de kans op een uitkomst die minstens zo extreem is als de waarde <span class="math inline">\(t = -3{,}09\)</span> die we daadwerkelijk hebben gevonden. Dat komt overeen met de oppervlakte van de staarten van de verdeling die in <a href="#fig-t-df9-staarten" class="quarto-xref">Figuur&nbsp;<span>26.2</span></a> hieronder met paars zijn aangegeven. (Die oppervlakten zijn maar klein—ze zijn daardoor misschien lastig te zien!)</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Genereer t-waarden</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>waarden_t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="at">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Maak een dataframe voor de kansdichtheid</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>dataframe <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">t =</span> waarden_t,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">kansdichtheid =</span> <span class="fu">dt</span>(waarden_t, <span class="at">df =</span> <span class="dv">9</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Definieer afzonderlijke gebieden voor de linker- en rechterstaart</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>data_tails_links <span class="ot">&lt;-</span> <span class="fu">subset</span>(dataframe, t <span class="sc">&lt;=</span> <span class="sc">-</span><span class="fl">3.09</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>data_tails_rechts <span class="ot">&lt;-</span> <span class="fu">subset</span>(dataframe, t <span class="sc">&gt;=</span> <span class="fl">3.09</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Bepaal y-coördinaten voor pijlen en labels</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>y_pijl <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>y_end_pijl <span class="ot">&lt;-</span> <span class="fl">0.02</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot de t-verdeling</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  dataframe,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> t, <span class="at">y =</span> kansdichtheid</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Vul de linker staart in</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> data_tails_links, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> kansdichtheid),</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"DarkOrchid"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Vul de rechter staart in</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> data_tails_rechts, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> kansdichtheid),</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"DarkOrchid"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg de lijn toe</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"darkorange"</span>, <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Kromme pijltjes toevoegen</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"curve"</span>,</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="sc">-</span><span class="fl">3.5</span>, <span class="at">y =</span> y_pijl, <span class="at">xend =</span> <span class="sc">-</span><span class="fl">3.4</span>, <span class="at">yend =</span> y_end_pijl,</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">curvature =</span> <span class="fl">0.2</span>,</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"cm"</span>)),</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.7</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">"curve"</span>,</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">3.5</span>, <span class="at">y =</span> y_pijl, <span class="at">xend =</span> <span class="fl">3.4</span>, <span class="at">yend =</span> y_end_pijl,</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">curvature =</span> <span class="sc">-</span><span class="fl">0.2</span>,</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"cm"</span>)),</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.7</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Annotaties toevoegen</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="sc">-</span><span class="fl">3.5</span>,</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> y_pijl <span class="sc">+</span> <span class="fl">0.05</span>,</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">frac</span>(<span class="fu">italic</span>(P),<span class="dv">2</span>)),</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">3.5</span>,</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> y_pijl <span class="sc">+</span> <span class="fl">0.05</span>,</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">frac</span>(<span class="fu">italic</span>(P),<span class="dv">2</span>)),</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een verticale, gestippelde lijn toe bij t = -3.09</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">xintercept =</span> <span class="sc">-</span><span class="fl">3.09</span>, <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dotted"</span></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een label toe op de x-as met een juiste wiskundige notatie</span></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">2.55</span>, <span class="at">y =</span> <span class="fl">0.3</span>,</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t) <span class="sc">==</span> <span class="sc">-</span><span class="fl">3.09</span>),</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg ook een verticale, gestippelde lijn toe bij t = 3.09</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">xintercept =</span> <span class="fl">3.09</span>, <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dotted"</span></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een label toe op de x-as met een juiste wiskundige notatie</span></span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">3</span>, <span class="at">y =</span> <span class="fl">0.3</span>,</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t) <span class="sc">==</span> <span class="fl">3.09</span>),</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span></span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Labels toevoegen</span></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t)),</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Kansdichtheid"</span>,</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="cn">NULL</span></span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Thema toepassen</span></span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-t-df9-staarten" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-t-df9-staarten-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="ToetsenGemiddelde_files/figure-html/fig-t-df9-staarten-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figuur&nbsp;26.2: t-verdeling met df = 9 vrijheidsgraden. De P-waarde is het totale oppervlak van de met paars aangegeven staarten van de verdeling."><img src="ToetsenGemiddelde_files/figure-html/fig-t-df9-staarten-1.png" class="img-fluid figure-img" style="width:57.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-t-df9-staarten-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;26.2: <span class="math inline">\(t\)</span>-verdeling met df = 9 vrijheidsgraden. De <span class="math inline">\(P\)</span>-waarde is het totale oppervlak van de met paars aangegeven staarten van de verdeling.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Om deze oppervlakte te berekenen, kun je gebruik maken van de functie <code>pt()</code> in R. Deze functie geeft de cumulatieve verdeling van de <span class="math inline">\(t\)</span>-verdeling. (In <a href="Kansverdelingen.html#exr-kansen-normaal" class="quarto-xref">Oefening&nbsp;<span>23.11</span></a> heb je de functie <code>pnorm()</code> al gebruikt, die hetzelfde doet voor de normale verdeling.)</p>
+<p>Bijvoorbeeld, <code>pt(0, df = 9)</code> geeft de kans op een waarde van <span class="math inline">\(t\)</span> kleiner dan 0 volgens de <span class="math inline">\(t\)</span>-verdeling met 9 vrijheidsgraden. (Het antwoord moet 0,5 zijn, omdat alle <span class="math inline">\(t\)</span>-verdelingen symmetrisch zijn rond 0.)</p>
+<p>De oppervlakte in de paarse linkerstaart van de verdeling kan dus worden berekend met</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">3.087701</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.006488777</code></pre>
+</div>
+</div>
+<p>De functie <code>abs(t)</code> haalt het minteken weg van <span class="math inline">\(t\)</span> zodat de waarde positief wordt. Op deze manier werkt de code ongeacht of de <span class="math inline">\(t\)</span>-waarde positief of negatief is.</p>
+<p>Om ook de rechterstaart mee te rekenen, moeten we die kans verdubbelen. Dat levert op:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.01297755</code></pre>
+</div>
+</div>
+<p>Dat is dus de <span class="math inline">\(P\)</span>-waarde waarnaar we op zoek waren!</p>
+<p><strong>Stap 6: Trek je Conclusies</strong><br>
+Nu we de <span class="math inline">\(P\)</span>-waarde hebben, kunnen we onze conclusies trekken.</p>
+<p>De <span class="math inline">\(P\)</span>-waarde van 0,013 is behoorlijk klein. Omdat deze kleiner is dan 0,05 wordt deze “statistisch significant” genoemd. De <span class="math inline">\(P\)</span>-waarde zegt: Als <span class="math inline">\(H_\textrm{0}\)</span> waar is (en het ware populatiegemiddelde is dus <span class="math inline">\(37\degree\)</span>C), dan komt zo’n extreme waarde (of nog extremer) voor bij iets meer dan 1 op de 100 steekproeven. Dat is een sterke indicatie dat de standaardwaarde van <span class="math inline">\(37\degree\)</span>C aan de hoge kant is.</p>
+</section>
+<section id="sec-t-toets-samengevat-1" class="level3">
+<h3 class="anchored" data-anchor-id="sec-t-toets-samengevat-1">De stappen voor de <span class="math inline">\(t\)</span>-toets voor één steekproef in het kort</h3>
+<p>We vatten de stappen van de <span class="math inline">\(t\)</span>-toets nog even kort samen:</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+De <span class="math inline">\(t\)</span>-toets voor één steekproef in 6 stappen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We zijn geïnteresseerd in een continue variabele <span class="math inline">\(X\)</span> en willen de hypothese toetsen dat het populatiegemiddelde van <span class="math inline">\(X\)</span> gelijk is aan een bepaalde waarde <span class="math inline">\(\mu_0\)</span>. We nemen daarom een steekproef van <span class="math inline">\(n\)</span> eenheden.</p>
+<p>Dan zijn dit de stappen van de toets:</p>
+<ol type="1">
+<li><p><strong>Kies het statistische model:</strong> het Normale Model.</p></li>
+<li><p><strong>Formuleer de hypotheses:</strong><br>
+<span class="math inline">\(H_\textrm{0}:\qquad \mu_X = \mu_0\)</span>,<br>
+<span class="math inline">\(H_\textrm{A}:\qquad \mu_X \neq \mu_0\)</span>.</p></li>
+<li><p><strong>Kies de toetsingsgrootheid:</strong></p>
+<p><span class="math display">\[t = \cfrac{\overline{X} - \mu_0}{\mathrm{SE}_{\overline{X}}}.\]</span></p>
+<p><strong>Verdeling van de toetsingsgrootheid onder <span class="math inline">\(H_\textrm{0}\)</span>:</strong><br>
+De <span class="math inline">\(t\)</span>-verdeling met <span class="math inline">\(\mathrm{df}= n - 1\)</span>.</p></li>
+<li><p><strong>Bereken de toetsingsgrootheid op basis van de steekproef.</strong><br>
+Achtereenvolgens: <span class="math inline">\(\overline{X}\)</span>, <span class="math inline">\(s_X\)</span>, <span class="math inline">\(\mathrm{SE}_{\overline{X}}\)</span>, en dan <span class="math inline">\(t\)</span>.</p></li>
+<li><p><strong>Bereken de <span class="math inline">\(P\)</span>-waarde:</strong><br>
+</p>
+<p>Gebruik R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p><strong>Trek je conclusies.</strong></p></li>
+</ol>
+</div>
+</div>
+<div id="exr-kippeneieren" class="mixedexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 26.1 (Kippen-eieren.)</strong></span> <br></p>
+<p>Een kippenboerderij beweert dat de geleverde eieren gemiddeld 52 g wegen. Wij geloven dat niet zomaar en besluiten onderzoek te doen.</p>
+<p>We wegen vier eieren, met de volgende gewichten: 51,7g; 50,3g; 48,4g; en 51,9g. Gebruik het stappenplan hierboven om de volledige <span class="math inline">\(t\)</span>-toets uit te voeren.</p>
+</div>
+</section>
+<section id="de-t-toets-helemaal-door-r-laten-uitvoeren" class="level3">
+<h3 class="anchored" data-anchor-id="de-t-toets-helemaal-door-r-laten-uitvoeren">De <span class="math inline">\(t\)</span>-toets helemaal door R laten uitvoeren</h3>
+<p>Hierboven hebben we de hele <span class="math inline">\(t\)</span>-toets handmatig uitgevoerd, en R enkel gebruikt om de <span class="math inline">\(P\)</span>-waarde op te vragen. Het is efficiënter om de hele berekening door R te laten uitvoeren. Het script zou er zo uit kunnen zien:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gegevens:</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>temperaturen <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">35.7</span>, <span class="fl">35.8</span>, <span class="fl">37.0</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>, <span class="fl">36.4</span>, <span class="fl">36.1</span>, <span class="fl">36.8</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>mu0 <span class="ot">&lt;-</span> <span class="dv">37</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># berekening:</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(temperaturen)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">mean</span>(temperaturen)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sd</span>(temperaturen)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>sem <span class="ot">&lt;-</span> s<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> (m <span class="sc">-</span> mu0) <span class="sc">/</span> sem</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># bereken en print P-waarde:</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>(P <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span><span class="dv">1</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.01297755</code></pre>
+</div>
+</div>
+<p>Maar het kan nog veel gemakkelijker. De functie <code>t.test()</code> die we in <a href="Schatten.html" class="quarto-xref"><span>Hoofdstuk 24</span></a> ook hadden gebruikt om het 95%-betrouwbaarheidsinterval uit te rekenen, voert de hele berekening in één keer uit:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>temperaturen <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">35.7</span>, <span class="fl">35.8</span>, <span class="fl">37.0</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>, <span class="fl">36.4</span>, <span class="fl">36.1</span>, <span class="fl">36.8</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mu0 <span class="ot">&lt;-</span> <span class="dv">37</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(temperaturen, <span class="at">mu =</span> mu0)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One Sample t-test
+
+data:  temperaturen
+t = -3.0877, df = 9, p-value = 0.01298
+alternative hypothesis: true mean is not equal to 37
+95 percent confidence interval:
+ 36.13368 36.86632
+sample estimates:
+mean of x 
+     36.5 </code></pre>
+</div>
+</div>
+<p>Merk op dat we <code>t.test()</code> nu moeten vertellen wat onze nulhypothese is; dat gebeurt met het argument <code>mu = mu0</code>.</p>
+<p>Het is belangrijk om even stil te staan bij de uitvoer van deze functie. We doen dat in de volgende opgave.</p>
+<div id="exr-uitvoer-t-test" class="Rexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 26.2 (De uitvoer van de funtie <code>t.test()</code> bij één steekproef.)</strong></span> <br></p>
+<ol type="a">
+<li>Neem de code hierboven, waarin de <span class="math inline">\(t\)</span>-toets wordt uitgevoerd met de functie <code>t.test()</code>, over in een script en voer het uit.</li>
+</ol>
+<p>Bestudeer de uitvoer:</p>
+<ol start="2" type="a">
+<li><p>Waar in de uitvoer vind je het steekproefgemiddelde?</p></li>
+<li><p>Waar vind je de waarden van <span class="math inline">\(t\)</span>, df, en de <span class="math inline">\(P\)</span>-waarde? Komen die overeen met onze handmatige berekeningen hierboven?</p></li>
+<li><p>De functie geeft ook het 95%-BHI voor <span class="math inline">\(\mu_X\)</span>. Wat zijn de onder- en bovengrens?</p></li>
+</ol>
+</div>
+</section>
+<section id="relatie-tussen-toetsen-en-betrouwbaarheidsintervallen" class="level3">
+<h3 class="anchored" data-anchor-id="relatie-tussen-toetsen-en-betrouwbaarheidsintervallen">Relatie tussen toetsen en betrouwbaarheidsintervallen</h3>
+<p>In <a href="Schatten.html" class="quarto-xref"><span>Hoofdstuk 24</span></a> hebben we het uitgebreid gehad over betrouwbaarheidsintervallen. Je hebt geleerd dat een 95%-BHI een interval is waarbinnen de ware parameter zich met 95% zekerheid bevindt. Dat wil zeggen: als <span class="math inline">\(H_\textrm{0}\)</span> waar is, dan zou <span class="math inline">\(\mu_0\)</span> in 95% van de keren dat we een steekproef trekken en het 95%-BHI uitrekenen binnen het BHI moeten liggen, en maar 5% van de keren daarbuiten.</p>
+<p>Als we dus vinden dat <span class="math inline">\(\mu_0\)</span> buiten het 95%-BHI ligt, dan kunnen we concluderen dat het waargenomen verschil tussen <span class="math inline">\(\overline{X}\)</span> en <span class="math inline">\(\mu_0\)</span> zo extreem is dat het onder <span class="math inline">\(H_\textrm{0}\)</span> in minder dan 5% van de gevallen plaatsvindt. <em>Dat betekent dat de <span class="math inline">\(P\)</span>-waarde kleiner moet zijn dan 0,05.</em></p>
+<p>Er is dus een nauw verband tussen het 95%-BHI en de <span class="math inline">\(P\)</span>-waarde:</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Verband tussen 95%-BHI en <span class="math inline">\(P\)</span>-waarde
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Neem een steekproef en bereken het 95%-BHI voor <span class="math inline">\(\mu_X\)</span>.</p>
+<ul>
+<li><p>Als <span class="math inline">\(\mu_0\)</span> <em>buiten</em> het 95%-BHI valt, dan moet <span class="math inline">\(P\)</span> kleiner zijn dan 0,05 en is de afwijking dus sowieso “statistisch significant”.</p></li>
+<li><p>Als <span class="math inline">\(\mu_0\)</span> <em>binnen</em> het 95%-BHI valt, dan moet <span class="math inline">\(P\)</span> groter zijn dan 0,05 en is de afwijking dus sowieso <em>niet</em> “statistisch significant”.</p></li>
+</ul>
+<p>Je kunt het 95%-BHI dus ook interpreteren als de verzameling van alle mogelijke waarden van <span class="math inline">\(\mu_0\)</span> waar volgens de <span class="math inline">\(t\)</span>-toets geen “statistisch significant” bewijs tegen is.</p>
+</div>
+</div>
+<p>Ondanks dit verband vullen het 95%-BHI en de <span class="math inline">\(P\)</span>-waarde elkaar aan.</p>
+<ul>
+<li><p>Het 95%-BHI kan je vertellen of de <span class="math inline">\(P\)</span>-waarde voor een bepaalde nulhypothese kleiner is dan 0,05, maar niet hoe klein dan precies. Je kunt er de mate van bewijs tegen <span class="math inline">\(H_\textrm{0}\)</span> dus niet precies mee bepalen.</p></li>
+<li><p>De <span class="math inline">\(P\)</span>-waarde kan je de mate van bewijs tegen <span class="math inline">\(H_\textrm{0}\)</span> vertellen, maar niet hoe ver de ware <span class="math inline">\(\mu_X\)</span> van <span class="math inline">\(\mu_0\)</span> verwijderd is. Vaak is dat minstens zo belangrijk.</p></li>
+</ul>
+</section>
+</section>
+<section id="sec-t-toets-twee-steekproeven" class="level2" data-number="26.2">
+<h2 data-number="26.2" class="anchored" data-anchor-id="sec-t-toets-twee-steekproeven"><span class="header-section-number">26.2</span> De <span class="math inline">\(t\)</span>-toets voor twee onafhankelijke steekproeven</h2>
+<p>De <span class="math inline">\(t\)</span>-toets voor één steekproef was bedoeld om te toetsen of het populatiegemiddelde van een variabele <span class="math inline">\(X\)</span> afwijkt van een specifieke waarde <span class="math inline">\(\mu_0\)</span>. We gaan het nu hebben over een andere situatie, waarin we willen onderzoeken of de populatiegemiddelden van <em>twee</em> populaties van elkaar <em>verschillen</em>. Bijvoorbeeld, we zouden ons kunnen afvragen of bacteriën mét een bepaalde mutatie gemiddeld resistenter zijn voor antibiotica dan bacteriën zonder die mutatie. Of, of de gemiddelde hoeveelheid fijnstof aangetroffen in woningen verschilt tussen IJmond en Amsterdam.</p>
+<p>Om de twee populaties te vergelijken, nemen we een steekproef uit populatie 1 en een steekproef uit populatie 2. Dat levert <em>twee steekproefgemiddelden</em> op, die waarschijnlijk van elkaar zullen verschillen. De vraag is vervolgens of we daaruit kunnen concluderen dat de <em>populatiegemiddelden</em> van beide populaties van elkaar verschillen, of dat de verschillen in het steekproefgemiddelde ook verklaard kunnen worden door toevallige steekproevenvariabiliteit.</p>
+<p>Dat is de taak van de <strong><span class="math inline">\(t\)</span>-toets voor twee onafhankelijke steekproeven</strong>.</p>
+<p>We gaan deze toets weer uitleggen door de zes stappen één voor één door te lopen. Daarna passen we het toe op een voorbeeld.</p>
+<p><strong>Stap 1: Kies een statistisch model.</strong><br>
+Bij de <span class="math inline">\(t\)</span>-toets voor één steekproef gingen we uit van het Normale Model. Dat doen we nu weer, maar met twee kleine <em>twists</em>:</p>
+<ol type="1">
+<li><p>Omdat we nu te maken hebben met twee populaties en twee steekproeven in plaats van één, moeten we aannames maken over beide steekproeven. We nemen daarom aan dat het Normale Model van toepassing is op <em>beide</em> steekproeven. Dat wil zeggen dat de variabele <span class="math inline">\(X\)</span> normaal verdeeld is in beide populaties, met gemiddelden <span class="math inline">\(\mu_1\)</span> en <span class="math inline">\(\mu_2\)</span>, en dat de waarnemingen in beide steekproeven onafhankelijk uit die normale verdeling getrokken zijn.</p></li>
+<li><p>We nemen bovendien aan dat de standaarddeviaties van beide populaties gelijk zijn; we zullen die standaarddeviatie <span class="math inline">\(\sigma\)</span> noemen.</p>
+<p>Deze aanname is vaak redelijk en maakt de berekeningen gemakkelijker. Maar, er bestaat ook een versie van de toets die deze aanname niet maakt, en die kan in veel gevallen dus geschikter zijn; daar komen we in <a href="#sec-Welch" class="quarto-xref"><span>Paragraaf 26.2.7</span></a> op terug.</p></li>
+</ol>
+<p>Het statistisch model kan dus in het volgende plaatje worden samengevat:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-model-t-test-2-var" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-model-t-test-2-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="ToetsenGemiddelde_files/figure-html/fig-model-t-test-2-var-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figuur&nbsp;26.3: Illustratie van het statistisch model van de t-toets voor 2 steekproeven. Aangenomen wordt dat de variabele in beide populaties normaal verdeeld is, met dezelfde standaarddeviatie \sigma."><img src="ToetsenGemiddelde_files/figure-html/fig-model-t-test-2-var-1.png" class="img-fluid figure-img" style="width:64.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-model-t-test-2-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;26.3: Illustratie van het statistisch model van de <span class="math inline">\(t\)</span>-toets voor 2 steekproeven. Aangenomen wordt dat de variabele in beide populaties normaal verdeeld is, met dezelfde standaarddeviatie <span class="math inline">\(\sigma\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Stap 2: Formuleer de hypotheses.</strong><br>
+De sceptische hypothese is in dit geval dat de populatiegemiddelden van beide populaties gelijk zijn. Dat wil zeggen:</p>
+<p><span class="math inline">\(H_\textrm{0}:\qquad \mu_1 = \mu_2,\)</span><br>
+<span class="math inline">\(H_\textrm{A}:\qquad \mu_1 \ne \mu_2.\)</span></p>
+<p><strong>Stap 3: Kies de toetsingsgrootheid en bepaal diens verdeling onder <span class="math inline">\(H_\textrm{0}\)</span>.</strong><br>
+Bij de <span class="math inline">\(t\)</span>-toets voor één steekproef gebruikten we als toetsingsgrootheid de afwijking van <span class="math inline">\(\overline{X}\)</span> van <span class="math inline">\(\mu_0\)</span>, relatief ten opzichte van de standaardfout van het gemiddelde, <span class="math inline">\(\mathrm{SE}_{\overline{X}}\)</span>. Het intuïtieve idee daarachter was dat we de afwijking van <span class="math inline">\(\overline{X} - \mu_0\)</span> moesten vergelijken met de onzekerheid in <span class="math inline">\(\overline{X}\)</span> als gevolg van steekproevenvariabiliteit.</p>
+<p>Bij de <span class="math inline">\(t\)</span>-toets voor twee steekproeven volgen we dezelfde logica. De toetsingsgrootheid die we gaan gebruiken moet weer aangeven hoe het verschil dat is aangetroffen tussen de twee steekproefgemiddelden, <span class="math inline">\(\overline{X}_1 - \overline{X}_2\)</span>, zich verhoudt tot de onzekerheid in dat verschil als gevolg van steekproevenvariabiliteit. Daarom is de toetsingsgrootheid <span id="eq-t-twee"><span class="math display">\[ t = \frac{\overline{X}_1 - \overline{X}_2}{\mathrm{SE}_{\overline{X}_1 - \overline{X}_2}}, \tag{26.2}\]</span></span> waarin <span class="math inline">\(\mathrm{SE}_{\overline{X}_1 - \overline{X}_2}\)</span> de standaardfout is van het verschil in de steekproefgemiddelden, <span class="math inline">\(\overline{X}_1 - \overline{X}_2\)</span>.</p>
+<p>Om te begrijpen wat die standaardfout voorstelt, moeten we ons voorstellen dat we heel vaak steekproeven nemen uit zowel populatie 1 en populatie 2, en steeds <span class="math inline">\(\overline{X}_1 - \overline{X}_2\)</span> uitrekenen. Dat levert de steekproevenverdeling van <span class="math inline">\(\overline{X}_1 - \overline{X}_2\)</span> op. De standaarddeviatie van die verdeling geeft aan hoe onzeker <span class="math inline">\(\overline{X}_1 - \overline{X}_2\)</span> is door steekproevenvariabiliteit. De standaardfout <span class="math inline">\(\mathrm{SE}_{\overline{X}_1 - \overline{X}_2}\)</span> is een schatter van die standaarddeviatie van de steekproevenverdeling, op dezelfde manier dat <span class="math inline">\(\mathrm{SE}_{\overline{X}}\)</span> een schatter was voor <span class="math inline">\(\sigma_{\overline{X}}\)</span>.</p>
+<p>Je kunt de waarde van <span class="math inline">\(\mathrm{SE}_{\overline{X}_1 - \overline{X}_2}\)</span> zelf berekenen, maar de formule is niet zo elegant. In de praktijk zul je de berekening dus aan R over laten. We laten de formules toch even zien:</p>
+<ul>
+<li><p>Eerst bereken je de standaarddeviaties <span class="math inline">\(s_1\)</span> en <span class="math inline">\(s_2\)</span> van beide steekproeven.</p></li>
+<li><p>Daarmee bereken je de <strong>gepoolde steekproefvariantie</strong> <span class="math inline">\(s_\textrm{p}^2\)</span> met de volgende formule:</p>
+<p><span id="eq-sp"><span class="math display">\[ s_\textrm{p}^2 = \frac{(n_1 - 1) s_1^2 + (n_2 - 1) s_2^2}{n_1 + n_2 - 2}. \tag{26.3}\]</span></span></p>
+<p>In deze formule zijn <span class="math inline">\(n_1\)</span> en <span class="math inline">\(n_2\)</span> de steekproefgroottes van beide steekproeven. Merk op dat <span class="math inline">\(s_\textrm{p}^2\)</span> eigenlijk gewoon een gewogen gemiddelde is van de steekproefvarianties van beide steekproeven, waarbij een grotere steekproef een groter gewicht krijgt.</p></li>
+<li><p>Tot slot kun je de volgende formule invullen: <span id="eq-se-diff"><span class="math display">\[ \mathrm{SE}_{\overline{X}_1 - \overline{X}_2} = \sqrt{s_\textrm{p}^2 \left( \frac{1}{n_1} + \frac{1}{n_2}\right)}. \tag{26.4}\]</span></span></p></li>
+</ul>
+<p>Nu we weten wat de toetsingsgrootheid is, is de volgende stap om te bepalen wat de verdeling van de toetsingsgrootheid is onder <span class="math inline">\(H_\textrm{0}\)</span>. Wiskundig kan worden aangetoond dat de <span class="math inline">\(t\)</span> van <a href="#eq-t-twee" class="quarto-xref">Vergelijking&nbsp;<span>26.2</span></a> onder <span class="math inline">\(H_\textrm{0}\)</span> een <span class="math inline">\(t\)</span>-verdeling volgt met <span class="math inline">\(\mathrm{df}= n_1 + n_2 - 2\)</span> vrijheidsgraden.</p>
+<p><strong>Stap 4: Bereken <span class="math inline">\(t\)</span> op basis van de twee steekproeven.</strong><br>
+Je vult in deze stap dus <a href="#eq-t-twee" class="quarto-xref">Vergelijking&nbsp;<span>26.2</span></a> in.</p>
+<p><strong>Stap 5: Bereken de <span class="math inline">\(P\)</span>-waarde:</strong><br>
+Nu kunnen we de <span class="math inline">\(P\)</span>-waarde berekenen met R. Dat gaat weer precies zoals bij de <span class="math inline">\(t\)</span>-toets voor één steekproef, behalve dat we nu een ander aantal vrijheidsgraden moeten specificeren, namelijk <span class="math inline">\(\mathrm{df}= n_1 + n_2 - 2\)</span>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Zorg dat t, n1, en n2 al gedefinieerd zijn.</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Bereken en print de P-waarde</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>(P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n1 <span class="sc">+</span> n2 <span class="sc">-</span> <span class="dv">2</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Stap 6: Trek je conclusies.</strong><br>
+Trek op basis van <span class="math inline">\(P\)</span> je conclusies!</p>
+<section id="sec-t-toets-samengevat-2" class="level3">
+<h3 class="anchored" data-anchor-id="sec-t-toets-samengevat-2">De stappen voor de <span class="math inline">\(t\)</span>-toets voor twee onafhankelijke steekproeven in het kort</h3>
+<p>We vatten de stappen weer even samen:</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+De <span class="math inline">\(t\)</span>-toets voor twee onafhankelijke steekproeven in 6 stappen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We zijn geïnteresseerd in een continue variabele <span class="math inline">\(X\)</span>. We willen de hypothese toetsen dat de populatiegemiddelden <span class="math inline">\(\mu_1\)</span> en <span class="math inline">\(\mu_2\)</span> van twee populaties gelijk zijn.</p>
+<p>We nemen daarom uit beide populaties een steekproef, van <span class="math inline">\(n_1\)</span> en <span class="math inline">\(n_2\)</span> eenheden.</p>
+<p>Dan zijn dit de stappen van de toets:</p>
+<ol type="1">
+<li><p><strong>Kies het statistische model:</strong><br>
+</p>
+<ul>
+<li>Beide populaties en steekproeven voldoen aan het Normale Model.</li>
+<li>De standaarddeviaties van beide populaties zijn gelijk.</li>
+</ul></li>
+<li><p><strong>Formuleer de hypotheses:</strong><br>
+<span class="math inline">\(H_\textrm{0}:\qquad \mu_1 = \mu_2\)</span>,<br>
+<span class="math inline">\(H_\textrm{A}:\qquad \mu_1 \neq \mu_2\)</span>.</p></li>
+<li><p><strong>Kies de toetsingsgrootheid:</strong></p>
+<p><span class="math display">\[t = \frac{\overline{X}_1 - \overline{X}_2}{\mathrm{SE}_{\overline{X}_1 - \overline{X}_2}},\]</span></p>
+<p>met de standaardfout</p>
+<p><span class="math display">\[ \mathrm{SE}_{\overline{X}_1 - \overline{X}_2} = \sqrt{s_\textrm{p}^2 \left( \frac{1}{n_1} + \frac{1}{n_2}\right)}\]</span></p>
+<p>en de gepoolde steekproefvariantie</p>
+<p><span class="math display">\[ s_\textrm{p}^2 = \frac{(n_1 - 1) s_1^2 + (n_2 - 1) s_2^2}{n_1 + n_2 - 2}.\]</span></p>
+<p><strong>Verdeling van de toetsingsgrootheid onder <span class="math inline">\(H_\textrm{0}\)</span>:</strong><br>
+De <span class="math inline">\(t\)</span>-verdeling met <span class="math inline">\(\mathrm{df}= n_1 + n_2 - 2\)</span>.</p></li>
+<li><p><strong>Bereken de toetsingsgrootheid op basis van de steekproeven.</strong><br>
+Achtereenvolgens: <span class="math inline">\(\overline{X}_1\)</span>,<span class="math inline">\(\overline{X}_2\)</span>, <span class="math inline">\(s_1\)</span>, <span class="math inline">\(s_2\)</span>, <span class="math inline">\(s_\textrm{p}^2\)</span>, <span class="math inline">\(\mathrm{SE}_{\overline{X}_1 - \overline{X}_2}\)</span>, en dan <span class="math inline">\(t\)</span>.</p></li>
+<li><p><strong>Bereken de <span class="math inline">\(P\)</span>-waarde:</strong><br>
+</p>
+<p>Gebruik R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n1 <span class="sc">+</span> n2 <span class="sc">-</span> <span class="dv">2</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p><strong>Trek je conclusies.</strong></p></li>
+</ol>
+</div>
+</div>
+</section>
+<section id="de-t-toets-voor-twee-steekproeven-met-r-uitvoeren" class="level3">
+<h3 class="anchored" data-anchor-id="de-t-toets-voor-twee-steekproeven-met-r-uitvoeren">De <span class="math inline">\(t\)</span>-toets voor twee steekproeven met R uitvoeren</h3>
+<p>De <span class="math inline">\(t\)</span>-toets voor twee steekproeven is één van de meest eenvoudige toetsen die er bestaan. Maar als je ’m met de hand moet uitrekenen, ben je toch een tijd bezig, en de kans op fouten is erg groot. Het is dus veel handiger om gebruik te maken van R.</p>
+<p>Het is niet moeilijk om de formules zelf in R in te programmeren, maar dat is niet nodig. Ook deze <span class="math inline">\(t\)</span>-toets kan namelijk met de functie <code>t.test()</code> worden uitgevoerd!</p>
+<p>Laten we aannemen dat je de resultaten van je twee steekproeven in R hebt ingevoerd als twee vectoren, <code>steekproef1</code> en <code>steekproef2</code>. Dan ben je daarna in één regel klaar:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(steekproef1, steekproef2, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Het argument <code>var.equal = TRUE</code> is nodig om de functie te vertellen dat we hebben aangenomen dat beide populaties een gelijke variantie hebben.</p>
+<div id="exm-penguins" class="theorem example">
+<p><span class="theorem-title"><strong>Voorbeeld 26.2 (Verschillen de snavellengtes tussen pinguins van de soorten Chinstrap en Gentoo?)</strong></span> &nbsp;</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="figuren/building.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Work in progress"><img src="figuren/building.png" class="img-fluid figure-img" alt="Work in progress"></a></p>
-<figcaption>Work in progress</figcaption>
+<p><a href="figuren/penguins.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figuur en data: Horst et al (2020)"><img src="figuren/penguins.png" class="img-fluid figure-img" style="width:70.0%" alt="Figuur en data: Horst et al (2020)"></a></p>
+<figcaption>Figuur en data: Horst et al (2020)</figcaption>
 </figure>
+</div>
+<p>Op drie eilanden in the Palmerarchipel (Antarctica) zijn metingen verricht aan pinguïns van drie verschillende soorten.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> We vragen ons af: verschillen de soorten in de gemiddelde lengte van hun snavel?</p>
+<p>Hieronder zullen we met een analyse in R twee soorten vergelijken: Chinstrap en Gentoo.</p>
+<section id="de-data" class="level3">
+<h3 class="anchored" data-anchor-id="de-data">De data</h3>
+<p>We lezen eerst de gegevens in; die zijn beschikbaar gesteld via de library “pelmerpenquins”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"palmerpenguins"</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>De variabele heet <code>bill_length_mm</code>. Uit de naam van de variabele valt op te maken dat de snavellengte gegeven is in mm. We selecteren de snavellengtes van de twee soorten en verwijderen <code>NA</code>s:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>snavel_Chinstrap <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>bill_length_mm[penguins<span class="sc">$</span>species <span class="sc">==</span> <span class="st">"Chinstrap"</span>]</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>snavel_Gentoo <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>bill_length_mm[penguins<span class="sc">$</span>species <span class="sc">==</span> <span class="st">"Gentoo"</span>]</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="bestudeer-de-gegevens" class="level3">
+<h3 class="anchored" data-anchor-id="bestudeer-de-gegevens">Bestudeer de gegevens</h3>
+<p>Voordat we een toets uitvoeren, moeten we de gegevens altijd eerst goed bekijken. Hoeveel datapunten zijn er?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(n1 <span class="ot">&lt;-</span> <span class="fu">length</span>(snavel_Chinstrap))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 68</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>(n2 <span class="ot">&lt;-</span> <span class="fu">length</span>(snavel_Gentoo))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 123</code></pre>
+</div>
+</div>
+<p>Dit is dus een flinke dataset, met snavelmetingen voor 68 Chinstrap-pinguïns en 123 Gentoo-pinguïns.</p>
+<p>We bekijken wat kengetallen voor beide soorten. Eerst de ligging:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(snavel_Chinstrap)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  40.90   46.35   49.55   48.83   51.08   58.00 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  40.90   45.30   47.30   47.50   49.55   59.60 </code></pre>
+</div>
+</div>
+<p>De mediaan en het gemiddelde van de Gentoos zijn net iets kleiner dan die van de Chinstraps.</p>
+<p>Dan de spreiding:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(snavel_Chinstrap)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.339256</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.081857</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">IQR</span>(snavel_Chinstrap) <span class="co">#interkwartielafstand</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.725</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">IQR</span>(snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.25</code></pre>
+</div>
+</div>
+<p>De spreiding is voor beide soorten vergelijkbaar, maar iets kleiner voor de Gentoos.</p>
+<p>We genereren ook voor beide soorten een histogram:</p>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(snavel_Chinstrap, <span class="at">main =</span> <span class="cn">NULL</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(snavel_Gentoo, <span class="at">main =</span> <span class="cn">NULL</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout="[1,1]">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-20-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-21-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>De verdelingen lijken lichtelijk rechts-scheef. Dat is jammer, want het Normale Model neemt aan dat de variabele in beide populaties normaal verdeeld is. We onderzoeken dit verder met twee QQ-plots:</p>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(snavel_Chinstrap, <span class="at">main =</span> <span class="cn">NULL</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(snavel_Chinstrap)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(snavel_Gentoo, <span class="at">main =</span> <span class="cn">NULL</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout="[1,1]">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-22-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" style="width:80.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-23-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" style="width:80.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Er zijn zeker wat milde afwijkingen te zien. Maar, in <a href="Schatten.html" class="quarto-xref"><span>Hoofdstuk 24</span></a> hebben we gezien dat bij grote steekproeven afwijkingen van het Normale Model minder belangrijk zijn. In dit geval zijn beide steekproeven groot en zouden deze milde afwijkingen geen probleem moeten zijn.</p>
+</section>
+<section id="de-t-toets-uitvoeren" class="level3">
+<h3 class="anchored" data-anchor-id="de-t-toets-uitvoeren">De <span class="math inline">\(t\)</span>-toets uitvoeren</h3>
+<p>Tot slot voeren we de toets uit:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(snavel_Chinstrap, snavel_Gentoo, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Two Sample t-test
+
+data:  snavel_Chinstrap and snavel_Gentoo
+t = 2.7694, df = 189, p-value = 0.006176
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 0.3823625 2.2755285
+sample estimates:
+mean of x mean of y 
+ 48.83382  47.50488 </code></pre>
+</div>
+</div>
+</section>
+<section id="conclusies" class="level3">
+<h3 class="anchored" data-anchor-id="conclusies">Conclusies</h3>
+<p>De <span class="math inline">\(P\)</span>-waarde is 0,006. Dat is behoorlijk klein en dus sterk bewijs tegen <span class="math inline">\(H_\textrm{0}\)</span>. Het (kleine) verschil in de gemiddelde snavellengte is dus moeilijk te verklaren door steekproevenvariatie. Gentoo-pinguïns hebben dus waarschijnlijk daadwerkelijk gemiddeld een iets kortere snavel.</p>
+</section>
+</div>
+<div id="exr-uitvoer-t-test-2" class="Pexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 26.3 (De uitvoer van de functie <code>t.test()</code> bij twee onafhankelijke steekproeven.)</strong></span> <br></p>
+<p>In <a href="#exm-penguins" class="quarto-xref">Voorbeeld&nbsp;<span>26.2</span></a> wordt uiteindelijk een <span class="math inline">\(t\)</span>-toets voor twee steekproeven uitgevoerd met de functie <code>t.test()</code>. Bekijk de uitvoer goed.</p>
+<ol type="a">
+<li><p>Hoeveel vrijheidsgraden heeft R gebruikt? Klopt dat?</p></li>
+<li><p>Er wordt in de uitvoer een 95%-BHI gegeven. Hoe moet je dat interval interpreteren?</p></li>
+<li><p>Ligt het getal 0 binnen het 95%-BHI? Wat zegt dat over de <span class="math inline">\(P\)</span>-waarde?</p></li>
+</ol>
+</div>
+</section>
+<section id="sec-Welch" class="level3">
+<h3 class="anchored" data-anchor-id="sec-Welch">De <span class="math inline">\(t\)</span>-toets van Welch voor twee onafhankelijke steekproeven</h3>
+<p>De standaard <span class="math inline">\(t\)</span>-toets voor twee steekproeven maakt de aanname dat de variantie van de variabele in beide populaties gelijk is. In veel praktische situaties is dat niet het geval. Wat dan?</p>
+<p>De <span class="math inline">\(t\)</span>-toets is op zich niet heel gevoelig voor kleine afwijkingen tussen beide standaarddeviaties, vooral als de steekproeven groot zijn. Als beide steekproeven groter zijn dan 30, is een verschil in standaarddeviatie van een factor 2 vaak nog geen groot probleem.</p>
+<p>Maar, bij twijfel is het beter om gebruik te maken van een versie van de <span class="math inline">\(t\)</span>-toets die <strong>de <span class="math inline">\(t\)</span>-toets van Welch</strong> wordt genoemd. Deze toets maakt de aanname dat beide standaarddeviaties gelijk zijn <em>niet</em>.</p>
+<p>In deze cursus bespreken we de precieze formules voor de <span class="math inline">\(t\)</span>-toets van Welch niet. Maar het is binnen R heel gemakkelijk om de toets uit te voeren. Voor de standaard <span class="math inline">\(t\)</span>-toets moesten we aan de <code>t.test()</code> functie het argument <code>var.equal = TRUE</code> meegeven. Als we in plaats daarvan <code>var.equal = FALSE</code> invoeren, wordt de toets van Welch uitgevoerd:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(snavel_Chinstrap, snavel_Gentoo, <span class="at">var.equal =</span> <span class="cn">FALSE</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  snavel_Chinstrap and snavel_Gentoo
+t = 2.706, df = 129.22, p-value = 0.00773
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 0.3572698 2.3006212
+sample estimates:
+mean of x mean of y 
+ 48.83382  47.50488 </code></pre>
+</div>
+</div>
+<p>Sterker nog, de setting <code>FALSE</code> is in R de default; als je niets specificeert wordt dus standaard de toets van Welch uitgevoerd:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(snavel_Chinstrap, snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Het enige nadeel van de toets van Welch is dat die iets minder krachtig is dan de standaard <span class="math inline">\(t\)</span>-toets voor twee steekproeven. De <span class="math inline">\(P\)</span>-waarde zal typisch dus iets groter zijn bij de toets van Welch dan bij de standaard toets. Maar als de steekproeven groter zijn, is het verschil te verwaarlozen.</p>
+<div id="exr-welch" class="pepexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 26.4 (Verschil in interpretatie tussen de toets van Welch en de standaardtoets.)</strong></span> <br></p>
+<p>In de tekst hierboven zijn zowel de toets van Welch als de standaard <span class="math inline">\(t\)</span>-toets toegepast op de pinguïndata. Vergelijk de uitvoer van beide toetsen.</p>
+<ol type="a">
+<li><p>Vergelijk de <span class="math inline">\(P\)</span>-waardes. Verschillen die betekenisvol van elkaar?</p></li>
+<li><p>Vergelijk de 95%-betrouwbaarheidsintervallen. Welke interval is breder? Hoe komt dat?</p></li>
+</ol>
+</div>
+</section>
+</section>
+<section id="de-t-toets-voor-gepaarde-steekproeven" class="level2" data-number="26.3">
+<h2 data-number="26.3" class="anchored" data-anchor-id="de-t-toets-voor-gepaarde-steekproeven"><span class="header-section-number">26.3</span> De <span class="math inline">\(t\)</span>-toets voor gepaarde steekproeven</h2>
+<p>Om het derde en laatste type <span class="math inline">\(t\)</span>-toets te illustreren, beginnen we weer met een voorbeeld.</p>
+<div id="exm-slaaptekort" class="theorem example">
+<p><span class="theorem-title"><strong>Voorbeeld 26.3 (De effecten van slaaptekort)</strong></span> <br></p>
+<div id="fig-slapende-student" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="D. Sharon Pruitt, owner of [Pink Sherbet Photography](https://www.pinksherbet.com) [CC BY 2.0](https://creativecommons.org/licenses/by/2.0), via Wikimedia Commons">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-slapende-student-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figuren/slapende_student.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Figuur&nbsp;26.4: De gevolgen van weinig slapen zijn niet mals."><img src="figuren/slapende_student.jpg" class="img-fluid figure-img" style="width:50.0%" data-fig-cap="D. Sharon Pruitt, owner of [Pink Sherbet Photography](https://www.pinksherbet.com) [CC BY 2.0](https://creativecommons.org/licenses/by/2.0), via Wikimedia Commons"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-slapende-student-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;26.4: De gevolgen van weinig slapen zijn niet mals.
+</figcaption>
+</figure>
+</div>
+<p>Slaaptekort heeft grote effecten op de lichamelijke en geestelijke gezondheid. In een experiment uit 2003 werden de acute effecten onderzocht<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<p>Gedurende één week mochten acht proefpersonen slechts 4 uur per nacht in bed doorbrengen. Vervolgens werd elke dag gemeten hoe slaperig de proefpersonen waren door middel van de <em>Maintainance of Wakefulness test</em> (MWT). Die werkt als volgt: de deelnemer zit gedurende 20 minuten in bed, in een donkere kamer zonder verdere afleiding. De deelnemer mag geen gerichte acties ondernemen om te voorkomen dat deze in slaap valt, zoals zichzelf in het gezicht slaan of zingen. Gemeten wordt hoeveel minuten de deelnemer wakker blijft. De test wordt vijf keer herhaald, en de uiteindelijke score is het gemiddelde van die vijf testen.</p>
+<p>Om het effect van het slaaptekort te bestuderen, vergelijken we de MWT scores van dag 0 (vlak voor de slaaprestrictie) met die van dag 6.</p>
+<p>Hieronder laten we de scores op beide dagen zien in jitterplots. De gemiddelden van de beide dagen zijn met oranje lijntjes aangegeven.</p>
+<div id="fig-vb-gepaarde-t-toets" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vb-gepaarde-t-toets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-28-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Figuur&nbsp;26.5: MWT-scores van de acht proefpersonen op dag 0 en dag 6 van de slaaprestrictie. Gemiddelde scores per dag zijn aangegeven met de oranje lijnen."><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" style="width:29.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vb-gepaarde-t-toets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;26.5: MWT-scores van de acht proefpersonen op dag 0 en dag 6 van de slaaprestrictie. Gemiddelde scores per dag zijn aangegeven met de oranje lijnen.
+</figcaption>
+</figure>
+</div>
+<p>Zoals je in <a href="#fig-vb-gepaarde-t-toets" class="quarto-xref">Figuur&nbsp;<span>26.5</span></a> kunt zien, waren er op dag 0 drie deelnemers die gedurende de hele test wakker bleven. Op dag 6 lukte dat geen van de deelnemers. Het lijkt dus heel duidelijk dat er een verschil is in de gemiddelde MWT-score tussen die twee dagen. Maar hoe tonen toetsen we dat?</p>
+</div>
+<p>De casus uit <a href="#exm-slaaptekort" class="quarto-xref">Voorbeeld&nbsp;<span>26.3</span></a> verschilt op een essentiële manier van die van <a href="#exm-penguins" class="quarto-xref">Voorbeeld&nbsp;<span>26.2</span></a>. De metingen op dag 0 en op dag 6 zijn namelijk verricht op dezelfde acht proefpersonen. In andere woorden: de twee steekproeven zijn <strong>gepaard</strong>: bij elke waarde in steekproef 1 hoort een waarde in steekproef 2. Een gevolg is dat de twee steekproeven niet onafhankelijk zijn van elkaar. Een proefpersonen die <em>in het algemeen</em> vrij gemakkelijk in slaap valt, zal mogelijk zowel op dag 0 als op dag 6 een lage MWT-score behalen. En een proefpersoon die in het algemeen moeilijk in slaap valt zal op beide dagen een relatief hoge score halen. De scores op dag 0 hangen dus samen met de scores op dag 6.</p>
+<p>We kunnen dit laten zien door de metingen op dag 0 en dag 6 die bij dezelfde persoon horen dezelfde kleur te geven en met een lijntje te verbinden. Dat geeft deze figuur:</p>
+<div id="fig-vb-gepaarde-t-toets-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vb-gepaarde-t-toets-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-29-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Figuur&nbsp;26.6: Dezelfde figuur als hierboven, maar nu hebben de metingen op beide dagen die bij dezelfde persoon dezelfde kleur; ze zijn bovendien met een lijn verbonden."><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" style="width:43.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vb-gepaarde-t-toets-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;26.6: Dezelfde figuur als hierboven, maar nu hebben de metingen op beide dagen die bij dezelfde persoon dezelfde kleur; ze zijn bovendien met een lijn verbonden.
+</figcaption>
+</figure>
+</div>
+<p>Deze figuur suggereert inderdaad dat er een slaperig persoon in de groep was: die viel op beide dagen het snelst in slaap (de onderste, donkerpaarse lijn). Er was ook een wakker type bij, die op beide dagen tot de topscores behoorde (de bovenste, donkergroene lijn).</p>
+<p>Dat de waarnemingen in beide steekproeven niet onafhankelijk zijn, heeft een belangrijke consequentie. Het statistische model van de <span class="math inline">\(t\)</span>-toets voor twee onafhankelijke steekproeven ging ervan uit dat de waarnemingen in beide steekproeven onafhankelijk waren. <em>Dat is hier duidelijk niet het geval, en dus kan die toets hier niet worden gebruikt!</em></p>
+<p>Zelfs als we de <span class="math inline">\(t\)</span>-toets voor onafhankelijke steekproeven hadden <em>mogen</em> gebruiken, is die toets niet ideaal. De onderlinge verschillen in de slaperigheid van de deelnemers dragen namelijk bij aan de spreiding binnen iedere steekproef. Hoe groter die spreiding is, hoe lastiger het is om aan te tonen dat er een verschil is in de gemiddelden van beide steekproeven. Om precies te zijn: de onderlinge verschillen tussen de deelnemers zorgen voor grotere standaarddeviaties <span class="math inline">\(s_1\)</span> en $s_2, daardoor een grotere gepoolde steekproefvariantie <span class="math inline">\(s_\textrm{p}^2\)</span> (zie <a href="#eq-sp" class="quarto-xref">Vergelijking&nbsp;<span>26.3</span></a>) en dus een grotere standaardfout <span class="math inline">\(\mathrm{SE}_{\overline{X}_1 - \overline{X}_2}\)</span> (zie <a href="#eq-se-diff" class="quarto-xref">Vergelijking&nbsp;<span>26.4</span></a>), en dat levert dan weer een <em>kleinere</em> waarde van <span class="math inline">\(t\)</span> op (<a href="#eq-t-twee" class="quarto-xref">Vergelijking&nbsp;<span>26.2</span></a>). Dat verkleint de kans op een significant resultaat!</p>
+<p>In dit onderzoek zijn we bovendien helemaal niet <em>geïnteresseerd</em> in de onderlinge verschillen. We willen vooral aantonen dat de individuele proefpersonen typisch slaperiger zijn op dag zes dan op dag 0, <em>ongeacht</em> hoe slaperig ze van zichzelf zijn.</p>
+<p>De oplossing is om voor iedere persoon het verschil uit te rekenen tussen de MWT-score op dag 6 en op dag 0, en enkel die verschillen te analyseren. Door alleen op de verschillen de focussen, filteren we de onderlinge verschillen in “baseline” slaperigheid weg.</p>
+<p>We plotten die verschillen hieronder, in <a href="#fig-vb-gepaarde-t-toets-2" class="quarto-xref">Figuur&nbsp;<span>26.7</span></a>; de oranje lijn geeft het gemiddelde verschil aan. Deze figuur laat duidelijk zien dat alle proefpersonen na zes nachten slaperiger zijn geworden.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-vb-gepaarde-t-toets-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vb-gepaarde-t-toets-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="ToetsenGemiddelde_files/figure-html/fig-vb-gepaarde-t-toets-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12" title="Figuur&nbsp;26.7: Het verschil tussen MWT-scores dag 6 en dag 0. De oranje lijn geeft het gemiddelde aan van de verschillen."><img src="ToetsenGemiddelde_files/figure-html/fig-vb-gepaarde-t-toets-2-1.png" class="img-fluid figure-img" style="width:30.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vb-gepaarde-t-toets-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;26.7: Het verschil tussen MWT-scores dag 6 en dag 0. De oranje lijn geeft het gemiddelde aan van de verschillen.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>De vraag wordt nu: kunnen we op basis van deze steekproef van acht proefpersonen concluderen dat het <em>populatiegemiddelde</em> van de verschillen in de MWT-scores afwijkt van 0?</p>
+<p>Merk op dat er in <a href="#fig-vb-gepaarde-t-toets-2" class="quarto-xref">Figuur&nbsp;<span>26.7</span></a> maar één steekproef te zien is, namelijk een steekproef van verschillen. De nulhypothese die we zouden willen toetsen is dat het populatiegemiddelde van de verschillen gelijk is aan 0. Deze situatie zou je bekend moeten voorkomen: dit is namelijk precies de situatie waarvoor de <span class="math inline">\(t\)</span>-toets voor één steekproef was bedacht!</p>
+<p>De toets die we willen gaan uitvoeren is daarom <em>precies</em> de <span class="math inline">\(t\)</span>-toets voor één steekproef, maar dan toegepast op de verschillen binnen de gepaarde gegevens.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+De <span class="math inline">\(t\)</span>-toets voor gepaarde steekproeven is gewoon de <span class="math inline">\(t\)</span>-toets voor één steekproef
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>De <span class="math inline">\(t\)</span>-toets voor gepaarde steekproeven is exact de <span class="math inline">\(t\)</span>-toets voor één steekproef, maar dan toegepast op de verschillen die gevonden zijn binnen de gepaarde gegevens.</p>
+</div>
+</div>
+<p>Aan de slag:</p>
+<p><strong>Stap 1: Kies een statistisch model.</strong><br>
+We zijn geïnteresseerd in de variabele <span class="math inline">\(D\)</span>, het verschil tussen de MWT-score op dag 6 en dag 0.</p>
+<p>We nemen aan dat de waargenomen verschillen voldoen aan het Normale Model. Dat wil zeggen: ieder verschil is onafhankelijk getrokken uit een normale verdeling, met (onbekend) gemiddelde <span class="math inline">\(\mu_D\)</span>.</p>
+<p>Let op! We hoeven <em>niet</em> aan te nemen dat steekproef 1 of steekproef 2 uit een normale verdeling zijn getrokken; de aannames gaan enkel over de <em>verschillen</em>.</p>
+<p>Om te controleren of de gegevens aanleiding geven tot twijfel aan de normale verdeling, maken we een QQ-plot van de verschillen:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-31-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" style="width:42.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Er zijn geen bijzonderheden te zien.</p>
+<p><strong>Stap 2: Formuleer de hypotheses.</strong><br>
+De nulhypothese is dat het slaaptekort gemiddeld geen effect heeft, dus</p>
+<p><span class="math inline">\(H_\textrm{0}:\qquad \mu_D = 0,\)</span><br>
+<span class="math inline">\(H_\textrm{A}:\qquad \mu_D\neq = 0.\)</span></p>
+<p><strong>Stap 3: Kies de toetsingsgrootheid en bepaal diens verdeling onder <span class="math inline">\(H_\textrm{0}\)</span>.</strong><br>
+We volgen de <span class="math inline">\(t\)</span>-toets voor één steekproef; de toetsingsgrootheid is dus <span class="math display">\[t = \cfrac{\overline{D}}{\mathrm{SE}_{\overline{D}}}\]</span>.</p>
+<p>Deze <span class="math inline">\(t\)</span> is onder <span class="math inline">\(H_\textrm{0}\)</span> verdeeld volgens de <span class="math inline">\(t\)</span>-verdeling met <span class="math inline">\(\mathrm{df}= n - 1 = 8 - 1 = 7\)</span> vrijheidsgraden.</p>
+<p><strong>Stap 4: Bereken <span class="math inline">\(t\)</span> op basis van de twee steekproeven.</strong><br>
+Het gemiddelde verschil <span class="math inline">\(\overline{D}\)</span> is gelijk aan <span class="math inline">\(-10{,}86\textrm{\,min}\)</span>, de standaarddeviatie van de steekproef <span class="math inline">\(s_D = 3{,}47\textrm{\,min}\)</span>, en de standaardfout is <span class="math inline">\(\mathrm{SE}_{\overline{D}} = 1{,}23\textrm{\,min}\)</span>. Dus,</p>
+<p><span class="math display">\[t = \frac{-10{,}86}{1{,}23} = -8.86.\]</span></p>
+<p><strong>Stap 5: Bereken de <span class="math inline">\(P\)</span>-waarde:</strong><br>
+Gebruik R (precies zoals bij de <span class="math inline">\(t\)</span>-toets voor één steekproef):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>(P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.723134e-05</code></pre>
+</div>
+</div>
+<p><strong>Stap 6: Trek je conclusies.</strong><br>
+De <span class="math inline">\(P\)</span>-waarde is 0,000047. Dat is een heel kleine <span class="math inline">\(P\)</span>-waarde. De gegevens vormen dus erg sterk bewijs tegen de nulhypothese. Dat geeft aan dat de deelnemers daadwerkelijk gemiddeld na 6 dagen slaaprestrictie een lagere MWT-score hebben.</p>
+<section id="sec-t-toets-samengevat-paar" class="level3">
+<h3 class="anchored" data-anchor-id="sec-t-toets-samengevat-paar">De stappen voor de <span class="math inline">\(t\)</span>-toets voor gepaarde steekproeven in het kort</h3>
+<p>We vatten de toets weer in het algemeen samen:</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+De <span class="math inline">\(t\)</span>-toets voor twee gepaarde steekproeven in 6 stappen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We zijn geïnteresseerd in een continue variabele <span class="math inline">\(X\)</span>. Er zijn twee steekproeven genomen van grootte <span class="math inline">\(n\)</span>, maar iedere waarneming in steekproef 1 is gepaard aan een waarneming in steekproef 2. We willen de hypothese toetsen dat het populatiegemiddelde van het verschil <span class="math inline">\(D\)</span> binnen de paren gelijk is aan 0.</p>
+<p>Dan zijn dit de stappen van de toets:</p>
+<ol type="1">
+<li><p><strong>Kies het statistische model:</strong><br>
+We nemen aan dat de verschillen <span class="math inline">\(D\)</span> binnen de paren voldoen aan het Normale Model. De verschillen zijn dus onafhankelijk getrokken uit een normale verdeling met (onbekend) gemiddelde <span class="math inline">\(\mu_D\)</span>.</p></li>
+<li><p><strong>Formuleer de hypotheses:</strong><br>
+<span class="math inline">\(H_\textrm{0}:\qquad \mu_D = 0\)</span>,<br>
+<span class="math inline">\(H_\textrm{A}:\qquad \mu_D \neq 0\)</span>.</p></li>
+<li><p><strong>Kies de toetsingsgrootheid:</strong></p>
+<p><span class="math display">\[t = \cfrac{\overline{D}}{\mathrm{SE}_{\overline{D}}}\]</span>.</p>
+<p><strong>Verdeling van de toetsingsgrootheid onder <span class="math inline">\(H_\textrm{0}\)</span>:</strong><br>
+De <span class="math inline">\(t\)</span>-verdeling met <span class="math inline">\(\mathrm{df}= n - 1\)</span>.</p></li>
+<li><p><strong>Bereken de toetsingsgrootheid op basis van de steekproef.</strong><br>
+Achtereenvolgens: alle verschillen <span class="math inline">\(D_i\)</span>, <span class="math inline">\(\overline{D}\)</span>, <span class="math inline">\(s_D\)</span>, <span class="math inline">\(\mathrm{SE}_{\overline{D}}\)</span>, en dan <span class="math inline">\(t\)</span>.</p></li>
+<li><p><strong>Bereken de <span class="math inline">\(P\)</span>-waarde:</strong><br>
+</p>
+<p>Gebruik R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p><strong>Trek je conclusies.</strong></p></li>
+</ol>
+</div>
+</div>
+</section>
+<section id="de-t-toets-voor-gepaarde-steekproeven-in-r-uitvoeren" class="level3">
+<h3 class="anchored" data-anchor-id="de-t-toets-voor-gepaarde-steekproeven-in-r-uitvoeren">De <span class="math inline">\(t\)</span>-toets voor gepaarde steekproeven in R uitvoeren</h3>
+<p>De gemakkelijkste manier om de <span class="math inline">\(t\)</span>-toets uit te voeren is door in R gebruik te maken van de functie <code>t.test()</code>, maar nu met het argument <code>paired = TRUE</code>. Toegepast op het voorbeeld levert dat de volgende code op:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>dag0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">13</span>, <span class="dv">17</span>, <span class="dv">14</span>, <span class="dv">20</span>, <span class="dv">17</span>, <span class="dv">20</span>, <span class="dv">14</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>dag6 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">4.5</span>, <span class="fl">1.9</span>, <span class="fl">3.7</span>, <span class="fl">6.2</span>, <span class="fl">10.3</span>, <span class="fl">8.2</span>, <span class="fl">5.14</span>, <span class="fl">8.2</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(dag0, dag6, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Paired t-test
+
+data:  dag0 and dag6
+t = 8.86, df = 7, p-value = 4.723e-05
+alternative hypothesis: true mean difference is not equal to 0
+95 percent confidence interval:
+  7.959764 13.755236
+sample estimates:
+mean difference 
+        10.8575 </code></pre>
+</div>
+</div>
+<p>Dat levert precies de resultaten op die we hierboven ook met de hand hadden berekend.</p>
+</section>
+</section>
+<section id="de-drie-t-toetsen-en-het-normale-model" class="level2" data-number="26.4">
+<h2 data-number="26.4" class="anchored" data-anchor-id="de-drie-t-toetsen-en-het-normale-model"><span class="header-section-number">26.4</span> De drie <span class="math inline">\(t\)</span>-toetsen en het Normale Model</h2>
+<p>De drie <span class="math inline">\(t\)</span>-toetsen maken allemaal de aanname dat het Normale Model van toepassing is. Maar iedere <span class="math inline">\(t\)</span>-toets past het Normale Model net iets anders toe. Het is belangrijk om die subtiele verschillen goed te begrijpen, omdat je anders niet kunt beoordelen of de gegevens afwijkingen laten zien van het model.</p>
+<ul>
+<li>Het statistisch model van de <strong><span class="math inline">\(t\)</span>-toets voor één steekproef</strong> veronderstelt dat het Normale Model van toepassing is op de verdeling van de variabele in de populatie en de manier waarop de steekproef tot stand is gekomen.</li>
+<li>Het statistisch model van de <strong><span class="math inline">\(t\)</span>-toets voor twee onafhankelijke steekproeven</strong> veronderstelt dat het Normale Model van toepassing is op <em>beide</em> populaties en steekproeven.</li>
+<li>Het statistisch model van de de <strong><span class="math inline">\(t\)</span>-toets voor gepaarde steekproeven</strong> veronderstelt dat het Normale Model van toepassing is op de verschillen binnen de gepaarde gegevens.</li>
+</ul>
+</section>
+<section id="wat-is-er-nog-meer" class="level2" data-number="26.5">
+<h2 data-number="26.5" class="anchored" data-anchor-id="wat-is-er-nog-meer"><span class="header-section-number">26.5</span> Wat is er nog meer?</h2>
+<p>We hebben in dit hoofdstuk drie <span class="math inline">\(t\)</span>-toetsen behandeld die allemaal te maken hebben met het gemiddelde van een continue variabele. In deze cursus moeten we het daarbij laten.</p>
+<p>Maar, er bestaan nog veel meer toetsen die gebruikt kunnen worden om de ligging van een verdeling te toetsen. We kunnen die onmogelijk allemaal bespreken, maar willen wel dat je nog een paar namen gezien hebt.</p>
+<section id="niet-parametrische-alternatieve" class="level3">
+<h3 class="anchored" data-anchor-id="niet-parametrische-alternatieve">Niet-parametrische alternatieve</h3>
+<p>In sommige situaties zijn we niet bereid om aan te nemen dat het Normale Model van toepassing is. Dat kan zijn omdat de normale verdeling bij voorbaat niet plausibel is, of omdat de data zelf aanleiding geven om aan de normale verdeling te twijfelen, bijvoorbeeld vanwege een scheve verdeling of opvallende uitbijters. We hebben het hier in <a href="Schatten.html#sec-afwijkingen" class="quarto-xref"><span>Paragraaf 24.9</span></a> uitgebreid over gehad.</p>
+<p>Voor dit soort situaties zijn speciale toetsen ontwikkeld die minder specifieke aannames maken dan de <span class="math inline">\(t\)</span>-toets over de verdeling van de variabele in de populatie. Deze toetsen worden <strong>verdelingsvrije</strong> of <strong>non-parametrische toetsen</strong> genoemd.</p>
+<p>Omdat deze toetsen minder specifieke aannames maken, zijn ze minder krachtig. Dat wil zeggen, als je voor dezelfde situatie zowel een <span class="math inline">\(t\)</span>-toets als een verdelingsvrije toets uitvoert, zal de <span class="math inline">\(t\)</span>-toets meestal een kleinere <span class="math inline">\(P\)</span>-waarde opleveren. Maar als de <span class="math inline">\(t\)</span>-toets niet passend is, komt zo’n minder krachtige toets toch van pas.</p>
+<p>In de tabel hieronder is kort een overzicht gegeven van de meest gebruikte verdelingsvrije alternatieven voor de <span class="math inline">\(t\)</span>-toetsen. We laten ze zien zodat je weet dat ze bestaan; we behandelen ze verder in deze cursus niet.</p>
+<p>De alternatieven voor de <span class="math inline">\(t\)</span>-toets voor één steekproef en de <span class="math inline">\(t\)</span>-toets voor gepaarde steekproeven zijn gelijk; dat is omdat, zoals we gezien hebben, het in feite om één en dezelfde toets gaat.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 48%">
+<col style="width: 51%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type <span class="math inline">\(t\)</span>-toets</th>
+<th>Verdelingsvrije alternatief</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(t\)</span>-toets voor één steekproef</td>
+<td>Wilcoxon signed-rank test, Tekentoets</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(t\)</span>-toets voor gepaarde steekproeven</td>
+<td>Wilcoxon signed-rank test, Tekentoets</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(t\)</span>-toets voor twee onafhankelijke steekproeven</td>
+<td>Mann-Whitney <span class="math inline">\(U\)</span>-test (of Wilcoxon rank-sum test)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="drie-of-meer-groepen-anova" class="level3">
+<h3 class="anchored" data-anchor-id="drie-of-meer-groepen-anova">Drie of meer groepen: ANOVA</h3>
+<p>Met de <span class="math inline">\(t\)</span>-toets voor twee onafhankelijke steekproeven kunnen we de gemiddelden van twee populaties vergelijken. In de praktijk vraagt een onderzoek vaak om het vergelijken van meer dan twee groepen. Om dat op een consistente manier te kunnen doen, is ANOVA ontwikkeld. ANOVA staat voor <em>analysis of variance</em>. De nulhypothese van de standaard ANOVA (ook wel “een-weg ANOVA” genoemd) is dat de populatiegemiddelden van <em>alle</em> populaties gelijk zijn. Ook deze toets zullen we verder in deze cursus niet behandelen.</p>
+</section>
+</section>
+<section id="samenvatting" class="level2" data-number="26.6">
+<h2 data-number="26.6" class="anchored" data-anchor-id="samenvatting"><span class="header-section-number">26.6</span> Samenvatting</h2>
+<p>In dit hoofdstuk zijn drie toetsen behandeld:</p>
+<ul>
+<li>de <span class="math inline">\(t\)</span>-toets voor één steekproef,</li>
+<li>de <span class="math inline">\(t\)</span>-toets voor twee onafhankelijke steekproeven,</li>
+<li>de <span class="math inline">\(t\)</span>-toets voor gepaarde steekproeven.</li>
+</ul>
+<p>Deze drie toetsen zijn al samengevat in <a href="#sec-t-toets-samengevat-1" class="quarto-xref"><span>Paragraaf 26.1.3</span></a>, <a href="#sec-t-toets-samengevat-2" class="quarto-xref"><span>Paragraaf 26.2.1</span></a>, en <a href="#sec-t-toets-samengevat-paar" class="quarto-xref"><span>Paragraaf 26.3.1</span></a>.</p>
+</section>
+<section id="terminologie" class="level2" data-number="26.7">
+<h2 data-number="26.7" class="anchored" data-anchor-id="terminologie"><span class="header-section-number">26.7</span> Terminologie</h2>
+<div id="tbl-toetsen-gemiddelden" class="striped hover quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-toetsen-gemiddelden-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabel&nbsp;26.1: Woordenlijst <a href="#sec-toetsen-gemiddelden" class="quarto-xref"><span>Hoofdstuk 26</span></a>
+</figcaption>
+<div aria-describedby="tbl-toetsen-gemiddelden-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 29%">
+<col style="width: 47%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Nederlands</th>
+<th style="text-align: left;">Engels</th>
+<th style="text-align: left;">Betekenis</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(t\)</span>-toets voor één steekproef</td>
+<td style="text-align: left;">one-sample <span class="math inline">\(t\)</span> test</td>
+<td style="text-align: left;">Toets van een hypothese over het populatiegemiddelde van een continue variabele.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(t\)</span>-toets voor twee onafhankelijke steekproeven</td>
+<td style="text-align: left;">two-sample <span class="math inline">\(t\)</span> test</td>
+<td style="text-align: left;">Toets van de hypothese dat het populatiegemiddelde van een continue variabele gelijk is voor twee populaties.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(t\)</span>-toets voor gepaarde steekproeven</td>
+<td style="text-align: left;"><span class="math inline">\(t\)</span> test for paired samples</td>
+<td style="text-align: left;">Toets van de hypothese dat het gemiddelde verschil van een continue variabele over twee condities gelijk is aan nul.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="opgaven" class="level2" data-number="26.8">
+<h2 data-number="26.8" class="anchored" data-anchor-id="opgaven"><span class="header-section-number">26.8</span> Opgaven</h2>
+<div id="exr-manakin" class="Rexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 26.5 (Het gemiddelde gewicht van de Bonte manakin.)</strong></span> <br></p>
+<p>Lichaamsgewicht is een belangrijke eigenschap bij dieren,<br>
+omdat het invloed heeft op hun fysiologie, gedrag en ecologische rol. In deze opgave gebruiken we een uitgebreide dataset over vogels en zoogdieren in Colombia, waarin het lichaamsgewicht van meer dan 42.000 vogels en 7.400 zoogdieren is vastgelegd<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. We focussen op de Bonte manakin (<em>Manacus manacus</em>).</p>
+<p>In eerder onderzoek wordt beweerd dat het gewicht van de Bonte manakin gemiddeld gelijk is aan 16,5g. Wij willen de Colombiaanse dataset gebruiken of die bewering juist is.</p>
+<ol type="a">
+<li><p>Welke <span class="math inline">\(t\)</span>-toets zou je moeten gebruiken om die bewering te testen?</p></li>
+<li><p>Formuleer <span class="math inline">\(H_\textrm{0}\)</span> en <span class="math inline">\(H_\textrm{A}\)</span>.</p></li>
+</ol>
+<p>Begin een nieuw R script om de analyse te programmeren.</p>
+<ol start="3" type="a">
+<li><p>We hebben de gegevens online gezet; voeg de volgende regel toe aan je script om de gegevens te importeren:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>massa_manacus <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data/massa_manacus.csv"</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Bekijk de dataset even. Welke variabelen zijn er? Hoeveel datapunten?</p></li>
+<li><p>Onderzoek de dataset. Bereken maten van ligging en spreiding voor de variabele, en visualiseer de verdeling met een boxplot en een histogram.</p></li>
+<li><p>Wat is het statistische model dat bij deze <span class="math inline">\(t\)</span>-toets hoort?</p></li>
+<li><p>Lijkt het Normale Model in dit geval bij voorbaat redelijk?</p>
+<p>Voeg een QQ-plot toe om te zien of de verdeling van de gegevens sterk afwijkt van een normale verdeling.</p>
+<p>Alles overziend, lijkt de <span class="math inline">\(t\)</span>-toets geschikt voor deze situatie?</p></li>
+<li><p>Voer de <span class="math inline">\(t\)</span>-toets uit met de functie <code>t.test()</code>.</p></li>
+<li><p>Bekijk eerst het 95%-BHI. Wat zegt die?</p></li>
+<li><p>Bekijk de <span class="math inline">\(P\)</span>-waarde en trek je conclusies.</p></li>
+<li><p>Wat vertelt het 95%-BHI je wat je niet uit de <span class="math inline">\(P\)</span>-waarde kunt opmaken?</p>
+<p>En wat vertelt de <span class="math inline">\(P\)</span>-waarde wat je niet uit het betrouwbaarheidsinterval kunt opmaken?</p></li>
+</ol>
+</div>
+<div id="exr-manakin-2" class="Rexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 26.6 (Gewichtsverschillen tussen mannetjes en vrouwtjes bij de Bonte mannakin.)</strong></span> <br></p>
+<p>In <a href="../Appendices/antwoorden_statistiek.html#exr-manakin" class="quarto-xref">Oefening&nbsp;<span>26.5</span></a> hierboven hebben we het gemiddelde lichaamsgewicht van een Bonte manakin onderzocht. Hierbij hebben we echter geen rekening gehouden met een factor die mogelijk van belang kan zijn voor het gewicht: geslacht. Zoals je in <a href="#fig-manacus" class="quarto-xref">Figuur&nbsp;<span>26.8</span></a> kunt zien hebben de mannetjes en vrouwtjes een heel ander uiterlijk. Daarom willen we in deze opgave onderzoeken of er ook een verschil is in de gewichten van mannelijke en vrouwelijke Bonte manakins. Je kunt doorwerken in het script dat je gemaakt hebt voor <a href="../Appendices/antwoorden_statistiek.html#exr-manakin" class="quarto-xref">Oefening&nbsp;<span>26.5</span></a>.</p>
+<div id="fig-manacus" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-manacus-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row quarto-layout-valign-bottom">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuren/manacus_manacus_female.jpg" class="img-fluid figure-img"></p>
+<figcaption>Vrouwelijke Bonte manakin. Foto gemaakt door Dario Sanches uit São Paulo, Brazil</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuren/manacus_manacus_male.jpg" class="img-fluid figure-img"></p>
+<figcaption>Mannelijke Bonte manakin. Foto gemaakt door Félix Uribe uit Rionegro, Antioquia, Colombia</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-manacus-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;26.8: De Bonte manakin (<em>Manacus manacus</em>). <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>
+</figcaption>
+</figure>
+</div>
+<ol type="a">
+<li><p>Welke <span class="math inline">\(t\)</span>-toets zou je voor deze situatie willen gebruiken?</p></li>
+<li><p>Formuleer <span class="math inline">\(H_\textrm{0}\)</span> en <span class="math inline">\(H_\textrm{A}\)</span>.</p></li>
+<li><p>Maak een vector met alleen de gewichten van de mannetjes, en een vector met alleen de gewichten van de vrouwtjes.</p></li>
+<li><p>Van hoeveel mannetjes en vrouwtjes heb je gegevens?</p></li>
+<li><p>Maak een boxplot en een histogram voor zowel de mannetjes en de vrouwtjes. Bereken ook maten voor ligging en spreiding.</p></li>
+<li><p>Wat is het statistisch model van deze <span class="math inline">\(t\)</span>-toets? (Wat zijn de aannames van het model?)</p>
+<p>Lijkt dat model je bij voorbaat plausibel?</p>
+<p>Bepaal of je op de waarnemingen zelf aanleiding geven om aan het model te twijfelen. Maak daarvoor ook een QQ-plot of -plots.</p>
+<p>Ziet het er goed uit?</p></li>
+<li><p>Gebruik de <code>t.test()</code> functie om de toets uit te voeren.</p></li>
+</ol>
+<p>Bestudeer de uitvoer:</p>
+<ol start="8" type="a">
+<li><p>Wat is het 95%-BHI voor het verschil tussen de gemiddelden van de geslachten? Welk geslachten heeft het grotere gewicht.</p></li>
+<li><p>Bekijk de <span class="math inline">\(P\)</span>-waarde en trek je conclusies.</p></li>
+<li><p>Wat vertelt het 95%-BHI je wat je niet uit de <span class="math inline">\(P\)</span>-waarde kunt opmaken?</p>
+<p>En wat vertelt de <span class="math inline">\(P\)</span>-waarde wat je niet uit het betrouwbaarheidsinterval kunt opmaken?</p></li>
+</ol>
+</div>
+<div id="exr-kurk" class="Rexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 26.7 (Kurkafzetting.)</strong></span> <br></p>
+<p>Onderzoekers vragen zich af of aan alle kanten van bomen evenveel kurk wordt afgezet. Om dat te bepalen selecteren ze uit een groot bosgebied aselect 28 bomen en meten aan de noord-, zuid-, oost- en westkant de dikte van de kurkafzetting.</p>
+<p>In deze opgave negeren we de metingen van de noord- en zuid-kant en onderzoeken we het verschil tussen de oost- en de westkant.</p>
+<ol type="a">
+<li><p>Welke <span class="math inline">\(t\)</span>-toets zou je willen uitvoeren om de onderzoeksvraag te beantwoorden?</p></li>
+<li><p>Stel <span class="math inline">\(H_\textrm{0}\)</span> en <span class="math inline">\(H_\textrm{A}\)</span> op.</p></li>
+</ol>
+<p>Start een nieuw script voor deze analyse.</p>
+<ol start="3" type="a">
+<li><p>De gegevens staan online; importeer ze door de volgende regel aan je script toe te voegen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>kurk <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data/kurk.csv"</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>De kurkafzetting is gegeven in mm.</p></li>
+<li><p>Gebruik <code>str(kurk)</code>, <code>head(kurk)</code> en/of <code>View(kurk)</code> om de volgende vragen te beantwoorden:</p>
+<ol type="1">
+<li>Hoeveel kolommen heeft de dataset?</li>
+<li>Hoeveel regels zijn er?</li>
+<li>Van welk datatype is elke kolom? Controleer dat R de juiste datatypes heeft gebruikt.</li>
+</ol></li>
+<li><p>Voordat je een analyses of toetsen gaat uitvoeren, is het belangrijk om de data eerst eens goed te bekijken. Maak daarom boxplots en histogrammen voor de waarden van kolommen <code>OOST</code> en <code>WEST</code> en bestudeer ze.</p></li>
+<li><p>Bereken ook kengetallen voor de ligging en spreiding van <code>OOST</code> en <code>WEST</code>. Vallen je dingen op? Zijn er opvallende verschillen tussen de kurkafzetting aan de oost- en westkant?</p></li>
+<li><p>Wat is het statistische model van de <span class="math inline">\(t\)</span>-toets die je wilt gebruiken?</p>
+<p>Lijkt je dat bij voorbaat een redelijk model voor deze variabele?</p>
+<p>Maak een QQ-plot en een boxplot of histogram om te controleren dat het model van toepassing is op deze situatie.</p>
+<p>Is dat wat jou betreft het geval?</p></li>
+<li><p>Voer de <span class="math inline">\(t\)</span>-toets uit met de functie <code>t.test()</code>.</p></li>
+</ol>
+<p>Bestudeer de uitvoer van <code>t.test()</code>.</p>
+<ol type="i">
+<li>Bekijk het 95%-BHI dat gegeven wordt. Wat is de interpretatie van dat interval?</li>
+</ol>
+<ol start="10" type="a">
+<li><p>Zoek de <span class="math inline">\(P\)</span>-waarde op en trek je conclusies.</p></li>
+<li><p>Wat vertelt het 95%-BHI je wat je niet uit de <span class="math inline">\(P\)</span>-waarde kunt opmaken?</p>
+<p>En wat vertelt de <span class="math inline">\(P\)</span>-waarde wat je niet uit het betrouwbaarheidsinterval kunt opmaken?</p></li>
+</ol>
+</div>
+<div id="exr-aapjes-2" class="theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 26.8 (Eten trage aapjes significant meer gele pixels?)</strong></span> <br></p>
+<p>In <a href="../Modellen/zwermen.html#exr-aapjes" class="quarto-xref">Oefening&nbsp;<span>16.1</span></a> van het onderdeel Biologische Modellen heb je een <em>individual-based</em> model onderzocht van aapjes die naar fruit zoeken. Specifiek heb je gekeken naar het effect van de <em>eetsnelheid</em> op de totale hoeveelheid fruit die na 1000 stappen tijdstappen gevonden is.</p>
+<p>Als je de simulatie meerdere keren herhaalt bij dezelfde eetsnelheid, krijg je elke keer net een ander resultaat. Toch leek het erop dat de aapjes bij een kleine eetsnelheid (zoals 0,5) typisch meer fruit vonden dan bij een hoge eetsnelheid (zoals 5). Maar is dat verschil daadwerkelijk statistisch significant? Of kunnen de gevonden verschillen ook worden verklaard doordat de resultaten “toevallig” bij de ene parameter wat hoger zijn uitgevallen dan bij de andere?</p>
+<p>Als het goed is, heb je series experimenten uitgevoerd voor drie verschillende waarden van de eetsnelheid, en heb je je resultaten bewaard. Gebruik <span class="math inline">\(t\)</span>-toetsen om te onderzoeken of je op basis van deze gegevens kunt concluderen dat de hoeveelheid fruit die gemiddeld gevonden wordt verschilt tussen deze drie condities.</p>
 </div>
 
 
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>In de praktijk heeft dat onderzoek allerlei haken en ogen. Hoe selecteren we gezonde personen? Hoe ga je om met het feit dat de lichaamstemperatuur ’s ochtends gemiddeld lager is dan ’s middags, of het verschil tussen mannen en vrouwen?</p>
+<p>Toch zijn er pogingen gedaan om de norm van 37<span class="math inline">\(\degree\)</span>C te toetsen:</p>
+<p>Mackowiak, P. A., S. S. Wasserman, and M. M. Levine. “A Critical Appraisal of 98.6 Degrees F, the Upper Limit of the Normal Body Temperature, and Other Legacies of Carl Reinhold August Wunderlich.” JAMA 268, no. 12 (September 23, 1992): 1578–80.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. https://allisonhorst.github.io/palmerpenguins/. doi: 10.5281/zenodo.3960218.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><a href="https://doi.org/10.1016/S1389-9457(03)00061-3">Guilleminault, C., Powell, N. B., Martinez, S., Kushida, C., Raffray, T., Palombini, L., &amp; Philip, P. (2003). Preliminary observations on the effects of sleep time in a sleep restriction paradigm. Sleep medicine, 4(3), 177-184.</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p><a href="https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273">Ocampo, D., Borja-Acosta, K. G., Lozano-Flórez, J., Cifuentes-Acevedo, S., Arbeláez-Cortés, E., Bayly, N. J., … &amp; Acevedo-Charry, O. (2021). <em>Body mass data set for 1,317 bird and 270 mammal species from Colombia.</em> Ecology, 102(3), e03273.</a><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1090,7 +2295,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","openEffect":"zoom","loop":false,"selector":".lightbox","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","openEffect":"zoom","descPosition":"bottom","loop":false});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
