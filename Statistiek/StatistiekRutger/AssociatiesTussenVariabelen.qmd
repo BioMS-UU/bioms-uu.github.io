@@ -215,7 +215,7 @@ De breedte van die kolommen geeft de frequentie weer
 van de niveaus van gezondheidstoestand.
 Dat zijn dus dezelfde frequenties die we eerder zagen in @fig-stapel.
 Je ziet dus gelijk dat veel meer mensen hun gezondheid als "Goed"
-beoordeeld hebbend dan als "Slecht".
+beoordeeld hebben dan als "Slecht".
 
 Binnen de kolommen laten de hoogtes van de blokken
 vervolgens voor iedere gezondheidstoestand
@@ -360,7 +360,7 @@ graph TD;
   B([zelfwaarde]) --> A([succes]) 
 ```
 
-Welk causale diagram weerspiegelt de werkelijkheid het beste?
+Welk causaal diagram weerspiegelt de werkelijkheid het beste?
 :::
 
 Het verschil tussen de modellen is van cruciaal belang 
@@ -376,6 +376,55 @@ lees je meer over dit debat over zelfwaarde.
     “Is High Self-Esteem Beneficial? Revisiting a Classic Question.” The
     American Psychologist 77, no. 1 (January 2022): 5–17.
     https://doi.org/10.1037/amp0000922.
+:::
+
+:::{#exr-transcriptiefactoren}
+## Gen-expressie en transcriptiefactoren
+<br>
+
+Stel dat je onderzoek doet naar het metabolisme van een bepaalde bacterie.
+
+Om te achterhalen welke genen gereguleerd worden door een transcriptiefactor TF,
+maak je gebruik van genexpressiedata.
+Het valt je op dat als TF een hoge expressie heeft,
+gen X dat vaak ook heeft.
+
+a.  Welk van de onderstaande causale diagrammen ligt voor de hand?
+
+::: {#fig-welk-diagram-2 layout-ncol="3" out.width="100%" fig.align="center"}
+
+```{mermaid}
+%%| fig-width: 2
+%%| label: fig-welk-diagram-2-a
+
+graph TD;
+  A([TF]) --> B([X])
+```
+
+```{mermaid}
+%%| fig-width: 2
+%%| label: fig-welk-diagram-2-b
+
+graph TD;
+  A([X]) --> B([TF])
+```
+
+```{mermaid}
+%%| fig-width: 2
+%%| label: fig-welk-diagram-2-c
+
+graph TD;
+  C([Een andere variabele]) --> B([TF])
+  C --> A([X])
+```
+
+Welk causaal diagram ligt het meest voor de hand? 
+De variabele `TF` staat voor de expressie van de transcription factor,
+en `X` voor de expressie van het gen.
+:::
+    
+b.  Kun je je situaties voorstellen waarbij de andere diagrammen van toepassing zijn?
+
 :::
 
 ### Causale ketens
@@ -513,7 +562,7 @@ graph TD;
   A --> C([ijsverkoop])
 ```
 
-Variabelen `ijsverkoop` en `verdrinking` hebben een gezamenlijke oorzaak, `dagtemperatuur`.
+Variabelen `ijsverkoop` en `verdrinking` hebben een gezamenlijke oorzaak, `gemiddelde dagtemperatuur`.
 :::
 
 :::
@@ -532,17 +581,48 @@ voor variabelen aan verschillende kanten "onder" de splitsing
 (hier dus `waterrecreatie`/`verdrinking` aan de ene kant, 
 en `ijsverkooop` aan de andere kant).
 
-::: {#exr-confounding}
+::: {#exr-confounding .pepexr}
 
-## Welke variabelen zijn mogelijk geassocieerd?
+## Wat zou een mogelijke confounder kunnen zijn?
+<br>
+
+In sommige epidemiologische studies 
+komt een correlatie naar voren tussen lichaamslengte en IQ.
+
+a.  Kun jij bedenken wat een confounder zou kunnen zijn?
+
+b.  Teken een causaal diagram met die confounder, lichaamslengte, en IQ.
 
 :::
 
-::: {#exr-confounding}
+::: {#exr-confounding .pepexr}
 
-## Wat zouden mogelijke confounders kunnen zijn?
+## Welke variabelen zijn mogelijk geassocieerd door een confounder?
+<br>
+
+Bekijk het volgend causale model:
+
+```{mermaid}
+graph TD;
+    A[Genetische aanleg] --> B[Roken]
+    A --> C[Alcoholgebruik]
+    B --> D[Hartproblemen]
+    C --> D
+    E[Socio-economische status] --> C
+    E --> F[Lichaamsbeweging]
+    B --> F
+```
+
+a.  Als dit model klopt, welke confounders kunnen dan de associatie 
+    tussen roken en alcoholgebruik beïnvloeden?
+    
+b.  Welke confounders kunnen de associatie tussen roken en lichaamsbeweging beïnvloeden?
+
+c.  Welke confounders kunnen de associatie tussen hartproblemen en lichaamsbeweging beïnvloeden?
 
 :::
+
+
 
 
 ### Colliders: associaties veroorzaakt door selectie van een subpopulatie
@@ -563,7 +643,7 @@ goed aansluit bij de opleiding.
 
 Op basis van beschikbare informatie---CV, vakken, cijfers, motivatie, referenties---worden studenten beoordeeld op verschillende deelaspecten.
 Bijvoorbeeld, 
-een uitgebreide achtergrond in de bioinformatica,
+een uitgebreide achtergrond in de bioinformatica
 verhoogt de kans
 om door de selectie te komen.
 Hetzelfde geldt voor aantoonbare ervaring 
@@ -591,8 +671,8 @@ Causaal diagram van de toelatingsprocedure voor de masteropleiding BIBC.
 Volgens @fig-collider bestaat er geen causaal verband
   tussen beide scores. 
 Als een student een extra cursus bioinformatica volgt,
-  stijgt diens `score bioinformatica`,
-  wat diens kans verhoogt om toegelaten te worden.
+  stijgt de `score bioinformatica`,
+  wat de kans verhoogt om toegelaten te worden.
 Maar de `score biologisch modelleren` zal er niet door veranderen:
   daarvoor staat de pijl tussen `toelating` en `score biologisch modelleren`
   de verkeerde kant op.
@@ -607,7 +687,7 @@ Dan kunnen we direct concluderen
   *want anders was deze niet toegelaten*.
 Dat geldt ook andersom:
   heeft de student een lage `score biologisch modelleren`,
-  dan moet diens `score bioinformatica` hoog zijn.
+  dan moet de `score bioinformatica` hoog zijn.
 Kortom:
   *binnen de groep van toegelaten studenten
   kunnen beide scores negatief geassocieerd zijn,
@@ -747,7 +827,32 @@ Dat maakt het vervolgens moeilijk om het causale effect in te schatten
 Interessant? Lees er meer over in het artikel in de voetnoot.[^colliderCovid]
 
 [^colliderCovid]: Griffith, Gareth J., Tim T. Morris, Matthew J. Tudball, Annie Herbert, Giulia Mancano, Lindsey Pike, Gemma C. Sharp, et al. “Collider bias Undermines Our Understanding of COVID-19 Disease Risk and Severity.” Nature Communications 11 (November 12, 2020): 5749. https://doi.org/10.1038/s41467-020-19478-2.
-    
+
+
+::: {#exr-colliders .pepexr}
+
+## Vind de colliders
+
+Bekijk het volgend causale model:
+
+```{mermaid}
+graph TD;
+    A[Genetische aanleg] --> B[Roken]
+    A --> C[Alcoholgebruik]
+    B --> D[Hartproblemen]
+    C --> D
+    E[Socio-economische status] --> C
+    E --> F[Lichaamsbeweging]
+    B --> F
+```
+
+We selecteren een groep personen met een hoog alcoholgebruik
+en onderzoeken hun leefgedrag. Als het causale model klopt,
+welke variabelen zouden dan binnen die groep geassocieerd kunnen raken
+als gevolg van collider bias?
+
+:::
+
 
 ### Verstrikt in het netwerk van causale relaties
 
@@ -807,11 +912,12 @@ Eerst zul je met geavanceerde methoden zorgvuldig moeten zorgen
 dat de kluwen aan confounders wordt ontward,
 zonder daarbij onbedoeld collider-bias te introduceren.
 
-::: {#exr-keizersnede}
+::: {#exr-keizersnede .pepexr}
 
 ## Een ingewikkeld causaal diagram
+<br>
 
-Bekijk @fig-keizersnede nog eens goed. Zie je confounders die de associatie tussen lichaamsgewicht en keizersnede kunnen beïnvloeden?
+Bekijk @fig-keizersnede nog eens goed. Zie je confounders die de associatie tussen `Gewicht moeder voor de zwangerschap` en `Keizersnede` kunnen beïnvloeden?
 :::
 
 ### Correlaties in tijdseries
@@ -841,9 +947,27 @@ Voor elke trend is er wel een naam te vinden.
 
 Als de variabelen zo duidelijk ongerelateerd zijn
 is het effect al snel komisch.
-Het wordt minder amusant als mensen op basis van exact dezelfde redenering
+Het wordt minder amusant als mensen op basis van exact dezelfde drogredenering
 verbanden gaan vermoeden tussen vaccins en autisme,
 of 5G en COVID-19.
+
+::: {#exr-theory-of-the-stork}
+
+## Oplossing voor een maatschappelijk probleem.
+<br>
+
+Bekijk onderstaande brief die in 1988 in het gerenommeerde tijdsschrift Nature
+gepubliceerd werd.
+
+![Korte ingezonde brief in Nature, 1988.](figuren/Sies_Nature_1988.png){width="50%"}
+
+a.  Met welk probleem heeft West-Duitsland in kampen?
+
+b.  Voor welke aloude wetenschappelijke theorie wordt hier bewijs geleverd?
+
+c.  Welke oplossing suggereert Prof. Sies dus voor het West-Duitse probleem?
+
+:::
 
 ## Twee soorten onderzoek: experimenteel en observationeel
 
@@ -940,7 +1064,7 @@ Voor een goede controle
 In plaats daarvan moeten we ervoor zorgen dat de proefpersonen in de controlegroep
 zoveel mogelijk hetzelfde traject doorlopen als de proefpersonen in de vaccingroep.
 Zij krijgen dus ook een prik, 
-  het liefst zelfs met dezelfde samenstelling als het echte vaccin
+  het liefst zelfs met dezelfde samenstelling als het echte vaccin,
   behalve dat de actieve component wordt weggelaten.
 Alleen op die manier zijn we er zeker van
   dat eventuele verschillen in de uitkomsten van beide groepen
@@ -1093,7 +1217,7 @@ Waar mogelijk zijn gerandomiseerde gecontroleerde experimenten de gouden standaa
 Dat geldt zeker in de medische wereld.
 Maar helaas zullen we in veel gevallen toch genoegen moeten nemen met observationele gegevens.
 
-## Blinderen: verstoring door proefpersonen en onderzoekers zelf
+## Blinderen voorkomt verstoringen door proefpersonen en onderzoekers zelf
 
 Zelfs als je onderzoek voldoet
 aan de eisen van een GGE
@@ -1252,6 +1376,47 @@ Dit kan gevolgen hebben voor de beoordeling of meting die door de onderzoeker
 wordt uitgevoerd, 
 en zo bijdrage aan een associatie tussen de behandelgroep en de beoordeling.
 (b) Door ook de onderzoeker te blinderen wordt dit tweede, ongewenste causale pad uitgesloten.
+:::
+
+::: {#exr-blinderen .pepexr}
+
+## Blindering buiten de wetenschap
+<br>
+
+Blindering wordt vaak toegepast in medisch onderzoek. 
+Maar er zijn veel andere situaties waarin waarnemersbias een rol kan spelen
+en blindering kan helpen, zelfs buiten het wetenschappelijk onderzoek.
+
+a.  Docenten kunnen soms onbewust de tentamens van studenten 
+    van wie ze een goede indruk hebben
+    hoger beoordelen.  Hoe kan een docent die zich van dat gevaar bewust is,
+    zorgen dat dit niet kan gebeuren?
+    
+b.  Als een organisatie wil voorkomen dat bij sollicitatieprocedures
+    het oordeel impliciet of expliciet beïnvloed wordt door bias 
+    op basis van gender of etniciteit,
+    hoe kan het bedrijf dat dan voorkomen?
+    
+c.  Voor liefhebbers van audio-apparatuur is *the sky the limit*.
+    Je kunt bijvoorbeeld €400,- uitgeven aan één digitale interlink kabel.
+    De vraag is of zo'n kabel daadwerkelijk een (positief) effect heeft 
+    op de geluidskwaliteit van je installatie. 
+    Veel "audiofielen" beweren zulke effecten duidelijk te horen.
+    Maar waarnemersbias kan daarbij gemakkelijk een rol spelen.
+    
+    Als je zelf houdt van mooi geluid, maar niet onnodig geld uit wilt geven,
+    hoe kun je dan je eigen waarnemersbias elimineren?
+    
+d.  Aan het eind van de basisschool krijgen leerlingen van school
+    een advies over het passend vervolgonderwijs---het schooladvies.
+    Onderzoek heeft aangetoond dat leerlingen van kleur, met een migratieachtergrond,
+    of met ouders met een laag opleidingsniveau,
+    vaak een te laag advies krijgen. Bij het oordeel van 
+    de school kan impliciete bias een rol spelen.
+    
+    Leg uit waarom dat een argument is om leerlingen óók te toetsen 
+    met een "doostroomtoets" (bijvoorbeeld van het Cito).
+
 :::
 
 ## Terugkeer naar het gemiddelde (*Regression to the mean*)
@@ -1423,7 +1588,7 @@ Zelfs als hun kinderen dezelfde aanleg meekrijgen
   dan hun ouders
   omdat zij naar verwachting niet onder dezelfde positieve omstandigheden opgroeien.
 
-Bij het analyseren van gegevens dan *regression to the mean* 
+Bij het analyseren van gegevens kan *regression to the mean* 
   een bijzonder misleidend effect hebben.
 Stel, je hebt al lange tijd last van rugklachten,
   maar de ernst van de klachten fluctueert van week tot week.
@@ -1441,11 +1606,11 @@ kun je nu concluderen dat de behandeling geholpen heeft?
 Een tegenwerping kan zijn dat het hier om een steekproef met maar één proefpersoon gaat. Daaruit kun je zelden iets concluderen!
 Maar laten we ons voorstellen dat we in de database van de fysiotherapeut
 nog 30 andere cliënten terugvinden met exact hetzelfde verhaal.
-Zijn we dan wel overtuigd?
+Zijn we dan wél overtuigd?
 
 Het echte probleem is dat we niet kunnen uitsluiten
 dat het de vermindering van de klachten
-het resultaat zijn van *regression to the mean*.
+het resultaat is van *regression to the mean*.
 Jij en je mede-cliënten gingen naar de fysio
 op een moment waarop de klachten te ernstig waren 
 om ze nog langer te negeren.
@@ -1469,6 +1634,43 @@ kun je de referenties in de voetnoten bekijken.[^associatiestussenvariabelen-3]
     Slow. 1st edition. New York: Farrar, Straus and Giroux, 2011.
     
     Morton, Veronica, and David J Torgerson. “Effect of Regression to the Mean on Decision Making in Health Care.” BMJ : British Medical Journal 326, no. 7398 (May 17, 2003): 1083–84.
+    
+:::{#exr-military .pepexr}
+## Belonen of straffen?
+
+In zijn boek *Thinking Fast and Slow* beschrijft Daniel Kahneman, 
+professor in de Psychologie en Nobelprijswinnaar in de Economie,
+de volgende scene:
+
+*"I had one of the most satisfying eureka experiences of my career
+while teaching flight instructors in the Israeli Air Force
+about the psychology of effective training.
+I was telling them about an important principle of skill training:
+reward for improved performance works better than punishment
+of mistakes.
+This proposition is supported by much evidence from research 
+on pigeons, rats, humans, and other animals.*
+
+*When I finished my enthusiastic speech, 
+one of the most seasoned instructors in the group raised his hand
+and made a short speech of his own.
+He began by conceding that rewarding improved performance might be
+good for the birds,
+but he denied that it was optimal for flight cadets.
+This is what he said: "On many occasions I have praised flight cadets
+for clean execution of some aerobatic maneuver.
+The next time they try the same maneuver they usually do worse.
+On the other hand, I have often screamed into a cadet's earphone
+for bad execution, 
+and in general he does better on this next try.
+So please don't tell us that reward works and punishment does not,
+because the opposite is the case."*
+
+Kun jij verklaren waarom de ervaringen van de instructeur
+zo indruisen tegen de kennis van Kahneman?
+
+:::
+
 
 ## Het machtige placebo-effect?
 
@@ -1562,7 +1764,7 @@ Een ander voorbeeld:
 Kijk in het algemeen uit voor berichten waarin alleen het percentage
 van één van de mogelijk uitkomsten worden genoemd.
 Veel nieuwsberichten zijn van dat type: "De Nederlandse burger is pessimistisch: 50% van de
-ondervraagden denkt er het komend jaar financieel op achteruit te gaan." Wat als de andere 50% erop *vooruit* denkt te zullen gaan -- klinkt het dan nog steeds alarmerend?
+ondervraagden denkt er het komend jaar financieel op achteruit te gaan." Wat als de andere 50% erop *vooruit* denkt te zullen gaan -- klinkt het dan nog steeds pessimistisch?
 
 :::
 
@@ -1573,7 +1775,19 @@ ondervraagden denkt er het komend jaar financieel op achteruit te gaan." Wat als
 
 ## Samenvatting
 
+:::{.todo-box}
+
+Deze samenvatting moet nog geschreven worden.
+
+:::
+
 ## Terminologie
+
+:::{.todo-box}
+
+De terminologie moet nog worden samengevat.
+
+:::
 
 ## Opgaven
 
