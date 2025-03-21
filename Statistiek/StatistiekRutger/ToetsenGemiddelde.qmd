@@ -82,7 +82,8 @@ We zijn geïnteresseerd in een continue variabele
 en hebben een hypothese over het gemiddelde van die variabele in de populatie
 (in het voorbeeld: het populatiegemiddelde van de lichaamstemperatuur).
 Om die hypothese te onderzoeken
-nemen we een steekproef en meten de variabele voor iedere eenheid in de steekproef. 
+nemen we een steekproef.
+Voor iedere eenheid in die steekproef bepalen we de waarde van de variabele. 
 Dat levert een *steekproefgemiddelde* op
 dat typisch wat afwijkt van het *populatiegemiddelde volgens onze hypothese*.
 De vraag is hoe opmerkelijk die afwijking is.
@@ -138,7 +139,7 @@ $\HA:\qquad\mu_X \neq \mu_0.$
 **Stap 3: Kies de toetsingsgrootheid en bepaal zijn kansverdeling onder $\HO$.**\
 We hebben een toetsingsgrootheid nodig die weergeeft hoe ver het
 steekproefgemiddelde $\mean{X}$ afwijkt van de verwachting onder $\HO$.
-De $t$-toets voor één steekproef gebruikt daarvoor 
+De $t$-toets voor één steekproef gebruikt daarvoor: 
 $$
 t = \frac{\mean{X} - \mu_0}{\se{\mean{X}}}.
 $$ {#eq-t-t-test}
@@ -179,7 +180,7 @@ $$\mean{X} = 36{,}5\degree\text{C},$$
 $$s_X = 0{,}512\degree\text{C},$$
 $$n = 10,$$
 $$\se{\mean{X}} = s_X/\sqrt{n} = 0{,}512\degree\text{C} / \sqrt{10} = 0{,}162\degree\text{C},$$
-en dus
+en dus:
 $$t = \frac{\mean{X} - \mu_0}{\se{\mean{X}}} = \frac{36{,}5 - 37}{0{,}162} = -3{,}09.$$
 
 We kunnen ook de bijbehorende kansverdeling plotten.
@@ -380,7 +381,7 @@ kleiner dan 0 volgens de $t$-verdeling met 9 vrijheidsgraden.
 (Het antwoord moet 0,5 zijn, omdat alle $t$-verdelingen symmetrisch zijn
 rond 0.)
 
-De oppervlakte in de paarse linkerstaart van de verdeling kan dus worden berekend met
+De oppervlakte in de paarse linkerstaart van de verdeling kan dus worden berekend met deze code:
 ```{r}
 t <- -3.087701
 n <- 10
@@ -512,7 +513,7 @@ b.  Waar in de uitvoer vind je het steekproefgemiddelde?
 c.  Waar vind je de waarden van $t$, df, en de $P$-waarde?
     Komen die overeen met onze handmatige berekeningen hierboven?
 
-d.  De functie geeft ook het 95%-BHI voor $\mu_X$. Wat zijn de onder- en bovengrens?
+d.  De functie geeft ook het 95%-BHI voor $\mu_X$. Wat zijn de ondergrens en de bovengrens?
 
 :::
 
@@ -525,8 +526,7 @@ Je hebt geleerd dat een 95%-BHI een interval is
 waarbinnen de ware parameter zich met 95% zekerheid bevindt.
 Dat wil zeggen: als $\HO$ waar is,
 dan zou $\mu_0$ in 95% van de keren dat we een steekproef trekken
-en het 95%-BHI uitrekenen 
-binnen het BHI moeten liggen,
+binnen het berekende 95%-BHI moeten liggen,
 en maar 5% van de keren daarbuiten.
 
 Als we dus vinden dat $\mu_0$ buiten het 95%-BHI ligt,
@@ -582,9 +582,11 @@ onderzoeken of de populatiegemiddelden van *twee* populaties
 van elkaar *verschillen*.
 Bijvoorbeeld,
 we zouden ons kunnen afvragen of bacteriën mét een bepaalde mutatie
-gemiddeld resistenter zijn voor antibiotica dan bacteriën zonder die mutatie.
-Of, of de gemiddelde hoeveelheid fijnstof aangetroffen in woningen
-verschilt tussen IJmond en Amsterdam.
+(populatie 1)
+gemiddeld resistenter zijn voor antibiotica dan bacteriën zonder die mutatie
+(populatie 2).
+Een ander voorbeeld: verschilt de gemiddelde hoeveelheid fijnstof aangetroffen in woningen
+in IJmond en Amsterdam?
 
 Om de twee populaties te vergelijken,
 nemen we een steekproef uit populatie 1 
@@ -1202,9 +1204,11 @@ MWT-scores van de acht proefpersonen op dag 0 en dag 6 van de slaaprestrictie. G
 Zoals je in @fig-vb-gepaarde-t-toets kunt zien, waren er op dag 0 
 drie deelnemers die gedurende de hele test wakker bleven. Op dag 
 6 lukte dat geen van de deelnemers.
-Het lijkt dus heel duidelijk dat er een verschil is in de gemiddelde MWT-score
-tussen die twee dagen. Maar hoe tonen toetsen we dat?
-
+De gemiddelde MWT-scores
+op die twee dagen
+verschillen dus van elkaar. 
+Maar hoe toetsen we of dit verschil verklaard kan worden 
+door toevallige steekproevenvariabiliteit?
 
 :::
 
@@ -1299,7 +1303,7 @@ hoe lastiger het is om aan te tonen dat er een verschil is
 in de gemiddelden van beide steekproeven.
 Om precies te zijn:
 de onderlinge verschillen tussen de deelnemers zorgen voor 
-grotere standaarddeviaties $s_1$ en $s_2, daardoor een 
+grotere standaarddeviaties $s_1$ en $s_2$, daardoor een 
 grotere gepoolde steekproefvariantie $s\ped{p}^2$ (zie @eq-sp)
 en dus een grotere standaardfout $\se{\mean{X}_1 - \mean{X}_2}$ (zie @eq-se-diff),
 en dat levert dan weer een *kleinere* waarde van $t$ op (@eq-t-twee).
@@ -1413,7 +1417,7 @@ qqline(verschillen)
 Er zijn geen bijzonderheden te zien.
 
 **Stap 2: Formuleer de hypotheses.**\
-De nulhypothese is dat het slaaptekort gemiddeld geen effect heeft, dus
+De nulhypothese is dat het slaaptekort gemiddeld geen effect heeft. Dus:
 
 $\HO:\qquad \mu_D = 0,$\
 $\HA:\qquad \mu_D\neq = 0.$
@@ -1618,6 +1622,9 @@ en @sec-t-toets-samengevat-paar.
 | $t$-toets voor één steekproef | one-sample $t$ test | Toets van een hypothese over het populatiegemiddelde van een continue variabele. |
 | $t$-toets voor twee onafhankelijke steekproeven | two-sample $t$ test | Toets van de hypothese dat het populatiegemiddelde van een continue variabele gelijk is voor twee populaties. |
 | $t$-toets voor gepaarde steekproeven | $t$ test for paired samples | Toets van de hypothese dat het gemiddelde verschil van een continue variabele over twee condities gelijk is aan nul. |
+| $t$-toets van Welch | Welch's $t$ test | Variant van de $t$-toets voor twee onafhankelijke steekproeven waarbij niet wordt aangenomen dat beide populaties een gelijke standaarddeviatie hebben. |
+| niet-parametrische / verdelingsvrije toetsen | non-parametric tests | Hypothesetoetsen die geen (of minder specifieke) aannames maken over de verdeling van de variabele in de populatie. |
+| één-weg ANOVA | one-way ANOVA | Een hypothesetoets die bedoeld is voor situaties met meer dan twee populaties. De nulhypothese die getoetst wordt, is dat de gemiddelden van alle populaties gelijk zijn. |
 
 : Woordenlijst @sec-toetsen-gemiddelden {#tbl-toetsen-gemiddelden .striped .hover}
 
