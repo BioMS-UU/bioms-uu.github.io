@@ -7,26 +7,54 @@
 
 library(ggplot2)
 
-opvulkleur <- "#e8601d"
+opvulkleur <- "darkorange"
 lijnkleur1 <- "darkorchid"
 lijnkleur2 <- "red"
 lijnkleur3 <- "blue"
 
 ```
 
-# Lineaire relaties {#sec-linrel}
+# Relaties tussen continue variabelen {#sec-linrel}
 
-Vorige hoofdstuk ging over associaties / relaties tussen variabelen.
-Dit hoofdstuk over een belangrijk type relatie,
-tussen continue variabelen: **lineaire relaties**.
+In het vorige hoofdstuk hebben we het uitgebreid gehad
+over relaties tussen variabelen.
+In dit hoofdstuk kijken we specifiek naar relaties tussen twee continue variabelen.
+De focus zal sterk liggen op **lineaire relaties**.
+Dat zijn relaties waarbij het verband tussen de variabelen 
+beschreven kan worden met een rechte lijn.
+Maar als afsluiter zullen we ook een voorbeeld bekijken
+waarbij de relatie niet lineair is. 
 
-## De gegevens van Sir Francis Galton
+Laten we weer beginnen met een voorbeeld.
 
-Relatie tussen de lichaamslengte van ouders
-en die van hun kinderen.
-Ontdekt door Galton en 1888.
-Gegevens van Galton geplot:
+::: {#exm-galton}
+## De ontdekking van Sir Francis Galton.
+<br>
 
+:::{.todo-box}
+
+Portret Galton?
+
+:::
+
+In @sec-associaties zijn we Francis Galton al tegengekomen.
+Rond 1888 deed Galton onderzoek naar de erfelijkheid van lichaamslengte.
+Iedereen weet dat lange ouders vaak lange kinderen krijgen,
+maar ook dat er soms opvallende verschillen zijn
+tussen ouders en hun kinderen.
+Galton verzamelde als eerste systematisch gegevens
+om te zien in welke mate de lengte van de ouders  
+en die van hun kinderen samenhangen.
+
+In de figuur hieronder zijn de gegevens van Galton te zien.
+Op de $x$-as staat de mid-ouder-lengte uitgezet.
+Dat is het gemiddelde van de lengte van beide ouders,
+waarbij de lengte van de moeder met 1,08 vermenigvuldigd is
+om te compenseren voor het verschil in de gemiddelde lengte
+van mannen en vrouwen.
+Op de $y$-as staat de lengte van de (volwassen) kinderen
+van deze ouderparen;
+weer zijn de lengtes van de vrouwen met 1,08 vermenigvuldigd.
 
 ```{r}
 #| fig-height: 5
@@ -37,55 +65,161 @@ Gegevens van Galton geplot:
 #| fig.cap: "De lichaamslengte van volwassen kinderen is gecorreleerd met de lichaamslengte van de ouders. Op de $x$-as staat de mid-ouder-lengte; dat is het gemiddelde van beide ouders. De lichaamslengtes van alle vrouwen (moeders en kinderen) is vermenigvuldigd met 1,08 om te corrigeren voor het feit dat mannen iets langer zijn dan vrouwen."
 #| label: fig-galton
 #| out.width: "71.4%"
+
 # Laad benodigde pakketten
 if (!("HistData" %in% .packages())) { library(HistData) }
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("ggplot2"  %in% .packages())) { library(ggplot2) }
 
-# Laad de GaltonFamilies dataset
+# Laad de GaltonFamilies-dataset
 data("GaltonFamilies")
 
-# Bereken de mid-parent height
-GaltonFamilies$mid_parent_height <- (GaltonFamilies$father + 
-                                     1.08 * GaltonFamilies$mother) / 2
+# Definieer omrekenfactoren
+inch         <- 2.54
+factor_vrouw <- 1.08
 
-GaltonFamilies$childHeightCorrected <- GaltonFamilies$childHeight
-GaltonFamilies$childHeightCorrected[GaltonFamilies$gender == "female" ] <- 1.08*GaltonFamilies$childHeight[GaltonFamilies$gender == "female" ]
+# Corrigeer ouderlengte naar cm en pas factor toe voor moeders
+GaltonFamilies$mid_parent_height <- inch * (
+  GaltonFamilies$father +
+  factor_vrouw * GaltonFamilies$mother
+) / 2
 
+# Corrigeer kindlengte naar cm
+GaltonFamilies$childHeightCorrected <- inch *
+  GaltonFamilies$childHeight
 
-# Maak de scatterplot met regressielijn en diagonaal
-ggplot(GaltonFamilies, aes(x = mid_parent_height, y = childHeightCorrected)) +
-  geom_point(alpha = 0.8, size = 1, color = "#e8601d") +  # Scatterplot punten
-#  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") +  # Diagonaal y = x
-  xlim(60, 80) + 
-  ylim(60, 80) +
-  labs(x = "Mid-ouder-lengte (inch)", 
-       y = "Lengte kind (inch)", 
-       title = "") +
-  theme_minimal()# +
-#  geom_smooth(method = "lm")
+# Pas correctie toe voor vrouwelijke kinderen
+GaltonFamilies$childHeightCorrected[
+  GaltonFamilies$gender == "female"
+] <- factor_vrouw *
+  GaltonFamilies$childHeightCorrected[
+    GaltonFamilies$gender == "female"
+  ]
+
+# Hernoem eindvariabelen voor plot
+GaltonFamilies$lengte_ouders     <- GaltonFamilies$mid_parent_height
+GaltonFamilies$lengte_kinderen  <- GaltonFamilies$childHeightCorrected
+
+# Maak scatterplot
+ggplot(
+  GaltonFamilies,
+  aes(x = lengte_ouders, y = lengte_kinderen)
+) +
+  geom_point(
+    alpha = 0.8,
+    size  = 1,
+    color = "darkorange"
+  ) +
+#  geom_abline(
+#    slope     = 1,
+#    intercept = 0,
+#    linetype  = "dashed",
+#    color     = "black"
+#  ) +
+  xlim(150, 205) +
+  ylim(150, 205) +
+  labs(
+    x = "Mid-ouder-lengte (cm)",
+    y = "Lengte kind (cm)",
+    title = ""
+  ) +
+  theme_minimal()
 
 ```
 
-De samenhang lijkt lineair (rechte lijn plus ruis).
-Hoe kunnen we de lineaire samenhang tussen de lengte van ouders en hun kinderen kwantificeren?
+De figuur laat zien dat,
+binnen deze dataset, 
+lange ouders gemiddeld langere kinderen krijgen.
+Maar je kunt ook zien dat kinderen van even lange ouders
+flink in lengte kunnen verschillen.
 
-## Pearsons correlatiecoëfficiënt $r$
+De gegevens van Galton roepen allerlei vragen op.
+Kunnen we de relatie tussen de lengte van de ouders 
+en hun kinderen kwantificeren?
+Is er een manier om te testen 
+of deze samenhang ook het toevallige gevolg kan zijn
+van steekproevenvariatie?
+Op deze en andere vragen zullen we hieronder ingaan.
 
-### Eigenschappen
+:::
 
-Stel, in een populatie wordt een steekproef met grootte $n$ genomen, waarbij van iedere eenheid in de steekproef twee variabelen worden gemeten: $X$ en $Y$. Dit levert de uitkomsten $x_1, \ldots, x_n$ en $y_1, \dots, y_n$.
+## Lineaire relaties in een steekproef
 
-**Pearson's correlatiecoëfficiënt** $r$ is een maat voor de lineaire correlatie tussen deze variabelen in de steekproef. In de praktijk wordt deze vaak afgekort tot de **correlatiecoëfficiënt**.
+### Wat is een lineaire relatie?
 
-Deze coëfficiënt is een **getal zonder dimensie** en heeft dus geen eenheid. De waarde ligt altijd tussen **-1 en 1**. De absolute waarde geeft de sterkte van het lineaire verband aan:
+Stel dat we een steekproef van grootte $n$ hebben genomen uit een populatie
+en van iedere eenheid twee variabelen hebben gemeten: $X$ en $Y$.
+De gemeten waarden van eenheid $i$ noemen we $x_i$ en $y_i$. 
+We maken vervolgens een spreidingsdiagram waarbij we $Y$ uitzetten tegen $X$.
 
-- **$r = 1$ of $r = -1$**: een perfect lineair verband; alle punten liggen exact op een rechte lijn.
-- **$r = 0$**: er is geen lineair verband tussen de variabelen.
+We zeggen dat de twee variabelen
+een **lineaire relatie** hebben als de datapunten 
+zich op of in de buurt van een rechte lijn bevinden
+die stijgt of daalt.
+(De lijn moet wel stijgen of dalen, 
+want als de lijn horizontaal loopt hangen de waarden van $Y$ niet af van die van $X$,
+en is er dus geen sprake van een relatie.)
+Hieronder is in @fig-voorbeeld een duidelijk voorbeeld te zien. 
 
-Het teken van $r$ geeft de richting van het verband aan:
+:::{#fig-voorbeeld}
+```{r}
+#| fig-width: 3
+#| fig-height: 3
+#| out-width: "43%"
+#| warning: false
+#| code-fold: true
 
-- **Positieve correlatie ($r > 0$)**: als $X$ toeneemt, neemt $Y$ gemiddeld ook toe.
-- **Negatieve correlatie ($r < 0$)**: als $X$ toeneemt, neemt $Y$ gemiddeld af.
+# Laad vereiste pakketten als ze nog niet geladen zijn
+if (!("MASS" %in% .packages())) { library(MASS) }
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+
+
+# Stel parameters in
+steekproef_grootte <- 100
+gemiddelden <- c(0, 0)
+covariantie_matrix <- matrix(c(1, 0.95, 0.95, 1), nrow = 2)
+
+# Genereer bivariate normale steekproef
+set.seed(122)  # voor reproduceerbaarheid
+data <- as.data.frame(mvrnorm(n = steekproef_grootte,
+                              mu = gemiddelden,
+                              Sigma = covariantie_matrix))
+names(data) <- c("X", "Y")
+
+# Maak de plot
+ggplot(data, aes(x = X, y = Y)) +
+  geom_point(color = "gray50") +
+  geom_smooth(method = "lm", se = FALSE, color = "darkorange", linewidth = 1) +
+  labs(x = expression(italic(X)), y = expression(italic(Y))) +
+  theme_minimal() + 
+  theme(
+      axis.text.x = element_blank(),
+      axis.text.y = element_blank()
+    )
+```
+
+Voorbeeld van variabelen $X$ en $Y$ met een lineaire relatie.
+:::
+
+### Pearsons correlatiecoëfficiënt $r$
+
+Als twee variabelen een lineaire relatie hebben,
+kunnen we de sterkte van die relatie kwantificeren
+door **Pearsons correlatiecoëfficiënt** $r$ uit te rekenen.
+(In de praktijk zeggen we vaak kortaf correlatiecoëfficiënt.)
+
+Hier zijn een paar eigenschappen:
+
+- De correlatiecoëfficiënt is **dimensieloos** en heeft dus geen eenheid. 
+- De waarde van $r$ ligt altijd in het interval $[-1, 1]$.
+- Het *teken* van $r$ (positief of negatief) geeft aan of het om een positief (stijgend) of een negatief (dalend) verband gaat.
+- De absolute waarde van $r$  geeft aan hoe sterk het verband is; 
+  dat wil zeggen, hoe strak de punten langs de lijn liggen.
+  - Als $r = 1$, dan is er een perfect *positief* lineair verband: 
+  alle punten liggen dan exact op een stijgende rechte lijn.
+  - Als $r = -1$, dan is er een perfect *negatief* lineair verband: 
+  alle punten liggen dan exact op een dalende rechte lijn.
+  - Als $r = 0$, dan is er géén lineair verband tussen de variabelen.
+
 
 @Fig-correl-coefs toont een aantal voorbeelden van puntenwolken met de bijbehorende waarden van $r$.
 
@@ -105,9 +239,9 @@ if (!("dplyr" %in% .packages())) { library(dplyr) }
 
 # Definieer parameters
 n <- 200  # Steekproefgrootte
-correlaties <- c(1, 0.75, 0.5, 0.25, 0, -0.25, -0.5, -0.75)
+correlaties <- c(1, 0.75, 0.5, 0.25, 0, -0.33, -0.67, -1)
 
-set.seed(135)
+set.seed(123)
 
 # Functie om een bivariate normale steekproef te genereren
 genereer_data <- function(rho, n, groep) {
@@ -127,7 +261,7 @@ correlatie_labels <- datasets %>%
 
 # Maak de ggplot met facet_wrap
 p <- ggplot(datasets, aes(x = X, y = Y)) +
-  geom_point(color = "#e8601d", alpha = 0.8, size = 1) +
+  geom_point(color = "darkorange", alpha = 0.8, size = 1) +
   facet_wrap(~ groep, nrow = 2, 
              labeller = as_labeller(setNames(correlatie_labels$label, 1:8))) +
   coord_fixed(xlim = c(-3, 3), ylim = c(-3, 3)) +
@@ -145,10 +279,16 @@ print(p)
 
 ```
 
-De correlatiecoëfficiënt geeft aan of het verband positief of negatief is,
-maar trekt zich verder niets aan van de richtingscoëfficiënt.
-De steekproeven in onderstaande figuren hebben allemaal $r = 1$ of $-1$.
+### De correlatiecoëfficient is niet de richtingscoëfficient
 
+De correlatiecoëfficiënt geeft aan of het verband positief of negatief is,
+en de mate waarin de punten de lijn volgen.
+Maar het doet er niet toe hoe *stijl* de lijn is.
+De correlatiecoëfficiënt is dus geen richtingscoëfficiënt.
+
+Bijvoorbeeld, de steekproeven in @-fig-correl-sd hieronder
+verschillen sterk in hun richtingscoëfficiënt, 
+maar hebben allemaal $r = 1$ of $-1$.
 
 ```{r}
 #| out-width: "100%"
@@ -156,7 +296,7 @@ De steekproeven in onderstaande figuren hebben allemaal $r = 1$ of $-1$.
 #| fig-height: 2.6
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Bij al deze steekproeven is de correlatiecoëfficiënt 1 of -1."
+#| fig.cap: "Bij al deze steekproeven is de correlatiecoëfficiënt 1 of -1. De correlatiecoëfficiënt geeft aan in hoeverre de punten op een rechte lijn vallen, niet hoe stijl die lijn is."
 #| label: fig-correl-sd
 
 # Laad benodigde pakketten
@@ -190,7 +330,7 @@ datasets <- do.call(
 
 # Maak de ggplot met facet_wrap
 p <- ggplot(datasets, aes(x = X, y = Y)) +
-  geom_point(color = "#e8601d", alpha = 0.8, size = 1) +
+  geom_point(color = "darkorange", alpha = 0.8, size = 1) +
   facet_wrap(~ groep, nrow = 1, labeller = as_labeller(custom_labels)) +
   coord_fixed(xlim = c(-3, 3), ylim = c(-3, 3)) +
 #  theme_minimal() +
@@ -206,10 +346,11 @@ p <- ggplot(datasets, aes(x = X, y = Y)) +
 print(p)
 ```
 
-Pearsons correlatiecoëfficiënt is bedoeld om lineaire relaties te beschrijven.
-De plotjes hieronder in @fig-nonlinear laten variabelen zien die wel een relatie hebben
----de waarde van $Y$ hangt wel af van de waarde van $X$---
-maar de relatie is niet *lineair*.
+### De correlatiecoëfficient is alleen betekenisvol voor lineaire relaties
+
+Pearsons correlatiecoëfficiënt is bedoeld om *lineaire* relaties te beschrijven.
+De grafieken  in @fig-nonlinear hieronder laten variabelen $X$ en $Y$ zien die wel een relatie hebben---de waarden van $Y$ hangen wel af van de waarde van $X$---maar
+de relatie is steeds niet *lineair*.
 Het is dan niet nuttig (en misleidend) om $r$ uit te rekenen.
 
 ```{r}
@@ -218,7 +359,7 @@ Het is dan niet nuttig (en misleidend) om $r$ uit te rekenen.
 #| fig-height: 2.6
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Voorbeelden van niet-lineaire relaties."
+#| fig.cap: "Voorbeelden van niet-lineaire relaties. Als een relatie niet lineair is, vertelt $r$ je weinig tot niets. Het heeft dan geen zin om $r$ uit te rekenen."
 #| label: fig-nonlinear
 
 # Laad benodigde pakketten
@@ -226,7 +367,7 @@ if (!("ggplot2" %in% .packages())) { library(ggplot2) }
 if (!("dplyr" %in% .packages())) { library(dplyr) }
 
 # Definieer parameters
-n <- 200
+n <- 100
 sigma_y <- 0.1  # Kleine variantie voor de fouten
 
 custom_labels <- c("1" = "parabool", 
@@ -261,7 +402,7 @@ datasets <- do.call(
 
 # Maak de ggplot met facet_wrap
 p <- ggplot(datasets, aes(x = X, y = Y)) +
-  geom_point(color = "#e8601d", alpha = 0.8, size = 1) +
+  geom_point(color = "darkorange", alpha = 0.8, size = 1) +
   facet_wrap(~ groep, nrow = 1, labeller = as_labeller(custom_labels)) +
   coord_fixed(xlim = c(-3, 3), ylim = c(-3, 3)) +
 #  theme_minimal() +
@@ -277,18 +418,301 @@ p <- ggplot(datasets, aes(x = X, y = Y)) +
 print(p)
 ```
 
-### Wisundige formule
+### De correlatiecoëfficient is gevoelig voor uitbijters
 
+De correlatiecoëfficiënt is erg gevoelig voor uitbijters.
+Voor de gegevens in @fig-outlier hieronder
+zou *zonder* de uitbijter rechtsboven
+de correlatiecoëfficiënt 0 zijn; 
+door dat ene datapunt is de waarde 0,4.
+Bekijk dus altijd je gegevens nauwkeurig
+voordat je $r$ uitrekent. 
+Als het verband er niet lineair uitziet óf er opvallende uitbijters zijn,
+is de waarde van $r$ niet betekenisvol.
+Omdat dit punt heel belangrijk is,
+komen we er in @sec-anscombe nog een keer uitgebreider op terug.
 
-$$
-r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}
-         {s_x s_y}.
-$$
+::: {#fig-outlier}
 
 ```{r}
-#| out-width: "71.4%"
-#| fig-width: 5
-#| fig-height: 5
+#| fig.width: 3
+#| fig.height: 3
+#| out.width: "43%"
+#| warning: false
+#| message: false
+#| code-fold: true
+
+# Laad vereiste pakketten als ze nog niet geladen zijn
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+
+# Genereer data met constante Y behalve één uitschieter
+set.seed(456)
+n <- 20
+X <- runif(n, -2, 2)
+Y <- rep(0, n)
+Y[n] <- 5  # uitschieter op laatste punt
+X[n] <- 2
+
+data <- data.frame(X = X, Y = Y)
+
+# Bereken de correlatiecoëfficiënt
+#correlatie <- cor(data$X, data$Y)
+#cat("Correlatiecoëfficiënt:", round(correlatie, 3), "\n")
+
+# Maak de plot
+ggplot(data, aes(x = X, y = Y)) +
+  geom_point(color = "darkorange") +
+#  geom_smooth(method = "lm", se = FALSE,
+#              color = "orange", linewidth = 1) +
+  labs(x = expression(italic(X)), y = expression(italic(Y))) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank()
+  ) +
+  annotate("text", x = -1.5, y = 4.5,
+           label = expression(italic(r) == 0.4),
+           size = 4) +
+  coord_cartesian( ylim = c(-1, 5.5) )
+
+```
+
+De correlatiecoëfficiënt is erg gevoelig voor uitbijters.
+Zonder uitbijter zou de correlatiecoëfficiënt 0 zijn;
+met de uitbijter 0,4. 
+
+:::
+
+### De correlatiecoëfficient kan afhangen van het bereik van de $X$-waarden
+
+Bekijk @fig-bereik-a hieronder eens. 
+Dat is een plot van twee variabelen die sterk lineair met elkaar samenhangen.
+De correlatiecoëfficiënt is dan ook $r = 0{,}79$.
+
+Maar stel dat we de analyse beperken tot alleen het middelste gedeelte van het domein.
+We selecteren de oranje datapunten en plotten die los in @fig-bereik-b.
+Nu is de correlatiecoëfficiënt een stuk kleiner: $r = 0{,}36$!
+Op het oog kun je ook goed zien waarom: als het bereik zo klein is,
+volgen de datapunten veel minder duidelijk een lineaire trend.
+
+Dat de correlatiecoëfficiënt zo afhangt van het domein,
+is iets dat je goed in gedachte moet houden 
+bij het interpreteren van gegevens.
+Als er tussen twee variabelen geen duidelijk verband wordt gevonden,
+kan dat ook liggen aan een gebrek aan variatie in de $X$-waarden.
+Een andere studie waarin de bestudeerde steekproef meer varieert
+kan dan mogelijk wél een correlatie aantonen.
+
+::: {#fig-bereik layout="[[1],[1]]"}
+
+```{r}
+#| fig.height: 4
+#| fig.width: 4
+#| out.width: "57%"
+#| warning: false
+#| code-fold: true
+#| label: fig-bereik-a
+#| fig-cap: "Dataset met een sterk positieve correlatie ($r = 0{,}79$)."
+
+# Laad benodigde bibliotheken
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("MASS" %in% .packages())) { library(MASS) }
+
+# Stel parameters in
+set.seed(123)
+n_punten      <- 500
+correlatie    <- 0.8
+sigma         <- 1
+x_bereik_vol  <- c(-2.7, 2.7)
+x_bereik_zoom <- c(-0.5, 0.5)
+
+# Covariantiematrix op basis van gewenste correlatie
+cov_matrix <- matrix(
+  c(sigma^2, correlatie * sigma^2,
+    correlatie * sigma^2, sigma^2),
+  nrow = 2
+)
+
+# Simuleer data uit een bivariate normale verdeling
+data <- MASS::mvrnorm(
+  n     = n_punten,
+  mu    = c(0, 0),
+  Sigma = cov_matrix
+)
+
+df <- data.frame(
+  x = data[, 1],
+  y = data[, 2]
+)
+
+# Bepaal of punt binnen zoomgebied valt
+df$kleur <- ifelse(
+  df$x >= x_bereik_zoom[1] &
+  df$x <= x_bereik_zoom[2],
+  "in_zoom",
+  "buiten_zoom"
+)
+
+# Filter voor zoom-in
+df_zoom <- subset(
+  df,
+  kleur == "in_zoom"
+)
+
+# Grijs gearceerd gebied in bovenste plot
+rect_data <- data.frame(
+  xmin = x_bereik_zoom[1],
+  xmax = x_bereik_zoom[2],
+  ymin = min(df$y),
+  ymax = max(df$y)
+)
+
+# Plot A (volledig bereik)
+plot_a <- ggplot(df, aes(x = x, y = y)) +
+  geom_rect(
+    data = rect_data,
+    aes(
+      xmin = xmin, xmax = xmax,
+      ymin = ymin, ymax = ymax
+    ),
+    fill = "grey90",
+    inherit.aes = FALSE
+  ) +
+  geom_point(
+    data = subset(df, kleur == "buiten_zoom"),
+    alpha = 0.6,
+    color = "grey50"
+  ) +
+  geom_point(
+    data = subset(df, kleur == "in_zoom"),
+    alpha = 0.8,
+    color = "darkorange"
+  ) +
+  geom_vline(
+    xintercept = x_bereik_zoom,
+    linetype   = "dashed",
+    color      = "grey30"
+  ) +
+  annotate(
+    "text",
+    x     = min(x_bereik_vol) + 0.2,
+    y     = max(df$y),
+    label = paste0("r = ", round(cor(df$x, df$y), 2)),
+    hjust = 0,
+    vjust = 1,
+    size  = 4
+  ) +
+  xlim(x_bereik_vol) +
+  xlab(expression(italic(X))) +
+  ylab(expression(italic(Y))) +
+  theme_minimal()
+
+# Plot B (ingezoomd)
+plot_b <- ggplot(df_zoom, aes(x = x, y = y)) +
+  geom_point(
+    alpha = 0.8,
+    color = "darkorange"
+  ) +
+  annotate(
+    "text",
+    x     = min(x_bereik_zoom) + 0.05,
+    y     = max(df_zoom$y),
+    label = paste0("r = ", round(cor(df_zoom$x, df_zoom$y), 2)),
+    hjust = 0,
+    vjust = 1,
+    size  = 4
+  ) +
+  xlim(x_bereik_zoom) +
+  xlab(expression(italic(X))) +
+  ylab(expression(italic(Y))) +
+  theme_minimal()
+
+plot_a
+```
+
+```{r}
+#| fig.height: 4
+#| fig.width: 4
+#| out.width: "57%"
+#| label: fig-bereik-b
+#| fig-cap: "Als de dataset wordt beperkt tot een kleiner domein---het oranje gedeelte van panel(a)---wordt de correlatiecoëfficiënt een stuk kleiner ($r = 0{,}36$). Dat is niet gek: de puntenwolk volgt nu ook veel minder duidelijk een rechte lijn."
+
+plot_b
+```
+
+Het bereik van de dataset kan een grote invloed hebben op de correlatiecoëfficiënt.
+
+:::
+
+
+
+### De covariantie
+
+Tot nu toe hebben we de eigenschappen van de correlatiecoëfficiënt besproken
+zonder te laten zien hoe je die uitrekent.
+Dat is het volgende op het programma.
+
+Het is handig om eerst de **covariantie** te definiëren tussen de gegevens $x_i$ en $y_i$
+in een steekproef of serie waarnemingen:
+
+$$ \covD{X}{Y} = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n-1}.$$ {#eq-cov}
+
+In de teller staat dat we voor iedere eenheid $i$ uit onze waarnemingen
+eerst de afwijkingen $x_i - \mean{x}$ en $y_i - \mean{y}$ moeten uitrekenen 
+en met elkaar vermenigvuldigen, en vervolgens
+de resultaten voor alle eenheden moeten optellen.
+Vervolgens delen we door het aantal waarnemingen $n$ min 1.
+
+De covariantie meet of de $x$- en $y$-waarden met elkaar samenhangen.
+@Fig-annotated-scatter illustreert dat.
+De figuur laat een spreidingsdiagram zien met een duidelijke positieve correlatie.
+Het diagram is in vier kwadranten verdeeld
+door met een verticale lijn het gemiddelde van $x$ aan te geven
+en met een horizontale lijn het gemiddelde van $y$.
+
+- In het kwadrant rechtsboven liggen dus alle datapunten waarbij $x_i > \mean{x}$,
+en $y_i > \mean{y}$.
+Het product $(x_i - \mean{x})(y_i - \mean{y})$ is voor datapunten in dat kwadrant
+dus *positief*.
+In @eq-cov voor de covariantie dragen punten in dat kwadrant dus positief bij.
+Punten die ver in de rechts-bovenhoek van het diagram liggen,
+dragen het meest bij, want daarvoor zijn $x_i > \mean{x}$
+en $y_i > \mean{y}$ het grootst.
+
+- In het kwadrant linksonder liggen alle datapunten waarbij $x_i < \mean{x}$,
+en $y_i < \mean{y}$.
+Het product $(x_i - \mean{x})(y_i - \mean{y})$ is voor die punten dus ook *positief*,
+omdat het product van twee negatieve getallen een positief getal is.
+In @eq-cov dragen punten in dit kwadrant dus óók positief bij.
+Punten die ver in de links-onderhoek van het diagram liggen doen dat het sterkst.
+
+- In het kwadrant linksboven liggen alle datapunten waarbij $x_i < \mean{x}$,
+en $y_i > \mean{y}$.
+Het product $(x_i - \mean{x})(y_i - \mean{y})$ is nu altijd *negatief*.
+In @eq-cov leveren deze punten dus een negatieve bijdrage.
+Hetzelfde geldt voor het kwadrant rechtsonder, waar $x_i > \mean{x}$,
+en $y_i < \mean{y}$.
+
+Het gevolg is dat de covariantie positief is
+als de meeste datapunten rechtsboven of linksonder in de plot 
+te vinden zijn.
+Dat zou inderdaad betekenen dat er een positieve relatie is.
+Als de meeste datapunten juist linksboven of rechtsonder liggen,
+wordt de covariantie negatief, 
+wat duidt op een negatieve relatie is.
+
+Om de covariantie te berekenen moeten we steeds (in de teller)
+een waarde van $X$ vermenigvuldigen met een waarde van $Y$.
+Daardoor heeft de covariantie als dimensie de dimensie van $X$ keer de dimensie van $Y$.
+Bijvoorbeeld,
+in de gegevens van Galton 
+hebben $X$ en $Y$ allebei de dimensie van *lengte*, met eenheid cm.
+De covariantie van die gegevens heeft dus dimensie lengte$^2$ en eenheid cm$^2$.
+
+```{r}
+#| out-width: "57%"
+#| fig-width: 4.5
+#| fig-height: 4.5
 #| code-fold: true
 #| warning: false
 #| fig.cap: "Scatterplot met vier kwadranten en annotaties."
@@ -312,34 +736,36 @@ df <- data.frame(X = data[, 1], Y = data[, 2])
 # Bereken gemiddelden
 mean_x <- mean(df$X)
 mean_y <- mean(df$Y)
+df$X <- df$X - mean_x
+df$Y <- df$Y - mean_y
 
 # Maak de scatterplot
 p <- ggplot(df, aes(x = X, y = Y)) +
-  geom_point(color = "#e8601d", alpha = 0.8, size = 2) +
-  geom_vline(xintercept = mean_x, linetype = "dashed") +
-  geom_hline(yintercept = mean_y, linetype = "dashed") +
-  annotate("text", x = mean_x + 0.5, y = mean_y + 3.4, 
-           label = expression(atop(italic(X) ~ "groter dan gemiddeld,", 
-                                   italic(Y) ~ "groter dan gemiddeld")), 
+  geom_point(color = "darkorange", alpha = 0.8, size = 2) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  annotate("text", x = 2.3, y = 3.5, 
+           label = expression(atop(italic(x) > bar(italic(x)), 
+                                   italic(y) > bar(italic(y)))), 
            size = 4, hjust = 0) +
-  annotate("text", x = mean_x - 2.8, y = mean_y + 3.4, 
-           label = expression(atop(italic(X) ~ "kleiner dan gemiddeld,", 
-                                   italic(Y) ~ "groter dan gemiddeld")), 
+  annotate("text", x = -2.7, y = 3.5, 
+           label = expression(atop(italic(x) < bar(italic(x)), 
+                                   italic(y) > bar(italic(y)))), 
            size = 4, hjust = 0) +
-  annotate("text", x = mean_x + 0.5, y = mean_y - 3.4, 
-           label = expression(atop(italic(X) ~ "groter dan gemiddeld,", 
-                                   italic(Y) ~ "kleiner dan gemiddeld")), 
+  annotate("text", x = 2.3, y = -3.5, 
+           label = expression(atop(italic(x) > bar(italic(x)), 
+                                   italic(y) < bar(italic(y)))), 
            size = 4, hjust = 0) +
-  annotate("text", x = mean_x - 2.8, y = mean_y - 3.4, 
-           label = expression(atop(italic(X) ~ "kleiner dan gemiddeld,", 
-                                   italic(Y) ~ "kleiner dan gemiddeld")), 
+  annotate("text", x = -2.7, y = -3.5, 
+           label = expression(atop(italic(x) < bar(italic(x)), 
+                                   italic(y) < bar(italic(y)))), 
            size = 4, hjust = 0) +
   theme_minimal() + 
   theme(
     axis.text = element_blank(),
     axis.ticks = element_blank()
   ) +
-  labs(x = expression(bar(italic(X))), y = expression(bar(italic(Y)))) +
+  labs(x = expression(bar(italic(x))), y = expression(bar(italic(y)))) +
   coord_cartesian(xlim = c(-3, 3), ylim = c(-4, 4))
 
 # Print de plot
@@ -347,13 +773,77 @@ print(p)
 ```
 
 
+::: {#exr-covariantie .pepexr}
+
+## De relatie tussen variantie en covariantie
+<br>
+
+Kijk nog eens naar @eq-cov voor de covariantie.
+
+a.  Stel dat we de covariantie van $X$ met zichzelf berekenen, $\covD{X}{X}$.
+    Wat is daarvoor de formule?
+    (Vul overal waar in @eq-cov $y$ staat, $x$ in, en versimpel de
+    vergelijking een beetje.)
+    
+b.  Vergelijk de vergelijking die je in **a** hebt afgeleid met @eq-variantie. Wat valt je op?
+
+c.  De variantie $V_{X}$ is altijd positief, en dus $\covD{X}{X}$ ook.
+    Had je dat kunnen verwachten?
+
+:::
+
+### De formule voor Pearsons correlatiecoëfficiënt
+
+Nu we weten wat de covariantie is,
+kunnen we de formule voor Pearsons correlatiecoëfficient schrijven als:
+
+$$
+r = \frac{\covD{X}{Y}}
+         {s_X s_Y}.
+$$ {#eq-pearson}
+
+De correlatiecoëfficiënt is dus de covariantie gedeeld door de standaarddeviaties
+van $X$ en $Y$. 
+Door te delen door beide standaarddeviaties wordt $r$ dimensieloos.
+Dat zorg er ook voor dat $r$ tussen -1 en 1 in ligt.
+
+Omdat $s_X$ en $s_Y$ alleen maar positief kunnen zijn,
+heeft $r$ altijd hetzelfde teken als $\covD{X}{Y}$.
+Als de covariantie positief is, is $r$ dat dus ook.
+
+::: {#exr-covariantie-2 .pepexr}
+
+## De relatie tussen variantie en covariantie
+<br>
+
+In @exr-covariantie heb je laten zien dat $\covD{X}{X}$ gelijk is aan $V_X$.
+
+Wat is volgens @eq-pearson dan de correlatiecoëfficiënt van $X$ met zichzelf?
+Is dat wat je zou verwachten?
+
+:::
+
 ### Correlatie-coefficient berekenen met R
 
+Met R kun je de covariantie tussen twee vectoren heel eenvoudig berekenen.
+Laten we dat doen voor de gegevens van Galton.
+Het dataframe heet `GaltonFamilies`:
+
 ```{r}
-x <- c(1, 2, 3)
-y <- c(3, 2, 1)
-cor(x, y)
+cov( GaltonFamilies$lengte_ouders, GaltonFamilies$lengte_kinderen )
 ```
+
+De covariantie is positief, zoals verwacht.
+Maar omdat de covariantie afhangt van de eenheden en schaal
+van de variabelen, is die lastig te interpreteren.
+
+Daarom berekenen we de correlatiecoëfficiënt. 
+Dat gaat ook erg gemakkelijk:
+```{r}
+cor( GaltonFamilies$lengte_ouders, GaltonFamilies$lengte_kinderen )
+```
+De correlatiecoëfficient tussen de lengte van ouders en hun kinderen
+is in de dataset van Galton dus 0,50.
 
 ### Toetsen van de correlatie-coefficient.
 
@@ -379,6 +869,8 @@ x <- c(1, 2, 3)
 y <- c(3, 2, 1)
 cor.test(x, y)
 ```
+
+
 
 ## Simpsons paradox
 
@@ -482,6 +974,9 @@ Regressieopgave terugverwijzen naar Brams opgave over covid.
 :::
 
 ::: {#exr-Monod .Rexp}
+
+## Het kalibreren van de nephelometer.
+
 De beroemde bioloog en Nobelprijswinnaar Jacques Monod beschreef in zijn proefschrift uit 1942^[] 
 in veel detail de groei van bacterie-culturen.
 Om tijdens de groei van een cultuur
@@ -513,7 +1008,7 @@ Hij vond de volgende waarden:
      Combineer ze tot een dataframe.
   b. Plot `drooggewicht` tegen `OD`. Ziet het ernaar uit dat `OD` gebruikt kan worden
      om `drooggewicht` te voorspellen?
-  c. Bereken de correlatiecoëfficient tussen beide variabelen. Wat zegt die waarde?
+  c. Bereken de correlatiecoëfficiënt tussen beide variabelen. Wat zegt die waarde?
   d. Bepaal een lineaire formule om `OD` te voorspellen uit `drooggewicht`.
      Gebruik daarvoor eerst de functie `lm()` en daarna de functie `summary()`.
   e. In een nieuw experiment meet Monod een OD van 41,0. Wat is jouw beste schatting
@@ -534,6 +1029,119 @@ summary(resultLM)
 
 ```
 
+:::
+
+### Anscombes kwartet
+
+Example: Anscombe's quartet
+
+Published in @anscombeGraphsStatisticalAnalysis1973.
+
+Four datasets with $(x, y)$ data, nearly identical summary statistics:
+all four datasets have the same mean and variance of $x$, mean and
+variance of $y$, even the same correlation coefficient. (Correlation
+will be discussed in chapter ...)
+
+```{r}
+#| echo: false
+
+if (!("datasets" %in% .packages())) { library(datasets) }
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+
+# Functie om één plot uit Anscombe's quartet te maken
+maak_anscombe_plot <- function(
+  xvariabele, 
+  yvariabele, 
+  titel
+  ) {
+  
+  grafiek <- ggplot(
+    anscombe,
+    aes(x = .data[[xvariabele]], 
+         y = .data[[yvariabele]])
+    ) +
+    geom_point(
+      color = "black",
+      grootte = 2
+      ) +
+    labs(
+      x = expression(italic(X)),
+      y = expression(italic(Y)),
+      title = titel,
+      parse = TRUE
+      ) +
+    coord_cartesian(
+      ylim = c(3, 13),
+      xlim = c(3, 20)
+      ) +
+    geom_smooth(
+      method = "lm",
+      se = FALSE,
+      color = "darkorange",
+      linewidth = 1
+      ) + theme_minimal()
+  
+  return(grafiek)
+}
+```
+
+:::{#fig-anscombe layout="[[1,1,1,1]]"}
+```{r}
+#| label: fig-anscombe-a
+#| fig-height: 2.5
+#| fig-width: 2.5
+#| out-width: "100%"
+#| warning: false
+
+grafiek_a <- maak_anscombe_plot("x1", "y1", NULL)
+grafiek_a
+```
+
+```{r}
+#| label: fig-anscombe-b
+#| fig-height: 2.5
+#| fig-width: 2.5
+#| out-width: "100%"
+#| warning: false
+
+grafiek_b <- maak_anscombe_plot("x2", "y2", NULL)
+grafiek_b
+```
+
+```{r}
+#| label: fig-anscombe-c
+#| fig-height: 2.5
+#| fig-width: 2.5
+#| out-width: "100%"
+#| warning: false
+
+
+grafiek_c <- maak_anscombe_plot("x3", "y3", NULL)
+grafiek_c
+```
+
+```{r}
+#| label: fig-anscombe-d
+#| fig-height: 2.5
+#| fig-width: 2.5
+#| out-width: "100%"
+#| warning: false
+
+
+grafiek_d <- maak_anscombe_plot("x4", "y4", NULL)
+grafiek_d
+```
+
+:::
+
+
+::: callout-warning
+## Examine your data first
+
+The lesson that you shoud draw from Anscombe's quartet is that you
+should always carefully examine your data before you perform any
+additional analysis. Try to visualize your data in various ways and
+never rely on summary statistics only.
 :::
 
 
