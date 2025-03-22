@@ -137,7 +137,7 @@ Kunnen we de relatie tussen de lengte van de ouders
 en hun kinderen kwantificeren?
 Is er een manier om te testen 
 of deze samenhang ook het toevallige gevolg kan zijn
-van steekproevenvariatie?
+van steekproevenvariabiliteit?
 Op deze en andere vragen zullen we hieronder ingaan.
 
 :::
@@ -782,10 +782,10 @@ Kijk nog eens naar @eq-cov voor de covariantie.
 
 a.  Stel dat we de covariantie van $X$ met zichzelf berekenen, $\covD{X}{X}$.
     Wat is daarvoor de formule?
-    (Vul overal waar in @eq-cov $y$ staat, $x$ in, en versimpel de
+    (Vervang in @eq-cov elke $y$ door een $x$, en versimpel de
     vergelijking een beetje.)
     
-b.  Vergelijk de vergelijking die je in **a** hebt afgeleid met @eq-variantie. Wat valt je op?
+b.  Vergelijk het restulaat van onderdeel **a** met @eq-variantie. Wat valt je op?
 
 c.  De variantie $V_{X}$ is altijd positief, en dus $\covD{X}{X}$ ook.
     Had je dat kunnen verwachten?
@@ -813,7 +813,7 @@ Als de covariantie positief is, is $r$ dat dus ook.
 
 ::: {#exr-covariantie-2 .pepexr}
 
-## De relatie tussen variantie en covariantie
+## De correlatie van $X$ met $X$
 <br>
 
 In @exr-covariantie heb je laten zien dat $\covD{X}{X}$ gelijk is aan $V_X$.
@@ -842,47 +842,629 @@ Dat gaat ook erg gemakkelijk:
 ```{r}
 cor( GaltonFamilies$lengte_ouders, GaltonFamilies$lengte_kinderen )
 ```
-De correlatiecoëfficient tussen de lengte van ouders en hun kinderen
+De correlatiecoëfficiënt tussen de lengte van ouders en hun kinderen
 is in de dataset van Galton dus 0,50.
 
-### Toetsen van de correlatie-coefficient.
+## Toetsen of de correlatiecoëfficiënt afwijkt van 0
 
-In de populatie: $\rho$.
+Als we in een steekproef of serie waarnemingen 
+een correlatie zien tussen twee variabelen,
+dan kan dat betekenen dat deze variabelen
+gecorreleerd zijn in de populatie.
+Maar het is ook mogelijk 
+dat de correlatie in de waarnemingen
+het gevolg is van toevallige steekproefvariabiliteit.
+Is er een manier om dat te toetsen?
+In andere woorden: kunnen we laten zien dat deze gegevens
+sterk bewijs leveren tegen de hypothese
+dat de correlatiecoëfficiënt van de *populatie*,
+$\rho$, gelijk is aan 0?
 
-Model: bivariaat normaal.
+Omdat we al meerdere hypothesetoetsen besproken hebben,
+kunnen we deze toets redelijk snel behandelen.
+We lopen de 6 stappen door:
 
-toets:
+**Stap 1: Kies een statistisch model.**\
+In eerdere hoofdstukken ging het statistisch model 
+steeds over de kans op een waarneming $X$.
+Nu moeten we een stapje verder gaan,
+omdat iedere waarneming nu twee waardes inhoudt: 
+een waarde van $X$ en een waarde van $Y$.
+We hebben dus een statistisch model nodig die 
+de verdeling van van datapunten $(X, Y)$ in de populatie modelleert.
 
-**Stap 1:**
+Bij deze toets nemen we aan dat die verdeling **bivariaat normaal** is.
+@Fig-bivariaat laat zien hoe een bivarate normale verdeling eruit ziet.
+Het is een 3D plot: de hoogte van de grafiek geeft de kansdichtheid, 
+die afhangt van zowel de waarde van $X$ als van de waarde van $Y$.
+Je kunt met je muis de grafiek bewegen om 'm van alle kanten te bekijken.
 
-**Stap 2:**
-
-**Stap 3:**
-
-**Stap 4:**
-
-**Stap 5:**
-
+::: {#fig-bivariaat}
 
 ```{r}
-x <- c(1, 2, 3)
-y <- c(3, 2, 1)
-cor.test(x, y)
+#| echo: false
+#| warning: false
+#| out-width: "71%"
+#| fig-width: 5
+#| fig-height: 5
+# Laad benodigde bibliotheken
+if (!("mnormt" %in% .packages()))   { library(mnormt) }
+if (!("plotly" %in% .packages()))  { library(plotly) }
+
+# Definieer parameters
+rho      <- 0.5
+sigma_x  <- 1
+sigma_y  <- 1
+mu_x     <- 0
+mu_y     <- 0
+
+# Covariantiematrix
+sigma_matrix <- matrix(
+  c(sigma_x^2,        rho * sigma_x * sigma_y,
+    rho * sigma_x * sigma_y, sigma_y^2),
+  nrow = 2
+)
+
+# Raster voor x en y
+x_vals <- seq(-3, 3, length.out = 100)
+y_vals <- seq(-3, 3, length.out = 100)
+
+raster <- expand.grid(
+  x = x_vals,
+  y = y_vals
+)
+
+# Bereken dichtheid
+raster$z <- dmnorm(
+  x      = cbind(raster$x, raster$y),
+  mean   = c(mu_x, mu_y),
+  varcov = sigma_matrix
+)
+
+# Zet om in matrix voor 3D-plot
+z_mat <- matrix(raster$z, nrow = length(x_vals))
+
+# Maak wireframe-plot met effen kleur (donkeroranje)
+plot_ly(
+  x = x_vals,
+  y = y_vals,
+  z = z_mat,
+  type = "surface",
+  showscale = FALSE,
+  surfacecolor = matrix(1, nrow = 100, ncol = 100),
+  colorscale = list(c(0, "darkorange"), c(1, "darkorange")),
+  contours = list(
+    x = list(show = TRUE, color = "black", highlight = FALSE, start = -3, end = 3, size = 0.5),
+    y = list(show = TRUE, color = "black", highlight = FALSE, start = -3, end = 3, size = 0.5),
+    z = list(show = TRUE, color = "black", highlight = FALSE, start = 0, end = 0, size = 0.04)
+  )
+) |>
+  layout(
+    title = NULL,
+    scene = list(
+      xaxis = list(title = "X"),
+      yaxis = list(title = "Y"),
+      zaxis = list(
+        title = "Kansdichtheid",
+        range = c(0, 0.25)
+      )    
+    )
+  )
 ```
 
+Visualisatie van de bivariate normale verdeling met $\rho = 0.5$.
+Je kunt met je muis de grafiek ronddraaien en in- en uitzoomen. 
+
+:::
 
 
-## Simpsons paradox
+De bivariate normale verdeling heeft een aantal belangrijke eigenschappen.
+
+- **Vijf parameters:** De bivariate normale verdeling heeft vijf parameters: het gemiddelden van $X$
+  en $Y$, de standaarddeviaties van $X$ en $Y$, en de correlatiecoëfficiënt 
+  van de populatie $\rho$. In het voorbeeld van @fig-bivariaat is $\mu_X = \mu_Y = 0$, 
+  $\sigma_X = \sigma_Y = 1$, en $\rho = 0{,}5$.
+  
+- **Beide variabelen zijn normale verdeel:** Zowel $X$ als $Y$ zijn normaal verdeeld.
+
+- **De contour-lijnen zijn ovaal:** De hoogtelijnen van de bivariate normale verdeling,
+  ook wel contour-lijnen genoems, zijn ovaal. @Fig-contours laat een aantal voorbeelden zien
+  voor verschillende waarden van $\rho$.
+  
+  Het gevolg is dat steekproeven uit de bivariate normale verdeling ook *ongeveer* een 
+  ovale of ronde puntenwolk vormen. 
+  De steekproeven die we in @fig-correl-coefs als voorbeeld gebruikten,
+  zijn allemaal uit een bivariate normale verdeling getrokken.
+
+```{r}
+#| echo: false
+#| warning: false
+
+# Laad benodigde bibliotheken
+if (!("mnormt" %in% .packages()))   { library(mnormt) }
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+
+# Definitie van de functie
+plot_bivariate_normal_contours <- function(rho) {
+
+  # Definieer vaste parameters
+  sigma_x <- 1
+  sigma_y <- 1
+  mu_x    <- 0
+  mu_y    <- 0
+
+  # Covariantiematrix
+  sigma_matrix <- matrix(
+    c(sigma_x^2, rho * sigma_x * sigma_y,
+      rho * sigma_x * sigma_y, sigma_y^2),
+    nrow = 2
+  )
+
+  # Raster voor x en y
+  x_vals <- seq(-3, 3, length.out = 100)
+  y_vals <- seq(-3, 3, length.out = 100)
+
+  raster <- expand.grid(
+    x = x_vals,
+    y = y_vals
+  )
+
+  # Bereken dichtheid
+  raster$z <- dmnorm(
+    x      = cbind(raster$x, raster$y),
+    mean   = c(mu_x, mu_y),
+    varcov = sigma_matrix
+  )
+
+  # Bepaal labelpositie (linksboven)
+  label_x <- min(x_vals) + 0.2
+  label_y <- max(y_vals) - 0.2
+  
+  label_rho <- paste0("rho == ", rho)  
+    # Maak contourplot
+  ggplot(raster, aes(x = x, y = y, z = z)) +
+    geom_contour(
+      color = "darkorange",
+      size  = 0.7
+    ) +
+    annotate(
+      geom  = "text",
+      x     = label_x,
+      y     = label_y,
+      label = label_rho,
+      hjust = 0,
+      vjust = 1,
+      parse = TRUE,
+      size  = 4.5
+    ) +
+    coord_fixed() +
+    labs(
+      x     = expression(italic(X)),
+      y     = expression(italic(Y)),
+      title = NULL
+    ) +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_blank(),
+      axis.text.y = element_blank()
+    )  +
+    xlim(-3, 3) + ylim(-3, 3)
+}
+
+correlaties <- c(1, 0.75, 0.5, 0.25, 0, -0.33, -0.67, -1)
+
+```
+
+::: {#fig-contours layout="[[1,1,1],[1,1,1]]"}
+
+```{r}
+#| echo: false
+#| warning: false
+#| out-width: "100%"
+#| fig-width: 2.33
+#| fig-height: 2.33
+plot_bivariate_normal_contours(correlaties[2])
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| out-width: "100%"
+#| fig-width: 2.33
+#| fig-height: 2.33
+plot_bivariate_normal_contours(correlaties[3])
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| out-width: "100%"
+#| fig-width: 2.33
+#| fig-height: 2.33
+plot_bivariate_normal_contours(correlaties[4])
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| out-width: "100%"
+#| fig-width: 2.33
+#| fig-height: 2.33
+plot_bivariate_normal_contours(correlaties[5])
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| out-width: "100%"
+#| fig-width: 2.33
+#| fig-height: 2.33
+plot_bivariate_normal_contours(correlaties[6])
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| out-width: "100%"
+#| fig-width: 2.33
+#| fig-height: 2.33
+plot_bivariate_normal_contours(correlaties[7])
+```
+
+Courtour-plots voor verschillende bivariaat-normale verdelingen.
+
+:::
+
+Naast de aanname dat de verdeling van $(X, Y)$ in de populatie
+bivariaat normaal is, nemen we ook aan
+dat ieder datapunt onafhankelijk uit deze verdeling getrokken is.
 
 
-## Regressie
+::: {#exr-galton-onafhankelijk .pepexr}
+## Correlatietoets van de gegevens van Galton
+<br>
 
-Een rechte lijn door de wolk trekken.
+We zouden de correlatietoets graag willen toepassen op de gegevens van Galton,
+om te zien of we uit zijn gegevens kunnen concluderen
+dat lichaamslengte inderdaad deel erfelijk is.
 
-$$ Y = a X + b. $$
+a.  Kijk nog eens naar het spreidingsdiagram van de gegevens, @fig-galton.
+    Geven deze gegevens de indruk afkomstig te zijn uit een 
+    bivariate normaalverdeling, of zie je afwijkingen.
+    
+b.  Als de verdeling bivariaat normaal is,
+    dan zouden de lengtes van de ouders 
+    en de lengtes van de kinderen
+    allebei normaal verdeeld moeten zijn.
+    We kunnen kijken of we afwijkingen zien 
+    door histogrammen en QQ-plots te maken van beide variabelen:
+    
+    ::: {layout="[[1,1],[1,1]]"}
+    
+    ```{r}
+    #| code-fold: true
+    #| fig-width: 3.5
+    #| fig-height: 3.5
+    
+    hist(GaltonFamilies$lengte_ouders, main = "ouders")
+    ```
+    
+    ```{r}
+    #| code-fold: true
+    #| fig-width: 3.5
+    #| fig-height: 3.5
+    
+    hist(GaltonFamilies$lengte_kinderen, main = "kinderen")
+    ```
+    
+    ```{r}
+    #| code-fold: true
+    #| fig-width: 3.5
+    #| fig-height: 3.5
+    
+    qqnorm(GaltonFamilies$lengte_ouders, main = "ouders")
+    qqline(GaltonFamilies$lengte_ouders)
+    ```
+    
+    ```{r}
+    #| code-fold: true
+    #| fig-width: 3.5
+    #| fig-height: 3.5
+    
+    qqnorm(GaltonFamilies$lengte_kinderen, main = "kinderen")
+    qqline(GaltonFamilies$lengte_kinderen)
+    ```
+    
+    :::
+    
+    Wat is jouw oordeel?
+    
+c.  Het statistische model neemt ook aan 
+    dat alle paren datapunten $(x_i, y_i)$
+    onafhankelijk uit de bivariaat normale kansverdeling zijn getrokken.
+    
+    Om te bepalen of dat een redelijke aanname is,
+    moeten we meer weten over de manier waarop Galton
+    deze dataset samenstelde.
+    
+    Lees de beschrijving van de dataset via [deze link](https://search.r-project.org/CRAN/refmans/HistData/html/GaltonFamilies.html).
+    
+    Lijkt het je redelijk om aan te nemen dat de datapunten onafhankelijk zijn?
 
-Kies $a$ en $b$ om de gekwadrateerde afwijkingen te minimaliseren.
-Denk weer aan elastiekjes die de lijn naar de datapunten toe trekken. 
+:::
+
+**Stap 2: Stel de hypotheses $\HO$ en $\HA$ op.**\
+De nulhypothese is dat $X$ en $Y$ niet gecorreleerd zijn in de populatie.
+Dat wil zeggen:
+
+$\HO:\qquad \rho = 0,$
+
+$\HA:\qquad \rho \neq 0.$
+
+**Stap 3: Kies de toetsingsgrootheid en bepaal zijn kansverdeling onder $\HO$.**\
+
+Als **toetsingsgrootheid** gebruiken we de correlatiecoefficient uit de steekproef $r$,
+gedeeld door de bijbehorende standaardfout:
+
+$$ t = \frac{r}{\se{r}}.$$ {#eq-t-cor}
+
+Die standaardfout kan met deze formule worden berekend:
+
+$$ \se{r} = \sqrt{\frac{1 - r^2}{n - 2}}.$$ {#eq-t-se}
+Je voelt het misschien al aankomen: de **kansverdeling onder $\HO$** van deze $t$ 
+is weer een $t$-verdeling.
+Maar deze keer met $n - 2$ vrijheidsgraden.
+
+**Stap 4: Bereken de toetsingsgrootheid op basis van de daadwerkelijke waarnemingen.**
+Hiervoor vul je dus de formules @eq-t-se en @eq-t-cor in op basis van de steekproef.
+
+**Stap 5: Bereken de $P$-waarde.**\
+Net als bij de $t$-toetsen in @sec-toetsen-gemiddelden
+kun je de $P$-waarde berekenen met de functie `pt()`.
+Let wel op dat je het juiste aantal vrijheidsgraden gebruikt:
+
+```{r}
+#| eval: false
+P <- 2 * pt(-abs(t), df = n - 2)
+```
+
+**Stap 6: Trek je conclusies**\
+Trek op basis van $P$ je conclusies.
+
+### De toets uitvoeren met R
+
+Het is weer veel eenvoudiger om de volledige toets
+met R uit te voeren, met de functie `cor.test()`.
+We laten het aan de hand van een voorbeeld zien:
+
+:::{#exm-cor-test .mixedexr}
+
+## De correlatie tussen flipper-lengte en gewicht bij Adelie-pinguïns
+<br>
+
+In @sec-toetsen-gemiddelden heb je al kennisgemaakt met de dataset "pelmerpenquins",
+met gegevens over pinguïns in de Palmerarchipel.
+In die dataset is ook voor alle pinguïns de flipperlengte (`flipper_length_mm`) en het lichaamsgewicht (`body_mass_g`) opgenomen.
+Je zou verwachten dat dat zwaardere pinguïns ook typisch langer flippers hebben.
+We gaan dat testen voor de soort Adelie.
+
+```{r}
+#| echo: false
+# Laad vereiste pakketten
+if (!("palmerpenguins" %in% .packages())) { library(palmerpenguins) }
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("dplyr" %in% .packages())) { library(dplyr) }
+
+# Filter enkel de Adelie-pinguïns met volledige data
+adelie <- penguins %>%
+  filter(species == "Adelie",
+         !is.na(flipper_length_mm),
+         !is.na(body_mass_g))
+```
+
+We hebben de gegevens over de Adelie-pinguïns
+in een dataframe `adelie` opgeslagen.
+Van hoeveel pinguïns hebben we gegevens?
+
+```{r}
+nrow(adelie)
+```
+
+We bekijken de gegevens eens:
+
+```{r}
+#| fig-width: 3.5
+#| fig-height: 4
+#| out-width: "50%"
+#| code-fold: true
+# Scatterplot: flipperlengte vs lichaamsgewicht
+plot(
+  adelie$body_mass_g, 
+  adelie$flipper_length_mm,
+  xlab = "Lichaamsgewicht (g)",
+  ylab = "Flipperlengte (mm)"
+)
+```
+
+Er lijkt inderdaad een positief verband te zijn tussen lichaamsgewicht
+en flipperlengte.
+De puntenwolk ziet er redelijk ovaal uit, 
+consistent met een bivariate normale verdeling, 
+en er zijn geen bijzondere uitbijters te zien.
+
+Om verder te controleren of het bivariate model redelijk is,
+bekijken we de verdelingen van beide variabelen:
+
+:::{layout="[[1,1],[1,1]]"}
+
+```{r}
+#| code-fold: true
+#| fig-width: 3
+#| fig-height: 3
+#| out-width: "80%"
+
+# Histogrammen met base R
+hist(adelie$body_mass_g,
+     main = NULL,
+     xlab = "Lichaamsgewicht (g)",
+     col = "darkorange", border = "black")
+```
+
+```{r}
+#| code-fold: true
+#| fig-width: 3
+#| fig-height: 3
+#| out-width: "80%"
+
+hist(adelie$flipper_length_mm,
+     main = NULL,
+     xlab = "Flipperlengte (mm)",
+     col = "darkorange", border = "black")
+```
+
+```{r}
+#| code-fold: true
+#| fig-width: 3
+#| fig-height: 3
+#| out-width: "80%"
+
+# QQ-plots
+qqnorm(adelie$body_mass_g, main = "QQ-plot lichaamsgewicht")
+qqline(adelie$body_mass_g)
+```
+
+```{r}
+#| code-fold: true
+#| fig-width: 3
+#| fig-height: 3
+#| out-width: "80%"
+
+qqnorm(adelie$flipper_length_mm, main = "QQ-plot flipperlengte")
+qqline(adelie$flipper_length_mm)
+```
+
+:::
+
+Lichaamsgewicht lijkt iets asymmetrisch,
+maar de afwijking is erg subtiel.
+
+Aangenomen dat de steekproef redelijk aselect heeft plaatsgevonden,
+kunnen we de toets uitvoeren:
+
+```{r}
+cor.test(adelie$body_mass_g, adelie$flipper_length_mm)
+```
+
+De uitvoer geeft direct de $P$-waarde: $P = 1{,}3\times 10^{-9}$.
+Die $P$-waarde is heel erg klein en laat weinig ruimte voor twijfel
+over de samenhang tussen gewicht en flipperlengte.
+
+De uitvoer geeft ook een 95%-BHI
+voor de correlatiecoëfficient van de populatie: 
+$[0{,}33, 0{,}58]$.
+We zijn dus 95% zeker dat de ware correlatiecoëfficient 
+in dat interval ligt. 
+
+:::
+
+::: {#exr-galton-2}
+
+```{r}
+
+# Laad de benodigde pakketten
+if (!("HistData" %in% .packages())) { library(HistData) }
+if (!("dplyr" %in% .packages())) { library(dplyr) }
+
+# Laad de GaltonFamilies dataset
+data("GaltonFamilies")
+
+# Filter: één waarneming per ouderpaar (dus per familie)
+ouders_uniek <- GaltonFamilies %>%
+  group_by(family) %>%
+  slice(1) %>%  # neem de eerste waarneming per familie
+  ungroup() %>%
+  select(family, father, mother)
+
+# Controleer op dubbele families (moet niet gebeuren)
+stopifnot(!any(duplicated(ouders_uniek$family)))
+
+# Bekijk de eerste paar rijen
+head(ouders_uniek)
+plot(ouders_uniek$father, ouders_uniek$mother)
+
+cor.test(ouders_uniek$father, ouders_uniek$mother)
+```
+
+:::
+
+
+
+## De regressielijn
+
+Wanneer $X$ en $Y$ lineair met elkaar samenhangen, 
+geeft de waarde van $X$ informatie over de waarde van $Y$.
+We kunnen $Y$ dan tot zekere hoogte voorspellen als we $X$ weten.
+
+Om dat te kunnen doen, zoeken we een rechte lijn
+die de puntenwolk het beste beschrijft.
+Zo'n lijn wordt de **regressielijn** genoemd.
+Hieronder hebben we de gegevens uit @exm-cor-test opnieuw weergegeven,
+maar nu is de regressielijn toegevoegd:
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-width: 4
+#| fig-height: 4
+#| out-width: "57%"
+ggplot(adelie, aes(x = body_mass_g, y = flipper_length_mm)) +
+  geom_point() +
+  geom_smooth( method = "lm", se = FALSE, color = "orange", linewidth = 1) +
+  theme_minimal() +
+  xlab("Lichaamsgewicht (g)") + ylab("Flipperlengte (mm)")
+```
+
+We kunnen deze lijn gebruiken om voorspellingen te doen.
+Bijvoorbeeld, als je te weten komt dat een pinguïn 
+een gewicht heeft van 4500 g, 
+dan zegt de lijn dat zijn flipperlengte rond de 195mm zal liggen.
+Bij een pinguïn van 3000g ligt dat meer rond 185mm.
+Omdat het verband tussen gewicht en flipperlengte niet volmaakt is,
+is die voorspelling natuurlijk een schatting;
+de daadwerkelijke flipperlengte kan wat groter of kleiner zijn.
+
+### Het berekenen van de regressielijn
+
+Zoals je weet, heeft een rechte lijn de volgende vorm:
+
+$$ Y = a + b X . $$
+Hier is $a$ het startgetal, en $b$ de richtingscoëfficiënt.
+Let op: in veel Nederlandse schoolboeken worden de symbolen precies andersom gebruikt:
+het startgetal heet dan $b$ en de richtingscoëfficiënt $a$.
+Als je dat gewend bent, zul je even scherp moeten zijn.
+
+Om de regressielijn te bepalen moeten we dus waarden voor $a$ en $b$ kiezen.
+We willen $a$ en $b$ zo kiezen dat de lijn door het midden van de puntenwolk loopt.
+@Fig-lineair-reg illustreert hoe we dat doen.
+
+Als het goed is, doet @fig-lineair-reg je denken aan @fig-res-1 uit hoofdstuk 2.
+Daar lieten we zien dat het gemiddelde van een reeks getallen
+de waarde is zodanig dat de som van de gekwadrateerde **residuen**
+zo klein mogelijk was.
+In @fig-res-1 waren de residuen (afwijkingen van het gemiddelde)
+met grijze lijntjes aangegeven.
+We konden ons voorstellen dat de grijze lijntjes elastiekjes waren
+die de oranje lijn naar de datapunten probeerden te trekken.
+
+Het vinden van de regressielijn werkt precies zo.
+We zoeken de lijn die de som van de gekwadrateerde residuen
+zo klein mogelijk maakt.
+Ook de metafoor van de elastiekjes werkt hier weer.
+In @fig-lineaire-reg is vanaf ieder datapunt een "elastiekje"
+getekend dat aan de oranje lijn is bevestigd. 
+Ieder elastiekje probeert de lijn verticaal naar zijn datapunt toe te trekken.
+Daardoor schuift en draait de lijn, net zo lang totdat 
+de trekkrachten in evenwicht zijn.
 
 ```{r}
 #| code-fold: true
@@ -930,43 +1512,52 @@ ggplot(data, aes(x = x, y = y)) +
     size = 1
   ) +
   # y-as labels instellen
-  scale_y_continuous(
-    breaks = y, 
-    limits = c(min(y, y_pred), max(y, y_pred)),
-    labels = function(i) parse(text = paste0("y[", seq_along(i), "]"))
-  ) +
+#  scale_y_continuous(
+#    breaks = y, 
+#    limits = c(min(y, y_pred), max(y, y_pred)),
+#    labels = function(i) parse(text = paste0("y[", seq_along(i), "]"))
+#  ) +
   # x-as labels instellen
-  scale_x_continuous(
-    breaks = x,
-    labels = function(i) parse(text = paste0("x[", seq_along(i), "]"))
-  ) +
+#  scale_x_continuous(
+#    breaks = x,
+#    labels = function(i) parse(text = paste0("x[", seq_along(i), "]"))
+#  ) +
   # Geen x-as, geen gridlijnen
   theme_classic() +
   theme(
     axis.title = element_blank(),
     panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank()
-  )
+    panel.grid.minor.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank()
+  ) + xlab(expression(italic(X))) + ylab(expression(italic(Y)))
 ```
 
-### Regressiecoefficienten schatten
+### Formule voor de regressiecoëfficient
+
+- regressiecoefficient $b$
 
 
-## Interpolatie en regressielijn gebruiken om voorspellingen te doen 
+### De regressielijn berekenen in R
+
+- `lm()`
+
+### Toetsen van de regressiecoefficient
+
+Model, t, standaardfout, t-verdeling met $n - 2$ vrijheidsgraden.
+
+## Interpolatie en extrapolatie
+
+## Het fitten van curves in het algemeen
 
 
-## Extrapolatie en zijn gevaren
 
+## Samenvatting
 
-## Dataset lineaire relaties
+## Terminologie
 
-To install the dataset used here:
-```{r}
-#| echo: false
-#| eval: false
-install.packages("palmerpenguins")
-```
-[Dataset source](https://github.com/allisonhorst/palmerpenguins)
+## Opgaven
+
 
 ::: {#exr-covid}
 Regressieopgave terugverwijzen naar Brams opgave over covid.
@@ -1145,7 +1736,6 @@ never rely on summary statistics only.
 :::
 
 
-## Het fitten van curves in het algemeen
 
 ::: {#exr-nonlinear}
 ## **Opdracht: Michaelis-Menten parameters schatten met niet-lineaire regressie**
@@ -1257,11 +1847,11 @@ ggplot(data, aes(x = substrate_concentration, y = reaction_rate)) +
 
 :::
 
-## Samenvatting
 
-## Terminologie
+::: {#exr-simpson}
 
-## Opgaven
+
+:::
 
 ::: todo-box
 Madelon en/of Yannick:
