@@ -16,6 +16,12 @@ lijnkleur3 <- "blue"
 
 # Relaties tussen continue variabelen {#sec-linrel}
 
+::: {.todo-box}
+
+Aan dit hoofdstuk wordt nog hard gewerk!
+
+:::
+
 In het vorige hoofdstuk hebben we het uitgebreid gehad
 over relaties tussen variabelen.
 In dit hoofdstuk kijken we specifiek naar relaties tussen twee continue variabelen.
@@ -31,11 +37,7 @@ Laten we weer beginnen met een voorbeeld.
 ## De ontdekking van Sir Francis Galton.
 <br>
 
-:::{.todo-box}
-
-Portret Galton?
-
-:::
+![Portret van Francis Galton, geschilderd door Octavius Oakley (1840)  Publiek domein.](figuren/Sir_Francis_Galton_by_Octavius_Oakley.jpg){width="50%"}
 
 In @sec-associaties zijn we Francis Galton al tegengekomen.
 Rond 1888 deed Galton onderzoek naar de erfelijkheid van lichaamslengte.
@@ -46,7 +48,7 @@ Galton verzamelde als eerste systematisch gegevens
 om te zien in welke mate de lengte van de ouders  
 en die van hun kinderen samenhangen.
 
-In de figuur hieronder zijn de gegevens van Galton te zien.
+In het figuur hieronder zijn de gegevens van Galton te zien.
 Op de $x$-as staat de mid-ouder-lengte uitgezet.
 Dat is het gemiddelde van de lengte van beide ouders,
 waarbij de lengte van de moeder met 1,08 vermenigvuldigd is
@@ -126,16 +128,15 @@ ggplot(
 
 ```
 
-De figuur laat zien dat,
+Het figuur laat zien dat,
 binnen deze dataset, 
 lange ouders gemiddeld langere kinderen krijgen.
 Maar je kunt ook zien dat kinderen van even lange ouders
 flink in lengte kunnen verschillen.
 
-De gegevens van Galton roepen allerlei vragen op.
-Kunnen we de relatie tussen de lengte van de ouders 
-en hun kinderen kwantificeren?
-Is er een manier om te testen 
+De gegevens van Galton riepen allerlei vragen op.
+Kunnen we de relatie tussen twee variabelen kwantificeren?
+Is er een manier om te toetsen 
 of deze samenhang ook het toevallige gevolg kan zijn
 van steekproevenvariabiliteit?
 Op deze en andere vragen zullen we hieronder ingaan.
@@ -282,11 +283,11 @@ print(p)
 ### De correlatiecoëfficient is niet de richtingscoëfficient
 
 De correlatiecoëfficiënt geeft aan of het verband positief of negatief is,
-en de mate waarin de punten de lijn volgen.
+en hoe dicht de punten bij de lijn liggen.
 Maar het doet er niet toe hoe *stijl* de lijn is.
 De correlatiecoëfficiënt is dus geen richtingscoëfficiënt.
 
-Bijvoorbeeld, de steekproeven in @-fig-correl-sd hieronder
+Bijvoorbeeld, de steekproeven in @fig-correl-sd hieronder
 verschillen sterk in hun richtingscoëfficiënt, 
 maar hebben allemaal $r = 1$ of $-1$.
 
@@ -305,7 +306,7 @@ if (!("MASS" %in% .packages())) { library(MASS) }
 if (!("dplyr" %in% .packages())) { library(dplyr) }
 
 # Definieer parameters
-n <- 100
+n <- 50
 correlaties <- c(1, 1, -1, -1)
 std_y <- c(1, 0.4, 0.1, 0.7)
 
@@ -351,7 +352,7 @@ print(p)
 Pearsons correlatiecoëfficiënt is bedoeld om *lineaire* relaties te beschrijven.
 De grafieken  in @fig-nonlinear hieronder laten variabelen $X$ en $Y$ zien die wel een relatie hebben---de waarden van $Y$ hangen wel af van de waarde van $X$---maar
 de relatie is steeds niet *lineair*.
-Het is dan niet nuttig (en misleidend) om $r$ uit te rekenen.
+Het is dan niet nuttig om $r$ uit te rekenen.
 
 ```{r}
 #| out-width: "100%"
@@ -421,16 +422,16 @@ print(p)
 ### De correlatiecoëfficient is gevoelig voor uitbijters
 
 De correlatiecoëfficiënt is erg gevoelig voor uitbijters.
-Voor de gegevens in @fig-outlier hieronder
-zou *zonder* de uitbijter rechtsboven
+Zie @fig-outlier hieronder.
+*Zonder* de uitbijter rechtsboven zou
 de correlatiecoëfficiënt 0 zijn; 
 door dat ene datapunt is de waarde 0,4.
-Bekijk dus altijd je gegevens nauwkeurig
+Bekijk je gegevens dus altijd nauwkeurig
 voordat je $r$ uitrekent. 
 Als het verband er niet lineair uitziet óf er opvallende uitbijters zijn,
 is de waarde van $r$ niet betekenisvol.
 Omdat dit punt heel belangrijk is,
-komen we er in @sec-anscombe nog een keer uitgebreider op terug.
+komen we er in @exr-anscombe nog een keer uitgebreider op terug.
 
 ::: {#fig-outlier}
 
@@ -567,6 +568,14 @@ rect_data <- data.frame(
   ymax = max(df$y)
 )
 
+# Grijs gearceerd gebied in bovenste plot
+rect_data_zoom <- data.frame(
+  xmin = x_bereik_zoom[1],
+  xmax = x_bereik_zoom[2],
+  ymin = floor(df_zoom$y),
+  ymax = ceiling(df_zoom$y)
+)
+
 # Plot A (volledig bereik)
 plot_a <- ggplot(df, aes(x = x, y = y)) +
   geom_rect(
@@ -609,6 +618,20 @@ plot_a <- ggplot(df, aes(x = x, y = y)) +
 
 # Plot B (ingezoomd)
 plot_b <- ggplot(df_zoom, aes(x = x, y = y)) +
+  geom_rect(
+    data = rect_data_zoom,
+    aes(
+      xmin = xmin, xmax = xmax,
+      ymin = ymin, ymax = ymax
+    ),
+    fill = "grey90",
+    inherit.aes = FALSE
+  ) +
+  geom_vline(
+    xintercept = x_bereik_zoom,
+    linetype   = "dashed",
+    color      = "grey30"
+  ) +
   geom_point(
     alpha = 0.8,
     color = "darkorange"
@@ -661,53 +684,10 @@ In de teller staat dat we voor iedere eenheid $i$ uit onze waarnemingen
 eerst de afwijkingen $x_i - \mean{x}$ en $y_i - \mean{y}$ moeten uitrekenen 
 en met elkaar vermenigvuldigen, en vervolgens
 de resultaten voor alle eenheden moeten optellen.
-Vervolgens delen we door het aantal waarnemingen $n$ min 1.
+Tot slot delen we door $n - 1$.
 
 De covariantie meet of de $x$- en $y$-waarden met elkaar samenhangen.
 @Fig-annotated-scatter illustreert dat.
-De figuur laat een spreidingsdiagram zien met een duidelijke positieve correlatie.
-Het diagram is in vier kwadranten verdeeld
-door met een verticale lijn het gemiddelde van $x$ aan te geven
-en met een horizontale lijn het gemiddelde van $y$.
-
-- In het kwadrant rechtsboven liggen dus alle datapunten waarbij $x_i > \mean{x}$,
-en $y_i > \mean{y}$.
-Het product $(x_i - \mean{x})(y_i - \mean{y})$ is voor datapunten in dat kwadrant
-dus *positief*.
-In @eq-cov voor de covariantie dragen punten in dat kwadrant dus positief bij.
-Punten die ver in de rechts-bovenhoek van het diagram liggen,
-dragen het meest bij, want daarvoor zijn $x_i > \mean{x}$
-en $y_i > \mean{y}$ het grootst.
-
-- In het kwadrant linksonder liggen alle datapunten waarbij $x_i < \mean{x}$,
-en $y_i < \mean{y}$.
-Het product $(x_i - \mean{x})(y_i - \mean{y})$ is voor die punten dus ook *positief*,
-omdat het product van twee negatieve getallen een positief getal is.
-In @eq-cov dragen punten in dit kwadrant dus óók positief bij.
-Punten die ver in de links-onderhoek van het diagram liggen doen dat het sterkst.
-
-- In het kwadrant linksboven liggen alle datapunten waarbij $x_i < \mean{x}$,
-en $y_i > \mean{y}$.
-Het product $(x_i - \mean{x})(y_i - \mean{y})$ is nu altijd *negatief*.
-In @eq-cov leveren deze punten dus een negatieve bijdrage.
-Hetzelfde geldt voor het kwadrant rechtsonder, waar $x_i > \mean{x}$,
-en $y_i < \mean{y}$.
-
-Het gevolg is dat de covariantie positief is
-als de meeste datapunten rechtsboven of linksonder in de plot 
-te vinden zijn.
-Dat zou inderdaad betekenen dat er een positieve relatie is.
-Als de meeste datapunten juist linksboven of rechtsonder liggen,
-wordt de covariantie negatief, 
-wat duidt op een negatieve relatie is.
-
-Om de covariantie te berekenen moeten we steeds (in de teller)
-een waarde van $X$ vermenigvuldigen met een waarde van $Y$.
-Daardoor heeft de covariantie als dimensie de dimensie van $X$ keer de dimensie van $Y$.
-Bijvoorbeeld,
-in de gegevens van Galton 
-hebben $X$ en $Y$ allebei de dimensie van *lengte*, met eenheid cm.
-De covariantie van die gegevens heeft dus dimensie lengte$^2$ en eenheid cm$^2$.
 
 ```{r}
 #| out-width: "57%"
@@ -724,7 +704,7 @@ if (!("MASS" %in% .packages())) { library(MASS) }
 
 # Definieer parameters
 n <- 100  # Steekproefgrootte
-rho <- 0.7  # Correlatiecoëfficiënt
+rho <- 0.85  # Correlatiecoëfficiënt
 
 set.seed(158)
 
@@ -772,6 +752,52 @@ p <- ggplot(df, aes(x = X, y = Y)) +
 print(p)
 ```
 
+Het figuur laat een spreidingsdiagram zien met een duidelijke positieve correlatie.
+Het diagram is in vier kwadranten verdeeld
+door met een verticale onderbroken lijn het gemiddelde van $x$ aan te geven
+en met een horizontale onderbroken lijn het gemiddelde van $y$.
+
+- In het **kwadrant rechtsboven** liggen dus alle datapunten waarbij $x_i > \mean{x}$,
+en $y_i > \mean{y}$.
+Het product $(x_i - \mean{x})(y_i - \mean{y})$ is voor datapunten in dat kwadrant
+dus *positief*.
+In @eq-cov voor de covariantie dragen punten in dat kwadrant dus positief bij.
+Punten die ver in de rechts-bovenhoek van het diagram liggen,
+dragen het meest bij, want daarvoor zijn $x_i > \mean{x}$
+en $y_i > \mean{y}$ het grootst.
+
+- In het **kwadrant linksonder** liggen alle datapunten waarbij $x_i < \mean{x}$,
+en $y_i < \mean{y}$.
+Het product $(x_i - \mean{x})(y_i - \mean{y})$ is voor die punten dus ook *positief*,
+omdat het product van twee negatieve getallen een positief getal is.
+In @eq-cov dragen punten in dit kwadrant dus óók positief bij.
+Punten die ver in de links-onderhoek van het diagram liggen doen dat het sterkst.
+
+- In het **kwadrant linksboven** liggen alle datapunten waarbij $x_i < \mean{x}$,
+en $y_i > \mean{y}$.
+Het product $(x_i - \mean{x})(y_i - \mean{y})$ is nu altijd *negatief*.
+In @eq-cov leveren deze punten dus een negatieve bijdrage.
+Hetzelfde geldt voor het **kwadrant rechtsonder**, waar $x_i > \mean{x}$,
+en $y_i < \mean{y}$.
+
+Het gevolg is dat de covariantie positief is
+als de meeste datapunten rechtsboven of linksonder in de plot 
+te vinden zijn.
+Dat zou inderdaad betekenen dat er een positieve relatie is.
+Als de meeste datapunten juist linksboven of rechtsonder liggen,
+wordt de covariantie negatief, 
+wat duidt op een negatieve relatie is.
+
+Om de covariantie te berekenen moeten we steeds (in de teller)
+een waarde van $X$ vermenigvuldigen met een waarde van $Y$.
+Daardoor heeft de covariantie als dimensie de dimensie van $X$ keer de dimensie van $Y$.
+Bijvoorbeeld,
+in de gegevens van Galton 
+hebben $X$ en $Y$ allebei de dimensie van *lengte*, met eenheid cm.
+De covariantie van die gegevens heeft dus dimensie lengte$^2$ en eenheid cm$^2$.
+
+
+
 
 ::: {#exr-covariantie .pepexr}
 
@@ -804,8 +830,7 @@ $$ {#eq-pearson}
 
 De correlatiecoëfficiënt is dus de covariantie gedeeld door de standaarddeviaties
 van $X$ en $Y$. 
-Door te delen door beide standaarddeviaties wordt $r$ dimensieloos.
-Dat zorg er ook voor dat $r$ tussen -1 en 1 in ligt.
+Het delen door beide standaarddeviaties zorgt ervoor dat $r$ tussen -1 en 1 ligt.
 
 Omdat $s_X$ en $s_Y$ alleen maar positief kunnen zijn,
 heeft $r$ altijd hetzelfde teken als $\covD{X}{Y}$.
@@ -835,7 +860,7 @@ cov( GaltonFamilies$lengte_ouders, GaltonFamilies$lengte_kinderen )
 
 De covariantie is positief, zoals verwacht.
 Maar omdat de covariantie afhangt van de eenheden en schaal
-van de variabelen, is die lastig te interpreteren.
+van de variabelen, is het getal zelf lastig te interpreteren.
 
 Daarom berekenen we de correlatiecoëfficiënt. 
 Dat gaat ook erg gemakkelijk:
@@ -936,7 +961,7 @@ plot_ly(
   contours = list(
     x = list(show = TRUE, color = "black", highlight = FALSE, start = -3, end = 3, size = 0.5),
     y = list(show = TRUE, color = "black", highlight = FALSE, start = -3, end = 3, size = 0.5),
-    z = list(show = TRUE, color = "black", highlight = FALSE, start = 0, end = 0, size = 0.04)
+    z = list(show = FALSE, color = "black", highlight = FALSE, start = 0, end = 0, size = 0.04)
   )
 ) |>
   layout(
@@ -947,7 +972,10 @@ plot_ly(
       zaxis = list(
         title = "Kansdichtheid",
         range = c(0, 0.25)
-      )    
+      ),
+      camera = list(
+        eye = list(x = -0.5, y = -1.25, z = 1.9)  # Aangepaste kijkhoek
+        )  
     )
   )
 ```
@@ -960,8 +988,8 @@ Je kunt met je muis de grafiek ronddraaien en in- en uitzoomen.
 
 De bivariate normale verdeling heeft een aantal belangrijke eigenschappen.
 
-- **Vijf parameters:** De bivariate normale verdeling heeft vijf parameters: het gemiddelden van $X$
-  en $Y$, de standaarddeviaties van $X$ en $Y$, en de correlatiecoëfficiënt 
+- **Vijf parameters:** De bivariate normale verdeling heeft vijf parameters: 
+  de gemiddelden van $X$ en $Y$, de standaarddeviaties van $X$ en $Y$, en de correlatiecoëfficiënt 
   van de populatie $\rho$. In het voorbeeld van @fig-bivariaat is $\mu_X = \mu_Y = 0$, 
   $\sigma_X = \sigma_Y = 1$, en $\rho = 0{,}5$.
   
@@ -974,7 +1002,7 @@ De bivariate normale verdeling heeft een aantal belangrijke eigenschappen.
   Het gevolg is dat steekproeven uit de bivariate normale verdeling ook *ongeveer* een 
   ovale of ronde puntenwolk vormen. 
   De steekproeven die we in @fig-correl-coefs als voorbeeld gebruikten,
-  zijn allemaal uit een bivariate normale verdeling getrokken.
+  zijn ieder uit een bivariate normale verdeling getrokken.
 
 ```{r}
 #| echo: false
@@ -1120,6 +1148,46 @@ bivariaat normaal is, nemen we ook aan
 dat ieder datapunt onafhankelijk uit deze verdeling getrokken is.
 
 
+
+
+**Stap 2: Stel de hypotheses $\HO$ en $\HA$ op.**\
+De nulhypothese is dat $X$ en $Y$ niet gecorreleerd zijn in de populatie.
+Dat wil zeggen:
+
+$\HO:\qquad \rho = 0,$
+
+$\HA:\qquad \rho \neq 0.$
+
+**Stap 3: Kies de toetsingsgrootheid en bepaal zijn kansverdeling onder $\HO$.**\
+
+Als **toetsingsgrootheid** gebruiken we de correlatiecoefficient uit de steekproef $r$,
+gedeeld door de bijbehorende standaardfout:
+
+$$ t = \frac{r}{\se{r}}.$$ {#eq-t-cor}
+
+Die standaardfout kan met deze formule worden berekend:
+
+$$ \se{r} = \sqrt{\frac{1 - r^2}{n - 2}}.$$ {#eq-t-se}
+Je voelt het misschien al aankomen: de **kansverdeling onder $\HO$** van deze $t$ 
+is weer een $t$-verdeling.
+Maar deze keer met $n - 2$ vrijheidsgraden.
+
+**Stap 4: Bereken de toetsingsgrootheid op basis van de daadwerkelijke waarnemingen.**
+Hiervoor vul je dus de formules @eq-t-se en @eq-t-cor in op basis van de steekproef.
+
+**Stap 5: Bereken de $P$-waarde.**\
+Net als bij de $t$-toetsen in @sec-toetsen-gemiddelden
+kun je de $P$-waarde berekenen met de functie `pt()`.
+Let wel op dat je het juiste aantal vrijheidsgraden gebruikt:
+
+```{r}
+#| eval: false
+P <- 2 * pt(-abs(t), df = n - 2)
+```
+
+**Stap 6: Trek je conclusies**\
+Trek op basis van $P$ je conclusies.
+
 ::: {#exr-galton-onafhankelijk .pepexr}
 ## Correlatietoets van de gegevens van Galton
 <br>
@@ -1193,44 +1261,6 @@ c.  Het statistische model neemt ook aan
 
 :::
 
-**Stap 2: Stel de hypotheses $\HO$ en $\HA$ op.**\
-De nulhypothese is dat $X$ en $Y$ niet gecorreleerd zijn in de populatie.
-Dat wil zeggen:
-
-$\HO:\qquad \rho = 0,$
-
-$\HA:\qquad \rho \neq 0.$
-
-**Stap 3: Kies de toetsingsgrootheid en bepaal zijn kansverdeling onder $\HO$.**\
-
-Als **toetsingsgrootheid** gebruiken we de correlatiecoefficient uit de steekproef $r$,
-gedeeld door de bijbehorende standaardfout:
-
-$$ t = \frac{r}{\se{r}}.$$ {#eq-t-cor}
-
-Die standaardfout kan met deze formule worden berekend:
-
-$$ \se{r} = \sqrt{\frac{1 - r^2}{n - 2}}.$$ {#eq-t-se}
-Je voelt het misschien al aankomen: de **kansverdeling onder $\HO$** van deze $t$ 
-is weer een $t$-verdeling.
-Maar deze keer met $n - 2$ vrijheidsgraden.
-
-**Stap 4: Bereken de toetsingsgrootheid op basis van de daadwerkelijke waarnemingen.**
-Hiervoor vul je dus de formules @eq-t-se en @eq-t-cor in op basis van de steekproef.
-
-**Stap 5: Bereken de $P$-waarde.**\
-Net als bij de $t$-toetsen in @sec-toetsen-gemiddelden
-kun je de $P$-waarde berekenen met de functie `pt()`.
-Let wel op dat je het juiste aantal vrijheidsgraden gebruikt:
-
-```{r}
-#| eval: false
-P <- 2 * pt(-abs(t), df = n - 2)
-```
-
-**Stap 6: Trek je conclusies**\
-Trek op basis van $P$ je conclusies.
-
 ### De toets uitvoeren met R
 
 Het is weer veel eenvoudiger om de volledige toets
@@ -1260,18 +1290,18 @@ adelie <- penguins %>%
   filter(species == "Adelie",
          !is.na(flipper_length_mm),
          !is.na(body_mass_g))
+
+adelie <- as.data.frame(adelie[, c("flipper_length_mm", "body_mass_g")])
 ```
 
 We hebben de gegevens over de Adelie-pinguïns
 in een dataframe `adelie` opgeslagen.
-Van hoeveel pinguïns hebben we gegevens?
-
 ```{r}
-nrow(adelie)
+str(adelie)
 ```
+We hebben dus gegevens voor 151 pinguïns.
 
 We bekijken de gegevens eens:
-
 ```{r}
 #| fig-width: 3.5
 #| fig-height: 4
@@ -1367,33 +1397,78 @@ in dat interval ligt.
 
 :::
 
-::: {#exr-galton-2}
+::: {#exr-galton-2 .Rexr}
+
+## *Assorted mating* bij mensen?
+<br>
+
+Met de gegevens van Galton kan nog een andere vraag worden onderzocht:
+is er een correlatie tussen de lichaamslengtes van mannen en vrouwen 
+binnen een echtpaar?
+Dat zou een voorbeeld zijn van *assorted mating* bij mensen!
+
+De gegevens van Galton zijn te vinden in de library `HistData`.
+Als je die nog niet geïnstalleerd hebt, 
+doe dat dan nu even:
+```{r}
+#| eval: false
+install.packages("HistData", dependencies = TRUE)
+```
 
 ```{r}
-
+#| echo: false
 # Laad de benodigde pakketten
 if (!("HistData" %in% .packages())) { library(HistData) }
-if (!("dplyr" %in% .packages())) { library(dplyr) }
 
-# Laad de GaltonFamilies dataset
 data("GaltonFamilies")
-
-# Filter: één waarneming per ouderpaar (dus per familie)
-ouders_uniek <- GaltonFamilies %>%
-  group_by(family) %>%
-  slice(1) %>%  # neem de eerste waarneming per familie
-  ungroup() %>%
-  select(family, father, mother)
-
-# Controleer op dubbele families (moet niet gebeuren)
-stopifnot(!any(duplicated(ouders_uniek$family)))
-
-# Bekijk de eerste paar rijen
-head(ouders_uniek)
-plot(ouders_uniek$father, ouders_uniek$mother)
-
-cor.test(ouders_uniek$father, ouders_uniek$mother)
 ```
+
+a.  Begin een nieuw script. Kopieer de volgende code om de dataset in te lezen en de gegevens te bekijken:
+
+    ```{r}
+    #| eval: false
+    library("HistData")
+    data("GaltonFamilies")
+    View(GaltonFamilies)
+    ```
+    
+b.  Merk op dat iedere regel de gegevens bevat van een kind en de bijbehorende ouders.
+    Omdat dezelfde ouders vaak meerdere kinderen hebben,
+    staan dezelfde ouders meerdere keren in de dataset.
+    Wij willen voor deze analyse ieder ouderpaar maar één keer analyseren,
+    en dus moeten we de gegevens filteren.
+    
+    Kopieer de volgende code naar je script en voer die uit:
+    
+    ```{r}
+    #| eval: false
+
+    # Vind de eerste rij per unieke familie
+    eerste_index <- match(
+      unique(GaltonFamilies$family),
+      GaltonFamilies$family
+    )
+
+    # Selecteer alleen die rijen, en houd alleen de relevante kolommen
+    ouders_uniek <- GaltonFamilies[
+      eerste_index, 
+      c("family", "father", "mother")
+      ]
+    ```
+    
+    Bekijk `ouders_uniek`, bijvoorbeeld met `str(ouders_uniek)`.
+
+c.  Voeg een regel code toe om de lichaamslengte van de moeder uit te zetten 
+    tegen die van de vader. Vermoed jij een verband?
+    
+d.  We moeten controleren of het statistische model voor de correlatietoets
+    redelijk is voor deze gegevens. 
+    Maak daarom histogrammen en QQ-plots voor beide variablen.
+    Wat concludeer je?
+
+e.  Voer de toets uit met de functie `cor.test()`, bekijk de uitvoer,
+    en trek je conclusies. 
+    Zie je bewijs voor *assorted mating*?
 
 :::
 
@@ -1417,6 +1492,8 @@ maar nu is de regressielijn toegevoegd:
 #| fig-width: 4
 #| fig-height: 4
 #| out-width: "57%"
+#| label: fig-regressie-adelie
+#| fig-cap: "De regressielijn waarmee de flipper-lengte van Adelie-pinguïns voorspeld kan worden op basis van hun gewicht."
 ggplot(adelie, aes(x = body_mass_g, y = flipper_length_mm)) +
   geom_point() +
   geom_smooth( method = "lm", se = FALSE, color = "orange", linewidth = 1) +
@@ -1432,8 +1509,9 @@ Bij een pinguïn van 3000g ligt dat meer rond 185mm.
 Omdat het verband tussen gewicht en flipperlengte niet volmaakt is,
 is die voorspelling natuurlijk een schatting;
 de daadwerkelijke flipperlengte kan wat groter of kleiner zijn.
+Hoe sterker het verband is, hoe beter de voorspelling.
 
-### Het berekenen van de regressielijn
+### De definitie van de regressielijn
 
 Zoals je weet, heeft een rechte lijn de volgende vorm:
 
@@ -1443,9 +1521,74 @@ Let op: in veel Nederlandse schoolboeken worden de symbolen precies andersom geb
 het startgetal heet dan $b$ en de richtingscoëfficiënt $a$.
 Als je dat gewend bent, zul je even scherp moeten zijn.
 
-Om de regressielijn te bepalen moeten we dus waarden voor $a$ en $b$ kiezen.
-We willen $a$ en $b$ zo kiezen dat de lijn door het midden van de puntenwolk loopt.
-@Fig-lineair-reg illustreert hoe we dat doen.
+Om de regressielijn te bepalen moeten we dus waarden voor $a$ en $b$ vastleggen.
+We willen $a$ en $b$ zo kiezen dat de lijn zo goed mogelijk de puntenwolk beschrijft.
+Om precies te zijn: we willen dat de lijn voor iedere waarde $X$
+een schatting geeft voor de *gemiddelde* waarde van $Y$.
+@Fig-lineair-reg hieronder illustreert hoe we dat doen.
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "De regressielijn minimaliseert de som van gekwadrateerde residuen. Het is alsof de grijze lijntjes elastiekjes zijn die de lijn naar de datapunten toetrekken."
+#| label: fig-lineair-reg
+#| fig.width: 3
+#| fig.height: 3
+#| out.width: "43%"
+
+set.seed(885)
+
+# Definieer parameters
+helling      <- 2
+intercept    <- 1
+opvulkleur   <- "darkorange"
+
+# Genereer gegevens
+x_waarden    <- runif(10, 0, 4)
+y_waarden    <- helling * x_waarden +
+                intercept +
+                rnorm(10)
+
+gegevens     <- data.frame(
+  x = x_waarden,
+  y = y_waarden
+)
+
+# Pas lineaire regressie toe
+model        <- lm(y ~ x, gegevens)
+voorspeld_y  <- predict(model)
+
+# Teken de plot
+ggplot(gegevens, aes(x = x, y = y)) +
+  geom_segment(
+    aes(
+      x = x, xend = x,
+      y = y, yend = voorspeld_y
+    ),
+    color    = "SlateGray",
+    size     = 1
+  ) +
+  geom_point(
+    shape    = 21,
+    fill     = "SlateGray",
+    size     = 3
+  ) +
+  geom_abline(
+    intercept = coef(model)[1],
+    slope     = coef(model)[2],
+    color     = opvulkleur,
+    size      = 1
+  ) +
+  theme_classic() +
+  theme(
+    axis.text.x  = element_blank(),
+    axis.text.y  = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()
+  ) +
+  xlab(expression(italic(X))) +
+  ylab(expression(italic(Y)))
+```
 
 Als het goed is, doet @fig-lineair-reg je denken aan @fig-res-1 uit hoofdstuk 2.
 Daar lieten we zien dat het gemiddelde van een reeks getallen
@@ -1454,107 +1597,452 @@ zo klein mogelijk was.
 In @fig-res-1 waren de residuen (afwijkingen van het gemiddelde)
 met grijze lijntjes aangegeven.
 We konden ons voorstellen dat de grijze lijntjes elastiekjes waren
-die de oranje lijn naar de datapunten probeerden te trekken.
+die de oranje lijn verticaal naar de datapunten probeerden te trekken.
+Het gemiddelde was de plek waar de trekkrachten in evenwicht zijn.
 
 Het vinden van de regressielijn werkt precies zo.
-We zoeken de lijn die de som van de gekwadrateerde residuen
+We zoeken weer de lijn die de som van de gekwadrateerde residuen
 zo klein mogelijk maakt.
 Ook de metafoor van de elastiekjes werkt hier weer.
-In @fig-lineaire-reg is vanaf ieder datapunt een "elastiekje"
+In @fig-lineair-reg is vanaf ieder datapunt een "elastiekje"
 getekend dat aan de oranje lijn is bevestigd. 
 Ieder elastiekje probeert de lijn verticaal naar zijn datapunt toe te trekken.
 Daardoor schuift en draait de lijn, net zo lang totdat 
 de trekkrachten in evenwicht zijn.
+Het resultaat is de regressielijn.
 
-```{r}
-#| code-fold: true
-#| warning: false
-#| fig.cap: "Lineaire regressie."
-#| label: fig-lineair-reg
-#| fig.width: 3.5
-#| fig.height: 3.5
-#| out.width: "50%"
+::: {.callout-important}
 
-set.seed(885)
+## Definitie van de regressielijn
 
-a <- 2
-b <- 1
-x <- runif(10, 0, 4)
-y <- a*x + b + rnorm(10)
-data <- data.frame(x = x, y = y)
+De regressielijn die hoort bij een serie van $n$ gepaarde gegevens $(x_i, y_i)$
+is de rechte lijn die de kwadratensom zo klein mogelijk maakt.
+De kwadratensom is de som van de gekwadrateerde residuen.
 
-# Doe een lineaire regressie met de gegenereerde data
-lin_reg <- lm(y ~ x, data)
-# Reken uit wat de geschatte y-waarden zijn volgens de lineaire regressie
-y_pred <- predict(lin_reg)
+:::
 
-ggplot(data, aes(x = x, y = y)) +
-  # Verticale lijnen naar het gemiddelde
-  geom_segment(
-    aes(
-      x = x, xend = x, 
-      y = y, yend = y_pred
-    ),
-    color = "SlateGray",
-    linetype = "solid",
-    size = 1
-  ) +
-  # Punten
-  geom_point(
-    shape = 21, 
-    fill = "SlateGray", 
-    size = 3
-  ) +
-  geom_abline(
-    intercept = lin_reg$coefficients[1],
-    slope = lin_reg$coefficients[2],
-    color = opvulkleur,
-    size = 1
-  ) +
-  # y-as labels instellen
-#  scale_y_continuous(
-#    breaks = y, 
-#    limits = c(min(y, y_pred), max(y, y_pred)),
-#    labels = function(i) parse(text = paste0("y[", seq_along(i), "]"))
-#  ) +
-  # x-as labels instellen
-#  scale_x_continuous(
-#    breaks = x,
-#    labels = function(i) parse(text = paste0("x[", seq_along(i), "]"))
-#  ) +
-  # Geen x-as, geen gridlijnen
-  theme_classic() +
-  theme(
-    axis.title = element_blank(),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(),
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank()
-  ) + xlab(expression(italic(X))) + ylab(expression(italic(Y)))
-```
 
-### Formule voor de regressiecoëfficiënt
+### Eigenschappen van de regressielijn
 
-- regressiecoefficient $b$
+:::{.todo-box}
+
+Werk in uitvoering!
+
+:::
+
+- De regressielijn gaat altijd door het zwaartepunt $(\mean{x}, \mean{y})$ van de puntenwolk.
+
+- Formule voor $b$:
+
+  $$ b = \frac{\covD{X}{Y}}{V_X}.$$
+
+  Daaruit volgt: 
+  
+  $$ b = \left(\frac{s_Y}{x_X}\right)r.$$
+
+  De tekens van $b$ en $r$ zijn dus altijd gelijk. 
+  Maar $b$ kan iedere waarde aannemen, terwijl $r$ alleen tussen -1 en 1 kan liggen.
+  Bovendien is $r$ dimensieloos, $b$ niet.
 
 
 ### De regressielijn berekenen in R
 
-- `lm()`
+:::{.todo-box}
 
-### Toetsen van de regressiecoefficient
+Werk in uitvoering!
 
-Model, t, standaardfout, t-verdeling met $n - 2$ vrijheidsgraden.
+:::
+
+Stel dat de gegevens zijn opgeslagen in een dataframe `gegevens`
+met variabelen (kolommen) `x` en `y`.
+Om $a$ en $b$ te berekenen, gebruiken we eerst de functie `lm()`.
+Dat staat voor *linear model*.
+Dit is een heel veelzijdige functie die allerlei verschillende statistische analyses kan uitvoeren.
+De functie berekent allerlei resultaten;
+we slaan die eerst op in een variabele, die we hier `resultaatLM` noemen:
+
+```{r}
+#| eval: false
+resultaatLM <- lm(y ~ x, data = gegevens)
+```
+
+Vervolgens kun je met de functie `summary()`
+de waarden van $a$ en $b$ uit de resultaten opvragen:
+
+```{r}
+#| eval: false
+summary(resultaatLM)$coefficients
+```
+
+
+::: {#exm-regressie-adelie}
+
+## De regressielijn voor flipperlengte versus gewicht van de Adelie-pinguïn.
+<br>
+
+Regressielijn uit @fig-regressie-adelie die gebruikt kan worden om
+de flipper-lengte van Adelie-pinguins 
+te voorspellen uit hun gewicht:
+```{r}
+resultaatLM <- lm(flipper_length_mm ~ body_mass_g, data = adelie)
+summary(resultaatLM)$coefficients
+```
+
+### Uitleg: 
+
+- De waarde van $a$ lees je af in de regel die begint met `(Intercept)`.
+  De waarde is af te lezen onder `Estimate` en is in dit geval $1{,}65\times 10^2\unit{mm}$.
+    
+- De waarde van $b$ lees je af ion de regel die begint met `body_mass_g`.
+  Daar vind je $6{,}7 \times 10^{-3}\unit{mm/g}$.
+  
+- De regressielijn is dus $Y =  1{,}65\times 10^2\unit{mm} + (6{,}7 \times 10^{-3}\unit{mm/g}) X$.
+
+:::
+
+::: {#exr-extrapoleren .pepexr}
+
+## Het voorspellen van de flipperlengte van Adelie-pinguïns.
+<br>
+
+Nu we de regressielijn voor de flipperlengte als functie van het gewicht hebben bepaald,
+kunnen we de lijn gebruiken om voorspellingen te doen.
+
+a.  We selecteren een willekeurige Adelie-pinguïn uit de populatie. 
+    Deze heeft een gewicht van 4000g.
+    Wat is jouw beste schatting voor de flipperlengte van deze pinguïn?
+    
+b.  We vinden een bijzonder kleine pinguïn die maar 500g weegt. Wat is nu jouw voorspelling?
+
+c.  Wat denk je over de betrouwbaarheid van je voorspelling bij onderdeel **b**?
+
+:::
 
 ## Interpolatie en extrapolatie
 
-## Het fitten van curves in het algemeen
+:::{.todo-box}
+
+Werk in uitvoering!
+
+:::
 
 
+- Interpoleren: het verband tussen $X$ en $Y$ gebruiken
+  om een $Y$-waarde te voorspellen voor een waarde van $X$ die 
+  binnen het bereik valt van je gegevens.
+  
+- Extrapoleren: het verband tussen $X$ en $Y$ gebruiken
+  om een $Y$-waarde te voorspellen voor een waarde van $X$ die
+  *buiten* het bereik valt van je gegevens.
+  
+  Extrapoleren is erg gevaarlijk: 
+  de regressielijn is bepaald voor een bepaald bereik.
+  Er is geen garantie dat het lineaire verband zich
+  buiten dat bereik voortzet.
+  
+
+## Toetsen van de regressiecoefficienten
+
+:::{.todo-box}
+
+Werk in uitvoering!
+
+:::
+
+-  Veel voorkomende situatie:
+   we willen weten of in de populatie
+   het begingetal of de richtingscoëfficient afwijken van 0.
+
+-  Zie @exm-regressie-adelie:
+   daar zijn $t$- en $P$-waarden gegeven.
+   
+-  R voert die toetsen dus standaard uit.
+
+**Statistisch model:**
+
+1. Voor iedere waarde van $X$ is het gemiddelde van $Y$
+   gegeven door 
+   
+   $$\ev{Y | X} = \alpha + \beta X.$$
+   
+2. Voor iedere waarde van $X$ is $Y$ normaal verdeeld.
+
+3. De variantie van $Y$ is voor iedere $X$ gelijk.
+
+4. Iedere waarde $Y$ is onafhankelijk getrokken.
+
+Visualisatie van het model: zie @fig-model-regressie.
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-model-regressie
+#| fig-cap: "Visualistatie van het statistisch model dat gebruikt wordt bij de toetsen van de regressiecoëfficiënten. Voor iedere waarde van $X$ is $Y$ normaal verdeeld. Het gemiddelde van die verdeling
+#| hangt lineair van $X$ af."
+
+# Laad benodigde bibliotheken
+if (!("plotly" %in% .packages())) { library(plotly) }
+
+# Definieer parameters
+beta_0     <- 0       # Intercept
+beta_1     <- 0.3     # Richtingcoëfficiënt
+sigma_y    <- 1       # Standaarddeviatie van residuen
+
+# Raster voor x en y
+x_vals <- seq(-3, 3, length.out = 100)
+y_vals <- seq(-3, 3, length.out = 100)
+
+raster <- expand.grid(
+  x = x_vals,
+  y = y_vals
+)
+
+# Voor elke X: bereken verwachte waarde van Y (lineair) en dichtheid
+mu_y_x <- beta_0 + beta_1 * raster$x
+
+# Normale kansdichtheid van Y gegeven X
+raster$z <- dnorm(
+  x    = raster$y,
+  mean = mu_y_x,
+  sd   = sigma_y
+)
+
+# Zet om in matrix voor 3D-plot
+z_mat <- matrix(raster$z, nrow = length(y_vals))
+z_mat <- t(z_mat)
+
+# Maak wireframe-plot met effen kleur (donkerblauw)
+plot_ly(
+  x = x_vals,
+  y = y_vals,
+  z = z_mat,
+  type = "surface",
+  showscale = FALSE,
+  surfacecolor = matrix(1, nrow = 100, ncol = 100),
+  colorscale = list(c(0, "darkorange"), c(1, "darkorange")),
+  contours = list(
+    x = list(show = TRUE, color = "black", highlight = FALSE,
+             start = -3, end = 3, size = 0.5),
+    y = list(show = FALSE, color = "black", highlight = FALSE,
+             start = -3, end = 3, size = 6),
+    z = list(show = FALSE, color = "black", highlight = FALSE,
+             start = 0, end = 0, size = 0.04)
+  )
+) |>
+  layout(
+    title = NULL,
+    scene = list(
+      xaxis = list(title = "X"),
+      yaxis = list(title = "Y"),
+      zaxis = list(
+        title = "Kansdichtheid",
+        range = c(0, 0.8)
+        ),
+      camera = list(
+        eye = list(x = -0.5, y = -1.25, z = 1.9)  # Aangepaste kijkhoek
+        )
+    )
+  )
+
+```
+
+## Het fitten van niet-lineaire modellen {#sec-nlf}
+
+Tot nu toe hebben we ons alleen beziggehouden met *lineaire* verbanden.
+In werkelijkheid komt het ook vaak voor dat variabelen 
+op een niet-lineaire manier met elkaar samenhangen.
+
+Bijvoorbeeld, de snelheid van een chemische reactie
+die door een enzym wordt gekatalyseerd
+hangt op een niet-lineaire manier af 
+van de hoeveelheid substraat.
+Je kunt dat in het lab onderzoeken
+door voor verschillende substraatconcentraties 
+de reactisnelheid te meten. 
+@Fig-mm-a laat zien hoe experimentele resultaten eruit zouden kunnen zien.
+Als je de substraatconcentratie steeds verder verhoogt,
+gaat uiteindelijk de reactiesnelheid niet meer omhoog
+omdat het enzym op zijn maximale snelheid werkt.
+Dat levert een niet-lineaire curve op.
+
+::: {#fig-mm layout="[[1,1]]"}
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Gemeten reactiesnelheden $v$ bij verschillende substraatconcentraties $S$."
+#| label: fig-mm-a
+#| fig.width: 3.5
+#| fig.height: 2.7
+#| out.width: "100%"
+
+data <- data.frame(
+  substraatconcentratie = c(0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0),
+  reactiesnelheid = c(2.3, 4.1, 8.5, 13.2, 18.4, 22.5, 24.0)
+)
+
+ggplot( data, aes(x = substraatconcentratie, y = reactiesnelheid)) +
+  geom_point(color = "darkorange") +
+  labs(
+    x = expression(substraatconcentratie ~ italic(S) ~ (mM)),
+    y = expression(reactiesnelheid ~ italic(v) ~ (μM/min))
+  ) + 
+  geom_hline(yintercept = 0, color = "black") +
+  geom_vline(xintercept = 0, color = "black") +
+  theme_classic() +
+  theme(
+    axis.line = element_blank(),        # remove default axes
+  )
+  
+```
+
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| fig.cap: "Michaelis-Menten-model voor enzymkinetiek."
+#| label: fig-mm-b
+#| fig.width: 3.5
+#| fig.height: 2.5
+#| out.width: "100%"
+
+# Definieer parameters
+km     <- 3
+vmax   <- 10
+kleur  <- "darkorange"
+
+# Substraatconcentraties tot ruim boven Km
+s_waarden <- seq(0, 6*km, length.out = 300)
+
+# Michaelis-Menten vergelijking
+v_waarden <- (vmax * s_waarden) / (km + s_waarden)
+
+# Bereken punt op de kromme bij S = Km
+v_bij_km <- vmax/2
+
+# Zet in data.frame
+gegevens <- data.frame(
+  s = s_waarden,
+  v = v_waarden
+)
+
+# Teken de grafiek
+ggplot(gegevens, aes(x = s, y = v)) +
+  geom_line(
+    color = kleur,
+    size  = 1
+  ) +
+  # Horizontale lijn op Vmax
+  geom_hline(
+    yintercept = vmax,
+    linetype   = "dashed",
+    color      = "gray40"
+  ) +
+  # Horizontale lijn op Vmax/2
+  geom_hline(
+    yintercept = v_bij_km,
+    linetype   = "dashed",
+    color      = "gray40"
+  ) +
+  # Verticale lijn van x-as tot de kromme bij S = Km
+  geom_segment(
+    aes(
+      x = km, xend = km,
+      y = 0,  yend = v_bij_km
+    ),
+    linetype = "dashed",
+    color    = "gray40"
+  ) +
+  # Labels bij Km, Vmax en Vmax/2
+  annotate(
+    "text",
+    x = km + 0.5,
+    y = 0.5,
+    label = expression(K[italic(M)]),
+    hjust = 0,
+    size  = 4
+  ) +
+  annotate(
+    "text",
+    x = 1,
+    y = vmax - 0.5,
+    label = expression(v[italic(max)]),
+    hjust = 0,
+    size  = 4
+  ) +
+  annotate(
+    "text",
+    x = 8,
+    y = v_bij_km + 0.4,
+    label = expression(v[italic(max)] / 2),
+    hjust = 0,
+    size  = 4
+  ) +
+  labs(
+    x = expression(substraatconcentratie ~ italic(S)),
+    y = expression(reactiesnelheid ~ italic(v))
+  ) + 
+  geom_hline(yintercept = 0, color = "black") +
+  geom_vline(xintercept = 0, color = "black") +
+  theme_classic() +
+  theme(
+    axis.line = element_blank(),        # remove default axes
+    axis.text.x  = element_blank(),
+    axis.text.y  = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()
+  )
+  
+```
+
+Voorbeeld van een niet-lineair verband dat met een model beschreven kan worden.
+:::
+
+Vanuit de theorie over enzymkinetiek
+weten we dat we dat curves zoals @fig-mm-a vaak goed kunnen modelleren
+met de volgende formule:
+$$
+v =  \frac{v\ped{max}\cdot S}{K\ped{M} + S}.
+$$ {#eq-mm}
+Dit wordt de Michaelis-Menten-curve genoemd; @fig-mm-b illustreert de formule.
+Hier is $v$ de snelheid van de reactie, en $S$ de substraatconcentratie.
+De parameter $v\ped{max}$ bepaalt de maximumsnelheid van de reactie,
+de parameter $K\ped{M}$ bij welke concentratie van het substraat de reactiesnelheid 
+$v\ped{max}/2$ bereikt.
+
+We kunnen voor de gegevens uit @fig-mm-a de waarden
+van $v\ped{max}$ en $K\ped{M}$ bepalen
+die het beste bij de gegevens passen.
+Dit noemen we het "fitten" van het model aan de gegevens.
+Dit is de manier waarop de eigenschappen van enzymen in de praktijk ook worden bepaald.
+
+Hierboven hebben we de parameters $a$ en $b$ 
+van de regressielijn "gefit"
+door te zoeken naar de waarden waarbij de kwadratensom minimaal was.
+Voor niet-lineaire modellen wordt dezelfde truc gebruikt.
+Om $v\ped{max}$ en $K\ped{M}$
+te bepalen,
+zoeken we ook naar de waarden waarbij de kwadratensom minimaal is.
+
+Het fitten van niet-lineaire modellen is een onderwerp op zich
+waar we helaas niet meer tijd aan kunnen besteden.
+Maar in @exr-nonlinear helpen we je om eenmalig een fit uit te voeren in R. 
 
 ## Samenvatting
 
+:::{.todo-box}
+
+Werk in uitvoering!
+
+:::
+
 ## Terminologie
+
+:::{.todo-box}
+
+Werk in uitvoering!
+
+:::
 
 ## Opgaven
 
@@ -1737,113 +2225,122 @@ never rely on summary statistics only.
 
 
 
-::: {#exr-nonlinear}
-## **Opdracht: Michaelis-Menten parameters schatten met niet-lineaire regressie**
+::: {#exr-nonlinear .Rexr}
+## Michaelis-Menten parameters schatten door gegevens te fitten.**
 
-### **Doel**
-Je krijgt een dataset met experimentele gegevens over de reactiesnelheid ($v$) van een enzymatische reactie bij verschillende substraatconcentraties ($[S]$). Je taak is om de Michaelis-Menten parameters te bepalen:
+In @sec-nlf hebben we uitgelegd dat de reactiesnelheid ($v$) van een enzymatische reactie 
+op een niet-lineaire manier afhangt van de substraatconcentratie $S$.
+In @fig-mm-a lieten we meetwaarden zien voor zo'n reactie.
 
-- **$v_{\max}$**: De maximale reactiesnelheid.
-- **$k_M$**: De substraatconcentratie waarbij de reactiesnelheid de helft van $v_{\max}$ bedraagt.
-
-Deze parameters worden beschreven door de **Michaelis-Menten vergelijking**:
-
+Een veelgebruikt model voor enzymkinetiek is het Michaelis--Menten-model. 
+Binnen dat model is de reactiesnelheid gegeven door:
 $$
-v = \frac{v_{\max} \cdot [S]}{k_M + [S]}
+v = \frac{v\ped{max} \cdot S}{K\ped{M} + S},
 $$
+met de volgende parameters:
 
-waarbij:
-- $v$ de gemeten reactiesnelheid is,
-- $[S]$ de substraatconcentratie is.
+- $v\ped{max}$: De maximale reactiesnelheid.
+- $K\ped{M}$**: De substraatconcentratie waarbij de reactiesnelheid de helft van $v_{\max}$ bereikt.
 
-Je gaat de **niet-lineaire regressie (NLS)** in R gebruiken om deze parameters te schatten.
+@Fig-mm-b illustreert de formule.
 
----
+We gaan de parameters voor het enzym van @fig-mm-a bepalen door het model te fitten aan de gegevens. 
+Start hiervoor een nieuw leeg script in R.
 
-## **Instructies**
-1. **Laad de dataset**: De gegevens bevatten twee kolommen:  
-   - `substrate_concentration` (mM)  
-   - `reaction_rate` (μM/min)  
+a.  Je kunt de gegevens importeren door deze code over te nemen:
 
-2. **Pas niet-lineaire regressie toe** met **de functie `nls()`** in R om $k_M$ en $v_{\max}$ te schatten.
+    ```{r}
+    #| eval: false
+    meetgegevens <- data.frame(
+    substraatconcentratie = c(0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0),
+    reactiesnelheid = c(2.3, 4.1, 8.5, 13.2, 18.4, 22.5, 24.0)
+    )
+    ```
+    
+    De substraatconcentratie is gegeven in mM, de reactiesnelheid in μM/min.
+    
+b.  We moeten R vertellen welke functie we willen fitten.
+    Daarom definiëren we in R de Michaelis-Menten-curve als een functie.
+    Neem deze code over:
+    
+    ```{r}
+    #| eval: false
+    # Definieer de Michaelis-Menten-curve
+    michaelis_menten <- function(S, v_max, K_M) {
+      v_max * S / (K_M + S)
+      }
+    ```
+    
+c.  Nu zijn we klaar om parameters `v_max` en `K_M` te zoeken 
+    die de meetgegevens "fitten". 
+    We gebruiken hiervoor de functie `nls()`:
+    
+    ```{r}
+    #| eval: false
+    # Pas niet-lineaire regressie toe
+    fit <- nls(
+      reactiesnelheid ~ michaelis_menten(substraatconcentratie, v_max, K_M),
+      data = meetgegevens,
+      start = list(v_max = 25, K_M = 1) # Startwaarden
+    )
+    ```
 
-3. **Maak een plot** van de meetpunten en pas de geschatte curve aan de data.
+    We vertellen de functie `nls()` om te zoeken naar waarden van `v_max` en `K_M`
+    waarbij de functie `michaelis_menten` de variabele `reactiesnelheid` 
+    uit de dataset `meetgegevens` zo dicht mogelijk benadert.
+    
+    Door @fig-mm-a te vergelijken met @fig-mm-b kunnen we grofweg inschatten 
+    dat `v_max` in de buurt van 25 zal liggen,
+    en `K_M` in de buurt van 1. 
+    We vertellen R daarom om te starten met `v_max = 25` en `K_M = 1` 
+    en vervolgens in die buurt te zoeken naar de parameterwaarden
+    die de kwadratensom minimaliseren.
+    Het eindresultaat wordt opgeslagen in de variabele `fit`.
+    
+    Zorg dat je snapt wat er in de code gebeurt;
+    neem deze regels code dan over en voer ze uit.
+    
+d.  Gebruik de functie `summary()` om de gevonden parameterwaarden te bekijken:
 
-4. **Beantwoord de volgende vragen**:
-   - Wat zijn de geschatte waarden voor $k_M$ en $v_{\max}$?
-   - Hoe goed past het model bij de data?
-   - Wat zou er gebeuren als de data **ruis** bevat of als er minder meetpunten beschikbaar zijn?
-   - Wat zijn de voordelen en   nadelen van niet-lineaire regressie ten opzichte van lineaire transformaties zoals de **Lineweaver-Burk plot**?
+    ```{r}
+    #| eval: false
 
----
-
-## **Gegeven dataset**
-Gebruik de onderstaande tabel in je analyse:
-
-| Substraatconcentratie (mM) | Reactiesnelheid (μM/min) |
-|----------------------------|-------------------------|
-| 0.1                        | 2.3                     |
-| 0.2                        | 4.1                     |
-| 0.5                        | 8.5                     |
-| 1.0                        | 13.2                    |
-| 2.0                        | 18.4                    |
-| 5.0                        | 22.5                    |
-| 10.0                       | 24.0                    |
-
----
-
-## **Oplossingsmodel (R-script)**
-Onderstaand R-script voert de niet-lineaire regressie uit en visualiseert de resultaten.
-
-```{r}
-# Controleer of de benodigde pakketten geladen zijn
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-
-# Gegevens inladen
-data <- data.frame(
-  substrate_concentration = c(0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0),
-  reaction_rate = c(2.3, 4.1, 8.5, 13.2, 18.4, 22.5, 24.0)
-)
-
-# Definieer het Michaelis-Menten model
-michaelis_menten <- function(S, v_max, k_M) {
-  v_max * S / (k_M + S)
-}
-
-# Pas niet-lineaire regressie toe
-fit <- nls(
-  reaction_rate ~ michaelis_menten(substrate_concentration, v_max, k_M),
-  data = data,
-  start = list(v_max = 25, k_M = 1) # Startwaarden op basis van ruwe schatting
-)
-
-# Toon de geschatte parameters
-summary(fit)
-
-# Extraheer de geschatte parameters
-params <- coef(fit)
-v_max_est <- params["v_max"]
-k_M_est <- params["k_M"]
-
-# Maak een dataset voor de voorspelde waarden
-fit_data <- data.frame(
-  substrate_concentration = seq(0, 12, length.out = 100)
-)
-fit_data$reaction_rate <- michaelis_menten(fit_data$substrate_concentration, v_max_est, k_M_est)
-
-# Visualiseer de resultaten
-ggplot(data, aes(x = substrate_concentration, y = reaction_rate)) +
-  geom_point(size = 3, color = "blue") +  # Meetpunten
-  geom_line(data = fit_data, aes(x = substrate_concentration, y = reaction_rate),
-            color = "red", linewidth = 1.2) +  # Modelcurve
-  labs(
-    title = "Michaelis-Menten Fit",
-    x = "Substraatconcentratie (mM)",
-    y = "Reactiesnelheid (μM/min)"
-  ) +
-  theme_minimal()
-```
-
+    # Laat de gefitte parameters zien
+    summary(fit)
+    ```
+    
+    Zijn die ongeveer zoals je verwacht had?
+    
+e.  Om te controleren hoe goed de Michaelis-Menten-curve de data beschrijft,
+    maken we een plot met zowel de gegevens als de gefitte curve:
+    
+    ```{r}
+    #| eval: false
+    
+    v_max <- 26.91670 # de gevonden parameterwaarden
+    K_M <- 1.02837
+    
+    S_waarden <- seq(0, 10, 0.5)
+    # de gefitte MM-curve:
+    reactiesnelheid_model <- michaelis_menten(S_waarden, v_max, K_M)
+    
+    # plot de lijn volgens het model
+    plot(
+      S_waarden, reactiesnelheid_model, 
+      type = "l", col = "black", lwd = 2
+      xlab = "substraat",
+      ylab = "reactiesnelheid")
+    # voeg de datapunten eraan toe
+    points(
+      meetgegevens$substraatconcentratie, meetgegevens$substraatconcentratie,
+      pch = 21, 
+      bg = "darkorange", 
+      cex = 1.5
+      )
+    
+    ```
+    
+    Ziet de fit er overtuigend uit?
 
 :::
 
@@ -1853,37 +2350,4 @@ ggplot(data, aes(x = substrate_concentration, y = reaction_rate)) +
 
 :::
 
-::: todo-box
-Madelon en/of Yannick:
 
-Invoegen uit oude computerpracticum 2, opgave 2. De data staan in folder
-"data". Ik ga deze vraag zeker herschrijven.
-:::
-
-::: {.Rexr #exr-loopsnelheid}
-## Loopsnelheid in verschillende steden (computer practicum 2 opdracht 2)
-
-In Behaviour 123 (1992) pp. 77–83 [^Wirtz, P., & Ries, G. (1992). The pace of life-reanalysed: why does walking speed of pedestrians correlate with city size?. Behaviour, 123(1-2), 77-83.] 
-beschrijven twee onderzoekers de mogelijke relatie tussen het aantal inwoners 
-van grote steden en de gemiddelde loopsnelheid van de inwoners van die steden.
-Een aantal resultaten van hun onderzoek is vastgelegd in het bestand
-“loopsnelheid.csv”.
-
-  a. Download het bestand, en lees het in als een dataframe. Bestudeer
-de dataframe.
-  b. Visualiseer, beschrijf en bestudeer de gegevens.
-  c. Maak daarbij ook een spreidingsdiagram van de gemiddelde loopsnelheid
-(av.wlksp) versus de logaritme van het aantal inwoners
-van de stad (popsize). (Voeg de logaritme van het aantal inwoners
-als een nieuwe variabele (logpops) aan de dataframe toe.)
-Beschrijf de samenhang tussen deze twee variabelen.
-  d. Bereken de correlatiecoëfficiënt bij het spreidingsdiagram uit onderdeel c). 
-  (Gebruik de functie `cor.test()`.)
-  e. Welke aannames moet je doen om te toetsen of deze correlatiecoëfficiënt significant van 0 verschilt? Is die aanname hier redelijk?
-  f. Aangenomen dat aan de aannames is voldaan: Is de correlatiecoëfficiënt
-statistisch significant verschillend van nul?
-  g. Stel de vergelijking op voor de regressielijn die de relatie tussen de twee variabelen beschrijft. (Gebruik lm() en summary().) Wat zijn de aannames van de regressie-analyse, en zijn die hier redelijk?
-  h. Is er sprake van een significante regressie en waar leid je dit uit af?
-  i. Had je de correlatiecoëfficiënt ook uit de uitvoer van de regressieanalyse kunnen aflezen?
-  j. Welke methode (correlatie of regressie) heeft jouw voorkeur in het beantwoorden van de onderzoeksvraag? Beargumenteer je antwoord.
-:::
