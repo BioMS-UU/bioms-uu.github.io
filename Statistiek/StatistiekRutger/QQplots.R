@@ -9,8 +9,13 @@ n <- 10
 gemeten <- NHANES$Length
 gemeten <- gemeten[order(gemeten)]
 q_gemeten <- quantile(gemeten, probs = seq(0, 1, length.out = n), na.rm = T)
-q_verwacht <- qnorm(seq(0, 1, length.out = n))
+verwacht <- qnorm(seq(0, 1, length.out = n))
 q_verwacht <- verwacht[order(verwacht)]
+
+#Versie zonder Inf en -Inf kwantiel
+#verwacht <- qnorm(seq(0, 1, length.out = n+2))
+#q_verwacht <- verwacht[order(verwacht)]
+#q_verwacht <- q_verwacht[2:n+1]
 
 dat <- data.frame(q_gemeten, q_verwacht)
 
