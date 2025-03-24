@@ -458,7 +458,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Statistiek/LineaireRelatiesEnFitten.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Lineaire relaties</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Relaties tussen continue variabelen</span></span></a>
   </div>
 </li>
       </ul>
@@ -811,12 +811,7 @@ Tip&nbsp;11.2: Continue en discrete variabelen
 <h2 data-number="11.6" class="anchored" data-anchor-id="een-ode-van-hertenmigratie"><span class="header-section-number">11.6</span> Een ODE van hertenmigratie</h2>
 <p>We kunnen van het bovengenoemde hertenfeestje ook een ODE (een differentiaalvergelijking) opschrijven. In tegenstelling tot <a href="#eq-ht" class="quarto-xref">Vergelijking&nbsp;<span>11.2</span></a>, beschrijft een ODE niet het aantal herten zelf, maar de snelheid waarmee dat aantal verandert. Voor ons scenario ziet dit er zo uit:</p>
 <p><span id="eq-odeherten"><span class="math display">\[
-    
-\mathchoice{\frac{\mathrm{d}H(t)}
-{\mathrm{d}t}}{\mathrm{d}H(t)/\mathrm{d}t}
-{\mathrm{d}H(t)/\mathrm{d}t}
-{\mathrm{d}H(t)/\mathrm{d}t}
-= m
+    \dt{H(t)} = m
 \tag{11.3}\]</span></span></p>
 <p>Formeel staat hier: de afgeleide van <span class="math inline">\(H(t)\)</span> over de tijd (dat wil zeggen de snelheid van verandering) is gelijk aan <span class="math inline">\(m\)</span>. Inderdaad, als we <span class="math inline">\(H(t)\)</span> uit <a href="#eq-ht" class="quarto-xref">Vergelijking&nbsp;<span>11.2</span></a> zouden differentiëren voor <span class="math inline">\(t\)</span> (tijd), dan krijgen we <span class="math inline">\(m\)</span>. <em>So far so good</em>.</p>
 <p>Stel je echter voor dat we niet weten met hoeveel herten we begonnen maar alleen weten dat er ieder uur <span class="math inline">\(m\)</span> herten bijkomen. In dat geval kunnen dus we alleen <a href="#eq-odeherten" class="quarto-xref">Vergelijking&nbsp;<span>11.3</span></a> opschrijven, zonder dat we de specifieke vorm van <span class="math inline">\(H(t)\)</span> weten. In dat geval is <span class="math inline">\(H(t)\)</span> dus een <strong>onbekende functie</strong> (zoals in een algebraïsche vergelijking <span class="math inline">\(x\)</span> een onbekende waarde is). De oplossing van deze ODE is dus een wiskundige functie <span class="math inline">\(H(t)\)</span>, waarvan de afgeleide altijd <span class="math inline">\(m\)</span> is. Hoe vinden we dan deze oplossing?</p>
@@ -839,12 +834,7 @@ Tip&nbsp;11.2: Continue en discrete variabelen
 <p>Maar stel dat we beginnen met een ODE zonder vooraf een specifieke oplossing te kennen. Hoe weten we dan de oplossing van die ODE? Het zijn natuurlijk vooral de oplossingen die ons inzicht geven in de dynamiek van het systeem! Maar oplossingen vinden, is lang niet altijd eenvoudig.</p>
 <p>Stel bijvoorbeeld dat de herten ook naar huis kunnen gaan. Omdat alleen herten die in het bos aanwezig zijn naar huis kunnen gaan, hangt deze snelheid af van de huidige hoeveelheid herten (<span class="math inline">\(H(t)\)</span>). De ODE wordt dan dus:</p>
 <p><span id="eq-ht2"><span class="math display">\[
-
-\mathchoice{\frac{\mathrm{d}H(t)}
-{\mathrm{d}t}}{\mathrm{d}H(t)/\mathrm{d}t}
-{\mathrm{d}H(t)/\mathrm{d}t}
-{\mathrm{d}H(t)/\mathrm{d}t}
-= m - d \cdot H(t)
+\dt{H(t)} = m - d \cdot H(t)
 \tag{11.4}\]</span></span></p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -871,31 +861,16 @@ Let op! <span class="math inline">\(\mathrm{d}\)</span> en <span class="math inl
 <p>Later in de cursus gaan we R-scripts gebruiken om specifieke oplossingen te laten uitrekenen, maar zoals gezegd kun je met pen en papier ook al veel voor elkaar krijgen. Hiermee oefenenen is belangrijk, want zo krijgen we een beter gevoel voor ODEs, zodat we eerder doorhebben wanneer de computer (wellicht door een typefoutje) rare resultaten geeft. Laten we beginnen met waar al het rekenwerk begint: zorgen dat we appels met appels vergelijken.</p>
 <p>Laten we nog even doorgaan met het model van herten-migratie met herten die naar huis vetrekken:</p>
 <p><span class="math display">\[\begin{align}
-
-\mathchoice{\frac{\mathrm{d}H(t)}
-{\mathrm{d}t}}{\mathrm{d}H(t)/\mathrm{d}t}
-{\mathrm{d}H(t)/\mathrm{d}t}
-{\mathrm{d}H(t)/\mathrm{d}t}
-= m - d \cdot H(t)
+\dt{H(t)} = m - d \cdot H(t)
 \end{align}\]</span></p>
 <p>Om het allemaal wat overzichtelijker te houden kunnen we het vermenigvuldigingsteken (<span class="math inline">\(\cdot\)</span>) weglaten, en <span class="math inline">\(H(t)\)</span> opschrijven als <span class="math inline">\(H\)</span>:</p>
 <p><span class="math display">\[\begin{align}
-
-\mathchoice{\frac{\mathrm{d}H}
-{\mathrm{d}t}}{\mathrm{d}H/\mathrm{d}t}
-{\mathrm{d}H/\mathrm{d}t}
-{\mathrm{d}H/\mathrm{d}t}
-= m - dH
+\dt{H} = m - dH
 \end{align}\]</span></p>
 <p>Laten we nogmaals omschrijven wat hier staat. Aan de linkerzijde staat de verandering in de hoeveelheid herten per tijdseenheid (in het hertenscenario hadden we het over tijd in uren). De verbale omschrijving “per tijdseenheid” kunnen we wiskundig opschrijven als <span class="math inline">\(\frac{1}{t}\)</span> (of <span class="math inline">\(t^{-1}\)</span>, dat is hetzelfde). Hetzelfde geldt overigens voor “per hert”, wat zou vertalen naar <span class="math inline">\(\frac{1}{H}\)</span> of <span class="math inline">\(H^{-1}\)</span>. Je kunt het woord “per” dus vertalen naar “gedeeld door”. Dus: “herten per uur” kunnen we opschrijven als <span class="math inline">\(\frac{H}{t}\)</span>.</p>
 <p>Aan de linkerkant staat dus iets in termen van “verandering in aantal herten per tijdsinterval in uren”, wat we voor het gemak afkorten naar “herten per uur”, dus <span class="math inline">\(H \over t\)</span>. Aan de rechterzijde staan twee individuele termen, namelijk <span class="math inline">\(m\)</span> en <span class="math inline">\(dH\)</span>. Om de differentiaalvergelijking geldig te houden moeten deze individuele termen dezelfde eenheden van “herten per uur” hebben, want je kan immers geen appels en peren bij elkaar optellen.</p>
 <p><span class="math display">\[\begin{align}
-\underbrace{
-\mathchoice{\frac{\mathrm{d}H}
-{\mathrm{d}t}}{\mathrm{d}H/\mathrm{d}t}
-{\mathrm{d}H/\mathrm{d}t}
-{\mathrm{d}H/\mathrm{d}t}
-}_{\text{herten per uur}} = \underbrace{m}_{\text{herten per uur}} - \underbrace{dH}_{\text{herten per uur}}
+\underbrace{\dt{H}}_{\text{herten per uur}} = \underbrace{m}_{\text{herten per uur}} - \underbrace{dH}_{\text{herten per uur}}
 \end{align}\]</span></p>
 <p>Hieruit kunnen we dus onmiddelijk concluderen dat de migratieparameter (<span class="math inline">\(m\)</span>) ook in termen van “herten per uur” uitgedrukt moet worden. Wiskundig stellen we dan dat de eenheid (soms ook dimensie genoemd) van <span class="math inline">\(m\)</span> “herten per uur” is. Als we dus in het veld de migratie gaan meten, weten we wat ons te doen staat.</p>
 <p>Maar wat zijn de eenheden van de parameter <span class="math inline">\(d\)</span>, die het vertrek bepaalt? Hiervoor moeten we deze term gelijk stellen aan <span class="math inline">\(H/t\)</span>, en oplossen voor <span class="math inline">\(d\)</span>:</p>
@@ -929,12 +904,7 @@ ODEs doen belangrijke aannames
 <p><span class="theorem-title"><strong>Oefening 11.1 (Plastic in de oceaan)</strong></span> <br></p>
 <p>We omschrijven hoe de hoeveelheid plastic in de oceaan verandert (kilo’s per jaar) met de volgende vergelijking:</p>
 <p><span class="math display">\[\begin{align}
-
-\mathchoice{\frac{\mathrm{d}P}
-{\mathrm{d}t}}{\mathrm{d}P/\mathrm{d}t}
-{\mathrm{d}P/\mathrm{d}t}
-{\mathrm{d}P/\mathrm{d}t}
-= k - \delta P
+\dt{P} = k - \delta P
 \end{align}\]</span></p>
 <ol type="a">
 <li>Welke twee processen worden beschreven met de twee individuele termen? Beschrijf in je eigen woorden.</li>
@@ -946,23 +916,18 @@ ODEs doen belangrijke aannames
 </section>
 <section id="evenwichten" class="level2" data-number="11.9">
 <h2 data-number="11.9" class="anchored" data-anchor-id="evenwichten"><span class="header-section-number">11.9</span> Evenwichten</h2>
-<p>Zoals hierboven uitgelegd is het vaak (relatief) eenvoudig om een ODE (bijvoorbeeld <span class="math inline">\(
-\mathchoice{\frac{\mathrm{d}H}
-{\mathrm{d}t}}{\mathrm{d}H/\mathrm{d}t}
-{\mathrm{d}H/\mathrm{d}t}
-{\mathrm{d}H/\mathrm{d}t}
-= m - dH\)</span>) op te stellen, maar niet zo eenvoudig om de algemene oplossing (<span class="math inline">\(H(t) = ...\)</span>) te vinden. In dit deel gaan we een ODE-model van de konijnen in Australië bestuderen, en zal je zien dat we die oplossing ook helemaal niet nodig hebben om inzichten te vergaren.</p>
+<p>Zoals hierboven uitgelegd is het vaak (relatief) eenvoudig om een ODE (bijvoorbeeld <span class="math inline">\(\dt{H} = m - dH\)</span>) op te stellen, maar niet zo eenvoudig om de algemene oplossing (<span class="math inline">\(H(t) = ...\)</span>) te vinden. In dit deel gaan we een ODE-model van de konijnen in Australië bestuderen, en zal je zien dat we die oplossing ook helemaal niet nodig hebben om inzichten te vergaren.</p>
 <p>Een mogelijk ODE-model voor de exponentiële groei van konijnen ziet er zo uit:</p>
 <p><span class="math display">\[\begin{equation}
-    \frac{\mathrm{d}N(t)}{\mathrm{d}t} = r \cdot N(t)
+    \frac{\dd N(t)}{\dd t} = r \cdot N(t)
 \end{equation}\]</span></p>
 <p>Wederom laten we het vermenigvuldigingsteken en de <span class="math inline">\((t)\)</span> weg, zodat het iets leesbaarder wordt:</p>
 <p><span class="math display">\[\begin{equation}
-    \frac{\mathrm{d}N}{\mathrm{d}t} = rN
+    \frac{\dd N}{\dd t} = rN
 \end{equation}\]</span></p>
 <p>De rechterzijde van deze vergelijking lijkt heel erg op de differentievergelijking uit het vorige hoofdstuk, <em>maar let op</em>, de interpretatie is net anders. Hier staat dat de <strong>groeisnelheid</strong> gelijk is aan <span class="math inline">\(rN\)</span>, en niet de populatiegrootte in “de volgende tijdstap”. Dat betekent dat bij deze ODE elke positieve waarde van <span class="math inline">\(r\)</span> (ook <span class="math inline">\(r=0.1\)</span>) resulteert in groei, terwijl er in de differentievergelijking alleen groei is wanneer <span class="math inline">\(r&gt;1\)</span>. Ondanks deze verschillen, kunnen we ook met ODEs de groei beperken door kleine uitbreidingen te doen. In het volgende hoofdstuk zullen we bijvoorbeeld – zoals in opgave <a href="exponentielegroei.html#exr-rabbits-map" class="quarto-xref">Oefening&nbsp;<span>10.2</span></a> – geboorte- (<span class="math inline">\(b\)</span>, <em>birth</em>) en sterfte- (<span class="math inline">\(d\)</span>, <em>death</em>) processen gaan toevoegen. Maar eerst gaan we onze ODE op een andere manier uitbreiden:</p>
 <p><span class="math display">\[\begin{equation}
-    \frac{\mathrm{d}N}{\mathrm{d}t} = rN \cdot f(N)
+    \frac{\dd N}{\dd t} = rN \cdot f(N)
 \end{equation}\]</span></p>
 <p>Met de functie <span class="math inline">\(f(N)\)</span> kunnen we de ODE uitbreiden, bijvoorbeeld door de groeisnelheid van een populatie afhankelijk te maken van de huidige populatiedichtheid.</p>
 <p>Als <span class="math inline">\(f(N)\)</span> bijvoorbeeld afneemt bij toenemende <span class="math inline">\(N\)</span>, zal de groeisnelheid van de populatie ook afnemen naarmate <span class="math inline">\(N\)</span> groter wordt. Stel dat we <span class="math inline">\(f(N) = 1 - \frac{N}{100}\)</span> kiezen. Deze functie wordt gelijk aan <span class="math inline">\(0\)</span> als <span class="math inline">\(N = 100\)</span>:</p>
@@ -1010,7 +975,7 @@ ODEs doen belangrijke aannames
 <p>Als we onze ODE vermenigvuldigen met deze functie, betekent dit dat de snelheid van verandering <span class="math inline">\(0\)</span> wordt wanneer er <span class="math inline">\(100\)</span> konijnen zijn. Dit model impliceert dat de populatie niet meer kan groeien als <span class="math inline">\(N \geq 100\)</span>, omdat de groeisnelheid dan <span class="math inline">\(0\)</span> of zelfs negatief is. Simpel gezegd: er is een limiet aan de groei (en dus de grootte) van de populatie. Algemener kunnen we het getal <span class="math inline">\(100\)</span> vervangen door een parameter die we het draagvermogen (carrying capacity, <span class="math inline">\(K\)</span>) noemen. Het draagvermogen stelt de maximale populatiegrootte voor die de omgeving kan ondersteunen. Onze uiteindelijke ODE wordt dan:</p>
 <p><span id="eq-logisticode"><span class="math display">\[
 \begin{equation}
-    \frac{\mathrm{d}N}{\mathrm{d}t} = rN \left(1-\frac{N}{K}\right)
+    \frac{\dd N}{\dd t} = rN \left(1-\frac{N}{K}\right)
 \end{equation}
 \tag{11.5}\]</span></span></p>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -1029,16 +994,11 @@ Parameters zijn vaak kleine letters, maar niet altijd
 </div>
 </div>
 </div>
-<p>Als een populatie groeit volgens vergelijking <a href="#eq-logisticode" class="quarto-xref">Vergelijking&nbsp;<span>11.5</span></a>, wanneer is er dan een evenwicht? Wanneer verandert de populatie niet meer? Met een ODE, is het antwoord daarop vrij eenvoudig te vinden: wanneer de snelheid van verandering (<span class="math inline">\(\frac{\mathrm{d}N}{\mathrm{d}t}\)</span>) gelijk is aan 0:</p>
+<p>Als een populatie groeit volgens vergelijking <a href="#eq-logisticode" class="quarto-xref">Vergelijking&nbsp;<span>11.5</span></a>, wanneer is er dan een evenwicht? Wanneer verandert de populatie niet meer? Met een ODE, is het antwoord daarop vrij eenvoudig te vinden: wanneer de snelheid van verandering (<span class="math inline">\(\frac{\dd N}{\dd t}\)</span>) gelijk is aan 0:</p>
 <p><span class="math display">\[\begin{equation}
     0 = rN \left(1-\frac{N}{K}\right)
 \end{equation}\]</span></p>
-<p>Het gelijkstellen aan <span class="math inline">\(0\)</span> levert een enorm voordeel op: we raken de vreemde <span class="math inline">\(
-\mathchoice{\frac{\mathrm{d} }
-{\mathrm{d}t}}{\mathrm{d} /\mathrm{d}t}
-{\mathrm{d} /\mathrm{d}t}
-{\mathrm{d} /\mathrm{d}t}
-\)</span> helemaal kwijt, en hebben daardoor ineens te maken met een normale algebraïsche vergelijking! Nu kunnen we eenvoudig uitzoeken bij welke dichtheid (<span class="math inline">\(N\)</span>) de vergelijking klopt, met andere woorden we lossen op voor <span class="math inline">\(N\)</span>:</p>
+<p>Het gelijkstellen aan <span class="math inline">\(0\)</span> levert een enorm voordeel op: we raken de vreemde <span class="math inline">\(\dt{ }\)</span> helemaal kwijt, en hebben daardoor ineens te maken met een normale algebraïsche vergelijking! Nu kunnen we eenvoudig uitzoeken bij welke dichtheid (<span class="math inline">\(N\)</span>) de vergelijking klopt, met andere woorden we lossen op voor <span class="math inline">\(N\)</span>:</p>
 <p><span class="math display">\[\begin{align*}
     rN \left(1-\frac{N}{K}\right) &amp;= 0 \quad \text{ als...}\\
     \color{blue} \bar{N} &amp; \color{blue} = 0  \color{black} \quad \text{ of als...}\\
@@ -1047,12 +1007,7 @@ Parameters zijn vaak kleine letters, maar niet altijd
 <p>Blauw-gedrukt staan de twee oplossingen van onze vergelijking, die de evenwichten of <em>steady states</em> van de populatie geven. Soms (maar lang niet altijd) worden populaties in evenwicht aangegeven met een streepje boven de variabele, in dit geval <span class="math inline">\(\bar{N}\)</span>. Uit deze analyse kunnen we concluderen dat de populatie konijnen niet kan groeien wanneer <span class="math inline">\(N=0\)</span> (als er geen konijnen zijn) of als <span class="math inline">\(N=K\)</span> (als de populatie gelijk is aan <span class="math inline">\(K\)</span>: de <em>carrying capacity</em> van het systeem. Het eerste evenwicht (<span class="math inline">\(N=0\)</span>) wordt vaak een “triviaal” evenwicht genoemd: als populaties niet bestaan kunnen ze ook niet groeien. Het tweede evenwicht (<span class="math inline">\(N=K\)</span>) is echter biologisch meer relevant: de populatie groeit totdat de <em>carrying capacity</em> is bereikt.</p>
 <p>We kunnen dezelfde strategie gebruiken om te controleren of pure exponentiële groei een evenwicht heeft:</p>
 <p><span class="math display">\[\begin{align*}
-    
-\mathchoice{\frac{\mathrm{d}N}
-{\mathrm{d}t}}{\mathrm{d}N/\mathrm{d}t}
-{\mathrm{d}N/\mathrm{d}t}
-{\mathrm{d}N/\mathrm{d}t}
-&amp;= rN = 0 \quad \text{ als...}\\
+    \dt{N} &amp;= rN = 0 \quad \text{ als...}\\
     N &amp;= 0 &amp;
 \end{align*}\]</span></p>
 <p>Exponentiële groei heeft dus alleen een zogezegd triviaal evenwicht (<span class="math inline">\(N = 0\)</span>).</p>
@@ -1074,33 +1029,18 @@ Tip&nbsp;11.3: Parameters zijn niet nul
 </div>
 <p>Laten we ook kijken of ons hertenfeestje evenwichten heeft:</p>
 <p><span class="math display">\[\begin{align*}
-    
-\mathchoice{\frac{\mathrm{d}H}
-{\mathrm{d}t}}{\mathrm{d}H/\mathrm{d}t}
-{\mathrm{d}H/\mathrm{d}t}
-{\mathrm{d}H/\mathrm{d}t}
-&amp;= m = 0 \quad \text{ als...}\\
+    \dt{H} &amp;= m = 0 \quad \text{ als...}\\
 \end{align*}\]</span></p>
 <p>Zoals uitgelegd in <a href="#tip-parsnul" class="quarto-xref">Tip&nbsp;<span>11.3</span></a> nemen we aan dat parameters niet <span class="math inline">\(0\)</span> zijn (een model van hertenmigratie zonder migratie is geen model), en zijn we dus vooral geïnteresseerd in welke waarden voor <span class="math inline">\(H\)</span> een evenwicht geven. Voor deze vergelijking bestaat er dus geen evenwicht, want welke waarde voor <span class="math inline">\(H\)</span> je ook invult, de populatie blijft met een constante snelheid <span class="math inline">\(m\)</span> veranderen. Voor het feestje waarbij ook herten vertrekken, ligt dat net anders:</p>
 <p><span class="math display">\[\begin{align*}
-    
-\mathchoice{\frac{\mathrm{d}H}
-{\mathrm{d}t}}{\mathrm{d}H/\mathrm{d}t}
-{\mathrm{d}H/\mathrm{d}t}
-{\mathrm{d}H/\mathrm{d}t}
-&amp;= m - dH = 0 \quad \text{ als...}\\
+    \dt{H} &amp;= m - dH = 0 \quad \text{ als...}\\
     dH &amp;= m &amp; \\
     \bar{H} &amp;= \frac{m}{d} &amp;
 \end{align*}\]</span></p>
 <p>De populatie herten op het feestje zal dus uiteindelijk uitkomen op een evenwicht (<span class="math inline">\(\bar{H}\)</span>) van <span class="math inline">\(\frac{m}{d}\)</span> herten. Op dit moment gaan er kennelijk evenveel herten naar huis als er naar het bos toe migreren.</p>
 <section id="conclusie-evenwichten" class="level3">
 <h3 class="anchored" data-anchor-id="conclusie-evenwichten">Conclusie evenwichten</h3>
-<p>Dus: als we willen weten waar het evenwicht van een een ODE (bijv. <span class="math inline">\(
-\mathchoice{\frac{\mathrm{d}X}
-{\mathrm{d}t}}{\mathrm{d}X/\mathrm{d}t}
-{\mathrm{d}X/\mathrm{d}t}
-{\mathrm{d}X/\mathrm{d}t}
-\)</span>) ligt, stellen we de ODE gelijk aan <span class="math inline">\(0\)</span> en lossen we de vergelijking op voor <span class="math inline">\(X\)</span>. Als de vergelijking geen <span class="math inline">\(X\)</span> bevat (of als <span class="math inline">\(X\)</span> wegvalt), en je dus alleen constanten overhoudt, is er geen evenwicht.</p>
+<p>Dus: als we willen weten waar het evenwicht van een een ODE (bijv. <span class="math inline">\(\dt{X}\)</span>) ligt, stellen we de ODE gelijk aan <span class="math inline">\(0\)</span> en lossen we de vergelijking op voor <span class="math inline">\(X\)</span>. Als de vergelijking geen <span class="math inline">\(X\)</span> bevat (of als <span class="math inline">\(X\)</span> wegvalt), en je dus alleen constanten overhoudt, is er geen evenwicht.</p>
 </section>
 </section>
 <section id="opgaven" class="level2" data-number="11.10">
@@ -1109,12 +1049,7 @@ Tip&nbsp;11.3: Parameters zijn niet nul
 <p><span class="theorem-title"><strong>Oefening 11.2 (Plastic in de oceaan (evenwicht))</strong></span> <br></p>
 <p>Bekijk nogmaals de volgende vergelijking voor hoe snel de hoeveelheid plastic in de oceaan verandert:</p>
 <p><span class="math display">\[\begin{align}
-
-\mathchoice{\frac{\mathrm{d}P}
-{\mathrm{d}t}}{\mathrm{d}P/\mathrm{d}t}
-{\mathrm{d}P/\mathrm{d}t}
-{\mathrm{d}P/\mathrm{d}t}
-= k - \delta P
+\dt{P} = k - \delta P
 \end{align}\]</span></p>
 <ol type="a">
 <li>Bepaal bij welke hoeveelheid plastic er sprake is van een evenwichtssituatie (<em>steady state</em>)</li>
@@ -1132,12 +1067,7 @@ Tip&nbsp;11.3: Parameters zijn niet nul
 </div>
 <p>Rode bloedcellen worden in het beenmerg geproduceerd met een snelheid <span class="math inline">\(p\)</span> cellen per dag. Elke rode bloedcel kan sterven met een kans <span class="math inline">\(d\)</span> per dag.</p>
 <ol type="a">
-<li>Dit process levert dezelfde ODEs op als het bovengenoemde model voor plastic in de oceaan. Schrijf de vergelijking (<span class="math inline">\(
-\mathchoice{\frac{\mathrm{d}B}
-{\mathrm{d}t}}{\mathrm{d}B/\mathrm{d}t}
-{\mathrm{d}B/\mathrm{d}t}
-{\mathrm{d}B/\mathrm{d}t}
-= \dots\)</span>) op.</li>
+<li>Dit process levert dezelfde ODEs op als het bovengenoemde model voor plastic in de oceaan. Schrijf de vergelijking (<span class="math inline">\(\dt{B} = \dots\)</span>) op.</li>
 <li>Wat zijn de eenheden van de parameters <span class="math inline">\(p\)</span> en <span class="math inline">\(d\)</span>?</li>
 <li>Reken uit hoeveel bloedcellen er in het evenwicht zijn.</li>
 <li>Stel je doneert een halve liter bloed. Maak met pen en papier een schets van de hoeveelheid bloedcellen over de tijd vlak na de donatie.</li>
@@ -1894,7 +1824,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"loop":false,"closeEffect":"zoom","openEffect":"zoom","selector":".lightbox","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","loop":false,"descPosition":"bottom","openEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
