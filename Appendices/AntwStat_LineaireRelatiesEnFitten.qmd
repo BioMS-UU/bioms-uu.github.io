@@ -1,109 +1,538 @@
 ## Antwoorden @sec-linrel
 
-### @exr-loopsnelheid
+### @exr-schatten-r
 
-  a. Het bestand bevat informatie over de populatiegrootte en gemiddelde loopsnelheid van 14 steden.
+Het is niet gek als je schatting er, zeg, 0,1 naast zit.
+Maar probeer je oog met deze voorbeelden te trainen.
+
+a.  De puntenwolk van Galton heeft ongeveer dezelfde vorm
+    als die van $r = 0{,}51$ in @fig-correl-coefs.
+    De correlatiecoëfficiënt moet dus dicht bij die waarde liggen.
+    Later in het hoofdstuk berekenen we de waarde exact.
+
+b.  De antwoorden zijn:
+
+    **(a)**  $r = 0{,}85$
+    
+    **(b)**  $r = 0{,}90$
+    
+    **(c)**  $r = -0{,}53$
+    
+    **(d)**  $r = 0{,}64$
+    
+    **(e)**  $r = 0{,}32$
+    
+    **(f)**  $r = 0{,}03$
+    
+    **(g)**  $r = 0{,}46$
+    
+    **(h)**  $r = -0{,}79$
+    
+### @exr-covariantie
+
+a.  We vullen in de formule @eq-cov voor $Y$ ook $X$ in. 
+    Dat levert op:
+
+    $$ 
+    \begin{align}
+    \covD{X}{X} &= \frac{\sum_{i=1}^{n} (x_i - \bar{x})(x_i - \bar{x})}{n-1}\\
+    &= \frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n-1}.
+    \end{align}
+    $$ {#eq-covXX}
+
+b.  Vergelijk @eq-covXX met @eq-variantie; dan wordt duidelijk dat
+    
+    $$
+    \covD{X}{X} = V_X.
+    $$
+
+    De covariantie van een variabele met zichzelf is dus de variantie van die variabele!
+
+c.  De covariantie meet de lineaire samenhang van twee variabelen. 
+    Iedere variabele hangt perfect lineair samen met zichzelf.
+    De covariantie van een variabele met zichzelf 
+    moet dus wel positief zijn.
+
+
+### @exr-covariantie-2
+
+We vullen in formule @eq-pearson voor $Y$ weer $X$ in:
+
+$$
+r = \frac{\covD{X}{Y}}
+         {s_X s_Y} = \frac{\covD{X}{X}}{s_X s_X}.
+$$
+In @exr-covariantie heb je afgeleid dat $\covD{X}{X} = V_X$,
+en je wist al dat $s_X s_X = s_X^2 = V_X$. Invullen levert op:
+
+$$
+r = \frac{\covD{X}{X}}{s_X s_X} = \frac{V_X}{V_X} = 1.
+$$
+De correlatiecoëfficiënt van een variabele met zichzelf is dus altijd 1.
+
+### @exr-galton-onafhankelijk
+
+a.  De puntenwolk van @fig-galton ziet er mooi ovaal uit.
+    Die algemene vorm is consistent met een bivariate normale verdeling.
+    
+    Wel valt op dat de punten soms horizontaal of verticaal uitlijnen.
+    Dat komt gedeeltelijk doordat lengtes in de dataset 
+    oorspronkelijk door Galton in inches zijn gemeten,
+    met een resolutie van $\frac{1}{4}$ inch. 
+    De data die hier gebruikt zijn
+    komen uit de `HistData` library,
+    waar ze zijn ze omgerekend naar cm en afgerond.
+    Daardoor komen sommige waarden meerdere keren exact voor.
+    
+    Er is nog een reden voor het uitlijnen van sommige waarden,
+    maar daar komen we zo op.
+    
+b.  De verdeling van de ouders is klokvormig,
+    maar lijkt iets te dikke staarten te hebben,
+    en heeft een opvallende piek bij 175cm.
+    De afwijkingen zijn niet heel drastisch,
+    maar geven toch te denken.
+    
+    De verdeling van de kinderen volgt de normale verdeling erg netjes,
+    zoals ook te zien is aan de QQ-plot.
+    
+c.  De beschrijving zegt: *"This data set lists the individual observations for 934 children in 205 families (...)"*.
+    Er zijn veel meer kinderen dan gezinnen in deze dataset.
+    Dat wil zeggen dat er voor hetzelfde ouderpaar vaak meerdere kinderen 
+    in de dataset zijn opgenomen.
+    
+    Er zijn dus groepjes van datapunten met dezelfde mid-ouder-lengte.
+    Dat geeft een extra verklaring voor de observatie dat sommige punten
+    in de puntenwolk verticaal uitlijnen: 
+    dat zijn kinderen van dezelfde ouders.
+    Het zou ook kunnen verklaren dat de verdeling van de lengtes van de ouders
+    ondanks het grote aantal waarnemingen niet zo netjes normaal verdeeld
+    is.
+    
+    Een consequentie is ook dat deze punten zeker niet onafhankelijk uit een bivariate 
+    kansverdeling getrokken zijn.
+    Al met al kunnen we de standaard correlatietoets dus niet op deze gegevens toepassen.
+
+
+### @exr-galton-2
+
+a.  --
+
+b.  De structuur van `ouders_uniek` is:
+
+    ```{r}
+    #| echo: false
+    library("HistData")
+    data("GaltonFamilies")
+    # Vind de eerste rij per unieke familie
+    eerste_index <- match(
+      unique(GaltonFamilies$family),
+      GaltonFamilies$family
+    )
+    
+    # Selecteer alleen die rijen, en houd alleen de relevante kolommen
+    ouders_uniek <- GaltonFamilies[
+      eerste_index, 
+      c("family", "father", "mother")
+      ]
+    ```
+    
+    ```{r}
+    str(ouders_uniek)
+    ```
+
+    Er zijn 205 ouder-paren in de dataset opgenomen.
+    
+c.  Code:
+
+    ```{r}
+    #| fig-width: 3.5
+    #| fig-height: 3.5
+    #| out-width: "50%"
+    plot(ouders_uniek$father, ouders_uniek$mother)
+    ```
+    
+    De gegevens zien er redelijk bivariaat normaal verdeeld uit.
+    Er is niet duidelijk een verband te zien.
+    
+d.  Je maakt de figuren zo:
+
+    :::{layout="[[1,1],[1,1]]"}
+    
+    ```{r}
+    #| fig-width: 3.5
+    #| fig-height: 3.5
+    #| out-width: "100%"
+    hist(ouders_uniek$father, main="vaders")
+    ```
+    
+    ```{r}
+    #| fig-width: 3.5
+    #| fig-height: 3.5
+    #| out-width: "100%"
+    hist(ouders_uniek$mother, main="moeders")
+    ```
+    
+    ```{r}
+    #| fig-width: 3.5
+    #| fig-height: 3.5
+    #| out-width: "100%"
+    qqnorm(ouders_uniek$father, main="vaders")
+    qqline(ouders_uniek$father)
+    ```
+    
+    ```{r}
+    #| fig-width: 3.5
+    #| fig-height: 3.5
+    #| out-width: "100%"
+    qqnorm(ouders_uniek$mother, main="moeders")
+    qqline(ouders_uniek$mother)
+    ```
+    
+    :::
+    
+    Zowel de moeders als de vaders laten een verdeling zien
+    die wel iets wegheeft van een klokvorm,
+    maar niet heel netjes de normale verdeling volgt. 
+    Het valt vooral op dat in beide QQ-plots
+    de Sample Quantiles voor kleine waarden kleiner zijn
+    dan verwacht op basis van de Theoretical Quantiles. 
+    Dat geeft aan dat de verdelingen iets links-scheef zijn.
+    
+    Het toepassen van de correlatie-test 
+    is in dit geval dus dubieus.
+    Het zou beter zijn om een andere toets te gebruiken,
+    zoals Spearman's correlatie-toets,
+    maar die behandelen we in deze cursus niet.
+    
+e.  Hoewel we twijfelen of het bivariate model wel geschikt is,
+    voeren we de toets toch uit:
+
+    ```{r}
+    cor.test(ouders_uniek$father, ouders_uniek$mother)
+    ```
+
+    De $P$-waarde van 0,17 is verre van significant.
+    De gegevens geven dus geen bewijs voor *assorted mating*.
+    
+    Het betrouwbaarheidsinterval voor de ware correlatie in de populatie
+    is $[-0{,}04; 0{,}23]$.
+    Een correlatie van $\rho \approx 0{,}2$ is dus nog niet uit te sluiten.
+    Het is dus goed mogelijk dat een grotere steekproef wel een lichte correlatie 
+    aan het licht zou brengen.
+    
+### @exr-extrapoleren
+
+a.  Gebruik de regressielijn:
+
+    $Y =  1{,}652448\cdot 10^2\unit{mm} + (6{,}676867 \cdot 10^{-3}\unit{mm/g}) \cdot 4000\unit{g} = 192\unit{mm}.$
+
+b.  Gebruik de regressielijn:
+
+    $Y =  1{,}652448\cdot 10^2\unit{mm} + (6{,}676867 \cdot 10^{-3}\unit{mm/g}) \cdot 500\unit{g} = 169\unit{mm}.$
+
+c.  De regressielijn was bepaald voor pinguïns in het domein $[2850\unit{g}, 4775\unit{g}]$. 
+    Bij onderdeel **b** hebben we de regressielijn dus geëxtrapoleerd 
+    naar een veel kleiner gewicht van 500g. 
+    Dat is erg gevaarlijk: niemand kan weten of het lineaire model
+    zo ver buiten dat domein nog van toepassing is.
+    
+    In dat geval lijkt dat onwaarschijnlijk. 
+    Een pinguïn van 4000g heeft volgens de regressielijn gemiddeld
+    een flipperlengte van 192mm. 
+    Het lijkt onwaarschijnlijk dat pinguïns die 8 keer lichter zijn,
+    gemiddeld flippers hebben die met 169mm maar zo'n 12% korter zijn.
+
+
+### @exr-Monod
+
+a.  Data:
+
+    ```{r}
+    OD <- c( 31.0, 34.6, 40.0, 35.2, 57.5, 56.5, 57.0, 56.8)
+    drooggewicht <- c(24, 26, 32, 26, 42, 44, 44, 42)
+    
+    monod <- data.frame(OD, drooggewicht)
+    ```
+    
+b.  Plot van `drooggewicht` tegen `OD`:
+
+    ```{r}
+    #| fig-width: 3.3
+    #| fig-height: 3.5
+    #| out-width: "50%"
+    plot(monod$OD, monod$drooggewicht)
+    ```
+    
+    Er is een mooi lineair verband; 
+    OD lijkt dus een erg goede voorspeller voor drooggewicht. 
+    Het is jammer dat verschillende punten dicht bij elkaar liggen.
+    We hadden het verband beter kunnen controleren als ze beter verspreid waren.
+    
+c.  Bereken de correlatiecoëfficiënt:
+
+    ```{r}
+    cor(monod$OD, monod$drooggewicht)
+    ```
+    
+    Een correlatiecoëfficiënt van 0,99 is heel erg hoog;
+    dit is een erg sterk lineair verband.
+    
+d.  We runnen eerst de `lm()` functie, en vragen dan de coëfficiënten op
+    met de functie `summary()`.
+    
+    ```{r}
+    resultaatLM <- lm(drooggewicht ~ OD, data = monod)
+    summary(resultaatLM)$coefficients
+    ```
+    
+    Lees de coëfficiënten af; dat geeft de volgende regressielijn:
+    
+    $\textrm{drooggewicht} = 0{,}834\unit{mg/L} + (0{,}742\unit{mg/L}) \cdot \textrm{OD}.$
+    
+    Voor de volledigheid kunnen we de regressielijn aan de plot toevoegen:
+    
+    ```{r}
+    #| fig-width: 3.3
+    #| fig-height: 3.5
+    #| out-width: "50%"
+    plot(monod$OD, monod$drooggewicht)
+    abline(resultaatLM, col = "darkorange")
+    ```
+    
+e.  Vul de waarde in de regressielijn in:
+
+    ```{r}
+    a <- 0.8342606
+    b <- 0.7415245
+    
+    OD_waarde <- 45.5
+    
+    ( drooggewicht_voorspelling <- a + b*OD_waarde )
+    ```
+
+f.  Op zich kunnen we de regressielijn gebruiken om een voorspelling te doen:
+
+    ```{r}
+    OD_waarde_2 <- 100.0
+    
+    ( drooggewicht_voorspelling_2 <- a + b*OD_waarde_2 )
+    ```
+    
+    Maar de OD van 100,0 ligt erg ver buiten het domein 
+    van de gegevens waaraan de regressielijn was gefit.
+    Als je zo ver extrapoleert
+    is er geen enkele garantie dat de regressielijn
+    nog werkt als proxy voor het drooggewicht. 
+    Het is dus heel onverstandig om op deze voorspelling te vertrouwen.
+
+
+
+### @exr-anscombe
+
+a.  Bekijk de dataset:
+
+    ```{r}
+    #| echo: false
+    library("datasets")
+    ```
+    
+    ```{r}
+    str(anscombe)
+    ```
+    
+b.  De kengetallen voor `x1` en `y1`:
+
+    ```{r}
+    mean(anscombe$x1)
+    mean(anscombe$y1)
+    sd(anscombe$x1)
+    sd(anscombe$y1)
+    cor(anscombe$x1, anscombe$y1)
+    
+    resultaatLM1 <- lm(y1 ~ x1, anscombe)
+    summary(resultaatLM1)$coefficients
+    ```
+    
+c.  De kengetallen voor `x1` en `y1`:
+
+    ```{r}
+    mean(anscombe$x2)
+    mean(anscombe$y2)
+    sd(anscombe$x2)
+    sd(anscombe$y2)
+    cor(anscombe$x2, anscombe$y2)
+    
+    resultaatLM2 <- lm(y2 ~ x2, anscombe)
+    summary(resultaatLM2)$coefficients
+    ```
+    
+d.  De kengetallen voor `x3` en `y3`:
+
+    ```{r}
+    mean(anscombe$x3)
+    mean(anscombe$y3)
+    sd(anscombe$x3)
+    sd(anscombe$y3)
+    cor(anscombe$x3, anscombe$y3)
+    
+    resultaatLM3 <- lm(y3 ~ x3, anscombe)
+    summary(resultaatLM3)$coefficients
+    ```
+
+e.  De kengetallen voor `x4` en `y4`:
+
+    ```{r}
+    mean(anscombe$x4)
+    mean(anscombe$y4)
+    sd(anscombe$x4)
+    sd(anscombe$y4)
+    cor(anscombe$x4, anscombe$y4)
+    
+    resultaatLM4 <- lm(y4 ~ x4, anscombe)
+    summary(resultaatLM4)$coefficients
+    ```
+    
+f.  Voor alle vier de datasets zijn de verschillende
+    kengetallen voor ligging, spreiding,
+    correlatie én regressie nagenoeg hetzelfde.
+    
+    Op basis van deze uitgebreide set kengetallen
+    zou je geneigd zijn te concluderen dat de datasets
+    erg op elkaar lijken.
+    
+g.  Alle plotjes:
+
+    ::: {layout="[[1,1],[1,1]]"}
+    
+    ```{r}
+    #| fig-width: 3.3
+    #| fig-height: 3.5
+    #| out-width: "100%"
+    plot(anscombe$x1, anscombe$y1)
+    abline(resultaatLM1, col = "darkorange")
+    ```
+    
+    ```{r}
+    #| fig-width: 3.3
+    #| fig-height: 3.5
+    #| out-width: "100%"
+    plot(anscombe$x2, anscombe$y2)
+    abline(resultaatLM2, col = "darkorange")
+    ```
+    
+    ```{r}
+    #| fig-width: 3.3
+    #| fig-height: 3.5
+    #| out-width: "100%"
+    plot(anscombe$x3, anscombe$y3)
+    abline(resultaatLM3, col = "darkorange")
+    ```
+    
+    ```{r}
+    #| fig-width: 3.3
+    #| fig-height: 3.5
+    #| out-width: "100%"
+    plot(anscombe$x4, anscombe$y4)
+    abline(resultaatLM4, col = "darkorange")
+    ```
+    
+    :::
+    
+    Hoewel de kengetallen van de vier datasets
+    vrijwel identiek zijn,
+    vertellen de plotjes allemaal een heel ander verhaal.
+    
+    De eerste dataset laat een linear verband zien.
+    In de tweede dataset is het verband duidelijk niet lineair;
+    het ziet er uit als een parabool. 
+    De gegevens in de derde dataset hebben een lineair verband,
+    maar alle kengetallen en coëfficiënten worden sterk verstoord
+    door een uitbijter. Tot slot wordt in de vierde dataset
+    de volledige correlatie, regressie, en standaarddeviatie
+    bepaald door één enkel punt.
+    
+    Alleen bij de eerste dataset zijn de correlatiecoëfficiënt
+    en de regressielijn betekenisvol.
+    
+h.  Zelfs als je een dataset karakteriseert met een hele reeks 
+    kengetallen, 
+    kun je allerlei structuur in de dataset over het hoofd zien.
+    Voordat je een statistische analyse uitvoert,
+    moet je dus *altijd* je data eerst op zoveel mogelijk manieren bekijken.
+
+
+### @exr-simpson
+
+a.  De correlatiecoëfficiënt voor de Chinstrap-pinguïns is sterk positief,
+    zoals de wetenschappers verwacht hadden. 
+    Je kunt dit direct zien aan de punten wolk en de oranje regressielijn.
+    
+b.  De correlatiecoëfficiënt voor de Stubbybeak-pinguïns is ook positief,
+
+c.  Het is een vreemd fenomeen: voor beide soorten is het verband 
+    tussen snavellengte en flipperlengte positief, 
+    maar als beide datasets worden samengevoegd
+    vinden we een *negatieve* correlatie.
+    
+    Dit fenomeen heet *Simpson's paradox*. 
+    Aan het plaatje kun je zien wat de paradox veroorzaakt.
+    Binnen beide groepen is de correlatie positief,
+    maar de *gemiddelden* van de groepen laten juist een negatieve correlatie zien:
+    Stubbybeak heeft gemiddeld langere flippers, 
+    maar een kortere snavel dan Chinstrap.
+    De zwarte regressielijn van de gehele populatie
+    laat zich daardoor naar beneden trekken.
+
+### @exr-nonlinear
+
+Onder **a** t/m **d** voer je het volgende script uit:
+
 ```{r}
-# Lees de data in
-loopsnelheid <- read.csv("../data/loopsnelheid.csv")
-
-# Bekijk de eerste paar regels
-head(loopsnelheid)
-
-# Bekijk de structuur van de dataframe
-str(loopsnelheid)
-```
-  b.
-```{r}
-# Histogram van gemiddelde loopsnelheid
-hist(loopsnelheid$av.wlksp, 
-     main="Histogram van gemiddelde loopsnelheid",
-     xlab="Gemiddelde loopsnelheid")
-
-# Histogram van aantal inwoners (popsize)
-hist(loopsnelheid$popsize, 
-     main="Histogram van aantal inwoners", 
-     xlab="Aantal inwoners")
-
-# Boxplot van gemiddelde loopsnelheid
-boxplot(loopsnelheid$av.wlksp, 
-        main="Boxplot van gemiddelde loopsnelheid",
-        ylab="Gemiddelde loopsnelheid")
+meetgegevens <- data.frame(
+  substraatconcentratie = c(0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0),
+  reactiesnelheid = c(2.3, 4.1, 8.5, 13.2, 18.4, 22.5, 24.0)
+  )# Definieer de Michaelis-Menten-curve
+michaelis_menten <- function(S, v_max, K_M) {
+  v_max * S / (K_M + S)
+}
+# Pas niet-lineaire regressie toe
+fit <- nls(
+  reactiesnelheid ~ michaelis_menten(substraatconcentratie, v_max, K_M),
+  data = meetgegevens,
+  start = list(v_max = 25, K_M = 1) # Startwaarden
+)
+summary(fit)$coefficients
 ```
 
-  We kunnen ook de kengetallen van beide variabelen inspecteren met behulp van `summary()`.
-```{r}
-summary(loopsnelheid)
-```
-  c. We maken eerst een nieuwe kolom met daarin het logaritme van het aantal inwoners, en vervolgens maken we hier een spreidingsdiagram van.
-```{r}
-# Maak eerst een nieuwe kolom met de logaritme van het aantal inwoners
-loopsnelheid$logpops <- log(loopsnelheid$popsize)
+De coêfficiënten liggen inderdaad in de buurt
+van de getallen die we vooraf hadden ingeschat.
 
-plot(loopsnelheid$logpops,
-     loopsnelheid$av.wlksp,
-     main = "Loopsnelheid en populatiegrootte in verschillende steden",
-     xlab = "Populatiegrootte (log)",
-     ylab = "Gemiddelde loopsnelheid",
-     col = "darkorange")
-```
+e.  Plot data met de fit:
 
-  d. 
-```{r}
-cor_pops_walk <- cor.test(loopsnelheid$logpops, loopsnelheid$av.wlksp)
-cor_pops_walk
-```
-  e. De Pearson correlatie coefficient heeft een aantal aannames:
-  - De data van beide variabelen moet normaalverdeeld zijn.
-  - De relatie tussen de variabelen is lineair.
-  - Homoscedasticiteit: de spreiding van de gegevens moet constant zijn.
-```{r}
-# Voor beide variabelen onderzoeken we of deze grofweg
-# normaalverdeeld zijn
+    ```{r}
+    v_max <- 26.91670 
+    K_M <- 1.02837
+    
+    S_waarden <- seq(0, 10, 0.5)
+    # de gefitte MM-curve:
+    reactiesnelheid_model <- michaelis_menten(S_waarden, v_max, K_M)
+    
+    # plot de lijn volgens het model
+    plot(
+      S_waarden, reactiesnelheid_model, 
+      type = "l", col = "black", lwd = 2,
+      xlab = "substraat",
+      ylab = "reactiesnelheid")
+    # voeg de datapunten eraan toe
+    points(
+      meetgegevens$substraatconcentratie, 
+      meetgegevens$reactiesnelheid,
+      pch = 21, 
+      bg = "darkorange", 
+      cex = 1.5
+      )
+    ```
 
-# Logaritme van de populatiegrootte
-qqnorm(loopsnelheid$logpops)
-qqline(loopsnelheid$logpops)
-
-# Gemiddelde loopsnelheid
-qqnorm(loopsnelheid$av.wlksp)
-qqline(loopsnelheid$av.wlksp)
-```
-  
-```{r}
-# QQplot om te onderzoeken of de relatie lineair is
-qqplot(loopsnelheid$logpops, loopsnelheid$av.wlksp)
-```
-  f. Hiervoor moeten we even kijken naar de uitkomst van onze correlatietest bij vraag d:
-```{r}
-cor_pops_walk
-```
-  De P-waarde is niet kleiner dan $0,05$, dus we kunnen concluderen dat de correlatiecoëfficiënt statistisch gezien niet verschillend is van nul.
-  g. De hypothese is dat de gemiddelde loopsnelheid afhangt van de logaritme van het aantal inwoners van een stad. 
-```{r}
-# Voer lineaire regressie uit
-model <- lm(av.wlksp ~ logpops, data = loopsnelheid)
-
-# Bekijk het model en de samenvatting
-summary(model)
-```
-  De aannames van de regressieanalyse zijn:
-  - Lineariteit: De relatie tussen de onafhankelijke en afhankelijke variabele moet lineair zijn.
-  - Normaliteit van de residuen: De residuen van het model moeten normaal verdeeld zijn.
-  - Homoscedasticiteit: De spreiding van de residuen moet constant zijn over de voorspelde waarden.
-  - Onafhankelijkheid van de residuen: De residuen moeten onafhankelijk zijn van elkaar.
-  
-  We kunnen deze aannames testen met behulp van de volgende figuur:
-```{r}
-par(mfrow = c(2, 2))
-plot(model)
-```
-  h. De uitkomst van `summary()` laat zien dat er geen significante regressie is, 
-  omdat de P-waarde voor de regressiecoëfficiënt groter is dan $0,05$.
-  
-::: {.todo-box}
-Antwoord i en j nog uitwerken!
-:::
-  i.
-  j.
-  
+    De gegevens liggen netjes langs het model.
+    Het model lijkt dus erg geschikt om deze gegevens te beschrijven.
