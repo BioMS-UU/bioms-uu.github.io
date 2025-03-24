@@ -280,6 +280,9 @@ print(p)
 
 ```
 
+
+
+
 ### De correlatiecoëfficient is niet de richtingscoëfficient
 
 De correlatiecoëfficiënt geeft aan of het verband positief of negatief is,
@@ -346,6 +349,93 @@ p <- ggplot(datasets, aes(x = X, y = Y)) +
 # Print de plot
 print(p)
 ```
+
+::: {#exr-schatten-r .pepexr}
+## Correlatiecoëfficiënten schatten
+<br>
+
+a.  Kijk terug naar de gegevens van Galton, @fig-galton, 
+    en vergelijk de plot met de puntenwolken in @fig-correl-coefs.
+    Schat op het oog de correlatiecoëfficiënt van Galtons gegevens.
+
+b.  Hieronder zijn 8 puntenwolken gegeven. 
+    Schat op het oog de correlatiecoëfficiënten.
+
+```{r}
+#| out-width: "100%"
+#| fig-width: 7
+#| echo: false
+#| warning: false
+#| fig.cap: "Wat zijn de correlatiecoëfficienten?"
+#| label: fig-correl-coefs-schatten
+
+# Laad benodigde pakketten
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("MASS" %in% .packages())) { library(MASS) }
+if (!("dplyr" %in% .packages())) { library(dplyr) }
+
+# Parameters
+n <- 200  # Steekproefgrootte
+aantal_panels <- 8
+set.seed(42)  # Voor reproduceerbaarheid
+
+# Genereer willekeurige correlaties tussen -1 en 1
+correlaties <- runif(aantal_panels, min = -1, max = 1)
+
+# Functie om bivariate normale steekproef te genereren
+genereer_data <- function(rho, n, groep) {
+  sigma <- matrix(c(1, rho, rho, 1), nrow = 2)
+  data <- MASS::mvrnorm(n, mu = c(0, 0), Sigma = sigma)
+  data.frame(X = data[, 1], Y = data[, 2], groep = groep)
+}
+
+# Genereer datasets
+datasets <- do.call(
+  rbind,
+  Map(genereer_data, correlaties, n = n, groep = 1:aantal_panels)
+)
+
+# Bereken steekproefcorrelaties
+correlatie_labels <- datasets %>%
+  group_by(groep) %>%
+  summarise(sample_cor = cor(X, Y))
+
+# Print correlaties in console
+cat("Steekproefcorrelaties:\n")
+for (i in 1:aantal_panels) {
+  cat(sprintf("(%s): r = %.2f\n",
+              letters[i],
+              correlatie_labels$sample_cor[i]))
+}
+
+# Genereer labels (a)–(h)
+panel_labels <- setNames(
+  paste0("(", letters[1:aantal_panels], ")"),
+  1:aantal_panels
+)
+
+# Plot
+p <- ggplot(datasets, aes(x = X, y = Y)) +
+  geom_point(color = "darkorange", alpha = 0.8, size = 1) +
+  facet_wrap(
+    ~ groep,
+    nrow = 2,
+    labeller = as_labeller(panel_labels)
+  ) +
+  coord_fixed(xlim = c(-3, 3), ylim = c(-3, 3)) +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    strip.text = element_text(size = 12),
+    plot.margin = margin(0, 0, 0, 0)
+  ) +
+  labs(x = NULL, y = NULL)
+
+print(p)
+```
+
+
+:::
 
 ### De correlatiecoëfficient is alleen betekenisvol voor lineaire relaties
 
@@ -1861,8 +1951,8 @@ door voor verschillende substraatconcentraties
 de reactisnelheid te meten. 
 @Fig-mm-a laat zien hoe experimentele resultaten eruit zouden kunnen zien.
 Als je de substraatconcentratie steeds verder verhoogt,
-gaat uiteindelijk de reactiesnelheid niet meer omhoog
-omdat het enzym op zijn maximale snelheid werkt.
+wordt uiteindelijk de reactiesnelheid niet meer groter
+omdat het enzym al op zijn maximale snelheid werkt.
 Dat levert een niet-lineaire curve op.
 
 ::: {#fig-mm layout="[[1,1]]"}
@@ -2046,29 +2136,28 @@ Werk in uitvoering!
 
 ## Opgaven
 
-
-::: {#exr-covid}
-Regressieopgave terugverwijzen naar Brams opgave over covid.
-    
-:::
-
 ::: {#exr-Monod .Rexp}
 
 ## Het kalibreren van de nephelometer.
+<br>
 
-De beroemde bioloog en Nobelprijswinnaar Jacques Monod beschreef in zijn proefschrift uit 1942^[] 
+De beroemde bioloog en Nobelprijswinnaar Jacques Monod beschreef in zijn proefschrift uit 1942
 in veel detail de groei van bacterie-culturen.
-Om tijdens de groei van een cultuur
-de biomassa van de cellen te meten
-maakte hij gebruik van een *nephelometer*.
+Om dat te kunnen doen, wilde hij wilde tijdens de groei van een cultuur
+de totale biomassa van de cellen kunnen meten
+zonder de cultuur te verstoren.
+
+Daarom maakte hij gebruik van een *nephelometer*.
 Een nephelometer meet de optische dichtheid (OD) van een suspensie
 door er een lichtstraal op te schijnen en de verstrooiing van het licht te meten.
-Monod rekende de gemeten OD om naar het drooggewicht van de cellen,
-in mg drooggewicht per liter groeimedium.
+Het idee was dat de OD toeneemt
+naarmate de biomassa groet.
+Uit de OD zou je de biomassa dus moeten kunnen berekenen.
 
 Om te bevestingen dat OD inderdaad een goede proxy is voor drooggewicht
+en de omrekenfactor te schatten,
 mat Monod acht keer
-zowel het drooggewicht en de OD
+zowel het drooggewicht (in mg per liter groeimedium) en de OD
 voor *Bacillus subtilis*-culturen.
 Hij vond de volgende waarden:
  
@@ -2085,151 +2174,262 @@ Hij vond de volgende waarden:
 
   a. Maak in R twee vectoren met de meetgegevens: `OD` en `drooggewicht`.
      Combineer ze tot een dataframe.
+     
   b. Plot `drooggewicht` tegen `OD`. Ziet het ernaar uit dat `OD` gebruikt kan worden
      om `drooggewicht` te voorspellen?
+     
   c. Bereken de correlatiecoëfficiënt tussen beide variabelen. Wat zegt die waarde?
+  
   d. Bepaal een lineaire formule om `OD` te voorspellen uit `drooggewicht`.
      Gebruik daarvoor eerst de functie `lm()` en daarna de functie `summary()`.
+     
   e. In een nieuw experiment meet Monod een OD van 41,0. Wat is jouw beste schatting
      van het drooggewicht?
+     
   f. In een volgend experiment meet Monod een OD van 100,0. Wat zegt de regressielijn
      over het drooggewicht?
      
 :::
 
-::: {.todo-box}
+
+::: {#exr-asncombe .Rexr}
+### Anscombes kwartet
+<br>
+
+In 1973 publiceerde statisticus Francis Anscombe een interessante dataset.^[Anscombe, F. J. (1973). "Graphs in Statistical Analysis". American Statistician. 27 (1): 17–21.]
+Deze dataset is beschikbaar via de library `datasets`;
+als je die nog niet geïnstalleerd hebt, 
+moet je dat eenmalig nog even doen met het commando:
 
 ```{r}
 #| eval: false
-MonodOD <- read.csv("~/Library/CloudStorage/OneDrive-UniversiteitUtrecht/Documents/Teaching/KwantitatieveBiologie/2024-2025/Boek/Statistiek/StatistiekRutger/data/MonodOD.csv")
-MonodOD$DryWeightPerL <- MonodOD$Dry.Weight..mg..in.50cc*20
-resultLM <- lm(DryWeightPerL ~ Nephelometer.Reading, MonodOD)
-summary(resultLM)
-
+install.packages("datasets")
 ```
+
+Start een nieuw script. Schrijf al je code in het script,
+niet rechtstreeks in de Console.
+
+a.  Laad de dataset in:
+    
+    ```{r}
+    #| eval: false
+    library("datasets")
+    ```
+    
+    De dataframe heet `anscombe`. Bekijk de structuur van de dataframe:
+    
+    ```{r}
+    #| eval: false
+    str(anscombe)
+    ```
+    
+    Verifieer dat er 8 kolommen zijn en 11 rijen.
+    
+    De datafame bevat eigenlijk vier datasets:
+    `x1` hoort bij `y1`, `x2` bij `y2`, etc.
+    
+b.  We focussen even op variabelen `x1` en `y1`.
+    
+    - Bereken het gemiddelde van beide variabelen.
+    - Bereken de standaarddeviatie van beide variabelen.
+    - Bereken de correlatiecoefficient voor `x1` en `y1`.
+    - Bereken de regressiecoëfficiënten voor `y1` als functie van `x1`.
+    
+c.  Herhaal de berekeningen van onderdeel **b**, 
+    maar nu voor `x2` en `y2`.
+    
+    (Als je de code voor **b** netjes in je script hebt geschreven,
+    kun je moet copy-paste heel snel klaar zijn.)
+    
+b.  Doe hetzelfde voor `x3` en `y3`...
+
+e.  ... en tot slot voor `x4` en `y4`.
+
+f.  Wat valt je op als je de resultaten van **b** tot **e** vergelijkt?
+    Wat zou je op basis van al deze kengetallen 
+    denken over deze vier datasets?
+
+g.  Gebruik de functie `plot()` om een spreidingsdiagram te maken van `y1` versus `x1`.
+    Herhaal dit voor de andere drie datasets.
+    Vertellen de figuren hetzelfde verhaal?
+    
+h.  Wat is de moraal van dit verhaal?
 
 :::
 
-### Anscombes kwartet
 
-Example: Anscombe's quartet
+::: {#exr-simpson .pepexr}
+### Piguïnparadox
+<br>
 
-Published in @anscombeGraphsStatisticalAnalysis1973.
+Tijdens avontuurlijk veldwerk hebben onderzoekers
+in de Palmer-archipel 
+de snavellengte en flipperlengte van pinguïns gemeten.
+De verwachting was dat die twee variabelen
+positief met elkaar correleren,
+want een pinguïn met lange flippers 
+zal typisch in alle opzichten wat groter zijn
+dan een pinguïn met korte flippers,
+en dus ook typisch een langere snavel hebben.
 
-Four datasets with $(x, y)$ data, nearly identical summary statistics:
-all four datasets have the same mean and variance of $x$, mean and
-variance of $y$, even the same correlation coefficient. (Correlation
-will be discussed in chapter ...)
+Groot was dan ook het ongeloof,
+toen bleek dat de correlatie *negatief* was:
+$r = -0{,}19$!
+
+Om uit te vinden wat er aan de hand was,
+doken de onderzoekers dieper de gegevens in.
+Het bleek dat er pinguïns van twee soorten 
+in de dataset waren opgenomen: 
+Chinstrap en Stubbybeak[^stubby].
+
+[^stubby]: Ok, om eerlijk te zijn: er bestaat geen pinguïnsoort 
+    met de naam Stubbybeak.
+    We hebben die voor deze opgave uit onze duim gezogen.
+    De gegevens voor Stubbybeak zijn eigenlijk meetgegevens 
+    voor Gentoo-pinguïns uit de dataset "palmerpenguins",
+    behalve dat van iedere snavellengte 3mm is afgetrokken.
+    De gegevens van Chinstrap zijn wél echt. 
+
+De plot hieronder laat de gehele dataset zien.
+De datapunten voor de twee soorten 
+hebben verschillende kleuren gekregen.
+Ook zijn aparte regressielijnen toegevoegd voor beide soorten.
 
 ```{r}
 #| echo: false
+#| code-fold: true
+#| warning: false
+#| fig.cap: "De pinguïnparadox: correleert snavellengte positief met flipperlengte?"
+#| label: fig-simpsons-fake
+#| fig.width: 5
+#| fig.height: 4.5
+#| out.width: "60%"
 
-if (!("datasets" %in% .packages())) { library(datasets) }
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-
-# Functie om één plot uit Anscombe's quartet te maken
-maak_anscombe_plot <- function(
-  xvariabele, 
-  yvariabele, 
-  titel
-  ) {
-  
-  grafiek <- ggplot(
-    anscombe,
-    aes(x = .data[[xvariabele]], 
-         y = .data[[yvariabele]])
-    ) +
-    geom_point(
-      color = "black",
-      grootte = 2
-      ) +
-    labs(
-      x = expression(italic(X)),
-      y = expression(italic(Y)),
-      title = titel,
-      parse = TRUE
-      ) +
-    coord_cartesian(
-      ylim = c(3, 13),
-      xlim = c(3, 20)
-      ) +
-    geom_smooth(
-      method = "lm",
-      se = FALSE,
-      color = "darkorange",
-      linewidth = 1
-      ) + theme_minimal()
-  
-  return(grafiek)
+# Laad benodigde bibliotheken
+if (!("palmerpenguins" %in% .packages())) {
+  library(palmerpenguins)
 }
+if (!("ggplot2" %in% .packages())) {
+  library(ggplot2)
+}
+
+# Definieer correcties (in mm)
+korter_snavel <- 3
+korter_flipper <- 0
+
+# Filter en manipuleer data
+pinguins <- subset(
+  penguins,
+  species %in% c("Chinstrap", "Gentoo") &
+    !is.na(bill_length_mm) &
+    !is.na(flipper_length_mm)
+)
+
+# Pas correctie toe en hernoem soort
+soort <- as.character(pinguins$species)
+snavel <- pinguins$bill_length_mm
+flipper <- pinguins$flipper_length_mm
+
+snavel[soort == "Gentoo"] <- snavel[soort == "Gentoo"] - korter_snavel
+flipper[soort == "Gentoo"] <- flipper[soort == "Gentoo"] - korter_flipper
+soort[soort == "Gentoo"] <- "Stubbybeak"
+
+# Werk dataset bij
+pinguins$species <- factor(
+  soort,
+  levels = c("Chinstrap", "Stubbybeak")
+)
+pinguins$bill_length_mm <- snavel
+pinguins$flipper_length_mm <- flipper
+
+# Bereken correlaties
+cor_chin <- cor(
+  pinguins$flipper_length_mm[pinguins$species == "Chinstrap"],
+  pinguins$bill_length_mm[pinguins$species == "Chinstrap"]
+)
+
+cor_short <- cor(
+  pinguins$flipper_length_mm[pinguins$species == "Stubbybeak"],
+  pinguins$bill_length_mm[pinguins$species == "Stubbybeak"]
+)
+
+cor_samen <- cor(
+  pinguins$flipper_length_mm,
+  pinguins$bill_length_mm
+)
+
+# Toon correlaties
+# cat("Correlatie Chinstrap:  ", round(cor_chin, 3), "\n")
+# cat("Correlatie Stubbybeak:  ", round(cor_short, 3), "\n")
+# cat("Samen genomen:         ", round(cor_samen, 3), "\n")
+
+# Gezamenlijk regressiemodel
+model <- lm(
+  bill_length_mm ~ flipper_length_mm,
+  data = pinguins
+)
+
+# Plot
+ggplot(
+  pinguins,
+  aes(x = flipper_length_mm, y = bill_length_mm)
+) +
+  geom_point(
+    aes(color = species),
+    size = 2
+  ) +
+  geom_smooth(
+    method = "lm",
+    aes(color = species),
+    se = FALSE,
+    size = 1
+  ) +
+  geom_abline(
+    intercept = coef(model)[1],
+    slope     = coef(model)[2],
+    linetype  = "dashed",
+    color     = "black",
+    size      = 1
+  ) +
+  labs(
+    x = "Flipperlengte (mm)",
+    y = "Snavellengte (mm)",
+    color = "Soort"
+  ) +
+  scale_color_manual(
+    values = c(
+      "Chinstrap" = "darkorange",
+      "Stubbybeak" = "DarkOrchid"
+    )
+  ) +
+  theme_classic()
 ```
 
-:::{#fig-anscombe layout="[[1,1,1,1]]"}
-```{r}
-#| label: fig-anscombe-a
-#| fig-height: 2.5
-#| fig-width: 2.5
-#| out-width: "100%"
-#| warning: false
+a.  Is de correlatiecoëfficient voor de Chinstrap-pinguins positief of negatief?
 
-grafiek_a <- maak_anscombe_plot("x1", "y1", NULL)
-grafiek_a
-```
+b.  Is de correlatiecoëfficient voor de Stubbybeak-pinguins positief of negatief?
 
-```{r}
-#| label: fig-anscombe-b
-#| fig-height: 2.5
-#| fig-width: 2.5
-#| out-width: "100%"
-#| warning: false
-
-grafiek_b <- maak_anscombe_plot("x2", "y2", NULL)
-grafiek_b
-```
-
-```{r}
-#| label: fig-anscombe-c
-#| fig-height: 2.5
-#| fig-width: 2.5
-#| out-width: "100%"
-#| warning: false
-
-
-grafiek_c <- maak_anscombe_plot("x3", "y3", NULL)
-grafiek_c
-```
-
-```{r}
-#| label: fig-anscombe-d
-#| fig-height: 2.5
-#| fig-width: 2.5
-#| out-width: "100%"
-#| warning: false
-
-
-grafiek_d <- maak_anscombe_plot("x4", "y4", NULL)
-grafiek_d
-```
+c.  Kun jij begrijpen hoe het kan dat de correlatie voor de gehele dataset toch negatief is?
 
 :::
 
+::: {.callout-note}
+## Simpsons paradox
 
-::: callout-warning
-## Examine your data first
-
-The lesson that you shoud draw from Anscombe's quartet is that you
-should always carefully examine your data before you perform any
-additional analysis. Try to visualize your data in various ways and
-never rely on summary statistics only.
-:::
-
-::: {#exr-simpson}
-
+De pinguïnparadox heet in het algemeen **Simpsons paradox**.
+De paradox is: 
+als twee variabelen positief geassocieerd zijn in twee groepen,
+dan kan het zijn dat ze negatief geassocieerd zijn als de twee groepen
+worden samengevoegd.
+Het is dus belangrijk om goed na te denken voordat je data van meerdere groepen
+aggregeert in één dataset.
 
 :::
+
 
 ::: {#exr-nonlinear .Rexr}
-## Michaelis-Menten parameters schatten door gegevens te fitten.**
+## Eigenschappen van een enzymatische reactie, en een niet-lineair model.
+<br>
 
 In @sec-nlf hebben we uitgelegd dat de reactiesnelheid ($v$) van een enzymatische reactie 
 op een niet-lineaire manier afhangt van de substraatconcentratie $S$.
@@ -2243,7 +2443,7 @@ $$
 met de volgende parameters:
 
 - $v\ped{max}$: De maximale reactiesnelheid.
-- $K\ped{M}$**: De substraatconcentratie waarbij de reactiesnelheid de helft van $v_{\max}$ bereikt.
+- $K\ped{M}$: De substraatconcentratie waarbij de reactiesnelheid de helft van $v_{\max}$ bereikt.
 
 @Fig-mm-b illustreert de formule.
 

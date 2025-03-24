@@ -1,5 +1,98 @@
 ## Antwoorden @sec-linrel
 
+### @exr-anscombe
+
+```{r}
+#| echo: false
+
+if (!("datasets" %in% .packages())) { library(datasets) }
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+
+# Functie om één plot uit Anscombe's quartet te maken
+maak_anscombe_plot <- function(
+  xvariabele, 
+  yvariabele, 
+  titel
+  ) {
+  
+  grafiek <- ggplot(
+    anscombe,
+    aes(x = .data[[xvariabele]], 
+         y = .data[[yvariabele]])
+    ) +
+    geom_point(
+      color = "black",
+      grootte = 2
+      ) +
+    labs(
+      x = expression(italic(X)),
+      y = expression(italic(Y)),
+      title = titel,
+      parse = TRUE
+      ) +
+    coord_cartesian(
+      ylim = c(3, 13),
+      xlim = c(3, 20)
+      ) +
+    geom_smooth(
+      method = "lm",
+      se = FALSE,
+      color = "darkorange",
+      linewidth = 1
+      ) + theme_minimal()
+  
+  return(grafiek)
+}
+```
+
+:::{#fig-anscombe layout="[[1,1,1,1]]"}
+```{r}
+#| label: fig-anscombe-a
+#| fig-height: 2.5
+#| fig-width: 2.5
+#| out-width: "100%"
+#| warning: false
+
+grafiek_a <- maak_anscombe_plot("x1", "y1", NULL)
+grafiek_a
+```
+
+```{r}
+#| label: fig-anscombe-b
+#| fig-height: 2.5
+#| fig-width: 2.5
+#| out-width: "100%"
+#| warning: false
+
+grafiek_b <- maak_anscombe_plot("x2", "y2", NULL)
+grafiek_b
+```
+
+```{r}
+#| label: fig-anscombe-c
+#| fig-height: 2.5
+#| fig-width: 2.5
+#| out-width: "100%"
+#| warning: false
+
+
+grafiek_c <- maak_anscombe_plot("x3", "y3", NULL)
+grafiek_c
+```
+
+```{r}
+#| label: fig-anscombe-d
+#| fig-height: 2.5
+#| fig-width: 2.5
+#| out-width: "100%"
+#| warning: false
+
+
+grafiek_d <- maak_anscombe_plot("x4", "y4", NULL)
+grafiek_d
+```
+:::
+
 ### @exr-loopsnelheid
 
   a. Het bestand bevat informatie over de populatiegrootte en gemiddelde loopsnelheid van 14 steden.
