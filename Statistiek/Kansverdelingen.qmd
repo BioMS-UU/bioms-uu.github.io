@@ -1393,17 +1393,19 @@ of met df = 8.
 Een variabele met een $t$-verdeling wordt vaak $t$ genoemd.
 
 De $t$-verdelingen lijken behoorlijk op de standaardnormale verdeling.
-In @fig-t hieronder laten we drie $t$-verdelingen zien,
-en in het oranje de standaardnormale verdeling.
+In @fig-t hieronder kun je de $t$-verdeling (oranje)
+vergelijken met de standaardnormale verdeling (zwart).
+Gebruik de slider om het aantal vrijheidsgraden te veranderen.
 
 ```{r}
-#| label: fig-t
+#| label: fig-t-2
 #| fig-cap: "Verschillende $t$-verdelingen en de standaardnormale verdeling"
 #| warning: false
 #| fig-height: 3
 #| fig-width: 6
 #| out-width: 86%
-#| code-fold: true
+#| eval: false
+#| echo: false
 
 # Genereer t-waarden
 t_values <- seq(-3.5, 3.5, by = 0.1)
@@ -1466,6 +1468,99 @@ ggplot(
   ) +
   # Thema toepassen
   theme_minimal()
+```
+
+```{r}
+#| echo: false
+#| fig-height: 4.5
+#| fig-width: 7
+#| out-width: 86%
+#| fig-cap: "Vergelijking tussen verschillende $t$-verdelingen en de standaardnormale verdeling. Hoe groter het aantal vrijheidsgraden, hoe kleiner het verschil."
+#| label: fig-t
+
+if (!("plotly" %in% .packages())) { library(plotly) }
+if (!("stats" %in% .packages())) { library(stats) }
+
+# Reeks x-waarden
+x_waarden <- seq(-4, 4, length.out = 200)
+vrijheidsgraden <- 2:30
+
+# Normale verdeling
+y_normaal <- dnorm(x_waarden)
+
+# Begin plot
+fig <- plot_ly()
+
+# Voeg standaardnormale verdeling toe
+fig <- fig %>% add_lines(
+  x = x_waarden,
+  y = y_normaal,
+  name = "Standaardnormale verdeling",
+  line = list(color = "black", dash = "dot", width = 3),
+  visible = TRUE
+)
+
+# Voeg t-verdelingen toe
+for (i in seq_along(vrijheidsgraden)) {
+  df <- vrijheidsgraden[i]
+  y_t <- dt(x_waarden, df = df)
+
+  fig <- fig %>% add_lines(
+    x = x_waarden,
+    y = y_t,
+    name = paste0("t-verdeling (df = ", df, ")"),
+    line = list(color = "darkorange", width = 3),
+    visible = i == 1
+  )
+}
+
+# Sliderstappen
+steps <- lapply(seq_along(vrijheidsgraden), function(i) {
+  visible_vec <- c(TRUE, rep(FALSE, length(vrijheidsgraden)))
+  visible_vec[i + 1] <- TRUE
+
+  list(
+    method = "update",
+    args = list(
+      list(visible = visible_vec),
+      list(
+        title = paste0("Standaardnormale en t-verdeling (df = ", 
+                       vrijheidsgraden[i], ")")
+      )
+    ),
+    label = as.character(vrijheidsgraden[i])
+  )
+})
+
+# Layout met latex in titels, mooie rasterlijnen
+fig <- fig %>% layout(
+  title = list(
+    text = "Vergelijking tussen standaardnormale verdeling en t-verdeling",
+    x = 0.5
+  ),
+  xaxis = list(
+    title = list(text = "t of Z"),  # LaTeX-style titel
+    tickmode = "array",
+    tickvals = -4:4,
+    gridcolor = "lightgray",
+    zeroline = TRUE,
+    zerolinewidth = 1
+  ),
+  yaxis = list(
+    title = "Kansdichtheid",
+    gridcolor = "lightgray"
+  ),
+  sliders = list(list(
+    active = 0,
+    currentvalue = list(prefix = "Vrijheidsgraden (df): "),
+    steps = steps,
+    x = 0.1,
+    xanchor = "left",
+    y = -0.2
+  ))
+)
+
+fig
 ```
 
 Net als bij de standaardnormale verdeling

@@ -147,7 +147,7 @@ Op deze en andere vragen zullen we hieronder ingaan.
 
 ### Wat is een lineaire relatie?
 
-Stel dat we een steekproef van grootte $n$ hebben genomen uit een populatie
+Stel dat we uit een populatie een steekproef van grootte $n$ hebben genomen 
 en van iedere eenheid twee variabelen hebben gemeten: $X$ en $Y$.
 De gemeten waarden van eenheid $i$ noemen we $x_i$ en $y_i$. 
 We maken vervolgens een spreidingsdiagram waarbij we $Y$ uitzetten tegen $X$.
@@ -210,20 +210,24 @@ door **Pearsons correlatiecoëfficiënt** $r$ uit te rekenen.
 
 Hier zijn een paar eigenschappen:
 
-- De correlatiecoëfficiënt is **dimensieloos** en heeft dus geen eenheid. 
+- De correlatiecoëfficiënt is **dimensieloos** en heeft dus geen eenheid.
+
 - De waarde van $r$ ligt altijd in het interval $[-1, 1]$.
+
 - Het *teken* van $r$ (positief of negatief) geeft aan of het om een positief (stijgend) of een negatief (dalend) verband gaat.
+
 - De absolute waarde van $r$  geeft aan hoe sterk het verband is; 
   dat wil zeggen, hoe strak de punten langs de lijn liggen.
+
   - Als $r = 1$, dan is er een perfect *positief* lineair verband: 
   alle punten liggen dan exact op een stijgende rechte lijn.
+
   - Als $r = -1$, dan is er een perfect *negatief* lineair verband: 
   alle punten liggen dan exact op een dalende rechte lijn.
+
   - Als $r = 0$, dan is er géén lineair verband tussen de variabelen.
 
-
 @Fig-correl-coefs toont een aantal voorbeelden van puntenwolken met de bijbehorende waarden van $r$.
-
 
 ```{r}
 #| out-width: "100%"
@@ -279,9 +283,6 @@ p <- ggplot(datasets, aes(x = X, y = Y)) +
 print(p)
 
 ```
-
-
-
 
 ### De correlatiecoëfficiënt is niet de richtingscoëfficiënt
 
@@ -591,7 +592,7 @@ is iets dat je goed in gedachte moet houden
 bij het interpreteren van gegevens.
 Als er tussen twee variabelen geen duidelijk verband wordt gevonden,
 kan dat ook liggen aan een gebrek aan variatie in de $X$-waarden.
-Een andere studie waarin de bestudeerde steekproef meer varieert
+Een andere studie waarin de bestudeerde steekproef meer variatie bevat
 kan dan mogelijk wél een correlatie aantonen.
 
 ::: {#fig-bereik layout="[[1],[1]]"}
@@ -762,7 +763,7 @@ Het bereik van de dataset kan een grote invloed hebben op de correlatiecoëffici
 ### De covariantie
 
 Tot nu toe hebben we de eigenschappen van de correlatiecoëfficiënt besproken
-zonder te laten zien hoe je die uitrekent.
+zonder te vertellen hoe je die uitrekent.
 Dat is het volgende op het programma.
 
 Het is handig om eerst de **covariantie** te definiëren tussen de gegevens $x_i$ en $y_i$
@@ -772,8 +773,8 @@ $$ \covD{X}{Y} = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n-1}.$$ {#
 
 In de teller staat dat we voor iedere eenheid $i$ uit onze waarnemingen
 eerst de afwijkingen $x_i - \mean{x}$ en $y_i - \mean{y}$ moeten uitrekenen 
-en met elkaar vermenigvuldigen, en vervolgens
-de resultaten voor alle eenheden moeten optellen.
+en die met elkaar moeten vermenigvuldigen, om vervolgens
+de resultaten voor alle eenheden op te tellen.
 Tot slot delen we door $n - 1$.
 
 De covariantie meet de mate waarin de $x$- en $y$-waarden lineair met elkaar samenhangen.
@@ -847,14 +848,14 @@ Het diagram is in vier kwadranten verdeeld
 door met een verticale onderbroken lijn het gemiddelde van $x$ aan te geven
 en met een horizontale onderbroken lijn het gemiddelde van $y$.
 
-- In het **kwadrant rechtsboven** liggen dus alle datapunten waarbij $x_i > \mean{x}$,
+- In het **kwadrant rechtsboven** liggen alle datapunten waarbij $x_i > \mean{x}$,
 en $y_i > \mean{y}$.
 Het product $(x_i - \mean{x})(y_i - \mean{y})$ is voor datapunten in dat kwadrant
 dus *positief*.
 In @eq-cov voor de covariantie dragen punten in dat kwadrant dus positief bij.
 Punten die ver in de rechts-bovenhoek van het diagram liggen,
-dragen het meest bij, want daarvoor zijn $x_i > \mean{x}$
-en $y_i > \mean{y}$ het grootst.
+dragen het meest bij, want daarvoor zijn $x_i - \mean{x}$
+en $y_i - \mean{y}$ het grootst.
 
 - In het **kwadrant linksonder** liggen alle datapunten waarbij $x_i < \mean{x}$,
 en $y_i < \mean{y}$.
@@ -885,9 +886,6 @@ Bijvoorbeeld,
 in de gegevens van Galton 
 hebben $X$ en $Y$ allebei de dimensie van *lengte*, met eenheid cm.
 De covariantie van die gegevens heeft dus dimensie lengte$^2$ en eenheid cm$^2$.
-
-
-
 
 ::: {#exr-covariantie .pepexr}
 
@@ -959,16 +957,17 @@ cor( GaltonFamilies$lengte_ouders, GaltonFamilies$lengte_kinderen )
 ```
 De correlatiecoëfficiënt tussen de lengte van ouders en hun kinderen
 is in de dataset van Galton dus 0,50.
+(Had je dat in @exr-schatten-r al zo ingeschat?)
 
 ## Toetsen of de correlatiecoëfficiënt afwijkt van 0
 
-Als we in een steekproef of serie waarnemingen 
+Als we in een *steekproef of serie waarnemingen* 
 een correlatie zien tussen twee variabelen,
 dan kan dat betekenen dat deze variabelen
-gecorreleerd zijn in de populatie.
+gecorreleerd zijn *in de populatie*.
 Maar het is ook mogelijk 
 dat de correlatie in de waarnemingen
-het gevolg is van toevallige steekproefvariabiliteit.
+het gevolg is van toevallige steekproevenvariabiliteit.
 Is er een manier om dat te toetsen?
 In andere woorden: kunnen we laten zien dat deze gegevens
 sterk bewijs leveren tegen de hypothese
@@ -2295,7 +2294,8 @@ Chinstrap en Stubbybeak[^stubby].
 De plot hieronder laat de gehele dataset zien.
 De datapunten voor de twee soorten 
 hebben verschillende kleuren gekregen.
-Ook zijn aparte regressielijnen toegevoegd voor beide soorten.
+Ook zijn aparte regressielijnen toegevoegd voor beide soorten (gekleurd)
+en voor de gehele dataset (zwarte onderbroken lijn).
 
 ```{r}
 #| echo: false
