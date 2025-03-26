@@ -16,12 +16,6 @@ lijnkleur3 <- "blue"
 
 # Relaties tussen continue variabelen {#sec-linrel}
 
-::: {.todo-box}
-
-Aan dit hoofdstuk wordt nog hard gewerk!
-
-:::
-
 In het vorige hoofdstuk hebben we het uitgebreid gehad
 over relaties tussen variabelen.
 In dit hoofdstuk kijken we specifiek naar relaties tussen twee continue variabelen.
@@ -290,6 +284,7 @@ De correlatiecoëfficiënt geeft aan of het verband positief of negatief is,
 en hoe dicht de punten bij de lijn liggen.
 Maar het doet er niet toe hoe *stijl* de lijn is.
 De correlatiecoëfficiënt is dus geen richtingscoëfficiënt.
+(Richtingscoëfficiënt is een ander woord voor hellingsgetal.)
 
 Bijvoorbeeld, de steekproeven in @fig-correl-sd hieronder
 verschillen sterk in hun richtingscoëfficiënt, 
@@ -959,7 +954,7 @@ De correlatiecoëfficiënt tussen de lengte van ouders en hun kinderen
 is in de dataset van Galton dus 0,50.
 (Had je dat in @exr-schatten-r al zo ingeschat?)
 
-## Toetsen of de correlatiecoëfficiënt afwijkt van 0
+## Toets van de correlatiecoëfficiënt
 
 Als we in een *steekproef of serie waarnemingen* 
 een correlatie zien tussen twee variabelen,
@@ -1085,7 +1080,7 @@ De bivariate normale verdeling heeft een aantal belangrijke eigenschappen.
 - **Beide variabelen zijn normale verdeel:** Zowel $X$ als $Y$ zijn normaal verdeeld.
 
 - **De contour-lijnen zijn ovaal:** De hoogtelijnen van de bivariate normale verdeling,
-  ook wel contour-lijnen genoems, zijn ovaal. @Fig-contours laat een aantal voorbeelden zien
+  ook wel contour-lijnen genoemd, zijn ovaal. @Fig-contours laat een aantal voorbeelden zien
   voor verschillende waarden van $\rho$.
   
   Het gevolg is dat steekproeven uit de bivariate normale verdeling ook *ongeveer* een 
@@ -1283,11 +1278,11 @@ Trek op basis van $P$ je conclusies.
 
 We zouden de correlatietoets graag willen toepassen op de gegevens van Galton,
 om te zien of we uit zijn gegevens kunnen concluderen
-dat lichaamslengte inderdaad deel erfelijk is.
+dat lichaamslengte inderdaad deels erfelijk is.
 
 a.  Kijk nog eens naar het spreidingsdiagram van de gegevens, @fig-galton.
     Geven deze gegevens de indruk afkomstig te zijn uit een 
-    bivariate normale verdeling, of zie je afwijkingen.
+    bivariate normale verdeling, of zie je afwijkingen?
     
 b.  Als de verdeling bivariaat normaal is,
     dan zouden de lengtes van de ouders 
@@ -1604,7 +1599,6 @@ Hoe sterker het verband is, hoe beter de voorspelling.
 ### De definitie van de regressielijn
 
 Zoals je weet, heeft een rechte lijn de volgende vorm:
-
 $$ Y = a + b X . $$
 Hier is $a$ het startgetal, en $b$ de richtingscoëfficiënt.
 Let op: in veel Nederlandse schoolboeken worden de symbolen precies andersom gebruikt:
@@ -1648,8 +1642,21 @@ gegevens     <- data.frame(
 model        <- lm(y ~ x, gegevens)
 voorspeld_y  <- predict(model)
 
+# Bepaal gemiddelden
+gem_x        <- mean(gegevens$x)
+gem_y        <- mean(gegevens$y)
+
 # Teken de plot
 ggplot(gegevens, aes(x = x, y = y)) +
+  # Gestippelde lijnen voor gemiddelden
+  geom_vline(
+    xintercept = gem_x,
+    linetype   = "dotted"
+  ) +
+  geom_hline(
+    yintercept = gem_y,
+    linetype   = "dotted"
+  ) +
   geom_segment(
     aes(
       x = x, xend = x,
@@ -1669,6 +1676,25 @@ ggplot(gegevens, aes(x = x, y = y)) +
     color     = opvulkleur,
     size      = 1
   ) +
+  # Labels voor de lijnen
+  annotate(
+    "text",
+    x        = gem_x + 0.05,
+    y        = min(gegevens$y) + 0.2,
+    label    = expression(bar(italic(x))),
+    vjust    = -1,
+    hjust    = -0.2,
+    parse    = TRUE
+  ) +
+  annotate(
+    "text",
+    x        = min(gegevens$x) + 0.1,
+    y        = gem_y + 0.1,
+    label    = expression(bar(italic(y))),
+    vjust    = -0.2,
+    hjust    = -0.2,
+    parse    = TRUE
+  ) +
   theme_classic() +
   theme(
     axis.text.x  = element_blank(),
@@ -1682,7 +1708,7 @@ ggplot(gegevens, aes(x = x, y = y)) +
 
 Als het goed is, doet @fig-lineair-reg je denken aan @fig-res-1 uit hoofdstuk 2.
 Daar lieten we zien dat het gemiddelde van een reeks getallen
-de waarde is zodanig dat de som van de gekwadrateerde **residuen**
+de waarde is, zodanig dat de som van de gekwadrateerde **residuen**
 zo klein mogelijk was.
 In @fig-res-1 waren de residuen (afwijkingen van het gemiddelde)
 met grijze lijntjes aangegeven.
@@ -1690,16 +1716,25 @@ We konden ons voorstellen dat de grijze lijntjes elastiekjes waren
 die de oranje lijn verticaal naar de datapunten probeerden te trekken.
 Het gemiddelde was de plek waar de trekkrachten in evenwicht zijn.
 
-Het vinden van de regressielijn werkt precies zo.
+Het bepalen van de regressielijn werkt precies zo.
 We zoeken weer de lijn die de som van de gekwadrateerde residuen
 zo klein mogelijk maakt.
+In @fig-lineair-reg zijn de residuen als grijze lijntjes aangegeven.
+
 Ook de metafoor van de elastiekjes werkt hier weer.
-In @fig-lineair-reg is vanaf ieder datapunt een "elastiekje"
-getekend dat aan de oranje lijn is bevestigd. 
+Je kunt de grijze lijntjes in  @fig-lineair-reg interpreteren als "elastiekje"
+die aan de oranje lijn zijn bevestigd. 
 Ieder elastiekje probeert de lijn verticaal naar zijn datapunt toe te trekken.
 Daardoor schuift en draait de lijn, net zo lang totdat 
 de trekkrachten in evenwicht zijn.
 Het resultaat is de regressielijn.
+
+De parameters $a$ en $b$ van de regressielijn
+worden de **regressiecoëfficiënten** genoemd.
+De coëfficiënt $a$ is het startgetal;
+dat is dus het snijpunt met de $Y$-as.
+De coëfficiënt $b$ is de richtingscoëfficient 
+
 
 ::: {.callout-important}
 
@@ -1714,47 +1749,70 @@ De kwadratensom is de som van de gekwadrateerde residuen.
 
 ### Eigenschappen van de regressielijn
 
-:::{.todo-box}
+De regressielijn heeft bepaalde eigenschappen
+die handig zijn om te weten.
 
-Werk in uitvoering!
+Ten eerste volgt uit de wiskunde dat de regressielijn 
+altijd door het zwaartepunt $(\mean{x}, \mean{y})$ van de puntenwolk gaat.
+In @fig-lineair-reg zijn $\mean{x}$ en $\mean{y}$ met stippellijnen aangegeven;
+de regressielijn gaat precies door het kruispunt van die stippellijnen.
 
-:::
+Ten tweede kan de waarde van $b$ 
+(dus de richtingscoëfficiënt van de regressielijn)
+worden uitgedrukt in een formule:
+$$ b = \frac{\covD{X}{Y}}{V_X}.$$ {#eq-regression-b}
+Als je die formule vergelijk met @eq-pearson,
+dan zie je dat je dat ook kunt schrijven als
+$$ b = \left(\frac{s_Y}{s_X}\right)r.$$ {#eq-r-vs-b}
+Deze formule laat zien dat de regressiecoëfficiënt $b$
+en de correlatiecoëfficiënt $r$
+met elkaar samenhangen.
+Als $b$ positief is, 
+dan is $r$ dat ook.
+Als de regressielijn een stijgende lijn is, 
+is er dus ook een positieve correlatie in de data.
+Als $r$ gelijk is aan 0, dan is $b$ dat ook.
+De coëfficiënt $b$ vertelt je dus net als $r$
+of $X$ en $Y$ samenhangen.
 
-- De regressielijn gaat altijd door het zwaartepunt $(\mean{x}, \mean{y})$ van de puntenwolk.
+Maar, @eq-r-vs-b laat ook zien dat $b$ en $r$ niet *hetzelfde* zijn:
 
-- Formule voor $b$:
-
-  $$ b = \frac{\covD{X}{Y}}{V_X}.$$
-
-  Daaruit volgt: 
-  
-  $$ b = \left(\frac{s_Y}{x_X}\right)r.$$
-
-  De tekens van $b$ en $r$ zijn dus altijd gelijk. 
-  Maar $b$ kan iedere waarde aannemen, terwijl $r$ alleen tussen -1 en 1 kan liggen.
-  Bovendien is $r$ dimensieloos, $b$ niet.
-
+- $r$ geeft aan in hoe strak de datapunten op of langs de lijn liggen.
+  $r$ heeft geen dimensie (en dus geen eenheid) en ligt altijd tussen -1 en 1.
+- $b$ geeft aan hoeveel $Y$ gemiddeld stijgt als je $X$ verhoogt.
+  $b$ heeft als dimensie de dimensie van $Y$ gedeeld door de dimensie van $X$,
+  en kan alle waarden aannemen.
 
 ### De regressielijn berekenen in R
 
-:::{.todo-box}
-
-Werk in uitvoering!
-
-:::
+In de praktijk zul je regressiecoëfficiënten altijd met R uitrekenen.
+Dat is niet moeilijk!
 
 Stel dat de gegevens zijn opgeslagen in een dataframe `gegevens`
 met variabelen (kolommen) `x` en `y`.
 Om $a$ en $b$ te berekenen, gebruiken we eerst de functie `lm()`.
-Dat staat voor *linear model*.
+Die naam staat voor *linear model*.
 Dit is een heel veelzijdige functie die allerlei verschillende statistische analyses kan uitvoeren.
-De functie berekent allerlei resultaten;
-we slaan die eerst op in een variabele, die we hier `resultaatLM` noemen:
+De functie berekent allerlei resultaten, waarvan we er hier maar een paar 
+nodig hebben.
+We slaan de restulaten daarom eerst op in een variabele, 
+die we hier `resultaatLM` noemen.
+Dat werkt als volgt:
 
 ```{r}
 #| eval: false
 resultaatLM <- lm(y ~ x, data = gegevens)
 ```
+
+Het eerste argument, `y ~ x`, vertelt de functie `lm()`
+dat we een regressielijn willen voor variabele/kolom `y`
+als functie van `x`.
+Als je variabelen/kolommen andere namen hebben,
+vul je hier dus die namen in.
+
+Het tweede argument, `data = gegevens`,
+vertelt de functie welke dataframe gebruikt moet worden.
+Als je dataframe een andere naam heeft, vul je die dus hier in.
 
 Vervolgens kun je met de functie `summary()`
 de waarden van $a$ en $b$ uit de resultaten opvragen:
@@ -1764,29 +1822,40 @@ de waarden van $a$ en $b$ uit de resultaten opvragen:
 summary(resultaatLM)$coefficients
 ```
 
+We illustreren dat met een voorbeeld.
 
 ::: {#exm-regressie-adelie}
 
 ## De regressielijn voor flipperlengte versus gewicht van de Adelie-pinguïn.
 <br>
 
-Regressielijn uit @fig-regressie-adelie die gebruikt kan worden om
-de flipper-lengte van Adelie-pinguins 
-te voorspellen uit hun gewicht:
+In @exm-cor-test hebben we de correlatie onderzocht
+tussen de flipper-lengte en het gewicht van Adelie-pinguins.
+In @fig-regressie-adelie was voor dezelfde gegevens 
+ook een regressielijn getekend,
+die gebruikt kan worden om flipper-lengte te voorspellen
+op basis van het gewicht.
+We kunnen de coëfficiënten van deze regressielijn zelf met R uitrekenen.
+
+De dataframe had de naam `adelie`, 
+en de variabelen (kolomnamen) waren `flipper_length_mm` (met eenheid mm) en `body_mass_g` (met eenheid g).
+Dat levert de volgende code op:
+
 ```{r}
 resultaatLM <- lm(flipper_length_mm ~ body_mass_g, data = adelie)
 summary(resultaatLM)$coefficients
 ```
 
-### Uitleg: 
+Je kunt de uitvoer als volgt uitlezen:
 
-- De waarde van $a$ lees je af in de regel die begint met `(Intercept)`.
-  De waarde is af te lezen onder `Estimate` en is in dit geval $1{,}65\cdot 10^2\unit{mm}$.
+- Informatie over $a$ lees je af in de regel die begint met `(Intercept)`.
+  ($a$ is het snijpunt met de $Y$-as, wat in het Engels de $Y$-*intercept* wordt genoemd.)
+  De waarde is af te lezen in de kolom `Estimate` en is in dit geval $a = 1{,}65\times 10^2\unit{mm}$.
     
-- De waarde van $b$ lees je af ion de regel die begint met `body_mass_g`.
-  Daar vind je $6{,}7 \cdot 10^{-3}\unit{mm/g}$.
+- Informatie over $b$ lees je af in de regel die begint met `body_mass_g`.
+  Daar vind je de waarde $b = 6{,}7 \times 10^{-3}\unit{mm/g}$.
   
-- De regressielijn is dus $Y =  1{,}65\cdot 10^2\unit{mm} + (6{,}7 \cdot 10^{-3}\unit{mm/g}) \cdot X$.
+De regressielijn is dus $Y =  1{,}65\times 10^2\unit{mm} + (6{,}7 \times 10^{-3}\unit{mm/g}) X$.
 
 :::
 
@@ -1808,60 +1877,70 @@ c.  Wat denk je over de betrouwbaarheid van je voorspelling bij onderdeel **b**?
 
 :::
 
-## Interpolatie en extrapolatie
 
-:::{.todo-box}
+## Betrouwbaarheidsintervallen voor de regressiecoëfficiënten
 
-Werk in uitvoering!
+De regressielijnen die we hierboven hebben gezien,
+waren gebaseerd op gegevens
+afkomstig uit experimenten of een steekproef.
+Als we dezelfde experimenten, of dezelfde steekproef,
+opnieuw zouden uitvoeren, 
+zouden we waarschijnlijk een andere regressielijn vinden.
+De regressiecoëfficienten $a$ en $b$ worden dus geplaagd
+door steekproevenvariabiliteit.
 
-:::
+Stel dat de werkelijke regressielijn van de *populatie*
+gegeven is door 
+ $$ Y = \alpha + \beta X.$$
+Hier zijn $\alpha$ en $\beta$ populatieparameters.
+Dan zijn de $a$ en $b$ die we berekenen op basis van onze gegevens
+schattingen van die populatieparameters.
+Zoals altijd komen die schattingen met een mate van onzekerheid.
+We zouden die onzekerheid graag willen kwantificeren met een 95%-BHI.
 
+Die betrouwbaarheidsintervallen zijn met R gemakkelijk te berekenen,
+met de functie `confint()` (voor *confidence intervals*).
+We gebruiken daarvoor het resultaat van de functie `lm()`.
+Om dat te laten zien,
+berekenen we de 95%-BHIs voor de regressiecoëfficiënten 
+van @exm-regressie-adelie:
+```{r}
+resultaatLM <- lm(flipper_length_mm ~ body_mass_g, data = adelie)
+confint(resultaatLM)
+```
+Deze tabel geeft de ondergrens en de bovengrens 
+van de betrouwbaarheidsintervallen van $\alpha$ en $\beta$.
+De interpretatie spreekt verder voor zich.
 
-- Interpoleren: het verband tussen $X$ en $Y$ gebruiken
-  om een $Y$-waarde te voorspellen voor een waarde van $X$ die 
-  binnen het bereik valt van je gegevens.
-  
-- Extrapoleren: het verband tussen $X$ en $Y$ gebruiken
-  om een $Y$-waarde te voorspellen voor een waarde van $X$ die
-  *buiten* het bereik valt van je gegevens.
-  
-  Extrapoleren is erg gevaarlijk: 
-  de regressielijn is bepaald voor een bepaald bereik.
-  Er is geen garantie dat het lineaire verband zich
-  buiten dat bereik voortzet.
-  
+### Het gebruikte statistische model
 
-## Toetsen van de regressiecoëfficiënten
+Op de exacte berekening van de betrouwbaarheidsintervallen zullen we niet verder ingaan.
+Wel zijn deze berekeningen gebaseerd op een statistisch model,
+en het is belangrijk te weten wat de aannames daarvan zijn,
+zodat je weet wanneer je deze BHI's kunt vertrouwen, en wanneer niet.
 
-:::{.todo-box}
+Het zal je niet verbazen dat het statistische model
+weer een variant is van het Normale Model.
+De aannames zijn:
 
-Werk in uitvoering!
+1.  De verwachtingswaarde (hetgemiddelde) van $Y$ 
+    hangt in de populatie lineair af van de waarde van $X$:
+    
+    $$\ev{Y | X} = \alpha + \beta X.$$
+    
+2.  Voor iedere waarde van $X$ is $Y$
+    normaal verdeeld.
 
-:::
+3.  De standaarddeviatie van $Y$ is voor alle waarden van $X$ hetzelfde.
 
--  Veel voorkomende situatie:
-   we willen weten of in de populatie
-   het begingetal of de richtingscoëfficiënt afwijken van 0.
+4.  Iedere waarneming is onafhankelijk uit zijn verdeling getrokken.
 
--  Zie @exm-regressie-adelie:
-   daar zijn $t$- en $P$-waarden gegeven.
-   
--  R voert die toetsen dus standaard uit.
-
-**Statistisch model:**
-
-1. Voor iedere waarde van $X$ is het gemiddelde van $Y$
-   gegeven door 
-   
-   $$\ev{Y | X} = \alpha + \beta X.$$
-   
-2. Voor iedere waarde van $X$ is $Y$ normaal verdeeld.
-
-3. De variantie van $Y$ is voor iedere $X$ gelijk.
-
-4. Iedere waarde $Y$ is onafhankelijk getrokken.
-
-Visualisatie van het model: zie @fig-model-regressie.
+In @fig-model-regressie is het model gevisualiseerd in een 3D-plot.
+Je kunt de plot weer met je muis bewegen
+om de vorm van alle kanten te bekijken.
+De lijnen op het oppervlak van de verdeling
+laten zien dat voor iedere vaste waarde van $X$
+de waarde van $Y$ normaal verdeeld is.
 
 ```{r}
 #| echo: false
@@ -1935,6 +2014,149 @@ plot_ly(
   )
 
 ```
+
+@Fig-heteroscedastiek(a) laat een puntenwolk zien die goed overeenkomt met het model.
+@Fig-heteroscedastiek(b--d) zijn voorbeelden waarbij dat niet het geval is.  
+
+```{r}
+#| label: fig-heteroscedastiek
+#| fig-cap: "Het statistische model voor de toetsen en de BHI's van de regressiecoëfficiënten. Paneel (a) laat een puntenwolk zien die consistent is met het model: het gemiddelde van $Y$ loopt lineair op, en de standaarddeviatie van $Y$ is voor iedere $X$ ongeveer gelijk. De data in (b), (c), en (d) zijn niet consistent met het model. In (b) neemt de standaarddeviatie van $Y$ toe met $X$. In (c) is de verdeling van $Y$ rechts-scheef en dus niet normaal verdeeld. In (d) is de extreme uitschieter het probleem."
+#| fig-width: 7
+#| fig-height: 2
+#| out-width: "100%"
+#| code-fold: true
+#| warning: false
+
+# Laad benodigde pakketten
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+if (!("dplyr" %in% .packages())) { library(dplyr) }
+
+# Zet zaad voor reproduceerbaarheid
+set.seed(123)
+
+# Definieer parameters
+n         <- 100
+alpha     <- 2
+beta      <- 0.5
+sigma     <- 1
+x_waarden <- runif(n, min = 0, max = 10)
+
+# Genereer de vier datasets
+y1 <- alpha + beta * x_waarden + rnorm(n, mean = 0, sd = sigma)
+
+y2 <- alpha + beta * x_waarden +
+      rnorm(n, mean = 0, sd = 0.2 * x_waarden^1.5)
+
+y3 <- alpha + beta * x_waarden +
+      rgamma(n, shape = 1.5, scale = 0.5)
+
+y4 <- alpha + beta * x_waarden + rnorm(n, mean = 0, sd = sigma)
+y4[which.max(x_waarden)] <- y4[which.max(x_waarden)] + 8  # uitschieter
+
+# Combineer in één dataframe
+data <- data.frame(
+  X     = rep(x_waarden, 4),
+  Y     = c(y1, y2, y3, y4),
+  groep = factor(rep(c("(a)", "(b)", "(c)", "(d)"), each = n),
+                 levels = c("(a)", "(b)", "(c)", "(d)"))
+)
+
+# Plot
+p <- ggplot(data, aes(x = X, y = Y)) +
+  geom_point(color = "grey50", alpha = 0.8, size = 1.2) +
+  geom_smooth(method = "lm", se = FALSE,
+              color = "darkorange", size = 0.8) +
+  facet_wrap(~ groep, nrow = 1, scales = "free_y") +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    strip.text = element_text(size = 11, face = "bold"),
+#    panel.grid = element_blank(),
+    panel.spacing = unit(1, "lines")
+  )
+
+print(p)
+```
+
+## Toetsen van de regressiecoëfficiënten
+
+Stel dat we op basis van onze gegevens een positieve waarde van $b$ vinden.
+Dan zijn we geneigd om te concluderen dat er een positieve relatie bestaat
+tussen de twee variabelen. 
+Maar voordat we dat kunnen concluderen, 
+zullen we eerst moeten onderzoeken of het redelijkerwijs ook mogelijk is
+dat de regressiecoëfficiënt van de populatie $\beta$ eigenlijk gelijk is aan 0,
+en de positieve $b$ enkel het gevolg is van steekproevenvariabiliteit.
+Daarvoor kunnen we hypothesetoetsen uitvoeren.
+
+Het is weer gemakkelijk om die toetsen binnen R uit te voeren.
+Sterker nog, we hebben er al twee gedaan!
+Kijk maar eens terug naar de coëfficiënten die we hadden berekend
+voor de regressie tussen `flipper_length_mm` en `body_mass_g`.
+Dit was de uitvoer van R:
+```{r}
+#| echo: false
+summary(resultaatLM)$coefficients
+```
+Hier waren in de kolom `Estimate` de waarden van $a$ en $b$ gegeven.
+In de andere kolommen zijn de resultaten weergegeven 
+van statistische toetsen.
+Gegeven zijn de standaardfouten die horen bij $a$ en $b$ (onder `Std. Error`),
+de $t$-waarden die horen bij de toetsen (onder `t value`),
+en de bijbehorende $P$-waardes (onder `Pr(>|t|)`).
+
+- In de regel `(Intercept)` wordt de nulhypothese getoetst 
+  dat $\alpha = 0$.
+  Dat de $P$-waarde zo astronomisch klein is ($P = 8{,}7 \times 10^{-86}$)
+  geeft aan dat we erg zeker zijn dat $\alpha \neq 0$.
+
+- In de regel `body_mass_b` wordt de nulhypothese getoetst
+  dat $\beta = 0$.
+  Dat is dus de hypothese dat er in de populatie
+  geen relatie is tussen $X$ en $Y$.
+  De $P$-waarde van deze toets is ook erg klein ($P = 1{,}3 \times 10^{-9}$).
+  Er is dus sterk bewijs dat er een postieve relatie is 
+  tussen $X$ en $Y$.
+  
+We zullen de onderliggende berekeningen hier niet verder uitspellen.
+Wel is het belangrijk dat voor deze resultaten 
+hetzelfde statistische model gebruikt wordt 
+als voor de berekening van de 95%-BHI's (@fig-model-regressie).
+
+## Interpolatie en extrapolatie
+
+De $X$-waarden van de gegevens die we gebruiken om
+een regressielijn mee te berekenen,
+zijn altijd beperkt tot een bepaald domein.
+Bijvoorbeeld, 
+de gewichten van de Adelie-pinguïns liepen van 2850g tot 4775g.
+We kiezen de waarden van $a$ en $b$ zo
+dat de regressielijn de gegevens binnen dit domein goed beschrijft,
+maar kunnen niet weten of dezelfde lijn buiten dat domein
+ook nog van toepassing is.
+
+Bij het voorspellen van een $Y$-waarde op basis van een $X$-waarde
+kunnen we daarom onderscheid maken tussen twee situaties:
+
+1.  **Interpoleren:** Als de $X$-waarde waarvoor we 
+    een voorspelling willen doen
+    binnen het domein valt van de gegevens
+    waarop de regressielijn gebaseerd was,
+    dan heet dat interpoleren.
+  
+2.  **Extrapoleren:** Als de $X$-waarde waarvoor we een voorspelling willen doen
+    buiten dat domein valt, 
+    dan noemen we dat extrapoleren.
+  
+Extrapoleren is gevaarlijk:
+het is heel goed mogelijk dat het  lineaire verband
+dat is waargenomen binnen het domein van de data
+zich niet voortzet buiten dat domein.
+In dat geval kunnen de voorspellingen enorm de plank misslaan.
+
+![Bron: [xkcd](https://xkcd.com/)](figuren/extrapolating.png)
 
 ## Het fitten van niet-lineaire modellen {#sec-nlf}
 
@@ -2048,7 +2270,7 @@ ggplot(gegevens, aes(x = s, y = v)) +
     "text",
     x = km + 0.5,
     y = 0.5,
-    label = expression(K[italic(M)]),
+    label = expression(italic(K)[M]),
     hjust = 0,
     size  = 4
   ) +
@@ -2056,15 +2278,15 @@ ggplot(gegevens, aes(x = s, y = v)) +
     "text",
     x = 1,
     y = vmax - 0.5,
-    label = expression(v[italic(max)]),
+    label = expression(italic(v)[max]),
     hjust = 0,
     size  = 4
   ) +
   annotate(
     "text",
     x = 8,
-    y = v_bij_km + 0.4,
-    label = expression(v[italic(max)] / 2),
+    y = v_bij_km + 0.6,
+    label = expression(italic(v)[max] / 2),
     hjust = 0,
     size  = 4
   ) +
@@ -2120,11 +2342,148 @@ Maar in @exr-nonlinear helpen we je om eenmalig een fit uit te voeren in R.
 
 ## Samenvatting
 
-:::{.todo-box}
+### Correlatie
 
-Werk in uitvoering!
+We zeggen dat de twee variabelen een lineaire relatie hebben of gecorreleerd zijn als de datapunten zich op of in de buurt van een rechte lijn bevinden die stijgt of daalt. 
+
+**Covarantie:**
+
+Maat van lineaire samenhang tussen $X$ en $Y$, 
+in de dimensies en eenheden van $X$ en $Y$.
+
+Definitie:
+$$ \covD{X}{Y} = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n-1}.$$
+
+Eigenschappen:
+
+- $\covD{X}{X} = V_X$.
+
+
+**Pearson's correlatiecoëfficiënt:**
+
+Maat van lineaire samenhang tussen $X$ en $Y$,
+zonder dimensie.
+
+Definitie:
+$$
+r = \frac{\covD{X}{Y}}
+         {s_X s_Y}.
+$$
+
+Eigenschappen:
+
+- Ligt altijd in het interval [-1, 1]
+- Het *teken* geeft de richting van het verband (positief of negatief)
+- De *absolutie waarde* heeft de sterkte van het verband.
+- Perfect verband: $r = 1$ of $r = -1$.
+- Geen verband: $r = 0$.
+
+Waarschuwingen: De correlatiecoëfficiënt is
+
+- geen richtingscoëfficiënt.
+- alleen geschikt voor lineaire verbanden.
+- gevoelig voor uitbijters.
+- afhankelijk van het bereik van de $X$-waarden.
+
+::: {.callout-important}
+## De toets voor correlatie in 6 stappen
+
+We zijn geïnteresseerd in twee continue variabelen $X$ en $Y$
+en willen de hypothese toetsen dat 
+het de correlatiecoëfficiënt tussen die twee variabelen
+in de populatie, $\rho$,
+gelijk is aan $0$.
+We nemen daarom een steekproef van $n$ eenheden
+en berekenen de correlatiecoëfficiënt $r$ van die steekproef.
+
+Dan zijn dit de stappen van de toets:
+
+1.  **Kies het statistische model:** het Bivariate Normale Model.
+2.  **Formuleer de hypotheses:**\
+    $\HO:\qquad \rho = 0$,\
+    $\HA:\qquad \rho \neq 0$.
+3.  **Kies de toetsingsgrootheid:**
+
+    $$t = \cfrac{r}{\se{r}}.$$
+    
+    met
+    
+    $$ \se{r} = \sqrt{\frac{1 - r^2}{n - 2}}.$$
+    
+    **Verdeling van de toetsingsgrootheid onder $\HO$:**\
+    De $t$-verdeling met $\df = n - 2$.
+4.  **Bereken de toetsingsgrootheid op basis van de steekproef.**\
+    Achtereenvolgens: $r$, $\se{r}$, en dan $t$.
+5.  **Bereken de $P$-waarde:**\
+    
+    Gebruik R:
+    
+    ```{r}
+    #| eval: false
+    P <- 2 * pt(-abs(t), df = n - 2)
+    ```
+
+6.  **Trek je conclusies.**
 
 :::
+
+### Lineaire regressie
+
+Rechte lijn door de "puntenwolk";
+beschrijft de lineaire relatie tussen $X$ en $Y$.
+Kan gebruikt worden om $Y$ te voorspellen uit de waarde van $X$.
+
+**Definitie:**
+
+De rechte lijn $Y = a + b X$ waarbij $a$ en $b$ zo gekozen zijn
+dat de kwadratensom zo klein mogelijk is.
+
+**Eigenschappen:**
+
+- Gaat altijd door het zwaartepunt $(\mean{x}, \mean{y})$.
+- De formule voor $b$ is:
+  
+  $$ b= \frac{\covD{X}{Y}}{V_X}.$$
+- Dat kan ook geschreven worden als
+  
+  $$ b = \left(\frac{s_Y}{s_X}\right)r.$$
+
+**Waarschuwingen:**
+
+- Ook $b$ is gevoelig voor uitbijters.
+- Voorspellingen buiten het domein van de gegevens (**extrapolaties**)
+  zijn onbetrouwbaar.
+
+**BHI's en toetsen:**
+
+Voor het berekenen van BHI's voor de regressiecoëfficiënten 
+en hypothesetoetsen
+wordt gebruik gemaakt van het volgende statistisch model:
+
+1.  De verwachtingswaarde (het gemiddelde) van $Y$ 
+    hangt in de populatie lineair af van de waarde van $X$:
+    
+    $$\ev{Y | X} = \alpha + \beta X.$$
+    
+2.  Voor iedere waarde van $X$ is $Y$
+    normaal verdeeld.
+
+3.  De standaarddeviatie van $Y$ is voor alle waarden van $X$ hetzelfde.
+
+4.  Iedere waarneming is onafhankelijk uit zijn verdeling getrokken.
+
+De details van de berekeningen hebben we niet behandeld;
+die laten we voor nu aan R over.
+
+### Het fitten van modellen
+
+- Het vinden van parameters van een model aan de hand van gegevens,
+  wordt "fitten" genoemd.
+- Bij lineaire regressie is het berekenen van $a$ en $b$ dus 
+  het "fitten" van een rechte lijn aan de gegevens.
+- De parameters van niet-lineaire modellen kunnen op dezelfde manier 
+  bepaald worden, door de parameters te zoeken
+  waarbij de kwadratensom zo klein mogelijk is.
 
 ## Terminologie
 

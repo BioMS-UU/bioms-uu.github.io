@@ -1037,12 +1037,12 @@ en die dus in feite noch strikt observationeel noch strikt experimenteel zijn.
 {#tbl-woorden-variabelen-verdelingen .striped .hover}
 
 
-### Randomized trials, of: Hoe experimenten wél causale relaties kunnen aantonen
+### Gerandomiseerde gecontroleerde experimenten, of: Hoe experimenten wél causale relaties kunnen aantonen
 
 Om uit te leggen hoe experimenteel onderzoek
   wél causale relaties kan aantonen,
   bespreken we nu de "gouden standaard" van het experimenteel onderzoek:
-  het **gerandomiseerd gecontroleerd experiment** (GGE).
+  het **gerandomiseerd gecontroleerd experiment** (GGE; *randomized trials*).
 Twee eisen definiëren een GGE. 
 We leggen ze uit aan de hand van een eenvoudig voorbeeld:
   een onderzoek dat moet uitwijzen of een zeker vaccin beschermt 
@@ -1112,7 +1112,7 @@ Het tweede eis aan een GGE is dat de toewijzing van eenheden aan groepen
 Dat wil zeggen dat de onderzoekers een onafhankelijk kansproces gebruiken,
   zoals randomgetallen verkregen met R,
   om te bepalen welke eenheid welke behandeling krijgt.
-Het doel daarvan is om eventuele counfounders te elimineren.
+Het doel daarvan is om eventuele confounders te elimineren.
 
 Het grote nadeel van observationeel onderzoek was
   dat er vaak variabelen zijn,
@@ -1141,7 +1141,7 @@ De namen Mohammed en Inaya zijn het meest populair in grote steden
   en veel minder op het platteland.
 Kortom, namen zijn geassocieerd met allerlei variabelen
   waaronder gender, leeftijd, geografie, etniciteit, 
-  en het het inkomen en opleidingsniveau van de ouders.
+  en het inkomen en opleidingsniveau van de ouders.
 Het kan zijn dat de veel van deze associaties verzwakt worden
   door de letters A tot K samen te voegen tot één groep,
   maar er is een serieus risico dat er confounders overblijven.
@@ -1775,11 +1775,89 @@ ondervraagden denkt er het komend jaar financieel op achteruit te gaan." Wat als
 
 ## Samenvatting
 
-:::{.todo-box}
+### Mogelijke oorzaken van associaties tussen variabelen
 
-Deze samenvatting moet nog geschreven worden.
+**Directe causale effecten:**\
+A beïnvloedt B rechtstreeks.
+```{mermaid}
+graph LR;
+  A(["A"]) --> B(["B"])
+```
 
-:::
+**Een causale keten:**\
+A beïnvloedt C via B.
+```{mermaid}
+graph LR;
+  A(["A"]) --> B(["B"]) --> C(["C"])
+```
+
+**Confounders:**\
+Confounder C beïnvloedt A én B, waardoor 
+A en B geassocieerd raken.
+```{mermaid}
+graph LR;
+  C(["C"]) --> A(["A"])
+  C --> B(["B"])
+```
+
+**Colliders:**
+A en B beïnvloeden C,
+en we maken een selectie op basis van de waarde van C.
+Binnen die selectie kunnen A en B geassocieerd zijn,
+zelfs als A en B elkaar niet beïnvloeden.
+```{mermaid}
+graph LR;
+  A(["A"]) --> C(["C"])
+  B(["B"]) --> C
+```
+
+**Tijdsseries:**
+Twee variabelen die stijgen of dalen in de tijd
+zijn altijd geassocieerd,
+zelfs als ze niets met elkaar te maken hebben.
+
+![Bron: [xkcd](https://xkcd.com/)](figuren/correlation_causation.png)
+
+### Experimenteen en observationeel onderzoek
+
+Bij **observationeel onderzoek** verzamelen onderzoekers gegevens zonder in te grijpen in de onderzochte processen. 
+
+Bij **experimenteel onderzoek** manipuleren onderzoekers actief een of meer variabelen en meten ze het effect daarvan op een of meer andere variabelen.
+
+| Kenmerk                | Observationeel onderzoek  | Experimenteel onderzoek |
+|:------------------------|:--------------------------|:--------------------------|
+| Manipulatie van variabelen | ❌ Nee  | ✅ Ja  |
+| Causale conclusies mogelijk? | ⚠️ Beperkt  | ✅ Ja  |
+| Controle over confounders? | ⚠️ Beperkt | ✅ Groot  |
+| Natuurlijke setting? | ✅ Ja | ❌ Meestal niet  |
+| Voorbeelden | Cohortstudies, surveys | gerandomiseerde gecontroleerde experimenten, laboratoriumexperimenten |
+
+
+**Gerandomiseerd gecontroleerd experiment:**
+
+1. Controlegroep met controlebehandeling.
+
+2. Gerandomiseerd toewijzen van proefpersonen aan behandelgroepen.
+
+**Blind onderzoek:**\
+Een onderzoek waarbij de proefpersoon niet kan weten
+welke behandeling die heeft gekregen,
+om uit te sluiten dat die kennis effect heeft op de respons.
+
+**Dubbelblind onderzoek:**\
+Een onderzoek waarbij ook de onderzoekers die de respons
+beoordelen geen kennis hebben van de behandeling die 
+de proefpersoon heeft ondergaan.
+Dat verkleint de kans op waarnemersbias.
+
+### Terugkeer naar het gemiddelde (*regression to the mean*)
+
+Het fenomeen dat schommelende toevalsprocessen na extreme waarden vaak terugkeren richting het gemiddelde, simpelweg doordat de kans op extreme waarden kleiner is dan de kans op waarden rond het evenwicht.
+
+### Het placebo-effect
+
+Het placebo-effect is het verschijnsel waarbij een patiënt verbetering van klachten ervaart na een behandeling zonder werkzame stof, puur door het vertrouwen in of de verwachting van effect.
+
 
 ## Terminologie
 
@@ -1797,7 +1875,7 @@ Deze samenvatting moet nog geschreven worden.
 | experimenteel onderzoek | experimental research | Type onderzoek waarbij onderzoekers actief een of meerdere variabelen manipuleren en meten wat het effect daarvan is op andere variabelen. |
 | experimentele/onafhankelijke variabele | independent variable | Variabele die in experimenteel onderzoek actief wordt gemanipuleerd. |
 | geblindeerd onderzoek | blinded experiment | Onderzoek waarbij de proefpersoon niet weet welke behandeling deze krijgt. |
-| gerandomiseerd gecontroleerd experiment (GGE) | randomised controlled experiment | Gouden standaard voor experimenteel onderzoek, waarbij er 1) een controlegroep is die een controlebehandeling krijgt, en 2) de toewijzing van eenheden aan de behandelgroepen gerandomiseerd is. |
+| gerandomiseerd gecontroleerd experiment (GGE) | randomised controlled experiment / trial | Gouden standaard voor experimenteel onderzoek, waarbij er 1) een controlegroep is die een controlebehandeling krijgt, en 2) de toewijzing van eenheden aan de behandelgroepen gerandomiseerd is. |
 | gezamenlijke oorzaak | confounder / lurking variable | Een variabele die meerdere variabelen tegelijkertijd beïnvloedt, waardoor ze geassocieerd kunnen raken zonder elkaar direct te beïnvloeden. |
 | kruistabel | contingency table | Tabel die het aantal waarnemingen toont voor elke combinatie van niveaus van twee categorische variabelen. |
 | mozaïekplot | mosaic plot | Grafische visualisatie van een kruistabel. |
@@ -1806,6 +1884,6 @@ Deze samenvatting moet nog geschreven worden.
 | placebo | placebo | Nep-medicijn of nep-behandeling die wordt gegeven aan de controlegroep. |
 | placebo-groep | placebo group | Groep van proefpersonen die een placebo toegediend krijgen. |
 | randomisatie | randomisation | Het gebruik van een onafhankelijk kansproces om te besluiten welke eenheid welke behandeling krijgt. |
-| terugkeer naar het gemiddelde | regression to the mean | Fenomeen waarbij (gedeeltelijke) toevalsprocessen na extreme waarden vaak terugkeren richting het gemiddelde, simpelweg doordat de kans op extreme waarden kleiner is dan de kans op waarden rond het evenwicht. |
+| terugkeer naar het gemiddelde | regression to the mean | Het fenomeen dat schommelende toevalsprocessen na extreme waarden vaak terugkeren richting het gemiddelde, simpelweg doordat de kans op extreme waarden kleiner is dan de kans op waarden rond het evenwicht. |
 
 : Woordenlijst @sec-associaties {#tbl-associaties .striped .hover}
