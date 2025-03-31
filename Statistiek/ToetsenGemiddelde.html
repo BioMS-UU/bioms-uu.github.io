@@ -568,6 +568,50 @@ window.Quarto = {
 <p>Om dat te achterhalen zouden we een steekproef kunnen nemen van een aantal gezonde personen. Als de gemiddelde temperatuur van die proefpersonen sterk afwijkt van 37<span class="math inline">\(\degree\)</span>C, dan is dat een indicatie dat de standaardtemperatuur misschien herzien moet worden.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <p>Stel dat we inderdaad een steekproef nemen van <span class="math inline">\(n = 10\)</span> personen en de volgende resultaten vinden, in <span class="math inline">\(\degree\)</span>C:</p>
 <p><span class="math display">\[35{,}7\quad 35{,}8\quad 37{,}0\quad 36{,}5\quad 37{,}1\quad 36{,}4\quad 36{,}1\quad 36{,}8\quad 36{,}5\quad 37{,}1\]</span></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Laad ggplot2 indien nodig</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>(<span class="st">"ggplot2"</span> <span class="sc">%in%</span> <span class="fu">.packages</span>())) { <span class="fu">library</span>(ggplot2) }</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Gegevens (vervang dit met je eigen getallen indien gewenst)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>gegevens <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">35.7</span>, <span class="fl">35.8</span>, <span class="fl">37.0</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>, <span class="fl">36.4</span>, <span class="fl">36.1</span>, <span class="fl">36.8</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Bereken het steekproefgemiddelde</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>gemiddelde <span class="ot">&lt;-</span> <span class="fu">mean</span>(gegevens)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Nulhypothese-gemiddelde</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>nulhypothese <span class="ot">&lt;-</span> <span class="dv">37</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Maak de jitterplot</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">waarde =</span> gegevens), <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> waarde)) <span class="sc">+</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> gemiddelde, <span class="at">color =</span> <span class="st">"darkorange"</span>, </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"solid"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> nulhypothese, <span class="at">color =</span> <span class="st">"darkorchid"</span>, </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">1.2</span>, <span class="at">y =</span> gemiddelde, <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">bar</span>(<span class="fu">italic</span>(X))),</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> <span class="st">"darkorange"</span>, <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">1.2</span>, <span class="at">y =</span> nulhypothese, <span class="at">label =</span> <span class="st">"37 °C"</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> <span class="st">"darkorchid"</span>, <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Lichaamstemperatuur (°C)"</span>, <span class="at">x =</span> <span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>())</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-tempdata" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tempdata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="ToetsenGemiddelde_files/figure-html/fig-tempdata-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figuur&nbsp;26.1: Jitterplot van de gegevens. De oranje lijn geeft het gemiddelde aan, de paarse lijn de standaardwaarde van 37°C."><img src="ToetsenGemiddelde_files/figure-html/fig-tempdata-1.png" class="img-fluid figure-img" style="width:28.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tempdata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;26.1: Jitterplot van de gegevens. De oranje lijn geeft het gemiddelde aan, de paarse lijn de standaardwaarde van 37°C.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <p>Het gemiddelde van deze steekproef is <span class="math inline">\(\overline{X} = 36{,}5\degree\)</span>C. Is dit dan sterk bewijs tegen de standaardtemperatuur van 37<span class="math inline">\(\degree\)</span>C?</p>
 <p>Mensen verschillen onderling in hun normale temperatuur, en ieders lichaamstemperatuur schommelt bovendien gedurende de dag (door je biologische klok) en van dag tot dag (bijvoorbeeld door de menstruatiecyclus). Een steekproefgemiddelde dat wat lager is dan 37<span class="math inline">\(\degree\)</span>C kan dus ook het gevolg zijn van steekproevenvariabiliteit. We hebben daarom een hypothesetoets nodig om te bepalen in hoeverre de gevonden afwijking bewijs levert tegen een populatiegemiddelde van 37<span class="math inline">\(\degree\)</span>C.</p>
 </div>
@@ -608,66 +652,6 @@ We gaan <span class="math inline">\(t\)</span> berekenen voor de lichaamstempera
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Genereer t-waarden</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>waarden_t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="at">by =</span> <span class="fl">0.1</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Maak een dataframe voor de kansdichtheid</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>dataframe <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">t =</span> waarden_t,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">kansdichtheid =</span> <span class="fu">dt</span>(waarden_t, <span class="at">df =</span> <span class="dv">9</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot de t-verdeling</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  dataframe,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> t, <span class="at">y =</span> kansdichtheid</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg de lijn toe</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"darkorange"</span>, <span class="at">linewidth =</span> <span class="dv">1</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een verticale, gestippelde lijn toe bij t = -3.09</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">xintercept =</span> <span class="sc">-</span><span class="fl">3.09</span>, <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dotted"</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een label toe op de x-as met een juiste wiskundige notatie</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">3.09</span>, <span class="at">y =</span> <span class="fl">0.2</span>,</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t) <span class="sc">==</span> <span class="sc">-</span><span class="fl">3.09</span>),</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Labels toevoegen</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t)),</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Kansdichtheid"</span>,</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="cn">NULL</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Thema toepassen</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div id="fig-t-df9" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-t-df9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="ToetsenGemiddelde_files/figure-html/fig-t-df9-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figuur&nbsp;26.1: t-verdeling met 9 vrijheidsgraden"><img src="ToetsenGemiddelde_files/figure-html/fig-t-df9-1.png" class="img-fluid figure-img" style="width:57.0%"></a>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-t-df9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;26.1: <span class="math inline">\(t\)</span>-verdeling met 9 vrijheidsgraden
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>De <span class="math inline">\(t\)</span>-waarde die we gevonden hebben, is met een paarse stippellijn aangegeven. Die waarde ligt aardig ver in de staart van de verdeling. Dat betekent dat deze waarde onder <span class="math inline">\(H_\textrm{0}\)</span> vrij verrassend is. We kunnen zien aankomen dat de <span class="math inline">\(P\)</span>-waarde klein gaat worden.</p>
-<p><strong>Stap 5: Bereken de <span class="math inline">\(P\)</span>-waarde.</strong><br>
-De volgende stap is om de <span class="math inline">\(P\)</span>-waarde te berekenen.</p>
-<p>De <span class="math inline">\(P\)</span>-waarde is de kans op een uitkomst die minstens zo extreem is als de waarde <span class="math inline">\(t = -3{,}09\)</span> die we daadwerkelijk hebben gevonden. Dat komt overeen met de oppervlakte van de staarten van de verdeling die in <a href="#fig-t-df9-staarten" class="quarto-xref">Figuur&nbsp;<span>26.2</span></a> hieronder met paars zijn aangegeven. (Die oppervlakten zijn maar klein—ze zijn daardoor misschien lastig te zien!)</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Genereer t-waarden</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>waarden_t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="at">by =</span> <span class="fl">0.1</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -677,110 +661,170 @@ De volgende stap is om de <span class="math inline">\(P\)</span>-waarde te berek
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">kansdichtheid =</span> <span class="fu">dt</span>(waarden_t, <span class="at">df =</span> <span class="dv">9</span>)</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Definieer afzonderlijke gebieden voor de linker- en rechterstaart</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>data_tails_links <span class="ot">&lt;-</span> <span class="fu">subset</span>(dataframe, t <span class="sc">&lt;=</span> <span class="sc">-</span><span class="fl">3.09</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>data_tails_rechts <span class="ot">&lt;-</span> <span class="fu">subset</span>(dataframe, t <span class="sc">&gt;=</span> <span class="fl">3.09</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Bepaal y-coördinaten voor pijlen en labels</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>y_pijl <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>y_end_pijl <span class="ot">&lt;-</span> <span class="fl">0.02</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot de t-verdeling</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  dataframe,</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> t, <span class="at">y =</span> kansdichtheid</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Vul de linker staart in</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> data_tails_links, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> kansdichtheid),</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"DarkOrchid"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Vul de rechter staart in</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> data_tails_rechts, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> kansdichtheid),</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"DarkOrchid"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg de lijn toe</span></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"darkorange"</span>, <span class="at">linewidth =</span> <span class="dv">1</span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Kromme pijltjes toevoegen</span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"curve"</span>,</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="sc">-</span><span class="fl">3.5</span>, <span class="at">y =</span> y_pijl, <span class="at">xend =</span> <span class="sc">-</span><span class="fl">3.4</span>, <span class="at">yend =</span> y_end_pijl,</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">curvature =</span> <span class="fl">0.2</span>,</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"cm"</span>)),</span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.7</span></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">"curve"</span>,</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">3.5</span>, <span class="at">y =</span> y_pijl, <span class="at">xend =</span> <span class="fl">3.4</span>, <span class="at">yend =</span> y_end_pijl,</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">curvature =</span> <span class="sc">-</span><span class="fl">0.2</span>,</span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"cm"</span>)),</span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.7</span></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Annotaties toevoegen</span></span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="sc">-</span><span class="fl">3.5</span>,</span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> y_pijl <span class="sc">+</span> <span class="fl">0.05</span>,</span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">frac</span>(<span class="fu">italic</span>(P),<span class="dv">2</span>)),</span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">3.5</span>,</span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> y_pijl <span class="sc">+</span> <span class="fl">0.05</span>,</span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">frac</span>(<span class="fu">italic</span>(P),<span class="dv">2</span>)),</span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span></span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een verticale, gestippelde lijn toe bij t = -3.09</span></span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">xintercept =</span> <span class="sc">-</span><span class="fl">3.09</span>, <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dotted"</span></span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een label toe op de x-as met een juiste wiskundige notatie</span></span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">2.55</span>, <span class="at">y =</span> <span class="fl">0.3</span>,</span>
-<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t) <span class="sc">==</span> <span class="sc">-</span><span class="fl">3.09</span>),</span>
-<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span></span>
-<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg ook een verticale, gestippelde lijn toe bij t = 3.09</span></span>
-<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">xintercept =</span> <span class="fl">3.09</span>, <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
-<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dotted"</span></span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een label toe op de x-as met een juiste wiskundige notatie</span></span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">3</span>, <span class="at">y =</span> <span class="fl">0.3</span>,</span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t) <span class="sc">==</span> <span class="fl">3.09</span>),</span>
-<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span></span>
-<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Labels toevoegen</span></span>
-<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t)),</span>
-<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Kansdichtheid"</span>,</span>
-<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="cn">NULL</span></span>
-<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Thema toepassen</span></span>
-<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot de t-verdeling</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  dataframe,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> t, <span class="at">y =</span> kansdichtheid</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg de lijn toe</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"darkorange"</span>, <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een verticale, gestippelde lijn toe bij t = -3.09</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">xintercept =</span> <span class="sc">-</span><span class="fl">3.09</span>, <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dotted"</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een label toe op de x-as met een juiste wiskundige notatie</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">3.09</span>, <span class="at">y =</span> <span class="fl">0.2</span>,</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t) <span class="sc">==</span> <span class="sc">-</span><span class="fl">3.09</span>),</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Labels toevoegen</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t)),</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Kansdichtheid"</span>,</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="cn">NULL</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Thema toepassen</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-t-df9" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-t-df9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="ToetsenGemiddelde_files/figure-html/fig-t-df9-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figuur&nbsp;26.2: t-verdeling met 9 vrijheidsgraden"><img src="ToetsenGemiddelde_files/figure-html/fig-t-df9-1.png" class="img-fluid figure-img" style="width:57.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-t-df9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;26.2: <span class="math inline">\(t\)</span>-verdeling met 9 vrijheidsgraden
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>De <span class="math inline">\(t\)</span>-waarde die we gevonden hebben, is met een paarse stippellijn aangegeven. Die waarde ligt aardig ver in de staart van de verdeling. Dat betekent dat deze waarde onder <span class="math inline">\(H_\textrm{0}\)</span> vrij verrassend is. We kunnen zien aankomen dat de <span class="math inline">\(P\)</span>-waarde klein gaat worden.</p>
+<p><strong>Stap 5: Bereken de <span class="math inline">\(P\)</span>-waarde.</strong><br>
+De volgende stap is om de <span class="math inline">\(P\)</span>-waarde te berekenen.</p>
+<p>De <span class="math inline">\(P\)</span>-waarde is de kans op een uitkomst die minstens zo extreem is als de waarde <span class="math inline">\(t = -3{,}09\)</span> die we daadwerkelijk hebben gevonden. Dat komt overeen met de oppervlakte van de staarten van de verdeling die in <a href="#fig-t-df9-staarten" class="quarto-xref">Figuur&nbsp;<span>26.3</span></a> hieronder met paars zijn aangegeven. (Die oppervlakten zijn maar klein—ze zijn daardoor misschien lastig te zien!)</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Genereer t-waarden</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>waarden_t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="at">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Maak een dataframe voor de kansdichtheid</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>dataframe <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">t =</span> waarden_t,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">kansdichtheid =</span> <span class="fu">dt</span>(waarden_t, <span class="at">df =</span> <span class="dv">9</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Definieer afzonderlijke gebieden voor de linker- en rechterstaart</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>data_tails_links <span class="ot">&lt;-</span> <span class="fu">subset</span>(dataframe, t <span class="sc">&lt;=</span> <span class="sc">-</span><span class="fl">3.09</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>data_tails_rechts <span class="ot">&lt;-</span> <span class="fu">subset</span>(dataframe, t <span class="sc">&gt;=</span> <span class="fl">3.09</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Bepaal y-coördinaten voor pijlen en labels</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>y_pijl <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>y_end_pijl <span class="ot">&lt;-</span> <span class="fl">0.02</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot de t-verdeling</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  dataframe,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> t, <span class="at">y =</span> kansdichtheid</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Vul de linker staart in</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> data_tails_links, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> kansdichtheid),</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"DarkOrchid"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Vul de rechter staart in</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> data_tails_rechts, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> kansdichtheid),</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"DarkOrchid"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg de lijn toe</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"darkorange"</span>, <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Kromme pijltjes toevoegen</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"curve"</span>,</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="sc">-</span><span class="fl">3.5</span>, <span class="at">y =</span> y_pijl, <span class="at">xend =</span> <span class="sc">-</span><span class="fl">3.4</span>, <span class="at">yend =</span> y_end_pijl,</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">curvature =</span> <span class="fl">0.2</span>,</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"cm"</span>)),</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.7</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">"curve"</span>,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">3.5</span>, <span class="at">y =</span> y_pijl, <span class="at">xend =</span> <span class="fl">3.4</span>, <span class="at">yend =</span> y_end_pijl,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">curvature =</span> <span class="sc">-</span><span class="fl">0.2</span>,</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"cm"</span>)),</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.7</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Annotaties toevoegen</span></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="sc">-</span><span class="fl">3.5</span>,</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> y_pijl <span class="sc">+</span> <span class="fl">0.05</span>,</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">frac</span>(<span class="fu">italic</span>(P),<span class="dv">2</span>)),</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">3.5</span>,</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> y_pijl <span class="sc">+</span> <span class="fl">0.05</span>,</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">frac</span>(<span class="fu">italic</span>(P),<span class="dv">2</span>)),</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een verticale, gestippelde lijn toe bij t = -3.09</span></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">xintercept =</span> <span class="sc">-</span><span class="fl">3.09</span>, <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dotted"</span></span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een label toe op de x-as met een juiste wiskundige notatie</span></span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">2.55</span>, <span class="at">y =</span> <span class="fl">0.3</span>,</span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t) <span class="sc">==</span> <span class="sc">-</span><span class="fl">3.09</span>),</span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span></span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg ook een verticale, gestippelde lijn toe bij t = 3.09</span></span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">xintercept =</span> <span class="fl">3.09</span>, <span class="at">color =</span> <span class="st">"DarkOrchid"</span>,</span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dotted"</span></span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Voeg een label toe op de x-as met een juiste wiskundige notatie</span></span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">3</span>, <span class="at">y =</span> <span class="fl">0.3</span>,</span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t) <span class="sc">==</span> <span class="fl">3.09</span>),</span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"DarkOrchid"</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span></span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Labels toevoegen</span></span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(t)),</span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Kansdichtheid"</span>,</span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="cn">NULL</span></span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Thema toepassen</span></span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-t-df9-staarten" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-t-df9-staarten-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="ToetsenGemiddelde_files/figure-html/fig-t-df9-staarten-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figuur&nbsp;26.2: t-verdeling met df = 9 vrijheidsgraden. De P-waarde is het totale oppervlak van de met paars aangegeven staarten van de verdeling."><img src="ToetsenGemiddelde_files/figure-html/fig-t-df9-staarten-1.png" class="img-fluid figure-img" style="width:57.0%"></a>
+<a href="ToetsenGemiddelde_files/figure-html/fig-t-df9-staarten-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figuur&nbsp;26.3: t-verdeling met df = 9 vrijheidsgraden. De P-waarde is het totale oppervlak van de met paars aangegeven staarten van de verdeling."><img src="ToetsenGemiddelde_files/figure-html/fig-t-df9-staarten-1.png" class="img-fluid figure-img" style="width:57.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-t-df9-staarten-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;26.2: <span class="math inline">\(t\)</span>-verdeling met df = 9 vrijheidsgraden. De <span class="math inline">\(P\)</span>-waarde is het totale oppervlak van de met paars aangegeven staarten van de verdeling.
+Figuur&nbsp;26.3: <span class="math inline">\(t\)</span>-verdeling met df = 9 vrijheidsgraden. De <span class="math inline">\(P\)</span>-waarde is het totale oppervlak van de met paars aangegeven staarten van de verdeling.
 </figcaption>
 </figure>
 </div>
@@ -790,9 +834,9 @@ Figuur&nbsp;26.2: <span class="math inline">\(t\)</span>-verdeling met df = 9 vr
 <p>Bijvoorbeeld, <code>pt(0, df = 9)</code> geeft de kans op een waarde van <span class="math inline">\(t\)</span> kleiner dan 0 volgens de <span class="math inline">\(t\)</span>-verdeling met 9 vrijheidsgraden. (Het antwoord moet 0,5 zijn, omdat alle <span class="math inline">\(t\)</span>-verdelingen symmetrisch zijn rond 0.)</p>
 <p>De oppervlakte in de paarse linkerstaart van de verdeling kan dus worden berekend met deze code:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">3.087701</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">3.087701</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.006488777</code></pre>
 </div>
@@ -800,7 +844,7 @@ Figuur&nbsp;26.2: <span class="math inline">\(t\)</span>-verdeling met df = 9 vr
 <p>De functie <code>abs(t)</code> haalt het minteken weg van <span class="math inline">\(t\)</span> zodat de waarde positief wordt. Op deze manier werkt de code ongeacht of de <span class="math inline">\(t\)</span>-waarde positief of negatief is.</p>
 <p>Om ook de rechterstaart mee te rekenen, moeten we die kans verdubbelen. Dat levert op:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.01297755</code></pre>
 </div>
@@ -840,7 +884,7 @@ Achtereenvolgens: <span class="math inline">\(\overline{X}\)</span>, <span class
 </p>
 <p>Gebruik R:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 <li><p><strong>Trek je conclusies.</strong></p></li>
 </ol>
@@ -856,28 +900,28 @@ Achtereenvolgens: <span class="math inline">\(\overline{X}\)</span>, <span class
 <h3 class="anchored" data-anchor-id="de-t-toets-helemaal-door-r-laten-uitvoeren">De <span class="math inline">\(t\)</span>-toets helemaal door R laten uitvoeren</h3>
 <p>Hierboven hebben we de hele <span class="math inline">\(t\)</span>-toets handmatig uitgevoerd, en R enkel gebruikt om de <span class="math inline">\(P\)</span>-waarde op te vragen. Het is efficiënter om de hele berekening door R te laten uitvoeren. Het script zou er zo uit kunnen zien:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gegevens:</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>temperaturen <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">35.7</span>, <span class="fl">35.8</span>, <span class="fl">37.0</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>, <span class="fl">36.4</span>, <span class="fl">36.1</span>, <span class="fl">36.8</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>mu0 <span class="ot">&lt;-</span> <span class="dv">37</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># berekening:</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(temperaturen)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">mean</span>(temperaturen)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sd</span>(temperaturen)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>sem <span class="ot">&lt;-</span> s<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> (m <span class="sc">-</span> mu0) <span class="sc">/</span> sem</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># bereken en print P-waarde:</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>(P <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span><span class="dv">1</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gegevens:</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>temperaturen <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">35.7</span>, <span class="fl">35.8</span>, <span class="fl">37.0</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>, <span class="fl">36.4</span>, <span class="fl">36.1</span>, <span class="fl">36.8</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>mu0 <span class="ot">&lt;-</span> <span class="dv">37</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># berekening:</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(temperaturen)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">mean</span>(temperaturen)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sd</span>(temperaturen)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>sem <span class="ot">&lt;-</span> s<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> (m <span class="sc">-</span> mu0) <span class="sc">/</span> sem</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># bereken en print P-waarde:</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>(P <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span><span class="dv">1</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.01297755</code></pre>
 </div>
 </div>
 <p>Maar het kan nog veel gemakkelijker. De functie <code>t.test()</code> die we in <a href="Schatten.html" class="quarto-xref"><span>Hoofdstuk 24</span></a> ook hadden gebruikt om het 95%-betrouwbaarheidsinterval uit te rekenen, voert de hele berekening in één keer uit:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>temperaturen <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">35.7</span>, <span class="fl">35.8</span>, <span class="fl">37.0</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>, <span class="fl">36.4</span>, <span class="fl">36.1</span>, <span class="fl">36.8</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mu0 <span class="ot">&lt;-</span> <span class="dv">37</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(temperaturen, <span class="at">mu =</span> mu0)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>temperaturen <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">35.7</span>, <span class="fl">35.8</span>, <span class="fl">37.0</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>, <span class="fl">36.4</span>, <span class="fl">36.1</span>, <span class="fl">36.8</span>, <span class="fl">36.5</span>, <span class="fl">37.1</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>mu0 <span class="ot">&lt;-</span> <span class="dv">37</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(temperaturen, <span class="at">mu =</span> mu0)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One Sample t-test
@@ -956,10 +1000,10 @@ Bij de <span class="math inline">\(t\)</span>-toets voor één steekproef gingen
 <div id="fig-model-t-test-2-var" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-model-t-test-2-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="ToetsenGemiddelde_files/figure-html/fig-model-t-test-2-var-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figuur&nbsp;26.3: Illustratie van het statistisch model van de t-toets voor 2 steekproeven. Aangenomen wordt dat de variabele in beide populaties normaal verdeeld is, met dezelfde standaarddeviatie \sigma."><img src="ToetsenGemiddelde_files/figure-html/fig-model-t-test-2-var-1.png" class="img-fluid figure-img" style="width:64.0%"></a>
+<a href="ToetsenGemiddelde_files/figure-html/fig-model-t-test-2-var-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figuur&nbsp;26.4: Illustratie van het statistisch model van de t-toets voor 2 steekproeven. Aangenomen wordt dat de variabele in beide populaties normaal verdeeld is, met dezelfde standaarddeviatie \sigma."><img src="ToetsenGemiddelde_files/figure-html/fig-model-t-test-2-var-1.png" class="img-fluid figure-img" style="width:64.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-model-t-test-2-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;26.3: Illustratie van het statistisch model van de <span class="math inline">\(t\)</span>-toets voor 2 steekproeven. Aangenomen wordt dat de variabele in beide populaties normaal verdeeld is, met dezelfde standaarddeviatie <span class="math inline">\(\sigma\)</span>.
+Figuur&nbsp;26.4: Illustratie van het statistisch model van de <span class="math inline">\(t\)</span>-toets voor 2 steekproeven. Aangenomen wordt dat de variabele in beide populaties normaal verdeeld is, met dezelfde standaarddeviatie <span class="math inline">\(\sigma\)</span>.
 </figcaption>
 </figure>
 </div>
@@ -987,9 +1031,9 @@ Je vult in deze stap dus <a href="#eq-t-twee" class="quarto-xref">Vergelijking&n
 <p><strong>Stap 5: Bereken de <span class="math inline">\(P\)</span>-waarde:</strong><br>
 Nu kunnen we de <span class="math inline">\(P\)</span>-waarde berekenen met R. Dat gaat weer precies zoals bij de <span class="math inline">\(t\)</span>-toets voor één steekproef, behalve dat we nu een ander aantal vrijheidsgraden moeten specificeren, namelijk <span class="math inline">\(\mathrm{df}= n_1 + n_2 - 2\)</span>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Zorg dat t, n1, en n2 al gedefinieerd zijn.</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Bereken en print de P-waarde</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>(P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n1 <span class="sc">+</span> n2 <span class="sc">-</span> <span class="dv">2</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Zorg dat t, n1, en n2 al gedefinieerd zijn.</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Bereken en print de P-waarde</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>(P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n1 <span class="sc">+</span> n2 <span class="sc">-</span> <span class="dv">2</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Stap 6: Trek je conclusies.</strong><br>
 Trek op basis van <span class="math inline">\(P\)</span> je conclusies!</p>
@@ -1033,7 +1077,7 @@ Achtereenvolgens: <span class="math inline">\(\overline{X}_1\)</span>,<span clas
 </p>
 <p>Gebruik R:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n1 <span class="sc">+</span> n2 <span class="sc">-</span> <span class="dv">2</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n1 <span class="sc">+</span> n2 <span class="sc">-</span> <span class="dv">2</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 <li><p><strong>Trek je conclusies.</strong></p></li>
 </ol>
@@ -1046,14 +1090,14 @@ Achtereenvolgens: <span class="math inline">\(\overline{X}_1\)</span>,<span clas
 <p>Het is niet moeilijk om de formules zelf in R in te programmeren, maar dat is niet nodig. Ook deze <span class="math inline">\(t\)</span>-toets kan namelijk met de functie <code>t.test()</code> worden uitgevoerd!</p>
 <p>Laten we aannemen dat je de resultaten van je twee steekproeven in R hebt ingevoerd als twee vectoren, <code>steekproef1</code> en <code>steekproef2</code>. Dan ben je daarna in één regel klaar:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(steekproef1, steekproef2, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(steekproef1, steekproef2, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Het argument <code>var.equal = TRUE</code> is nodig om de functie te vertellen dat we hebben aangenomen dat beide populaties een gelijke variantie hebben.</p>
 <div id="exm-penguins" class="theorem example">
 <p><span class="theorem-title"><strong>Voorbeeld 26.2 (Verschillen de snavellengtes tussen pinguins van de soorten Chinstrap en Gentoo?)</strong></span> &nbsp;</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="figuren/penguins.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figuur en data: Horst et al (2020)"><img src="figuren/penguins.png" class="img-fluid figure-img" style="width:70.0%" alt="Figuur en data: Horst et al (2020)"></a></p>
+<p><a href="figuren/penguins.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figuur en data: Horst et al (2020)"><img src="figuren/penguins.png" class="img-fluid figure-img" style="width:70.0%" alt="Figuur en data: Horst et al (2020)"></a></p>
 <figcaption>Figuur en data: Horst et al (2020)</figcaption>
 </figure>
 </div>
@@ -1063,29 +1107,29 @@ Achtereenvolgens: <span class="math inline">\(\overline{X}_1\)</span>,<span clas
 <h3 class="anchored" data-anchor-id="de-data">De data</h3>
 <p>We lezen eerst de gegevens in; die zijn beschikbaar gesteld via de library <code>"palmerpenquins"</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"palmerpenguins"</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"palmerpenguins"</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>De variabele heet <code>bill_length_mm</code>. Uit de naam van de variabele valt op te maken dat de snavellengte gegeven is in mm. We selecteren de snavellengtes van de twee soorten en verwijderen <code>NA</code>s:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>snavel_Chinstrap <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>bill_length_mm[penguins<span class="sc">$</span>species <span class="sc">==</span> <span class="st">"Chinstrap"</span>]</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>snavel_Gentoo <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>bill_length_mm[penguins<span class="sc">$</span>species <span class="sc">==</span> <span class="st">"Gentoo"</span>]</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>snavel_Chinstrap <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>bill_length_mm[penguins<span class="sc">$</span>species <span class="sc">==</span> <span class="st">"Chinstrap"</span>]</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>snavel_Gentoo <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>bill_length_mm[penguins<span class="sc">$</span>species <span class="sc">==</span> <span class="st">"Gentoo"</span>]</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="bestudeer-de-gegevens" class="level3">
 <h3 class="anchored" data-anchor-id="bestudeer-de-gegevens">Bestudeer de gegevens</h3>
 <p>Voordat we een toets uitvoeren, moeten we de gegevens altijd eerst goed bekijken. Hoeveel datapunten zijn er?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(n1 <span class="ot">&lt;-</span> <span class="fu">length</span>(snavel_Chinstrap))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>(n1 <span class="ot">&lt;-</span> <span class="fu">length</span>(snavel_Chinstrap))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 68</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>(n2 <span class="ot">&lt;-</span> <span class="fu">length</span>(snavel_Gentoo))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>(n2 <span class="ot">&lt;-</span> <span class="fu">length</span>(snavel_Gentoo))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 123</code></pre>
 </div>
@@ -1093,14 +1137,14 @@ Achtereenvolgens: <span class="math inline">\(\overline{X}_1\)</span>,<span clas
 <p>Dit is dus een flinke dataset, met snavelmetingen voor 68 Chinstrap-pinguïns en 123 Gentoo-pinguïns.</p>
 <p>We bekijken wat kengetallen voor beide soorten. Eerst de ligging:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(snavel_Chinstrap)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(snavel_Chinstrap)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   40.90   46.35   49.55   48.83   51.08   58.00 </code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   40.90   45.30   47.30   47.50   49.55   59.60 </code></pre>
@@ -1109,38 +1153,29 @@ Achtereenvolgens: <span class="math inline">\(\overline{X}_1\)</span>,<span clas
 <p>De mediaan en het gemiddelde van de Gentoos zijn net iets kleiner dan die van de Chinstraps.</p>
 <p>Dan de spreiding:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(snavel_Chinstrap)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(snavel_Chinstrap)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3.339256</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3.081857</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">IQR</span>(snavel_Chinstrap) <span class="co">#interkwartielafstand</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">IQR</span>(snavel_Chinstrap) <span class="co">#interkwartielafstand</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4.725</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">IQR</span>(snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">IQR</span>(snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4.25</code></pre>
 </div>
 </div>
 <p>De spreiding is voor beide soorten vergelijkbaar, maar iets kleiner voor de Gentoos.</p>
 <p>We genereren ook voor beide soorten een histogram:</p>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(snavel_Chinstrap, <span class="at">main =</span> <span class="cn">NULL</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(snavel_Gentoo, <span class="at">main =</span> <span class="cn">NULL</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(snavel_Chinstrap, <span class="at">main =</span> <span class="cn">NULL</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(snavel_Gentoo, <span class="at">main =</span> <span class="cn">NULL</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="quarto-layout-panel" data-layout="[1,1]">
 <div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-20-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
-</figure>
-</div>
-</div>
-</div>
 <div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="cell-output-display">
 <div>
@@ -1150,20 +1185,29 @@ Achtereenvolgens: <span class="math inline">\(\overline{X}_1\)</span>,<span clas
 </div>
 </div>
 </div>
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-22-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 </div>
 <p>De verdelingen lijken lichtelijk rechts-scheef. Dat is jammer, want het Normale Model neemt aan dat de variabele in beide populaties normaal verdeeld is. We onderzoeken dit verder met twee QQ-plots:</p>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(snavel_Chinstrap, <span class="at">main =</span> <span class="cn">NULL</span>)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(snavel_Chinstrap)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(snavel_Gentoo, <span class="at">main =</span> <span class="cn">NULL</span>)</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(snavel_Chinstrap, <span class="at">main =</span> <span class="cn">NULL</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(snavel_Chinstrap)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(snavel_Gentoo, <span class="at">main =</span> <span class="cn">NULL</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="quarto-layout-panel" data-layout="[1,1]">
 <div class="quarto-layout-row">
 <div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-22-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" style="width:80.0%"></a></p>
+<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-23-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" style="width:80.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -1172,7 +1216,7 @@ Achtereenvolgens: <span class="math inline">\(\overline{X}_1\)</span>,<span clas
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-23-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" style="width:80.0%"></a></p>
+<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-24-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" style="width:80.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -1185,7 +1229,7 @@ Achtereenvolgens: <span class="math inline">\(\overline{X}_1\)</span>,<span clas
 <h3 class="anchored" data-anchor-id="de-t-toets-uitvoeren">De <span class="math inline">\(t\)</span>-toets uitvoeren</h3>
 <p>Tot slot voeren we de toets uit:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(snavel_Chinstrap, snavel_Gentoo, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(snavel_Chinstrap, snavel_Gentoo, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Two Sample t-test
@@ -1223,7 +1267,7 @@ mean of x mean of y
 <p>Maar, bij twijfel is het beter om gebruik te maken van een versie van de <span class="math inline">\(t\)</span>-toets die <strong>de <span class="math inline">\(t\)</span>-toets van Welch</strong> wordt genoemd. Deze toets maakt de aanname dat beide standaarddeviaties gelijk zijn <em>niet</em>.</p>
 <p>In deze cursus bespreken we de precieze formules voor de <span class="math inline">\(t\)</span>-toets van Welch niet. Maar het is binnen R heel gemakkelijk om de toets uit te voeren. Voor de standaard <span class="math inline">\(t\)</span>-toets moesten we aan de <code>t.test()</code> functie het argument <code>var.equal = TRUE</code> meegeven. Als we in plaats daarvan <code>var.equal = FALSE</code> invoeren, wordt de toets van Welch uitgevoerd:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(snavel_Chinstrap, snavel_Gentoo, <span class="at">var.equal =</span> <span class="cn">FALSE</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(snavel_Chinstrap, snavel_Gentoo, <span class="at">var.equal =</span> <span class="cn">FALSE</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
@@ -1240,7 +1284,7 @@ mean of x mean of y
 </div>
 <p>Sterker nog, de setting <code>FALSE</code> is in R de default; als je niets specificeert wordt dus standaard de toets van Welch uitgevoerd:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(snavel_Chinstrap, snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(snavel_Chinstrap, snavel_Gentoo)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Het enige nadeel van de toets van Welch is dat die iets minder krachtig is dan de standaard <span class="math inline">\(t\)</span>-toets voor twee steekproeven. De <span class="math inline">\(P\)</span>-waarde zal typisch dus iets groter zijn bij de toets van Welch dan bij de standaard toets. Maar als de steekproeven groter zijn, is het verschil te verwaarlozen.</p>
 <div id="exr-welch" class="pepexr theorem exercise">
@@ -1261,10 +1305,10 @@ mean of x mean of y
 <div id="fig-slapende-student" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-cap="D. Sharon Pruitt, owner of [Pink Sherbet Photography](https://www.pinksherbet.com) [CC BY 2.0](https://creativecommons.org/licenses/by/2.0), via Wikimedia Commons">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-slapende-student-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="figuren/slapende_student.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Figuur&nbsp;26.4: De gevolgen van weinig slapen zijn niet mals."><img src="figuren/slapende_student.jpg" class="img-fluid figure-img" style="width:50.0%" data-fig-cap="D. Sharon Pruitt, owner of [Pink Sherbet Photography](https://www.pinksherbet.com) [CC BY 2.0](https://creativecommons.org/licenses/by/2.0), via Wikimedia Commons"></a>
+<a href="figuren/slapende_student.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Figuur&nbsp;26.5: De gevolgen van weinig slapen zijn niet mals."><img src="figuren/slapende_student.jpg" class="img-fluid figure-img" style="width:50.0%" data-fig-cap="D. Sharon Pruitt, owner of [Pink Sherbet Photography](https://www.pinksherbet.com) [CC BY 2.0](https://creativecommons.org/licenses/by/2.0), via Wikimedia Commons"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-slapende-student-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;26.4: De gevolgen van weinig slapen zijn niet mals.
+Figuur&nbsp;26.5: De gevolgen van weinig slapen zijn niet mals.
 </figcaption>
 </figure>
 </div>
@@ -1279,18 +1323,18 @@ Figuur&nbsp;26.4: De gevolgen van weinig slapen zijn niet mals.
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-28-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Figuur&nbsp;26.5: MWT-scores van de acht proefpersonen op dag 0 en dag 6 van de slaaprestrictie. Gemiddelde scores per dag zijn aangegeven met de oranje lijnen."><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" style="width:29.0%"></a></p>
+<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-29-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Figuur&nbsp;26.6: MWT-scores van de acht proefpersonen op dag 0 en dag 6 van de slaaprestrictie. Gemiddelde scores per dag zijn aangegeven met de oranje lijnen."><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" style="width:29.0%"></a></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vb-gepaarde-t-toets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;26.5: MWT-scores van de acht proefpersonen op dag 0 en dag 6 van de slaaprestrictie. Gemiddelde scores per dag zijn aangegeven met de oranje lijnen.
+Figuur&nbsp;26.6: MWT-scores van de acht proefpersonen op dag 0 en dag 6 van de slaaprestrictie. Gemiddelde scores per dag zijn aangegeven met de oranje lijnen.
 </figcaption>
 </figure>
 </div>
-<p>Zoals je in <a href="#fig-vb-gepaarde-t-toets" class="quarto-xref">Figuur&nbsp;<span>26.5</span></a> kunt zien, waren er op dag 0 drie deelnemers die gedurende de hele test wakker bleven. Op dag 6 lukte dat geen van de deelnemers. De gemiddelde MWT-scores op die twee dagen verschillen dus van elkaar. Maar hoe toetsen we of dit verschil verklaard kan worden door toevallige steekproevenvariabiliteit?</p>
+<p>Zoals je in <a href="#fig-vb-gepaarde-t-toets" class="quarto-xref">Figuur&nbsp;<span>26.6</span></a> kunt zien, waren er op dag 0 drie deelnemers die gedurende de hele test wakker bleven. Op dag 6 lukte dat geen van de deelnemers. De gemiddelde MWT-scores op die twee dagen verschillen dus van elkaar. Maar hoe toetsen we of dit verschil verklaard kan worden door toevallige steekproevenvariabiliteit?</p>
 </div>
 <p>De casus uit <a href="#exm-slaaptekort" class="quarto-xref">Voorbeeld&nbsp;<span>26.3</span></a> verschilt op een essentiële manier van die van <a href="#exm-penguins" class="quarto-xref">Voorbeeld&nbsp;<span>26.2</span></a>. De metingen op dag 0 en op dag 6 zijn namelijk verricht op dezelfde acht proefpersonen. In andere woorden: de twee steekproeven zijn <strong>gepaard</strong>: bij elke waarde in steekproef 1 hoort een waarde in steekproef 2. Een gevolg is dat de twee steekproeven niet onafhankelijk zijn van elkaar. Een proefpersonen die <em>in het algemeen</em> vrij gemakkelijk in slaap valt, zal mogelijk zowel op dag 0 als op dag 6 een lage MWT-score behalen. En een proefpersoon die in het algemeen moeilijk in slaap valt zal op beide dagen een relatief hoge score halen. De scores op dag 0 hangen dus samen met de scores op dag 6.</p>
 <p>We kunnen dit laten zien door de metingen op dag 0 en dag 6 die bij dezelfde persoon horen dezelfde kleur te geven en met een lijntje te verbinden. Dat geeft deze figuur:</p>
@@ -1301,14 +1345,14 @@ Figuur&nbsp;26.5: MWT-scores van de acht proefpersonen op dag 0 en dag 6 van de 
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-29-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Figuur&nbsp;26.6: Dezelfde figuur als hierboven, maar nu hebben de metingen op beide dagen die bij dezelfde persoon dezelfde kleur; ze zijn bovendien met een lijn verbonden."><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" style="width:43.0%"></a></p>
+<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-30-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12" title="Figuur&nbsp;26.7: Dezelfde figuur als hierboven, maar nu hebben de metingen op beide dagen die bij dezelfde persoon dezelfde kleur; ze zijn bovendien met een lijn verbonden."><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" style="width:43.0%"></a></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vb-gepaarde-t-toets-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;26.6: Dezelfde figuur als hierboven, maar nu hebben de metingen op beide dagen die bij dezelfde persoon dezelfde kleur; ze zijn bovendien met een lijn verbonden.
+Figuur&nbsp;26.7: Dezelfde figuur als hierboven, maar nu hebben de metingen op beide dagen die bij dezelfde persoon dezelfde kleur; ze zijn bovendien met een lijn verbonden.
 </figcaption>
 </figure>
 </div>
@@ -1317,23 +1361,23 @@ Figuur&nbsp;26.6: Dezelfde figuur als hierboven, maar nu hebben de metingen op b
 <p>Zelfs als we de <span class="math inline">\(t\)</span>-toets voor onafhankelijke steekproeven hadden <em>mogen</em> gebruiken, is die toets niet ideaal. De onderlinge verschillen in de slaperigheid van de deelnemers dragen namelijk bij aan de spreiding binnen iedere steekproef. Hoe groter die spreiding is, hoe lastiger het is om aan te tonen dat er een verschil is in de gemiddelden van beide steekproeven. Om precies te zijn: de onderlinge verschillen tussen de deelnemers zorgen voor grotere standaarddeviaties <span class="math inline">\(s_1\)</span> en <span class="math inline">\(s_2\)</span>, daardoor een grotere gepoolde steekproefvariantie <span class="math inline">\(s_\textrm{p}^2\)</span> (zie <a href="#eq-sp" class="quarto-xref">Vergelijking&nbsp;<span>26.3</span></a>) en dus een grotere standaardfout <span class="math inline">\(\mathrm{SE}_{\overline{X}_1 - \overline{X}_2}\)</span> (zie <a href="#eq-se-diff" class="quarto-xref">Vergelijking&nbsp;<span>26.4</span></a>), en dat levert dan weer een <em>kleinere</em> waarde van <span class="math inline">\(t\)</span> op (<a href="#eq-t-twee" class="quarto-xref">Vergelijking&nbsp;<span>26.2</span></a>). Dat verkleint de kans op een significant resultaat!</p>
 <p>In dit onderzoek zijn we bovendien helemaal niet <em>geïnteresseerd</em> in de onderlinge verschillen. We willen vooral aantonen dat de individuele proefpersonen typisch slaperiger zijn op dag zes dan op dag 0, <em>ongeacht</em> hoe slaperig ze van zichzelf zijn.</p>
 <p>De oplossing is om voor iedere persoon het verschil uit te rekenen tussen de MWT-score op dag 6 en op dag 0, en enkel die verschillen te analyseren. Door alleen op de verschillen de focussen, filteren we de onderlinge verschillen in “baseline” slaperigheid weg.</p>
-<p>We plotten die verschillen hieronder, in <a href="#fig-vb-gepaarde-t-toets-2" class="quarto-xref">Figuur&nbsp;<span>26.7</span></a>; de oranje lijn geeft het gemiddelde verschil aan. Deze figuur laat duidelijk zien dat alle proefpersonen na zes nachten slaperiger zijn geworden.</p>
+<p>We plotten die verschillen hieronder, in <a href="#fig-vb-gepaarde-t-toets-2" class="quarto-xref">Figuur&nbsp;<span>26.8</span></a>; de oranje lijn geeft het gemiddelde verschil aan. Deze figuur laat duidelijk zien dat alle proefpersonen na zes nachten slaperiger zijn geworden.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-vb-gepaarde-t-toets-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-vb-gepaarde-t-toets-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="ToetsenGemiddelde_files/figure-html/fig-vb-gepaarde-t-toets-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12" title="Figuur&nbsp;26.7: Het verschil tussen MWT-scores dag 6 en dag 0. De oranje lijn geeft het gemiddelde aan van de verschillen."><img src="ToetsenGemiddelde_files/figure-html/fig-vb-gepaarde-t-toets-2-1.png" class="img-fluid figure-img" style="width:30.0%"></a>
+<a href="ToetsenGemiddelde_files/figure-html/fig-vb-gepaarde-t-toets-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13" title="Figuur&nbsp;26.8: Het verschil tussen MWT-scores dag 6 en dag 0. De oranje lijn geeft het gemiddelde aan van de verschillen."><img src="ToetsenGemiddelde_files/figure-html/fig-vb-gepaarde-t-toets-2-1.png" class="img-fluid figure-img" style="width:30.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vb-gepaarde-t-toets-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;26.7: Het verschil tussen MWT-scores dag 6 en dag 0. De oranje lijn geeft het gemiddelde aan van de verschillen.
+Figuur&nbsp;26.8: Het verschil tussen MWT-scores dag 6 en dag 0. De oranje lijn geeft het gemiddelde aan van de verschillen.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>De vraag wordt nu: kunnen we op basis van deze steekproef van acht proefpersonen concluderen dat het <em>populatiegemiddelde</em> van de verschillen in de MWT-scores afwijkt van 0?</p>
-<p>Merk op dat er in <a href="#fig-vb-gepaarde-t-toets-2" class="quarto-xref">Figuur&nbsp;<span>26.7</span></a> maar één steekproef te zien is, namelijk een steekproef van verschillen. De nulhypothese die we zouden willen toetsen is dat het populatiegemiddelde van de verschillen gelijk is aan 0. Deze situatie zou je bekend moeten voorkomen: dit is namelijk precies de situatie waarvoor de <span class="math inline">\(t\)</span>-toets voor één steekproef was bedacht!</p>
+<p>Merk op dat er in <a href="#fig-vb-gepaarde-t-toets-2" class="quarto-xref">Figuur&nbsp;<span>26.8</span></a> maar één steekproef te zien is, namelijk een steekproef van verschillen. De nulhypothese die we zouden willen toetsen is dat het populatiegemiddelde van de verschillen gelijk is aan 0. Deze situatie zou je bekend moeten voorkomen: dit is namelijk precies de situatie waarvoor de <span class="math inline">\(t\)</span>-toets voor één steekproef was bedacht!</p>
 <p>De toets die we willen gaan uitvoeren is daarom <em>precies</em> de <span class="math inline">\(t\)</span>-toets voor één steekproef, maar dan toegepast op de verschillen binnen de gepaarde gegevens.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1358,7 +1402,7 @@ We zijn geïnteresseerd in de variabele <span class="math inline">\(D\)</span>, 
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-31-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" style="width:42.0%"></a></p>
+<p><a href="ToetsenGemiddelde_files/figure-html/unnamed-chunk-32-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14"><img src="ToetsenGemiddelde_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" style="width:42.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -1377,8 +1421,8 @@ Het gemiddelde verschil <span class="math inline">\(\overline{D}\)</span> is gel
 <p><strong>Stap 5: Bereken de <span class="math inline">\(P\)</span>-waarde:</strong><br>
 Gebruik R (precies zoals bij de <span class="math inline">\(t\)</span>-toets voor één steekproef):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">8</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>(P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>(P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>))</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4.723134e-05</code></pre>
 </div>
@@ -1416,7 +1460,7 @@ Achtereenvolgens: alle verschillen <span class="math inline">\(D_i\)</span>, <sp
 </p>
 <p>Gebruik R:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 <li><p><strong>Trek je conclusies.</strong></p></li>
 </ol>
@@ -1427,10 +1471,10 @@ Achtereenvolgens: alle verschillen <span class="math inline">\(D_i\)</span>, <sp
 <h3 class="anchored" data-anchor-id="de-t-toets-voor-gepaarde-steekproeven-in-r-uitvoeren">De <span class="math inline">\(t\)</span>-toets voor gepaarde steekproeven in R uitvoeren</h3>
 <p>De gemakkelijkste manier om de <span class="math inline">\(t\)</span>-toets uit te voeren is door in R gebruik te maken van de functie <code>t.test()</code>, maar nu met het argument <code>paired = TRUE</code>. Toegepast op het voorbeeld levert dat de volgende code op:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>dag0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">13</span>, <span class="dv">17</span>, <span class="dv">14</span>, <span class="dv">20</span>, <span class="dv">17</span>, <span class="dv">20</span>, <span class="dv">14</span>)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>dag6 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">4.5</span>, <span class="fl">1.9</span>, <span class="fl">3.7</span>, <span class="fl">6.2</span>, <span class="fl">10.3</span>, <span class="fl">8.2</span>, <span class="fl">5.14</span>, <span class="fl">8.2</span>)</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(dag0, dag6, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>dag0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">13</span>, <span class="dv">17</span>, <span class="dv">14</span>, <span class="dv">20</span>, <span class="dv">17</span>, <span class="dv">20</span>, <span class="dv">14</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>dag6 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">4.5</span>, <span class="fl">1.9</span>, <span class="fl">3.7</span>, <span class="fl">6.2</span>, <span class="fl">10.3</span>, <span class="fl">8.2</span>, <span class="fl">5.14</span>, <span class="fl">8.2</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(dag0, dag6, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Paired t-test
@@ -1583,9 +1627,9 @@ omdat het invloed heeft op hun fysiologie, gedrag en ecologische rol. In deze op
 <ol start="3" type="a">
 <li><p>We hebben de gegevens online gezet; voeg de volgende regel toe aan je script om de gegevens te importeren:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>massa_manacus <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data/massa_manacus.csv"</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>massa_manacus <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data/massa_manacus.csv"</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Bekijk de dataset even. Welke variabelen zijn er? Hoeveel datapunten?</p></li>
 <li><p>Onderzoek de dataset. Bereken maten van ligging en spreiding voor de variabele, en visualiseer de verdeling met een boxplot en een histogram.</p></li>
@@ -1602,7 +1646,7 @@ omdat het invloed heeft op hun fysiologie, gedrag en ecologische rol. In deze op
 </div>
 <div id="exr-manakin-2" class="Rexr theorem exercise">
 <p><span class="theorem-title"><strong>Oefening 26.6 (Gewichtsverschillen tussen mannetjes en vrouwtjes bij de Bonte manakin.)</strong></span> <br></p>
-<p>In <a href="../Appendices/antwoorden_statistiek.html#exr-manakin" class="quarto-xref">Oefening&nbsp;<span>26.5</span></a> hierboven hebben we het gemiddelde lichaamsgewicht van een Bonte manakin onderzocht. Hierbij hebben we echter geen rekening gehouden met een factor die mogelijk van belang kan zijn voor het gewicht: geslacht. Zoals je in <a href="#fig-manacus" class="quarto-xref">Figuur&nbsp;<span>26.8</span></a> kunt zien hebben de mannetjes en vrouwtjes een heel ander uiterlijk. Daarom willen we in deze opgave onderzoeken of er ook een verschil is in de gewichten van mannelijke en vrouwelijke Bonte manakins. Je kunt doorwerken in het script dat je gemaakt hebt voor <a href="../Appendices/antwoorden_statistiek.html#exr-manakin" class="quarto-xref">Oefening&nbsp;<span>26.5</span></a>.</p>
+<p>In <a href="../Appendices/antwoorden_statistiek.html#exr-manakin" class="quarto-xref">Oefening&nbsp;<span>26.5</span></a> hierboven hebben we het gemiddelde lichaamsgewicht van een Bonte manakin onderzocht. Hierbij hebben we echter geen rekening gehouden met een factor die mogelijk van belang kan zijn voor het gewicht: geslacht. Zoals je in <a href="#fig-manacus" class="quarto-xref">Figuur&nbsp;<span>26.9</span></a> kunt zien hebben de mannetjes en vrouwtjes een heel ander uiterlijk. Daarom willen we in deze opgave onderzoeken of er ook een verschil is in de gewichten van mannelijke en vrouwelijke Bonte manakins. Je kunt doorwerken in het script dat je gemaakt hebt voor <a href="../Appendices/antwoorden_statistiek.html#exr-manakin" class="quarto-xref">Oefening&nbsp;<span>26.5</span></a>.</p>
 <div id="fig-manacus" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-manacus-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1626,7 +1670,7 @@ omdat het invloed heeft op hun fysiologie, gedrag en ecologische rol. In deze op
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-manacus-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;26.8: De Bonte manakin (<em>Manacus manacus</em>). <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>
+Figuur&nbsp;26.9: De Bonte manakin (<em>Manacus manacus</em>). <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>
 </figcaption>
 </figure>
 </div>
@@ -1662,9 +1706,9 @@ Figuur&nbsp;26.8: De Bonte manakin (<em>Manacus manacus</em>). <a href="https://
 <ol start="3" type="a">
 <li><p>De gegevens staan online; importeer ze door de volgende regel aan je script toe te voegen:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>kurk <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data/kurk.csv"</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>kurk <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data/kurk.csv"</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>De kurkafzetting is gegeven in mm.</p></li>
 <li><p>Gebruik <code>str(kurk)</code>, <code>head(kurk)</code> en/of <code>View(kurk)</code> om de volgende vragen te beantwoorden:</p>
@@ -2311,7 +2355,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"loop":false,"openEffect":"zoom","selector":".lightbox","descPosition":"bottom","closeEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","openEffect":"zoom","loop":false,"selector":".lightbox","descPosition":"bottom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
