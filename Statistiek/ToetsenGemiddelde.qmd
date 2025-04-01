@@ -50,6 +50,42 @@ Stel dat we inderdaad een steekproef nemen van $n = 10$ personen
 en de volgende resultaten vinden, in $\degree$C:
 
 $$35{,}7\quad 35{,}8\quad 37{,}0\quad 36{,}5\quad 37{,}1\quad 36{,}4\quad 36{,}1\quad 36{,}8\quad 36{,}5\quad 37{,}1$$
+```{r}
+#| fig.width: 2 
+#| out-width: "28%"
+#| fig.height: 4 
+#| warning: FALSE
+#| code-fold: true
+#| label: fig-tempdata
+#| fig-cap: "Jitterplot van de gegevens. De oranje lijn geeft het gemiddelde aan, de paarse lijn de standaardwaarde van 37°C."
+# Laad ggplot2 indien nodig
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+
+# Gegevens (vervang dit met je eigen getallen indien gewenst)
+gegevens <- c(35.7, 35.8, 37.0, 36.5, 37.1, 36.4, 36.1, 36.8, 36.5, 37.1)
+
+# Bereken het steekproefgemiddelde
+gemiddelde <- mean(gegevens)
+
+# Nulhypothese-gemiddelde
+nulhypothese <- 37
+
+# Maak de jitterplot
+ggplot(data.frame(waarde = gegevens), aes(x = "", y = waarde)) +
+  geom_jitter(width = 0.1, height = 0, size = 2, color = "black") +
+  geom_hline(yintercept = gemiddelde, color = "darkorange", 
+             linetype = "solid", size = 1) +
+  geom_hline(yintercept = nulhypothese, color = "darkorchid", 
+             linetype = "dashed", size = 1) +
+  annotate("text", x = 1.2, y = gemiddelde, label = expression(bar(italic(X))),
+           color = "darkorange", hjust = 0, vjust = -0.5, size = 4) +
+  annotate("text", x = 1.2, y = nulhypothese, label = "37 °C",
+           color = "darkorchid", hjust = 0, vjust = -0.5, size = 4) +
+  labs(y = "Lichaamstemperatuur (°C)", x = "") +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
 
 Het gemiddelde van deze steekproef is $\mean{X} = 36{,}5\degree$C.
 Is dit dan sterk bewijs tegen de standaardtemperatuur van 37$\degree$C?
@@ -1686,7 +1722,7 @@ j.  Wat vertelt het 95%-BHI je wat je niet uit de $P$-waarde kunt opmaken?
 
 
 ::: {#exr-manakin-2 .Rexr}
-## Gewichtsverschillen tussen mannetjes en vrouwtjes bij de Bonte mannakin.
+## Gewichtsverschillen tussen mannetjes en vrouwtjes bij de Bonte manakin.
 <br>
 
 In @exr-manakin hierboven hebben we het gemiddelde 
