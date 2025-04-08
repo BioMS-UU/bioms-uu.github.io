@@ -67,11 +67,31 @@ b.  Je bent geïnteresseerd in de gemiddelde prijs van producten in deze webwink
     pt(0.975, df = 232)
     ```
     
-    Geef je antwoord in tenminste 3 decimalen.
+    Geef je antwoord in tenminste 2 decimalen.
     
     Ondergrens van het interval: ...
     
     Bovengrens van het interval: ...
+
+:::
+
+:::{.callout collapse=true}
+
+## Antwoord voor 'Prijzen van producten'
+
+a.  De waarden €13,95 en €41,09 zijn precies het eerste en het derde kwartiel,
+    zoals je aan de uitvoer kunt zien. 
+    Dat wil zeggen dat 50% van de gegevens binnen die grenzen valt.
+    Dat is de helft van 464 producten, dus 232.
+    
+b.  Gegeven is $s = 15{,}81$, $\mean{X} = 27{,}84$, $n = 464$. 
+    De kritieke waarde $t_{0{,}05(2)n-1}$ is gegeven door
+    `qt(0.975, df = 463)`, dus 1,965.
+    Daarmee kun je de formule invullen:
+    
+    Ondergrens: $27{,}84 - 1{,}965 \times 15{,}81/\sqrt{464} = 26{,}40.$
+
+    Bovengrens: $27{,}84 + 1{,}965 \times 15{,}81/\sqrt{464} = 29{,}28.$
 
 :::
 
@@ -92,6 +112,66 @@ Antwoord: ...
 
 :::
 
+:::{.callout collapse=true}
+
+## Antwoord voor 'Risk'
+
+Het is redelijk aan te nemen dat de uitkomsten van beide dobbelstenen onafhankelijk zijn.
+Dan is iedere combinatie van uitkomsten even waarschijnlijk.
+
+De figuur hieronder geeft de kansruimte. 
+Oranje punten geven alle uitkomsten aan waarbij de aanvaller wint.
+Dat zijn 15 uitkomsten uit 36, en dus is de kans $\pr{\text{aanvaller wint}}=15/36$.
+
+```{r}
+#| echo: false
+#| fig-width: 3.5
+#| fig-height: 4
+#| out-width: 50%
+
+# Controleer of de benodigde bibliotheken geladen zijn
+if (!("grDevices" %in% .packages())) { library(grDevices) }
+
+# Definieer mogelijke uitkomsten van de dobbelstenen
+uitkomsten_x <- 1:6
+uitkomsten_y <- 1:6
+
+# Genereer alle combinaties van X en Y
+combinaties <- expand.grid(
+  X = uitkomsten_x,
+  Y = uitkomsten_y
+)
+
+# Voeg een indicator toe voor Y > X
+combinaties$Y_groter_dan_X <- combinaties$Y > combinaties$X
+
+# Plot instellen
+plot(
+  combinaties$X,
+  combinaties$Y,
+  col = ifelse(combinaties$Y_groter_dan_X, "darkorange", "white"),
+  pch = 19,
+  xlab = "Verdediger (blauwe dobbelsteen)",
+  ylab = "Aanvaller (rode dobbelsteen)",
+  main = NULL,
+  xlim = c(0.5, 6.5),
+  ylim = c(0.5, 6.5),
+  axes = FALSE
+)
+
+# Assen toevoegen
+axis(1, at = 1:6)
+axis(2, at = 1:6)
+box()
+
+# Raster tekenen
+grid(nx = 6, ny = 6, col = "gray", lty = "dotted")
+
+```
+
+
+:::
+
 ::: {#exr-wegen}
 
 ## Gewicht
@@ -105,6 +185,17 @@ A.  Een toevallige fout.
 B.  Een systematische fout.
 C.  Een toevallige fout en een systematische fout.
 D.  Geen van beide.
+
+:::
+
+:::{.callout collapse=true}
+
+## Antwoord voor 'Gewicht'
+
+Het antwoorde is C. De kleding zorgt ervoor dat 
+de meting altijd te hoog uitvalt; dat is een systematische fout.
+maar daarnaast verschilt het gewicht van de kleding per meting,
+en dus is er ook een toevallige fout.
 
 :::
 
@@ -123,6 +214,25 @@ A.  Ongeveer 0,046.
 B.  Ongeveer 0,023.
 C.  Ongeveer 0,954.
 D.  Ongeveer 0,683.
+
+:::
+
+:::{.callout collapse=true}
+
+## Antwoord voor 'Steekproefgemiddelde'
+
+Het juiste antwoord is B.
+
+Als $X$ normaal verdeeld is met gemiddelde $\mu_X = 100$ en standaarddeviatie $\sigma_X = 10$,
+dan is $\overline{X}$ ook normaal verdeeld,
+met gemiddelde $\mu_X$ en een standaarddeviatie van $\sigma_\overline{X} = \sigma_X / \sqrt{n} = 5$.
+
+Dat wil zeggen dat 110 twee keer $\sigma_\overline{X}$ boven het gemiddelde ligt.
+De vuistregel zegt dat de kans op een waarneming die meer dan twee standaarddeviaties afwijkt van het gemiddelde
+gelijk is aan $1 - 0{,}954 = 0{,}046$. 
+Maar omdat we alleen de kans op $\overline{X} > 110$ willen meenemen (de rechterstaart), 
+en niet de kans op $\overline{X} < 90$ (de linkerstaart), moeten we die kans door twee delen.
+Het resultaat is 0,046/2 = 0,023.
 
 :::
 
@@ -167,6 +277,19 @@ b.  De onderzoekers merken op dat er een sterke associatie is
 
 :::
 
+:::{.callout collapse=true}
+
+## Antwoord voor 'Steekproefgemiddelde'
+
+a.  Alleen `School_Choice`, want die variabele is een oorzaak voor beide variabelen.
+
+b.  Nee, want het effect van `School_Choice` op `Motivation` kan ook komen door 
+    het effect van `School_choice` op `Peer_Group`. 
+    Het hoeft dus niet zo te zijn dat `Quality_Education` een grote rol speelt
+    in het effect van `School_Choice` op `Motivation`.
+
+:::
+
 
 ::: {#exr-cor}
 
@@ -179,8 +302,6 @@ AnimalTraits <- read.csv("data/AnimalTraits.csv")
 AnimalTraits <- AnimalTraits[AnimalTraits$class == "Mammalia", ]
 selection <- c("body.mass", "metabolic.rate")
 AnimalTraits <- AnimalTraits[complete.cases(AnimalTraits[selection]), selection]
-AnimalTraits$log.body.mass <- log(AnimalTraits$body.mass)
-AnimalTraits$log.metabolic.rate <- log(AnimalTraits$metabolic.rate)
 ```
 
 De stofwisselingssnelheid van zoogdieren hangt sterk samen 
@@ -188,9 +309,12 @@ met hun gemiddelde lichaamsgewicht.
 We gebruiken de dataset AnimalTraits om dit te onderzoeken.
 
 We plotten eerst de logaritme van de stofwisselingssnelheid (*metabolic rate*) in Watt
-tegen het gewicht (*mass*) in kg. 
+tegen de logaritme van gewicht (*mass*) in kg. 
+(We gebruiken de functie `log()`, die de log met basisgetal $e$ uitvoert, oftewel, de natuurlijke logaritme.)
 
 ```{r}
+AnimalTraits$log.body.mass <- log(AnimalTraits$body.mass)
+AnimalTraits$log.metabolic.rate <- log(AnimalTraits$metabolic.rate)
 plot(AnimalTraits$log.body.mass, AnimalTraits$log.metabolic.rate)
 ```
 
@@ -227,4 +351,22 @@ d.  Gebruik de volgende gegevens om de correlatiecoëfficiënt tussen `log.metab
 
 ::: 
 
+:::{.callout collapse=true}
 
+## Antwoord voor 'Stofwisselingssnelheid en lichaamsgewicht bij zoogdieren'
+
+a.  Aflezen uit de tabel: $a = 1{,}098$.
+
+b.  Aflezen uit de tabel: $b = 0{,}671$.
+
+c.  Als $X = 5{,}1\unit{kg}$, dan is $\log(X) = 1{,}629$. 
+    De regressielijn zegt dan:
+  
+    $\log(Y) = 1{,}098 + 0{,}671 \times 1{,}629241 = 2{,}190.$
+    
+    Hieruit volgt dat:\
+    $Y = \text{e}^{\log(Y)} = \text{e}^{2{,}190} = 8{,}939\unit{W}.$
+    
+d.  Gebruik dat $r = \left(s_X / s_Y\right) b = (1{,}999/1{,}405)\times 0{,}671 = 0{,}954$.
+
+:::
