@@ -14,7 +14,7 @@ lijnkleur3 <- "blue"
 
 ```
 
-# Associaties, oorzaak en gevolg, en experimenten {#sec-associaties}
+# Associaties, causaliteit, en experimenten {#sec-associaties}
 
 Kan het eten van vlees darmkanker veroorzaken?
 Hangt het aantal nakomelingen van koolmezen samen met het moment waarop 
@@ -52,7 +52,7 @@ Zo kan een numerieke variabele
 geassocieerd zijn met een categorische variabele.
 Daarvan zijn we in @sec-toetsen-gemiddelden al voorbeelden tegengekomen.
 In @sec-t-toets-twee-steekproeven gebruikten we een $t$-toets voor twee onafhankelijke steekproeven
-om aan te tonen dat het gemiddelde gewicht van de bonte manacin 
+om aan te tonen dat het gemiddelde gewicht van de bonte manakin 
 (*manacus manacus*) verschilt tussen de geslachten.
 In andere woorden, `gewicht` (continu) 
 hangt samen met `geslacht` (nominaal).
@@ -136,9 +136,9 @@ hangt iemands woontoestand samen met diens gezondheidstoestand?
 Woontoestand is opgeslagen in de variabele `HomeOwn`, 
 een factor met niveaus *Koopwoning*, *Huurwoning*, en *Overig*.
 De variabele gezondheidstoestand (`HealthGen`)
-hadden we in @exm-freq-gezondheidsstatus al bekeken.
-Dit is ook een factor, ditmaal met vijf niveaus: 
-*Slecht*, *Matig*, *Goed*, *Zeer Goed*, of *Uitstekend*. 
+hadden we in @tbl-gezondheid al bekeken.
+Dit is ook een factor, met niveaus
+*Slecht*, *Matig*, *Goed*, *Zeer Goed*, en *Uitstekend*. 
 
 Om de samenhang te onderzoeken, maken we eerst
 een **kruistabel**. Een kruistabel is
@@ -163,7 +163,7 @@ NHANES$HomeOwn <- factor(
   ordered = TRUE
 )
 
-# Vertaal de niveaus van HealtGen naar het Nederlands
+# Vertaal de niveaus van HealthGen naar het Nederlands
 NHANES$HealthGen <- factor(
   NHANES$HealthGen,
   levels = c("Poor", "Fair", "Good", "Vgood", "Excellent"),
@@ -210,49 +210,27 @@ mosaicplot(
 ```
 
 Uit deze mozaïekplot kun je verschillende dingen aflezen.
-De plot bestaat uit vijf kolommen.
-De breedte van die kolommen geeft de frequentie weer 
-van de niveaus van gezondheidstoestand.
-Dat zijn dus dezelfde frequenties die we eerder zagen in @fig-stapel.
-Je ziet dus gelijk dat veel meer mensen hun gezondheid als "Goed"
-beoordeeld hebben dan als "Slecht".
-
+De breedte van de kolommen geeft de frequentie weer 
+van de verschillende niveaus van gezondheidstoestand.
 Binnen de kolommen laten de hoogtes van de blokken
-vervolgens voor iedere gezondheidstoestand
+voor iedere gezondheidstoestand
 de relatieve frequenties zien van de verschillende woontoestanden.
-Die verhoudingen verschillen niet drastisch per niveau van gezondheidstoestand.
-Maar het lijkt erop dat de oranje blokken van links naar rechts wel hoger worden.
-Dat zou betekenen dat gezondere personen vaker een huis bezitten.
+Die verschillen niet drastisch per niveau van gezondheidstoestand,
+maar het lijkt erop dat de oranje blokken van links naar rechts wel hoger worden.
+Dat suggereert dat gezondere personen vaker een huis bezitten.
 Alleen de categorie "Slecht" past niet helemaal in die trend,
   al zou steekproefvariabiliteit in die kleine categorie een rol kunnen spelen.
 
 Om te beoordelen of de twee variabelen daadwerkelijk samenhangen
 zouden we eigenlijk een statistische toets moeten uitvoeren.
-Een geschikte toets is de $\chi^2$-toets voor onafhankelijkheid.
-We hebben in deze cursus geen tijd om die te behandelen,
-maar voor de volledigheid kunnen we deze toch even uitvoeren:
-
-```{r}
-#| warning: false
-# chi-kwadraat-toets voor onafhankelijkheid
-chisq.test(kruistabel)
-```
-
-Het nulmodel van deze toets is dat de twee variabelen
-volledig onafhankelijk zijn.
-In de uitvoer is de $P$-waarde gegeven;
-die is kleiner dan $2{,}2 \times 10^{-16}$.
-Dat wil zeggen dat deze kruistabel onder het nulmodel erg onwaarschijnlijk is.
-Dat is sterk bewijs tegen het nulmodel en voor het vermoeden
-dat de variabelen samenhangen.
+Een geschikte toets is de $\chi^2$-toets voor onafhankelijkheid;
+helaas hebben we in deze cursus geen tijd om die te behandelen.
 
 Over de oorzaken van deze samenhang kunnen we alleen maar speculeren.
-Je kunt je voorstellen dat mensen met een matige gezondheid
-daardoor soms beperkt worden, wat hun inkomen kan beïnvloeden.
-Bovendien hebben ze mogelijk hoge medische kosten.
-Dat zou kunnen verklaren dat zij minder vaak in staat zijn
-een huis te kopen.
-Maar waarschijnlijk spelen nog veel meer factoren een rol.
+Maar een slechte gezondheid
+en hoge medische kosten
+kunnen wellicht van invloed zijn op iemands mogelijkheden
+om een huis te kopen.
 
 :::
 
@@ -284,14 +262,6 @@ maar regenpakken veroorzaken geen paraplu's,
 en paraplu's geen regenpakken.
 Maatregelen tegen het gebruik van paraplu's
 zullen dus ook niets veranderen aan het aantal regenpakken.
-Dit is wat men bedoelt met de uitspraak "Correlatie is nog geen causatie!"
-
-Hoewel veel mensen dit principe begrijpen
-blijft de verleiding groot om associaties kritiekloos als oorzakelijke verbanden
-te interpreteren.
-De kranten staan vol met voorbeelden.
-Hopelijk zul jij daar na het lezen van dit hoofdstuk
-een stuk voorzichtiger mee omgaan.
 
 ### Causale diagrammen
 
@@ -311,7 +281,7 @@ Een eenvoudig causaal diagram dat stelt dat roken longkanker veroorzaakt.
 
 In een causaal diagram worden de namen van variabelen verbonden met pijlen
 als we vermoeden dat die variabelen elkaar causaal beïnvloeden. 
-Het voorbeeld van @fig-CD is dus eigenlijk de weergave van een *model*
+Het voorbeeld van @fig-CD is  eigenlijk de weergave van een *model*
 dat stelt dat er een causaal verband is
 tussen roken en longkanker.
 Zoals ieder model is het diagram een vereenvoudiging van de werkelijkheid,
@@ -328,10 +298,10 @@ Dit voorbeeld illustreert dat met een concreet voorbeeld.
 In de jaren 1980 en 1990 ontdekten onderzoekers dat mensen met
 een positief zelfbeeld vaak succesvoller zijn in het leven. Dit leidde tot
 beleidsmaatregelen die gericht waren op het verhogen van de zelfwaarde
-bij kinderen, in de hoop dat dit hen succesvoller zou maken.
+bij kinderen, in de hoop dat dit ze succesvoller zou maken.
 
-Maar is het vanzelfsprekend dat de causale pijl van `zelfwaarde` naar `success`
-loopt? Het lijkt aannemelijk dat succes op school, in sport, of in het sociale leven zal bijdragen aan een positief zelfbeeld. 
+Maar is het vanzelfsprekend dat de pijl van `zelfwaarde` naar `success`
+loopt? Het lijkt ook logisch dat succes op school, in sport, of in het sociale leven kan bijdragen aan een positief zelfbeeld. 
 Dat suggereert dat de pijl de andere kant op staat.
 
 ::: {#fig-welk-diagram layout-ncol="3" out.width="100%" fig.align="center"}
@@ -369,8 +339,7 @@ Als zelfbeeld het gevolg is van succes (en niet andersom)
 dan helpt het niet om zelfvertrouwen kunstmatig te bevorderen
 en kan wellicht beter worden ingezet op kennis en vaardigheden.
 
-Interessant? In de referentie in de voetnoot[^associatiestussenvariabelen-1]
-lees je meer over dit debat over zelfwaarde.
+Interessant? In de referentie in de voetnoot[^associatiestussenvariabelen-1].
 
 [^associatiestussenvariabelen-1]: Orth, Ulrich, and Richard W. Robins.
     “Is High Self-Esteem Beneficial? Revisiting a Classic Question.” The
@@ -444,12 +413,12 @@ Roken kan geassocieerd raken met levensduur via longkanker.
 :::
 
 Hier raakt roken geassocieerd met levensduur
-omdat roken longkanker veroorzaak, en longkanker mortaliteit.
+omdat roken longkanker veroorzaakt, en longkanker mortaliteit.
 
 In het algemeen:
 als een keten van pijlen (die dezelfde kant op staan)
 variabele $A$ met variabele $B$ verbindt
-dan is er een (indirecte) causale relatie tussen $A$ en $B$.
+dan valt te verwachten dat er een (indirecte) causale relatie bestaat tussen $A$ en $B$.
 Beide variabelen kunnen daardoor geassocieerd zijn, 
 en het manipuleren van $A$ kan dan effect hebben op $B$.
 
@@ -467,8 +436,8 @@ Er is dan dus wel een associatie of correlatie,
 
 Bekijk @fig-ijs hieronder eens. 
 De figuur is gebaseerd op Amerikaanse cijfers uit 2019,
-maar ieder ander jaar laat een vergelijkbaar beeld zien.[^cijfersijs]
-In die grafiek zijn voor iedere maand het aantal overlijdens door verdrinking
+maar andere jaren laat een vergelijkbaar beeld zien.[^cijfersijs]
+In die grafiek is voor iedere maand het aantal sterfgevallen door verdrinking
 uitgezet tegen... de verkoopcijfers van ijsjes?!?!
 
 [^cijfersijs]: Versies van deze figuur zijn op veel plekken op het internet te vinden. Wij hebben deze variant voor het jaar 2019 zelf samengesteld.
@@ -531,19 +500,15 @@ ggplot(gegevens, aes(x = ijsverkoop, y = verdrinkingen,
   coord_cartesian(xlim = c(70, 130), ylim = c(100, 700))
 ```
 
-De figuur laat een positieve associatie zien tussen het aantal verdrinkingen
-  dat in een maand plaatsvindt
-  en het aantal ijsjes dat geconsumeerd wordt.
+De figuur laat een positieve associatie zien.
 Vooral in de zomermaanden mei, juni, juli en augustus
   zijn de cijfers verontrustend:
   de ijscoman doet dan goede zaken,
-  maar helaas verdrinken er in die periode erg veel mensen.
+  maar helaas verdrinken er in die periode ook erg veel mensen.
 Is het tijd om ijsjes te verbieden?
 
 Er is natuurlijk een veel betere verklaring.
-Hoogstwaarschijnlijk bestaat er tussen `ijsverkoop` en `verdrinking` 
-  geen oorzakelijk verband.
-In plaats daarvan zijn deze variabelen gecorreleerd 
+Deze variabelen zijn gecorreleerd 
   als gevolg van één of meerdere **gezamenlijke oorzaken**.
 Een gezamenlijke oorzaak is een variabele
   die beide variabelen beïnvloedt;
@@ -577,9 +542,7 @@ Daardoor heeft het diagram een "gevorkte" structuur.
 Altijd als er een vork bestaat in het causale diagram 
 kan de variabele op de splitsing (hier `gemiddelde dagtemperatuur`) 
 als confounder optreden
-voor variabelen aan verschillende kanten "onder" de splitsing 
-(hier dus `waterrecreatie`/`verdrinking` aan de ene kant, 
-en `ijsverkooop` aan de andere kant).
+voor variabelen aan verschillende kanten "onder" de splitsing.
 
 ::: {#exr-confounding .pepexr}
 
@@ -641,20 +604,14 @@ doorloopt deze een selectieprocedure
 waarbij gecontroleerd wordt of de achtergrond van de student
 goed aansluit bij de opleiding.
 
-Op basis van beschikbare informatie---CV, vakken, cijfers, motivatie, referenties---worden studenten beoordeeld op verschillende deelaspecten.
-Bijvoorbeeld, 
-een uitgebreide achtergrond in de bioinformatica
-verhoogt de kans
-om door de selectie te komen.
-Hetzelfde geldt voor aantoonbare ervaring 
+Op basis van beschikbare informatie---CV, vakken, cijfers, motivatie, referenties---krijgen studenten een score voor verschillende deelaspecten, 
+waaronder hun kennis van bioinformatica
+en hun ervaring 
 met biologisch modelleren.
 
 Stel dat de opleiding besloten heeft
 alleen student toe te laten
 waarvan het gemiddelde van deze twee scores boven een bepaalde drempel ligt.
-(In werkelijkheid worden veel meer variabelen meegewogen,
-maar we houden het hier eenvoudig.)
-
 We kunnen de situatie dan weergeven in het volgende causale diagram:
   
 :::{#fig-collider}
@@ -668,18 +625,11 @@ Causaal diagram van de toelatingsprocedure voor de masteropleiding BIBC.
 (In werkelijkheid is de procedure veel complexer.)
 :::
 
-Volgens @fig-collider bestaat er geen causaal verband
-  tussen beide scores. 
-Als een student een extra cursus bioinformatica volgt,
-  stijgt de `score bioinformatica`,
-  wat de kans verhoogt om toegelaten te worden.
-Maar de `score biologisch modelleren` zal er niet door veranderen:
-  daarvoor staat de pijl tussen `toelating` en `score biologisch modelleren`
-  de verkeerde kant op.
+Merk op dat er geen causale pijl is tussen `score bioinformatica` en `score biologisch modelleren`.
 
-Laten we even aannemen dat in de aanmeldingen 
-beide scores niet correleren.
-Nu richten we ons alleen op *toegelaten* studenten.
+Stel dat in de aanmeldingen 
+beide scores niet gecorreleerd zijn.
+Nu onderzoeken we de *toegelaten* studenten.
 Stel dat we uit die groep een willekeurige student kiezen
 en ontdekken dat deze student nauwelijks ervaring heeft met bioinformatica.
 Dan kunnen we direct concluderen
@@ -774,13 +724,12 @@ graph TD;
   Z([...]) --> C
 ```
 Nu selecteren we een deelpopulatie op basis van de waarde
-  van $C$
-  (net als in het voorbeeld van de toegelaten masterstudenten).
+  van $C$.
 Dan kan het zijn dat, binnen die selectie,
-  de associatie tussen $X$ en $Y$ anders is
-  dan in de gehele populatie.
+  de associatie tussen $X$ en $Y$ verschilt
+  van die van de gehele populatie.
   
-Specifiek kunnen $X$ en $Y$ binnen de selectie
+In het bijzonder kunnen $X$ en $Y$ binnen de selectie
   geassocieerd zijn
   terwijl ze elkaar op geen enkele manier causaal beïnvloeden,
   en de associatie niet bestaat in de gehele populatie.
@@ -788,9 +737,14 @@ Ook kan de associatie
   binnen de selectie negatief zijn, 
   terwijl die in de volledige populatie positief is
   (of andersom).
+  
+Collider-bias speelt in veel onderzoeken een rol
+en wordt vaak niet herkend.
 :::
 
-Collider-bias speelt vaak een rol en wordt vaak niet herkend.
+
+
+::: {.content-hidden}
 Bijvoorbeeld, 
   tijdens de corona-pandemie werd in korte tijd veel onderzoek gedaan
   naar risicofactoren bij SARS-COV-2.
@@ -827,6 +781,8 @@ Dat maakt het vervolgens moeilijk om het causale effect in te schatten
 Interessant? Lees er meer over in het artikel in de voetnoot.[^colliderCovid]
 
 [^colliderCovid]: Griffith, Gareth J., Tim T. Morris, Matthew J. Tudball, Annie Herbert, Giulia Mancano, Lindsey Pike, Gemma C. Sharp, et al. “Collider bias Undermines Our Understanding of COVID-19 Disease Risk and Severity.” Nature Communications 11 (November 12, 2020): 5749. https://doi.org/10.1038/s41467-020-19478-2.
+
+:::
 
 
 ::: {#exr-colliders .pepexr}
@@ -879,7 +835,7 @@ graph LR;
   B --> C([Keizersnede])
   D([Lichaamslengte moeder]) --> B
   D --> E([Gewichtstoename tijdens zwangerschap])
-  E --> F([Geschat gewicht feutus])
+  E --> F([Geschat gewicht foetus])
   F --> C
   E --> C
   G([Leeftijd moeder]) --> B
@@ -940,10 +896,12 @@ van zo'n 30 miljoen stuks naar 350 miljoen per jaar!
 De correlatie is spectaculair,
 maar is natuurlijk enkel gebaseerd op een toevallige samenloop van omstandigheden.
 
+::: {.content-hidden}
 Het is een gemakkelijk spelletje. 
 De mobiele telefoon kwam bijvoorbeeld een stukje later op dan de PC,
 maar dat geldt ook voor de meisjesnaam Mila.
 Voor elke trend is er wel een naam te vinden.
+:::
 
 Als de variabelen zo duidelijk ongerelateerd zijn
 is het effect al snel komisch.
@@ -1021,9 +979,11 @@ Het is daardoor bij observationele onderzoeken altijd moeilijk
   
 @Tbl-woorden-variabelen-verdelingen vat de verschillen tussen observationeel en experimenteel onderzoek samen.
 
+::: {.content-hidden}
 Overigens zijn er ook veel onderzoeken waarbij de controle 
 over de relevante variabelen niet volledig is
 en die dus in feite noch strikt observationeel noch strikt experimenteel zijn.
+:::
 
 | Kenmerk                | Observationeel onderzoek  | Experimenteel onderzoek |
 |:------------------------|:--------------------------|:--------------------------|
@@ -1074,6 +1034,8 @@ Alleen op die manier zijn we er zeker van
   de bezoeken aan het ziekenhuis,
   het ontvangen van een prik,
   of een conserveermiddel in het vaccin.
+  
+::: {.content-hidden}
 Het idee kan weer worden geïllustreerd met behulp van 
   causale diagrammen (@fig-controlegroep).
   
@@ -1104,7 +1066,9 @@ graph TD;
 ```
 
 Het belang van een zorgvuldige controlebehandeling. (a) Als de controlegroep simpelweg geen behandeling krijgt, zijn er mogelijk meerdere causale paden van `behandelgroep` naar `infectie`.
-(b) Een zorgvuldig gekozen controlecontrolebehandeling zorgt ervoor dat de groepen zoveel mogelijk identiek worden behandeld. Zo kan het effect van `behandelgroep` op `infectie` alleen via `actieve component` lopen, omdat toewijzing aan een groep geen effect heeft op de andere variabelen.
+(b) Een zorgvuldig gekozen controlebehandeling zorgt ervoor dat de groepen zoveel mogelijk identiek worden behandeld. Zo kan het effect van `behandelgroep` op `infectie` alleen via `actieve component` lopen, omdat toewijzing aan een groep geen effect heeft op de andere variabelen.
+:::
+
 :::
   
 Het tweede eis aan een GGE is dat de toewijzing van eenheden aan groepen
@@ -1126,34 +1090,6 @@ Hetzelfde probleem kan optreden bij experimenten
   als een variabele zowel de toewijzing aan een behandelgroep
   als de responsvariabele beïnvloedt.
 De situatie is weergegeven in het causale diagram van @fig-randomgetallen-a.
-
-Het effect kan subtiel zijn.
-Stel bijvoorbeeld dat we besluiten om de proefpersonen
-  op basis van hun voornaam aan een groep toe te kennen.
-Zeg, proefpersonen met namen van A tot K krijgen het vaccin,
-  die met namen L tot Z de controlebehandeling.
-Het is moeilijk te zeggen wat het effect zal zijn.
-De naam Noah, de meest populaire jongensnaam in 2024,
-  kwam in Nederland vóór het jaar 2000 nauwelijks voor,
-  en dus zijn vrijwal alle Noahs jong.
-De namen Mohammed en Inaya zijn het meest populair in grote steden
-  zoals Rotterdam,
-  en veel minder op het platteland.
-Kortom, namen zijn geassocieerd met allerlei variabelen
-  waaronder gender, leeftijd, geografie, etniciteit, 
-  en het inkomen en opleidingsniveau van de ouders.
-Het kan zijn dat de veel van deze associaties verzwakt worden
-  door de letters A tot K samen te voegen tot één groep,
-  maar er is een serieus risico dat er confounders overblijven.
-Een dergelijk risico is er altijd 
-  als de groepen ingedeeld worden op basis van een arbitrair gekozen variabele.
-
-Randomisatie lost dit probleem heel eenvoudig op;
-  zie @fig-randomgetallen-b. Als de toewijzing aan groepen
-  *enkel* op basis van randomgetallen gebeurt,
-  is er gegarandeerd geen associatie tussen de behandelgroep
-  en andere variabelen.
-Confounders zijn op die manier uitgesloten.  
 
 ::: {#fig-randomgetallen layout-ncol="2"}
 ```{mermaid}
@@ -1181,6 +1117,34 @@ graph TD;
 Het belang van randomisatie. (a) Als de toewijzing van behandelgroep niet gerandomiseerd plaatsvindt, dan kunnen er confounders zijn die zowel de behandeling als de uitkomst beïnvloeden. (b) Als de toewijzing van de groepen enkel door randomgetallen worden bepaald, sluit dat confounders uit.
 :::
 
+Het effect kan subtiel zijn.
+Stel bijvoorbeeld dat we besluiten om de proefpersonen
+  op basis van hun voornaam aan een groep toe te kennen.
+Zeg, proefpersonen met namen van A tot K krijgen het vaccin,
+  die met namen L tot Z de controlebehandeling.
+Het is moeilijk te zeggen wat het effect zal zijn.
+De naam Noah, de meest populaire jongensnaam in 2024,
+  kwam in Nederland vóór het jaar 2000 nauwelijks voor,
+  en dus zijn vrijwel alle Noahs jong.
+De namen Mohammed en Inaya zijn het meest populair in grote steden
+  zoals Rotterdam,
+  en veel minder op het platteland.
+Kortom, namen zijn geassocieerd met allerlei variabelen
+  waaronder gender, leeftijd, geografie, etniciteit, 
+  en het inkomen en opleidingsniveau van de ouders.
+Het kan zijn dat de veel van deze associaties verzwakt worden
+  door de letters A tot K samen te voegen tot één groep,
+  maar er is een serieus risico dat er confounders overblijven.
+Een dergelijk risico is er altijd 
+  als de groepen ingedeeld worden op basis van een arbitrair gekozen variabele.
+
+Randomisatie lost dit probleem heel eenvoudig op;
+  zie @fig-randomgetallen-b. Als de toewijzing aan groepen
+  *enkel* op basis van randomgetallen gebeurt,
+  is er gegarandeerd geen associatie tussen de behandelgroep
+  en andere variabelen.
+Confounders zijn op die manier uitgesloten.  
+
 Deze twee aspecten samen
 ---een zorgvuldige controlebehandeling én randomisatie---
 zorgen ervoor dat een GGE confounders kan omzeilen
@@ -1204,18 +1168,20 @@ onderzoek uit te voeren.
 Maar dan zouden we een groep random gekozen jonge vrouwen
 moeten dwingen om tot hun eerste zwangerschap 
 een door ons bepaald gewicht aan te houden.
-Krijg dat maar eens door de ethische commissie...
+(Krijg dat maar eens door de ethische commissie...)
+Dit soort beperkingen speelt bij heel veel onderzoeken een rol.
 
-Dit soort problemen speelt bij heel veel onderzoeken een rol.
+:::{.content-hidden}
 Wat is het verband tussen trauma in de kindertijd
 en antisociale persoonlijkheidsstoornis op volwassen leeftijd?
 (Gaan we de helft van de proefpersonen actief traumatiseren?)
 Wat is het effect van slaaptekort van de chirurg op medische fouten tijdens operaties?
 (Gaan we een groep chirurgen slaapdronken operaties laten uitvoeren?)
+:::
 
 Waar mogelijk zijn gerandomiseerde gecontroleerde experimenten de gouden standaard.
 Dat geldt zeker in de medische wereld.
-Maar helaas zullen we in veel gevallen toch genoegen moeten nemen met observationele gegevens.
+Maar in veel gevallen zullen we toch genoegen moeten nemen met observationele gegevens.
 
 ## Blinderen voorkomt verstoringen door proefpersonen en onderzoekers zelf
 
@@ -1251,9 +1217,6 @@ om geïnfecteerd te raken.
 Dat zou kunnen leiden tot een verandering in diens gedrag.
 Gevolg zou kunnen zijn dat personen in de vaccingroep
 daardoor vaker geïnfecteerd raken dan personen in de controlegroep.
-(Tijdens de onderzoeken naar corona-vaccins tijdens de pandemie 
-zou dit effect zeker een rol hebben kunnen spelen,
-omdat *social distancing* toen zo'n belangrijke maatregel was.)
 Het causale diagram in @fig-blinderen-a illustreert 
 dat er nu twee causale paden bestaan van `behandelgroep`
 naar `infectie`, 
@@ -1307,7 +1270,7 @@ te zien wat ze verwachten.
 Wetenschappers zijn zelf niet immuun voor deze neiging.
 Helaas kan dat de uitkomsten van onderzoeken ernstig verstoren.
 
-Een voorbeeld is een medisch onderzoek,
+Een voorbeeld is een medisch onderzoek
 naar de effectiviteit van
 *artroscopische lavage en debridement*:
 kijkoperaties waarbij het kniegewricht wordt schoongespoeld en losse
@@ -1345,7 +1308,7 @@ was hoogstwaarschijnlijk gebaseerd op twee vormen van waarnemersbias.
 Het onderzoek uit 2002 wist deze effecten te blokkeren 
 door het onderzoek dubbelblind uit te voeren.
 
-
+:::{.content-hidden}
 ::: {#fig-dubbel-blinderen layout-ncol="2"}
 ```{mermaid}
 %%| fig-width: 3.5
@@ -1376,6 +1339,8 @@ Dit kan gevolgen hebben voor de beoordeling of meting die door de onderzoeker
 wordt uitgevoerd, 
 en zo bijdrage aan een associatie tussen de behandelgroep en de beoordeling.
 (b) Door ook de onderzoeker te blinderen wordt dit tweede, ongewenste causale pad uitgesloten.
+:::
+
 :::
 
 ::: {#exr-blinderen .pepexr}
@@ -1841,7 +1806,7 @@ Bij **experimenteel onderzoek** manipuleren onderzoekers actief een of meer vari
 
 **Blind onderzoek:**\
 Een onderzoek waarbij de proefpersoon niet kan weten
-welke behandeling die heeft gekregen,
+welke behandeling deze heeft gekregen,
 om uit te sluiten dat die kennis effect heeft op de respons.
 
 **Dubbelblind onderzoek:**\
