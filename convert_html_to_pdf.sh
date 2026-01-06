@@ -9,3 +9,9 @@ for html in _book/Modellen/*.html; do
 	filename=${filename%%.*}
 	echo wkhtmltopdf $html $filename.pdf	
 done;
+
+for html in _book/Statistiek/*.html; do
+	filename="${html##*/}"	
+	filename=${filename%%.*}
+	echo wkhtmltopdf $html $filename.pdf	
+done;
