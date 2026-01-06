@@ -4,89 +4,163 @@
 
 # Mini-project {#sec-evolutie .unnumbered}
 
-## Toxine-producerende bacteriën
+## Efficiënte konijnen
 
-Verschillende bacteriën die in eenzelfde omgeving groeien ondergaan vele interacties met elkaar. Naast het concurreren om voedsel, kunnen sommige bacteriën ook giftige stoffen (toxines) uitscheiden om hun concurrenten te onderdrukken. Sommige bacteriën scheiden deze toxines uit in het medium, terwijl andere de toxines direct in hun buurcellen kunnen injecteren. Hoewel dit deze bacteriën kan bevoordelen, dragen ze ook de metabolische kosten voor het produceren van de toxines (en de resistentie daartegen!). Om de ecologie van toxineproducenten te bestuderen, hebben we een systeem van ODEs opgesteld dat twee stammen beschrijft – een toxineproducerende stam die resistent is tegen het toxine en een gevoelige die dood gaat naar mate er meer toxine-producenten aanwezig zijn:
+We bestuderen een ecosysteem met gras ($G$) en konijnen ($N$).
+Gras groeit logistisch en wordt gegeten door konijnen. Konijnen gebruiken een fractie $c$ van het gegeten gras om nieuwe konijnen-biomassa te maken. Hoewel de waarden van deze parameter (en de andere parameters) niet in het veld gemeten zijn, kunnen we met een model wel onderzoeken wat er gebeurt als deze parameter verandert.
 
-\begin{align}
-\dt{X} &= a_{1}X(1-\frac{X+Y}{K}) - dX \\
-\dt{Y} &= a_{2}Y(1-\frac{X+Y}{K}) - dY - cXY
-\end{align}
-
-In dit cursusonderdeel schrijven jullie een kort verslag over het bovenstaande ODE model, en een computersimulatie die deze interacties in de ruimte simuleert. Dit verslag dient de volgende vorm te hebben: 
-
-  * Een korte introductie (~200 woorden), waarin het onderwerp het het vraagstuk geïntroduceerd wordt.     
-  * Stapsgewijs antwoorden op de vragen (a=..., b=..., etc.).
-  * Een korte conclusie (1-2 zinnen)
-  * Bijlage: [ingevuld samenwerkingsformulier](../Appendices/samenwerkings_startformulier.docx)
-
-Per onderdeel (a, b, c, *etc.*), word jullie verslag volgens de volgende standaard beoordeeld:
-
-  * 1 pt. Antwoorden/figuren zijn correct (of er wordt een juiste beredenering gegeven voor een alternatief antwoord)
-  * 1 pt. Uit het antwoord is goed af te lezen wat de vraag was (dit geldt ook voor vragen waar alleen een figuur wordt gevraagd!). Voorbeelden zijn "Het model laat zien dat het verhogen van de carrying capacity van de konijnen geen invloed heeft op de hoeveelheid konijnen in evenwicht..." of "In Figuur X tonen we de mogelijke faseruimtes voor Vergelijking Y, waar de blauwe lijnen...".
-
-Omdat er 12 subvragen zijn, levert dit 24 punten op. De overige 6 punten verdien je met een passende inleiding (3 pt) en onderbouwde conclusie (3 pt). 
-
-Succes met de opdracht!
-
-::: {.callout-caution #ctn-project}
-
-## Computerpracticum over toxine-productie
-
-Verschillende bacteriën die in eenzelfde omgeving groeien ondergaan vele interacties met elkaar. Naast het concurreren om voedsel, kunnen sommige bacteriën ook giftige stoffen (toxines) uitscheiden om hun concurrenten te onderdrukken. Sommige bacteriën scheiden deze toxines uit in het medium, terwijl andere de toxines direct in hun buurcellen kunnen injecteren. Hoewel dit deze bacteriën kan bevoordelen, dragen ze ook de metabolische kosten voor het produceren van de toxines (en de resistentie daartegen!). Dit geeft een verlaagde groeisnelheid ten opzichte van bacteriën die het toxine niet produceren. Om de ecologie van toxineproducenten te bestuderen, hebben we een systeem van ODEs opgesteld dat twee stammen beschrijft – een toxineproducerende stam die resistent is tegen het toxine en een gevoelige die extra dood gaat naar mate er meer toxine-producenten aanwezig zijn:
-
-\begin{align}
-\dt{X} &= a_{1}X(1-\frac{X+Y}{K}) - dX \\
-\dt{Y} &= a_{2}Y(1-\frac{X+Y}{K}) - dY - cXY
-\end{align}
-
-a. Omschrijf waar de termen in de vergelijkingen voor staan, en welke ODE (dX of dY) de toxine-producerende stam voorstelt, en welke de sensitieve stam.
-b. Gegeven de biologische context, waar staan de parameters $a1$, $a2$, $K$, $d$ en $c$ voor? 
-c. We gaan ervan uit dat er metabolische kosten zijn voor de productie van toxines, maar dat sensitieven behoorlijk gevoelig zijn voor deze toxines. Verwachten we dan dat een toxine-producerende mutant kan invaderen? 
-d. Bereken de nullclines van dit systeem.
-e. Schets de nullclines die je hebt gevonden in d in een faseruimte (een uitgebreid stappenplan vind je in [Tip 15.1](competitie.qmd#tip-odesschetsen)). Beschrijf en schets wat er met de nullclines gebeurt naar mate de kosten voor het produceren van het toxine hoger en hoger zijn.
-f. Beschrijf de evenwichten in de verschillende faseruimtes uit e in biologische begrippen. Kan een toxine-producerende mutant (met lage metabolische kosten) invaderen in een populatie van sensitieven?
-
-Neem het volgende Grind-script over: 
+Hieronder staat het model beshreven in grind.
 
 ```{r results='hide'}
-#| eval: false
 
 source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
 
-model <- function(t, state, parms){
-  with(as.list(c(state,parms)),{
-    dX <- a1*X*(1-(X+Y)/K) - d*X
-    dY <- a2*Y*(1-(X+Y)/K) - d*Y - c*X*Y
-    return(list(c(dX,dY)))
+# Grind model
+model <- function(t, state, parms) {
+  with(as.list(c(state,parms)), {
+    dG <- b*G*(1 - G/K) - d*G - a*G*R/(G+h)
+    dR <- c*a*G*R/(G+h) - delta*R
+    return(list(c(dG, dR)))
   })
-}  
+}
 
-colors[1] = "navy"
-colors[2] = "red"
+# Parameters (p-vector) en beginwaarden (s-vector)
+p <- c(
+  b = 1,       # groeisnelheid gras (per tijd)
+  d = 0.2,     # natuurlijke sterfte/afbraak gras (per tijd)
+  K = 10,      # draagkracht gras (hoeveelheid gras)
+  a = 10,      # graas-snelheid (gras per konijn per tijd)
+  c = 0.024,   # conversie-efficiëntie (dimensieloos)
+  delta = 0.2, # sterfte konijnen (per tijd)
+  h = 2        # halfverzadiging (hoeveelheid gras)
+)
 
-p <- c(a1=0.6,a2=1.0,d=0.1,c=0.5,K=1)
-s <- c(X=0.0001,Y=0.9)
-par(mfrow=c(1,3))
-plane(vector=T,grid=3,ymax=1.1,xmax=1.1,tstep=0.1, portrait=T, main="Totale faseruimte")
-plane(vector=T,grid=6,ymax=0.85,ymin=0.6,xmax=0.25, xmin=0.05, portrait=F, main="(ingezoomed)")
-newton(state=c(X=0.15,Y=0.7),plot=T)
+s <- c(G = 1, R = 1)  # beginwaarden (gras, konijnen)
 
-run(tmax=400,traject=F, main="Invasie van X")
+colors[1] <- "darkseagreen"
+colors[2] <- "brown"
+par(mfrow=c(1,2))
+
+plane(xmax=15, ymax=0.3, main="Faseruimte (x-as: G, y-as: R)")
+run(legend=TRUE, main="Tijdreeksen van G en R", xlab="Tijd", tmax=200, tstep=0.25)
 ```
 
-  g. Bestudeer met de parameters gegeven in het R-script of een toxine-producerende mutant zich kan verspreiden in een populatie van sensitieve cellen.
-  h. Verandert je antwoord in g als je de toxines 2 keer zo sterk maakt? En als je de toxines 10 keer zo sterk maakt?
-  i. Ga terug naar de oorspronkelijke parameters (`p <- c(a1=0.6,a2=1.0,d=0.1,c=0.5,K=1)`). Bestudeer nu ook of een sensitieve cell zich kan verspreiden in een populatie van toxine-producerende cellen.
-  j. Trek uit de bovenstaande analyses alvast een biologische conclusie.
+a. Schrijf de ODEs op die in het bovenstaande Grind-model worden gebruikt. Geef hierbij met accolades (zoals in @eq-vossen-konijnen) kort aan wat elke term in de ODEs betekent.
 
-De ODEs nemen aan dat het systeem goed gemengd is, zoals in een Erlenmeyer die goed wordt geschud. Laten we ons virtuele experiment ook herhalen op het equivalent van een agar-plaat, waar zowel reproductie als de effecten van de toxines *lokaal* zijn. 
+$$
+\begin{align*}
+    \frac{\dd {\color{#31ad75}G}}{\dd t} &= \underbrace{b\left(1-\frac{{\color{#31ad39}G}}{K}\right){\color{#31ad75}G}}_{\text{groei van nieuw gras}} - 
+\underbrace{d{\color{#31ad75}G}}_{\text{sterfte gras}} - \underbrace{\frac{a{\color{#31ad75}G}\color{#ba5323}R}{\color{#31ad75}G+h}}_{\text{predatie van gras door konijnen}}\\
+\frac{\dd \color{#ba5323}R}{\dd t} &= \underbrace{\frac{ca{\color{#31ad75}G}\color{#ba5323}R}{\color{#31ad75}G+h}}_{\text{toename van konijnen door predatie}} - \underbrace{\delta \color{#ba5323}R}_{\text{sterfte konijnen}}
+\end{align*}
+$$ 
+b. Leg uit waar alle parameters ($b$, $K$, $d$, $a$, $h$, $c$, en $\delta$) voor staan.  
 
-De parameters in de simulatie hebben vergelijkbare interpretaties als in de ODEs. In de simulatie is er echter geen sprake van *snelheden* van geboorte en sterfte, maar *kansen* van geboorte en sterfte. Let op: door deze kansprocessen moet je de simulatie soms meerdere keren herhalen om een betrouwbaar beeld te krijgen.
+b is de maximale groeisnelheid van de graspopulatie. 
+K is de hoeveelheid gras waarbij de groei van nieuw gras 0 wordt (dit bepaalt het maximale draagvermogen van gras in het ecosysteem). 
+d is de sterftesnelheid van gras 
+a is de maximale begrazings-snelheid van konijnen (maximale hoeveelheid gras dat een konijn per tijdseenheid kan eten)
+h is de hoeveelheid gras waarbij de begrazings-snelheid de helft is van de maximale begrazings-snelheid
+c is de conversie-efficiëntie van gras naar konijnen-biomassa
+delta is de sterftesnelheid van konijnen
 
-![](figuren/project_toxins.png){width="60%" fig-align="center"}
+c. Bepaal in welke eenheden de parameter $a$ wordt uitgedrukt (let op: hill-functies hebben geen eenheden, en kun je daarom meteen wegstrepen). 
 
-Je vindt de simulatie hier: <https://tbb.bio.uu.nl/bvd/bms/simulations/toxins/>. 
+Zoals jullie geleerd hebben bepaal je de eenheid van een parameter door de  term in de ODE waarin de parameter voorkomt gelijk te stellen aan de eenheden van de linkerzijde van de ODE. De linkerzijde van de ODE is altijd in termen van "iets per tijdseenheid" (dus bij gras is dat gras per tijdseenheid, bij konijnen is dat konijnen per tijdseenheid). Dus:
 
-k. Bestudeer met de standaard parameters of de toxine-producent kan invaderen, en vorm een hypothese over wat er gebeurt. 
-l. Test en bespreek je hypothese met de opties die beschikbaar zijn in de simulatie.
+Gras per tijdseenheid = G/t = aRG/(G+h)
+Zoals gezegd heeft de hillfunctie geen eenheid, dus die kunnen we wegstrepen voordat we beginnen met rekenen: 
+aR = G/t, 
+Nu kunnen we beide kanten delen door K, het aantal konijnen. 
+a = G/t * 1/R. Dit is dus gras PER tijdseenheid PER konijn.
+
+d. Welke waarde van $c$ verwacht je intuïtief dat het gunstigst is voor de konijnenpopulatie?
+
+Intuitief gezien zou je verwachten dat een hogere waarde van c gunstiger is voor de konijnenpopulatie. Omdat het gaat om de conversieefficientie zou deze niet boven de 1 moeten liggen (dat betekent dat er biomassa uit het niets ontstaat!), maar je zou denken dat 1 heel gunstig is voor de konijnenpopulatie omdat ze dan alle biomassa die ze eten omzetten in nieuwe konijnen-biomassa.
+
+e. Bereken waar de nullclines van dit systeem. 
+
+Gras nullclines:
+b*G*(1 - G/K) - d*G - a*G*R/(G+h) = 0 herschrijven we tot:
+G*(b*(1 - G/K) - d - a*R/(G+h)) = 0. Zo zie je dat er een nullcline is als G=0 (nullcline 1), maar ook als de rest 0 is. Daarvoor geldt:
+b*(1 - G/K) - d = a*R/(G+h)
+Beide kanten maal G+h:
+(G+h)*(b*(1-G/K) – d) = aR
+Beide kanten delen door a:
+R = (G+h)/a * (b*(1-G/K) – d)  (nullcline 2)
+
+Konijnen nullclines:
+c*a*G*R/(G+h) - delta*R = 0 herschrijven we tot: 
+R*(c*a*G/(G+h) - delta) = 0. Zo zien we dat er een nullcline is als R=0 (nullcline 1), maar ook als de rest 0 is. Daarvoor geldt:
+c*a*G/(G+h) = delta
+Beide kanten maal G+h:
+c*a*G = delta*(G+h)
+c*a*G = delta*G + delta*h
+caG - delta*G = delta*h
+G(ca-delta) = delta*h
+G = delta*h/(ca - delta)
+Breuk versimpelen:
+G = h/(ca/delta - 1) (nullcline 2)
+
+f. Waar liggen de nullclines voor de konijnen als $ca=delta$? Leg je antwoord uit in biologische begrippen.
+
+Dan ligt deze nullcline bij oneindig, omdat je dan deelt door 0. Daarom zit je altijd aan de 'linkerkant' van deze rechte nullcline, waar de konijnen niet kunnen groeien. Dat is begrijpelij, omdat de hoeveelheid nieuwe konijnen-biomassa die ze maximaal kunnen maken precies gelijk is aan de hoeveelheid konijnen-biomassa die sowieso verloren gaat door sterfte. Dus de konijnenpopulatie kan nooit groeien. 
+
+g. Schets de nullclines in een faseruimte (x-as: gras, y-as: konijnen). Varieer hierbij de waarde van $c$ zodat er drie kwalitatief verschillende scenario's ontstaan (laag, midden, hoog). 
+
+De meeste nullclines zijn eenvoudig lijnen (twee triviale bij G=0 en R=0, en een rechte lijn voor de konijnen bij h/(ca/delta - 1)). Alleen de nullcline voor het gras is een kromme lijn, en die lijkt ingewikkelder dan die is. 
+
+R= (G+h)/a * (b*(1-G/K) – d)
+
+Net als in het klassieke Lotka-Volterra model, is dit een bergparabool. Deze heeft de nullpunten G=-h (links van de y-as), en b*(1-G/K) – d = 0 -->
+1-G/K = d/b --> G = K(1-d/b). Gegeven dat death kleiner is dan birth ligt dit rechts van de y-as. 
+
+Er wordt gevraagd $c$ te varieren, en $c$ komt alleen in de niet-triviale konijnen-nullcline voor:
+
+G = h/(ca/delta - 1)
+
+Hoe groter $c$, hoe groter het getal onder de breuk, dus hoe kleiner de breuk. Voor hele grote $c$ ligt de nullcline dus dicht bij 0. Voor kleiner waarden van $c$ ligt de nullcline verder naar rechts. Zo kan de nullcline voor de konijnen links van de parabool liggen (scenario 1: hoge $c$), rechts van de parabool liggen maar wel snijden (scenario 2: kleinere $c$), of rechts van de parabool liggen en niet meer snijden (scenario 3: hele lage $c$).
+
+SCHETS MET 3 SCENARIOS TODO
+
+h. Gebruik de eerder gegeven grind code (met de gegeven parameters) om te onderzoeken bij welke waarden van $c$ de scenario's uit g optreden. 
+
+Als $c$ < 0.025 dan ligt de konijnennullcline zo ver rechts van de parabool dat er geen snijpunt meer is. Dit betekent dat de konijnen nooit kunnen groeien, want zelfs met de maximale hoeveelheid gras hebben ze niet genoeg. 
+
+Als $0.025 < c < 0.033$ dan snijden de nullclines rechts van de top van de parabool, en zien we dempende oscillaties (door de stable spiral). Als $c$ echter groter is dan 0.044 dan snijden de nullclines links van de top van de parabool, en zien we blijvende oscillaties (door de instabiele spiral). 
+
+Het parameter-gebied waar je stabiele hoeveelheden gras en konijnen verwacht is in dit geval dus verrassend klein! :)
+
+i. Stel ook eens zeer hoge waarden in voor $c$ (bijvoorbeeld 0.5 of 0.8). Wat gebeurt er in deze gevallen? (hint: het kan zijn dat je de tijdstapgroote $tstep$ een stuk kleiner in moet stellen). Leg je antwoord uit in biologische termen.
+
+Bij hele hoge $c$ (dus hele efficiente konijnen) krijg je zeer grote oscillaties. Dit komt doordat de konijnen heel snel groeien als er gras is, en daardoor het gras heel snel opeten. Maar als het gras op is, dan sterven de konijnen ook heel snel weer uit. Dit leidt tot grote pieken en dalen in de populaties. Als de tijdstap niet klein genoeg is, dan kan het model deze snelle veranderingen niet goed bijhouden, en krijg je onnatuurlijke resultaten (zoals negatieve populaties).
+
+j. Heroverweeg je antwoord op d in het licht van je bevindingen in h en i.
+
+Nu we het effect van $c$ in het wiskundige model begrijpen, gaan we een simulatie bekijken waarbij de konijnen zich fysiek in een (ruimtelijk) grasveld bevinden. 
+
+In de versimpelde simulatie bewegen de konijnen zich over een rasterwereld:
+	*	Groene vakjes stellen gras voor.
+	*	Lichtbruine vakjes stellen kale grond voor (geen gras).
+	*	Gras kan lokaal weer aangroeien op kale vakjes met een constante snelheid, waardoor de graspopulatie zichzelf kan onderhouden.
+	*	In tegenstelling tot het ODE-model heeft gras hier geen natuurlijke sterfte.
+
+Konijnen bewegen willekeurig rond. Alle konijnen eten al het gras binnen een bepaalde straal onmiddelijk op (je weet hoe ze zijn, gekke knijnen). Een vaste fractie (c) van elk opgegeten grasvakje wordt omgezet in nieuwe biomassa. Wanneer deze 1 bereikt, plant het konijn zich voort en verschijnt er een nieuw konijn vlakbij het huidige konijn. Dan moet het konijn opnieuw gras gaan eten om weer nieuwe konijnen te kunnen maken.
+
+Konijnen sterven met een constante kans per tijdseenheid. Deze sterftekans hangt *niet* af van de hoeveelheid gras, net zoals in het ODE-model.
+
+De grafiek in de simulatie toont alleen de laatste 500 tijdstappen, zodat de dynamiek duidelijker zichtbaar is.
+
+https://jsfiddle.net/bramvandijk88/z2shmyt0/
+
+k. Gebruik de simulatie om te bestuderen wat het effect is van de $c$ parameter in dit nieuwe model. Zie je iets wat in het ODE model niet gebeurde?
+
+Bij $c = 0.04$ overleven de konijnen het vaak niet, terwijl ze in de ODE dan al konden groeien. 
+Met $c > 0.5$ komen er snel heel veel konijnen, die het gras zo snel opeten dat de populatie uitsterft. Dit gebeurde in het ODE model niet, omdat de konijnen daar oneindig kleine populaties konden krijgen die weer herstelden. In de ruimtelijke simulatie kunnen populaties echter niet onder 0 komen, en als ze eenmaal uitgestorven zijn, kunnen ze niet meer terugkomen.
+Over het algemeen zijn er minder mooie oscillaties in dit model, en is er meer overgelaten aan willekeur. 
+
+j. De simulatie heeft een vinkje om de konijnen en het gras elke tijdstap te "mengen" (door ze op willekeurige plekken te zetten). Zet deze knop aan en bestudeer nogmaals wat het effect is van de $c$ parameter. 
+
+In de gemengde versie is een $c$ waarde van 0.04 weldegelijk genoeg om de konijnen te laten groeien, terwijl dat in het niet-gemengde systeem niet zo was. Dit zou kunnen komen doordat de konijnen er last van hebben als ze hun eigen gras "te snel" opeten, waardoor er niet genoeg om hun heen overblijft. 
+
+Ook zie je met een gemengd systeem duidelijkere staande oscillaties, omdat de alle interacties tussen gras en konijnen wat meer gemiddeld worden. Omdat ODEs ervan uitgaan dat alle interacties gemiddeld zijn (elk konijn is gelijk en ziet dezelfde hoeveelheid gras), lijkt het gemengde systeem dus ook meer op het ODE model!
