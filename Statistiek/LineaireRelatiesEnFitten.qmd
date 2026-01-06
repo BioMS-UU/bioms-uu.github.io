@@ -25,7 +25,30 @@ beschreven kan worden met een rechte lijn.
 Maar als afsluiter zullen we ook een voorbeeld bekijken
 waarbij de relatie niet lineair is. 
 
-Laten we weer beginnen met een voorbeeld.
+## Leerdoelen
+
+Na het bestuderen van dit hoofdstuk kun je:
+
+- uitleggen wat een lineaire relatie is;
+- de covariantie tussen twee variabelen berekenen en interpreteren;
+- voor een gegeven dataset Pearsons correlatiecoëfficiënt $r$ berekenen en interpreteren;
+- toetsen of de correlatiecoëfficiënt van een steekproef
+  groot genoeg is om te concluderen dat er in de populatie ook een correlatie is;
+- uitleggen welk statistisch model daarvoor gebruikt wordt, en beoordelen
+  of de aannames van dat model redelijk zijn;
+- uitleggen wat een regressielijn is en hoe die gebruikt kan worden om voorspellingen te doen;
+- relaties tussen de covariantie, de correlatiecoëfficiënt, en de regressielijn 
+  beschrijven en toepassen;
+- de regressiecoëfficiënten berekenen met R, inclusief betrouwbaarheidsintervallen;
+- uitleggen welk statistisch model daarvoor gebruikt wordt, en beoordelen
+  of de aannames van dat model redelijk zijn;
+- het onderscheid tussen interpolatie en extrapolatie uitleggen en de gevaren ervan benoemen;
+- uitleggen dat ook de parameters van niet-lineaire modellen geschat kunnen worde
+  door ze te "fitten" aan gegevens.
+
+## Lineaire relaties
+
+We beginnen met een voorbeeld.
 
 ::: {#exm-galton}
 ## De ontdekking van Sir Francis Galton.
@@ -43,14 +66,9 @@ om te zien in welke mate de lengte van de ouders
 en die van hun kinderen samenhangen.
 
 In het figuur hieronder zijn de gegevens van Galton te zien.
-Op de $x$-as staat de mid-ouder-lengte uitgezet.
-Dat is het gemiddelde van de lengte van beide ouders,
-waarbij de lengte van de moeder met 1,08 vermenigvuldigd is
-om te compenseren voor het verschil in de gemiddelde lengte
-van mannen en vrouwen.
-Op de $y$-as staat de lengte van de (volwassen) kinderen
-van deze ouderparen;
-weer zijn de lengtes van de vrouwen met 1,08 vermenigvuldigd.
+Op de $x$-as staat de \emph{mid-ouder-lengte} uitgezet.
+Dat is het gemiddelde van de lengte van beide ouders.
+Op de $y$-as staat de lengte van hun (volwassen) kinderen.
 
 ```{r}
 #| fig-height: 5
@@ -122,38 +140,37 @@ ggplot(
 
 ```
 
-Het figuur laat zien dat,
-binnen deze dataset, 
-lange ouders gemiddeld langere kinderen krijgen.
+Het figuur laat zien dat
+lange ouders gemiddeld lange kinderen krijgen.
 Maar je kunt ook zien dat kinderen van even lange ouders
 flink in lengte kunnen verschillen.
 
-De gegevens van Galton riepen allerlei vragen op.
+De gegevens roepen allerlei vragen op.
 Kunnen we de relatie tussen twee variabelen kwantificeren?
 Is er een manier om te toetsen 
 of deze samenhang ook het toevallige gevolg kan zijn
 van steekproevenvariabiliteit?
-Op deze en andere vragen zullen we hieronder ingaan.
+Op deze en andere vragen gaan we hieronder in.
 
 :::
 
-## Lineaire relaties in een steekproef
 
 ### Wat is een lineaire relatie?
 
 Stel dat we uit een populatie een steekproef van grootte $n$ hebben genomen 
 en van iedere eenheid twee variabelen hebben gemeten: $X$ en $Y$.
 De gemeten waarden van eenheid $i$ noemen we $x_i$ en $y_i$. 
-We maken vervolgens een spreidingsdiagram waarbij we $Y$ uitzetten tegen $X$.
+We tekenen vervolgens een spreidingsdiagram waarbij we $Y$ uitzetten tegen $X$.
 
 We zeggen dat de twee variabelen
 een **lineaire relatie** hebben als de datapunten 
-zich op of in de buurt van een rechte lijn bevinden
+op of in de buurt van een rechte lijn liggen
 die stijgt of daalt.
 (De lijn moet wel stijgen of dalen, 
-want als de lijn horizontaal loopt hangen de waarden van $Y$ niet af van die van $X$,
-en is er dus geen sprake van een relatie.)
-Hieronder is in @fig-voorbeeld een duidelijk voorbeeld te zien. 
+want als de lijn horizontaal loopt 
+hangen de waarden van $Y$ niet af van die van $X$,
+en is er dus geen relatie.)
+@Fig-voorbeeld laat een duidelijk voorbeeld zien. 
 
 :::{#fig-voorbeeld}
 ```{r}
@@ -192,7 +209,7 @@ ggplot(data, aes(x = X, y = Y)) +
     )
 ```
 
-Voorbeeld van variabelen $X$ en $Y$ met een lineaire relatie.
+Variabelen $X$ en $Y$ met een lineaire relatie.
 :::
 
 ### Pearsons correlatiecoëfficiënt $r$
@@ -208,18 +225,14 @@ Hier zijn een paar eigenschappen:
 
 - De waarde van $r$ ligt altijd in het interval $[-1, 1]$.
 
-- Het *teken* van $r$ (positief of negatief) geeft aan of het om een positief (stijgend) of een negatief (dalend) verband gaat.
+- Het *teken* van $r$ (positief of negatief) geeft aan of het om een stijgend (positief) of een dalend (negatief) verband gaat.
 
 - De absolute waarde van $r$  geeft aan hoe sterk het verband is; 
-  dat wil zeggen, hoe strak de punten langs de lijn liggen.
+  dat wil zeggen, hoe precies de punten op een lijn liggen.
 
-  - Als $r = 1$, dan is er een perfect *positief* lineair verband: 
-  alle punten liggen dan exact op een stijgende rechte lijn.
-
-  - Als $r = -1$, dan is er een perfect *negatief* lineair verband: 
-  alle punten liggen dan exact op een dalende rechte lijn.
-
-  - Als $r = 0$, dan is er géén lineair verband tussen de variabelen.
+  Als $r = 1$ of $-1$, dan is er een perfect lineair verband
+  en liggen alle punten exact op een rechte lijn.
+  Als $r = 0$, dan is er géén lineair verband tussen de variabelen.
 
 @Fig-correl-coefs toont een aantal voorbeelden van puntenwolken met de bijbehorende waarden van $r$.
 
@@ -282,9 +295,8 @@ print(p)
 
 De correlatiecoëfficiënt geeft aan of het verband positief of negatief is,
 en hoe dicht de punten bij de lijn liggen.
-Maar het doet er niet toe hoe *stijl* de lijn is.
-De correlatiecoëfficiënt is dus geen richtingscoëfficiënt.
-(Richtingscoëfficiënt is een ander woord voor hellingsgetal.)
+Maar hij vertelt niet hoe *steil* de lijn is.
+Een correlatiecoëfficiënt is dus geen richtingscoëfficiënt (hellingsgetal).
 
 Bijvoorbeeld, de steekproeven in @fig-correl-sd hieronder
 verschillen sterk in hun richtingscoëfficiënt, 
@@ -296,7 +308,7 @@ maar hebben allemaal $r = 1$ of $-1$.
 #| fig-height: 2.6
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Bij al deze steekproeven is de correlatiecoëfficiënt 1 of -1. De correlatiecoëfficiënt geeft aan in hoeverre de punten op een rechte lijn vallen, niet hoe stijl die lijn is."
+#| fig.cap: "Bij al deze steekproeven is de correlatiecoëfficiënt 1 of -1. De correlatiecoëfficiënt geeft aan in hoeverre de punten op een rechte lijn vallen, niet hoe steil die lijn is."
 #| label: fig-correl-sd
 
 # Laad benodigde pakketten
@@ -436,8 +448,8 @@ print(p)
 ### De correlatiecoëfficiënt is alleen betekenisvol voor lineaire relaties
 
 Pearsons correlatiecoëfficiënt is bedoeld om *lineaire* relaties te beschrijven.
-De grafieken  in @fig-nonlinear hieronder laten variabelen $X$ en $Y$ zien die wel een relatie hebben---de waarden van $Y$ hangen wel af van de waarde van $X$---maar
-de relatie is steeds niet *lineair*.
+De grafieken  in @fig-nonlinear hieronder laten variabelen $X$ en $Y$ zien die wel een relatie hebben---de waarde van $Y$ hangt wel af van de waarde van $X$---maar
+de relaties zijn steeds niet lineair.
 Het is dan niet nuttig om $r$ uit te rekenen.
 
 ```{r}
@@ -510,14 +522,14 @@ print(p)
 De correlatiecoëfficiënt is erg gevoelig voor uitbijters.
 Zie @fig-outlier hieronder.
 *Zonder* de uitbijter rechtsboven zou
-de correlatiecoëfficiënt 0 zijn; 
-door dat ene datapunt is de waarde 0,4.
+de correlatiecoëfficiënt 0 zijn, 
+maar door dat ene datapunt is de waarde 0,4.
 Bekijk je gegevens dus altijd nauwkeurig
 voordat je $r$ uitrekent. 
 Als het verband er niet lineair uitziet óf er opvallende uitbijters zijn,
 is de waarde van $r$ niet betekenisvol.
 Omdat dit punt heel belangrijk is,
-komen we er in @exr-anscombe nog een keer uitgebreider op terug.
+komen we er in @exr-anscombe nog een keer op terug.
 
 ::: {#fig-outlier}
 
@@ -572,8 +584,7 @@ met de uitbijter 0,4.
 
 ### De correlatiecoëfficiënt kan afhangen van het bereik van de $X$-waarden
 
-Bekijk @fig-bereik-a hieronder eens. 
-Dat is een plot van twee variabelen die sterk lineair met elkaar samenhangen.
+@Fig-bereik-a is een plot van variabelen die sterk met elkaar samenhangen.
 De correlatiecoëfficiënt is dan ook $r = 0{,}79$.
 
 Maar stel dat we de analyse beperken tot alleen het middelste gedeelte van het domein.
@@ -582,12 +593,11 @@ Nu is de correlatiecoëfficiënt een stuk kleiner: $r = 0{,}36$!
 Op het oog kun je ook goed zien waarom: als het bereik zo klein is,
 volgen de datapunten veel minder duidelijk een lineaire trend.
 
-Dat de correlatiecoëfficiënt zo afhangt van het domein,
-is iets dat je goed in gedachte moet houden 
+Hou dit goed in gedachte 
 bij het interpreteren van gegevens.
 Als er tussen twee variabelen geen duidelijk verband wordt gevonden,
-kan dat ook liggen aan een gebrek aan variatie in de $X$-waarden.
-Een andere studie waarin de bestudeerde steekproef meer variatie bevat
+kan dat liggen aan een gebrek aan variatie in de $X$-waarden.
+Een andere studie met meer variatie
 kan dan mogelijk wél een correlatie aantonen.
 
 ::: {#fig-bereik layout="[[1],[1]]"}
@@ -692,10 +702,11 @@ plot_a <- ggplot(df, aes(x = x, y = y)) +
     "text",
     x     = min(x_bereik_vol) + 0.2,
     y     = max(df$y),
-    label = paste0("r = ", round(cor(df$x, df$y), 2)),
+    label = paste0("italic(r) == ", round(cor(df$x, df$y), 2)),
     hjust = 0,
     vjust = 1,
-    size  = 4
+    size  = 4,
+    parse = TRUE
   ) +
   xlim(x_bereik_vol) +
   xlab(expression(italic(X))) +
@@ -726,10 +737,11 @@ plot_b <- ggplot(df_zoom, aes(x = x, y = y)) +
     "text",
     x     = min(x_bereik_zoom) + 0.05,
     y     = max(df_zoom$y),
-    label = paste0("r = ", round(cor(df_zoom$x, df_zoom$y), 2)),
+    label = paste0("italic(r) == ", round(cor(df_zoom$x, df_zoom$y), 2)),
     hjust = 0,
     vjust = 1,
-    size  = 4
+    size  = 4,
+    parse = TRUE
   ) +
   xlim(x_bereik_zoom) +
   xlab(expression(italic(X))) +
@@ -766,11 +778,10 @@ in een steekproef of serie waarnemingen:
 
 $$ \covD{X}{Y} = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{n-1}.$$ {#eq-cov}
 
-In de teller staat dat we voor iedere eenheid $i$ uit onze waarnemingen
-eerst de afwijkingen $x_i - \mean{x}$ en $y_i - \mean{y}$ moeten uitrekenen 
-en die met elkaar moeten vermenigvuldigen, om vervolgens
-de resultaten voor alle eenheden op te tellen.
-Tot slot delen we door $n - 1$.
+Voor iedere eenheid $i$ uit onze waarnemingen
+rekenen we eerst de afwijkingen $x_i - \mean{x}$ en $y_i - \mean{y}$ uit 
+en vermenigvuldigen die.
+Vervolgens tellen we de resultaten op en delen we door $n - 1$.
 
 De covariantie meet de mate waarin de $x$- en $y$-waarden lineair met elkaar samenhangen.
 @Fig-annotated-scatter illustreert dat.
@@ -781,7 +792,7 @@ De covariantie meet de mate waarin de $x$- en $y$-waarden lineair met elkaar sam
 #| fig-height: 4.5
 #| code-fold: true
 #| warning: false
-#| fig.cap: "Scatterplot met vier kwadranten en annotaties."
+#| fig.cap: "Spreidingsdiagram met vier kwadranten. De covariantie wordt positief beïnvloed door punten in de kwadranten rechtsboven en linksonder, en negatief door punten in de kwadranten linksboven en rechtsonder."
 #| label: fig-annotated-scatter
 
 # Laad benodigde pakketten
@@ -838,26 +849,25 @@ p <- ggplot(df, aes(x = X, y = Y)) +
 print(p)
 ```
 
-Het figuur laat een spreidingsdiagram zien met een duidelijke positieve correlatie.
+Het figuur laat een spreidingsdiagram zien met een positieve correlatie.
 Het diagram is in vier kwadranten verdeeld
 door met een verticale onderbroken lijn het gemiddelde van $x$ aan te geven
 en met een horizontale onderbroken lijn het gemiddelde van $y$.
 
 - In het **kwadrant rechtsboven** liggen alle datapunten waarbij $x_i > \mean{x}$,
 en $y_i > \mean{y}$.
-Het product $(x_i - \mean{x})(y_i - \mean{y})$ is voor datapunten in dat kwadrant
+Het product $(x_i - \mean{x})(y_i - \mean{y})$ is voor die punten
 dus *positief*.
-In @eq-cov voor de covariantie dragen punten in dat kwadrant dus positief bij.
+Deze punten dragen dus positief bij aan de waarde van de covariantie (@eq-cov).
 Punten die ver in de rechts-bovenhoek van het diagram liggen,
-dragen het meest bij, want daarvoor zijn $x_i - \mean{x}$
+dragen het sterkst bij, want daarvoor zijn $x_i - \mean{x}$
 en $y_i - \mean{y}$ het grootst.
 
 - In het **kwadrant linksonder** liggen alle datapunten waarbij $x_i < \mean{x}$,
 en $y_i < \mean{y}$.
-Het product $(x_i - \mean{x})(y_i - \mean{y})$ is voor die punten dus ook *positief*,
-omdat het product van twee negatieve getallen een positief getal is.
-In @eq-cov dragen punten in dit kwadrant dus óók positief bij.
-Punten die ver in de links-onderhoek van het diagram liggen doen dat het sterkst.
+Het product $(x_i - \mean{x})(y_i - \mean{y})$ is voor die punten ook *positief*.
+Punten in dit kwadrant dragen dus óók positief bij;
+de punten ver in de links-onderhoek het sterkst.
 
 - In het **kwadrant linksboven** liggen alle datapunten waarbij $x_i < \mean{x}$,
 en $y_i > \mean{y}$.
@@ -870,13 +880,11 @@ Het gevolg is dat de covariantie positief is
 als de meeste datapunten rechtsboven of linksonder in de plot 
 te vinden zijn.
 Dat zou inderdaad betekenen dat er een positieve relatie is.
-Als de meeste datapunten juist linksboven of rechtsonder liggen,
-wordt de covariantie negatief, 
-wat duidt op een negatieve relatie.
 
-Om de covariantie te berekenen moeten we steeds (in de teller)
-een waarde van $X$ vermenigvuldigen met een waarde van $Y$.
-Daardoor heeft de covariantie als dimensie de dimensie van $X$ 
+Bij de berekening van de covariantie vermenigvuldigen we steeds
+een waarde van $X$ met een waarde van $Y$.
+Daardoor is de dimensie van de covariantie gelijk aan
+de dimensie van $X$ 
 vermenigvuldigd met de dimensie van $Y$.
 Bijvoorbeeld,
 in de gegevens van Galton 
@@ -971,7 +979,7 @@ dat de correlatiecoëfficiënt van de *populatie*,
 $\rho$, gelijk is aan 0?
 
 Omdat we al meerdere hypothesetoetsen besproken hebben,
-kunnen we deze toets redelijk snel behandelen.
+kunnen we deze toets snel behandelen.
 We lopen de 6 stappen door:
 
 **Stap 1: Kies een statistisch model.**\
@@ -980,14 +988,18 @@ steeds over de kans op een waarneming $X$.
 Nu moeten we een stapje verder gaan,
 omdat iedere waarneming nu twee waardes inhoudt: 
 een waarde van $X$ en een waarde van $Y$.
-We hebben dus een statistisch model nodig die 
-de verdeling van van datapunten $(X, Y)$ in de populatie modelleert.
+We hebben dus een statistisch model nodig voor 
+de verdeling van van datapunten $(X, Y)$ in de populatie.
 
-Bij deze toets nemen we aan dat die verdeling **bivariaat normaal** is.
-@Fig-bivariaat laat zien hoe een bivarate normale verdeling eruit ziet.
+Bij deze toets nemen we aan dat de verdeling in de populatie **bivariaat normaal** is.
+@Fig-bivariaat laat zien hoe een bivariate normale verdeling eruit ziet.
 Het is een 3D plot: de hoogte van de grafiek geeft de kansdichtheid, 
 die afhangt van zowel de waarde van $X$ als van de waarde van $Y$.
 Je kunt met je muis de grafiek bewegen om 'm van alle kanten te bekijken.
+
+
+We nemen ook aan
+dat ieder datapunt **onafhankelijk** uit de verdeling getrokken is.
 
 ::: {#fig-bivariaat}
 
@@ -1133,7 +1145,7 @@ plot_bivariate_normal_contours <- function(rho) {
   label_x <- min(x_vals) + 0.2
   label_y <- max(y_vals) - 0.2
   
-  label_rho <- paste0("rho == ", rho)  
+  label_rho <- paste0("italic(rho) == ", rho)  
     # Maak contourplot
   ggplot(raster, aes(x = x, y = y, z = z)) +
     geom_contour(
@@ -1224,15 +1236,9 @@ plot_bivariate_normal_contours(correlaties[6])
 plot_bivariate_normal_contours(correlaties[7])
 ```
 
-Courtour-plots voor verschillende bivariaat-normale verdelingen.
+Contour-plots voor verschillende bivariaat-normale verdelingen.
 
 :::
-
-Naast de aanname dat de verdeling van $(X, Y)$ in de populatie
-bivariaat normaal is, nemen we ook aan
-dat ieder datapunt onafhankelijk uit deze verdeling getrokken is.
-
-
 
 
 **Stap 2: Stel de hypotheses $\HO$ en $\HA$ op.**\
@@ -1357,11 +1363,12 @@ We laten het aan de hand van een voorbeeld zien:
 ## De correlatie tussen flipper-lengte en gewicht bij Adelie-pinguïns
 <br>
 
-In @sec-toetsen-gemiddelden heb je al kennisgemaakt met de dataset `palmerpenquins`,
+In @sec-toetsen-gemiddelden heb je al kennisgemaakt met de dataset `palmerpenguins`,
 met gegevens over pinguïns in de Palmer-archipel.
 In die dataset is ook voor alle pinguïns de flipperlengte (`flipper_length_mm`) en het lichaamsgewicht (`body_mass_g`) opgenomen.
 Je zou verwachten dat dat zwaardere pinguïns ook typisch langer flippers hebben.
 We gaan dat testen voor de soort Adelie.
+Bestudeer ook de code voor ieder stap, zodat je het straks ook zelf kunt.
 
 ```{r}
 #| echo: false
@@ -1380,7 +1387,7 @@ adelie <- as.data.frame(adelie[, c("flipper_length_mm", "body_mass_g")])
 ```
 
 We hebben de gegevens over de Adelie-pinguïns
-in een dataframe `adelie` opgeslagen.
+opgeslagen in een dataframe `adelie`.
 ```{r}
 str(adelie)
 ```
@@ -1401,7 +1408,7 @@ plot(
 )
 ```
 
-Er lijkt inderdaad een positief verband te zijn tussen lichaamsgewicht
+Er lijkt inderdaad een positief verband te bestaan tussen lichaamsgewicht
 en flipperlengte.
 De puntenwolk ziet er redelijk ovaal uit, 
 consistent met een bivariate normale verdeling, 
@@ -1564,7 +1571,7 @@ e.  Voer de toets uit met de functie `cor.test()`, bekijk de uitvoer,
 
 Wanneer $X$ en $Y$ lineair met elkaar samenhangen, 
 geeft de waarde van $X$ informatie over de waarde van $Y$.
-We kunnen $Y$ dan tot zekere hoogte voorspellen als we $X$ weten.
+We kunnen $Y$ dan tot op zekere hoogte voorspellen als we $X$ weten.
 
 Om dat te kunnen doen, zoeken we een rechte lijn
 die de puntenwolk het beste beschrijft.
@@ -1602,9 +1609,19 @@ Hoe sterker het verband is, hoe beter de voorspelling.
 Zoals je weet, heeft een rechte lijn de volgende vorm:
 $$ Y = a + b X . $$
 Hier is $a$ het startgetal, en $b$ de richtingscoëfficiënt.
-Let op: in veel Nederlandse schoolboeken worden de symbolen precies andersom gebruikt:
+De parameters $a$ en $b$ van de regressielijn
+worden **regressiecoëfficiënten** genoemd.
+
+::: {.callout-warning}
+
+## Verwarring over $a$ en $b$!
+
+Let op: in veel Nederlandse schoolboeken worden 
+in de definitie van een rechte lijn 
+de symbolen $a$ en $b$ precies andersom gebruikt:
 het startgetal heet dan $b$ en de richtingscoëfficiënt $a$.
 Als je dat gewend bent, zul je even scherp moeten zijn.
+:::
 
 Om de regressielijn te bepalen moeten we dus waarden voor $a$ en $b$ vastleggen.
 We willen $a$ en $b$ zo kiezen dat de lijn zo goed mogelijk de puntenwolk beschrijft.
@@ -1709,32 +1726,22 @@ ggplot(gegevens, aes(x = x, y = y)) +
 
 Als het goed is, doet @fig-lineair-reg je denken aan @fig-res-1 uit @sec-gem.
 Daar lieten we zien dat het gemiddelde van een reeks getallen
-de waarde is, zodanig dat de som van de gekwadrateerde **residuen**
+de waarde is waarvoor de som van de gekwadrateerde **residuen**
 zo klein mogelijk was.
 In @fig-res-1 waren de residuen (afwijkingen van het gemiddelde)
 met grijze lijntjes aangegeven.
 We konden ons voorstellen dat de grijze lijntjes elastiekjes waren
 die de oranje lijn verticaal naar de datapunten probeerden te trekken.
-Het gemiddelde was de plek waar de trekkrachten in evenwicht zijn.
 
 Het bepalen van de regressielijn werkt precies zo.
 We zoeken weer de lijn die de som van de gekwadrateerde residuen
 zo klein mogelijk maakt.
-In @fig-lineair-reg zijn de residuen als grijze lijntjes aangegeven.
-
-Ook de metafoor van de elastiekjes werkt hier weer.
-Je kunt de grijze lijntjes in  @fig-lineair-reg interpreteren als "elastiekje"
-die aan de oranje lijn zijn bevestigd. 
-Ieder elastiekje probeert de lijn verticaal naar zijn datapunt toe te trekken.
+In @fig-lineair-reg zijn de residuen weer als grijze lijntjes aangegeven.
+Je kunt ze weer interpreteren als elastiekjes 
+die de lijn verticaal naar de datapunten trekken.
 Daardoor schuift en draait de lijn, net zo lang totdat 
 de trekkrachten in evenwicht zijn.
 Het resultaat is de regressielijn.
-
-De parameters $a$ en $b$ van de regressielijn
-worden de **regressiecoëfficiënten** genoemd.
-De coëfficiënt $a$ is het startgetal;
-dat is dus het snijpunt met de $Y$-as.
-De coëfficiënt $b$ is de richtingscoëfficient 
 
 
 ::: {.callout-important}
@@ -1750,53 +1757,46 @@ De kwadratensom is de som van de gekwadrateerde residuen.
 
 ### Eigenschappen van de regressielijn
 
-De regressielijn heeft bepaalde eigenschappen
-die handig zijn om te weten.
+De volgende eigenschappen van regressielijnen zijn belangrijk om te weten.
 
-Ten eerste volgt uit de wiskunde dat de regressielijn 
-altijd door het zwaartepunt $(\mean{x}, \mean{y})$ van de puntenwolk gaat.
-In @fig-lineair-reg zijn $\mean{x}$ en $\mean{y}$ met stippellijnen aangegeven;
-de regressielijn gaat precies door het kruispunt van die stippellijnen.
+1.  De regressielijn gaat altijd door het zwaartepunt $(\mean{x}, \mean{y})$ van de puntenwolk.
+    In @fig-lineair-reg zijn $\mean{x}$ en $\mean{y}$ met stippellijnen aangegeven;
+    de regressielijn gaat precies door het kruispunt van die stippellijnen.
 
-Ten tweede kan de waarde van $b$ 
-(dus de richtingscoëfficiënt van de regressielijn)
-worden uitgedrukt in een formule:
-$$ b = \frac{\covD{X}{Y}}{V_X}.$$ {#eq-regression-b}
-Als je die formule vergelijkt met @eq-pearson,
-dan zie je dat je dat ook kunt schrijven als
-$$ b = \left(\frac{s_Y}{s_X}\right)r.$$ {#eq-r-vs-b}
-Deze formule laat zien dat de regressiecoëfficiënt $b$
-en de correlatiecoëfficiënt $r$
-met elkaar samenhangen.
-Als $b$ positief is, 
-dan is $r$ dat ook.
-Als de regressielijn een stijgende lijn is, 
-is er dus ook een positieve correlatie in de data.
-Als $r$ gelijk is aan 0, dan is $b$ dat ook.
-De coëfficiënt $b$ vertelt je dus net als $r$
-of $X$ en $Y$ samenhangen.
+2.  De waarde van $b$ 
+    (dus de richtingscoëfficiënt van de regressielijn)
+    kan worden berekend met deze formule:
+    $$ b = \frac{\covD{X}{Y}}{V_X}.$$ {#eq-regression-b}
+    Als je die formule vergelijkt met @eq-pearson,
+    dan zie je dat je dat ook kunt schrijven als
+    $$ b = \left(\frac{s_Y}{s_X}\right)r.$$ {#eq-r-vs-b}
+    Deze formule laat zien dat de regressiecoëfficiënt $b$
+    en de correlatiecoëfficiënt $r$
+    met elkaar samenhangen.
+    Als $b$ positief is, 
+    dan is $r$ dat ook;
+    een stijgende regressielijn betekent dus 
+    een positieve correlatie.
+    Maar @eq-r-vs-b benadrukt ook dat $b$ en $r$ niet gelijk zijn:
 
-Maar, @eq-r-vs-b laat ook zien dat $b$ en $r$ niet *hetzelfde* zijn:
-
-- $r$ geeft aan hoe strak de datapunten op of langs de lijn liggen.
-  $r$ heeft geen dimensie (en dus geen eenheid) en ligt altijd tussen -1 en 1.
-- $b$ geeft aan hoeveel $Y$ gemiddeld stijgt als je $X$ verhoogt.
-  $b$ heeft als dimensie de dimensie van $Y$ gedeeld door de dimensie van $X$,
-  en kan alle waarden aannemen.
+    - $r$ geeft aan hoe strak de datapunten op of langs de lijn liggen.
+      $r$ heeft geen dimensie (en dus geen eenheid) en ligt altijd tussen -1 en 1.
+    - $b$ geeft aan hoeveel $Y$ gemiddeld stijgt als je $X$ verhoogt.
+      $b$ heeft als dimensie de dimensie van $Y$ gedeeld door de dimensie van $X$,
+      en kan iedere waarde aannemen.
 
 ### De regressielijn berekenen in R
 
 In de praktijk zul je regressiecoëfficiënten altijd met R uitrekenen.
-Dat is niet moeilijk!
 
 Stel dat de gegevens zijn opgeslagen in een dataframe `gegevens`
 met variabelen (kolommen) `x` en `y`.
 Om $a$ en $b$ te berekenen, gebruiken we eerst de functie `lm()`.
 Die naam staat voor *linear model*.
-Dit is een heel veelzijdige functie die allerlei verschillende statistische analyses kan uitvoeren.
+Dit is een heel veelzijdige functie die een groot aantal statistische analyses kan uitvoeren.
 De functie berekent allerlei resultaten, waarvan we er hier maar een paar 
 nodig hebben.
-We slaan de restulaten daarom eerst op in een variabele, 
+We slaan de resultaten daarom eerst op in een variabele, 
 die we hier `resultaatLM` noemen.
 Dat werkt als volgt:
 
@@ -1820,7 +1820,7 @@ de waarden van $a$ en $b$ uit de resultaten opvragen:
 
 ```{r}
 #| eval: false
-summary(resultaatLM)$coefficients
+summary(resultaatLM)$coefficients #regressiecoëfficiënten
 ```
 
 We illustreren dat met een voorbeeld.
@@ -1884,24 +1884,23 @@ c.  Wat denk je over de betrouwbaarheid van je voorspelling bij onderdeel **b**?
 De regressielijnen die we hierboven hebben gezien,
 waren gebaseerd op gegevens
 afkomstig uit experimenten of een steekproef.
-Als we dezelfde experimenten, of dezelfde steekproef,
-opnieuw zouden uitvoeren, 
-zouden we waarschijnlijk een andere regressielijn vinden.
-De regressiecoëfficienten $a$ en $b$ worden dus geplaagd
+Als we hetzelfde onderzoek
+opnieuw uitvoeren, 
+vinden we waarschijnlijk een andere regressielijn.
+De regressiecoëfficiënten $a$ en $b$ worden dus geplaagd
 door steekproevenvariabiliteit.
 
-Stel dat de werkelijke regressielijn van de *populatie*
+Stel dat de *werkelijke* regressielijn van de *populatie*
 gegeven is door 
  $$ Y = \alpha + \beta X.$$
 Hier zijn $\alpha$ en $\beta$ populatieparameters.
 Dan zijn de $a$ en $b$ die we berekenen op basis van onze gegevens
 schattingen van die populatieparameters.
-Zoals altijd komen die schattingen met een mate van onzekerheid.
-We zouden die onzekerheid graag willen kwantificeren met een 95%-BHI.
+We zouden de onzekerheid in die schattingen graag willen kwantificeren met een 95%-BHI.
 
 Die betrouwbaarheidsintervallen zijn met R gemakkelijk te berekenen,
 met de functie `confint()` (voor *confidence intervals*).
-We gebruiken daarvoor het resultaat van de functie `lm()`.
+We gebruiken daarbij het resultaat van de functie `lm()`.
 Om dat te laten zien,
 berekenen we de 95%-BHIs voor de regressiecoëfficiënten 
 van @exm-regressie-adelie:
@@ -2016,7 +2015,7 @@ plot_ly(
 
 ```
 
-@Fig-heteroscedastiek(a) laat een puntenwolk zien die goed overeenkomt met het model.
+De puntenwolk in @fig-heteroscedastiek(a) past goed bij dit model.
 @Fig-heteroscedastiek(b--d) zijn voorbeelden waarbij dat niet het geval is.  
 
 ```{r}
@@ -2101,24 +2100,24 @@ Dit was de uitvoer van R:
 #| echo: false
 summary(resultaatLM)$coefficients
 ```
-Hier waren in de kolom `Estimate` de waarden van $a$ en $b$ gegeven.
-In de andere kolommen zijn de resultaten weergegeven 
-van statistische toetsen.
-Gegeven zijn de standaardfouten die horen bij $a$ en $b$ (onder `Std. Error`),
-de $t$-waarden die horen bij de toetsen (onder `t value`),
-en de bijbehorende $P$-waardes (onder `Pr(>|t|)`).
+In de kolom `Estimate` waren de waarden van $a$ en $b$ gegeven.
+De andere kolommen geven resultaten van statistische toetsen.
 
 - In de regel `(Intercept)` wordt de nulhypothese getoetst 
   dat $\alpha = 0$.
-  Dat de $P$-waarde zo astronomisch klein is ($P = 8{,}7 \times 10^{-86}$)
+  Het is een $t$-toets.
+  Onder `Std. Error` staat de standaardfout van $a$;
+  onder `t value` de $t$-waarde van de toets;
+  en onder `Pr(>|t|)` de bijbehorende $P$-waarde.
+  Dat de $P$-waarde zo klein is ($P = 8{,}7 \times 10^{-86}$)
   geeft aan dat we erg zeker zijn dat $\alpha \neq 0$.
 
 - In de regel `body_mass_b` wordt de nulhypothese getoetst
   dat $\beta = 0$.
   Dat is dus de hypothese dat er in de populatie
-  geen relatie is tussen $X$ en $Y$.
+  géén relatie is tussen $X$ en $Y$.
   De $P$-waarde van deze toets is ook erg klein ($P = 1{,}3 \times 10^{-9}$).
-  Er is dus sterk bewijs dat er een postieve relatie is 
+  Er is dus sterk bewijs voor een positieve relatie
   tussen $X$ en $Y$.
   
 We zullen de onderliggende berekeningen hier niet verder uitspellen.
@@ -2137,7 +2136,6 @@ We kiezen de waarden van $a$ en $b$ zo
 dat de regressielijn de gegevens binnen dit domein goed beschrijft,
 maar kunnen niet weten of dezelfde lijn buiten dat domein
 ook nog van toepassing is.
-
 Bij het voorspellen van een $Y$-waarde op basis van een $X$-waarde
 kunnen we daarom onderscheid maken tussen twee situaties:
 
@@ -2176,7 +2174,8 @@ de reactisnelheid te meten.
 Als je de substraatconcentratie steeds verder verhoogt,
 wordt uiteindelijk de reactiesnelheid niet meer groter
 omdat het enzym al op zijn maximale snelheid werkt.
-Dat levert een niet-lineaire curve op.
+De relatie tussen substraatconcentratie en reactiesnelheid
+is dus niet lineair.
 
 ::: {#fig-mm layout="[[1,1]]"}
 
@@ -2311,16 +2310,15 @@ ggplot(gegevens, aes(x = s, y = v)) +
 Voorbeeld van een niet-lineair verband dat met een model beschreven kan worden.
 :::
 
-Vanuit de theorie over enzymkinetiek
-weten we dat we dat curves zoals @fig-mm-a vaak goed kunnen modelleren
-met de volgende formule:
+De kinetiek van enzymatische reacties kan vaak
+worden beschreven met de volgende formule:
 $$
 v =  \frac{v\ped{max}\cdot S}{K\ped{M} + S}.
 $$ {#eq-mm}
 Dit wordt de Michaelis-Menten-curve genoemd; @fig-mm-b illustreert de formule.
 Hier is $v$ de snelheid van de reactie, en $S$ de substraatconcentratie.
 De parameter $v\ped{max}$ bepaalt de maximumsnelheid van de reactie,
-de parameter $K\ped{M}$ bij welke concentratie van het substraat de reactiesnelheid 
+de parameter $K\ped{M}$ bij welke concentratie de reactiesnelheid 
 $v\ped{max}/2$ bereikt.
 
 We kunnen voor de gegevens uit @fig-mm-a de waarden
@@ -2337,9 +2335,12 @@ Om $v\ped{max}$ en $K\ped{M}$
 te bepalen,
 zoeken we ook naar de waarden waarbij de kwadratensom minimaal is.
 
-Het fitten van niet-lineaire modellen is een onderwerp op zich
-waar we helaas niet meer tijd aan kunnen besteden.
-Maar in @exr-nonlinear helpen we je om eenmalig een fit uit te voeren in R. 
+We kunnen in deze cursus helaas niet meer tijd besteden aan 
+het fitten van niet-lineaire modellen.
+Maar in @exr-nonlinear helpen we je om met R 
+het Michaelis-Menten-model te fitten
+aan de gegevens 
+van @Fig-mm-a.
 
 ## Samenvatting
 
@@ -2347,7 +2348,7 @@ Maar in @exr-nonlinear helpen we je om eenmalig een fit uit te voeren in R.
 
 We zeggen dat de twee variabelen een lineaire relatie hebben of gecorreleerd zijn als de datapunten zich op of in de buurt van een rechte lijn bevinden die stijgt of daalt. 
 
-**Covarantie:**
+**Covariantie:**
 
 Maat van lineaire samenhang tussen $X$ en $Y$, 
 in de dimensies en eenheden van $X$ en $Y$.
@@ -2375,7 +2376,7 @@ Eigenschappen:
 
 - Ligt altijd in het interval [-1, 1]
 - Het *teken* geeft de richting van het verband (positief of negatief)
-- De *absolutie waarde* heeft de sterkte van het verband.
+- De *absolute waarde* geeft de sterkte van het verband.
 - Perfect verband: $r = 1$ of $r = -1$.
 - Geen verband: $r = 0$.
 
@@ -2500,7 +2501,7 @@ die laten we voor nu aan R over.
 | lineaire relatie | linear relation | Een relatie tussen twee variabelen die beschreven kan worden met een rechte lijn.  |
 | interpolatie | interpolation | Een model dat is geformuleerd en gefit voor een bepaald domein van $X$-waarden, toepassen voor een $X$-waarde binnen dat domein. |
 | (Pearsons) correlatiecoëfficiënt | (Pearson's) correlation coefficient | Dimensieloze maat voor de lineaire samenhang tussen twee variabelen, met waarden tussen -1 en 1. Geeft aan hoe "strak" de datapunten op de rechte lijn liggen. |
-| regressiecoëfficiënt | regression coefficient | Parameters van een regressiemodel, zoals de richtingscoëfficiënt $b$ en het snijpunt met de $y$-as $b$ van de regressielijn. |
+| regressiecoëfficiënt | regression coefficient | Parameters van een regressiemodel, zoals de richtingscoëfficiënt $b$ en het snijpunt met de $y$-as $a$ van de regressielijn. |
 | regressielijn | regression line | De rechte lijn door de gegevens waarvan de parameters gekozen zijn zodanig dat de kwadratensom zo klein mogelijk is. |
 
 
@@ -2611,9 +2612,9 @@ c.  Herhaal de berekeningen van onderdeel **b**,
     maar nu voor `x2` en `y2`.
     
     (Als je de code voor **b** netjes in je script hebt geschreven,
-    kun je moet copy-paste heel snel klaar zijn.)
+    kun je met copy-paste heel snel klaar zijn.)
     
-b.  Doe hetzelfde voor `x3` en `y3`...
+d.  Doe hetzelfde voor `x3` en `y3`...
 
 e.  ... en tot slot voor `x4` en `y4`.
 
@@ -2631,7 +2632,7 @@ h.  Wat is de moraal van dit verhaal?
 
 
 ::: {#exr-simpson .pepexr}
-### Piguïnparadox
+### Pinguïnparadox
 <br>
 
 Tijdens avontuurlijk veldwerk hebben onderzoekers
