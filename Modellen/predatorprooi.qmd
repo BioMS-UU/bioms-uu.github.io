@@ -589,21 +589,19 @@ g. Wat gebeurt er als de death rate van de predator heel laag is (bijvoorbeeld 0
 ## Virus-uitbraak 
 <br>
 
-<span style="color:purple;font-weight:bold">Correctie: dankzij een oplettende student realiseer ik me dat de onderstaande SIR-vraag bij nader inzien niet helemaal correct is. Het model zoals het er staat is niet het klassieke SIR model (daarin kunnen alle individuen voortplanten), en ook niet het SIRS model zoals in het college besproken (daar veranderen recovered individuen weer in sensitieven). Doordat de recovered individuen in dit model niet meer terug kunnen naar de susceptible populatie, en deze ook niet kunnen voortplanten, kan de hele populatie hele populatie uitsterven nadat het virus is verdwenen. Dat is natuurlijk een beetje vreemd. Er ontbreekt eigenlijk nog een belangrijke koppeling tussen deze ODEs: de recovered individuen die verdwijnen (-dR) moeten toegevoegd worden aan de susceptible populatie (+dR). In dat geval zouden alle individuen uiteindelijk weer S worden, die wel kan voortplanten. Dan herstelt de populatie volledig. </span>
-<br>
 
 Als een nieuw virus ontstaat, kan deze zich vroeg in de epidemie vaak enorm hard uitbreiden: veel individuen zijn nog niet resistent. Over de tijd zullen individuen echter resistent worden. Zodoende hebben we te maken met drie type individuen: vatbare individuen (*susceptibles*, $S$), geinfecteerde individuen (*infected*, $I$), en resistente individuen (*recovered*, $R$). De totale populatiegrootte ($S$+$I$+$R$), kunnen we $N$ noemen. Nu kunnen we een systeem van drie ODEs opstellen:
 
 \begin{align}
 N &= S+I+R\\
-\dt{S} &= b(1-\frac{N}{K})S - dS - \beta S I \\
-\dt{I} &= \beta SI - (d+\delta)I - rI \\
-\dt{R} &= rI - dR
+\dt{S} &= b(1-\frac{N}{K})S - dS - \beta S I + fR \\
+\dt{I} &= b(1-\frac{N}{K})I + \beta SI - (d+\delta)I - rI \\
+\dt{R} &= b(1-\frac{N}{K})R + rI - fR
 \end{align}
 
 Bekijk de vergelijkingen hierboven.
 
-a. Welke van de drie individuen (susceptible, infected, recovered) kan zich individueel voortplanten? 
+a. Heeft de infectie invloed op de geboorte van de individuën? Heeft de infectie invloed op de sterfte?
 
 b. In welke eenheden wordt de $\delta$ parameter uitgedrukt? Wat is de biologische interpretatie van deze parameter? 
 
@@ -623,15 +621,15 @@ source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
 #| fig.width: 6
 #| fig.height: 3
 #| fig-align: "center"
-
+#source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
 par(mar=c(4,4,0,2))
 
 model <- function(t, state, parms){
   with(as.list(c(state,parms)),{
     N <- S+I+R
-    dS <- b*(1-N/K)*S - d*S - beta*S*I
-    dI <- beta*S*I - (d+delta)*I - r*I
-    dR <- r*I - d*R
+    dS <- b*(1-N/K)*S - d*S - beta*S*I + f*R
+    dI <- b*(1-N/K)*I + beta*S*I - (d+delta)*I - r*I
+    dR <- b*(1-N/K)*R + r*I - f*R - d*R
     return(list(c(dS,dI,dR)))
   })
 }
@@ -640,27 +638,27 @@ colors[1] = "#4E1681"
 colors[2] = "#F05D5D"
 colors[3] = "#e2d5cb"
 
-p <- c(b=0.7,beta=0.3,r=0.1,d=0.1,delta=0.1,K=4)
+p <- c(b=0.7,beta=0.3,r=0.1,d=0.1,delta=0.1,K=4,f=0.005)
 s <- c(S=3.5,I=0.001,R=0.0)
 
-plot <- run(tmax=100,ylab="Dichtheden",xlab="Tijd")
+plot <- run(tmax=200,ylab="Dichtheden",xlab="Tijd",tstep=0.1)
 ```
 
 Tijdens de Covid-19 pandemie hebben we gezien dat twee maatregelen zeer effectief waren: 1.) *social distancing* (mensen waarmee je contact hebt proberen niet te besmetten) en 2) *contactbeperkingen* (het aantal mensen waarmee je contact hebt reduceren). Hieronder zie je een interactieve simulatie van bovenstaande interacties in een ruimtelijk model. Met de 'mengen' optie worden na elke tijdstap alle individuen volledig gehusseld.
 
-d. Controleer of onder gemengde omstandigheden dit model zich zoals het ODE model gedraagt.
+d. Controleer of dit model zich (ongeveer) hetzelfde als het ODE model gedraagt. Controleer dit ook in gemengde omstandigheden.
 
 e. Is het effect in deze simulatie (zonder mengen) meer vergelijkbaar met *social distancing* of met *contactbeperkingen*? 
 
 ```{=html}
 <div class="interactive_content">
 
-<iframe id="iframeToReplace" width="100%" height="490" src="https://jsfiddle.net/bramvandijk88/x716p038/embedded/result"
+<iframe id="iframeToReplace" width="100%" height="590" src="https://jsfiddle.net/bramvandijk88/x716p038/embedded/result"
 title="Simulation"></iframe>
 </div>
 ```
 
-f. Maak de $\beta$-parameters van het virus hoger (bijvoorbeeld 0.1, maar je kan ook andere waarden proberen). Beschrijf in je eigen woorden wat er gebeurt voor zowel gemengde als ongemende omstandigheden. 
+f. Maak de $\beta$-parameters van het virus hoger (bijvoorbeeld 1.0, maar je kan ook andere waarden proberen). Start de simulatie een paar keer opnieuw onder zowel gemengde als niet-gemengde omstandigheden. Kan het virus zich nu wel handhaven in een ongemengde populatie?
 
 :::
 
