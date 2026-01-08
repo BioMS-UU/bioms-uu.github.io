@@ -434,7 +434,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Statistiek/Schatten.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Het schatten van parameters, en betrouwbaarheidsintervallen</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Betrouwbaarheidsintervallen</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -452,7 +452,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Statistiek/AssociatiesTussenVariabelen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Associaties, oorzaak en gevolg, en experimenten</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Associaties, causaliteit, en experimenten</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -574,17 +574,18 @@ window.Quarto = {
     const images = document.querySelectorAll('img#subset')
     images.forEach((img) => { img.style.width = "60%"; });
     const imagesShow = document.querySelectorAll('img#imgToShow')
-    imagesShow.forEach((img) => { img.style.display = "block"; });
+    imagesShow.forEach((img) => { img.style.display = "block"; img.style.marginBottom = "20px";});
     
-    const videos = document.querySelectorAll('img#imgToShow')
-    imagesShow.forEach((img) => { img.style.display = "block"; });
     
     //document.body.style.fontFamily= "Georgia";
     const iframes = document.querySelectorAll("iframe#iframeToReplace");
     iframes.forEach((iframe, index) => {
                 // Create a placeholder element with text
                 const placeholder = document.createElement('div');
-                placeholder.innerHTML += "<br><center><font size=1>(Deze interactieve content vind je op <a href='" + iframe.src + "'> " + iframe.src + " </a>)</font></center><br>"
+                placeholder.style.paddingBottom = "20px";
+                placeholder.innerHTML += "<br><center><font size=1>(deze interactieve content vind je op <a href='" +
+                                          iframe.src + "'> " + iframe.src + 
+                                          " </a>)</font></center><br>"
                 iframe.parentNode.replaceChild(placeholder, iframe);
             });
   };
@@ -996,7 +997,7 @@ ODEs doen belangrijke aannames
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="odes_basis_files/figure-html/unnamed-chunk-4-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="odes_basis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></a></p>
+<p><a href="odes_basis_files/figure-html/unnamed-chunk-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="odes_basis_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -1099,8 +1100,49 @@ Tip&nbsp;11.3: Parameters zijn niet nul
 </section>
 <section id="opgaven" class="level2" data-number="11.10">
 <h2 data-number="11.10" class="anchored" data-anchor-id="opgaven"><span class="header-section-number">11.10</span> Opgaven</h2>
+<div id="exr-litersbacterien" class="pepexr theorem exercise">
+<p><span class="theorem-title"><strong>Oefening 11.2 (Liters bacteriën)</strong></span> <br></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/erlenmeyer.webp" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Foto gedownload op pexels.com (CC public license)"><img src="figuren/erlenmeyer.webp" class="img-fluid figure-img" style="width:50.0%" alt="Foto gedownload op pexels.com (CC public license)"></a></p>
+<figcaption>Foto gedownload op pexels.com (CC public license)</figcaption>
+</figure>
+</div>
+<p>Een simpel ODE-model van exponentiële groei van <em>E. coli</em> is:</p>
+<p><span class="math display">\[\begin{align}
+
+\mathchoice{\frac{\mathrm{d}B(t)}
+{\mathrm{d}t}}{\mathrm{d}B(t)/\mathrm{d}t}
+{\mathrm{d}B(t)/\mathrm{d}t}
+{\mathrm{d}B(t)/\mathrm{d}t}
+= r \cdot B(t)
+\end{align}\]</span></p>
+<p>Zoals je hebt geleerd, betekent dit dat <span class="math inline">\(B(t)\)</span> een onbekende functie is waarvan de afgeleide gelijk is aan <span class="math inline">\(r\cdot B(t)\)</span>. Met andere woorden: de snelheid van verandering van de functie <span class="math inline">\(B(t)\)</span> is op elk moment gelijk is aan <span class="math inline">\(r\cdot B(t)\)</span>. Deze functie is zo eenvoudig, dat we de algemene oplossing weten<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
+<p><span id="eq-oplossingbact"><span class="math display">\[
+\begin{align}
+B(t) = B_0 \cdot e^{rt}
+\end{align}
+\tag{11.6}\]</span></span></p>
+<p>Waarbij:</p>
+<ul>
+<li><span class="math inline">\(B_0\)</span> de beginwaarde is (bijvoorbeeld het aantal bacteriën op dag 0),</li>
+<li><span class="math inline">\(r\)</span> de groeisnelheid per uur,</li>
+<li><span class="math inline">\(e\)</span> grondtal van het natuurlijke logaritme (ongeveer 2.718282, deze kun je in R vinden met <code>exp(1)</code>)</li>
+<li><span class="math inline">\(t\)</span> de tijd in uren is</li>
+</ul>
+<ol type="a">
+<li>Bepaal de afgeleide voor <span class="math inline">\(t\)</span> van de rechter zijde van <a href="#eq-oplossingbact" class="quarto-xref">Vergelijking&nbsp;<span>11.6</span></a>.</li>
+<li>Kijk nog eens naar <a href="#eq-oplossingbact" class="quarto-xref">Vergelijking&nbsp;<span>11.6</span></a>. Kun je deze vergelijking gebruiken om het antwoord in a anders (korter!) opschrijven? Wat valt je op aan je antwoordt?</li>
+</ol>
+<p>We groeien een beginpopulatie van 1000 E. coli cellen. E. coli deelt onder goede omstandigheden <span class="math inline">\(1.4\)</span> keer per uur. Dankzij de algemene oplossing kunnen we precies uitrekenen hoeveel bacteriën er op elk tijdpunt zijn.</p>
+<ol start="3" type="a">
+<li><p>Bereken hoeveel bacteriën er na 400 minuten zijn. Druk dit getal in spreektaal uit.</p></li>
+<li><p>Hoeveel bacteriën zijn er na 24 uur? Druk ook dit getal in spreektaal uit.</p></li>
+<li><p>E. coli heeft een gemiddeld volume van 0.6 <span class="math inline">\(\mu m^3\)</span> (kubieke micrometer). Een typische Erlenmeyer is 0.250 liter groot. Bereken het volume van de bacteriepopulatie na 24 uur in liters (hint: <span class="math inline">\(1 \mu m^3 = 10^{-15}\)</span> liter). Wat valt je op?</p></li>
+</ol>
+</div>
 <div id="exr-eenheden-tussen2" class="pepexr theorem exercise">
-<p><span class="theorem-title"><strong>Oefening 11.2 (Plastic in de oceaan (evenwicht))</strong></span> <br></p>
+<p><span class="theorem-title"><strong>Oefening 11.3 (Plastic in de oceaan (evenwicht))</strong></span> <br></p>
 <p>Bekijk nogmaals de volgende vergelijking voor hoe snel de hoeveelheid plastic in de oceaan verandert:</p>
 <p><span class="math display">\[\begin{align}
 
@@ -1117,10 +1159,10 @@ Tip&nbsp;11.3: Parameters zijn niet nul
 </ol>
 </div>
 <div id="exr-rodebloedcellen" class="mixedexr theorem exercise">
-<p><span class="theorem-title"><strong>Oefening 11.3 (Rode bloedcellen)</strong></span> &nbsp;</p>
+<p><span class="theorem-title"><strong>Oefening 11.4 (Rode bloedcellen)</strong></span> &nbsp;</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="figuren/rode_bloedcellen.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Rode bloedcellen, of rode CUTEcellen? (gegenereerd met ChatGPT4-o)"><img src="figuren/rode_bloedcellen.png" class="img-fluid figure-img" style="width:50.0%" alt="Rode bloedcellen, of rode CUTEcellen? (gegenereerd met ChatGPT4-o)"></a></p>
+<p><a href="figuren/rode_bloedcellen.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Rode bloedcellen, of rode CUTEcellen? (gegenereerd met ChatGPT4-o)"><img src="figuren/rode_bloedcellen.png" class="img-fluid figure-img" style="width:50.0%" alt="Rode bloedcellen, of rode CUTEcellen? (gegenereerd met ChatGPT4-o)"></a></p>
 <figcaption>Rode bloedcellen, of rode CUTEcellen? (gegenereerd met ChatGPT4-o)</figcaption>
 </figure>
 </div>
@@ -1169,7 +1211,7 @@ Tip&nbsp;11.3: Parameters zijn niet nul
 </div>
 <ol start="7" type="a">
 <li>In ‘Stap 4’ rekent het script de hoeveelheid verandering in <span class="math inline">\(B\)</span> uit. Waarom geeft de functie <span class="math inline">\(0\)</span> terug?</li>
-<li>De code in de for-loop produceert een specifieke oplossing, dat wil zeggen het rekent één van de mogelijke tijd-series uit voor <span class="math inline">\(B(t)\)</span>. Dit gebeurt op een zeer grove manier door in stappen de integraal (de opsomming van kleine veranderingen) door te rekenen. Om dit netjes te doen, gebruik je normaal gesproken integrators die automatisch zorgen dat de tijdstap niet te groot is<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Leg uit waarom dat belangrijk kan zijn (hint: denk aan het vorige hoofdstuk).</li>
+<li>De code in de for-loop produceert een specifieke oplossing, dat wil zeggen het rekent één van de mogelijke tijd-series uit voor <span class="math inline">\(B(t)\)</span>. Dit gebeurt op een zeer grove manier door in stappen de integraal (de opsomming van kleine veranderingen) door te rekenen. Om dit netjes te doen, gebruik je normaal gesproken integrators die automatisch zorgen dat de tijdstap niet te groot is<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Leg uit waarom dat belangrijk kan zijn (hint: denk aan het vorige hoofdstuk).</li>
 <li>Schat met behulp van de grafiek in hoe lang het duurt om de helft van het bloedverlies te herstellen.</li>
 <li>Stel dat je slechts een beetje bloed verliest (0.1%). Hoe lang duurt het om hiervan de helft te herstellen?</li>
 <li>Wat bepaalt denk je hoe snel je van bloedverlies herstelt (<span class="math inline">\(p\)</span>, <span class="math inline">\(d\)</span>, of beide)?</li>
@@ -1177,7 +1219,7 @@ Tip&nbsp;11.3: Parameters zijn niet nul
 </ol>
 </div>
 <div id="exr-diffvsdiffinR" class="Rexr theorem exercise">
-<p><span class="theorem-title"><strong>Oefening 11.4 (Een differentie- en <strong>differentiaal</strong>vergelijking doorrekenen met R)</strong></span> <br></p>
+<p><span class="theorem-title"><strong>Oefening 11.5 (Een differentie- en <strong>differentiaal</strong>vergelijking doorrekenen met R)</strong></span> <br></p>
 <p>We hebben eerder een R-script bekeken die een tijdserie produceert van een differentievergelijking voor logistische konijnengroei. We kunnen in deze differentievergelijking ook de parameter <span class="math inline">\(K\)</span> gebruiken om de groei te stoppen. De code ziet er dan ongeveer zo uit:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SIMPEL SCRIPT VOOR DIFFERENTIEVERGELIJKING</span></span>
@@ -1286,7 +1328,8 @@ Tip&nbsp;11.3: Parameters zijn niet nul
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>Hiervoor gaan we later in de cursus een R-script genaamd Grind.R inladen<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Dit bepaal je door de ODE te integreren, maar dat is geen leerdoel van deze cursus.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Hiervoor gaan we later in de cursus een R-script genaamd Grind.R inladen<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -1888,7 +1931,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","openEffect":"zoom","closeEffect":"zoom","selector":".lightbox","loop":false});
+<script>var lightboxQuarto = GLightbox({"loop":false,"closeEffect":"zoom","descPosition":"bottom","openEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

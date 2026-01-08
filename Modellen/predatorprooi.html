@@ -434,7 +434,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Statistiek/Schatten.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Het schatten van parameters, en betrouwbaarheidsintervallen</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Betrouwbaarheidsintervallen</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -452,7 +452,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Statistiek/AssociatiesTussenVariabelen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Associaties, oorzaak en gevolg, en experimenten</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Associaties, causaliteit, en experimenten</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -572,17 +572,18 @@ window.Quarto = {
     const images = document.querySelectorAll('img#subset')
     images.forEach((img) => { img.style.width = "60%"; });
     const imagesShow = document.querySelectorAll('img#imgToShow')
-    imagesShow.forEach((img) => { img.style.display = "block"; });
+    imagesShow.forEach((img) => { img.style.display = "block"; img.style.marginBottom = "20px";});
     
-    const videos = document.querySelectorAll('img#imgToShow')
-    imagesShow.forEach((img) => { img.style.display = "block"; });
     
     //document.body.style.fontFamily= "Georgia";
     const iframes = document.querySelectorAll("iframe#iframeToReplace");
     iframes.forEach((iframe, index) => {
                 // Create a placeholder element with text
                 const placeholder = document.createElement('div');
-                placeholder.innerHTML += "<br><center><font size=1>(Deze interactieve content vind je op <a href='" + iframe.src + "'> " + iframe.src + " </a>)</font></center><br>"
+                placeholder.style.paddingBottom = "20px";
+                placeholder.innerHTML += "<br><center><font size=1>(deze interactieve content vind je op <a href='" +
+                                          iframe.src + "'> " + iframe.src + 
+                                          " </a>)</font></center><br>"
                 iframe.parentNode.replaceChild(placeholder, iframe);
             });
   };
@@ -1245,7 +1246,6 @@ Figuur&nbsp;14.6: Regels van een simpel “Lotka Volterra” model in de ruimte
 </div>
 <div id="exr-virusuitbraak" class="mixedexr theorem exercise">
 <p><span class="theorem-title"><strong>Oefening 14.3 (Virus-uitbraak)</strong></span> <br></p>
-<p><span style="color:purple;font-weight:bold">Correctie: dankzij een oplettende student realiseer ik me dat de onderstaande SIR-vraag bij nader inzien niet helemaal correct is. Het model zoals het er staat is niet het klassieke SIR model (daarin kunnen alle individuen voortplanten), en ook niet het SIRS model zoals in het college besproken (daar veranderen recovered individuen weer in sensitieven). Doordat de recovered individuen in dit model niet meer terug kunnen naar de susceptible populatie, en deze ook niet kunnen voortplanten, kan de hele populatie hele populatie uitsterven nadat het virus is verdwenen. Dat is natuurlijk een beetje vreemd. Er ontbreekt eigenlijk nog een belangrijke koppeling tussen deze ODEs: de recovered individuen die verdwijnen (-dR) moeten toegevoegd worden aan de susceptible populatie (+dR). In dat geval zouden alle individuen uiteindelijk weer S worden, die wel kan voortplanten. Dan herstelt de populatie volledig. </span> <br></p>
 <p>Als een nieuw virus ontstaat, kan deze zich vroeg in de epidemie vaak enorm hard uitbreiden: veel individuen zijn nog niet resistent. Over de tijd zullen individuen echter resistent worden. Zodoende hebben we te maken met drie type individuen: vatbare individuen (<em>susceptibles</em>, <span class="math inline">\(S\)</span>), geinfecteerde individuen (<em>infected</em>, <span class="math inline">\(I\)</span>), en resistente individuen (<em>recovered</em>, <span class="math inline">\(R\)</span>). De totale populatiegrootte (<span class="math inline">\(S\)</span>+<span class="math inline">\(I\)</span>+<span class="math inline">\(R\)</span>), kunnen we <span class="math inline">\(N\)</span> noemen. Nu kunnen we een systeem van drie ODEs opstellen:</p>
 <p><span class="math display">\[\begin{align}
 N &amp;= S+I+R\\
@@ -1254,23 +1254,23 @@ N &amp;= S+I+R\\
 {\mathrm{d}t}}{\mathrm{d}S/\mathrm{d}t}
 {\mathrm{d}S/\mathrm{d}t}
 {\mathrm{d}S/\mathrm{d}t}
-&amp;= b(1-\frac{N}{K})S - dS - \beta S I \\
+&amp;= b(1-\frac{N}{K})S - dS - \beta S I + fR \\
 
 \mathchoice{\frac{\mathrm{d}I}
 {\mathrm{d}t}}{\mathrm{d}I/\mathrm{d}t}
 {\mathrm{d}I/\mathrm{d}t}
 {\mathrm{d}I/\mathrm{d}t}
-&amp;= \beta SI - (d+\delta)I - rI \\
+&amp;= b(1-\frac{N}{K})I + \beta SI - (d+\delta)I - rI \\
 
 \mathchoice{\frac{\mathrm{d}R}
 {\mathrm{d}t}}{\mathrm{d}R/\mathrm{d}t}
 {\mathrm{d}R/\mathrm{d}t}
 {\mathrm{d}R/\mathrm{d}t}
-&amp;= rI - dR
+&amp;= b(1-\frac{N}{K})R + rI - fR
 \end{align}\]</span></p>
 <p>Bekijk de vergelijkingen hierboven.</p>
 <ol type="a">
-<li><p>Welke van de drie individuen (susceptible, infected, recovered) kan zich individueel voortplanten?</p></li>
+<li><p>Heeft de infectie invloed op de geboorte van de individuën? Heeft de infectie invloed op de sterfte?</p></li>
 <li><p>In welke eenheden wordt de <span class="math inline">\(\delta\)</span> parameter uitgedrukt? Wat is de biologische interpretatie van deze parameter?</p></li>
 </ol>
 <p>Aangenomen dat de parameters positief zijn (en dat de infectie zich kan verspreiden), kunnen we een oplossing met de computer doorrekenen. Omdat dit 3 ODEs zijn, geeft dit ook 3 grafiekjes (zie Figuur hieronder).</p>
@@ -1280,46 +1280,47 @@ N &amp;= S+I+R\\
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">0</span>,<span class="dv">2</span>))</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="cf">function</span>(t, state, parms){</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(<span class="fu">as.list</span>(<span class="fu">c</span>(state,parms)),{</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    N <span class="ot">&lt;-</span> S<span class="sc">+</span>I<span class="sc">+</span>R</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    dS <span class="ot">&lt;-</span> b<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>N<span class="sc">/</span>K)<span class="sc">*</span>S <span class="sc">-</span> d<span class="sc">*</span>S <span class="sc">-</span> beta<span class="sc">*</span>S<span class="sc">*</span>I</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    dI <span class="ot">&lt;-</span> beta<span class="sc">*</span>S<span class="sc">*</span>I <span class="sc">-</span> (d<span class="sc">+</span>delta)<span class="sc">*</span>I <span class="sc">-</span> r<span class="sc">*</span>I</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    dR <span class="ot">&lt;-</span> r<span class="sc">*</span>I <span class="sc">-</span> d<span class="sc">*</span>R</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(<span class="fu">c</span>(dS,dI,dR)))</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>colors[<span class="dv">1</span>] <span class="ot">=</span> <span class="st">"#4E1681"</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>colors[<span class="dv">2</span>] <span class="ot">=</span> <span class="st">"#F05D5D"</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>colors[<span class="dv">3</span>] <span class="ot">=</span> <span class="st">"#e2d5cb"</span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">b=</span><span class="fl">0.7</span>,<span class="at">beta=</span><span class="fl">0.3</span>,<span class="at">r=</span><span class="fl">0.1</span>,<span class="at">d=</span><span class="fl">0.1</span>,<span class="at">delta=</span><span class="fl">0.1</span>,<span class="at">K=</span><span class="dv">4</span>)</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">S=</span><span class="fl">3.5</span>,<span class="at">I=</span><span class="fl">0.001</span>,<span class="at">R=</span><span class="fl">0.0</span>)</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">&lt;-</span> <span class="fu">run</span>(<span class="at">tmax=</span><span class="dv">100</span>,<span class="at">ylab=</span><span class="st">"Dichtheden"</span>,<span class="at">xlab=</span><span class="st">"Tijd"</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">0</span>,<span class="dv">2</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="cf">function</span>(t, state, parms){</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(<span class="fu">as.list</span>(<span class="fu">c</span>(state,parms)),{</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    N <span class="ot">&lt;-</span> S<span class="sc">+</span>I<span class="sc">+</span>R</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    dS <span class="ot">&lt;-</span> b<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>N<span class="sc">/</span>K)<span class="sc">*</span>S <span class="sc">-</span> d<span class="sc">*</span>S <span class="sc">-</span> beta<span class="sc">*</span>S<span class="sc">*</span>I <span class="sc">+</span> f<span class="sc">*</span>R</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    dI <span class="ot">&lt;-</span> b<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>N<span class="sc">/</span>K)<span class="sc">*</span>I <span class="sc">+</span> beta<span class="sc">*</span>S<span class="sc">*</span>I <span class="sc">-</span> (d<span class="sc">+</span>delta)<span class="sc">*</span>I <span class="sc">-</span> r<span class="sc">*</span>I</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    dR <span class="ot">&lt;-</span> b<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>N<span class="sc">/</span>K)<span class="sc">*</span>R <span class="sc">+</span> r<span class="sc">*</span>I <span class="sc">-</span> f<span class="sc">*</span>R <span class="sc">-</span> d<span class="sc">*</span>R</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(<span class="fu">c</span>(dS,dI,dR)))</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>colors[<span class="dv">1</span>] <span class="ot">=</span> <span class="st">"#4E1681"</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>colors[<span class="dv">2</span>] <span class="ot">=</span> <span class="st">"#F05D5D"</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>colors[<span class="dv">3</span>] <span class="ot">=</span> <span class="st">"#e2d5cb"</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">b=</span><span class="fl">0.7</span>,<span class="at">beta=</span><span class="fl">0.3</span>,<span class="at">r=</span><span class="fl">0.1</span>,<span class="at">d=</span><span class="fl">0.1</span>,<span class="at">delta=</span><span class="fl">0.1</span>,<span class="at">K=</span><span class="dv">4</span>,<span class="at">f=</span><span class="fl">0.005</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">S=</span><span class="fl">3.5</span>,<span class="at">I=</span><span class="fl">0.001</span>,<span class="at">R=</span><span class="fl">0.0</span>)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">&lt;-</span> <span class="fu">run</span>(<span class="at">tmax=</span><span class="dv">200</span>,<span class="at">ylab=</span><span class="st">"Dichtheden"</span>,<span class="at">xlab=</span><span class="st">"Tijd"</span>,<span class="at">tstep=</span><span class="fl">0.1</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="predatorprooi_files/figure-html/unnamed-chunk-10-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16"><img src="predatorprooi_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></a></p>
+<p><a href="predatorprooi_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16"><img src="predatorprooi_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></a></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Tijdens de Covid-19 pandemie hebben we gezien dat twee maatregelen zeer effectief waren: 1.) <em>social distancing</em> (mensen waarmee je contact hebt proberen niet te besmetten) en 2) <em>contactbeperkingen</em> (het aantal mensen waarmee je contact hebt reduceren). Hieronder zie je een interactieve simulatie van bovenstaande interacties in een ruimtelijk model. Met de ‘mengen’ optie worden na elke tijdstap alle individuen volledig gehusseld.</p>
 <ol start="4" type="a">
-<li><p>Controleer of onder gemengde omstandigheden dit model zich zoals het ODE model gedraagt.</p></li>
+<li><p>Controleer of dit model zich (ongeveer) hetzelfde als het ODE model gedraagt. Controleer dit ook in gemengde omstandigheden.</p></li>
 <li><p>Is het effect in deze simulatie (zonder mengen) meer vergelijkbaar met <em>social distancing</em> of met <em>contactbeperkingen</em>?</p></li>
 </ol>
 <div class="interactive_content">
 
-<iframe id="iframeToReplace" width="100%" height="490" src="https://jsfiddle.net/bramvandijk88/x716p038/embedded/result" title="Simulation"></iframe>
+<iframe id="iframeToReplace" width="100%" height="590" src="https://jsfiddle.net/bramvandijk88/x716p038/embedded/result" title="Simulation"></iframe>
 </div>
 <ol start="6" type="a">
-<li>Maak de <span class="math inline">\(\beta\)</span>-parameters van het virus hoger (bijvoorbeeld 0.1, maar je kan ook andere waarden proberen). Beschrijf in je eigen woorden wat er gebeurt voor zowel gemengde als ongemende omstandigheden.</li>
+<li>Maak de <span class="math inline">\(\beta\)</span>-parameters van het virus hoger (bijvoorbeeld 1.0, maar je kan ook andere waarden proberen). Start de simulatie een paar keer opnieuw onder zowel gemengde als niet-gemengde omstandigheden. Kan het virus zich nu wel handhaven in een ongemengde populatie?</li>
 </ol>
 </div>
 <div id="exr-3dsysteem" class="pepexr theorem exercise">
@@ -2013,7 +2014,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","openEffect":"zoom","closeEffect":"zoom","selector":".lightbox"});
+<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","openEffect":"zoom","loop":false,"closeEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
