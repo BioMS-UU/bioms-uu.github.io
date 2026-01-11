@@ -464,7 +464,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Statistiek/Oefenvragen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Voorbeeldopgaven</span></a>
+ <span class="menu-text">Oefenvragen</span></a>
   </div>
 </li>
       </ul>
@@ -565,32 +565,6 @@ window.Quarto = {
 </header>
 
 
-<script>
-  window.onbeforeprint = () => {
-    
-    const images = document.querySelectorAll('img#subset')
-    images.forEach((img) => { img.style.width = "60%"; });
-    const imagesShow = document.querySelectorAll('img#imgToShow')
-    imagesShow.forEach((img) => { img.style.display = "block"; img.style.marginBottom = "20px";});
-    
-    
-    //document.body.style.fontFamily= "Georgia";
-    const iframes = document.querySelectorAll("iframe#iframeToReplace");
-    iframes.forEach((iframe, index) => {
-                // Create a placeholder element with text
-                const placeholder = document.createElement('div');
-                placeholder.style.paddingBottom = "20px";
-                placeholder.innerHTML += "<br><center><font size=1>(deze interactieve content vind je op <a href='" +
-                                          iframe.src + "'> " + iframe.src + 
-                                          " </a>)</font></center><br>"
-                iframe.parentNode.replaceChild(placeholder, iframe);
-            });
-  };
-  window.onafterprint = () => {
-      window.location.reload(true);
-    }
-    
-</script>
 <section id="leerdoelen" class="level2" data-number="10.1">
 <h2 data-number="10.1" class="anchored" data-anchor-id="leerdoelen"><span class="header-section-number">10.1</span> Leerdoelen</h2>
 <p>In dit eerste hoofdstuk gaan we een belangrijk concept uit de biologie beter leren begrijpen: exponentiële groei. Na dit hoofdstuk word je geacht het volgende te kunnen:</p>
@@ -617,7 +591,10 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="de-mythe-van-de-ontdekking-van-het-schaakspel">De mythe van de ontdekking van het schaakspel</h3>
 <p>De mythe van de ontdekking van het schaakspel is een beroemde legende uit India. Volgens het verhaal wilde een koning de uitvinder van het schaakspel belonen. In schijnbare bescheidenheid vroeg de uitvinder om rijst: één korrel op het eerste veld van het schaakbord, twee op het tweede, vier op het derde, en zo verder, telkens verdubbelend tot het 64e veld is bereikt. De koning stemde toe, zich niet realiserend hoeveel rijst hij zojuist had beloofd. Tegen de tijd dat het 64e veld bereikt was, had de koning niet genoeg rijst in zijn hele koninkrijk om aan de vraag te voldoen. Het totaal aantal korrels rijst komt uit op:</p>
 <p><span class="math display">\[
-1 + 2 + 4 + · · · + 2^{63} = 2^{64} − 1 = 18.446.744.073.709.551.615
+\begin{aligned}
+1 + 2 + 4 + \cdots + 2^{63} &amp;= 2^{64} - 1 \\
+&amp;= 18,446,744,073,709,551 %&gt;% ,615
+\end{aligned}
 \]</span> Als je het aantal cijfers van dit grote getal telt, zie je dat het neerkomt op 18 triljoen (een 18 met 18 nullen!). Dit kunnen we beter als een macht van 10 schrijven: <span class="math inline">\(\sim 1.84 \cdot 10^{19}\)</span>. In R worden dergelijke grote getallen meestal met <code>e+</code> aangegeven:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span><span class="dv">64</span> <span class="sc">-</span> <span class="dv">1</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -639,11 +616,11 @@ window.Quarto = {
 <p>Naast deze drie basisingrediënten, is het natuurlijk ook belangrijk om te bepalen wat de hoeveelheid rijst is waar we mee beginnen (hier <span class="math inline">\(R(0) = 1\)</span>). Dit wordt in de model-wereld de <strong>initiële conditie</strong> (<em>initial condition</em>) genoemd, oftewel de start waarde van de variabele(n). Vanaf daar gaan we verder rekenen: op het tweede vakje liggen <span class="math inline">\(R(1) = R(0) \cdot 2\)</span> rijstkorrels, op het derde vakje <span class="math inline">\(R(2) = R(0) \cdot 2 \cdot 2\)</span> korrels, <em>etc.</em> Het aantal korrels op het 64e vakje, wordt gegeven door 63 verdubbelingen (want let op: het eerste vakje was al bezet!). Dit kunnen we omschrijven met de volgende vergelijking:</p>
 <p><span id="eq-rijst"><span class="math display">\[
 R(63) = R(0) \cdot 2^{63}
-\tag{10.1}\]</span></span></p>
+\qquad(10.1)\]</span></span></p>
 <p><a href="#eq-rijst" class="quarto-xref">Vergelijking&nbsp;<span>10.1</span></a> geeft het aantal korrels op het 64e vakje. Dat is dus nog niet het <em>totaal</em> aantal korrels. Het totaal wordt gegeven door <span class="math inline">\(R(0) + R(1) + R(2) + \cdots + R(63)\)</span>. Deze som is een beetje te lang om volledig op te schrijven, maar we weten dat elke stap de volgende <strong>vergelijking</strong> wordt toegepast:</p>
 <p><span id="eq-differentie-vergelijking"><span class="math display">\[
 R(t+1) = 2\cdot R(t)
-\tag{10.2}\]</span></span></p>
+\qquad(10.2)\]</span></span></p>
 <p>Een vergelijking in de vorm van <a href="#eq-differentie-vergelijking" class="quarto-xref">Vergelijking&nbsp;<span>10.2</span></a> wordt een <strong>differentievergelijking</strong> genoemd<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Deze differentievergelijking is zo simpel, dat we een eenvoudig R-script kunnen schrijven die deze herhaaldelijk toepast:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co"># beginaantal rijst (initiële conditie)</span></span>
@@ -888,13 +865,19 @@ Figuur&nbsp;10.3: De regels van een simpele computersimulatie voor de verspreidi
 <li><p>Verwacht je dat er een draagvermogen (<em>carrying capacity</em>) zal zijn?</p></li>
 <li><p>Een interactieve versie van deze simulatie zie je hieronder. Start de simulatie en bekijk de grafieken. Had je de vorige vragen juist beantwoord?</p></li>
 </ol>
-<div class="interactive_content">
-                
+<div class="print-only">
+<center>
+<em>Interactieve content beschikbaar op de website:</em>
+</center>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figuren/australia_preview.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="figuren/australia_preview.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></a></p>
+</figure>
+</div>
+</div>
+<div class="screen-only">
 <iframe id="iframeToReplace" width="100%" height="550" src="https://jsfiddle.net/bramvandijk88/jq3u7f6t/embedded/result" title="Simulatie">
 </iframe>
-
-<center><img id="imgToShow" src="figuren/australia_preview.png" style="display:none; width=80%;"></center>
-
 </div>
 <ol start="4" type="a">
 <li><p>Omdat dit model willekeur bevat (geboorte en sterfte worden met kansen bepaald), zijn populatiegroottes niet elke keer hetzelfde en is de groei nooit <em>perfect</em> exponentieel. We kunnen wél testen of de groei bij benadering exponentieel is. Daarvoor tellen we bijvoorbeeld elke 10 tijdstappen het aantal konijnen: <code>13, 108, 311, 665, 1137, 1773, 2549, 3384</code>. Gebruik R om te bepalen of deze groei ongeveer exponentieel is.</p></li>
@@ -1553,7 +1536,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"loop":false,"openEffect":"zoom","selector":".lightbox","closeEffect":"zoom","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","selector":".lightbox","openEffect":"zoom","closeEffect":"zoom","loop":false});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

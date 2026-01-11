@@ -464,7 +464,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Statistiek/Oefenvragen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Voorbeeldopgaven</span></a>
+ <span class="menu-text">Oefenvragen</span></a>
   </div>
 </li>
       </ul>
@@ -565,32 +565,6 @@ window.Quarto = {
 </header>
 
 
-<script>
-  window.onbeforeprint = () => {
-    
-    const images = document.querySelectorAll('img#subset')
-    images.forEach((img) => { img.style.width = "60%"; });
-    const imagesShow = document.querySelectorAll('img#imgToShow')
-    imagesShow.forEach((img) => { img.style.display = "block"; img.style.marginBottom = "20px";});
-    
-    
-    //document.body.style.fontFamily= "Georgia";
-    const iframes = document.querySelectorAll("iframe#iframeToReplace");
-    iframes.forEach((iframe, index) => {
-                // Create a placeholder element with text
-                const placeholder = document.createElement('div');
-                placeholder.style.paddingBottom = "20px";
-                placeholder.innerHTML += "<br><center><font size=1>(deze interactieve content vind je op <a href='" +
-                                          iframe.src + "'> " + iframe.src + 
-                                          " </a>)</font></center><br>"
-                iframe.parentNode.replaceChild(placeholder, iframe);
-            });
-  };
-  window.onafterprint = () => {
-      window.location.reload(true);
-    }
-    
-</script>
 <p>In het vorige onderdeel heb je geleerd dat diffusie niet altijd patronen vervaagt, maar ook stabiele patronen kan opleveren met behulp van reactie-diffusie vergelijkingen. In dit hoofdstuk gaan we echter weer naar dynamische patronen kijken, en wel met een heel concreet en medisch relevant voorbeeld: actiepotentialen en hartritmestoornissen. Aan het einde van dit hoofdstuk, word je geacht het volgende te kunnen:</p>
 <ul>
 <li>Uitleggen wat een actiepotentiaal in termen van een faseruimte inhoudt</li>
@@ -777,7 +751,7 @@ Figuur&nbsp;18.2: Alleen met een sterke prikkel ontstaat er in het Hodgkin-Huxle
 {\mathrm{d}W/\mathrm{d}t}
 &amp;=\epsilon(V-bW)
 \end{align}
-\tag{18.1}\]</span></span></p>
+\qquad(18.1)\]</span></span></p>
 <p>V staat hier voor het voltage. Laten we stap voor stap ontcijferen wat hier staat. De eerste vergelijking (<span class="math inline">\(
 \mathchoice{\frac{\mathrm{d}V}
 {\mathrm{d}t}}{\mathrm{d}V/\mathrm{d}t}
@@ -941,35 +915,50 @@ Figuur&nbsp;18.5: Faseruimten en oplossingen voor het Fitzhugh-Nagumo model
 <h2 data-number="18.4" class="anchored" data-anchor-id="actiepotentialen-als-pde"><span class="header-section-number">18.4</span> Actiepotentialen als PDE</h2>
 <p>In het vorige hoofdstuk hebben we diffusie toegevoegd aan ODEs zodat deze PDEs worden (of platter uitgedrukt hebben we “differentiaalvergelijkingen in hokjes gestopt”). Nogmaals, met PDEs kunnen we naast veranderingen over de tijd, ook veranderingen door de ruimte bestuderen. We zagen dat dit mooie patronen op kan leveren. Wat gebeurt er als we de ODEs van het Fitzhugh-Nagumo model nemen, en deze in een PDE bestuderen?</p>
 <p>Dit zou een soort simulatie kunnen zijn van een axon, of van hartweefsel waarbij het actiepotentiaal zorgt voor samentrekking van de hartspier. Om dit te laten zien, geeft de onderstaande simulatie aan wat er gebeurt in een “weefsel” van 60 hoog en 150 lang. In het begin is de linker kolom sterk geprikkeld (<span class="math inline">\(V=1\)</span>), en de rest van het weefsel in rust (<span class="math inline">\(V=0,W=0\)</span>).</p>
-<div class="interactive_content">
-<iframe id="iframeToReplace" width="100%" height="360" src="https://jsfiddle.net/bramvandijk88/8x1ezk2u/embedded/result" title="Simulation"></iframe>
+<div class="print-only">
 <center>
-<img src="figuren/interactive_exc1.png" id="imgToShow" style="display:none;padding-bottom:30px;">
+<em>Interactieve content beschikbaar op de website:</em> <img src="figuren/interactive_exc1.png" class="img-fluid">
 </center>
-</div><br>
+</div>
+<div class="screen-only">
+<iframe id="iframeToReplace" width="100%" height="360" src="https://jsfiddle.net/bramvandijk88/8x1ezk2u/embedded/result" title="Simulation"></iframe>
+
+</div>
 <p>Zoals je ziet vormt er zich een golf van <span class="math inline">\(V\)</span> (rood), die van links naar rechts doorgegeven wordt door het weefsel. Daarachter volgt een bredere band van <span class="math inline">\(W\)</span>, dat er voor zorgt dat het actiepotentiaal niet meteen opnieuw geactiveerd kan worden. Dit kan je zelf testen: met de muis kun je prikkels geven aan het medium. Als je vóór een golf een prikkel geeft ontstaat er een nieuwe golf voor de bestaande golf. Deze golf gaat twee kanten op en annihileert de oorspronkelijke golf! Als je echter vlak ná een bestaande golf probeert het weefsel een prikkel te geven, dooft deze meteen uit!</p>
 </section>
 <section id="sec-spiral" class="level2" data-number="18.5">
 <h2 data-number="18.5" class="anchored" data-anchor-id="sec-spiral"><span class="header-section-number">18.5</span> Ophopingen, blokkades, en spiralen</h2>
 <p>Met de bovenstaande simulatie kunnen we vrij “virtueel” experimenteren. Zo weten we bijvoorbeeld dat littekenweefsel (bijv. op het hart) actiepotentialen kan verstoren, omdat deze het signaal niet (meer) geleiden. Laten we een dergelijke blokkade inbouwen door een deel van het weefsel altijd op refractair (<span class="math inline">\(W=1\)</span>) te veronderstellen:</p>
-<div class="interactive_content">
+<div class="print-only">
+<center>
+<em>Interactieve content beschikbaar op de website:</em> <img src="figuren/interactive_exc2.png" class="img-fluid">
+</center>
+</div>
+<div class="screen-only">
 <iframe id="iframeToReplace" width="100%" height="360" src="https://jsfiddle.net/bramvandijk88/1akdcg0x/embedded/result" title="Simulation"></iframe>
-<center><img src="figuren/interactive_exc2.png" id="imgToShow" style="display:none;padding-bottom:30px;">
-</center>
-</div><br>
+
+</div>
 <p>Zoals je ziet krult de golf om de blokkade heen. Ook zie je dat de golf zichzelf uiteindelijk weer recht trekt. Dit komt omdat weefsel vooraan in de golf minder activatie krijgt van omliggend weefsel. Zo herstelt de rechte staande golf eigenlijk vanzelf. Als dit dus een hart-weefsel is – waar een golf als deze verantwoordelijk is voor het sequentieel samentrekken van de hartkamers – heeft dit litteken nog geen rampzalige gevolgen. Misschien kunnen we ons ook voorstellen dat er een stuk littekenweefsel is dat het signaal veel slechter doorlaat, maar nog wel een beetje:</p>
-<div class="interactive_content">
-<iframe id="iframeToReplace" width="100%" height="360" src="https://jsfiddle.net/bramvandijk88/faj58ucn/embedded/result" title="Simulation"></iframe>
-<center><img src="figuren/interactive_exc3.png" id="imgToShow" style="display:none;padding-bottom:30px;">
+<div class="print-only">
+<center>
+<em>Interactieve content beschikbaar op de website:</em> <img src="figuren/interactive_exc3.png" class="img-fluid">
 </center>
-</div><br>
+</div>
+<div class="screen-only">
+<iframe id="iframeToReplace" width="100%" height="360" src="https://jsfiddle.net/bramvandijk88/faj58ucn/embedded/result" title="Simulation"></iframe>
+
+</div>
 <p>Ook hier kan de actiepotentiaal gelukkig nog doorheen breken. Wel kun je zien dat deze golf (onderin) nu een klein beetje achterloopt op een golf die geen hinder heef ondervonden (bovenin).</p>
 <p>Als we echter aannemen dat de blokkade slechts tijdelijk is, gebeurt er iets vreemds:</p>
-<div class="interactive_content">
-<iframe id="iframeToReplace" width="100%" height="360" src="https://jsfiddle.net/bramvandijk88/aoev0dzx/embedded/result" title="Simulation"></iframe>
-<center><img src="figuren/interactive_exc4.png" id="imgToShow" style="display:none;padding-bottom:30px;">
+<div class="print-only">
+<center>
+<em>Interactieve content beschikbaar op de website:</em> <img src="figuren/interactive_exc4.png" class="img-fluid">
 </center>
-</div><br>
+</div>
+<div class="screen-only">
+<iframe id="iframeToReplace" width="100%" height="360" src="https://jsfiddle.net/bramvandijk88/aoev0dzx/embedded/result" title="Simulation"></iframe>
+
+</div>
 <p>Wat je hier ziet, is een actiepotentiaal golf die om zichzelf is heen gekruld. Als dit een stuk hartweefsel is, hebben we dus te maken met een hartritmestoornis! Inderdaad zijn deze spiraalvormen een belangrijke oorzaak van hartritmestoornissen (zie <a href="#fig-hartar" class="quarto-xref">Figuur&nbsp;<span>18.6</span></a>). Met de muis kun je het hartweefsel lokaal proberen te herstellen, maar naar alle waarschijnlijkheid maak je er alleen maar meer spiralen bij (probeer het maar eens!). In het werkcollege gaan we kijken we we moeten doen om dit “hart” weer normaal te laten kloppen.</p>
 <div id="fig-hartar" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1042,9 +1031,12 @@ Figuur&nbsp;18.8: Voorbeelden van spiralen in biologische systemen
 </div>
 </div>
 <p>Ook buiten de biologie zien we dergelijke systemen terug, zoals in simpele chemische reacties of vlammen op het oppervlak van een brandstof. Dit voorbeeld, en vele andere voorbeelden van excitable media vind je in deze video:</p>
-<div class="interactive_content">
+<div class="print-only">
+<iframe id="iframeToReplace" width="100%" height="200" src="https://youtube.com/embed/SqhXQUzVMlQ" title="Simulation"></iframe>
+</div>
+<div class="screen-only">
 <iframe id="iframeToReplace" width="100%" height="500" src="https://youtube.com/embed/SqhXQUzVMlQ" title="Simulation"></iframe>
-</div><br>
+</div>
 </section>
 <section id="opgaven" class="level2" data-number="18.7">
 <h2 data-number="18.7" class="anchored" data-anchor-id="opgaven"><span class="header-section-number">18.7</span> Opgaven</h2>
@@ -1080,11 +1072,15 @@ Figuur&nbsp;18.8: Voorbeelden van spiralen in biologische systemen
 <div id="exr-clear" class="Rexr theorem exercise">
 <p><span class="theorem-title"><strong>Oefening 18.2 (Clear!)</strong></span> <br></p>
 <p>Zoals gezegd kunnen er spiralen vormen op het hartweefsel, wat een hartritmestoornis veroorzaakt. Bekijk de volgende simulatie, waarbij er door het hokje linksbovenin elke 250 tijdstappen een nieuwe golf start:</p>
-<div class="interactive_content">
-<iframe id="iframeToReplace" width="100%" height="800" src="https://jsfiddle.net/bramvandijk88/zr6a72ys/embedded/result" title="Simulation"></iframe>
-<center><img src="figuren/interactive_exc4.png" id="imgToShow" style="display:none;padding-bottom:30px;">
+<div class="print-only">
+<center>
+<em>Interactieve content beschikbaar op de website:</em> <img src="figuren/interactive_exc4.png" class="img-fluid">
 </center>
-</div><br>
+</div>
+<div class="screen-only">
+<iframe id="iframeToReplace" width="100%" height="800" src="https://jsfiddle.net/bramvandijk88/zr6a72ys/embedded/result" title="Simulation"></iframe>
+
+</div>
 <ol type="a">
 <li>Laat de simulatie een tijdje lopen, en bepaal de frequentie van het hart (de tijdseenheden zijn arbitrair, dus het antwoord is in de vorm “een hartslag elke X-de tijdstap”).</li>
 <li>Gebruik de knop ‘Boe’ om dit virtuele persoon “te laten schrikken” (de knop voegt aan alle hokjes een willekeurige hoeveelheid <span class="math inline">\(V\)</span> toe<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>). Zie je een effect op de hartslag? Is dit effect blijvend?</li>
@@ -1100,9 +1096,15 @@ Figuur&nbsp;18.8: Voorbeelden van spiralen in biologische systemen
 <li>Iemand stelt voor om de ziekte te stoppen door alle vatbare individuen tegelijkertijd te infecteren. Zou dit werken? Is dit ook ethisch verantwoord?</li>
 </ol>
 <p>Er wordt een vaccinatie campagne opgezet, maar een groot deel van de populatie komt niet opdagen. Bestudeer de volgende simulatie, van een golf die een matig gevaccineerd dorp binnenrolt.</p>
-<div class="interactive_content">
+<div class="print-only">
+<center>
+<em>Interactieve content beschikbaar op de website.</em>
+</center>
+</div>
+<div class="screen-only">
 <iframe id="iframeToReplace" width="100%" height="510" src="https://jsfiddle.net/bramvandijk88/od20zhL4/embedded/result" title="Simulation"></iframe>
-</div><br>
+
+</div>
 <ol start="3" type="a">
 <li>Kan een golf (links) de ongevaccineerde mensen (rechts) bereiken? Wanneer wel/niet?<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></li>
 <li>Wat kan er gebeuren als een toerist van een niet-gevaccineerd land met het vliegtuig binnenkomt (rechts verschijnt)?</li>
@@ -1112,9 +1114,15 @@ Figuur&nbsp;18.8: Voorbeelden van spiralen in biologische systemen
 <div id="exr-bosbranden" class="Rexr theorem exercise">
 <p><span class="theorem-title"><strong>Oefening 18.4 (Bosbranden)</strong></span> <br></p>
 <p>Hoewel we tot nu toe voorbeelden hebben gezien van exciteerbare media in PDEs, bestaan ze ook in <em>individual-based</em> modellen. Laten we bijvoorbeeld eens aannemen dat een groot bos in hokjes opgedeeld is, met in elk hokje een boom of een stuk lege grond. Een bosbrand begint in het midden van het bos, en verspreidt zich via de bomen.</p>
-<div class="interactive_content">
+<div class="print-only">
+<center>
+<em>Interactieve content beschikbaar op de website.</em>
+</center>
+</div>
+<div class="screen-only">
 <iframe id="iframeToReplace" width="100%" height="600" src="https://jsfiddle.net/bramvandijk88/kdxu51wa/embedded/result" title="Simulation"></iframe>
-</div><br>
+
+</div>
 <ol type="a">
 <li>Begin de simulatie een paar keer met een bomen-dichtheid van 0.4. Schat ruwweg in welke fractie van het bos afbrandt. Zie je veel variatie tussen de experimenten?</li>
 <li>Herhaal je experiment ook met dichtheden 0.2, 0.3, 0.5, en 0.6. Bepaal opnieuw welke fractie afbrandt, en hoeveel variatie er is.</li>
@@ -1123,9 +1131,15 @@ Figuur&nbsp;18.8: Voorbeelden van spiralen in biologische systemen
 <li>Bomen planten zich ook voort. Wat denk je dat er kan gebeuren als de afgebrande bomen na een tijdje weer vruchtbare grond voor nieuwe bomen vormt?</li>
 </ol>
 <p>Brand is meestal een heel snel proces ten opzichte van de voortplanting van bomen. Bestudeer de volgende simulatie:</p>
-<div class="interactive_content">
+<div class="print-only">
+<center>
+<em>Interactieve content beschikbaar op de website.</em>
+</center>
+</div>
+<div class="screen-only">
 <iframe id="iframeToReplace" width="100%" height="600" src="https://jsfiddle.net/bramvandijk88/5jb91uk3/embedded/result" title="Simulation"></iframe>
-</div><br>
+
+</div>
 <ol start="6" type="a">
 <li>Is brand een groter of een kleiner probleem als planten zich snel voort kunnen planten?</li>
 </ol>
@@ -1769,7 +1783,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","selector":".lightbox","closeEffect":"zoom","loop":false,"openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","descPosition":"bottom","loop":false,"closeEffect":"zoom","openEffect":"zoom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

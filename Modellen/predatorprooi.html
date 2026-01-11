@@ -464,7 +464,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Statistiek/Oefenvragen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Voorbeeldopgaven</span></a>
+ <span class="menu-text">Oefenvragen</span></a>
   </div>
 </li>
       </ul>
@@ -566,32 +566,6 @@ window.Quarto = {
 </header>
 
 
-<script>
-  window.onbeforeprint = () => {
-    
-    const images = document.querySelectorAll('img#subset')
-    images.forEach((img) => { img.style.width = "60%"; });
-    const imagesShow = document.querySelectorAll('img#imgToShow')
-    imagesShow.forEach((img) => { img.style.display = "block"; img.style.marginBottom = "20px";});
-    
-    
-    //document.body.style.fontFamily= "Georgia";
-    const iframes = document.querySelectorAll("iframe#iframeToReplace");
-    iframes.forEach((iframe, index) => {
-                // Create a placeholder element with text
-                const placeholder = document.createElement('div');
-                placeholder.style.paddingBottom = "20px";
-                placeholder.innerHTML += "<br><center><font size=1>(deze interactieve content vind je op <a href='" +
-                                          iframe.src + "'> " + iframe.src + 
-                                          " </a>)</font></center><br>"
-                iframe.parentNode.replaceChild(placeholder, iframe);
-            });
-  };
-  window.onafterprint = () => {
-      window.location.reload(true);
-    }
-    
-</script>
 <p>Biologische populaties leven nooit in isolatie, maar ondergaan interacties met andere populaties. Dit hebben we in het vorige hoofdstuk ook al kort gezien in de computermodellen waarin samenwerking centraal stond. Maar er bestaan natuurlijk veel meer typen interacties, en deze interacties kunnen we niet alleen met computermodellen bestuderen. Neem bijvoorbeeld de populatie konijnen in Australië, waarvoor we hebben aangenomen dat ze een dichtheidsafhankelijke afname van hun groei hebben. Worden de populatiegroottes van konijnen (normaal gesproken) niet ook door predatoren beïnvloed? Is onder die omstandigheden voedselbeperking überhaupt nog erg relevant, of gaan konijnen vooral aan predatie dood? Om deze vragen te kunnen beantwoorden, gaan we leren werken met <strong>systemen van differentiaalvergelijkingen</strong> aan de hand van een beroemd predator-prooi model.</p>
 <div id="fig-shared" class="figure quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -670,7 +644,7 @@ Figuur&nbsp;14.2: Eenvoudige functies die we kunnen gebruiken in een predator/pr
 \underbrace{d{\color{#2d43fc}R}}_{\text{sterfte konijnen}} - \underbrace{a{\color{#2d43fc}R}\color{#ff7700}N}_{\text{predatie}}\\
 \frac{\mathrm{d}\color{#ff7700}N}{\mathrm{d}t} &amp;= \underbrace{ca{\color{#2d43fc}R}\color{#ff7700}N}_{\text{geboorte vossen}} - \underbrace{\delta \color{#ff7700}N}_{\text{sterfte vossen}}
 \end{align*}
-\tag{14.1}\]</span></span></p>
+\qquad(14.1)\]</span></span></p>
 <p>Het bovenstaande model staat bekend als het <strong>Lotka-Volterra predator-prooi model</strong>, vernoemd naar de ontdekkers Alfred Lotka en Vito Volterra. De vergelijking bestaat uit 2 ODEs die van elkaar afhankelijk zijn, en wordt daarom een 2 dimensioneel (2D) ODE systeem genoemd. We spreken van een <strong>systeem van differentiaalvergelijkingen</strong> wanneer de variabelen in elkaars vergelijking terugkomen, waardoor de dynamica van de variabelen gekoppeld (en niet onafhankelijk) is. Hierbij nemen we dus aan dat de organismen in hetzelfde (eco)systeem voorkomen, want konijnen op de Veluwe en konijnen op een eiland in Zweden beïnvloeden elkaar niet (tenzij ze het vliegtuig nemen).</p>
 <p>We zouden het systeem natuurlijk nog verder uit kunnen breiden. We zouden bijvoorbeeld een top predator (adelaars) kunnen toevoegen, en dan hebben we een 3 dimensioneel (3D) ODE systeem<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. We zouden zelfs een heel ecosysteem kunnen opbouwen, en een 10D of 100D systeem bestuderen. Voor deze “hoogdimensionele” systemen kunnen we vaak alleen numeriek (met de computer) uitrekenen wat er gebeurt. Maar voor 2D systemen kunnen we nog best veel met pen en papier voor elkaar krijgen.</p>
 </section>
@@ -1220,8 +1194,13 @@ Figuur&nbsp;14.6: Regels van een simpel “Lotka Volterra” model in de ruimte
 <p>In <a href="exponentielegroei.html" class="quarto-xref"><span>Hoofdstuk 10</span></a> hebben we een miniatuur Australië bestudeerd waarin konijnen zich konden verspreiden. Hierbij zagen we enkele verschillen tussen het wiskundige model (de differentievergelijking / ODEs) en het ruimtelijke model. We gaan nu bestuderen of Lotka-Volterra in een vergelijkbaar ruimtelijk model ook belangrijke verschillen heeft.</p>
 <p>Wederom delen we de ruimte op in verschillende types hokjes: lege hokjes (zwart), prooidierhokjes (geel), en predatorhokjes (rood). (zie <a href="#fig-lotkaexplainer" class="quarto-xref">Figuur&nbsp;<span>14.6</span></a>). Prooidieren kunnen een leeg, nabijgelegen hokje in een prooidierhokje veranderen (dit stelt geboorte voor). Als er geen leeg hokje beschikbaar is, kan de prooi niet reproduceren. De predator kan alleen reproduceren als er een nabijgelegen prooihokje is, en verandert deze dan in een predatorhokje. Beide types individuen sterven met 4% kans, waarna het hokje weer leeg wordt.</p>
 <p>Net als bij de konijnen in Australië, hoeven we geen extra dichtheidseffect in te bouwen omdat deze automatisch bestaat: het aantal hokjes is eindig.</p>
-<div class="interactive_content">
-
+<div class="print-only">
+<center>
+<em>Deze interactieve content is beschikbaar op de website.</em>
+</center>
+<p><a href="figuren/lotka_screenshot.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16"><img src="figuren/lotka_screenshot.png" class="img-fluid"></a></p>
+</div>
+<div class="screen-only">
 <iframe id="iframeToReplace" width="100%" height="560" src="https://jsfiddle.net/bramvandijk88/xyhob5Lm/embedded/result" title="Simulation"></iframe>
 </div>
 <p>In dit “toy-model” wordt predatie versimpeld tot 1 prooihokje in 1 predatorhokje veranderen.</p>
@@ -1305,7 +1284,7 @@ N &amp;= S+I+R\\
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="predatorprooi_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16"><img src="predatorprooi_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></a></p>
+<p><a href="predatorprooi_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-17"><img src="predatorprooi_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></a></p>
 </figure>
 </div>
 </div>
@@ -1315,8 +1294,13 @@ N &amp;= S+I+R\\
 <li><p>Controleer of dit model zich (ongeveer) hetzelfde als het ODE model gedraagt. Controleer dit ook in gemengde omstandigheden.</p></li>
 <li><p>Is het effect in deze simulatie (zonder mengen) meer vergelijkbaar met <em>social distancing</em> of met <em>contactbeperkingen</em>?</p></li>
 </ol>
-<div class="interactive_content">
-
+<div class="print-only">
+<center>
+<em>Deze interactieve content is beschikbaar op de website.</em>
+</center>
+<p><a href="figuren/sir_screenshot.png" class="lightbox" data-gallery="quarto-lightbox-gallery-18"><img src="figuren/sir_screenshot.png" class="img-fluid"></a></p>
+</div>
+<div class="screen-only">
 <iframe id="iframeToReplace" width="100%" height="590" src="https://jsfiddle.net/bramvandijk88/x716p038/embedded/result" title="Simulation"></iframe>
 </div>
 <ol start="6" type="a">
@@ -2014,7 +1998,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","closeEffect":"zoom","loop":false,"descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","descPosition":"bottom","loop":false,"openEffect":"zoom","closeEffect":"zoom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
