@@ -5,7 +5,7 @@
 
 # Studieplanning {#sec-planning .unnumbered}
 
-Hieronder staat de (voorlopige) studieplanning voor de cursus. Probeer zo goed mogelijk bij te blijven! De data voor de onderstaande tabel vind je [hier](https://tbb.bio.uu.nl/hermsen/studieplanning_2025.txt). Je kan dit eventueel ook zelf als een spreadsheet in Excel importeren, of als een data frame in R!
+Hieronder staat de (voorlopige) studieplanning voor de cursus. Probeer zo goed mogelijk bij te blijven! De data voor de onderstaande tabel vind je [hier](Appendices/studieplanning_2026.csv). Je kan dit eventueel ook zelf als een spreadsheet in Excel importeren, of als een data frame in R! ;)
 
 
 ```{r}
@@ -15,10 +15,37 @@ Hieronder staat de (voorlopige) studieplanning voor de cursus. Probeer zo goed m
 library(DT)
 library(datasets)
 
-planning <- read.csv("https://tbb.bio.uu.nl/hermsen/studieplanning_2025.txt",sep="\t", header=T)
+
+planning <- read.csv("Appendices/studieplanning_2026.csv",sep=";")
 #planning <- planning[planning$Wk==1,]
-planning <- planning[planning$Wk>6,]
-datatable(planning, rownames=F, options=list(pageLength=8))%>% formatStyle(columns = c(1:8), fontSize = '9pt')
+#planning <- planning[planning$Wk>6,]
+colnames(planning)[1] <- "Wk"
+colnames(planning)[6] <- "Grp"
+datatable(
+  planning,
+  rownames = FALSE,
+  options = list(
+    pageLength = 100,
+    scrollY = '600px',
+    bPaginate = FALSE,
+    autoWidth = FALSE,
+      columnDefs = list(
+        list(width = '10px',  targets = 0),  # Week
+        list(width = '120px',  targets = 1),  # Deel
+        list(width = '100px',  targets = 2),  # Datm
+        list(width = '80px',  targets = 3),  # Dag
+        list(width = '90px',  targets = 4),  # Tijd
+        list(width = '30px', targets = 5),  # Groep
+        list(width = '200px', targets = 6),  # Activiteit
+        list(width = '300px', targets = 7)   # Inhoud
+      )
+  ),
+  class = "compact"
+) %>%
+  formatStyle(
+    columns = 1:8,
+    fontSize = '8.5pt'
+  ) 
 ```
 
 
