@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spiekbriefje R (printbaar A4)</title>
+<style>
+  /* --- Print setup --- */
+  @page { size: A4; margin: 10mm; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #111;
+    font-size: 10px;           /* kleiner: user request */
+    line-height: 1.25;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background: #fff;
+  }
+
+  /* A4 canvas */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 10mm;
+    box-sizing: border-box;
+  }
+
+  /* Header */
+  .header {
+    display: grid;
+    grid-template-columns: 34mm 1fr;
+    column-gap: 8mm;
+    align-items: center;
+    margin-bottom: 6mm;
+  }
+  .logo {
+    width: 28mm;
+    height: 28mm;
+    border-radius: 50%;
+    background: #f26b00;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-weight: 800;
+    font-size: 36px;
+    letter-spacing: 0.5px;
+  }
+  h1 {
+    margin: 0;
+    color: #f26b00;
+    font-weight: 500;
+    font-size: 28px;          /* iets kleiner */
+    line-height: 1.0;
+  }
+  .subtitle {
+    margin-top: 2mm;
+    color: #666;
+    font-size: 10px;
+  }
+
+  /* Columns */
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10mm;                /* grotere gutter -> minder overflow */
+  }
+
+  /* Section heading */
+  .section {
+    margin: 0 0 3mm 0;
+  }
+  .section-title {
+    margin: 0 0 1.5mm 0;
+    color: #f26b00;
+    font-size: 16px;          /* kleiner */
+    font-weight: 800;
+  }
+  .rule {
+    height: 1px;
+    background: #d6d8db;
+    margin: 0 0 2.5mm 0;
+  }
+  .para {
+    margin: 0 0 2.5mm 0;
+    color: #111;
+  }
+
+  /* Code boxes */
+  .box {
+    margin: 0 0 2.5mm 0;
+  }
+  .box-title {
+    font-weight: 800;
+    margin: 0 0 1mm 0;
+    font-size: 10px;
+  }
+  pre {
+    margin: 0;
+    padding: 3.5mm 4mm;       /* meer padding */
+    background: #f5f6f7;
+    border: 1px solid #d6d8db;
+    border-radius: 3mm;
+    overflow: hidden;
+    white-space: pre-wrap;    /* wrap zodat het nooit overloopt */
+    word-break: break-word;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-size: 8.4px;         /* kleiner */
+    line-height: 1.25;
+  }
+
+  /* Footnote */
+  .footer {
+    margin-top: 5mm;
+    color: #666;
+    font-size: 9px;
+    text-align: right;
+  }
+
+  /* Make it nice on screen too */
+  @media screen {
+    body { background: #f2f3f5; }
+    .page { margin: 10px auto; background: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div class="logo">BMS</div>
+      <div>
+        <h1>Spiekbriefje R</h1>
+        <div class="subtitle">Rekenen • Vectoren • Dataframes • CSVs lezen • Selecties maken • Plotten (base R)</div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <!-- LEFT COLUMN -->
+      <div>
+
+        <div class="section">
+          <div class="section-title">Starten</div>
+          <div class="rule"></div>
+          <p class="para"> </p>
+
+          <div class="box">
+            <div class="box-title">Working directory & files</div>
+            <pre><code>getwd()                 # -> huidige wd (working directory)
+setwd("pad/naar/map")   # -> wd aanpassen
+list.files()            # -> bestanden in wd laten zien</code></pre>
+          </div>
+
+          <div class="box">
+            <div class="box-title">CSV inlezen & checken</div>
+            <pre><code>df <- read.csv("data.csv")     # -> df wordt een dataframe
+head(df,n)                     # -> toont eerste n rijen
+str(df)                        # -> toont kolomnamen + types</code></pre>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Rekenen</div>
+          <div class="rule"></div>
+          <p class="para">Getallen en vectoren worden meestal <b>elementgewijs</b> bewerkt.</p>
+
+          <div class="box">
+            <div class="box-title">Basis rekenwerk</div>
+            <pre><code>2 + 3          # -> 2 plus 3
+5 - 1          # -> 5 min 1
+4 * 2          # -> 4 keer 2
+10 / 4         # -> 10 gedeeld door 4
+2^5            # -> 2 tot de macht 5
+sqrt(9)        # -> wortel van 9</code></pre>
+          </div>
+
+          <div class="box">
+            <div class="box-title">Vectoren optellen en vermenigvuldigen</div>
+            <pre><code>a <- c(1, 2, 3)           # -> vector (1,2,3)
+b <- c(10, 20, 30)        # -> vector (10,20,30)
+
+a + b                  # -> elementgewijs, dus (11, 22, 33) 
+a * b                  # -> elementgewijs, dus (10, 40, 90)
+a + 1                  # -> alles van a + 1, dus (2, 3, 4)</code></pre>
+          </div>
+
+          <div class="box">
+            <div class="box-title">Vector berekeningen</div>
+            <pre><code>sum(a)        # -> som van alle waarden
+mean(a)       # -> gemiddelde
+min(a)        # -> kleinste waarde
+max(a)        # -> grootste waarde
+length(a)     # -> lengte van de vector</code></pre>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Logica & selectie</div>
+          <div class="rule"></div>
+
+          <div class="box">
+            <div class="box-title">Vergelijken + selecteren</div>
+            <pre><code>x <- c(3, 7, 1, 9)
+
+x > 5         # -> (FALSE, TRUE, FALSE, TRUE)
+x[x > 5]      # -> (7, 9)  (selectie)
+which(x > 5)  # -> (2, 4)  (<i>indeces</i> waarvoor dit geldt)</code></pre>
+          </div>
+
+          <div class="box">
+            <div class="box-title">if / else en ifelse()</div>
+            <pre><code>leeftijd_student <- 19
+if(leeftijd_student >= 18){ 
+  print("Student is volwassen") # uitgevoerd want waar
+} else{
+  print("Student is niet volwassen") # niet uitgevoerd
+}
+print("Einde")  # dit wordt altijd uitgevoerd
+</code></pre>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div>
+
+        <div class="section">
+          <div class="section-title">Dataframes</div>
+          <div class="rule"></div>
+          <p class="para">Een dataframe is een tabel zoals een spreadsheet:
+elke <b>kolom</b> (column) is één variabele (met een vast datatype),
+en elke <b>rij</b> (row) is één observatie van al die variabelen.</p>
+
+          <div class="box">
+            <div class="box-title">Kolom of rij pakken</div>
+            <pre><code>df$kleur          # -> geeft kolom met naam 'kleur' terug
+df[1, ]           # -> alles op rij 1 (observatie #1)
+df[ , 1]          # -> kolom 1 (op index)</code></pre>
+          </div>
+
+          <div class="box">
+            <div class="box-title">Filteren (selecteer rijen)</div>
+            <pre><code>df[df$leeftijd >= 19, ]     # -> rijen met leeftijd >= 19
+subset(df, leeftijd >= 19)  # -> hetzelfde (leesbaarder)</code></pre>
+          </div>
+
+          <div class="box">
+            <div class="box-title">Nieuwe kolom maken</div>
+            <pre><code>df$adult <- df$leeftijd >= 18    # -> TRUE/FALSE per rij
+df$leeftijd2 <- df$leeftijd^2    # -> kwadraat per rij</code></pre>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Plotten (base R)</div>
+          <div class="rule"></div>
+
+          <div class="box">
+            <div class="box-title">Snelle plots</div>
+            <pre><code>plot(x, y)                    # -> puntenplot
+plot(x, y, type="l")          # -> lijnplot
+hist(x, breaks=20)            # -> histogram
+boxplot(x)                    # -> boxplot</code></pre>
+          </div>
+
+          <div class="box">
+            <div class="box-title">Labels & hulplijnen</div>
+            <pre><code>plot(x, y, type="l",
+     xlab="tijd", ylab="waarde",
+     main="Titel")            # -> labels + titel
+
+abline(h=0)                   # -> horizontale lijn op y=0</code></pre>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Veelgemaakte fouten</div>
+          <div class="rule"></div>
+
+          <div class="box">
+            <div class="box-title">De symbolen = en == betekenen iets anders!</div>
+            <pre><code>x <- 3    # toewijzen
+x = 3     # ook toewijzen, maar is niet gebruikelijk in R
+x == 3    # NIET toewijzen, maar "vragen" of dit waar is</code></pre>
+          </div>
+
+          <div class="box">
+            <div class="box-title">NA breekt berekeningen</div>
+            <pre><code>x <- c(1, NA, 3)
+mean(x)                 # -> NA
+mean(x, na.rm=TRUE)     # -> 2</code></pre>
+          </div>
+
+          <div class="box">
+            <div class="box-title">Bestand inlezen </div>
+            <pre><code>read.csv("data.csv")    # foutmelding, wd goed ingesteld?
+setwd("pad/naar/map")   # wd aanpassen
+read.csv("data.csv")    # nu werkt het wel
+
+read.csv("data2.csv")            # huh? slechts 1 kolom...?
+read.csv("data2.csv", sep=";")   # nu werkt het!
+</code></pre>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer"></div>
+  </div>
+</body>
+</html>
