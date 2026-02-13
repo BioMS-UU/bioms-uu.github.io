@@ -68,6 +68,7 @@ R_series %>% filter(initR==24,time>1,time<=40,r==4) %>%
   scale_color_brewer(type="qual", palette = "Dark2", name="") +
   guides(color="none")+
   ylab("Aantal konijnen") +
+  scale_y_log10()+
   xlab("Tijd (jaren)") +
   theme_minimal(base_size=16)+
   theme(plot.margin = unit(c(0,0,0,0), "cm"))
@@ -87,9 +88,10 @@ R_series %>% filter(time>1,time <40,r==4) %>%
   geom_line(size=1.2) + 
   #facet_wrap(~r, scale="free_y",ncol=1) + 
   theme_bw() +
-  guides(color="none")+
+  #guides(color="none")+
   scale_color_brewer(type="qual", palette = "Dark2", name="Begin aantal\nkonijnen") +
   guides(alpha="none") +
+  scale_y_log10()+
   ylab("Aantal konijnen") +
   xlab("Tijd (jaren)") +
   theme_minimal(base_size=16)+
@@ -454,7 +456,7 @@ Waarbij:
 * $e$ grondtal van het natuurlijke logaritme (ongeveer 2.718282, deze kun je in R vinden met `exp(1)`)
 * $t$ de tijd in uren is
 
-a. Bepaal de afgeleide voor $t$ van de rechter zijde van @eq-oplossingbact. 
+a. Bepaal de afgeleide van $B(t)$ (zie @eq-oplossingbact). 
 b. Kijk nog eens naar @eq-oplossingbact. Kun je deze vergelijking gebruiken om het antwoord in a anders (korter!) opschrijven? Wat valt je op aan je antwoordt? 
 
 We groeien een beginpopulatie van 1000 E. coli cellen. E. coli deelt onder goede omstandigheden $1.4$ keer per uur. Dankzij de algemene oplossing kunnen we precies uitrekenen hoeveel bacteriën er op elk tijdpunt zijn. 
@@ -532,8 +534,8 @@ plot(B, xlab="Tijd in dagen", ylab="Aantal rode bloedcellen", type="l", col="sea
   h. De code in de for-loop produceert een specifieke oplossing, dat wil zeggen het rekent één van de mogelijke tijd-series uit voor $B(t)$. Dit gebeurt op een zeer grove manier door in stappen de integraal (de opsomming van kleine veranderingen) door te rekenen. Om dit netjes te doen, gebruik je normaal gesproken integrators die automatisch zorgen dat de tijdstap niet te groot is^[Hiervoor gaan we later in de cursus een R-script genaamd Grind.R inladen]. Leg uit waarom dat belangrijk kan zijn (hint: denk aan het vorige hoofdstuk). 
   i. Schat met behulp van de grafiek in hoe lang het duurt om de helft van het bloedverlies te herstellen.
   j. Stel dat je slechts een beetje bloed verliest (0.1%). Hoe lang duurt het om hiervan de helft te herstellen? 
-  k. Wat bepaalt denk je hoe snel je van bloedverlies herstelt ($p$, $d$, of beide)? 
-  l. Gebruik het script om te bepalen welke parameter ($p$ of $d$) de snelheid van herstel bepaalt. Komt dit overeen met je eerdere inschatting? 
+  k. Heroverweeg -- nu je het script hebt bekeken -- nogmaals welke parameter ($p$, $d$, of beide) de snelheid van herstel bepaalt.
+  l. Gebruik het script om te bepalen welke parameter ($p$ of $d$) de snelheid van herstel bepaalt. Komt dit overeen met je eerdere inschattingen? 
 :::
 
 ::: {.Rexr #exr-diffvsdiffinR}
@@ -591,7 +593,7 @@ plot(tijdserie$t, tijdserie$konijnen, type="l",xlab="Tijd (jaren)", ylab="Aantal
 Het bovenstaande script is iets anders geschreven dan het eerste script. Simpele scripts kunnen vaak op heel veel manieren geschreven worden. Zo genereert de bovenstaande code niet een tijdserie-vector (zoals het vorige voorbeeld), maar een tijdserie-dataframe. Het voordeel hiervan is dat we ook een tweede kolom kunnen bijhouden: de hoeveelheid tijd die is verstreken.
 
 a. Bestudeer het eerste R-script (voor de **differentie**vergelijking). Voer het script uit voor veel verschillende waarden van $r$. Wat gebeurt er met $r<1$? Wat gebeurt er met $r>3.7$? <br>
-b. Bestudeer ook het tweede R-script (voor de **differentiaal**vergelijking, waarbij we kleine stapjes nemen). Wat gebeurt er met $r<1$? Wat gebeurt er nu met $r>3.7$? Welke waarde van $r$ geeft afname? Welke Bij welke waarde van $r$ krijg je chaotische fluctuaties? 
+b. Bestudeer ook het tweede R-script (voor de **differentiaal**vergelijking, waarbij we kleine stapjes nemen). Wat gebeurt er met $r<1$? Wat gebeurt er nu met $r>3.7$? Welke waarde van $r$ geeft afname? Bij welke waarde van $r$ krijg je chaotische fluctuaties? 
 c. Maak de tijdstap voor de differentiaalvergelijking heel klein (bijv `delta_t = 0.0001`), en voer het hele script uit. Wat valt je op? (hint: R-studio heeft rechtsboven in de console een grote rode STOP-knop)
 
 :::
