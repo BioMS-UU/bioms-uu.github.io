@@ -62,6 +62,7 @@ Stel dat we inderdaad een steekproef nemen van $n = 10$ personen
 en de volgende resultaten vinden, in $\degree$C:
 
 $$35{,}7\quad 35{,}8\quad 37{,}0\quad 36{,}5\quad 37{,}1\quad 36{,}4\quad 36{,}1\quad 36{,}8\quad 36{,}5\quad 37{,}1$$
+
 ```{r}
 #| fig.width: 2 
 #| out-width: "28%"
@@ -428,6 +429,7 @@ kleiner dan 0 volgens de $t$-verdeling met 9 vrijheidsgraden.
 rond 0.)
 
 De oppervlakte in de paarse linkerstaart van de verdeling kan dus worden berekend met deze code:
+
 ```{r}
 t <- -3.087701
 n <- 10
@@ -438,6 +440,7 @@ Op deze manier werkt de code ongeacht of de $t$-waarde positief of negatief is.
 
 Om ook de rechterstaart mee te rekenen, moeten we die kans verdubbelen.
 Dat levert op:
+
 ```{r}
 (P <- 2 * pt(-abs(t), df = n - 1))
 ```
@@ -959,6 +962,7 @@ library("palmerpenguins")
 De variabele heet `bill_length_mm`. Uit de naam van de variabele valt op te maken
 dat de snavellengte gegeven is in mm.
 We selecteren de snavellengtes van de twee soorten en verwijderen `NA`s:
+
 ```{r}
 snavel_Chinstrap <- na.omit(
   penguins$bill_length_mm[penguins$species == "Chinstrap"]
@@ -973,24 +977,29 @@ snavel_Gentoo <- na.omit(
 
 Voordat we een toets uitvoeren, moeten we de gegevens altijd eerst goed bekijken.
 Hoeveel datapunten zijn er?
+
 ```{r}
 (n1 <- length(snavel_Chinstrap))
 ```
+
 ```{r}
 (n2 <- length(snavel_Gentoo))
 ```
 Dit is dus een flinke dataset, met snavelmetingen voor 68 Chinstrap-pinguïns en 123 Gentoo-pinguïns. 
 
 We bekijken wat kengetallen voor beide soorten. Eerst de ligging:
+
 ```{r}
 summary(snavel_Chinstrap)
 ```
+
 ```{r}
 summary(snavel_Gentoo)
 ```
 De mediaan en het gemiddelde van de Gentoos zijn net iets kleiner dan die van de Chinstraps.
 
 Dan de spreiding:
+
 ```{r}
 sd(snavel_Chinstrap)
 sd(snavel_Gentoo)
@@ -1054,6 +1063,7 @@ en zouden deze milde afwijkingen geen probleem moeten zijn.
 ### De $t$-toets uitvoeren
 
 Tot slot voeren we de toets uit:
+
 ```{r}
 t.test(snavel_Chinstrap, snavel_Gentoo, var.equal = TRUE)
 ```
