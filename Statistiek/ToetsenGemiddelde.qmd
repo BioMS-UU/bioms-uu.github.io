@@ -1,0 +1,1907 @@
+{{< include _macros.tex >}}
+
+# Toetsen van gemiddelden {#sec-toetsen-gemiddelden}
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: false
+
+library(ggplot2)
+library(tidyverse)
+
+opvulkleur <- "darkorange"
+lijnkleur1 <- "darkorchid"
+lijnkleur2 <- "red"
+lijnkleur3 <- "blue"
+
+```
+
+In het vorige hoofdstuk heb je kennisgemaakt met hypothesetoetsen.
+In dit hoofdstuk gaan we een aantal specifieke toetsen behandelen 
+voor situaties
+die in de praktijk vaak voorkomen.
+Dat zijn situaties waarbij de variabele $X$
+numeriek en continu is, 
+en waarbij onze hypotheses gaan over parameter $\mu_X$, 
+het populatiegemiddelde van die variabele.
+
+## Leerdoelen
+
+Na het bestuderen van dit hoofdstuk kun je 
+
+- drie veelvoorkomende toetsen voor gemiddelden uitvoeren en interpreteren:
+  1.  De $t$-toets voor één steekproef;
+  2.  De $t$-toets voor twee onafhankelijke steekproeven;
+  3.  De $t$-toets voor gepaarde steekproeven;
+- de aannames van deze toetsen uitleggen en controleren;
+- zelfstandig bepalen welke toets in een bepaalde situatie passend is;
+- uitleggen wat verdelingsvrije alternatieven zijn en wanneer je die kunt gebruiken;
+- uitleggen waarin de $t$-toets van Welch verschilt van de standaard $t$-toets voor twee steekproeven
+  en wanneer je die moet gebruiken;
+- de relatie uitleggen en toepassen tussen hypothesetoetsen en betrouwbaarheidsintervallen.
+
+## Toets van het gemiddelde: $t$-toets voor één steekproef
+
+::: {#exm-casus-temp}
+## Is de lichaamstemperatuur van gezonde mensen wel 37$\degree$C? {#sec-casus}
+
+Waarschijnlijk heb je lang geleden geleerd dat gezonde mensen 
+een "normale" lichaamstemperatuur hebben van 37$\degree$C.
+Die wijsheid is het resultaat van klassiek onderzoek door Carl Reinhold August Wunderlich
+dat werd gepubliceerd in 1868.
+In die tijd waren de meetmethoden lang niet zo precies als nu.
+Het is dus niet gek om je af te vragen: klopt die waarde eigenlijk wel?
+
+Om dat te achterhalen 
+zouden we een steekproef kunnen nemen van een aantal gezonde personen.
+Als de gemiddelde temperatuur van die proefpersonen sterk afwijkt van 37$\degree$C,
+dan is dat een indicatie dat de standaardtemperatuur misschien herzien moet worden.[^temp]
+
+Stel dat we inderdaad een steekproef nemen van $n = 10$ personen
+en de volgende resultaten vinden, in $\degree$C:
+
+$$35{,}7\quad 35{,}8\quad 37{,}0\quad 36{,}5\quad 37{,}1\quad 36{,}4\quad 36{,}1\quad 36{,}8\quad 36{,}5\quad 37{,}1$$
+
+```{r}
+#| fig.width: 2 
+#| out-width: "28%"
+#| fig.height: 4 
+#| warning: FALSE
+#| code-fold: true
+#| label: fig-tempdata
+#| fig-cap: "Jitterplot van de gegevens. De oranje lijn geeft het gemiddelde aan, de paarse lijn de standaardwaarde van 37°C."
+# Laad ggplot2 indien nodig
+if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+
+# Gegevens (vervang dit met je eigen getallen indien gewenst)
+gegevens <- c(35.7, 35.8, 37.0, 36.5, 37.1, 36.4, 36.1, 36.8, 36.5, 37.1)
+
+# Bereken het steekproefgemiddelde
+gemiddelde <- mean(gegevens)
+
+# Nulhypothese-gemiddelde
+nulhypothese <- 37
+
+# Maak de jitterplot
+ggplot(data.frame(waarde = gegevens), aes(x = "", y = waarde)) +
+  geom_jitter(width = 0.1, height = 0, size = 2, color = "black") +
+  geom_hline(yintercept = gemiddelde, color = "darkorange", 
+             linetype = "solid", size = 1) +
+  geom_hline(yintercept = nulhypothese, color = "darkorchid", 
+             linetype = "dashed", size = 1) +
+  annotate("text", x = 1.2, y = gemiddelde, label = expression(bar(italic(X))),
+           color = "darkorange", hjust = 0, vjust = -0.5, size = 4) +
+  annotate("text", x = 1.2, y = nulhypothese, label = "37 °C",
+           color = "darkorchid", hjust = 0, vjust = -0.5, size = 4) +
+  labs(y = "Lichaamstemperatuur (°C)", x = "") +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
+
+Het gemiddelde van deze steekproef is $\mean{X} = 36{,}5\degree$C.
+Is dit dan sterk bewijs tegen de standaardtemperatuur van 37$\degree$C?
+
+Mensen verschillen onderling in hun normale temperatuur,
+en ieders lichaamstemperatuur schommelt bovendien gedurende de dag 
+(door je biologische klok) en van dag tot dag (bijvoorbeeld door de menstruatiecyclus).
+Een steekproefgemiddelde dat wat lager is dan 37$\degree$C
+kan dus ook het gevolg zijn van steekproevenvariabiliteit.
+We hebben daarom een hypothesetoets nodig
+om te bepalen in hoeverre de gevonden afwijking
+bewijs levert tegen een populatiegemiddelde van 37$\degree$C.
+
+[^temp]: In de praktijk heeft dat onderzoek allerlei haken en ogen. Hoe selecteren we gezonde personen? 
+    Hoe ga je om met het feit dat de lichaamstemperatuur 's ochtends gemiddeld lager is dan 's middags, of
+    het verschil tussen mannen en vrouwen?
+  
+    Toch zijn er pogingen gedaan om de norm van 37$\degree$C te toetsen:
+
+    Mackowiak, P. A., S. S. Wasserman, and M. M. Levine. “A Critical Appraisal of 98.6 Degrees F, the Upper Limit of the Normal Body Temperature, and Other Legacies of Carl Reinhold August Wunderlich.” JAMA 268, no. 12 (September 23, 1992): 1578–80.
+
+:::
+  
+### Hypotheses over het gemiddelde van een variabele
+
+De casus hierboven over de normale lichaamstemperatuur is een voorbeeld
+van een veelvoorkomende situatie.
+We zijn geïnteresseerd in een continue variabele 
+(in het voorbeeld: lichaamstemperatuur),
+en hebben een hypothese over het gemiddelde van die variabele in de populatie
+(in het voorbeeld: het populatiegemiddelde van de lichaamstemperatuur).
+Om die hypothese te onderzoeken
+nemen we een steekproef.
+Voor iedere eenheid in die steekproef bepalen we de waarde van de variabele. 
+Dat levert een *steekproefgemiddelde* op
+dat typisch wat afwijkt van het *populatiegemiddelde volgens onze hypothese*.
+De vraag is hoe opmerkelijk die afwijking is.
+Kan die verklaard worden door steekproevenvariabiliteit,
+of is de afwijking daarvoor te groot?
+
+De **$t$-toets voor één steekproef** is de standaardtoets die voor dit soort situaties
+ontwikkeld is.
+
+### De $t$-toets voor één steekproef in zes stappen
+
+In @sec-algemene-vorm hebben we al gezien dat alle hypothesetoetsen dezelfde 
+logische structuur hebben. 
+Daar hebben we die structuur in zes stappen opgedeeld.
+We gaan die zes stappen nu doorlopen voor de $t$-toets voor één steekproef.
+Daarbij passen we de berekening direct toe op @exm-casus-temp over de lichaamstemperatuur.
+
+**Stap 1: Kies een statistisch model.**\
+De eerste stap van iedere toets bestaat uit het kiezen van een gepast statistisch model.
+De $t$-toets voor één steekproef gaat uit van het Normale Model (@sec-Normale-Model) 
+dat we in @sec-schatten ook hebben gebruikt.
+We nemen dus aan:
+
+1.  De variabele is in de populatie normaal verdeeld,
+    met gemiddelde $\mu_X$ en standaarddeviatie $\sigma_X$.
+
+2.  Iedere waarde $X_i$ in onze steekproef is onafhankelijk uit die normale verdeling getrokken.
+    Dat vereist dat we een eenvoudige aselecte steekproef hebben uitgevoerd.
+    
+Het is weer belangrijk dat we kritisch nagaan of die aannames
+redelijk zijn voor de toepassing.
+We hebben in @sec-afwijkingen uitgebreid besproken hoe je dat kunt doen.
+
+**Stap 2: Stel de hypotheses $\HO$ en $\HA$ op.**\
+Stap 2 is het opstellen van de nulhypothese en de alternatieve hypothese.
+In de casus was de nulhypothese dat het populatiegemiddelde
+van de variabele lichaamstemperatuur gelijk is aan 37$\degree$C.
+Die hypothese kan kort opgeschreven worden als:
+
+$\HO:\qquad\mu_X = 37\degree$C.
+
+De alternatieve hypothese is de ontkenning daarvan:
+
+$\HA:\qquad\mu_X \neq 37\degree$C.
+
+De waarde van $\mu_X$ volgens de nulhypothese wordt in het algemeen vaak $\mu_0$ genoemd.
+
+In het algemeen kunnen we de hypotheses dus opschrijven als
+
+$\HO:\qquad\mu_X = \mu_0.$\
+$\HA:\qquad\mu_X \neq \mu_0.$
+
+**Stap 3: Kies de toetsingsgrootheid en bepaal zijn kansverdeling onder $\HO$.**\
+We hebben een toetsingsgrootheid nodig die weergeeft hoe ver het
+steekproefgemiddelde $\mean{X}$ afwijkt van de verwachting onder $\HO$.
+De $t$-toets voor één steekproef gebruikt daarvoor: 
+$$
+t = \frac{\mean{X} - \mu_0}{\se{\mean{X}}}.
+$$ {#eq-t-t-test}
+Dit is het verschil tussen het steekproefgemiddelde $\mean{X}$
+en het populatiegemiddelde volgens $\HO$, 
+relatief ten opzichte van de standaardfout.
+
+Dat $t$ een goede keuze is voor de toetsingsgrootheid, kun je als volgt inzien.
+We hebben in @sec-schatten gezien dat de standaardfout 
+een maat is voor de onzekerheid in $\mean{X}$ als gevolg van steekproevenvariabiliteit.
+De waarde van $t$ is *klein* 
+als het waargenomen verschil tussen $\mean{X}$ en $\mu_0$ niet veel groter is dan de standaardfout.
+(Controleer dat je dat begrijpt op basis van @eq-t-t-test!)
+In dat geval is dat verschil goed te verklaren
+door toevallige steekproevenvariabiliteit. 
+De waarde van $t$ is juist *groot* 
+als het waargenomen verschil tussen $\mean{X}$ en $\mu_0$ 
+veel groter is dan de standaardfout.
+In dat geval is dat verschil erg opmerkelijk onder $\HO$
+en dus bewijs tegen $\HO$.
+Extreme waarden van $t$ zijn dus een indicatie dat er iets mis is met $\HO$.
+
+De volgende uitdaging is om de kansverdeling van $t$ onder $\HO$ te bepalen.
+Gelukkig hebben we in @sec-t-verdeling-n-1 al het lastige voorwerk al gedaan.
+Daar hebben we namelijk al besproken dat 
+de verdeling van $t$,
+zoals gedefinieerd in @eq-t-t-test,
+onder het Normale Model
+een $t$-verdeling volgt met $n - 1$ vrijheidsgraden!
+
+**Stap 4: Bereken de toetsingsgrootheid op basis van de daadwerkelijke waarnemingen.**\
+We gaan $t$ berekenen voor de lichaamstemperaturen.
+Uit de resultaten die in @exm-casus-temp gegeven waren,
+kunnen we berekenen:
+
+$$\mean{X} = 36{,}5\degree\text{C},$$
+$$s_X = 0{,}512\degree\text{C},$$
+$$n = 10,$$
+$$\se{\mean{X}} = s_X/\sqrt{n} = 0{,}512\degree\text{C} / \sqrt{10} = 0{,}162\degree\text{C},$$
+en dus:
+$$t = \frac{\mean{X} - \mu_0}{\se{\mean{X}}} = \frac{36{,}5 - 37}{0{,}162} = -3{,}09.$$
+
+We kunnen ook de bijbehorende kansverdeling plotten.
+Dat is de $t$-verdeling met $\df = n - 1 = 9$ vrijheidsgraden.
+Die ziet er zo uit:
+
+```{r}
+#| label: fig-t-df9
+#| fig-cap: "$t$-verdeling met 9 vrijheidsgraden"
+#| warning: false
+#| fig-height: 3
+#| fig-width: 4.5
+#| out-width: 64.3%
+#| code-fold: true
+
+# Genereer t-waarden
+waarden_t <- seq(-3.5, 3.5, by = 0.1)
+
+# Maak een dataframe voor de kansdichtheid
+dataframe <- data.frame(
+  t = waarden_t,
+  kansdichtheid = dt(waarden_t, df = 9)
+)
+
+# Plot de t-verdeling
+ggplot(
+  dataframe,
+  aes(
+    x = t, y = kansdichtheid
+  )
+) +
+  # Voeg de lijn toe
+  geom_line(
+    color = "darkorange", linewidth = 1
+  ) +
+  # Voeg een verticale, gestippelde lijn toe bij t = -3.09
+  geom_vline(
+    xintercept = -3.09, color = "DarkOrchid",
+    linewidth = 1, linetype = "dotted"
+  ) +
+  # Voeg een label toe op de x-as met een juiste wiskundige notatie
+  annotate(
+    "text", x = -3.09, y = 0.2,
+    label = expression(italic(t) == -3.09),
+    color = "DarkOrchid", angle = 90, vjust = -0.5, hjust = 1
+  ) +
+  # Labels toevoegen
+  labs(
+    x = expression(italic(t)),
+    y = "Kansdichtheid",
+    title = NULL
+  ) +
+  # Thema toepassen
+  theme_minimal()
+```
+
+De $t$-waarde die we gevonden hebben,
+is met een paarse stippellijn aangegeven.
+Die waarde ligt aardig ver in de staart van de verdeling.
+Dat betekent dat deze waarde onder $\HO$ vrij verrassend is.
+We kunnen zien aankomen dat de $P$-waarde klein gaat worden.
+
+**Stap 5: Bereken de $P$-waarde.**\
+De volgende stap is om de $P$-waarde te berekenen.
+
+De $P$-waarde is de kans op een uitkomst die
+minstens zo extreem is als de waarde $t = -3{,}09$ die we 
+daadwerkelijk hebben gevonden.
+Dat komt overeen met de oppervlakte van 
+de staarten van de verdeling die in @fig-t-df9-staarten hieronder 
+met paars zijn aangegeven.
+(Die oppervlakten zijn maar klein---ze zijn daardoor misschien lastig te zien!)
+
+```{r}
+#| label: fig-t-df9-staarten
+#| fig-cap: "$t$-verdeling met df = 9 vrijheidsgraden. De $P$-waarde is het totale oppervlak van de met paars aangegeven staarten van de verdeling."
+#| warning: false
+#| fig-height: 3
+#| fig-width: 4.5
+#| out-width: 64.3%
+#| code-fold: true
+
+# Genereer t-waarden
+waarden_t <- seq(-3.5, 3.5, by = 0.1)
+
+# Maak een dataframe voor de kansdichtheid
+dataframe <- data.frame(
+  t = waarden_t,
+  kansdichtheid = dt(waarden_t, df = 9)
+)
+
+# Definieer afzonderlijke gebieden voor de linker- en rechterstaart
+data_tails_links <- subset(dataframe, t <= -3.09)
+data_tails_rechts <- subset(dataframe, t >= 3.09)
+
+# Bepaal y-coördinaten voor pijlen en labels
+y_pijl <- 0.1
+y_end_pijl <- 0.02
+
+# Plot de t-verdeling
+ggplot(
+  dataframe,
+  aes(
+    x = t, y = kansdichtheid
+  )
+) +
+  # Vul de linker staart in
+  geom_area(
+    data = data_tails_links, aes(x = t, y = kansdichtheid),
+    fill = "DarkOrchid", alpha = 0.7
+  ) +
+  # Vul de rechter staart in
+  geom_area(
+    data = data_tails_rechts, aes(x = t, y = kansdichtheid),
+    fill = "DarkOrchid", alpha = 0.7
+  ) +
+  # Voeg de lijn toe
+  geom_line(
+    color = "darkorange", linewidth = 1
+  ) +
+  # Kromme pijltjes toevoegen
+  annotate(
+    "curve",
+    x = -3.5, y = y_pijl, xend = -3.4, yend = y_end_pijl,
+    curvature = 0.2,
+    arrow = arrow(length = unit(0.2, "cm")),
+    color = "DarkOrchid",
+    size = 0.7
+  ) +
+  annotate(
+    "curve",
+    x = 3.5, y = y_pijl, xend = 3.4, yend = y_end_pijl,
+    curvature = -0.2,
+    arrow = arrow(length = unit(0.2, "cm")),
+    color = "DarkOrchid",
+    size = 0.7
+  ) +
+  # Annotaties toevoegen
+  annotate(
+    "text",
+    x = -3.5,
+    y = y_pijl + 0.05,
+    label = expression(frac(italic(P),2)),
+    color = "DarkOrchid",
+    hjust = 0.5,
+    size = 4
+  ) +
+  annotate(
+    "text",
+    x = 3.5,
+    y = y_pijl + 0.05,
+    label = expression(frac(italic(P),2)),
+    color = "DarkOrchid",
+    hjust = 0.5,
+    size = 4
+  ) +
+  # Voeg een verticale, gestippelde lijn toe bij t = -3.09
+  geom_vline(
+    xintercept = -3.09, color = "DarkOrchid",
+    linewidth = 1, linetype = "dotted"
+  ) +
+  # Voeg een label toe op de x-as met een juiste wiskundige notatie
+  annotate(
+    "text", x = -2.55, y = 0.3,
+    label = expression(italic(t) == -3.09),
+    color = "DarkOrchid", angle = 90, vjust = -0.5, hjust = 1
+  ) +
+  # Voeg ook een verticale, gestippelde lijn toe bij t = 3.09
+  geom_vline(
+    xintercept = 3.09, color = "DarkOrchid",
+    linewidth = 1, linetype = "dotted"
+  ) +
+  # Voeg een label toe op de x-as met een juiste wiskundige notatie
+  annotate(
+    "text", x = 3, y = 0.3,
+    label = expression(italic(t) == 3.09),
+    color = "DarkOrchid", angle = 90, vjust = -0.5, hjust = 1
+  ) +
+  # Labels toevoegen
+  labs(
+    x = expression(italic(t)),
+    y = "Kansdichtheid",
+    title = NULL
+  ) +
+  # Thema toepassen
+  theme_minimal()
+```
+
+Om deze oppervlakte te berekenen, 
+kun je gebruik maken van de functie `pt()` in R.
+Deze functie geeft de cumulatieve verdeling van de $t$-verdeling.
+(In @exr-kansen-normaal heb je de functie `pnorm()` al gebruikt,
+die hetzelfde doet voor de normale verdeling.)
+
+Bijvoorbeeld, `pt(0, df = 9)` geeft de kans op een waarde van $t$
+kleiner dan 0 volgens de $t$-verdeling met 9 vrijheidsgraden.
+(Het antwoord moet 0,5 zijn, omdat alle $t$-verdelingen symmetrisch zijn
+rond 0.)
+
+De oppervlakte in de paarse linkerstaart van de verdeling kan dus worden berekend met deze code:
+
+```{r}
+t <- -3.087701
+n <- 10
+pt(-abs(t), df = n - 1)
+```
+De functie `abs(t)` haalt het minteken weg van $t$ zodat de waarde positief wordt.
+Op deze manier werkt de code ongeacht of de $t$-waarde positief of negatief is.
+
+Om ook de rechterstaart mee te rekenen, moeten we die kans verdubbelen.
+Dat levert op:
+
+```{r}
+(P <- 2 * pt(-abs(t), df = n - 1))
+```
+Dat is dus de $P$-waarde waarnaar we op zoek waren!
+
+**Stap 6: Trek je Conclusies**\
+Nu we de $P$-waarde hebben, kunnen we onze conclusies trekken.
+
+De $P$-waarde van 0,013 is behoorlijk klein.
+Omdat deze kleiner is dan 0,05 wordt deze "statistisch significant" genoemd.
+De $P$-waarde zegt:
+Als $\HO$ waar is (en het ware populatiegemiddelde is dus $37\degree$C),
+dan komt zo'n extreme waarde (of nog extremer) voor bij iets meer dan 1 op de 100
+steekproeven.
+Dat is een sterke indicatie dat de standaardwaarde van $37\degree$C
+aan de hoge kant is.
+
+### De stappen voor de $t$-toets voor één steekproef in het kort {#sec-t-toets-samengevat-1}
+
+We vatten de stappen van de $t$-toets nog even kort samen:
+
+::: {.callout-important}
+## De $t$-toets voor één steekproef in 6 stappen
+
+We zijn geïnteresseerd in een continue variabele $X$
+en willen de hypothese toetsen dat 
+het populatiegemiddelde van $X$ gelijk is aan 
+een bepaalde waarde $\mu_0$.
+We nemen daarom een steekproef van $n$ eenheden.
+
+Dan zijn dit de stappen van de toets:
+
+1.  **Kies het statistische model:** het Normale Model.
+2.  **Formuleer de hypotheses:**\
+    $\HO:\qquad \mu_X = \mu_0$,\
+    $\HA:\qquad \mu_X \neq \mu_0$.
+3.  **Kies de toetsingsgrootheid:**
+
+    $$t = \cfrac{\mean{X} - \mu_0}{\se{\mean{X}}}.$$
+    
+    **Verdeling van de toetsingsgrootheid onder $\HO$:**\
+    De $t$-verdeling met $\df = n - 1$.
+4.  **Bereken de toetsingsgrootheid op basis van de steekproef.**\
+    Achtereenvolgens: $\mean{X}$, $s_X$, $\se{\mean{X}}$, en dan $t$.
+5.  **Bereken de $P$-waarde:**\
+    
+    Gebruik R:
+    
+    ```{r}
+    P <- 2 * pt(-abs(t), df = n - 1)
+    ```
+
+6.  **Trek je conclusies.**
+
+:::
+
+::: {#exr-kippeneieren .mixedexr}
+## Kippen-eieren.
+<br>
+
+Een kippenboerderij beweert dat de geleverde eieren gemiddeld 52 g
+wegen. Wij geloven dat niet zomaar en besluiten onderzoek te doen.
+
+We wegen vier eieren, met de volgende gewichten: 51,7g; 50,3g; 48,4g; en 51,9g. 
+Gebruik het stappenplan hierboven om de volledige $t$-toets uit te voeren.
+:::
+
+### De $t$-toets helemaal door R laten uitvoeren
+
+Hierboven hebben we de hele $t$-toets handmatig uitgevoerd,
+en R enkel gebruikt om de $P$-waarde op te vragen.
+Het is efficiënter om de hele berekening door R te laten uitvoeren.
+Het script zou er zo uit kunnen zien:
+
+```{r}
+# gegevens:
+temperaturen <- c(35.7, 35.8, 37.0, 36.5, 37.1, 36.4, 36.1, 36.8, 36.5, 37.1)
+mu0 <- 37
+
+# berekening:
+n <- length(temperaturen)
+m <- mean(temperaturen)
+s <- sd(temperaturen)
+sem <- s/sqrt(n)
+t <- (m - mu0) / sem
+
+# bereken en print P-waarde:
+(P <- 2*pt(-abs(t), df = n -1))
+```
+
+Maar het kan nog veel gemakkelijker. 
+De functie `t.test()` die we in @sec-schatten 
+ook hadden gebruikt om het 95%-betrouwbaarheidsinterval uit te rekenen,
+voert de hele berekening in één keer uit:
+
+```{r}
+temperaturen <- c(35.7, 35.8, 37.0, 36.5, 37.1, 36.4, 36.1, 36.8, 36.5, 37.1)
+mu0 <- 37
+t.test(temperaturen, mu = mu0)
+```
+
+Merk op dat we `t.test()` nu moeten vertellen wat onze nulhypothese is;
+dat gebeurt met het argument `mu = mu0`.
+
+Het is belangrijk om even stil te staan bij de uitvoer van deze functie.
+We doen dat in de volgende opgave.
+
+::: {#exr-uitvoer-t-test .Rexr}
+## De uitvoer van de functie `t.test()` bij één steekproef.
+<br>
+
+a.  Neem de code hierboven, waarin de $t$-toets wordt uitgevoerd met de functie `t.test()`,
+    over in een script en voer het uit.
+    
+Bestudeer de uitvoer:
+
+b.  Waar in de uitvoer vind je het steekproefgemiddelde?
+
+c.  Waar vind je de waarden van $t$, df, en de $P$-waarde?
+    Komen die overeen met onze handmatige berekeningen hierboven?
+
+d.  De functie geeft ook het 95%-BHI voor $\mu_X$. Wat zijn de ondergrens en de bovengrens?
+
+:::
+
+
+### Relatie tussen toetsen en betrouwbaarheidsintervallen
+
+In @sec-schatten hebben we het uitgebreid gehad over
+betrouwbaarheidsintervallen.
+Je hebt geleerd dat een 95%-BHI een interval is 
+waarbinnen de ware parameter zich met 95% zekerheid bevindt.
+Dat wil zeggen: als $\HO$ waar is,
+dan zou $\mu_0$ in 95% van de keren dat we een steekproef trekken
+binnen het berekende 95%-BHI moeten liggen,
+en maar 5% van de keren daarbuiten.
+
+Als we dus vinden dat $\mu_0$ buiten het 95%-BHI ligt,
+dan kunnen we concluderen dat het waargenomen verschil
+tussen $\mean{X}$ en $\mu_0$ zo extreem is
+dat het onder $\HO$ 
+in minder dan 5% van de gevallen plaatsvindt.
+*Dat betekent dat de $P$-waarde kleiner moet zijn dan 0,05.*
+
+Er is dus een nauw verband tussen het 95%-BHI en de $P$-waarde:
+
+:::{.callout-important}
+
+## Verband tussen 95%-BHI en $P$-waarde
+
+Neem een steekproef en bereken het 95%-BHI voor $\mu_X$.
+
+-   Als $\mu_0$ *buiten* het 95%-BHI valt, 
+    dan moet $P$ kleiner zijn dan 0,05
+    en is de afwijking dus sowieso "statistisch significant".
+
+-   Als $\mu_0$ *binnen* het 95%-BHI valt,
+    dan moet $P$ groter zijn dan 0,05
+    en is de afwijking dus sowieso *niet* "statistisch significant".
+    
+Je kunt het 95%-BHI dus ook interpreteren
+als de verzameling van alle mogelijke waarden van $\mu_0$
+waar volgens de $t$-toets geen "statistisch significant" bewijs tegen is.
+
+
+:::
+
+Ondanks dit verband vullen het 95%-BHI en de $P$-waarde elkaar aan.
+
+- Het 95%-BHI kan je vertellen of de $P$-waarde voor een bepaalde 
+  nulhypothese kleiner is dan 0,05,
+  maar niet hoe klein dan precies. 
+  Je kunt er de mate van bewijs tegen $\HO$ dus niet precies mee bepalen.
+  
+- De $P$-waarde kan je de mate van bewijs tegen $\HO$ vertellen,
+  maar niet hoe ver de ware $\mu_X$ van $\mu_0$ verwijderd is.
+  Vaak is dat minstens zo belangrijk.
+
+
+## De $t$-toets voor twee onafhankelijke steekproeven {#sec-t-toets-twee-steekproeven}
+
+De $t$-toets voor één steekproef was bedoeld om te toetsen
+of het populatiegemiddelde van een variabele $X$
+afwijkt van een specifieke waarde $\mu_0$.
+We gaan het nu hebben over een andere situatie, 
+waarin we willen
+onderzoeken of de populatiegemiddelden van *twee* populaties 
+van elkaar *verschillen*.
+Bijvoorbeeld,
+we zouden ons kunnen afvragen of bacteriën mét een bepaalde mutatie
+(populatie 1)
+gemiddeld resistenter zijn voor antibiotica dan bacteriën zonder die mutatie
+(populatie 2).
+Een ander voorbeeld: verschilt de gemiddelde hoeveelheid fijnstof aangetroffen in woningen
+in IJmond en Amsterdam?
+
+Om de twee populaties te vergelijken,
+nemen we een steekproef uit populatie 1 
+en een steekproef uit populatie 2.
+Dat levert *twee steekproefgemiddelden* op, 
+die waarschijnlijk van elkaar zullen verschillen.
+De vraag is vervolgens of we daaruit kunnen concluderen
+dat de *populatiegemiddelden* van beide populaties van elkaar verschillen,
+of dat de verschillen in het steekproefgemiddelde 
+ook verklaard kunnen worden door toevallige steekproevenvariabiliteit.
+
+Dat is de taak van de **$t$-toets voor twee onafhankelijke steekproeven**.
+
+We gaan deze toets weer uitleggen door de zes stappen één voor één door te lopen.
+Daarna passen we het toe op een voorbeeld.
+
+**Stap 1: Kies een statistisch model.**\
+Bij de $t$-toets voor één steekproef
+gingen we uit van het Normale Model.
+Dat doen we nu weer, maar met twee kleine *twists*:
+
+1.  Omdat we nu te maken hebben met twee populaties en twee steekproeven
+    in plaats van één,
+    moeten we aannames maken over beide steekproeven.
+    We nemen daarom aan dat het Normale Model van toepassing is op *beide*
+    steekproeven.
+    Dat wil zeggen dat de variabele $X$ normaal verdeeld is in beide populaties,
+    met gemiddelden $\mu_1$ en $\mu_2$,
+    en dat de waarnemingen in beide steekproeven onafhankelijk
+    uit die normale verdeling getrokken zijn.
+    
+    
+2.  We nemen bovendien aan dat de standaarddeviaties van beide populaties
+    gelijk zijn; we zullen die standaarddeviatie $\sigma$ noemen.
+    
+    Deze aanname is vaak redelijk en maakt de berekeningen gemakkelijker.
+    Maar, er bestaat ook een versie van de toets die deze aanname niet maakt,
+    en die kan in veel gevallen dus geschikter zijn;
+    daar komen we in @sec-Welch op terug.
+    
+Het statistisch model kan dus in het volgende plaatje worden samengevat:
+
+```{r}
+#| label: fig-model-t-test-2-var
+#| fig-cap: "Illustratie van het statistisch model van de $t$-toets voor 2 steekproeven. 
+#| Aangenomen wordt dat de variabele in beide populaties normaal verdeeld is, 
+#| met dezelfde standaarddeviatie $\\sigma$."
+#| fig-width: 4.5
+#| fig-height: 2.5
+#| out-width: "64%"
+#| echo: false
+#| code-fold: true
+#| warning: false
+
+# Controleer of ggplot2 geladen is, zo niet, laad het pakket
+if (!("ggplot2" %in% .packages())) {
+  library(ggplot2)
+}
+
+# Parameters instellen
+verschil <- 2.2  # Verschuiving t.o.v. normaalverdeling 1
+waarden_x <- seq(-3.5, 3.5, length.out = 350)
+
+# Maak dataframes voor beide normaalverdelingen
+data_normaal_1 <- data.frame(
+  x = waarden_x,
+  kansdichtheid = dnorm(waarden_x)
+)
+
+data_normaal_2 <- data.frame(
+  x = waarden_x + verschil,
+  kansdichtheid = dnorm(waarden_x)
+)
+
+# Hoogte van de pijl bepalen
+hoogte_pijl <- exp(-0.5) / sqrt(2 * pi)
+
+# Plot de normaalverdelingen
+ggplot() +
+  # Voeg eerste normaalverdeling toe
+  geom_line(
+    data = data_normaal_1, aes(x, kansdichtheid),
+    color = "darkorange", linewidth = 1
+  ) +
+  geom_area(
+    data = data_normaal_1, aes(x, kansdichtheid),
+    fill = "darkorange", alpha = 0.4
+  ) +
+  # Voeg tweede normaalverdeling toe
+  geom_line(
+    data = data_normaal_2, aes(x, kansdichtheid),
+    color = "darkorchid", linewidth = 1
+  ) +
+  geom_area(
+    data = data_normaal_2, aes(x, kansdichtheid),
+    fill = "darkorchid", alpha = 0.4
+  ) +
+  # Voeg pijlen toe voor standaarddeviatie
+  geom_segment(
+    aes(x = 0, xend = 1, y = hoogte_pijl, yend = hoogte_pijl),
+    arrow = arrow(length = unit(0.2, "cm")),
+    color = "black", linewidth = 0.7
+  ) +
+  geom_segment(
+    aes(x = verschil, xend = verschil + 1, y = hoogte_pijl, yend = hoogte_pijl),
+    arrow = arrow(length = unit(0.2, "cm")),
+    color = "black", linewidth = 0.7
+  ) +
+  # Voeg annotaties toe
+  annotate(
+    "text", x = 0.5, y = 0.91 * hoogte_pijl,
+    label = expression(italic(sigma)),
+    color = "black", size = 4.5, hjust = 0.5, vjust = 0.5
+  ) +
+  annotate(
+    "text", x = verschil + 0.5, y = 0.91 * hoogte_pijl,
+    label = expression(italic(sigma)),
+    color = "black", size = 4.5, hjust = 0.5, vjust = 0.5
+  ) +
+  annotate(
+    "text", x = 0, y = -0.03,
+    label = expression(mu[1]),
+    color = "black", size = 5
+  ) +
+  annotate(
+    "text", x = verschil, y = -0.03,
+    label = expression(mu[2]),
+    color = "black", size = 5
+  ) +
+  annotate(
+    "segment", x = 0, y = 0, yend = max(data_normaal_1$kansdichtheid),
+    color = "black", linetype = 2
+  ) +
+  annotate(
+    "segment", x = verschil, y = 0, yend = max(data_normaal_2$kansdichtheid),
+    color = "black", linetype = 2
+  ) +
+  # Labels toevoegen
+  labs(
+    x = expression(italic(X)),
+    y = "Kansdichtheid"
+  ) +
+  scale_y_continuous(labels = NULL) + # getallen van y-as weglaten
+  scale_x_continuous(labels = NULL) + # getallen van x-as weglaten
+  # Thema toepassen
+  theme_minimal()
+```
+
+
+**Stap 2: Formuleer de hypotheses.**\
+De sceptische hypothese is in dit geval 
+dat de populatiegemiddelden van beide populaties gelijk zijn.
+Dat wil zeggen:
+
+$\HO:\qquad \mu_1 = \mu_2,$\
+$\HA:\qquad \mu_1 \ne \mu_2.$
+
+
+**Stap 3: Kies de toetsingsgrootheid en bepaal zijn verdeling onder $\HO$.**\
+Bij de $t$-toets voor één steekproef
+gebruikten we als toetsingsgrootheid
+de afwijking van $\mean{X}$ van $\mu_0$, relatief
+ten opzichte van de standaardfout van het gemiddelde, $\se{\mean{X}}$.
+Het intuïtieve idee daarachter was
+dat we de afwijking van $\mean{X} - \mu_0$ moesten vergelijken
+met de onzekerheid in $\mean{X}$ als gevolg van steekproevenvariabiliteit.
+
+Bij de $t$-toets voor twee steekproeven volgen we dezelfde logica.
+De toetsingsgrootheid die we gaan gebruiken
+moet weer aangeven hoe het verschil dat is aangetroffen tussen de 
+twee steekproefgemiddelden, $\mean{X}_1 - \mean{X}_2$,
+zich verhoudt tot de onzekerheid in dat verschil
+als gevolg van steekproevenvariabiliteit.
+Daarom is de toetsingsgrootheid
+$$ t = \frac{\mean{X}_1 - \mean{X}_2}{\se{\mean{X}_1 - \mean{X}_2}},$$ {#eq-t-twee}
+waarin $\se{\mean{X}_1 - \mean{X}_2}$ de standaardfout is van het verschil in de steekproefgemiddelden, 
+$\mean{X}_1 - \mean{X}_2$.
+
+Om te begrijpen wat die standaardfout voorstelt,
+stellen we ons voor dat we heel vaak steekproeven nemen uit beide populaties
+en steeds $\mean{X}_1 - \mean{X}_2$ uitrekenen.
+Dat levert de steekproevenverdeling van $\mean{X}_1 - \mean{X}_2$ op.
+De standaardfout $\se{\mean{X}_1 - \mean{X}_2}$ is een schatter 
+van de standaarddeviatie van die verdeling.
+
+Je kunt de waarde van $\se{\mean{X}_1 - \mean{X}_2}$ zelf berekenen,
+maar de formule is niet zo elegant.
+In de praktijk zul je de berekening dus aan R over laten.
+We laten de formules toch even zien:
+
+-   Eerst bereken je de standaarddeviaties $s_1$ en $s_2$ van beide steekproeven.
+-   Daarmee bereken je de **gepoolde steekproefvariantie** $s\ped{p}^2$ met de volgende formule:
+    
+    $$ s\ped{p}^2 = \frac{(n_1 - 1) s_1^2 + (n_2 - 1) s_2^2}{n_1 + n_2 - 2}.$$ {#eq-sp}
+  
+    In deze formule zijn $n_1$ en $n_2$ de steekproefgroottes van beide steekproeven.
+    Merk op dat $s\ped{p}^2$ eigenlijk gewoon een gewogen gemiddelde is van 
+    de steekproefvarianties van beide steekproeven,
+    waarbij een grotere steekproef een groter gewicht krijgt.
+-   Tot slot kun je de volgende formule invullen:
+    $$ \se{\mean{X}_1 - \mean{X}_2} = \sqrt{s\ped{p}^2 \left( \frac{1}{n_1} + \frac{1}{n_2}\right)}.$$ {#eq-se-diff}
+
+Nu we weten wat de toetsingsgrootheid is,
+is de volgende stap om te bepalen wat de verdeling van 
+de toetsingsgrootheid is onder $\HO$.
+Wiskundig kan worden aangetoond dat de $t$ van @eq-t-twee
+onder $\HO$ een $t$-verdeling volgt met $\df = n_1 + n_2 - 2$ vrijheidsgraden.
+
+**Stap 4: Bereken $t$ op basis van de twee steekproeven.**\
+Je vult in deze stap dus @eq-t-twee in.
+
+**Stap 5: Bereken de $P$-waarde:**\
+Nu kunnen we de $P$-waarde berekenen met R.
+Dat gaat weer precies zoals bij de $t$-toets voor één steekproef,
+behalve dat we nu een ander aantal vrijheidsgraden moeten specificeren,
+namelijk $\df = n_1 + n_2 - 2$:  
+
+```{r}
+#| eval: false
+# Zorg dat t, n1, en n2 al gedefinieerd zijn.
+# Bereken en print de P-waarde
+(P <- 2 * pt(-abs(t), df = n1 + n2 - 2))
+```
+
+**Stap 6: Trek je conclusies.**\
+Trek op basis van $P$ je conclusies!
+
+### De stappen voor de $t$-toets voor twee onafhankelijke steekproeven in het kort {#sec-t-toets-samengevat-2}
+
+We vatten de stappen weer even samen:
+
+::: {.callout-important}
+## De $t$-toets voor twee onafhankelijke steekproeven in 6 stappen
+
+We zijn geïnteresseerd in een continue variabele $X$.
+We willen de hypothese toetsen dat 
+de populatiegemiddelden $\mu_1$ en $\mu_2$
+van twee populaties gelijk zijn.
+
+We nemen daarom uit beide populaties een steekproef,
+van $n_1$ en $n_2$ eenheden.
+
+Dan zijn dit de stappen van de toets:
+
+1.  **Kies het statistische model:**\
+    - Beide populaties en steekproeven voldoen aan het Normale Model.
+    - De standaarddeviaties van beide populaties zijn gelijk.
+2.  **Formuleer de hypotheses:**\
+    $\HO:\qquad \mu_1 = \mu_2$,\
+    $\HA:\qquad \mu_1 \neq \mu_2$.
+3.  **Kies de toetsingsgrootheid:**
+
+    $$t = \frac{\mean{X}_1 - \mean{X}_2}{\se{\mean{X}_1 - \mean{X}_2}},$$
+    
+    met de standaardfout
+    
+    $$ \se{\mean{X}_1 - \mean{X}_2} = \sqrt{s\ped{p}^2 \left( \frac{1}{n_1} + \frac{1}{n_2}\right)}$$
+
+    en de gepoolde steekproefvariantie
+    
+    $$ s\ped{p}^2 = \frac{(n_1 - 1) s_1^2 + (n_2 - 1) s_2^2}{n_1 + n_2 - 2}.$$
+    
+    **Verdeling van de toetsingsgrootheid onder $\HO$:**\
+    De $t$-verdeling met $\df = n_1 + n_2 - 2$.
+4.  **Bereken de toetsingsgrootheid op basis van de steekproeven.**\
+    Achtereenvolgens: $\mean{X}_1$,$\mean{X}_2$, $s_1$, $s_2$, $s\ped{p}^2$, $\se{\mean{X}_1 - \mean{X}_2}$, en dan $t$.
+5.  **Bereken de $P$-waarde:**\
+    
+    Gebruik R:
+    
+    ```{r}
+    #| eval: false
+    P <- 2 * pt(-abs(t), df = n1 + n2 - 2)
+    ```
+
+6.  **Trek je conclusies.**
+
+:::
+
+### De $t$-toets voor twee steekproeven met R uitvoeren
+
+De $t$-toets voor twee steekproeven is één van de meest eenvoudige toetsen 
+die er bestaan.
+Maar als je 'm met de hand moet uitrekenen,
+ben je toch een tijd bezig, en de kans op fouten is erg groot.
+Het is dus veel handiger om gebruik te maken van R.
+
+Het is niet moeilijk om de formules zelf in R in te programmeren,
+maar dat is niet nodig. 
+Ook deze $t$-toets kan namelijk met de functie `t.test()`
+worden uitgevoerd!
+
+Laten we aannemen dat je de resultaten van je twee steekproeven
+in R hebt ingevoerd als twee vectoren, `steekproef1` en `steekproef2`.
+Dan ben je daarna in één regel klaar:
+
+```{r}
+#| eval: false
+t.test(steekproef1, steekproef2, var.equal = TRUE)
+```
+
+Het argument `var.equal = TRUE` is nodig om de functie te vertellen
+dat we hebben aangenomen dat beide populaties een gelijke variantie hebben.
+
+:::{#exm-penguins}
+## Verschillen de snavellengtes tussen pinguins van de soorten Chinstrap en Gentoo?
+
+![Figuur en data: Horst et al (2020)](figuren/penguins.png){width="70%"}
+
+Op drie eilanden in the Palmerarchipel (Antarctica) zijn metingen verricht 
+aan pinguïns van drie verschillende soorten.^[Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. https://allisonhorst.github.io/palmerpenguins/. doi: 10.5281/zenodo.3960218.]
+We vragen ons af: verschillen de soorten in de gemiddelde lengte van hun snavel?
+
+Hieronder zullen we met een analyse in R twee soorten vergelijken: Chinstrap en Gentoo.
+
+### De data
+
+We lezen eerst de gegevens in; die zijn beschikbaar gesteld via de library `"palmerpenguins"`.
+
+```{r}
+library("palmerpenguins")
+```
+
+De variabele heet `bill_length_mm`. Uit de naam van de variabele valt op te maken
+dat de snavellengte gegeven is in mm.
+We selecteren de snavellengtes van de twee soorten en verwijderen `NA`s:
+
+```{r}
+snavel_Chinstrap <- na.omit(
+  penguins$bill_length_mm[penguins$species == "Chinstrap"]
+  )
+snavel_Gentoo <- na.omit(
+  penguins$bill_length_mm[penguins$species == "Gentoo"]
+  )
+```
+
+
+### Bestudeer de gegevens
+
+Voordat we een toets uitvoeren, moeten we de gegevens altijd eerst goed bekijken.
+Hoeveel datapunten zijn er?
+
+```{r}
+(n1 <- length(snavel_Chinstrap))
+```
+
+```{r}
+(n2 <- length(snavel_Gentoo))
+```
+Dit is dus een flinke dataset, met snavelmetingen voor 68 Chinstrap-pinguïns en 123 Gentoo-pinguïns. 
+
+We bekijken wat kengetallen voor beide soorten. Eerst de ligging:
+
+```{r}
+summary(snavel_Chinstrap)
+```
+
+```{r}
+summary(snavel_Gentoo)
+```
+De mediaan en het gemiddelde van de Gentoos zijn net iets kleiner dan die van de Chinstraps.
+
+Dan de spreiding:
+
+```{r}
+sd(snavel_Chinstrap)
+sd(snavel_Gentoo)
+
+IQR(snavel_Chinstrap) #interkwartielafstand
+IQR(snavel_Gentoo)
+```
+De spreiding is voor beide soorten vergelijkbaar, maar iets kleiner voor de Gentoos. 
+
+We genereren ook voor beide soorten een histogram:
+
+:::{layout="[1,1]"}
+
+```{r}
+#| fig-width: 3.5
+#| fig-height: 3
+#| out-width: 100%
+
+
+hist(snavel_Chinstrap, main = NULL)
+```
+
+```{r}
+#| fig-width: 3.5
+#| fig-height: 3
+#| out-width: 100%
+hist(snavel_Gentoo, main = NULL)
+```
+:::
+De verdelingen lijken lichtelijk rechts-scheef.
+Dat is jammer, want
+het Normale Model neemt aan dat de variabele in beide populaties normaal verdeeld is.
+We onderzoeken dit verder met twee QQ-plots:
+
+:::{layout="[1,1]"}
+
+```{r}
+#| fig-width: 3
+#| fig-height: 3.5
+#| out-width: 80%
+qqnorm(snavel_Chinstrap, main = NULL)
+qqline(snavel_Chinstrap)
+```
+
+```{r}
+#| fig-width: 3
+#| fig-height: 3.5
+#| out-width: 80%
+qqnorm(snavel_Gentoo, main = NULL)
+qqline(snavel_Gentoo)
+```
+:::
+
+Er zijn zeker wat milde afwijkingen te zien.
+Maar, in @sec-schatten hebben we gezien
+dat bij grote steekproeven afwijkingen van het Normale Model
+minder belangrijk zijn.
+In dit geval zijn beide steekproeven groot
+en zouden deze milde afwijkingen geen probleem moeten zijn.
+
+### De $t$-toets uitvoeren
+
+Tot slot voeren we de toets uit:
+
+```{r}
+t.test(snavel_Chinstrap, snavel_Gentoo, var.equal = TRUE)
+```
+
+### Conclusies
+
+De $P$-waarde is 0,006. 
+Dat is behoorlijk klein en dus sterk bewijs tegen $\HO$.
+Het (kleine) verschil in de gemiddelde snavellengte is dus moeilijk te verklaren
+door steekproevenvariatie.
+Gentoo-pinguïns hebben dus waarschijnlijk daadwerkelijk
+gemiddeld een iets kortere snavel.
+
+:::
+
+::: {#exr-uitvoer-t-test-2 .Pexr}
+## De uitvoer van de functie `t.test()` bij twee onafhankelijke steekproeven.
+<br>
+
+In @exm-penguins wordt uiteindelijk een $t$-toets voor twee steekproeven uitgevoerd
+met de functie `t.test()`. 
+Bekijk de uitvoer goed.
+
+a.  Hoeveel vrijheidsgraden heeft R gebruikt? Klopt dat?
+
+b.  Er wordt in de uitvoer een 95%-BHI gegeven.
+    Hoe moet je dat interval interpreteren?
+    
+c.  Ligt het getal 0 binnen het 95%-BHI? Wat zegt dat over de $P$-waarde? 
+
+:::
+
+
+### De $t$-toets van Welch voor twee onafhankelijke steekproeven {#sec-Welch}
+
+De standaard $t$-toets voor twee steekproeven 
+maakt de aanname dat de variantie van de variabele
+in beide populaties gelijk is.
+In veel praktische situaties is dat niet het geval.
+Wat dan?
+
+De $t$-toets is op zich niet heel gevoelig voor kleine afwijkingen
+tussen beide standaarddeviaties,
+vooral als de steekproeven groot zijn.
+Als beide steekproeven groter zijn dan 30,
+is een verschil in standaarddeviatie van een factor 2
+vaak nog geen groot probleem.
+
+Maar, bij twijfel is het beter om gebruik te maken van 
+een versie van de $t$-toets die **de $t$-toets van Welch** wordt genoemd.
+Deze toets maakt de aanname dat beide standaarddeviaties gelijk zijn *niet*.
+
+In deze cursus bespreken we de precieze formules voor de $t$-toets van Welch niet.
+Maar het is binnen R heel gemakkelijk om de toets uit te voeren.
+Voor de standaard $t$-toets moesten we aan de `t.test()` functie 
+het argument `var.equal = TRUE` meegeven. 
+Als we in plaats daarvan `var.equal = FALSE` invoeren,
+wordt de toets van Welch uitgevoerd:
+
+```{r}
+t.test(snavel_Chinstrap, snavel_Gentoo, var.equal = FALSE)
+```
+
+Sterker nog, de setting `FALSE` is in R de default;
+als je niets specificeert wordt dus standaard de toets van Welch uitgevoerd:
+
+```{r}
+#| eval: false
+t.test(snavel_Chinstrap, snavel_Gentoo)
+```
+
+Het enige nadeel van de toets van Welch is dat die iets minder krachtig is
+dan de standaard $t$-toets voor twee steekproeven.
+De $P$-waarde zal typisch dus iets groter zijn bij de toets van Welch 
+dan bij de standaard toets.
+Maar als de steekproeven groter zijn, is het verschil te verwaarlozen.
+
+::: {#exr-welch .pepexr}
+## Verschil in interpretatie tussen de toets van Welch en de standaardtoets.
+<br> 
+
+In de tekst hierboven zijn zowel de toets van Welch als de standaard $t$-toets 
+toegepast op de pinguïndata. Vergelijk de uitvoer van beide toetsen.
+
+a. Vergelijk de $P$-waardes. Verschillen die betekenisvol van elkaar?
+
+b. Vergelijk de 95%-betrouwbaarheidsintervallen. Welke interval is breder? Hoe komt dat?
+
+:::
+
+## De $t$-toets voor gepaarde steekproeven
+
+Om het derde en laatste type $t$-toets te illustreren,
+beginnen we weer met een voorbeeld.
+
+:::{#exm-slaaptekort}
+
+## De effecten van slaaptekort
+<br>
+
+![De gevolgen van weinig slapen zijn niet mals.](figuren/slapende_student.jpg){#fig-slapende-student fig-cap="D. Sharon Pruitt, owner of [Pink Sherbet Photography](https://www.pinksherbet.com) [CC BY 2.0](https://creativecommons.org/licenses/by/2.0), via Wikimedia Commons" width="50%"}
+
+Slaaptekort heeft grote effecten op de lichamelijke en geestelijke gezondheid.
+In een experiment uit 2003 werden de acute effecten onderzocht^[[Guilleminault, C., Powell, N. B., Martinez, S., Kushida, C., Raffray, T., Palombini, L., & Philip, P. (2003). Preliminary observations on the effects of sleep time in a sleep restriction paradigm. Sleep medicine, 4(3), 177-184.](https://doi.org/10.1016/S1389-9457(03)00061-3)].
+
+Gedurende één week mochten acht proefpersonen slechts 4 uur per nacht in 
+bed doorbrengen. Vervolgens werd elke dag gemeten hoe slaperig de proefpersonen
+waren door middel van de *Maintainance of Wakefulness test* (MWT).
+Die werkt als volgt:
+de deelnemer zit gedurende 20 minuten in bed, 
+in een donkere kamer zonder verdere afleiding. 
+De deelnemer mag geen gerichte acties ondernemen om te 
+voorkomen dat deze in slaap valt, 
+zoals zichzelf in het gezicht slaan of zingen.
+Gemeten wordt hoeveel minuten de deelnemer wakker blijft.
+De test wordt vijf keer herhaald, 
+en de uiteindelijke score is het gemiddelde van die vijf testen.
+
+```{r}
+#| include: false
+
+slaap <- data.frame(ID = as.factor(seq(8)),
+                    groep = c(rep(1, 4), rep(2, 4)),
+                    MWT_d0 = c(20, 13, 17, 14, 20, 17, 20, 14),
+                    MWT_d1 = c(3.5, 8.7, 10.8, 13.6, 14, 13, 11.9, 12.2),
+                    MWT_d2 = c(5.5, 7.6, 6.4, 10.4, 13, 11, 17.3, 7.5),
+                    MWT_d3 = c(5.3, 5.9, 5.8, 12.6, 13.3, 8, 9, 7.1),
+                    MWT_d4 = c(4.7, 7.9, 7, 17.8, 8.9, 8.5, 8.5, 7.4),
+                    MWT_d5 = c(3.7, 3.2, 5, 12.4, 8, 10.8, 16, 10.8),
+                    MWT_d6 = c(4.5, 1.9, 3.7, 6.2, 10.3, 8.2, 5.14, 8.2),
+                    MWT_d7 = c(1.7, 5.5, 4.7, 3.6, 10.3, 6.8, 8.5, 5.2))
+```
+
+Om het effect van het slaaptekort te bestuderen,
+vergelijken we de MWT scores 
+van dag 0 (vlak voor de slaaprestrictie) met die van dag 6. 
+
+Hieronder laten we de scores op beide dagen zien in jitterplots. 
+De gemiddelden van de beide dagen zijn met oranje lijntjes aangegeven.
+
+::: {#fig-vb-gepaarde-t-toets}
+  
+```{r}
+#| code-fold: true
+#| warning: false
+#| echo: false
+#| fig.width: 2
+#| fig.height: 3.5
+#| out.width: "29%" 
+
+library(tidyverse)
+library(dplyr)
+
+# Bereken de offset voor overlappende waarden
+slaap_plot <- slaap %>%
+  pivot_longer(cols = starts_with("MWT"),
+               names_to = "dag",
+               names_prefix = "MWT_d",
+               values_to = "MWT") %>%
+  filter(dag %in% c(0, 6)) %>%
+  group_by(dag, MWT) %>%
+  mutate(n = n(),
+         offset = ifelse(n > 1, seq(-0.5, 0.5, length.out = n), 0)) %>%
+  ungroup()
+
+# Bereken het gemiddelde per dag
+gemiddelden <- slaap_plot %>%
+  group_by(dag) %>%
+  summarise(mean_MWT = mean(MWT))
+
+ggplot(slaap_plot, aes(x = as.numeric(dag) + offset, y = MWT, color = "darkgray")) +
+  geom_point(size = 2, color = "darkgray") +
+  geom_segment(data = gemiddelden, aes(x = as.numeric(dag) - 1.5, 
+                                       xend = as.numeric(dag) + 1.5,
+                                       y = mean_MWT), 
+             color = "darkorange", size = 1.5, alpha = 0.8) +  # Gemiddelde punten
+#  geom_line(aes(x = as.numeric(dag), group = ID), size = 1) +  
+  scale_x_continuous(breaks = c(0, 6), limits = c(-2, 8)) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  xlab("Dag") +
+  ylab("MWT-score (min)")
+#+
+#  scale_color_viridis_d(option = "viridis")
+```
+
+MWT-scores van de acht proefpersonen op dag 0 en dag 6 van de slaaprestrictie. Gemiddelde scores per dag zijn aangegeven met de oranje lijnen.
+:::
+
+Zoals je in @fig-vb-gepaarde-t-toets kunt zien, waren er op dag 0 
+drie deelnemers die gedurende de hele test wakker bleven. Op dag 
+6 lukte dat geen van de deelnemers.
+De gemiddelde MWT-scores
+op die twee dagen
+verschillen dus van elkaar. 
+Maar hoe toetsen we of dit verschil verklaard kan worden 
+door toevallige steekproevenvariabiliteit?
+
+:::
+
+De casus uit @exm-slaaptekort verschilt op een essentiële manier
+van die van @exm-penguins.
+De metingen op dag 0 en op dag 6 
+zijn namelijk verricht op dezelfde acht proefpersonen.
+In andere woorden: de twee steekproeven zijn **gepaard**:
+bij elke waarde in steekproef 1 hoort een waarde in steekproef 2.
+Een gevolg is dat de twee steekproeven niet onafhankelijk zijn van elkaar.
+Een proefperson die *in het algemeen* vrij gemakkelijk in slaap valt,
+zal mogelijk zowel op dag 0
+als op dag 6
+een lage MWT-score behalen.
+En een proefpersoon die in het algemeen moeilijk in slaap valt
+zal op beide dagen een relatief hoge score halen.
+De scores op dag 0 hangen dus samen met de scores op dag 6.
+
+We kunnen dit laten zien door de metingen op dag 0 en dag 6
+die bij dezelfde persoon horen
+dezelfde kleur te geven en met een lijntje te verbinden.
+Dat geeft deze figuur:
+
+::: {#fig-vb-gepaarde-t-toets-1}
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| echo: false
+#| fig.width: 3
+#| fig.height: 3.5
+#| out.width: "43%" 
+
+library(tidyverse)
+library(dplyr)
+
+# Bereken de offset voor overlappende waarden
+slaap_plot <- slaap %>%
+  pivot_longer(cols = starts_with("MWT"),
+               names_to = "dag",
+               names_prefix = "MWT_d",
+               values_to = "MWT") %>%
+  filter(dag %in% c(0, 6)) %>%
+  group_by(dag, MWT) %>%
+  mutate(n = n(),
+         offset = ifelse(n > 1, seq(-0.2, 0.2, length.out = n), 0)) %>%
+  ungroup()
+
+# Bereken het gemiddelde per dag
+gemiddelden <- slaap_plot %>%
+  group_by(dag) %>%
+  summarise(mean_MWT = mean(MWT))
+
+ggplot(slaap_plot, aes(x = as.numeric(dag) + offset, y = MWT, color = ID)) +
+  geom_segment(data = gemiddelden, aes(x = as.numeric(dag) - 1.5, 
+                                       xend = as.numeric(dag) + 1.5,
+                                       y = mean_MWT), 
+             color = "darkorange", size = 1.5, alpha = 0.8) +  # Gemiddelde punten
+  geom_point(size = 3) +
+  geom_line(aes(x = as.numeric(dag), group = ID), size = 1) +  
+  scale_x_continuous(breaks = c(0, 6), limits = c(-2, 8)) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  xlab("Dag") +
+  ylab("MWT-score (min)") +
+  scale_color_viridis_d(option = "viridis")
+```
+
+Dezelfde figuur als hierboven, maar nu hebben de metingen op beide dagen die bij dezelfde persoon dezelfde kleur; ze zijn bovendien met een lijn verbonden.
+
+:::
+
+Deze figuur suggereert inderdaad dat er een slaperig persoon in de groep was:
+die viel op beide dagen het snelst in slaap (de onderste, donkerpaarse lijn).
+Er was ook een wakker type bij, die op beide dagen tot de topscores behoorde
+(de bovenste, donkergroene lijn).
+
+Dat de waarnemingen in beide steekproeven niet onafhankelijk zijn,
+heeft een belangrijke consequentie:
+het statistische model van de $t$-toets voor twee onafhankelijke steekproeven 
+nam aan dat alle waarnemingen onafhankelijk waren;
+dat is hier niet juist, en dus kan die toets hier niet worden gebruikt.
+
+Zelfs als we de $t$-toets voor onafhankelijke steekproeven 
+hadden *mogen* gebruiken, 
+is die toets niet ideaal.
+De onderlinge verschillen in de slaperigheid van de deelnemers
+dragen namelijk bij aan de spreiding binnen iedere steekproef.
+Hoe groter die spreiding is,
+hoe lastiger het is om aan te tonen dat er een verschil is 
+in de gemiddelden van beide steekproeven.
+Om precies te zijn:
+de onderlinge verschillen tussen de deelnemers zorgen voor 
+grotere standaarddeviaties $s_1$ en $s_2$, daardoor een 
+grotere gepoolde steekproefvariantie $s\ped{p}^2$ (zie @eq-sp)
+en dus een grotere standaardfout $\se{\mean{X}_1 - \mean{X}_2}$ (zie @eq-se-diff),
+en dat levert dan weer een *kleinere* waarde van $t$ op (@eq-t-twee).
+Dat verkleint de kans op een significant resultaat!
+
+In dit onderzoek zijn we bovendien helemaal niet *geïnteresseerd* 
+in de onderlinge verschillen.
+We willen vooral aantonen dat de individuele proefpersonen
+typisch slaperiger zijn op dag zes dan op dag 0, 
+*ongeacht* hoe slaperig ze van zichzelf zijn. 
+
+De oplossing is om voor iedere persoon
+het verschil uit te rekenen tussen de MWT-score op dag 6 
+en op dag 0,
+en enkel die verschillen te analyseren.
+Door alleen op de verschillen de focussen,
+filteren we de onderlinge verschillen in "baseline" slaperigheid weg.
+
+We plotten die verschillen hieronder, in @fig-vb-gepaarde-t-toets-2;
+de oranje lijn geeft het gemiddelde verschil aan.
+Deze figuur laat duidelijk zien dat alle proefpersonen
+na zes nachten slaperiger zijn geworden.
+
+```{r}
+#| warning: false
+#| echo: false
+#| fig.width: 2
+#| fig.height: 3
+#| out.width: "30%"
+#| fig-cap: "Het verschil tussen MWT-scores dag 6 en dag 0. De oranje lijn geeft het gemiddelde aan van de verschillen."
+#| label: fig-vb-gepaarde-t-toets-2
+
+gem_verschil <- mean(slaap$MWT_d6 - slaap$MWT_d0)
+sd_verschil <- sd(slaap$MWT_d6 - slaap$MWT_d0)
+SE_verschil <- sd_verschil/sqrt(nrow(slaap))
+
+ggplot(slaap, aes(x = 0, y = MWT_d6 - MWT_d0, color = ID)) +
+  geom_point(size = 3) +
+  geom_segment(aes(x = - 1.5, xend = 1.5, y = gem_verschil), 
+             color = "darkorange", size = 1, alpha = 0.8) +
+  geom_hline(yintercept = 0) +
+  ylab("verschil in MWT-score (dag 6 - dag 0) (min)") +
+  xlab(NULL) +
+  scale_color_viridis_d(option = "viridis") +
+  scale_y_continuous(breaks = c(-15, -10, -5, 0), limits = c(-17, 2)) + 
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.x = element_blank())
+```
+
+De vraag wordt nu:
+kunnen we op basis van deze steekproef van acht proefpersonen
+concluderen dat het *populatiegemiddelde* van de verschillen in de MWT-scores
+afwijkt van 0?
+
+Merk op dat er in @fig-vb-gepaarde-t-toets-2
+maar één steekproef te zien is,
+namelijk een steekproef van verschillen.
+De nulhypothese die we zouden willen toetsen
+is dat het populatiegemiddelde van de verschillen
+gelijk is aan 0.
+Deze situatie zou je bekend moeten voorkomen:
+dit is namelijk precies de situatie 
+waarvoor de $t$-toets voor één steekproef was bedacht!
+
+De toets die we willen gaan uitvoeren
+is daarom *precies* de $t$-toets voor één steekproef,
+maar dan toegepast op de verschillen binnen de gepaarde gegevens.
+
+:::{.callout-important}
+## De $t$-toets voor gepaarde steekproeven is gewoon de $t$-toets voor één steekproef
+
+De $t$-toets voor gepaarde steekproeven
+is exact de $t$-toets voor één steekproef,
+maar dan toegepast op de verschillen
+die gevonden zijn binnen de gepaarde gegevens.
+
+:::
+
+Aan de slag:
+
+**Stap 1: Kies een statistisch model.**\
+We zijn geïnteresseerd in de variabele $D$,
+het verschil tussen de MWT-score op dag 6 en dag 0.
+
+We nemen aan dat de waargenomen verschillen voldoen aan het Normale Model.
+Dat wil zeggen: 
+ieder verschil is onafhankelijk getrokken 
+uit een normale verdeling,
+met (onbekend) gemiddelde $\mu_D$.
+
+Let op! We hoeven *niet* aan te nemen 
+dat steekproef 1 of steekproef 2 uit een normale verdeling zijn getrokken;
+de aannames gaan enkel over de *verschillen*.
+
+Om te controleren of de gegevens aanleiding geven tot twijfel 
+aan de normale verdeling, 
+maken we een QQ-plot van de verschillen:
+
+```{r}
+#| warning: false
+#| echo: false
+#| fig.width: 3
+#| fig.height: 3.5
+#| out.width: "42%"
+verschillen <- slaap$MWT_d6 - slaap$MWT_d0
+qqnorm(verschillen, main = NULL)
+qqline(verschillen)
+```
+
+Er zijn geen bijzonderheden te zien.
+
+**Stap 2: Formuleer de hypotheses.**\
+De nulhypothese is dat het slaaptekort gemiddeld geen effect heeft. Dus:
+
+$\HO:\qquad \mu_D = 0,$\
+$\HA:\qquad \mu_D \neq 0.$
+
+**Stap 3: Kies de toetsingsgrootheid en bepaal zijn verdeling onder $\HO$.**\
+We volgen de $t$-toets voor één steekproef; de toetsingsgrootheid is dus
+$$t = \cfrac{\mean{D}}{\se{\mean{D}}}.$$
+    
+Deze $t$ is onder $\HO$ verdeeld volgens
+de $t$-verdeling met $\df = n - 1 = 8 - 1 = 7$ vrijheidsgraden.
+
+**Stap 4: Bereken $t$ op basis van de twee steekproeven.**\
+Het gemiddelde verschil $\mean{D}$ is gelijk aan $-10{,}86\unit{min}$, 
+de standaarddeviatie van de steekproef $s_D = 3{,}47\unit{min}$,
+en de standaardfout is $\se{\mean{D}} = 1{,}23\unit{min}$.
+Dus,
+
+$$t = \frac{-10{,}86}{1{,}23} = -8.86.$$
+
+
+```{r}
+#| echo: false
+t  <- gem_verschil / SE_verschil
+
+```
+
+
+**Stap 5: Bereken de $P$-waarde:**\
+Gebruik R (precies zoals bij de $t$-toets voor één steekproef):
+    
+```{r}
+n <- 8
+(P <- 2 * pt(-abs(t), df = n - 1))
+```
+
+**Stap 6: Trek je conclusies.**\
+De $P$-waarde is 0,000047. Dat is een heel kleine $P$-waarde.
+De gegevens vormen dus erg sterk bewijs tegen de nulhypothese.
+Dat geeft aan dat de deelnemers daadwerkelijk gemiddeld na 6 dagen slaaprestrictie
+een lagere MWT-score hebben.
+
+
+### De stappen voor de $t$-toets voor gepaarde steekproeven in het kort {#sec-t-toets-samengevat-paar}
+
+
+We vatten de toets weer in het algemeen samen:
+
+::: {.callout-important}
+## De $t$-toets voor twee gepaarde steekproeven in 6 stappen
+
+We zijn geïnteresseerd in een continue variabele $X$.
+Er zijn twee steekproeven genomen van grootte $n$,
+maar iedere waarneming in steekproef 1
+is gepaard aan een waarneming in steekproef 2.
+We willen de hypothese toetsen
+dat het populatiegemiddelde van het verschil $D$
+binnen de paren gelijk is aan 0.
+
+Dan zijn dit de stappen van de toets:
+
+1.  **Kies het statistische model:**\
+    We nemen aan dat de verschillen $D$ binnen de paren
+    voldoen aan het Normale Model.
+    De verschillen zijn dus onafhankelijk getrokken
+    uit een normale verdeling met (onbekend) gemiddelde $\mu_D$.
+2.  **Formuleer de hypotheses:**\
+    $\HO:\qquad \mu_D = 0$,\
+    $\HA:\qquad \mu_D \neq 0$.
+3.  **Kies de toetsingsgrootheid:**
+
+    $$t = \cfrac{\mean{D}}{\se{\mean{D}}}.$$
+    
+    **Verdeling van de toetsingsgrootheid onder $\HO$:**\
+    De $t$-verdeling met $\df = n - 1$.
+4.  **Bereken de toetsingsgrootheid op basis van de steekproef.**\
+    Achtereenvolgens: alle verschillen $D_i$, $\mean{D}$, $s_D$, $\se{\mean{D}}$, en dan $t$.
+5.  **Bereken de $P$-waarde:**\
+    
+    Gebruik R:
+    
+    ```{r}
+    P <- 2 * pt(-abs(t), df = n - 1)
+    ```
+
+6.  **Trek je conclusies.**
+
+:::
+
+
+### De $t$-toets voor gepaarde steekproeven in R uitvoeren
+
+De gemakkelijkste manier om de $t$-toets uit te voeren
+is door in R gebruik te maken van de functie `t.test()`,
+maar nu met het argument `paired = TRUE`.
+Toegepast op het voorbeeld levert dat de volgende code op:
+
+
+```{r}
+dag0 <- c(20, 13, 17, 14, 20, 17, 20, 14)
+dag6 <- c(4.5, 1.9, 3.7, 6.2, 10.3, 8.2, 5.14, 8.2)
+
+t.test(dag0, dag6, paired = TRUE)
+```
+
+Dat levert precies de resultaten op die we hierboven ook met de hand hadden berekend.
+
+## De drie $t$-toetsen en het Normale Model
+
+De drie $t$-toetsen maken allemaal de aanname dat het Normale Model van toepassing is.
+Maar iedere $t$-toets past het Normale Model net iets anders toe.
+Het is belangrijk om die subtiele verschillen goed te begrijpen,
+omdat je anders niet kunt beoordelen of de gegevens afwijkingen laten zien
+van het model.
+
+- Het statistisch model van de **$t$-toets voor één steekproef** veronderstelt dat het Normale Model 
+  van toepassing is op de verdeling
+  van de variabele in de populatie en de manier waarop de steekproef tot stand is gekomen.
+- Het statistisch model van de **$t$-toets voor twee onafhankelijke steekproeven** veronderstelt
+  dat het Normale Model van toepassing is op *beide* populaties en steekproeven.
+- Het statistisch model van de **$t$-toets voor gepaarde steekproeven** veronderstelt dat 
+  het Normale Model van toepassing is op de verschillen binnen de gepaarde gegevens.
+
+## Wat is er nog meer?
+
+We hebben in dit hoofdstuk drie $t$-toetsen behandeld
+die allemaal te maken hebben met het gemiddelde van een continue variabele.
+In deze cursus moeten we het daarbij laten.
+
+Maar, er bestaan nog veel meer toetsen die gebruikt kunnen worden 
+om de ligging van een verdeling te toetsen.
+We kunnen die onmogelijk allemaal bespreken,
+maar willen wel dat je nog een paar namen gezien hebt.
+
+### Niet-parametrische alternatieven
+
+In sommige situaties zijn we niet bereid
+om aan te nemen dat het Normale Model van toepassing is.
+Dat kan zijn omdat de normale verdeling bij voorbaat niet plausibel is,
+of omdat de data zelf aanleiding geven om aan de normale verdeling te twijfelen,
+bijvoorbeeld vanwege een scheve verdeling of opvallende uitbijters.
+We hebben het hier in @sec-afwijkingen uitgebreid over gehad.
+
+Voor dit soort situaties zijn speciale toetsen ontwikkeld
+die minder specifieke aannames maken dan de $t$-toets over de verdeling van de variabele
+in de populatie.
+Deze toetsen worden **verdelingsvrije** of **non-parametrische toetsen** genoemd.
+
+Omdat deze toetsen minder specifieke aannames maken,
+zijn ze minder krachtig.
+Dat wil zeggen, als je voor dezelfde situatie zowel een $t$-toets 
+als een verdelingsvrije toets uitvoert,
+zal de $t$-toets meestal een kleinere $P$-waarde opleveren.
+Maar als de $t$-toets niet passend is, 
+komt zo'n minder krachtige toets toch van pas.
+
+In de tabel hieronder is kort een overzicht gegeven van de meest gebruikte 
+verdelingsvrije alternatieven voor de $t$-toetsen.
+We laten ze zien zodat je weet dat ze bestaan;
+we behandelen ze verder in deze cursus niet.
+
+De alternatieven voor de $t$-toets voor één steekproef 
+en de $t$-toets voor gepaarde steekproeven zijn gelijk;
+dat is omdat, zoals we gezien hebben,
+het in feite om één en dezelfde toets gaat.
+
+| Type $t$-toets          | Verdelingsvrije alternatief   |
+|----------------------------|------------------------------|
+| $t$-toets voor één steekproef  | Wilcoxon signed-rank test, Tekentoets |
+| $t$-toets voor gepaarde steekproeven      | Wilcoxon signed-rank test, Tekentoets |
+| $t$-toets voor twee onafhankelijke steekproeven | Mann-Whitney $U$-test (of Wilcoxon rank-sum test) |
+
+### Drie of meer groepen: ANOVA {#sec-ANOVA}
+
+Met de $t$-toets voor twee onafhankelijke steekproeven
+kunnen we de gemiddelden van twee populaties vergelijken.
+In de praktijk vraagt een onderzoek vaak om het vergelijken van 
+meer dan twee groepen.
+Om dat op een consistente manier te kunnen doen,
+is ANOVA ontwikkeld. 
+ANOVA staat voor *analysis of variance*.
+De nulhypothese van de standaard ANOVA
+(ook wel "een-weg ANOVA" genoemd)
+is dat de populatiegemiddelden van *alle* populaties
+gelijk zijn.
+Ook deze toets zullen we verder in deze cursus niet behandelen.
+
+## Samenvatting
+
+In dit hoofdstuk zijn drie toetsen behandeld:
+
+- de $t$-toets voor één steekproef,
+- de $t$-toets voor twee onafhankelijke steekproeven,
+- de $t$-toets voor gepaarde steekproeven.
+
+Deze drie toetsen zijn al samengevat in @sec-t-toets-samengevat-1, @sec-t-toets-samengevat-2,
+en @sec-t-toets-samengevat-paar.
+
+## Terminologie
+
+| Nederlands   | Engels           | Betekenis                   |
+|:-------------|:-----------------|:----------------------------|
+| $t$-toets voor één steekproef | one-sample $t$ test | Toets van een hypothese over het populatiegemiddelde van een continue variabele. |
+| $t$-toets voor twee onafhankelijke steekproeven | two-sample $t$ test | Toets van de hypothese dat het populatiegemiddelde van een continue variabele gelijk is voor twee populaties. |
+| $t$-toets voor gepaarde steekproeven | $t$ test for paired samples | Toets van de hypothese dat het gemiddelde verschil van een continue variabele over twee condities gelijk is aan nul. |
+| $t$-toets van Welch | Welch's $t$ test | Variant van de $t$-toets voor twee onafhankelijke steekproeven waarbij niet wordt aangenomen dat beide populaties een gelijke standaarddeviatie hebben. |
+| niet-parametrische / verdelingsvrije toetsen | non-parametric tests | Hypothesetoetsen die geen (of minder specifieke) aannames maken over de verdeling van de variabele in de populatie. |
+| één-weg ANOVA | one-way ANOVA | Een hypothesetoets die bedoeld is voor situaties met meer dan twee populaties. De nulhypothese die getoetst wordt, is dat de gemiddelden van alle populaties gelijk zijn. |
+
+: Woordenlijst @sec-toetsen-gemiddelden {#tbl-toetsen-gemiddelden .striped .hover}
+
+## Opgaven
+
+::: {#exr-manakin .Rexr}
+## Het gemiddelde gewicht van de Bonte manakin.
+<br>
+
+Lichaamsgewicht is een belangrijke eigenschap bij dieren,  
+omdat het invloed heeft op hun fysiologie, gedrag en ecologische rol. 
+In deze opgave gebruiken we een uitgebreide dataset
+over vogels en zoogdieren in Colombia, 
+waarin het lichaamsgewicht van meer dan 
+42.000 vogels en 7.400 zoogdieren is vastgelegd^[[Ocampo, D., Borja-Acosta, K. G., Lozano-Flórez, J., Cifuentes-Acevedo, S., Arbeláez-Cortés, E., Bayly, N. J., ... & Acevedo-Charry, O. (2021). *Body mass data set for 1,317 bird and 270 mammal species from Colombia.* Ecology, 102(3), e03273.](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3273)]. 
+We focussen op de Bonte manakin (*Manacus manacus*).
+
+In eerder onderzoek wordt beweerd dat het gewicht van 
+de Bonte manakin gemiddeld gelijk is aan 16,5g.
+Wij willen de Colombiaanse dataset gebruiken om te toetsen of die bewering juist is.
+
+a.  Welke $t$-toets zou je moeten gebruiken om die bewering te testen?
+
+b.  Formuleer $\HO$ en $\HA$.
+
+Begin een nieuw R script om de analyse te programmeren.
+
+c.  We hebben de gegevens online gezet; voeg de volgende regel toe aan je script om de gegevens te importeren:
+
+    ```{r}
+    #| eval: false
+    massa_manacus <- read.csv(
+      "https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data/massa_manacus.csv"
+      )
+    ```
+    
+    Bekijk de dataset even.
+    Welke variabelen zijn er? Hoeveel datapunten?
+    
+d.  Onderzoek de dataset. Bereken maten van ligging en spreiding voor de variabele, 
+    en visualiseer de verdeling met een boxplot en een histogram.
+    
+e.  Wat is het statistische model dat bij deze $t$-toets hoort?
+
+f.  Lijkt het Normale Model in dit geval bij voorbaat redelijk?
+
+    Voeg een QQ-plot toe om te zien of de verdeling van de gegevens sterk afwijkt van een normale verdeling.
+    
+    Alles overziend, lijkt de $t$-toets geschikt voor deze situatie?
+    
+g.  Voer de $t$-toets uit met de functie `t.test()`. 
+
+h.  Bekijk eerst het 95%-BHI.  Wat zegt die?
+    
+i.  Bekijk de $P$-waarde en trek je conclusies.
+
+j.  Wat vertelt het 95%-BHI je wat je niet uit de $P$-waarde kunt opmaken?
+    
+    En wat vertelt de $P$-waarde wat je niet uit het betrouwbaarheidsinterval kunt opmaken?
+:::
+
+
+::: {#exr-manakin-2 .Rexr}
+## Gewichtsverschillen tussen mannetjes en vrouwtjes bij de Bonte manakin.
+<br>
+
+In @exr-manakin hierboven hebben we het gemiddelde 
+lichaamsgewicht van een Bonte manakin onderzocht. 
+Hierbij hebben we echter geen rekening gehouden met
+een factor die mogelijk van belang kan zijn voor het gewicht: geslacht. 
+Zoals je in @fig-manacus kunt zien hebben de mannetjes en vrouwtjes een heel ander
+uiterlijk. 
+Daarom willen we in deze opgave onderzoeken of er ook een verschil is in de gewichten van mannelijke en 
+vrouwelijke Bonte manakins.
+Je kunt doorwerken in het script dat je gemaakt hebt voor @exr-manakin.
+
+::: {#fig-manacus layout-ncol=2 layout-valign="bottom"}
+
+[![Vrouwelijke Bonte manakin. Foto gemaakt door Dario Sanches uit São Paulo, Brazil](figuren/manacus_manacus_female.jpg)](https://www.flickr.com/photos/dariosanches/5833840567/){#fig-manacus-female}
+
+[![Mannelijke Bonte manakin. Foto gemaakt door Félix Uribe uit Rionegro, Antioquia, Colombia](figuren/manacus_manacus_male.jpg)](https://www.flickr.com/photos/24201429@N04/8254939982/){#fig-manacus-male}
+
+De Bonte manakin (*Manacus manacus*). [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0)
+
+:::
+
+a.  Welke $t$-toets zou je voor deze situatie willen gebruiken?
+
+b.  Formuleer $\HO$ en $\HA$.
+
+c.  Maak een vector met alleen de gewichten van de mannetjes, 
+    en een vector met alleen de gewichten van de vrouwtjes.
+
+d.  Van hoeveel mannetjes en vrouwtjes heb je gegevens?
+
+e.  Maak een boxplot en een histogram voor zowel de mannetjes en de vrouwtjes.
+    Bereken ook maten voor ligging en spreiding.
+
+f.  Wat is het statistisch model van deze $t$-toets?
+    (Wat zijn de aannames van het model?)
+
+    Lijkt dat model je bij voorbaat plausibel?
+    
+    Bepaal of je op de waarnemingen zelf
+    aanleiding geven om aan het model te twijfelen.
+    Maak daarvoor ook een QQ-plot of -plots.
+    
+    Ziet het er goed uit?
+    
+g.  Gebruik de `t.test()` functie
+    om de toets uit te voeren.
+    
+Bestudeer de uitvoer:
+    
+h.  Wat is het 95%-BHI voor het verschil tussen de gemiddelden van de geslachten? Welk geslacht heeft het grotere gewicht?
+     
+i.  Bekijk de $P$-waarde en trek je conclusies.
+
+j.  Wat vertelt het 95%-BHI je wat je niet uit de $P$-waarde kunt opmaken?
+    
+    En wat vertelt de $P$-waarde wat je niet uit het betrouwbaarheidsinterval kunt opmaken?
+
+:::
+
+::: {#exr-kurk .Rexr}
+## Kurkafzetting.
+<br>
+
+Onderzoekers vragen zich af of aan alle kanten van bomen
+evenveel kurk wordt afgezet.
+Om dat te bepalen selecteren ze uit een groot bosgebied 
+aselect 28 bomen en meten aan de noord-, zuid-, oost- en westkant
+de dikte van de kurkafzetting.
+
+In deze opgave negeren we de metingen van de noord- en zuid-kant
+en onderzoeken we het verschil tussen de oost- en de westkant.
+
+a.  Welke $t$-toets zou je willen uitvoeren om de onderzoeksvraag te beantwoorden?
+
+b.  Stel $\HO$ en $\HA$ op. 
+
+Start een nieuw script voor deze analyse.
+
+c.  De gegevens staan online; importeer ze door de volgende regel
+    aan je script toe te voegen:
+
+    ```{r}
+    #| eval: false
+    kurk <- read.csv(
+      "https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data/kurk.csv"
+      )
+    ```
+    
+    De kurkafzetting is gegeven in mm.
+
+d.  Gebruik  `str(kurk)`, `head(kurk)` en/of `View(kurk)` om de volgende vragen te beantwoorden: 
+    
+    1. Hoeveel kolommen heeft de dataset? 
+    2. Hoeveel regels zijn er? 
+    3. Van welk datatype is elke kolom? Controleer dat R de juiste datatypes heeft gebruikt.
+
+e.  Voordat je een analyses of toetsen gaat uitvoeren, 
+    is het belangrijk om de data eerst eens goed te bekijken. 
+    Maak daarom boxplots en histogrammen voor de waarden van kolommen `OOST` en `WEST` 
+    en bestudeer ze.
+
+f.  Bereken ook kengetallen voor de ligging en spreiding van `OOST` en `WEST`. 
+    Vallen je dingen op? 
+    Zijn er opvallende verschillen tussen de kurkafzetting aan de oost- en westkant?
+
+g.  Wat is het statistische model van de $t$-toets die je wilt gebruiken?
+
+    Lijkt je dat bij voorbaat een redelijk model voor deze variabele?
+
+    Maak een QQ-plot en een boxplot of histogram om te controleren
+    dat het model van toepassing is op deze situatie.
+    
+    Is dat wat jou betreft het geval?
+    
+h.  Voer de $t$-toets uit met de functie `t.test()`.
+
+Bestudeer de uitvoer van `t.test()`.
+
+i.  Bekijk het 95%-BHI dat gegeven wordt. 
+    Wat is de interpretatie van dat interval?
+
+j.  Zoek de $P$-waarde op en trek je conclusies.
+
+k.  Wat vertelt het 95%-BHI je wat je niet uit de $P$-waarde kunt opmaken?
+    
+    En wat vertelt de $P$-waarde wat je niet uit het betrouwbaarheidsinterval kunt opmaken?
+    
+
+:::
+
+::: {#exr-aapjes-2}
+## Eten trage aapjes significant meer gele pixels?
+<br>
+
+In @exr-aapjes van het onderdeel Biologische Modellen
+heb je een *individual-based* model onderzocht
+van aapjes die naar fruit zoeken. 
+Specifiek heb je gekeken naar het effect van de *eetsnelheid*
+op de totale hoeveelheid fruit die na 1000 stappen tijdstappen gevonden is.
+
+Als je de simulatie meerdere keren herhaalt bij dezelfde eetsnelheid,
+krijg je elke keer net een ander resultaat.
+Toch leek het erop dat de aapjes bij een kleine eetsnelheid
+(zoals 0,5)
+typisch meer fruit vonden dan bij een hoge eetsnelheid (zoals 5).
+Maar is dat verschil daadwerkelijk statistisch significant?
+Of kunnen de gevonden verschillen ook worden verklaard doordat
+de resultaten "toevallig" bij de ene parameter wat hoger zijn uitgevallen
+dan bij de andere?
+
+Als het goed is, heb je series experimenten uitgevoerd voor drie verschillende waarden
+van de eetsnelheid,
+en heb je je resultaten bewaard.
+Gebruik $t$-toetsen^[Het vergelijken van meer dan twee condities/groepen
+zou je eigenlijk met ANOVA moeten doen (zie @sec-ANOVA),
+met daarna *post-hoc* toetsen, 
+maar omdat we dat niet behandeld hebben,
+zien we dat nu even door de vingers.] om te onderzoeken of je op basis van deze gegevens kunt concluderen
+dat de hoeveelheid fruit die gemiddeld gevonden wordt
+verschilt tussen deze drie condities.
+
+:::
+
+
