@@ -268,7 +268,9 @@ Zoals je ziet heeft deze parameterverandering het vectorveld veranderd: waar eer
 
 Als we ons weer een balletje voorstellen dat naar beneden rolt, zal dit er uitzien zoals de rechterzijde van @fig-attractorlandscapes. Of het balletje naar links of naar rechts rolt, wordt eigenlijk uitsluitend bepaald door waar het balletje begon. Sterker nog, als het *precies* in het midden was begonnen, was het precies op het midden van het "zadel" blijven liggen (een dergelijke situatie is natuurlijk biologisch gezien niet heel reëel). Als we dit terug vertalen naar de samenleving van de twee soorten, kunnen we concluderen dat er geen coexistentie zal zijn, maar competitieve exclusie (*competitive exclusion*): één soort blijft over en de ander sterft uit. De soort die aanvankelijk meer voorkomt zal winnen, wat in de ecologie *founder control* wordt genoemd. Dit betekent dus ook dat als de andere soort invasief is (een nieuwe mutant of geïntroduceerd vanuit een ander continent), dat deze *niet* zal kunnen verspreiden. 
 
-Met het bovenstaande model zien we dat, afhankelijk van de parameters, er hele andere voorspellingen uit ons model komen rollen. Bovendien zien we dat evenwichtspunten (daar waar twee nullclines snijden) er heel anders uit kunnen zien. We zagen in het Lotka-Volterra model zonder verzadigbare predator een stabiele spiraal, met verzadigbare predator dat de populaties prooi- en predator blijven oscilleren, met zwakke competitie tussen soorten samenleving, en met sterke competitie tussen soorten competitieve exclusie. Al deze verschillende evenwichtsituaties (zie @tip-typeevenwichten) kunnen we aflezen aan de gegeven faseruimtes, en dit vertalen naar hoe het systeem zich over de tijd zal ontwikkelen. 
+Met het bovenstaande model zien we dat, afhankelijk van de parameters, er hele andere voorspellingen uit ons model komen rollen. Bovendien zien we dat evenwichtspunten (daar waar twee nullclines snijden) er heel anders uit kunnen zien. We zagen in het Lotka-Volterra model zonder verzadigbare predator een stabiele spiraal, met verzadigbare predator dat de populaties prooi- en predator blijven oscilleren, met zwakke competitie tussen soorten samenleving, en met sterke competitie tussen soorten competitieve exclusie. Vaak kunnen we deze verschillende evenwichtsituaties (zie @tip-typeevenwichten) aflezen aan de gegeven faseruimtes, en dit vertalen naar hoe het systeem zich over de tijd zal ontwikkelen. Als we met zekerheid iets willen zeggen over d eevenwichten, moeten we echter nog iets meer wiskunde doen. Voor deze verdieping kun je @tip-jacobian uitklappen, maar dit is geen leerstof van deze cursus.
+
+
 
 ::: {.callout-tip #tip-typeevenwichten collapse="false"}
 
@@ -281,6 +283,76 @@ Met het bovenstaande model zien we dat, afhankelijk van de parameters, er hele a
 | Zadelpunt | Saddle point | In één richting wijzen de pijlen naar het evenwicht toe, maar in de andere richting wijzen ze er juist vanaf. | ![](figuren/equi_saddle.png)
 | Stabiele spiraal  | Stable spiral | Het vectorveld draait om het evenwicht heen, maar uiteindelijk beweegt het systeem naar het evenwicht toe.| ![](figuren/equi_spiral.png)
 | Instabiele spiraal  | Unstable spiral | Het vectorveld draait om het evenwicht heen, en het systeem beweegt weg van het evenwicht.| ![](figuren/equi_spiral_unst.png)
+:::
+
+
+::: {.callout-tip #tip-jacobian collapse=true}
+## Verdieping: hoe bepaal je nou écht welk evenwicht het is? {#sec-jacobian-vooruitblik}
+
+In de voorgaande analyses hebben we de stabiliteit van evenwichten vooral bepaald door naar het vectorveld te kijken: wijzen de pijltjes naar het evenwicht toe, dan noemen we het stabiel. Wijzen ze er vanaf, dan is het instabiel. En als ze in de ene richting naar het evenwicht toe wijzen maar in de andere richting ervan weg, dan noemen we het een zadelpunt. Deze methode werkt vaak prima, maar je hebt misschien al gemerkt dat het soms lastig is om met zekerheid te zeggen wat er nou écht rond zo'n evenwicht gebeurt. Zeker als de nullclines dicht bij elkaar liggen, of als het vectorveld draait (zoals bij een spiraal), is het niet altijd triviaal om de stabiliteit af te lezen. Ieder jaar zijn er dan ook weer een hand vol studenten die toch meer willen weten, en voor hen is de volgende tekst. Met andere woorden: dit is echt verdieping of voorbereiding op vervolgvakken, en *geen* leerstof. 
+
+Er is een wiskundig exacte methode om de stabiliteit van elk evenwicht te bepalen. Het idee is als volgt. Stel je voor dat je het systeem een heel klein zetje geeft vanuit het evenwicht. Komt het systeem terug, of beweegt het juist weg? Zonder de volledige wiskunde te bespreken, kun je het je zo voorstellen. Neem een 2D-systeem met variabelen $X$ en $Y$. Bij een evenwichtspunt op positie $(X^*, Y^*)$, kun we deze vier vragen stellen:
+
+1. Als $X$ een beetje toeneemt, wat doet $\frac{dX}{dt}$ dan? (Corrigeert het zichzelf, of versterkt het?)
+1. Als $Y$ een beetje toeneemt, wat doet $\frac{dX}{dt}$ dan?
+1. Als $X$ een beetje toeneemt, wat doet $\frac{dY}{dt}$ dan?
+1. Als $Y$ een beetje toeneemt, wat doet $\frac{dY}{dt}$ dan?
+
+Om deze vragen te beantwoorden, kunnen we de ODEs *lineariseren* rond het evenwicht: je benadert de vergelijkingen met een eenvoudiger, lineair systeem dat zich in de buurt van het evenwicht precies hetzelfde gedraagt. In principe is het ook zo dat een snijpunt van twee lijnen, als je maar ver genoeg inzoomed, er precies uitziet als een snijpunt van twee rechte lijnen. Als we dan de afgeleiden bepalen van $X$ naar $X$, van $X$ naar $Y$, van $Y$ naar $X$, en van $Y$ naar $Y$, kunnen we voor die lineaire systeem precies bepalen hoe het systeem reageert op kleine verstoringen in elke richting. Deze vier afgeleiden, die partiële afgeleiden worden genoemd, vatten we samen in een matrix, die de **Jacobiaan** (of *Jacobian matrix*) heet:
+
+$$
+J = \begin{pmatrix}
+\frac{\partial \dot{X}}{\partial X} & \frac{\partial \dot{X}}{\partial Y} \\
+\frac{\partial \dot{Y}}{\partial X} & \frac{\partial \dot{Y}}{\partial Y}
+\end{pmatrix}
+$$
+**Voorbeeld**
+
+Stel dat je het volgende systeem hebt:
+
+$$
+\begin{align}
+\dt{X} = aX+bY\\
+\dt{Y} =cX+dY
+\end{align}
+$$
+
+Dan wordt de Jacobiaan:
+
+$$
+J=\begin{pmatrix}
+a & b \\
+c & d
+\end{pmatrix}
+$$
+De diagonaal van deze matrix (linksboven en rechtsonder) beschrijft hoe elke variabele op *zichzelf* reageert. De andere twee elementen beschrijven hoe de variabelen *elkaar* beïnvloeden. Eigenlijk doen we dus met de Jacobiaan precies wat je al deed toen je het vectorveld rond het evenwicht bestudeerde: bepalen in welke richting het systeem zich beweegt na een kleine verstoring. Maar soms kun je niet door te turen precies uitvogelen welke effecten er sterker zijn. Hiervoor kunnen we aan de matrix gaan rekenen. 
+
+Uit de Jacobiaan kunnen we twee getallen destileren. De eerste is de **trace** (de som van de diagonaalelementen, $a+d$ in het voorbeeld). De trace vertelt ons of verstoringen gemiddeld groeien of krimpen. Het tweede getal is de **determinant**, die bepaalt of het evenwicht een “echt” aantrekkend of afstotend punt is, of een zadelpunt (dit kun je aan de **trace** meestal niet opmaken). Samen geven ze dus alle informatie over de stabiliteit van een evenwicht. 
+
+| |Determinant > 0 |Determinant < 0|
+|-------------|------------------------------------|---------------|
+|**Trace < 0**|Stabiel punt of stabiele spiraal |Zadelpunt |
+|**Trace > 0**|Instabiel punt of instabiele spiraal|Zadelpunt |
+|**Trace = 0**|Centrum (oscillaties) |Zadelpunt |
+
+: Classificatie van evenwichten op basis van de trace en determinant van de Jacobiaan. {#tbl-trace-det}
+
+**Vooruitblik**
+
+De Jacobiaan en bijbehorende stabiliteitscriteria komen uitgebreider aan bod in vervolgvakken over dynamische systemen en wiskundige biologie. Voor nu is het belangrijkste inzicht dat de intuïtieve methode die je hier leert (vectorveld schetsen en pijltjes interpreteren) dezelfde informatie geeft als de wiskundige methode, alleen is de wiskundige methode *exact* en werkt deze ook wanneer het vectorveld moeilijk af te lezen is. Je hoeft de Jacobiaan voor dit vak niet zelf te berekenen, maar het is goed om te weten dat die optie bestaat! Hieronder zie je ook een interactieve visualisatie van de stappen die typisch genomen worden om stabiliteit te bepalen (die is bijvoorbeeld wat `Grind.R` ook doet!). Als je goed oplet zul je zien dat er ook nog onderscheid wordt gemaakt tussen stabiele spiralen en stabiele punten, die beide kunnen voorkomen met een vergelijkbaar vectorveld! Dit heeft te maken met Eigenwaardes en complexe getallen, en laten we voor deze cursus zeer zeker buiten beschouwing! 
+
+
+:::{.print-only}
+<center>*Deze interactieve content is beschikbaar op de website.*</center>
+:::
+
+:::{.screen-only}
+```{=html}
+<iframe id="iframeToReplace" width="100%" height="950"
+src="linearisatie_eq.html" title="Simulation"></iframe>
+```
+:::
+
 :::
 
 ## Evolutionaire vraagstukken
