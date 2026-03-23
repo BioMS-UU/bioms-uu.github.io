@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulatie: steekproevenverdeling</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #fdf6ee;
+    color: #2d1a00;
+    min-height: 100vh;
+    padding: 16px;
+  }
+
+  /* ── Header with logo ── */
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .logo {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: #2d1a00;
+  }
+
+  .app {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 14px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── Controls sidebar ── */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 1px 4px rgba(200,100,0,.10);
+  }
+
+  .card h2 {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #b86000;
+    margin-bottom: 10px;
+  }
+
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 7px 10px;
+    transition: background 0.15s, transform 0.1s;
+  }
+  button:active { transform: scale(0.97); }
+
+  .btn-dist {
+    background: #fff0dc;
+    color: #7a3e00;
+    text-align: left;
+  }
+  .btn-dist.active {
+    background: darkorange;
+    color: #fff;
+  }
+  .btn-dist:hover:not(.active) { background: #ffe0b2; }
+
+  label {
+    font-size: 0.82rem;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  input[type=radio], input[type=checkbox] { accent-color: darkorange; }
+
+  select {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1.5px solid #f5c87a;
+    font-size: 0.85rem;
+    color: #333;
+    background: #fffaf4;
+    cursor: pointer;
+  }
+
+  .draw-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .btn-draw {
+    background: darkorange;
+    color: #fff;
+    font-size: 0.8rem;
+    padding: 7px 4px;
+  }
+  .btn-draw:hover { background: #cc7000; }
+  .btn-clear {
+    background: #e63946;
+    color: #fff;
+    width: 100%;
+    margin-top: 4px;
+    font-size: 0.82rem;
+  }
+  .btn-clear:hover { background: #c1121f; }
+
+  .toggle-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .stat-count {
+    font-size: 0.8rem;
+    color: #777;
+    text-align: center;
+    margin-top: 4px;
+  }
+  .stat-count span { font-weight: 700; color: darkorange; }
+
+  /* ── Charts panel ── */
+  .charts {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .panel {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px 16px 12px;
+    box-shadow: 0 1px 4px rgba(200,100,0,.10);
+    position: relative;
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+
+  .panel-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: darkorange;
+  }
+
+  .panel-stats {
+    font-size: 0.78rem;
+    color: #555;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .panel-stats .stat b { color: #2d1a00; }
+
+  .chart-wrap {
+    position: relative;
+    height: 160px;
+  }
+
+  /* Custom distribution hint */
+  #pop-canvas-wrap {
+    position: relative;
+    cursor: crosshair;
+  }
+  .custom-hint {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 0.7rem;
+    color: #aaa;
+    pointer-events: none;
+    display: none;
+  }
+  body.custom-mode .custom-hint { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="site-header">
+  <!-- BMS logo (inline SVG) -->
+  <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="BMS logo">
+    <circle cx="50" cy="50" r="50" fill="darkorange"/>
+    <text x="50" y="66" text-anchor="middle"
+          font-family="Arial, Helvetica, sans-serif"
+          font-size="35" font-weight="bold" fill="white">BMS</text>
+  </svg>
+  <h1>Simulatie: steekproevenverdeling</h1>
+</div>
+
+<div class="app">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <div class="sidebar">
+
+    <div class="card">
+      <h2>Vorm van de populatie</h2>
+      <div class="btn-group">
+        <button class="btn-dist active" onclick="setDist('normal')">Normaal</button>
+        <button class="btn-dist" onclick="setDist('uniform')">Uniform</button>
+        <button class="btn-dist" onclick="setDist('skewed')">Scheef (rechts)</button>
+        <button class="btn-dist" onclick="setDist('bimodal')">Bimodaal</button>
+        <button class="btn-dist" onclick="setDist('custom')">Eigen (tekenen)</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Statistiek</h2>
+      <select id="statSelect" onchange="setStat(this.value)">
+        <option value="mean">Gemiddelde</option>
+        <option value="median">Mediaan</option>
+        <option value="sd">Standaardafwijking</option>
+        <option value="variance">Variantie</option>
+        <option value="mad">MAD</option>
+        <option value="range">Bereik</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <h2>Steekproefgrootte</h2>
+      <div class="btn-group" id="nBtns">
+        <label><input type="radio" name="n" value="2"> <i>n</i> = 2</label>
+        <label><input type="radio" name="n" value="5"> <i>n</i> = 5</label>
+        <label><input type="radio" name="n" value="10" checked> <i>n</i> = 10</label>
+        <label><input type="radio" name="n" value="16"> <i>n</i> = 16</label>
+        <label><input type="radio" name="n" value="20"> <i>n</i> = 20</label>
+        <label><input type="radio" name="n" value="25"> <i>n</i> = 25</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Trek steekproeven</h2>
+      <div class="draw-btns">
+        <button class="btn-draw" onclick="drawSamples(1)">Trek 1</button>
+        <button class="btn-draw" onclick="drawSamples(10)">Trek 10</button>
+        <button class="btn-draw" onclick="drawSamples(1000)">Trek 1 000</button>
+        <button class="btn-draw" onclick="drawSamples(10000)">Trek 10 000</button>
+      </div>
+      <button class="btn-clear" onclick="clearSampling()">Wis steekproevenverdeling</button>
+      <div class="stat-count">Getrokken steekproeven: <span id="nDrawn">0</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Opties</h2>
+      <div class="toggle-row">
+        <label><input type="checkbox" id="chkAnimate" checked> Animeer trekking</label>
+        <label><input type="checkbox" id="chkFitNormal" onchange="renderSamplingDist()"> Fit een normale verdeling</label>
+      </div>
+    </div>
+
+  </div><!-- /sidebar -->
+
+  <!-- ═══ CHARTS ═══ -->
+  <div class="charts">
+
+    <!-- Panel 1: Population -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Populatie</span>
+        <div class="panel-stats" id="popStats"></div>
+      </div>
+      <div class="chart-wrap" id="pop-canvas-wrap">
+        <canvas id="popChart"></canvas>
+        <div class="custom-hint">Klik en sleep om verdeling te tekenen</div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Last sample -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Meest recente steekproef</span>
+        <div class="panel-stats" id="sampleStats"></div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="sampleChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Panel 3: Sampling distribution -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Steekproevenverdeling van <span id="statLabel">het Gemiddelde</span></span>
+        <div class="panel-stats" id="sdStats"></div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="sdChart"></canvas>
+      </div>
+    </div>
+
+  </div><!-- /charts -->
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════════════════════════
+//  State
+// ═══════════════════════════════════════════
+let currentDist = 'normal';
+let currentStat = 'mean';
+let N = 10;
+let samplingValues = [];   // accumulated statistic values
+let animFrameId = null;
+let customBins = null;     // Array[30] of weights for custom dist
+
+const NUM_BINS = 40;               // bin width = 4 units
+const POP_MIN = 20, POP_MAX = 180;
+const BIN_W = (POP_MAX - POP_MIN) / NUM_BINS; // = 4
+
+// X-bar rendered with CSS overline (more reliable cross-browser than combining char)
+const XBAR  = '<i><span style="text-decoration:overline">X</span></i>';
+// s_X and s_{X-bar} with italic subscripts
+const SX    = 's<sub><i>X</i></sub>';
+const SXBAR = 's<sub><i><span style="text-decoration:overline">X</span></i></sub>';
+
+// ═══════════════════════════════════════════
+//  Utilities / Math
+// ═══════════════════════════════════════════
+function randNormal(mu=100, sigma=20) {
+  let u, v;
+  do { u = Math.random(); } while (u === 0);
+  do { v = Math.random(); } while (v === 0);
+  return mu + sigma * Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v);
+}
+
+function randUniform(a=POP_MIN, b=POP_MAX) {
+  return a + Math.random() * (b - a);
+}
+
+// Right-skewed via exponential transform scaled to [0,200]
+function randSkewed() {
+  const lambda = 0.03;
+  const x = -Math.log(1 - Math.random()) / lambda;
+  return Math.min(x, 200);
+}
+
+function randBimodal() {
+  return Math.random() < 0.5 ? randNormal(60, 16) : randNormal(140, 16);
+}
+
+function randCustom() {
+  const total = customBins.reduce((a,b) => a+b, 0);
+  if (total === 0) return randUniform();
+  let r = Math.random() * total, cum = 0;
+  for (let i = 0; i < NUM_BINS; i++) {
+    cum += customBins[i];
+    if (r <= cum) return POP_MIN + (i + Math.random()) * BIN_W;
+  }
+  return POP_MAX;
+}
+
+function drawValue() {
+  switch(currentDist) {
+    case 'normal':  return Math.max(POP_MIN, Math.min(POP_MAX, randNormal()));
+    case 'uniform': return randUniform();
+    case 'skewed':  return randSkewed();
+    case 'bimodal': return Math.max(POP_MIN, Math.min(POP_MAX, randBimodal()));
+    case 'custom':  return randCustom();
+  }
+}
+
+function drawSample(n) {
+  const vals = [];
+  for (let i = 0; i < n; i++) vals.push(drawValue());
+  return vals;
+}
+
+// ── Statistics ──
+const mean   = a => a.reduce((s,x)=>s+x,0)/a.length;
+const median = a => { const s=[...a].sort((x,y)=>x-y), m=Math.floor(s.length/2); return s.length%2?s[m]:(s[m-1]+s[m])/2; };
+const variance = a => { const mu=mean(a); return mean(a.map(x=>(x-mu)**2)); };
+const sd     = a => Math.sqrt(variance(a));
+const mad    = a => { const mu=mean(a); return mean(a.map(x=>Math.abs(x-mu))); };
+const range  = a => Math.max(...a) - Math.min(...a);
+
+const statFns = { mean, median, sd, variance, mad, range };
+const statNames = {
+  mean: 'Gemiddelde', median: 'Mediaan', sd: 'Standaardafwijking',
+  variance: 'Variantie', mad: 'MAD', range: 'Bereik'
+};
+const statArticles = {
+  mean: 'het', median: 'de', sd: 'de',
+  variance: 'de', mad: 'de', range: 'het'
+};
+
+function computeStat(arr) { return statFns[currentStat](arr); }
+
+function toBins(values, min, max, nBins) {
+  const counts = new Array(nBins).fill(0);
+  const w = (max - min) / nBins;
+  values.forEach(v => {
+    const i = Math.min(nBins-1, Math.floor((v - min) / w));
+    if (i >= 0) counts[i]++;
+  });
+  return counts;
+}
+
+function binLabels(min, max, nBins) {
+  // Use left-edge labels (integers) so multiples of 10 land exactly on ticks
+  const w = (max - min) / nBins;
+  return Array.from({length: nBins}, (_, i) => String(Math.round(min + i * w)));
+}
+
+function normalPdf(x, mu, sigma) {
+  return (1/(sigma*Math.sqrt(2*Math.PI))) * Math.exp(-0.5*((x-mu)/sigma)**2);
+}
+
+// ═══════════════════════════════════════════
+//  Chart.js setup
+// ═══════════════════════════════════════════
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+Chart.defaults.font.size = 11;
+
+// Darkorange palette for three charts
+const C1 = '#FF8C00'; // darkorange  — population
+const C2 = '#D45500'; // burnt orange — sample
+const C3 = '#FFA833'; // golden orange — sampling dist
+
+function makeChart(id, color) {
+  const ctx = document.getElementById(id).getContext('2d');
+  return new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Frequentie',
+        data: [],
+        backgroundColor: color + 'bb',
+        borderColor: color,
+        borderWidth: 1,
+        borderRadius: 2,
+        categoryPercentage: 1.0,
+        barPercentage: 1.0,
+      },{
+        label: 'Normale verdeling',
+        data: [],
+        type: 'line',
+        xAxisID: 'x2',   // separate linear axis → 200 smooth points
+        borderColor: '#c1121f',
+        borderWidth: 2,
+        pointRadius: 0,
+        fill: false,
+        tension: 0,       // no smoothing needed with many points
+        hidden: true,
+        yAxisID: 'y2',
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 120 },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: items => `${items[0].label}–${parseInt(items[0].label) + BIN_W}`,
+            label: item => item.datasetIndex===0 ? `Aantal: ${item.raw}` : `Dichtheid: ${item.raw?.toFixed?.(4) ?? item.raw}`
+          }
+        }
+      },
+      scales: {
+        x:  { grid: { display: false }, ticks: {
+                maxRotation: 0,
+                // Show only multiples of 10 (left-edge labels are integers)
+                callback: function(val, index) {
+                  const num = parseInt(this.getLabelForValue(val));
+                  return num % 10 === 0 ? num : null;
+                }
+              }},
+        x2: { type: 'linear', min: 20, max: 180, display: false }, // for smooth curve
+        y:  { grid: { color: '#f5e6d0' }, ticks: { maxTicksLimit: 5 }, beginAtZero: true },
+        y2: { display: false, beginAtZero: true }
+      }
+    }
+  });
+}
+
+const popChart    = makeChart('popChart',    C1);
+const sampleChart = makeChart('sampleChart', C2);
+const sdChart     = makeChart('sdChart',     C3);
+
+// Shared x-axis labels (same for all three panels)
+const SHARED_LABELS = binLabels(POP_MIN, POP_MAX, NUM_BINS);
+
+// Exact analytical population parameters (null = estimate from simulated bins)
+const EXACT_POP_STATS = {
+  normal:  { mu: 100, sigma: 20 },
+  uniform: { mu: (POP_MIN + POP_MAX) / 2,
+             sigma: (POP_MAX - POP_MIN) / Math.sqrt(12) },
+  // bimodal: mixture of N(60,16) and N(140,16) with equal weights
+  bimodal: { mu: 100,
+             sigma: Math.sqrt(16**2 + ((60-100)**2 + (140-100)**2) / 2) },
+  skewed:  null,   // no closed form after capping — estimate from bins
+  custom:  null,   // user-drawn — estimate from bins
+};
+
+// ═══════════════════════════════════════════
+//  Render population
+// ═══════════════════════════════════════════
+function getPopulationBins() {
+  if (currentDist === 'custom' && customBins) {
+    return customBins.map(v => Math.round(v));
+  }
+  const N_SIM = 50000;
+  const vals = Array.from({length: N_SIM}, drawValue);
+  return toBins(vals, POP_MIN, POP_MAX, NUM_BINS);
+}
+
+function renderPopulation() {
+  const bins = getPopulationBins();
+  popChart.data.labels = SHARED_LABELS;
+  popChart.data.datasets[0].data = bins;
+  popChart.data.datasets[1].data = [];
+  popChart.data.datasets[1].hidden = true;
+  popChart.update();
+
+  let mu, sigma;
+  const exact = EXACT_POP_STATS[currentDist];
+  if (exact) {
+    mu = exact.mu;
+    sigma = exact.sigma;
+  } else {
+    // Estimate from simulated bins
+    let total=0, wSum=0, wSum2=0;
+    bins.forEach((c,i) => {
+      const midVal = POP_MIN + (i+0.5)*BIN_W;
+      total += c; wSum += c*midVal; wSum2 += c*midVal*midVal;
+    });
+    mu = wSum/total;
+    sigma = Math.sqrt(wSum2/total - mu*mu);
+  }
+  document.getElementById('popStats').innerHTML =
+    `<span class="stat">μ<sub>X</sub>: <b>${mu.toFixed(1)}</b></span>
+     <span class="stat">σ<sub>X</sub>: <b>${sigma.toFixed(1)}</b></span>`;
+}
+
+// ═══════════════════════════════════════════
+//  Render sample
+// ═══════════════════════════════════════════
+function renderSample(sampleVals) {
+  const bins = toBins(sampleVals, POP_MIN, POP_MAX, NUM_BINS);
+  sampleChart.data.labels = SHARED_LABELS;
+  sampleChart.data.datasets[0].data = bins;
+  sampleChart.data.datasets[1].data = [];
+  sampleChart.data.datasets[1].hidden = true;
+  sampleChart.update();
+
+  const statVal = computeStat(sampleVals);
+  const mu = mean(sampleVals);
+  const sig = sd(sampleVals);
+
+  // Only show extra stat when it isn't already displayed as X̄ or s_X
+  const extraStat = (currentStat !== 'mean' && currentStat !== 'sd')
+    ? `<span class="stat">${statNames[currentStat]}: <b>${statVal.toFixed(2)}</b></span>`
+    : '';
+
+  document.getElementById('sampleStats').innerHTML =
+    `<span class="stat"><i>n</i>: <b>${sampleVals.length}</b></span>
+     <span class="stat">${XBAR}: <b>${mu.toFixed(2)}</b></span>
+     <span class="stat">${SX}: <b>${sig.toFixed(2)}</b></span>
+     ${extraStat}`;
+}
+
+// ═══════════════════════════════════════════
+//  Render sampling distribution
+// ═══════════════════════════════════════════
+function renderSamplingDist() {
+  if (samplingValues.length === 0) {
+    sdChart.data.labels = SHARED_LABELS;
+    sdChart.data.datasets[0].data = new Array(NUM_BINS).fill(0);
+    sdChart.data.datasets[1].data = [];
+    sdChart.data.datasets[1].hidden = true;
+    sdChart.update();
+    document.getElementById('sdStats').innerHTML = '';
+    return;
+  }
+
+  // Fixed [POP_MIN, POP_MAX] range — same scale as the other two panels
+  const bins = toBins(samplingValues, POP_MIN, POP_MAX, NUM_BINS);
+
+  sdChart.data.labels = SHARED_LABELS;
+  sdChart.data.datasets[0].data = bins;
+
+  const fitNormal = document.getElementById('chkFitNormal').checked;
+  if (fitNormal && samplingValues.length > 1) {
+    const mu = mean(samplingValues);
+    const sigma = sd(samplingValues);
+    const scale = samplingValues.length * BIN_W; // density → expected counts per bin
+    // 200 points on the linear x2 axis for a smooth curve
+    const N_CURVE = 200;
+    const curveData = [];
+    for (let i = 0; i <= N_CURVE; i++) {
+      const x = POP_MIN + (i / N_CURVE) * (POP_MAX - POP_MIN);
+      curveData.push({ x, y: normalPdf(x, mu, sigma) * scale });
+    }
+    sdChart.data.datasets[1].data = curveData;
+    sdChart.data.datasets[1].hidden = false;
+    // Use analytical peak so the curve is never cropped
+    const analyticalPeak = normalPdf(mu, mu, sigma) * scale;
+    const yMax = Math.max(Math.max(...bins), analyticalPeak) * 1.15;
+    sdChart.options.scales.y.max  = yMax;
+    sdChart.options.scales.y2.max = yMax;
+    sdChart.options.scales.y2.display = false;
+  } else {
+    sdChart.data.datasets[1].data = [];
+    sdChart.data.datasets[1].hidden = true;
+    sdChart.options.scales.y.max = undefined; // revert to auto-scale
+  }
+
+  sdChart.update();
+
+  const mu = mean(samplingValues);
+  const sig = sd(samplingValues);
+  document.getElementById('sdStats').innerHTML =
+    `<span class="stat"><i>n</i>: <b>${samplingValues.length}</b></span>
+     <span class="stat">${XBAR}: <b>${mu.toFixed(3)}</b></span>
+     <span class="stat">${SXBAR}: <b>${sig.toFixed(3)}</b></span>`;
+}
+
+// ═══════════════════════════════════════════
+//  Draw samples
+// ═══════════════════════════════════════════
+function drawSamples(count) {
+  if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = null; }
+
+  const animate = document.getElementById('chkAnimate').checked && count <= 50;
+
+  if (animate) {
+    let drawn = 0;
+    function step() {
+      const s = drawSample(N);
+      samplingValues.push(computeStat(s));
+      drawn++;
+      renderSample(s);
+      renderSamplingDist();
+      document.getElementById('nDrawn').textContent = samplingValues.length;
+      if (drawn < count) animFrameId = requestAnimationFrame(step);
+    }
+    animFrameId = requestAnimationFrame(step);
+  } else {
+    let lastSample;
+    for (let i = 0; i < count; i++) {
+      lastSample = drawSample(N);
+      samplingValues.push(computeStat(lastSample));
+    }
+    renderSample(lastSample);
+    renderSamplingDist();
+    document.getElementById('nDrawn').textContent = samplingValues.length;
+  }
+}
+
+function clearSampling() {
+  if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = null; }
+  samplingValues = [];
+  sampleChart.data.labels = SHARED_LABELS;
+  sampleChart.data.datasets[0].data = new Array(NUM_BINS).fill(0);
+  sampleChart.data.datasets[1].data = [];
+  sampleChart.update();
+  document.getElementById('sampleStats').innerHTML = '';
+  renderSamplingDist();
+  document.getElementById('nDrawn').textContent = '0';
+}
+
+// ═══════════════════════════════════════════
+//  Controls
+// ═══════════════════════════════════════════
+function setDist(name) {
+  currentDist = name;
+  document.querySelectorAll('.btn-dist').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  if (name === 'custom') {
+    customBins = new Array(NUM_BINS).fill(1);
+    document.body.classList.add('custom-mode');
+    setupCustomDrawing();
+  } else {
+    document.body.classList.remove('custom-mode');
+  }
+
+  clearSampling();
+  renderPopulation();
+}
+
+function setStat(val) {
+  currentStat = val;
+  document.getElementById('statLabel').textContent =
+    statArticles[val] + ' ' + statNames[val];
+  clearSampling();
+}
+
+document.querySelectorAll('input[name="n"]').forEach(r => {
+  r.addEventListener('change', () => { N = parseInt(r.value); clearSampling(); });
+});
+
+// ═══════════════════════════════════════════
+//  Custom distribution drawing
+// ═══════════════════════════════════════════
+function setupCustomDrawing() {
+  const wrap = document.getElementById('pop-canvas-wrap');
+  let painting = false;
+
+  function paint(e) {
+    if (!painting || currentDist !== 'custom') return;
+    const rect = wrap.getBoundingClientRect();
+    const x = (e.clientX || e.touches?.[0].clientX) - rect.left;
+    const frac = Math.max(0, Math.min(1, x / rect.width));
+    const bin = Math.floor(frac * NUM_BINS);
+    const y = (e.clientY || e.touches?.[0].clientY) - rect.top;
+    const heightFrac = 1 - Math.max(0, Math.min(1, y / rect.height));
+    customBins[bin] = Math.round(heightFrac * 200);
+    renderPopulation();
+  }
+
+  wrap.addEventListener('mousedown',  e => { painting = true; paint(e); });
+  wrap.addEventListener('mousemove',  paint);
+  wrap.addEventListener('mouseup',    () => painting = false);
+  wrap.addEventListener('mouseleave', () => painting = false);
+}
+
+// ═══════════════════════════════════════════
+//  Init
+// ═══════════════════════════════════════════
+renderPopulation();
+</script>
+</body>
+</html>
