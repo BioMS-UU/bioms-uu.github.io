@@ -443,6 +443,18 @@ function normalPdf(x, mu, sigma) {
   return (1/(sigma*Math.sqrt(2*Math.PI))) * Math.exp(-0.5*((x-mu)/sigma)**2);
 }
 
+// Complementary error function (Abramowitz & Stegun, max error 1.5e-7)
+function erfc(x) {
+  const t = 1 / (1 + 0.3275911 * Math.abs(x));
+  const p = t * (0.254829592 + t * (-0.284496736 +
+            t * (1.421413741 + t * (-1.453152027 + t * 1.061405429))));
+  const r = p * Math.exp(-x * x);
+  return x >= 0 ? r : 2 - r;
+}
+function normalCdf(x, mu, sigma) {
+  return 0.5 * erfc(-(x - mu) / (sigma * Math.SQRT2));
+}
+
 // ═══════════════════════════════════════════
 //  Chart.js setup
 // ═══════════════════════════════════════════
@@ -473,14 +485,12 @@ function makeChart(id, color) {
         label: 'Normale verdeling',
         data: [],
         type: 'line',
-        xAxisID: 'x2',   // separate linear axis → 200 smooth points
         borderColor: '#c1121f',
         borderWidth: 2,
         pointRadius: 0,
         fill: false,
-        tension: 0,       // no smoothing needed with many points
+        tension: 0.3,     // smooth Bezier through CDF-based control points
         hidden: true,
-        yAxisID: 'y2',
       }]
     },
     options: {
@@ -499,15 +509,12 @@ function makeChart(id, color) {
       scales: {
         x:  { grid: { display: false }, ticks: {
                 maxRotation: 0,
-                // Show only multiples of 10 (left-edge labels are integers)
                 callback: function(val, index) {
                   const num = parseInt(this.getLabelForValue(val));
                   return num % 10 === 0 ? num : null;
                 }
               }},
-        x2: { type: 'linear', min: 20, max: 180, display: false }, // for smooth curve
-        y:  { grid: { color: '#f5e6d0' }, ticks: { maxTicksLimit: 5 }, beginAtZero: true },
-        y2: { display: false, beginAtZero: true }
+        y:  { grid: { color: '#f5e6d0' }, ticks: { maxTicksLimit: 5 }, beginAtZero: true }
       }
     }
   });
@@ -623,22 +630,19 @@ function renderSamplingDist() {
   if (fitNormal && samplingValues.length > 1) {
     const mu = mean(samplingValues);
     const sigma = sd(samplingValues);
-    const scale = samplingValues.length * BIN_W; // density → expected counts per bin
-    // 200 points on the linear x2 axis for a smooth curve
-    const N_CURVE = 200;
-    const curveData = [];
-    for (let i = 0; i <= N_CURVE; i++) {
-      const x = POP_MIN + (i / N_CURVE) * (POP_MAX - POP_MIN);
-      curveData.push({ x, y: normalPdf(x, mu, sigma) * scale });
-    }
+    // CDF-difference curve: one value per bin, placed on the same categorical axis
+    // as the bars → pixel-perfect alignment guaranteed, no cross-axis shift.
+    const N_samp = samplingValues.length;
+    const curveData = Array.from({length: NUM_BINS}, (_, i) => {
+      const xLeft = POP_MIN + i * BIN_W;
+      const xRight= POP_MIN + (i + 1) * BIN_W;
+      return N_samp * (normalCdf(xRight, mu, sigma) - normalCdf(xLeft, mu, sigma));
+    });
     sdChart.data.datasets[1].data = curveData;
     sdChart.data.datasets[1].hidden = false;
-    // Use analytical peak so the curve is never cropped
-    const analyticalPeak = normalPdf(mu, mu, sigma) * scale;
+    const analyticalPeak = Math.max(...curveData.map(d => d.y));
     const yMax = Math.max(Math.max(...bins), analyticalPeak) * 1.15;
-    sdChart.options.scales.y.max  = yMax;
-    sdChart.options.scales.y2.max = yMax;
-    sdChart.options.scales.y2.display = false;
+    sdChart.options.scales.y.max = yMax;
   } else {
     sdChart.data.datasets[1].data = [];
     sdChart.data.datasets[1].hidden = true;
