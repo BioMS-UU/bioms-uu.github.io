@@ -13,27 +13,27 @@ a.  De puntenwolk van Galton heeft ongeveer dezelfde vorm
 b.  De antwoorden zijn:
 
     **(a)**  $r = 0{,}85$
-    
+
     **(b)**  $r = 0{,}90$
-    
+
     **(c)**  $r = -0{,}53$
-    
+
     **(d)**  $r = 0{,}64$
-    
+
     **(e)**  $r = 0{,}32$
-    
+
     **(f)**  $r = 0{,}03$
-    
+
     **(g)**  $r = 0{,}46$
-    
+
     **(h)**  $r = -0{,}79$
-    
+
 ### @exr-covariantie
 
-a.  We vullen in de formule @eq-cov voor $Y$ ook $X$ in. 
+a.  We vullen in de formule @eq-cov voor $Y$ ook $X$ in.
     Dat levert op:
 
-    $$ 
+    $$
     \begin{align}
     \covD{X}{X} &= \frac{\sum_{i=1}^{n} (x_i - \bar{x})(x_i - \bar{x})}{n-1}\\
     &= \frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n-1}.
@@ -41,16 +41,16 @@ a.  We vullen in de formule @eq-cov voor $Y$ ook $X$ in.
     $$ {#eq-covXX}
 
 b.  Vergelijk @eq-covXX met @eq-variantie; dan wordt duidelijk dat
-    
+
     $$
     \covD{X}{X} = V_X.
     $$
 
     De covariantie van een variabele met zichzelf is dus de variantie van die variabele!
 
-c.  De covariantie meet de lineaire samenhang van twee variabelen. 
+c.  De covariantie meet de lineaire samenhang van twee variabelen.
     Iedere variabele hangt perfect lineair samen met zichzelf.
-    De covariantie van een variabele met zichzelf 
+    De covariantie van een variabele met zichzelf
     moet dus wel positief zijn.
 
 
@@ -74,42 +74,42 @@ De correlatiecoëfficiënt van een variabele met zichzelf is dus altijd 1.
 
 a.  De puntenwolk van @fig-galton ziet er mooi ovaal uit.
     Die algemene vorm is consistent met een bivariate normale verdeling.
-    
+
     Wel valt op dat de punten soms horizontaal of verticaal uitlijnen.
-    Dat komt gedeeltelijk doordat lengtes in de dataset 
+    Dat komt gedeeltelijk doordat lengtes in de dataset
     oorspronkelijk door Galton in inches zijn gemeten,
-    met een resolutie van $\frac{1}{4}$ inch. 
+    met een resolutie van $\frac{1}{4}$ inch.
     De data die hier gebruikt zijn
     komen uit de `HistData` library,
     waar ze zijn ze omgerekend naar cm en afgerond.
     Daardoor komen sommige waarden meerdere keren exact voor.
-    
+
     Er is nog een reden voor het uitlijnen van sommige waarden,
     maar daar komen we zo op.
-    
+
 b.  De verdeling van de ouders is klokvormig,
     maar lijkt iets te dikke staarten te hebben,
     en heeft een opvallende piek bij 175cm.
     De afwijkingen zijn niet heel drastisch,
     maar geven toch te denken.
-    
+
     De verdeling van de kinderen volgt de normale verdeling erg netjes,
     zoals ook te zien is aan de QQ-plot.
-    
+
 c.  De beschrijving zegt: *"This data set lists the individual observations for 934 children in 205 families (...)"*.
     Er zijn veel meer kinderen dan gezinnen in deze dataset.
-    Dat wil zeggen dat er voor hetzelfde ouderpaar vaak meerdere kinderen 
+    Dat wil zeggen dat er voor hetzelfde ouderpaar vaak meerdere kinderen
     in de dataset zijn opgenomen.
-    
+
     Er zijn dus groepjes van datapunten met dezelfde mid-ouder-lengte.
     Dat geeft een extra verklaring voor de observatie dat sommige punten
-    in de puntenwolk verticaal uitlijnen: 
+    in de puntenwolk verticaal uitlijnen:
     dat zijn kinderen van dezelfde ouders.
     Het zou ook kunnen verklaren dat de verdeling van de lengtes van de ouders
     ondanks het grote aantal waarnemingen niet zo netjes normaal verdeeld
     is.
-    
-    Een consequentie is ook dat deze punten zeker niet onafhankelijk uit een bivariate 
+
+    Een consequentie is ook dat deze punten zeker niet onafhankelijk uit een bivariate
     kansverdeling getrokken zijn.
     Al met al kunnen we de standaard correlatietoets dus niet op deze gegevens toepassen.
 
@@ -129,20 +129,20 @@ b.  De structuur van `ouders_uniek` is:
       unique(GaltonFamilies$family),
       GaltonFamilies$family
     )
-    
+
     # Selecteer alleen die rijen, en houd alleen de relevante kolommen
     ouders_uniek <- GaltonFamilies[
-      eerste_index, 
+      eerste_index,
       c("family", "father", "mother")
       ]
     ```
-    
+
     ```{r}
     str(ouders_uniek)
     ```
 
     Er zijn 205 ouder-paren in de dataset opgenomen.
-    
+
 c.  Code:
 
     ```{r}
@@ -151,28 +151,28 @@ c.  Code:
     #| out-width: "50%"
     plot(ouders_uniek$father, ouders_uniek$mother)
     ```
-    
+
     De gegevens zien er redelijk bivariaat normaal verdeeld uit.
     Er is niet duidelijk een verband te zien.
-    
+
 d.  Je maakt de figuren zo:
 
     :::{layout="[[1,1],[1,1]]"}
-    
+
     ```{r}
     #| fig-width: 3.5
     #| fig-height: 3.5
     #| out-width: "100%"
     hist(ouders_uniek$father, main="vaders")
     ```
-    
+
     ```{r}
     #| fig-width: 3.5
     #| fig-height: 3.5
     #| out-width: "100%"
     hist(ouders_uniek$mother, main="moeders")
     ```
-    
+
     ```{r}
     #| fig-width: 3.5
     #| fig-height: 3.5
@@ -180,7 +180,7 @@ d.  Je maakt de figuren zo:
     qqnorm(ouders_uniek$father, main="vaders")
     qqline(ouders_uniek$father)
     ```
-    
+
     ```{r}
     #| fig-width: 3.5
     #| fig-height: 3.5
@@ -188,23 +188,23 @@ d.  Je maakt de figuren zo:
     qqnorm(ouders_uniek$mother, main="moeders")
     qqline(ouders_uniek$mother)
     ```
-    
+
     :::
-    
+
     Zowel de moeders als de vaders laten een verdeling zien
     die wel iets wegheeft van een klokvorm,
-    maar niet heel netjes de normale verdeling volgt. 
+    maar niet heel netjes de normale verdeling volgt.
     Het valt vooral op dat in beide QQ-plots
     de Sample Quantiles voor kleine waarden kleiner zijn
-    dan verwacht op basis van de Theoretical Quantiles. 
+    dan verwacht op basis van de Theoretical Quantiles.
     Dat geeft aan dat de verdelingen iets links-scheef zijn.
-    
-    Het toepassen van de correlatie-test 
+
+    Het toepassen van de correlatie-test
     is in dit geval dus dubieus.
     Het zou beter zijn om een andere toets te gebruiken,
     zoals Spearman's correlatie-toets,
     maar die behandelen we in deze cursus niet.
-    
+
 e.  Hoewel we twijfelen of het bivariate model wel geschikt is,
     voeren we de toets toch uit:
 
@@ -214,13 +214,13 @@ e.  Hoewel we twijfelen of het bivariate model wel geschikt is,
 
     De $P$-waarde van 0,17 is verre van significant.
     De gegevens geven dus geen bewijs voor *assorted mating*.
-    
+
     Het betrouwbaarheidsinterval voor de ware correlatie in de populatie
     is $[-0{,}04; 0{,}23]$.
     Een correlatie van $\rho \approx 0{,}2$ is dus nog niet uit te sluiten.
-    Het is dus goed mogelijk dat een grotere steekproef wel een lichte correlatie 
+    Het is dus goed mogelijk dat een grotere steekproef wel een lichte correlatie
     aan het licht zou brengen.
-    
+
 ### @exr-extrapoleren
 
 a.  Gebruik de regressielijn:
@@ -231,18 +231,18 @@ b.  Gebruik de regressielijn:
 
     $Y =  1{,}652448\times 10^2\unit{mm} + (6{,}676867 \times 10^{-3}\unit{mm/g}) \times 500\unit{g} = 169\unit{mm}.$
 
-c.  De regressielijn was bepaald voor pinguïns met een gewicht tussen  $2850\unit{g}$ en $4775\unit{g}$. 
-    Bij onderdeel **b** hebben we de regressielijn toegepast 
-    op een veel kleiner gewicht van 500g. 
+c.  De regressielijn was bepaald voor pinguïns met een gewicht tussen  $2850\unit{g}$ en $4775\unit{g}$.
+    Bij onderdeel **b** hebben we de regressielijn toegepast
+    op een veel kleiner gewicht van 500g.
     Dat is erg gevaarlijk: niemand kan weten of het lineaire model
     zo ver buiten dat domein nog van toepassing is.
-    
-    In dat geval lijkt dat onwaarschijnlijk. 
+
+    In dat geval lijkt dat onwaarschijnlijk.
     Een pinguïn van 4000g heeft volgens de regressielijn gemiddeld
-    een flipperlengte van 192mm. 
+    een flipperlengte van 192mm.
     Het lijkt onwaarschijnlijk dat pinguïns die 8 keer lichter zijn,
     gemiddeld flippers hebben die met 169mm maar zo'n 12% korter zijn.
-    
+
     Een model toepassen buiten het domein waarvoor het bedoeld was,
     heet **extrapoleren**; we komen daar in @sec-extrapoleren nog even op terug.
 
@@ -253,10 +253,10 @@ a.  Data:
     ```{r}
     OD <- c( 31.0, 34.6, 40.0, 35.2, 57.5, 56.5, 57.0, 56.8)
     drooggewicht <- c(24, 26, 32, 26, 42, 44, 44, 42)
-    
+
     monod <- data.frame(OD, drooggewicht)
     ```
-    
+
 b.  Plot van `drooggewicht` tegen `OD`:
 
     ```{r}
@@ -265,35 +265,35 @@ b.  Plot van `drooggewicht` tegen `OD`:
     #| out-width: "50%"
     plot(monod$OD, monod$drooggewicht)
     ```
-    
-    Er is een mooi lineair verband; 
-    OD lijkt dus een erg goede voorspeller voor drooggewicht. 
+
+    Er is een mooi lineair verband;
+    OD lijkt dus een erg goede voorspeller voor drooggewicht.
     Het is jammer dat verschillende punten dicht bij elkaar liggen.
     We hadden het verband beter kunnen controleren als ze beter verspreid waren.
-    
+
 c.  Bereken de correlatiecoëfficiënt:
 
     ```{r}
     cor(monod$OD, monod$drooggewicht)
     ```
-    
+
     Een correlatiecoëfficiënt van 0,99 is heel erg hoog;
     dit is een erg sterk lineair verband.
-    
+
 d.  We runnen eerst de `lm()` functie, en vragen dan de coëfficiënten op
     met de functie `summary()`.
-    
+
     ```{r}
     resultaatLM <- lm(drooggewicht ~ OD, data = monod)
     summary(resultaatLM)$coefficients
     ```
-    
+
     Lees de coëfficiënten af; dat geeft de volgende regressielijn:
-    
+
     $\textrm{drooggewicht} = 0{,}834\unit{mg/L} + (0{,}742\unit{mg/L}) \cdot \textrm{OD}.$
-    
+
     Voor de volledigheid kunnen we de regressielijn aan de plot toevoegen:
-    
+
     ```{r}
     #| fig-width: 3.3
     #| fig-height: 3.5
@@ -301,15 +301,15 @@ d.  We runnen eerst de `lm()` functie, en vragen dan de coëfficiënten op
     plot(monod$OD, monod$drooggewicht)
     abline(resultaatLM, col = "darkorange")
     ```
-    
+
 e.  Vul de waarde in de regressielijn in:
 
     ```{r}
     a <- 0.8342606
     b <- 0.7415245
-    
+
     OD_waarde <- 45.5
-    
+
     ( drooggewicht_voorspelling <- a + b*OD_waarde )
     ```
 
@@ -317,15 +317,15 @@ f.  Op zich kunnen we de regressielijn gebruiken om een voorspelling te doen:
 
     ```{r}
     OD_waarde_2 <- 100.0
-    
+
     ( drooggewicht_voorspelling_2 <- a + b*OD_waarde_2 )
     ```
-    
-    Maar de OD van 100,0 ligt erg ver buiten het domein 
+
+    Maar de OD van 100,0 ligt erg ver buiten het domein
     van de gegevens waaraan de regressielijn was gefit.
     Als je zo ver extrapoleert
     is er geen enkele garantie dat de regressielijn
-    nog werkt als proxy voor het drooggewicht. 
+    nog werkt als proxy voor het drooggewicht.
     Het is dus heel onverstandig om op deze voorspelling te vertrouwen.
 
 
@@ -338,11 +338,11 @@ a.  Bekijk de dataset:
     #| echo: false
     library("datasets")
     ```
-    
+
     ```{r}
     str(anscombe)
     ```
-    
+
 b.  De kengetallen voor `x1` en `y1`:
 
     ```{r}
@@ -351,11 +351,11 @@ b.  De kengetallen voor `x1` en `y1`:
     sd(anscombe$x1)
     sd(anscombe$y1)
     cor(anscombe$x1, anscombe$y1)
-    
+
     resultaatLM1 <- lm(y1 ~ x1, anscombe)
     summary(resultaatLM1)$coefficients
     ```
-    
+
 c.  De kengetallen voor `x2` en `y2`:
 
     ```{r}
@@ -364,11 +364,11 @@ c.  De kengetallen voor `x2` en `y2`:
     sd(anscombe$x2)
     sd(anscombe$y2)
     cor(anscombe$x2, anscombe$y2)
-    
+
     resultaatLM2 <- lm(y2 ~ x2, anscombe)
     summary(resultaatLM2)$coefficients
     ```
-    
+
 d.  De kengetallen voor `x3` en `y3`:
 
     ```{r}
@@ -377,7 +377,7 @@ d.  De kengetallen voor `x3` en `y3`:
     sd(anscombe$x3)
     sd(anscombe$y3)
     cor(anscombe$x3, anscombe$y3)
-    
+
     resultaatLM3 <- lm(y3 ~ x3, anscombe)
     summary(resultaatLM3)$coefficients
     ```
@@ -390,23 +390,23 @@ e.  De kengetallen voor `x4` en `y4`:
     sd(anscombe$x4)
     sd(anscombe$y4)
     cor(anscombe$x4, anscombe$y4)
-    
+
     resultaatLM4 <- lm(y4 ~ x4, anscombe)
     summary(resultaatLM4)$coefficients
     ```
-    
+
 f.  Voor alle vier de datasets zijn de verschillende
     kengetallen voor ligging, spreiding,
     correlatie én regressie nagenoeg hetzelfde.
-    
+
     Op basis van deze uitgebreide set kengetallen
     zou je geneigd zijn te concluderen dat de datasets
     erg op elkaar lijken.
-    
+
 g.  Alle plotjes:
 
     ::: {layout="[[1,1],[1,1]]"}
-    
+
     ```{r}
     #| fig-width: 3.3
     #| fig-height: 3.5
@@ -414,7 +414,7 @@ g.  Alle plotjes:
     plot(anscombe$x1, anscombe$y1)
     abline(resultaatLM1, col = "darkorange")
     ```
-    
+
     ```{r}
     #| fig-width: 3.3
     #| fig-height: 3.5
@@ -422,7 +422,7 @@ g.  Alle plotjes:
     plot(anscombe$x2, anscombe$y2)
     abline(resultaatLM2, col = "darkorange")
     ```
-    
+
     ```{r}
     #| fig-width: 3.3
     #| fig-height: 3.5
@@ -430,7 +430,7 @@ g.  Alle plotjes:
     plot(anscombe$x3, anscombe$y3)
     abline(resultaatLM3, col = "darkorange")
     ```
-    
+
     ```{r}
     #| fig-width: 3.3
     #| fig-height: 3.5
@@ -438,27 +438,27 @@ g.  Alle plotjes:
     plot(anscombe$x4, anscombe$y4)
     abline(resultaatLM4, col = "darkorange")
     ```
-    
+
     :::
-    
+
     Hoewel de kengetallen van de vier datasets
     vrijwel identiek zijn,
     vertellen de plotjes allemaal een heel ander verhaal.
-    
+
     De eerste dataset laat een lineair verband zien.
     In de tweede dataset is het verband duidelijk niet lineair;
-    het ziet er uit als een parabool. 
+    het ziet er uit als een parabool.
     De gegevens in de derde dataset hebben een lineair verband,
     maar alle kengetallen en coëfficiënten worden sterk verstoord
     door een uitbijter. Tot slot wordt in de vierde dataset
     de volledige correlatie, regressie, en standaarddeviatie
     bepaald door één enkel punt.
-    
+
     Alleen bij de eerste dataset zijn de correlatiecoëfficiënt
     en de regressielijn betekenisvol.
-    
-h.  Zelfs als je een dataset karakteriseert met een hele reeks 
-    kengetallen, 
+
+h.  Zelfs als je een dataset karakteriseert met een hele reeks
+    kengetallen,
     kun je allerlei structuur in de dataset over het hoofd zien.
     Voordat je een statistische analyse uitvoert,
     moet je dus *altijd* je data eerst op zoveel mogelijk manieren bekijken.
@@ -467,21 +467,21 @@ h.  Zelfs als je een dataset karakteriseert met een hele reeks
 ### @exr-simpson
 
 a.  De correlatiecoëfficiënt voor de Chinstrap-pinguïns is sterk positief,
-    zoals de wetenschappers verwacht hadden. 
+    zoals de wetenschappers verwacht hadden.
     Je kunt dit direct zien aan de puntenwolk en de oranje regressielijn.
-    
+
 b.  De correlatiecoëfficiënt voor de Stubbybeak-pinguïns is ook positief,
 
-c.  Het is een vreemd fenomeen: voor beide soorten is het verband 
-    tussen snavellengte en flipperlengte positief, 
+c.  Het is een vreemd fenomeen: voor beide soorten is het verband
+    tussen snavellengte en flipperlengte positief,
     maar als beide datasets worden samengevoegd
     vinden we een *negatieve* correlatie.
-    
-    Dit fenomeen heet *Simpson's paradox*. 
+
+    Dit fenomeen heet *Simpson's paradox*.
     Aan het plaatje kun je zien wat de paradox veroorzaakt.
     Binnen beide groepen is de correlatie positief,
     maar de *gemiddelden* van de groepen laten juist een negatieve correlatie zien:
-    Stubbybeak heeft gemiddeld langere flippers, 
+    Stubbybeak heeft gemiddeld langere flippers,
     maar een kortere snavel dan Chinstrap.
     De zwarte regressielijn van de gehele populatie
     laat zich daardoor naar beneden trekken.
@@ -516,25 +516,25 @@ e.  Plot data met de fit:
     #| fig-width: 4
     #| fig-height: 4
     #| out.width: 50%
-    v_max <- 26.91670 
+    v_max <- 26.91670
     K_M <- 1.02837
-    
+
     S_waarden <- seq(0, 10, 0.5)
     # de gefitte MM-curve:
     reactiesnelheid_model <- michaelis_menten(S_waarden, v_max, K_M)
-    
+
     # plot de lijn volgens het model
     plot(
-      S_waarden, reactiesnelheid_model, 
+      S_waarden, reactiesnelheid_model,
       type = "l", col = "darkorange", lwd = 3,
       xlab = "substraat",
       ylab = "reactiesnelheid")
     # voeg de datapunten eraan toe
     points(
-      meetgegevens$substraatconcentratie, 
+      meetgegevens$substraatconcentratie,
       meetgegevens$reactiesnelheid,
-      pch = 21, 
-      bg = "gray", 
+      pch = 21,
+      bg = "gray",
       cex = 1.5
       )
     ```

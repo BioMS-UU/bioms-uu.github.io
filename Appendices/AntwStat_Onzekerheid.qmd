@@ -22,8 +22,8 @@ d.  **Populatie:** Nederlandse bevolking.
     **Eenheden:** Individuele Nederlanders.
     **Variabele:** Steun voor het kabinetsbeleid (bijv. "Ja"/"Nee").
     **Populatieparameter:** Proportie van de populatie dat het kabinetsbeleid steunt.
-    
-    
+
+
 ### @exr-systematisch-of-toevallig
 
 a.  **Toevallige fout.** Ieder cijfer hangt af van de studentassistent
@@ -33,10 +33,10 @@ b.  **Systematische fout.** Door de manier waarop de steekproef werd genomen
     (via de lijst van Literary Digest) was deze sterk gebiast. Dat levert
     een systematische fout op.
 
-c.   **Systematische fout.** De tijden wijken namelijk systematisch 4 min af 
+c.   **Systematische fout.** De tijden wijken namelijk systematisch 4 min af
      van de werkelijke waarde.
 
-d.   **Toevallige fout.** Er is variatie in de concentraties door toevallige 
+d.   **Toevallige fout.** Er is variatie in de concentraties door toevallige
      afwijkingen bij het pipetteren.
 
 ### @exr-biases
@@ -47,8 +47,8 @@ a.   **Waarnemersbias** ligt het meest voor de hand, omdat de psychiater
      als bij sommige cliënten de behandeling tussentijds wordt afgebroken;
      in dat geval zullen we alleen de klachten beoordelen van een specifieke
      selectie van de cliënten.
-     
-b.   **Vrijwilligersbias** speelt daar een enorme rol, want de mensen die 
+
+b.   **Vrijwilligersbias** speelt daar een enorme rol, want de mensen die
      de moeite nemen om te stemmen zijn geen willekeurige steekproef
      uit de populatie. Stand.nl weet dit heel goed: deze disclaimer
      staat op hun website bij de uitslag:
@@ -57,28 +57,28 @@ b.   **Vrijwilligersbias** speelt daar een enorme rol, want de mensen die
 
 c.   **Overlevingsbias**. Bedrijven die tijdens de crisis failliet zijn gegaan
      staan mogelijk in 2024 niet meer ingeschreven bij de Kamer van Koophandel.
-     Het effect van de steun op die bedrijven wordt in het onderzoek dus 
+     Het effect van de steun op die bedrijven wordt in het onderzoek dus
      niet meegenomen. Dat levert bias op.
 
-d.   **Non-respons-bias**: typisch vult maar ongeveer 20% van de studenten 
+d.   **Non-respons-bias**: typisch vult maar ongeveer 20% van de studenten
      de enquête in. Niemand weet welk effect dat heeft op de gemiddelde cijfers.
      (Vul jij de enquête na deze cursus wel in? Een grotere steekproef vermindert de bias.)
 
 e.   **Overlevingsbias**. Deze CEO schat het effect van stoppen met je studie
      in op basis van een heel bijzondere selectie personen: succesvolle managers
-     in de ICT. Dat levert een vertekend beeld op. 
+     in de ICT. Dat levert een vertekend beeld op.
      Het perspectief van de *drop-outs* die géén CEO zijn geworden
-     wordt niet meegenomen. 
-     
+     wordt niet meegenomen.
+
      Mogelijk stopten deze succesvolle ICT-ers met hun studie
-     omdat ze concrete mogelijkheden zagen op de arbeidsmarkt, 
+     omdat ze concrete mogelijkheden zagen op de arbeidsmarkt,
      of hadden ze een bijzonder talent.
      Dat maakt het niet per se een goed idee voor anderen
      om hun voorbeeld te volgen.
 
 ### @exr-aselect
 
-a.  Het volgende scriptje werkt hiervoor: 
+a.  Het volgende scriptje werkt hiervoor:
 
     ```{r}
     #| eval: false
@@ -86,10 +86,10 @@ a.  Het volgende scriptje werkt hiervoor:
     # parameters
     aantal_plotjes <- 20
     aantal_selecteren <- 10
-    
+
     # vector met nummers plotjes
     nummers_plotjes <- seq(1, aantal_plotjes)
-    
+
     # selecteer plotjes die bemest gaan worden
     (bemesten <- sample( nummers_plotjes, aantal_selecteren) )
     ```
@@ -99,10 +99,10 @@ b.  Zie het volgende script:
 
     ```{r}
     #| eval: false
-    
+
     library(NHANES)
     data(NHANES)
-    
+
     # parameters
     n_steekproef <- 30    # grootte van de steekproef
 
@@ -111,12 +111,12 @@ b.  Zie het volgende script:
         NHANES$SleepHrsNight, n_steekproef
       )
     gemiddelde <- mean(steekproef, na.rm = TRUE)
-    
+
     print(steekproef)
-    
+
     print(gemiddelde)
     ```
-    
+
     Merk op dat er op veel plekken `NA` is ingevuld --- dat zijn missende gegevens.
 
 c.  --
@@ -128,38 +128,38 @@ e.  Omdat we een aselecte steekproef hebben genomen, hebben de schattingen geen 
     de schattingen zijn nauwkeurig / zuiver.
     Dat wil zeggen dat de schattingen *gemiddeld* juist zijn.
     We kunnen het populatiegemiddelde dus schatten door het gemiddelde
-    te bepalen van de schattingen in het histogram. 
+    te bepalen van de schattingen in het histogram.
     Op het oog is dat ongeveer 6,9 uur.
-    
+
     We kunnen dat gemiddelde van die schattingen ook rechtstreeks
-    aan R vragen door deze regel 
+    aan R vragen door deze regel
     toe te voegen aan de code:
-    
+
     ```{r}
     #| eval: false
     mean(gemiddelden)
     ```
-    
+
     Het gemiddelde van de hele populatie krijgen we als volgt:
-    
+
     ```{r}
     #| eval: false
     mean(slaapuren)
     ```
-    
+
     Als het goed is, liggen deze getallen dicht bij elkaar, rond 6,9 uur.
 
 f.  De onzekerheid of toevallige fout in één schatting hangt samen met
     de *spreiding* van de herhaalde schattingen.
     Een goede optie is dus om de standaarddeviatie van de schattingen te gebruiken:
-    
+
     ```{r}
     #| eval: false
     sd(gemiddelden)
     ```
-    
-    Het precieze resultaat hangt af van de toevallige steekproeven die jij hebt 
-    getrokken, maar zou dichtbij 0,25 moeten liggen. 
-    Dat wil zeggen: 
-    *typisch* ligt één schatting blijkbaar zo'n 0,25 van de werkelijke waarde 
+
+    Het precieze resultaat hangt af van de toevallige steekproeven die jij hebt
+    getrokken, maar zou dichtbij 0,25 moeten liggen.
+    Dat wil zeggen:
+    *typisch* ligt één schatting blijkbaar zo'n 0,25 van de werkelijke waarde
     van de populatieparameter af.
