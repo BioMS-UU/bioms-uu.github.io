@@ -78,23 +78,13 @@ a.  Een schets van de verdeling; de zwarte pijl geeft de standaarddeviatie aan:
     mu = 110
     sigma = 9
 
-    # Hoogte van de pijl bepalen
-    h <- exp(-0.5) / sqrt(2 * pi) / sigma
-
-    pijl <- geom_segment(
-        aes(x = mu, xend = mu + sigma, y = h, yend = h),
-        arrow = arrow(length = unit(0.2, "cm")),
-        color = "black",
-        linewidth = 0.8
-      ) # Pijl voor standaarddeviatie
-
-    x <- seq(mu -3.5*sigma, mu + 3.5*sigma, length.out = 350)
+    x <- seq(mu - 3.5*sigma, mu + 3.5*sigma, length.out = 350)
     data_Specifiek <- data.frame(x = x, y = dnorm(x, mean = mu, sd = sigma))
 
-    normaalSpecifiek(mu, sigma, "Spanwijdte (cm)") +
+    normaalCurve(mu, sigma, "Spanwijdte (cm)", labels = "numeriek") +
       oppervlak(0, mu - 18, data_Specifiek) +
       oppervlak(mu + 18, 200, data_Specifiek) +
-      pijl
+      pijlSigma(mu, sigma, label = NULL)
     ```
 
 b.  Het oppervlak is in de schets hierboven aangegeven.
@@ -120,23 +110,13 @@ e.  Een schets van de steekproevenverdeling van het gemiddelde; de zwarte pijl g
     mu = 110
     sigma = 3
 
-    # Hoogte van de pijl bepalen
-    h <- exp(-0.5) / sqrt(2 * pi) / sigma
-
-    pijl <- geom_segment(
-        aes(x = mu, xend = mu + sigma, y = h, yend = h),
-        arrow = arrow(length = unit(0.2, "cm")),
-        color = "black",
-        linewidth = 0.8
-      ) # Pijl voor standaarddeviatie
-
-    x <- seq(mu -3.5*sigma, mu + 3.5*sigma, length.out = 350)
+    x <- seq(mu - 3.5*sigma, mu + 3.5*sigma, length.out = 350)
     data_Specifiek <- data.frame(x = x, y = dnorm(x, mean = mu, sd = sigma))
 
-    normaalSpecifiek(mu, sigma, "Steekproefgemiddelde van spanwijdte (cm)") +
+    normaalCurve(mu, sigma, "Steekproefgemiddelde van spanwijdte (cm)", labels = "numeriek") +
       oppervlak(0, mu - 6, data_Specifiek) +
       oppervlak(mu + 6, 200, data_Specifiek) +
-      pijl
+      pijlSigma(mu, sigma, label = NULL)
     ```
 
 f.  De situatie is in de schets hierboven ingetekend.

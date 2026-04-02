@@ -235,45 +235,12 @@ Die ziet er zo uit:
 #| out-width: 64.3%
 #| code-fold: true
 
-# Genereer t-waarden
-waarden_t <- seq(-3.5, 3.5, by = 0.1)
-
-# Maak een dataframe voor de kansdichtheid
-dataframe <- data.frame(
-  t = waarden_t,
-  kansdichtheid = dt(waarden_t, df = 9)
-)
-
-# Plot de t-verdeling
-ggplot(
-  dataframe,
-  aes(
-    x = t, y = kansdichtheid
-  )
-) +
-  # Voeg de lijn toe
-  geom_line(
-    color = lijnkleur0, linewidth = 1
-  ) +
-  # Voeg een verticale, gestippelde lijn toe bij t = -3.09
-  geom_vline(
-    xintercept = -3.09, color = lijnkleur1,
-    linewidth = 1, linetype = "dotted"
-  ) +
-  # Voeg een label toe op de x-as met een juiste wiskundige notatie
-  annotate(
-    "text", x = -3.09, y = 0.2,
-    label = expression(italic(t) == -3.09),
-    color = accentkleur2, angle = 90, vjust = -0.5, hjust = 1
-  ) +
-  # Labels toevoegen
-  labs(
-    x = expression(italic(t)),
-    y = "Kansdichtheid",
-    title = NULL
-  ) +
-  # Thema toepassen
-  theme_minimal()
+tCurve(9) +
+  geom_vline(xintercept = -3.09, color = lijnkleur1,
+             linewidth = 1, linetype = "dotted") +
+  annotate("text", x = -3.09, y = 0.2,
+           label = expression(italic(t) == -3.09),
+           color = accentkleur2, angle = 90, vjust = -0.5, hjust = 1)
 ```
 
 De $t$-waarde die we gevonden hebben,
@@ -302,110 +269,39 @@ met paars zijn aangegeven.
 #| out-width: 64.3%
 #| code-fold: true
 
-# Genereer t-waarden
-waarden_t <- seq(-3.5, 3.5, by = 0.1)
-
-# Maak een dataframe voor de kansdichtheid
-dataframe <- data.frame(
-  t = waarden_t,
-  kansdichtheid = dt(waarden_t, df = 9)
-)
-
-# Definieer afzonderlijke gebieden voor de linker- en rechterstaart
-data_tails_links <- subset(dataframe, t <= -3.09)
-data_tails_rechts <- subset(dataframe, t >= 3.09)
-
-# Bepaal y-coördinaten voor pijlen en labels
-y_pijl <- 0.1
+# Data frame met x/y kolommen voor oppervlak()
+data <- data.frame(x = seq(-3.5, 3.5, length.out = 350),
+                   y = dt(seq(-3.5, 3.5, length.out = 350), df = 9))
+y_pijl     <- 0.1
 y_end_pijl <- 0.02
 
-# Plot de t-verdeling
-ggplot(
-  dataframe,
-  aes(
-    x = t, y = kansdichtheid
-  )
-) +
-  # Vul de linker staart in
-  geom_area(
-    data = data_tails_links, aes(x = t, y = kansdichtheid),
-    fill = opvulkleur1, alpha = 0.7
-  ) +
-  # Vul de rechter staart in
-  geom_area(
-    data = data_tails_rechts, aes(x = t, y = kansdichtheid),
-    fill = opvulkleur1, alpha = 0.7
-  ) +
-  # Voeg de lijn toe
-  geom_line(
-    color = lijnkleur0, linewidth = 1
-  ) +
-  # Kromme pijltjes toevoegen
-  annotate(
-    "curve",
-    x = -3.5, y = y_pijl, xend = -3.4, yend = y_end_pijl,
-    curvature = 0.2,
-    arrow = arrow(length = unit(0.2, "cm")),
-    color = lijnkleur1,
-    size = 0.7
-  ) +
-  annotate(
-    "curve",
-    x = 3.5, y = y_pijl, xend = 3.4, yend = y_end_pijl,
-    curvature = -0.2,
-    arrow = arrow(length = unit(0.2, "cm")),
-    color = lijnkleur1,
-    size = 0.7
-  ) +
-  # Annotaties toevoegen
-  annotate(
-    "text",
-    x = -3.5,
-    y = y_pijl + 0.05,
-    label = expression(frac(italic(P),2)),
-    color = accentkleur2,
-    hjust = 0.5,
-    size = 4
-  ) +
-  annotate(
-    "text",
-    x = 3.5,
-    y = y_pijl + 0.05,
-    label = expression(frac(italic(P),2)),
-    color = accentkleur2,
-    hjust = 0.5,
-    size = 4
-  ) +
-  # Voeg een verticale, gestippelde lijn toe bij t = -3.09
-  geom_vline(
-    xintercept = -3.09, color = lijnkleur1,
-    linewidth = 1, linetype = "dotted"
-  ) +
-  # Voeg een label toe op de x-as met een juiste wiskundige notatie
-  annotate(
-    "text", x = -2.55, y = 0.3,
-    label = expression(italic(t) == -3.09),
-    color = accentkleur2, angle = 90, vjust = -0.5, hjust = 1
-  ) +
-  # Voeg ook een verticale, gestippelde lijn toe bij t = 3.09
-  geom_vline(
-    xintercept = 3.09, color = lijnkleur1,
-    linewidth = 1, linetype = "dotted"
-  ) +
-  # Voeg een label toe op de x-as met een juiste wiskundige notatie
-  annotate(
-    "text", x = 3, y = 0.3,
-    label = expression(italic(t) == 3.09),
-    color = accentkleur2, angle = 90, vjust = -0.5, hjust = 1
-  ) +
-  # Labels toevoegen
-  labs(
-    x = expression(italic(t)),
-    y = "Kansdichtheid",
-    title = NULL
-  ) +
-  # Thema toepassen
-  theme_minimal()
+tCurve(9) +
+  oppervlak(-10, -3.09) +
+  oppervlak( 3.09,  10) +
+  annotate("curve",
+           x = -3.5, y = y_pijl, xend = -3.4, yend = y_end_pijl,
+           curvature =  0.2, arrow = arrow(length = unit(0.2, "cm")),
+           color = lijnkleur1, linewidth = 0.7) +
+  annotate("curve",
+           x =  3.5, y = y_pijl, xend =  3.4, yend = y_end_pijl,
+           curvature = -0.2, arrow = arrow(length = unit(0.2, "cm")),
+           color = lijnkleur1, linewidth = 0.7) +
+  annotate("text", x = -3.5, y = y_pijl + 0.05,
+           label = expression(frac(italic(P), 2)),
+           color = accentkleur2, hjust = 0.5, size = 4) +
+  annotate("text", x =  3.5, y = y_pijl + 0.05,
+           label = expression(frac(italic(P), 2)),
+           color = accentkleur2, hjust = 0.5, size = 4) +
+  geom_vline(xintercept = -3.09, color = lijnkleur1,
+             linewidth = 1, linetype = "dotted") +
+  annotate("text", x = -2.55, y = 0.3,
+           label = expression(italic(t) == -3.09),
+           color = accentkleur2, angle = 90, vjust = -0.5, hjust = 1) +
+  geom_vline(xintercept =  3.09, color = lijnkleur1,
+             linewidth = 1, linetype = "dotted") +
+  annotate("text", x = 3, y = 0.3,
+           label = expression(italic(t) == 3.09),
+           color = accentkleur2, angle = 90, vjust = -0.5, hjust = 1)
 ```
 
 Om deze oppervlakte te berekenen, 
@@ -696,9 +592,6 @@ data_normaal_2 <- data.frame(
   kansdichtheid = dnorm(waarden_x)
 )
 
-# Hoogte van de pijl bepalen
-hoogte_pijl <- exp(-0.5) / sqrt(2 * pi)
-
 # Plot de normaalverdelingen
 ggplot() +
   # Voeg eerste normaalverdeling toe
@@ -719,28 +612,9 @@ ggplot() +
     data = data_normaal_2, aes(x, kansdichtheid),
     fill = opvulkleur1, alpha = 0.4
   ) +
-  # Voeg pijlen toe voor standaarddeviatie
-  geom_segment(
-    aes(x = 0, xend = 1, y = hoogte_pijl, yend = hoogte_pijl),
-    arrow = arrow(length = unit(0.2, "cm")),
-    color = "black", linewidth = 0.7
-  ) +
-  geom_segment(
-    aes(x = verschil, xend = verschil + 1, y = hoogte_pijl, yend = hoogte_pijl),
-    arrow = arrow(length = unit(0.2, "cm")),
-    color = "black", linewidth = 0.7
-  ) +
-  # Voeg annotaties toe
-  annotate(
-    "text", x = 0.5, y = 0.91 * hoogte_pijl,
-    label = expression(italic(sigma)),
-    color = "black", size = 4.5, hjust = 0.5, vjust = 0.5
-  ) +
-  annotate(
-    "text", x = verschil + 0.5, y = 0.91 * hoogte_pijl,
-    label = expression(italic(sigma)),
-    color = "black", size = 4.5, hjust = 0.5, vjust = 0.5
-  ) +
+  # Pijlen voor standaarddeviatie
+  pijlSigma(0,       1, y_scale = 0.91) +
+  pijlSigma(verschil, 1, y_scale = 0.91) +
   annotate(
     "text", x = 0, y = -0.03,
     label = expression(mu[1]),

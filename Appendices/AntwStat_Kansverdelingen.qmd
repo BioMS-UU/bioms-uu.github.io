@@ -276,28 +276,8 @@ e.  Standaarddeviatie:
 x <- seq(-3.5, 3.5, length.out = 350)
 data <- data.frame(x = x, y = dnorm(x))
 
-normaalGeneriek <-
-  # Plot maken
-  ggplot(data, aes(x, y)) +
-  geom_line(color = lijnkleur0, linewidth = 1) + # Curve van de standaardnormale verdeling
-  scale_x_continuous(
-    breaks = c(-2, -1, 0, 1, 2),
-    labels = parse(text = c(
-  "italic(mu) - 2 * italic(sigma)",
-  "italic(mu) - italic(sigma)",
-  "italic(mu)",
-  "italic(mu) + italic(sigma)",
-  "italic(mu) + 2 * italic(sigma)"
-)),
-    minor_breaks = NULL # Verwijdert minor ticks
-  ) + # Labels voor x-as
-  scale_y_continuous(labels = NULL) + # getallen van y-as weglaten
-  labs(
-    y = "Kansdichtheid",
-    x = NULL
-  ) + # Labels voor de assen
-  theme_minimal() +
-  theme(axis.text.x = element_text(size = 12, angle = 90, vjust = 0.5, hjust = 1))
+normaalGeneriek <- normaalCurve(0, 1, NULL, angle = 90) +
+  theme(axis.text.x = element_text(vjust = 0.5, hjust = 1))
 
 # Gebruik qnorm om de de x-waarde bij een bepaalde kans te bepalen zodat de
 # antwoorden makkelijk gemaakt kunnen worden.
@@ -403,22 +383,7 @@ b.  Schets:
 ```{r}
 #| echo: false
 
-standaardNormaalGeneriek <-
-  # Plot maken
-  ggplot(data, aes(x, y)) +
-  geom_line(color = lijnkleur0, linewidth = 1) + # Curve van de standaardnormale verdeling
-  scale_x_continuous(
-    breaks = c(-2, -1, 0, 1, 2),
-    labels = c(-2, -1, 0, 1, 2),
-    minor_breaks = NULL # Verwijdert minor ticks
-  ) + # Labels voor x-as
-  scale_y_continuous(labels = NULL) + # getallen van y-as weglaten
-  labs(
-    y = "Kansdichtheid",
-    x = expression(italic(Z))
-  ) + # Labels voor de assen
-  theme_minimal() +
-  theme(axis.text.x = element_text(size = 12))
+standaardNormaalGeneriek <- normaalCurve(0, 1, expression(italic(Z)), labels = "z")
 
 # Gebruik qnorm om de de x-waarde bij een bepaalde kans te bepalen zodat de
 # antwoorden makkelijk gemaakt kunnen worden.
@@ -590,7 +555,7 @@ e.  Schets:
     x <- seq(mu -3.5*sigma, mu + 3.5*sigma, length.out = 350)
     data_Specifiek <- data.frame(x = x, y = dnorm(x, mean = mu, sd = sigma))
 
-    normaalSpecifiek(mu, sigma, "IQ") + oppervlak(140, 200, data_Specifiek)
+    normaalCurve(mu, sigma, "IQ", labels = "numeriek") + oppervlak(140, 200, data_Specifiek)
     ```
 
     De waarde 140 ligt ver in de staart, en dus is maar een heel klein deel
@@ -621,89 +586,7 @@ a.  De schets ziet er zo uit:
     #| fig.width: 3.75
     #| fig.height: 2.75
     #| out.width: 50%
-    # Functie om een plot te maken van de kritieke waarde
-    crit_plot <- function(alpha) {
-      # Kritieke waarde van Z
-      Z_crit <- qnorm(1 - alpha / 2)  # Bereken de kritieke waarde
-
-      # Coördinaten voor de pijlen
-      xstart <- (Z_crit + 3.5) / 2         # Beginpunt x-coördinaat
-      ystart <- dnorm(0) / 4               # Beginpunt y-coördinaat
-      xend <- Z_crit + (3.5 - Z_crit) / 7  # Eindpunt x-coördinaat
-      yend <- dnorm(xend) / 3              # Eindpunt y-coördinaat
-
-      proportie <- function(prop){
-          annotate(
-              "text",
-              x = 0, y = 0.15,
-              label = prop, # Dynamically include the variable
-              color = "black",
-              size = 5,
-              hjust = 0.5,
-              vjust = 0.5
-          )
-      }
-
-      # Plot de standaardnormale verdeling met staarten en annotaties
-      standaardNormaalGeneriek +
-        # Labels voor de assen
-        labs(
-          y = "Kansdichtheid",
-          x = expression(italic(Z))
-        ) +
-        # Ingekleurd oppervlak onder de curve
-        oppervlak(-10, -Z_crit, data) +
-        oppervlak(Z_crit, 10, data) +
-        # Schaalinstellingen voor de x-as
-        scale_x_continuous(
-          breaks = c(-Z_crit, 0, Z_crit),
-          labels = c(
-            paste0(round(-Z_crit, 2), "..."),
-            "0",
-            paste0(round(Z_crit, 2), "...")
-          ),
-          minor_breaks = NULL  # Verwijder minor ticks
-        ) +
-        # Kromme pijltjes toevoegen
-        geom_curve(
-          aes(x = -xstart, y = ystart, xend = -xend, yend = yend),
-          curvature = 0.2,
-          arrow = arrow(length = unit(0.2, "cm")),
-          color = "black",
-          size = 0.7
-        ) +
-        geom_curve(
-          aes(x = xstart, y = ystart, xend = xend, yend = yend),
-          curvature = -0.2,
-          arrow = arrow(length = unit(0.2, "cm")),
-          color = "black",
-          size = 0.7
-        ) +
-        # Annotaties toevoegen
-        annotate(
-          "text",
-          x = -xstart,
-          y = ystart + 0.02,  # Plaats annotatie net boven de pijl
-          label = gsub("\\.", ",", round(alpha / 2, 3)),
-          color = "black",
-          hjust = 0.5,
-          size = 4
-        ) +
-        annotate(
-          "text",
-          x = xstart,
-          y = ystart + 0.02,  # Plaats annotatie net boven de pijl
-          label = gsub("\\.", ",", round(alpha / 2, 3)),
-          color = "black",
-          hjust = 0.5,
-          size = 4
-        ) +
-        # Label in het midden
-        proportie(gsub("\\.", ",", round(1 - alpha, 2)))
-    }
-
-    # Voorbeeld: plot voor alpha = 0.1
-    crit_plot(0.1)
+    critPlot_norm(0.1)
     ```
 
     De kritieke waarde (dus de grens van het gekleurde gebied) kun je berekenen als:

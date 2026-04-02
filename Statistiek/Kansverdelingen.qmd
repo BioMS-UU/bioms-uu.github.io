@@ -551,30 +551,13 @@ b.  Schat voor ieder van de kansenverdelingen de kans op een uitkomst
 ```{r}
 #| echo: false
 
-# Definieer de standaardnormale verdeling
+# Definieer de standaardnormale verdeling (nodig voor oppervlak())
 x <- seq(-3.5, 3.5, length.out = 350)
 data <- data.frame(x = x, y = dnorm(x))
 
-oppervlak <- function(a, b){# Gebied tussen a en b kleuren
-  geom_area(
-    data = subset(data, x >= a & x <= b),
-    aes(x, y),
-    fill = opvulkleur1,
-    alpha = 0.4
-  )
-} 
+normaalGeneriek <- normaalCurve(0, 1, "Waarde", labels = "geen")
 
-normaalGeneriek <- ggplot(
-  data, 
-  aes(x = x, y = y)) +
-  geom_line(
-    color = lijnkleur0, 
-    linewidth = 1) +          
-  theme_minimal() + xlab("Waarde") + ylab("Kansdichtheid")
-#  theme(axis.text = element_blank(),
-#        axis.title = element_blank())
-
-# Gebruik qnorm om de de x-waarde bij een bepaalde kans te bepalen zodat de 
+# Gebruik qnorm om de de x-waarde bij een bepaalde kans te bepalen zodat de
 # antwoorden makkelijk gemaakt kunnen worden.
 ```
 
@@ -872,85 +855,13 @@ De verdelingen zien er als volgt uit (@fig-normale-verdeling):
 #| fig.height: 3
 #| out.width: 57%
 
-# Definieer de standaardnormale verdeling
+# Definieer de standaardnormale verdeling (nodig voor oppervlak())
 x <- seq(-3.5, 3.5, length.out = 350)
 data <- data.frame(x = x, y = dnorm(x))
 
-plotNormaal <- function(mu, sigma){
-    # Plot maken
-  ggplot(data, aes(x, y)) +
-  geom_line(color = lijnkleur0, linewidth = 1) + # Curve van de standaardnormale verdeling
-  scale_x_continuous(
-    breaks = c(mu - 2*sigma, -mu - sigma, mu, mu + sigma, mu + 2*sigma), 
-    labels = c(
-      mu - 2 * sigma, 
-      mu -sigma, 
-      mu, 
-      mu + sigma, 
-      mu + 2 * sigma
-    )
-  ) + # Labels voor x-as
-  labs(
-    y = "Kansdichtheid", 
-    x = expression(italic(X))
-  ) + # Labels voor de assen
-  theme_minimal() +
-  theme(axis.text.x = element_text(size = 10))
-}
+normaalGeneriek <- normaalCurve(0, 1, expression(italic(X)))
 
-normaalGeneriek <- 
-  # Plot maken
-  ggplot(data, aes(x, y)) +
-  geom_line(color = lijnkleur0, linewidth = 1) + # Curve van de standaardnormale verdeling
-  scale_x_continuous(
-  breaks = c(-2, -1, 0, 1, 2), 
-  labels = parse(text = c(
-    "italic(mu) - 2 * italic(sigma)", 
-    "italic(mu) - italic(sigma)", 
-    "italic(mu)", 
-    "italic(mu) + italic(sigma)", 
-    "italic(mu) + 2 * italic(sigma)"
-      )),
-    minor_breaks = NULL
-    ) + # Labels voor x-as
-  scale_y_continuous(labels = NULL) + # getallen van y-as weglaten
-  labs(
-    y = "Kansdichtheid", 
-    x = expression(italic(X))
-  ) + # Labels voor de assen
-  theme_minimal() +
-  theme(axis.text.x = element_text(size = 12, angle = 45))
-
-# Hoogte van de pijl bepalen
-h <- exp(-0.5) / sqrt(2 * pi)
-
-pijl <- geom_segment(
-    aes(x = 0, xend = 1, y = h, yend = h), 
-    arrow = arrow(length = unit(0.2, "cm")), 
-    color = "black", 
-    linewidth = 0.8
-  ) # Pijl voor standaarddeviatie
-  
-oppervlak <- function(a, b){# Gebied tussen a en b kleuren
-  geom_area(
-    data = subset(data, x >= a & x <= b), 
-    aes(x, y), 
-    fill = opvulkleur1, 
-    alpha = 0.4
-  ) 
-} 
-
-normaalGeneriek + pijl +
-  annotate(
-  "text", 
-  x = 0.5, 
-  y = 0.9 * h, # Use the variable h to scale the y-coordinate
-  label = expression(italic(sigma)), # Use expression() for mathematical notation
-  color = "black", 
-  size = 5, 
-  hjust = 0.5, 
-  vjust = 0.5
-  )
+normaalGeneriek + pijlSigma(0, 1)
 
 ```
 Je ziet dat de verdeling een *klokvorm* heeft en volledig *symmetrisch* is.
@@ -996,22 +907,9 @@ $$\pr{\mu - 2\sigma < X < \mu + 2\sigma} = 0{,}954\ldots.$$ {#eq-vuistregel-2-pr
 #| fig.height: 2.7
 #| out.width: 100%
 
-proportie <- function(prop){
-  annotate(
-  "text", 
-  x = 0, 
-  y = 0.15, 
-  label = prop, # Dynamically include the variable
-  color = "black", 
-  size = 5, 
-  hjust = 0.5, 
-  vjust = 0.5
-)
-}
+normaalGeneriek + oppervlak(-1, 1, data) + proportie("0,68...")
 
-normaalGeneriek + oppervlak(-1,1) + proportie("0,68...")
-
-normaalGeneriek + oppervlak(-2, 2) + proportie("0,954...")
+normaalGeneriek + oppervlak(-2, 2, data) + proportie("0,954...")
 ```
 
 ::: {#exr-normale-verdeling .pepexr}
@@ -1101,25 +999,8 @@ Deze verdeling is hieronder (@fig-std-normaal) weergegeven.
 #| out.width: 64%
 
 # Plot de standaardnormale verdeling
-plotNormaal(0, 1) +
-  # Labels voor de assen
-  labs(
-    y = "Kansdichtheid", 
-    x = expression(italic(Z))
-  ) +
-  # Voeg de pijl toe
-  pijl +
-  # Annotatie toevoegen met sigma
-  annotate(
-    "text", 
-    x = 0.5, 
-    y = 0.88 * h,        # Gebruik de variabele h voor de y-positie
-    label = expression(italic(sigma) == 1),  # Wiskundige notatie voor sigma
-    color = "black", 
-    size = 5, 
-    hjust = 0.47, 
-    vjust = 0.5
-  )
+normaalCurve(0, 1, expression(italic(Z)), labels = "z") +
+  pijlSigma(0, 1, label = expression(italic(sigma) == 1), y_scale = 0.88, hjust = 0.47)
 ```
 
 Eerder hebben we kansvariabelen vaak $X$ genoemd.
@@ -1612,77 +1493,7 @@ en de kans op een waarneming die minder extreem is, is 1 - 0,2 = 0,8.
 #| fig.width: 3.75
 #| fig.height: 2.75
 #| out.width: 100%
-# Functie om een plot te maken van de kritieke waarde
-crit_plot <- function(alpha) {
-  # Kritieke waarde van Z
-  Z_crit <- qnorm(1 - alpha / 2)  # Bereken de kritieke waarde
-  
-  # Coördinaten voor de pijlen
-  xstart <- (Z_crit + 3.5) / 2         # Beginpunt x-coördinaat
-  ystart <- dnorm(0) / 4               # Beginpunt y-coördinaat
-  xend <- Z_crit + (3.5 - Z_crit) / 7  # Eindpunt x-coördinaat
-  yend <- dnorm(xend) / 3              # Eindpunt y-coördinaat
-  
-  # Plot de standaardnormale verdeling met staarten en annotaties
-  plotNormaal(0, 1) +
-    # Labels voor de assen
-    labs(
-      y = "Kansdichtheid", 
-      x = expression(italic(Z))
-    ) +
-    # Ingekleurd oppervlak onder de curve
-    oppervlak(-10, -Z_crit) +
-    oppervlak(Z_crit, 10) +
-    # Schaalinstellingen voor de x-as
-    scale_x_continuous(
-      breaks = c(-Z_crit, 0, Z_crit), 
-      labels = c(
-        paste0(round(-Z_crit, 2), "..."), 
-        "0", 
-        paste0(round(Z_crit, 2), "...")
-      ),
-      minor_breaks = NULL  # Verwijder minor ticks
-    ) +
-    # Kromme pijltjes toevoegen
-    geom_curve(
-      aes(x = -xstart, y = ystart, xend = -xend, yend = yend), 
-      curvature = 0.2, 
-      arrow = arrow(length = unit(0.2, "cm")), 
-      color = "black", 
-      size = 0.7
-    ) +
-    geom_curve(
-      aes(x = xstart, y = ystart, xend = xend, yend = yend), 
-      curvature = -0.2, 
-      arrow = arrow(length = unit(0.2, "cm")), 
-      color = "black", 
-      size = 0.7
-    ) +
-    # Annotaties toevoegen
-    annotate(
-      "text", 
-      x = -xstart, 
-      y = ystart + 0.02,  # Plaats annotatie net boven de pijl
-      label = gsub("\\.", ",", round(alpha / 2, 3)), 
-      color = "black", 
-      hjust = 0.5, 
-      size = 4
-    ) +
-    annotate(
-      "text", 
-      x = xstart, 
-      y = ystart + 0.02,  # Plaats annotatie net boven de pijl
-      label = gsub("\\.", ",", round(alpha / 2, 3)), 
-      color = "black", 
-      hjust = 0.5, 
-      size = 4
-    ) +
-    # Label in het midden
-    proportie(gsub("\\.", ",", round(1 - alpha, 2)))
-}
-
-# Voorbeeld: plot voor alpha = 0.2
-crit_plot(0.2)
+critPlot_norm(0.2)
 ```
 
 ```{r}
@@ -1694,7 +1505,7 @@ crit_plot(0.2)
 #| fig.height: 2.75
 #| out.width: 100%
 
-crit_plot(0.05)
+critPlot_norm(0.05)
 ```
 
 ```{r}
@@ -1706,90 +1517,7 @@ crit_plot(0.05)
 #| fig.height: 2.75
 #| out.width: 100%
 
-# Functie om een plot te maken van de kritieke waarde
-crit_plot_t <- function(alpha, df) {
-  # Kritieke waarde van t
-  t_crit <- qt(1 - alpha / 2, df = df)  # Bereken de kritieke waarde
-  
-  # Coördinaten voor de pijlen
-  xstart <- (t_crit + 3.5) / 2         # Beginpunt x-coördinaat
-  ystart <- dt(0, df) / 4               # Beginpunt y-coördinaat
-  xend <- t_crit + (3.5 - t_crit) / 7  # Eindpunt x-coördinaat
-  yend <- dt(xend, df) / 3              # Eindpunt y-coördinaat
-
-  # Plot de t-verdeling met staarten en annotaties
-  dataT <- data.frame(x = x, y = dt(x, df = df))
-  plotT <- ggplot(dataT, aes(x, y)) +
-    geom_line(color = lijnkleur0, linewidth = 1) + # Curve van de t-verdeling
-    labs(
-      y = "Kansdichtheid", 
-      x = expression(italic(t))
-    ) + # Labels voor de assen
-    theme_minimal()
-  
-  oppervlakT <- function(a, b){# Gebied tussen a en b kleuren
-    geom_area(
-      data = subset(dataT, x >= a & x <= b), 
-      aes(x, y), 
-      fill = opvulkleur1, 
-      alpha = 0.4
-    ) 
-    } 
-  
-  plotT +
-    # Ingekleurd oppervlak onder de curve
-    oppervlakT(-10, -t_crit) +
-    oppervlakT(t_crit, 10) +
-    # Schaalinstellingen voor de x-as
-    scale_x_continuous(
-      breaks = c(-t_crit, 0, t_crit), 
-      labels = c(
-        paste0(round(-t_crit, 2), "..."), 
-        "0", 
-        paste0(round(t_crit, 2), "...")
-      ),
-      minor_breaks = NULL  # Verwijder minor ticks
-    ) +
-    # Kromme pijltjes toevoegen
-    geom_curve(
-      aes(x = -xstart, y = ystart, xend = -xend, yend = yend), 
-      curvature = 0.2, 
-      arrow = arrow(length = unit(0.2, "cm")), 
-      color = "black", 
-      size = 0.7
-    ) +
-    geom_curve(
-      aes(x = xstart, y = ystart, xend = xend, yend = yend), 
-      curvature = -0.2, 
-      arrow = arrow(length = unit(0.2, "cm")), 
-      color = "black", 
-      size = 0.7
-    ) +
-    # Annotaties toevoegen
-    annotate(
-      "text", 
-      x = -xstart, 
-      y = ystart + 0.02,  # Plaats annotatie net boven de pijl
-      label = gsub("\\.", ",", round(alpha / 2, 3)), 
-      color = "black", 
-      hjust = 0.5, 
-      size = 4
-    ) +
-    annotate(
-      "text", 
-      x = xstart, 
-      y = ystart + 0.02,  # Plaats annotatie net boven de pijl
-      label = gsub("\\.", ",", round(alpha / 2, 3)), 
-      color = "black", 
-      hjust = 0.5, 
-      size = 4
-    ) +
-    # Label in het midden
-    proportie(gsub("\\.", ",", round(1 - alpha, 2)))
-}
-
-# Voorbeeld: plot voor alpha = 0.2 en df = 4
-crit_plot_t(0.2, 4)
+critPlot_t(0.2, 4)
 ```
 
 ```{r}
@@ -1801,7 +1529,7 @@ crit_plot_t(0.2, 4)
 #| fig.height: 2.75
 #| out.width: 100%
 
-crit_plot_t(0.05, 4)
+critPlot_t(0.05, 4)
 ```
 
 Kritieke waarden van de standaardnormale verdeling en de $t$-verdeling.
