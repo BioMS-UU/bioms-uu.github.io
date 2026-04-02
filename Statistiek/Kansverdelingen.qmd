@@ -1,4 +1,13 @@
-{{< include _macros.tex >}}
+{{< include ../_macros.tex >}}
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: false
+
+source("_stat_setup.R")
+
+```
 
 # Kansverdelingen {#sec-kansverdelingen}
 
@@ -40,16 +49,11 @@ We kunnen de kansen weergeven in een grafiek:
 #| fig.height: 3
 #| out.width: 57%
  
-# Controleer of de benodigde pakketten zijn geladen
-if (!("ggplot2" %in% .packages())) {
-  library("ggplot2")
-}
-
 # Parameters definiëren
 min_ogen <- 1       # Minimum aantal ogen op een dobbelsteen
 max_ogen <- 6       # Maximum aantal ogen op een dobbelsteen
 kans <- 1 / max_ogen # Gelijke kans voor elke uitkomst
-kleur <- "darkorange"   # Kleur voor de balken in de plot
+kleur <- opvulkleur   # Kleur voor de balken in de plot
 
 # Genereer de uitkomsten en bijbehorende kansen
 uitkomsten <- seq(min_ogen, max_ogen)
@@ -102,15 +106,10 @@ dan kunnen we de kansen uitrekenen en in een grafiek laten zien:
 #| fig.height: 3
 #| out.width: 57%
 
-# Controleer of de benodigde pakketten zijn geladen
-if (!("ggplot2" %in% .packages())) {
-  library("ggplot2")
-}
-
 # Parameters definiëren
 min_som <- 2          # Minimum som bij twee dobbelstenen
 max_som <- 2*max_ogen # Maximum som bij twee dobbelstenen
-kleur <- rep("darkorange", 11) # Kleur voor de balken in de plot
+kleur <- rep(opvulkleur, 11) # Kleur voor de balken in de plot
 
 # Genereer uitkomsten en bijbehorende kansen
 uitkomsten <- seq(min_som, max_som)                     # Mogelijke uitkomsten
@@ -238,8 +237,8 @@ De kans $\pr{7 < X < 11}$
 #| fig.height: 3
 #| out.width: 57%
 
-kleur <- rep("darkorange", 11)
-kleur[7:9] <- "darkorchid"
+kleur <- rep(opvulkleur, 11)
+kleur[7:9] <- opvulkleur1
 
 verdelingTweeDobbelstenen(kleur)
 
@@ -278,11 +277,6 @@ maar $F_X(3) = \pr{X = 2} + \pr{X = 3}$.
 #| fig.height: 3
 #| out.width: 57%
 
-# Controleer of de benodigde pakketten zijn geladen
-if (!("ggplot2" %in% .packages())) {
-  library("ggplot2")
-}
-
 # Voeg extra punten toe om de cumulatieve kansen buiten het bereik van 2-12 te tonen
 kansen_dobbelsteen_cumulatief <- data.frame(
   uitkomsten = c(1, uitkomsten, 13), # Voeg 1 en 13 toe als grenzen
@@ -308,7 +302,7 @@ ggplot() +
   geom_segment(
     data = lijnen_data,
     aes(x = x_start, xend = x_end, y = y, yend = y),
-    color = "darkorange",        # Kleur van de lijnen
+    color = lijnkleur0,        # Kleur van de lijnen
     size = 1                     # Dikte van de lijnen
   ) +
   # Voeg gesloten cirkels (linkerkanten) toe, behalve bij (1, 0) en (13, 1)
@@ -317,7 +311,7 @@ ggplot() +
     aes(x = uitkomsten, y = kansen),
     shape = 16,                  # Gesloten cirkel
     size = 3,
-    color = "darkorange"
+    color = puntkleur1
   ) +
   # Voeg open cirkels (rechterkanten) toe
   geom_point(
@@ -326,7 +320,7 @@ ggplot() +
     shape = 1,                 # Open cirkel
     size = 1.8,
     stroke = 1.4,
-    color = "darkorange"
+    color = puntkleur1
   ) +
   scale_x_continuous(
     breaks = 2:12,               # Ticks alleen bij gehele getallen van 2 tot 12
@@ -424,11 +418,6 @@ Wat is dan wél de juiste interpretatie?
 #| fig.height: 3
 #| out.width: 57%
 
-# Controleer of de benodigde pakketten zijn geladen
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-if (!("tidyverse" %in% .packages())) { library(tidyverse) }
-if (!("NHANES" %in% .packages())) { library(NHANES) }
-
 linkergrens <- 170
 rechtergrens <- 182
 
@@ -475,27 +464,27 @@ ggplot(
   geom_area(
     data = dichtheid_interval, 
     aes(x = Lengte, y = Kansdichtheid),
-    fill = "darkorchid", 
+    fill = opvulkleur1,
     alpha = 0.5) +
   geom_line(
-    color = "darkorange", 
+    color = lijnkleur0, 
     linewidth = 1) +          
   annotate(
     "text", 
     x = linkergrens, 
     y = -0.003, 
-    label = paste0(linkergrens), 
-    size = 4, 
-    color = "darkorchid"
-    ) +          
+    label = paste0(linkergrens),
+    size = 4,
+    color = accentkleur2
+    ) +
   annotate(
-    "text", 
-    x = rechtergrens, 
-    y = -0.003, 
-    label = paste0(rechtergrens), 
-    size = 4, 
-    color = "darkorchid"
-    ) +  
+    "text",
+    x = rechtergrens,
+    y = -0.003,
+    label = paste0(rechtergrens),
+    size = 4,
+    color = accentkleur2
+    ) +
   annotate(
     "text", 
     x = (linkergrens + rechtergrens)/2, 
@@ -562,26 +551,24 @@ b.  Schat voor ieder van de kansenverdelingen de kans op een uitkomst
 ```{r}
 #| echo: false
 
-library(ggplot2)
-
 # Definieer de standaardnormale verdeling
 x <- seq(-3.5, 3.5, length.out = 350)
 data <- data.frame(x = x, y = dnorm(x))
 
 oppervlak <- function(a, b){# Gebied tussen a en b kleuren
   geom_area(
-    data = subset(data, x >= a & x <= b), 
-    aes(x, y), 
-    fill = "darkorchid", 
+    data = subset(data, x >= a & x <= b),
+    aes(x, y),
+    fill = opvulkleur1,
     alpha = 0.4
-  ) 
+  )
 } 
 
 normaalGeneriek <- ggplot(
   data, 
   aes(x = x, y = y)) +
   geom_line(
-    color = "darkorange", 
+    color = lijnkleur0, 
     linewidth = 1) +          
   theme_minimal() + xlab("Waarde") + ylab("Kansdichtheid")
 #  theme(axis.text = element_blank(),
@@ -736,10 +723,6 @@ de taak succesvol weet uit te voeren. Dat model levert de volgende kansen op:
 #| echo: false
 #| warning: false
 
-# Controleer of benodigde bibliotheken geladen zijn
-if (!("dplyr" %in% .packages())) { library(dplyr) }
-if (!("knitr" %in% .packages())) { library(knitr) }
-
 # Parameters instellen
 aantal_proeven <- 9
 kans_succes <- 0.41
@@ -889,12 +872,6 @@ De verdelingen zien er als volgt uit (@fig-normale-verdeling):
 #| fig.height: 3
 #| out.width: 57%
 
-# Controleer of ggplot2 geladen is, zo niet, laad het pakket
-if (!("ggplot2" %in% .packages())) {
-  library(ggplot2)
-}
-if (!("dplyr" %in% .packages())) { library(dplyr) }
-
 # Definieer de standaardnormale verdeling
 x <- seq(-3.5, 3.5, length.out = 350)
 data <- data.frame(x = x, y = dnorm(x))
@@ -902,7 +879,7 @@ data <- data.frame(x = x, y = dnorm(x))
 plotNormaal <- function(mu, sigma){
     # Plot maken
   ggplot(data, aes(x, y)) +
-  geom_line(color = "darkorange", linewidth = 1) + # Curve van de standaardnormale verdeling
+  geom_line(color = lijnkleur0, linewidth = 1) + # Curve van de standaardnormale verdeling
   scale_x_continuous(
     breaks = c(mu - 2*sigma, -mu - sigma, mu, mu + sigma, mu + 2*sigma), 
     labels = c(
@@ -924,7 +901,7 @@ plotNormaal <- function(mu, sigma){
 normaalGeneriek <- 
   # Plot maken
   ggplot(data, aes(x, y)) +
-  geom_line(color = "darkorange", linewidth = 1) + # Curve van de standaardnormale verdeling
+  geom_line(color = lijnkleur0, linewidth = 1) + # Curve van de standaardnormale verdeling
   scale_x_continuous(
   breaks = c(-2, -1, 0, 1, 2), 
   labels = parse(text = c(
@@ -958,7 +935,7 @@ oppervlak <- function(a, b){# Gebied tussen a en b kleuren
   geom_area(
     data = subset(data, x >= a & x <= b), 
     aes(x, y), 
-    fill = "darkorange", 
+    fill = opvulkleur1, 
     alpha = 0.4
   ) 
 } 
@@ -1187,14 +1164,6 @@ ten opzichte van elkaar uitgerekt en verschoven.)
 #| fig.width: 3.75
 #| out.width: 55%
 
-# Laad benodigde pakketten
-if (!("ggplot2" %in% loadedNamespaces())) { 
-  library(ggplot2) 
-}
-if (!("cowplot" %in% loadedNamespaces())) { 
-  library(cowplot) 
-}
-
 # Basisparameters instellen
 mu_x <- 170             # Gemiddelde voor X
 sigma_x <- 6            # Standaarddeviatie voor X
@@ -1242,10 +1211,10 @@ z_fill <- data.frame(
 
 # Plot voor X
 plot_x <- ggplot(x_data, aes(x = x, y = y)) +
-  geom_line(size = 1, color = "darkorange") +
+  geom_line(size = 1, color = lijnkleur0) +
   geom_area(
     data = x_fill, aes(x = x, y = y),
-    fill = "darkorange", alpha = 0.5
+    fill = opvulkleur1, alpha = 0.5
   ) +
   labs(
     x = expression(italic(X)),
@@ -1255,10 +1224,10 @@ plot_x <- ggplot(x_data, aes(x = x, y = y)) +
 
 # Plot voor Z
 plot_z <- ggplot(z_data, aes(x = x, y = y)) +
-  geom_line(size = 1, color = "darkorange") +
+  geom_line(size = 1, color = lijnkleur0) +
   geom_area(
     data = z_fill, aes(x = x, y = y),
-    fill = "darkorange", alpha = 0.5
+    fill = opvulkleur1, alpha = 0.5
   ) +
   labs(
     x = expression(italic(Z)),
@@ -1277,7 +1246,7 @@ final_plot <- ggdraw(combined_plot) +
   draw_line(
     x = c(0.675, 0.675),  # Relatieve positie op de x-as (0-1 schaal)
     y = c(0.09, 1),  # Relatieve positie op de y-as (0-1 schaal)
-    color = "DarkOrchid", 
+    color = lijnkleur1,
     size = 1, 
     linetype = "dashed"
   )
@@ -1289,15 +1258,15 @@ print(final_plot)
 
 Stel nu dat we geïnteresseerd zijn in de kans dat $X > 176$, 
 dus $\pr{X > 176}$. 
-In de *bovenste* grafiek van @fig-transformeren is dat de oppervlakte van het oranje gekleurde gebied.
+In de *bovenste* grafiek van @fig-transformeren is dat de oppervlakte van het paars gekleurde gebied.
 Omdat de twee grafieken dezelfde vorm hebben, kunnen we exact hetzelfde oppervlak
-ook intekenen in de *onderste* grafiek; dat hebben we weer met oranje gedaan.
+ook intekenen in de *onderste* grafiek; dat hebben we weer met paars gedaan.
 De paarse stippellijn laat zien 
-dat de grenzen van de oranje gebieden in beide plots
+dat de grenzen van de paarse gebieden in beide plots
 precies zijn uitgelijnd.
 
 In de bovenste plot is het gemiddelde $\mu_X = 170$ en de standaarddeviatie $\sd{X} = 6$.
-De grens van het oranje gebied, 176 cm,
+De grens van het paarse gebied, 176 cm,
 is dus precies één standaarddeviatie boven het gemiddelde.
 In de onderste plot moet de grens dus ook getrokken worden
 op één standaarddeviatie boven het gemiddelde, 
@@ -1493,8 +1462,7 @@ ggplot(
 #| fig-cap: "Vergelijking tussen verschillende $t$-verdelingen en de standaardnormale verdeling. Hoe groter het aantal vrijheidsgraden, hoe kleiner het verschil."
 #| label: fig-t
 
-if (!("plotly" %in% .packages())) { library(plotly) }
-if (!("stats" %in% .packages())) { library(stats) }
+library(plotly)
 
 # Reeks x-waarden
 x_waarden <- seq(-4, 4, length.out = 200)
@@ -1524,7 +1492,7 @@ for (i in seq_along(vrijheidsgraden)) {
     x = x_waarden,
     y = y_t,
     name = paste0("t-verdeling (df = ", df, ")"),
-    line = list(color = "darkorange", width = 3),
+    line = list(color = lijnkleur0, width = 3),
     visible = i == 1
   )
 }
@@ -1623,7 +1591,7 @@ alleen te beredeneren.)
 
 In @fig-krit-1 is weer 
 de standaardnormale verdeling weergegeven.
-In beide staarten van de verdeling is een gebied oranje gekleurd.
+In beide staarten van de verdeling is een gebied paars gekleurd.
 De oppervlakte van elk van deze gebieden is 0,1; 
 samen representeren ze dus een kans van 0,2.
 
@@ -1752,7 +1720,7 @@ crit_plot_t <- function(alpha, df) {
   # Plot de t-verdeling met staarten en annotaties
   dataT <- data.frame(x = x, y = dt(x, df = df))
   plotT <- ggplot(dataT, aes(x, y)) +
-    geom_line(color = "darkorange", linewidth = 1) + # Curve van de t-verdeling
+    geom_line(color = lijnkleur0, linewidth = 1) + # Curve van de t-verdeling
     labs(
       y = "Kansdichtheid", 
       x = expression(italic(t))
@@ -1763,7 +1731,7 @@ crit_plot_t <- function(alpha, df) {
     geom_area(
       data = subset(dataT, x >= a & x <= b), 
       aes(x, y), 
-      fill = "darkorange", 
+      fill = opvulkleur1, 
       alpha = 0.4
     ) 
     } 
@@ -1842,13 +1810,13 @@ Kritieke waarden van de standaardnormale verdeling en de $t$-verdeling.
 
 De grenswaarde van het rechter gebied wordt een **kritieke waarde** (*critical value*) van de verdeling genoemd.
 In dit geval gaat het om de kritieke waarde die hoort bij een kans van 0,2
-(voor beide oranje gebieden samen).
+(voor beide paarse gebieden samen).
 Deze kritieke waarde wordt daarom genoteerd als $Z_{0{,}2(2)}$.
-Hierin verwijst 0,2 naar de totale oppervlakte van de oranje gebieden,
+Hierin verwijst 0,2 naar de totale oppervlakte van de paarse gebieden,
 en de (2) geeft aan dat daarbij beide staarten worden meegeteld.
 
 Op dezelfde manier is $Z_{0{,}05(2)}$ de grenswaarde 
-die hoort bij oranje gebieden met een totale oppervlakte van 0,05. 
+die hoort bij paarse gebieden met een totale oppervlakte van 0,05. 
 Deze situatie is weergegeven in @fig-krit-2.
 De kritieke waarde is nu $Z_{0{,}05(2)} \approx 1{,}96$. 
 Dat deze kritieke waarde dicht bij 2 ligt,
@@ -1862,7 +1830,7 @@ Onthoud de waarde $Z_{0{,}05(2)}=1{,}96$;
   deze kritieke waarde komt in de statistiek keer op keer terug.
 
 Er bestaan kritieke waarden voor elke keuze
-van de totale oppervlakte van de oranje gebieden.
+van de totale oppervlakte van de paarse gebieden.
 Als we deze oppervlakte noteren met de Griekse letter $\alpha$ (spreek uit als "alfa"),
 is er een kritieke waarde $Z_{\alpha(2)}$ voor iedere waarde van $\alpha$
 tussen 0 en 1. Samengevat:
@@ -1891,7 +1859,7 @@ Kritieke waarden kunnen ook worden gedefinieerd voor $t$-verdelingen.
 Het grote verschil is dat de kritieke waarde die hoort bij een bepaalde kans
 $\alpha$ nu ook afhangt van het aantal vrijheidsgraden (df) van de $t$-verdeling.
 In @fig-krit-3 is de $t$-verdeling met $\mathrm{df} = 4$ weergegeven.
-Net als in @fig-krit-1 hebben de oranje gebieden in totaal
+Net als in @fig-krit-1 hebben de paarse gebieden in totaal
 een oppervlakte van 0,2.
 De grenzen van deze gebieden zijn de kritieke waarden 
 voor de kans 0,2 en $\mathrm{df} = 4$.
@@ -1937,11 +1905,6 @@ convergeert naar $Z_{0{,}05(2)}=1{,}96$ in de limiet van grote df.
 #| fig.height: 2.75
 #| out.width: 54%
 
-# Laad ggplot2 indien nodig
-if (!("ggplot2" %in% loadedNamespaces())) { 
-  library(ggplot2) 
-}
-
 # Parameters
 alpha <- 0.05                # Significatieniveau
 vrijheidsgraden <- 1:30      # Aantal vrijheidsgraden
@@ -1956,11 +1919,11 @@ data <- data.frame(
 
 # Plot
 ggplot(data, aes(x = df, y = kritieke_t)) +
-  geom_point(color = "darkorange", size = 2) +    # Punten
-  geom_line(color = "darkorange", size = 1) +     # Lijnen
+  geom_point(color = puntkleur1, size = 2) +    # Punten
+  geom_line(color = lijnkleur0, size = 1) +     # Lijnen
   geom_hline(
     yintercept = kritieke_normaal, 
-    color = "DarkOrchid", 
+    color = lijnkleur1,
     linetype = "dashed", 
     size = 1
   ) +
@@ -1969,15 +1932,15 @@ ggplot(data, aes(x = df, y = kritieke_t)) +
     x = 6, 
     y = kritieke_normaal - 0.4, 
     label = expression(italic(Z)[0.05 * "(" * 2 * ")"] == 1.96), 
-    color = "DarkOrchid", 
+    color = lijnkleur1,
     size = 4
   ) +
   annotate(
     "text", 
     x = 6, 
     y = 3.75, 
-    label = expression(italic(t)[0.05 * "(" * 2 * ")"*"df"]), 
-    color = "darkorange", 
+    label = expression(italic(t)[0.05 * "(" * 2 * ")"*"df"]),
+    color = accentkleur1,
     size = 4
   ) +
   coord_cartesian(ylim = c(0, 5)) +  # Stel het bereik van de y-as in
@@ -2092,18 +2055,13 @@ voor als je ze ergens tegenkomt.
 
 ```{r}
 #| echo: false
-# Laad benodigde pakketten
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-if (!("dplyr" %in% .packages())) { library(dplyr) }
-if (!("tibble" %in% .packages())) { library(tibble) }
-
 # Definieer x-waarden voor de continue verdelingen
 df_x <- seq(0, 10, length.out = 100)
 
 # Functie om discrete verdelingen te plotten
 make_discrete_plot <- function(x_vals, probs, dist_name) {
   ggplot(data.frame(x = x_vals, y = probs), aes(x = x, y = y)) +
-    geom_bar(stat = "identity", fill = "darkorange", color = "black", width = 1) +
+    geom_bar(stat = "identity", fill = opvulkleur, color = "black", width = 1) +
     labs(x = "Waarde", y = "Kans", title = dist_name) +
     theme_minimal()
 }
@@ -2111,7 +2069,7 @@ make_discrete_plot <- function(x_vals, probs, dist_name) {
 # Functie om continue verdelingen te plotten
 make_continuous_plot <- function(x_vals, density_vals, dist_name) {
   ggplot(data.frame(x = x_vals, y = density_vals), aes(x = x, y = y)) +
-    geom_line(color = "darkorange", size = 1) +
+    geom_line(color = lijnkleur0, size = 1) +
     labs(x = "Waarde", y = "Kansdichtheid", title = dist_name) +
     theme_minimal()
 }

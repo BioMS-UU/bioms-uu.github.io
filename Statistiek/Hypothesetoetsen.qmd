@@ -1,17 +1,11 @@
-{{< include _macros.tex >}}
+{{< include ../_macros.tex >}}
 
 ```{r}
 #| eval: true
 #| echo: false
 #| output: false
 
-library(ggplot2)
-
-opvulkleur <- "#ff7700" #opvulkleur
-lijnkleur1 <- "DarkOrchid"
-lijnkleur2 <- "#C72C05"
-lijnkleur3 <- "#0044FB"
-lijnkleur4 <- "#65982B"
+source("_stat_setup.R")
 
 ```
 
@@ -60,21 +54,6 @@ lagen.
 #| fig.width: 7
 #| out.width: "100%"
 #| warning: false
-
-# Installeer en laad de benodigde pakketten
-if (!requireNamespace("HistData", quietly = TRUE)) { 
-  install.packages("HistData") 
-}
-if (!requireNamespace("ggplot2", quietly = TRUE)) { 
-  install.packages("ggplot2") 
-}
-if (!requireNamespace("tidyr", quietly = TRUE)) { 
-  install.packages("tidyr") 
-}
-
-library(HistData)
-library(ggplot2)
-library(tidyr)
 
 # Laad de Arbuthnot-data
 data("Arbuthnot")
@@ -286,11 +265,6 @@ staarten dan is dat dus een indicatie dat $\HO$ niet waar is.
 #| fig.width: 7
 #| out.width: "86%"
 
-# Controleer of de benodigde pakketten zijn geladen
-if (!("ggplot2" %in% .packages())) {
-  library("ggplot2")
-}
-
 # Parameters definiëren voor de binomiale verdeling
 n <- 82
 p <- 0.5
@@ -330,7 +304,7 @@ verdelingBinomiaal <- function(kleur) {
 }
 
 # Kleur voor de balken
-kleur <- "darkorange"
+kleur <- opvulkleur
 
 # Plot de binomiale verdeling
 verdelingBinomiaal(kleur)
@@ -417,7 +391,7 @@ y_end_pijl <- 0.012
 # Maak een vector van kleuren
 kleur_vector <- ifelse(
   abs(uitkomsten - m) < abs(m - X), 
-  "darkorange", 
+  opvulkleur, 
   "DarkOrchid"
   )
 
@@ -426,36 +400,36 @@ verdelingBinomiaal(kleur_vector) +
     annotate(
       "curve",
       x = 7, y = y_pijl, xend = 9, yend = y_end_pijl, 
-      curvature = 0.2, 
-      arrow = arrow(length = unit(0.2, "cm")), 
-      color = "darkorchid", 
+      curvature = 0.2,
+      arrow = arrow(length = unit(0.2, "cm")),
+      color = lijnkleur1,
       size = 0.9
     ) +
     annotate(
       "curve",
-      x = 31, y = y_pijl, xend = 29, yend = y_end_pijl, 
-      curvature = -0.2, 
-      arrow = arrow(length = unit(0.2, "cm")), 
-      color = "darkorchid", 
+      x = 31, y = y_pijl, xend = 29, yend = y_end_pijl,
+      curvature = -0.2,
+      arrow = arrow(length = unit(0.2, "cm")),
+      color = lijnkleur1,
       size = 0.9
     ) +
     # Annotaties toevoegen
     annotate(
       "text", 
-      x = 7, 
+      x = 7,
       y = y_pijl + 0.01,  # Plaats annotatie net boven de pijl
-      label = expression(frac(italic(P),2)), 
-      color = "darkorchid", 
-      hjust = 0.5, 
+      label = expression(frac(italic(P),2)),
+      color = accentkleur2,
+      hjust = 0.5,
       size = 5
     ) +
     annotate(
-      "text", 
-      x = 31, 
+      "text",
+      x = 31,
       y = y_pijl + 0.01,  # Plaats annotatie net boven de pijl
-      label = expression(frac(italic(P),2)), 
-      color = "darkorchid", 
-      hjust = 0.5, 
+      label = expression(frac(italic(P),2)),
+      color = accentkleur2,
+      hjust = 0.5,
       size = 5
     )
 
@@ -853,7 +827,7 @@ plot_binomiaal_p_waarde <- function(X, x_verschuiving, y_verschuiving) {
   p_waarde <- sum(dbinom(0:grens, n, p)) * 2
 
   # Maak kleur_vector
-  kleur_vector <- rep("darkorange", length(uitkomsten))
+  kleur_vector <- rep(opvulkleur, length(uitkomsten))
   extreme_indices <- which(uitkomsten <= grens | 
                            uitkomsten >= n - grens)
   kleur_vector[extreme_indices] <- "DarkOrchid"
@@ -876,37 +850,37 @@ plot_binomiaal_p_waarde <- function(X, x_verschuiving, y_verschuiving) {
       x = x_pijl_links, y = y_pijl, 
       xend = x_pijl_links + pijl_offset_x, 
       yend = y_end_pijl, 
-      curvature = 0.2, 
-      arrow = arrow(length = unit(0.2, "cm")), 
-      color = "darkorchid", 
+      curvature = 0.2,
+      arrow = arrow(length = unit(0.2, "cm")),
+      color = lijnkleur1,
       size = 0.9
     ) +
     annotate(
       "curve",
-      x = x_pijl_rechts, y = y_pijl, 
-      xend = x_pijl_rechts - pijl_offset_x, 
-      yend = y_end_pijl, 
-      curvature = -0.2, 
-      arrow = arrow(length = unit(0.2, "cm")), 
-      color = "darkorchid", 
+      x = x_pijl_rechts, y = y_pijl,
+      xend = x_pijl_rechts - pijl_offset_x,
+      yend = y_end_pijl,
+      curvature = -0.2,
+      arrow = arrow(length = unit(0.2, "cm")),
+      color = lijnkleur1,
       size = 0.9
     ) +
     annotate(
       "text", 
       x = x_pijl_links, 
       y = y_pijl + 0.008,  
-      label = sprintf("%.3f", p_waarde / 2),  
-      color = "darkorchid", 
-      hjust = 0.5, 
+      label = sprintf("%.3f", p_waarde / 2),
+      color = accentkleur2,
+      hjust = 0.5,
       size = 5
     ) +
     annotate(
-      "text", 
-      x = x_pijl_rechts, 
-      y = y_pijl + 0.008,  
-      label = sprintf("%.3f", p_waarde / 2),  
-      color = "darkorchid", 
-      hjust = 0.5, 
+      "text",
+      x = x_pijl_rechts,
+      y = y_pijl + 0.008,
+      label = sprintf("%.3f", p_waarde / 2),
+      color = accentkleur2,
+      hjust = 0.5,
       size = 5
     )
 }
@@ -1002,7 +976,7 @@ y_pijl <- dbinom(grens - 1, n, p) + pijl_offset_y +
 y_end_pijl <- y_pijl - pijl_offset_y
 
 # Maak kleur_vector
-kleur_vector_rood <- rep("darkorange", length(uitkomsten))
+kleur_vector_rood <- rep(opvulkleur, length(uitkomsten))
 extreme_indices <- which(uitkomsten <= grens | 
                          uitkomsten >= n - grens)
 kleur_vector_rood[extreme_indices] <- lijnkleur2

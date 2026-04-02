@@ -1,16 +1,11 @@
-{{< include _macros.tex >}}
+{{< include ../_macros.tex >}}
 
 ```{r}
 #| eval: true
 #| echo: false
 #| output: false
 
-library(ggplot2)
-
-opvulkleur <- "#e8601d"
-lijnkleur1 <- "darkorchid"
-lijnkleur2 <- "red"
-lijnkleur3 <- "blue"
+source("_stat_setup.R")
 
 ```
 
@@ -113,9 +108,6 @@ gewicht neemt sneller dan lineair toe met lichaamslengte.
 #| fig.height: 3.5
 #| out.width: "64%"
 
-library(NHANES)
-library(ggplot2)
-
 data(NHANES)
 
 
@@ -124,7 +116,7 @@ ggplot(
   aes(x = Height, y = Weight)
 ) +
   geom_point(
-    color = "#e8601d",
+    color = puntkleur1,
     alpha = 0.5
   )+
   labs( x = "Lichaamslengte (cm)", y = "Gewicht (kg)") +
@@ -173,10 +165,6 @@ het aantal waarnemingen toont.
 #| 
 # samenhang gezondheidstoestand en woontoestand
 
-if (!("knitr" %in% .packages())) {
-  library(knitr)
-}
-
 # Vertaal de niveaus van HomeOwn naar het Nederlands
 NHANES$HomeOwn <- factor(
   NHANES$HomeOwn,
@@ -220,7 +208,7 @@ Daarom geven we de kruistabel weer met een **mozaïekplot**:
 #| fig.height: 4.5
 #| out.width: "100%"
 
-kleuren <- c("DarkOrchid", "#409899", "#e8601d")
+kleuren <- c("DarkOrchid", "#409899", opvulkleur)
 
 mosaicplot(
   kruistabel, 
@@ -471,10 +459,6 @@ uitgezet tegen... de verkoopcijfers van ijsjes?!?!
 #| fig.height: 5
 #| out.width: "95%"
 #| 
-# Controleer of benodigde pakketten zijn geladen
-if (!("readr" %in% .packages())) { library(readr) }
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-
 # Inlezen van gegevens
 verdrinkingen <- read_csv("data/drowning.csv")
 ijsverkoop <- read_csv("data/ice_cream.csv")
@@ -509,7 +493,7 @@ gegevens <- data.frame(
 # Visualisatie met ggplot2
 ggplot(gegevens, aes(x = ijsverkoop, y = verdrinkingen, 
                      label = maand)) +
-  geom_point(color = "#e8601d", size = 2) +
+  geom_point(color = puntkleur1, size = 2) +
   geom_text(vjust = 1.7, hjust = 0.4) +
   theme_minimal() +
   labs(
@@ -673,13 +657,6 @@ Figuur @fig-collider-plot illustreert dit effect.
 #| fig.height: 4
 #| out.width: "60%"
 #| label: fig-collider-plot
-
-if (!("MASS" %in% .packages())) {
-  library(MASS)
-}
-if (!("ggplot2" %in% .packages())) {
-  library(ggplot2)
-}
 
 # Parameters
 n_steekproef <- 500  # Aantal waarnemingen in de populatie
@@ -1478,10 +1455,6 @@ Dat is *regression to the mean* in actie.
 #| fig.height: 1.6
 #| out.width: "100%"
 
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-if (!("dplyr" %in% .packages())) { library(dplyr) }
-if (!("MASS" %in% .packages())) { library(MASS) }
-
 # Parameters for Ornstein-Uhlenbeck process
 t_max <- 2000  # Totale tijdstappen
 dt <- 1        # Grootte van tijdstap
@@ -1532,11 +1505,11 @@ ggplot(data, aes(x = tijd, y = X_scaled)) +
   geom_point(
     data = data %>% filter(extreem), 
     aes(x = tijd, y = X_scaled), 
-    color = "#e8601d", size = 1.5
+    color = puntkleur1, size = 1.5
   ) +
   geom_hline(
     yintercept = c(threshold_pos, threshold_neg) / sigma_inf, 
-    linetype = "dotted", color = "#e8601d"
+    linetype = "dotted", color = lijnkleur0
   ) +
   scale_y_continuous(breaks = Y_ticks, labels = Y_ticks) +
   labs(

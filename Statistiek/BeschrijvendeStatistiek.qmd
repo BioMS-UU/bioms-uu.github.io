@@ -1,18 +1,11 @@
-{{< include _macros.tex >}}
+{{< include ../_macros.tex >}}
 
 ```{r}
 #| eval: true
 #| echo: false
 #| output: false
 
-library(ggplot2)
-
-#opvulkleur <- "#ff7700" #opvulkleur
-opvulkleur <- "#ff8f2e" #opvulkleur
-lijnkleur1 <- "DarkOrchid"
-lijnkleur2 <- "#C72C05"
-lijnkleur3 <- "#0044FB"
-lijnkleur4 <- "#65982B"
+source("_stat_setup.R")
 
 ```
 
@@ -114,8 +107,7 @@ zijn
 
 - de genus van bacteriën betrokken bij een
 blaasontsteking, met niveaus *Escherichia*, *Klebsiella*, etc.
-- kankerstadia, met niveaus 0, I, II, III, of
-IV. 
+- kankerstadia, met niveaus 0, I, II, III, of IV. 
 
 Categorische variabelen worden ook wel **kwalitatieve variabelen**
 genoemd.
@@ -292,15 +284,6 @@ laat een voorbeeld zien voor variabele `AgeMonths`
 #| fig.height: 3
 #| out.width: "57%"
 
-
-# Controleer of ggplot2 en NHANES zijn geladen
-if (!("ggplot2" %in% .packages())) { 
-  library(ggplot2) 
-}
-if (!("NHANES" %in% .packages())) { 
-  library(NHANES) 
-}
-
 data("NHANES")
 
 ggplot(
@@ -350,11 +333,6 @@ zit de staart aan de rechterkant, dan is hij **rechts-scheef** (*right-skewed*).
 #| fig.cap: "Illustraties van scheve en symmetrische verdelingen."
 #| label: fig-symmetrisch
 #| out.width: "100%"
-
-# Controleer of ggplot2 geladen is
-if (!("ggplot2" %in% .packages())) { 
-  library(ggplot2) 
-}
 
 # Stel een seed in voor reproduceerbaarheid
 set.seed(123)
@@ -456,9 +434,6 @@ in het domein tussen 0 en 1.
 #| fig.cap: "Histogram van een ongeveer uniforme verdeling."
 #| label: fig-uniform
 
-# Laad benodigde bibliotheken
-if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
-
 # Stel een seed in voor reproduceerbaarheid
 set.seed(125)
 
@@ -498,11 +473,6 @@ Wel kom je soms **multimodaal** tegen voor verdelingen met meerdere pieken.
 #| out.width: "86%"
 #| fig.cap: "Unimodale en bimodale verdelingen."
 #| label: fig-bimodaal
-
-# Controleer of ggplot2 geladen is
-if (!("ggplot2" %in% loadedNamespaces())) { 
-  library(ggplot2) 
-}
 
 # Stel een seed in voor reproduceerbaarheid
 set.seed(123)
@@ -628,8 +598,6 @@ waar die twee pieken vandaan komen.
 #| fig-height: 4
 #| out-width: "100%"
 
-library(ggplot2)
-
 # Aantal samples
 n <- 9000
 
@@ -729,7 +697,7 @@ onderbroken lijnen) dat 86% van de mensen een gewicht heeft van hoogstens
 cumulplot <- ggplot(NHANES, aes(x = Weight)) +
   stat_ecdf(
     geom = "step", 
-    color = opvulkleur, 
+    color = lijnkleur0, 
     size = 1, 
     bw = 2
   ) +
@@ -828,9 +796,6 @@ maar is hun ligging gelijk.
 #| out.width: "100%"
 #| fig.cap: "Illustratie van de begrippen ligging en spreiding."
 #| label: fig-ligging-spreiding
-
-# Laad benodigde bibliotheken
-if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
 
 # Stel een seed in voor reproduceerbaarheid
 set.seed(124)
@@ -1032,21 +997,21 @@ volgende cijfers hebt gehaald:
 $$7 \qquad 7{,}5 \qquad 1 \qquad 8{,}5 \qquad 9.$$ Wat is dan de mediaan van
 je cijfers?  We sorteren de cijfers en krijgen
 
-$$1 \qquad 7 \qquad {\color{darkorange}7{,}5} \qquad 8{,}5 \qquad 9.$$
+$$1 \qquad 7 \qquad \ackI{7{,}5} \qquad 8{,}5 \qquad 9.$$
 
-Het getal midden in de rij is de ${\color{darkorange}7{,}5}$ en dus is de
-mediaan $\tilde{x} = {\color{darkorange}7{,}5}$.
+Het getal midden in de rij is de $\ackI{7{,}5}$ en dus is de
+mediaan $\tilde{x} = \ackI{7{,}5}$.
 
 Als je voor het volgende tentamen een 10 haalt, verandert de gesorteerde
 reeks als volgt:
 
-$$1 \qquad 7 \qquad {\color{darkorange}7{,}5} \qquad {\color{darkorange}8{,}5} \qquad 9  \qquad 10.$$
+$$1 \qquad 7 \qquad \ackI{7{,}5} \qquad \ackI{8{,}5} \qquad 9  \qquad 10.$$
 
 Omdat het aantal tentamencijfers nu even is, is er geen middelste getal
 meer. Als mediaan nemen we daarom het gemiddelde van de *twee* middelste
 getallen:
 
-$$\tilde{x}=\frac{{\color{darkorange}7{,}5} + {\color{darkorange}8{,}5}}{2} = 8.$$
+$$\tilde{x}=\frac{\ackI{7{,}5} + \ackI{8{,}5}}{2} = 8.$$
 :::
 
 De mediaan is een typische of representatieve waarde in de zin dat
@@ -1205,10 +1170,10 @@ ggplot(df, aes(x = x, y = 0)) +
     x = m, 
     y = 0.2, 
     label = expression(
-      bar(italic(x))), 
-      size = 7, 
-    vjust = 1, 
-    color = opvulkleur
+      bar(italic(x))),
+      size = 7,
+    vjust = 1,
+    color = accentkleur1
     ) +
   theme_void() + # geen y-as, geen ticks, geen labels
   theme(axis.line.x = element_blank())
@@ -1286,7 +1251,7 @@ ggplot(data, aes(x = x, y = y)) +
       x = -0.15, xend = 0.15, 
       y = m, yend = m
     ),
-    color = opvulkleur,
+    color = lijnkleur0,
     size = 1
   ) +
   # Label bij de gemiddelde lijn
@@ -1295,7 +1260,7 @@ ggplot(data, aes(x = x, y = y)) +
     x = 0.12, 
     y = m + 0.3,
     label = expression(bar(italic(x))),
-    color = opvulkleur,
+    color = accentkleur1,
     hjust = 0,
     size = 6
   ) +
@@ -1398,11 +1363,6 @@ is kleiner dan het derde kwartiel (Q3). De kwartielen zijn in
 #| fig.width: 7
 #| fig.height: 3.5
 
-# Laad de benodigde bibliotheken als ze nog niet beschikbaar zijn
-if (!("ggplot2" %in% .packages())) { library("ggplot2") }
-if (!("NHANES" %in% .packages())) { library("NHANES") }
-if (!("dplyr" %in% .packages())) { library("dplyr") }
-
 # Gebruik de Weight-variabele uit de NHANES dataset
 data <- NHANES %>%
   filter(!is.na(Weight)) %>%
@@ -1435,7 +1395,7 @@ ggplot(data, aes(x = Weight)) +
     aes(
       y = ifelse(after_stat(x) <= q1 + 5, after_stat(density), NA)
     ),
-    color = opvulkleur,
+    color = lijnkleur0,
     fill = lighten_color(opvulkleur, 0.8),
     bw = 2,
     size = 1
@@ -1449,7 +1409,7 @@ ggplot(data, aes(x = Weight)) +
         NA
       )
     ),
-    color = opvulkleur,
+    color = lijnkleur0,
     fill = lighten_color(opvulkleur, 0.6),
     bw = 2,
     size = 1
@@ -1463,7 +1423,7 @@ ggplot(data, aes(x = Weight)) +
         NA
       )
     ),
-    color = opvulkleur,
+    color = lijnkleur0,
     fill = lighten_color(opvulkleur, 0.4),
     bw = 2,
     size = 1
@@ -1473,7 +1433,7 @@ ggplot(data, aes(x = Weight)) +
     aes(
       y = ifelse(after_stat(x) >= q3, after_stat(density), NA)
     ),
-    color = opvulkleur,
+    color = lijnkleur0,
     fill = lighten_color(opvulkleur, 0.2),
     bw = 2,
     size = 1
@@ -1574,10 +1534,8 @@ De zwarte pijl geeft weer de IKA aan.
 #| fig.height: 2.5
 #| out.width: "71.4%"
 
-library(grid) # voor de pijl
-
 cumulplot <- ggplot(NHANES, aes(x = Weight)) +
-  stat_ecdf(geom = "step", color = opvulkleur, size = 1, bw = 2) +
+  stat_ecdf(geom = "step", color = lijnkleur0, size = 1, bw = 2) +
   labs(
     title = NULL,
     x = "Lichaamsgewicht (kg)",
@@ -1679,12 +1637,6 @@ cumulplot +
 #| fig.height: 2.5
 #| out.width: "71.4%"
 
-# Laad de benodigde bibliotheken als ze nog niet geladen zijn
-if (!("ggplot2" %in% loadedNamespaces())) { library(ggplot2) }
-if (!("dplyr" %in% loadedNamespaces())) { library(dplyr) }
-if (!("NHANES" %in% loadedNamespaces())) { library(NHANES) }
-if (!("dplyr" %in% loadedNamespaces())) { library(dplyr) }
-
 # Gebruik de Weight-variabele uit de NHANES dataset
 data <- NHANES %>%
   filter(!is.na(Weight)) %>%
@@ -1751,7 +1703,7 @@ ggplot(data, aes(x = Weight)) +
   stat_ecdf(
     geom = "step",
     size = 1,
-    color = opvulkleur,
+    color = lijnkleur0,
     bw = 2
   ) +
   # Voeg aangepaste x-as ticks en labels toe voor de kwartielen
@@ -2003,11 +1955,6 @@ standaarddeviatie met een pijl aangegeven.
 #| fig.height: 2.5
 #| out.width: "71%"
 
-# Controleer of de benodigde pakketten zijn geladen
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-if (!("NHANES" %in% .packages())) { library(NHANES) }
-if (!("scales" %in% .packages())) { library(scales) }
-
 # Laad de NHANES dataset
 data("NHANES")
 
@@ -2057,10 +2004,10 @@ ggplot(NHANES, aes(x = Pulse)) +
       yend = 850
     ),
     arrow = arrow(
-      length = unit(0.3, "cm"), 
+      length = unit(0.3, "cm"),
       ends = "both"
-    ), 
-    color = "DarkOrchid", 
+    ),
+    color = lijnkleur1,
     size = 1
   ) +
   
@@ -2069,9 +2016,9 @@ ggplot(NHANES, aes(x = Pulse)) +
     "text", 
     x = mean_pulse + sd_pulse / 2.5 -1, 
     y = 960, 
-    label = expression(italic(s[X])), 
-    color = "DarkOrchid", 
-    size = 4.5, 
+    label = expression(italic(s[X])),
+    color = accentkleur2,
+    size = 4.5,
     parse = TRUE
   ) +
   
@@ -2158,11 +2105,6 @@ centrummaten.
 #| fig-cap: "Voorbeeld van een scheve verdeling, waarbij de modus, de mediaan, en het gemiddelde zijn aangegeven. Bij zo'n rechts-scheve verdeling is typisch de modus kleiner dan de mediaan,
 #| en de mediaan kleiner dan het gemiddelde."
 #| label: fig-centrummaten
-
-# Installeer en laad ggplot2 als het niet al beschikbaar is
-if (!("ggplot2" %in% .packages())) {
-  library(ggplot2)
-}
 
 # Stel een seed in voor reproduceerbaarheid
 set.seed(123)
@@ -2335,11 +2277,6 @@ Voor de gewichten levert dat de volgende tabel op:
 #| warning: false
 #| tbl-cap: "Frequentietabel van de lichaamsgewichten in de dataset `NHANES`."
 
-# Controleer of benodigde pakketten geladen zijn
-if (!("magrittr" %in% .packages())) { library(magrittr) }
-if (!("knitr" %in% .packages())) { library(knitr) }
-if (!("kableExtra" %in% .packages())) { library(kableExtra) }
-
 # Definieer dataset met lichaamsgewichten en frequenties
 gewicht_data <- data.frame(
   "lichaamsgewicht_kg" = c(
@@ -2425,21 +2362,21 @@ Je kunt de waarnemingen ook weergeven in een frequentietabel:
 |          [6]{style="color:darkorange;"} |          1 |                  [0,1]{style="color:darkorchid;"} |
   
   b.  Leg uit dat het gemiddelde ook zo berekend kan worden:
-      $$ \mean{x} = \frac{3\times {\color{darkorange}2} + 3\times {\color{darkorange}3} + 1\times {\color{darkorange}4} + 2\times {\color{darkorange}5} + 1 \times {\color{darkorange}6} }{10}.$$
+      $$ \mean{x} = \frac{3\times \ackI{2} + 3\times \ackI{3} + 1\times \ackI{4} + 2\times \ackI{5} + 1 \times \ackI{6} }{10}.$$
       Wat stelt het eerste getal in de vermenigvuldigingen steeds voor?
   
   c.  Leg uit dat het gemiddelde ook zo berekend kan worden:
-      $$ \mean{x} = {\color{darkorchid}0{,}3}\times {\color{darkorange}2} + 
-      {\color{darkorchid}0{,}3}\times {\color{darkorange}3} + 
-      {\color{darkorchid}0{,}1}\times {\color{darkorange}4} + 
-      {\color{darkorchid}0{,}2}\times {\color{darkorange}5} + 
-      {\color{darkorchid}0{,}1}\times {\color{darkorange}6}.$$
+      $$ \mean{x} = \ackII{0{,}3}\times \ackI{2} + 
+      \ackII{0{,}3}\times \ackI{3} + 
+      \ackII{0{,}1}\times \ackI{4} + 
+      \ackII{0{,}2}\times \ackI{5} + 
+      \ackII{0{,}1}\times \ackI{6}.$$
       Wat stelt het eerste getal in de vermenigvuldigingen nu voor?
   
   d.  Stel dat de relatieve frequentie van de waarde $x$ genoteerd wordt
-      als ${\color{darkorchid}f(x)}$. Leg uit dat het gemiddelde dan altijd zo kan worden
+      als $\ackII{f(x)}$. Leg uit dat het gemiddelde dan altijd zo kan worden
       geschreven: 
-      $$ \mean{x} = \sum_{\color{darkorange}x} {\color{darkorchid}f(x)} {\color{darkorange}x}.$$ {#eq-mean-rel-freq} 
+      $$ \mean{x} = \sum_{\ackI{x}} \ackII{f(x)} \ackI{x}.$$ {#eq-mean-rel-freq}
       Met de notatie $\sum_x$ wordt gedoeld dat je moet sommeren 
       over alle waarden van $x$ die kunnen voorkomen.
       
@@ -2481,13 +2418,6 @@ welke categorieën de hoogste frequentie hebben.
 #| fig.width: 4
 #| fig.height: 3
 #| out.width: "57%"
-
-# De gegevens zijn gepubliceerd in dit package:
-library(NHANES)
-library(ggplot2)
-library(knitr)
-library(dplyr)
-
 
 # Laad de dataset in:
 data(NHANES)
@@ -2702,7 +2632,7 @@ een lijn getrokken tussen deze punten.
 #| out.width: "56%"
 
 ggplot(NHANES, aes(x = Weight)) +
-  geom_freqpoly(binwidth = 5, color = opvulkleur, size = 1) +
+  geom_freqpoly(binwidth = 5, color = lijnkleur0, size = 1) +
   labs(title = "",
        x = "Lichaamsgewicht (kg)",
        y = "Frequentie") +
@@ -2740,7 +2670,7 @@ vioolplot weergegeven voor de variabele lichaamsgewicht.
 #| out.width: "36%"
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
-  geom_violin(fill = "Bisque", color = opvulkleur) +
+  geom_violin(fill = "Bisque", color = lijnkleur0) +
   labs(title = NULL,
        x = "",
        y = "Lichaamsgewicht (kg)") +
@@ -2784,25 +2714,25 @@ grenzen <- c(kwantielen, uitbijters)
 ggplot(data, aes(x = "", y = Weight)) +
   # Boxplot
   geom_boxplot(
-    aes(x = 3), 
-    fill = "Bisque", 
-    color = opvulkleur,
+    aes(x = 3),
+    fill = "Bisque",
+    color = lijnkleur0,
     size = 0.7,
-    outlier.color = "red",
+    outlier.color = puntkleur4,
     outlier.alpha = 0.3
   ) +
   stat_boxplot(
     aes(x = 3),
     geom = "errorbar",
-    colour = "DarkOrchid",
+    colour = lijnkleur1,
     size = 0.7,
     width = 0.15
   ) +
   geom_boxplot(
-    aes(x = 3), 
-    fill = "Bisque", 
-    color = opvulkleur,
-    coef = 0, 
+    aes(x = 3),
+    fill = "Bisque",
+    color = lijnkleur0,
+    coef = 0,
     outlier.shape = NA
   ) +
   # Jitterplot
@@ -2817,37 +2747,37 @@ ggplot(data, aes(x = "", y = Weight)) +
     "text", 
     y = kwantielen[2], 
     x = 3.47, 
-    label = "Q1", 
-    color = opvulkleur
+    label = "Q1",
+    color = accentkleur1
   ) +
   annotate(
-    "text", 
-    y = kwantielen[4], 
-    x = 3.47, 
-    label = "Q3", 
-    color = opvulkleur
+    "text",
+    y = kwantielen[4],
+    x = 3.47,
+    label = "Q3",
+    color = accentkleur1
   ) +
   annotate(
-    "text", 
-    y = kwantielen[3], 
-    x = 3.8, 
+    "text",
+    y = kwantielen[3],
+    x = 3.8,
     label = "interkwartiel-
-afstand", 
-    color = opvulkleur
+afstand",
+    color = accentkleur1
   ) +
   annotate(
     "text", 
     y = mean(kwantielen[4:5]), 
     x = 3.45, 
-    label = "snorhaar", 
-    color = "DarkOrchid"
+    label = "snorhaar",
+    color = accentkleur2
   ) +
   annotate(
-    "text", 
-    y = mean(kwantielen[1:2]), 
-    x = 3.45, 
-    label = "snorhaar", 
-    color = "DarkOrchid"
+    "text",
+    y = mean(kwantielen[1:2]),
+    x = 3.45,
+    label = "snorhaar",
+    color = accentkleur2
   ) +
   annotate(
     "segment",
@@ -2855,7 +2785,7 @@ afstand",
     yend = kwantielen[4] - 5,
     x = 3.46,
     size = 0.7,
-    color = opvulkleur
+    color = lijnkleur0
   ) +
   annotate(
     "text", 
@@ -2964,7 +2894,7 @@ jitterplot (zoals in @fig-anatomie-boxplot).
 #| out.width: "40%"
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
-  geom_boxplot(fill = "Bisque", color = opvulkleur) +
+  geom_boxplot(fill = "Bisque", color = lijnkleur0) +
   labs(title = NULL,
        x = "",
        y = "Lichaamsgewicht (kg)") +
@@ -3103,11 +3033,6 @@ in het voorbeeld levert dat de volgende codetabel op:
 ```{r}
 #| warning: false
 #| echo: false
-
-# Controleer of gt is geladen
-if (!("gt" %in% .packages())) { 
-  library(gt) 
-}
 
 # Maak een dataframe met codes en voedingsstrategieën
 df <- data.frame(

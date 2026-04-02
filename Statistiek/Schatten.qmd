@@ -1,4 +1,13 @@
-{{< include _macros.tex >}}
+{{< include ../_macros.tex >}}
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: false
+
+source("_stat_setup.R")
+
+```
 
 # Betrouwbaarheidsintervallen {#sec-schatten}
 
@@ -115,11 +124,6 @@ een verkeerde indruk.
 #| label: fig-bhi
 #| out.width: "100%"
 
-# Laad ggplot2 indien nodig
-if (!("ggplot2" %in% loadedNamespaces())) {
-  library(ggplot2)
-}
-
 # Parameters voor de populatieverdeling
 waar_gemiddelde <- 2.0
 waar_sd <- 0.4
@@ -169,13 +173,13 @@ ggplot() +
   geom_point(
     data = bhi_data,
     aes(x = factor(steekproef_id), y = gemiddelde),
-    color = "darkorchid",
+    color = puntkleur2,
     size = 3
   ) +
   # Horizontale lijn voor het ware populatiegemiddelde
   geom_hline(
     yintercept = waar_gemiddelde,
-    color = "#e8601d",
+    color = lijnkleur0,
     linetype = "solid",
     size = 1
   ) +
@@ -214,9 +218,6 @@ De oranje lijnen geven de 95%-betrouwbaarheidsintervallen aan.
 #| fig-height: 3
 #| out-width: "42%"
 
-# Laad de benodigde bibliotheek
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-
 # Data definiëren
 data_punten <- data.frame(
   medicijn = c("medicijn 1", "medicijn 2"),
@@ -227,10 +228,10 @@ data_punten <- data.frame(
 # Plot maken
 ggplot(data_punten, aes(x = medicijn, 
                          y = verandering_bloeddruk)) +
-  geom_point(color = "darkorange", size = 3) + # Punten plotten
+  geom_point(color = puntkleur1, size = 3) + # Punten plotten
   geom_errorbar(aes(ymin = verandering_bloeddruk - foutmarge,
                     ymax = verandering_bloeddruk + foutmarge),
-                width = 0.2, color = "darkorange") + # Foutbalken toevoegen
+                width = 0.2, color = lijnkleur0) + # Foutbalken toevoegen
   labs(y = "Verandering in bloeddruk (mmHG)", x = "") + # Aslabels instellen
   theme_minimal() # Minimalistische stijl toepassen
 ```
@@ -333,11 +334,6 @@ Dan ziet de verdeling van de populatie er zo uit:
 #| fig-cap: "Een normaalverdeelde populatie met gemiddelde 100 en standaarddeviatie 10."
 #| label: fig-populatie
 
-# Laad ggplot2 indien nodig
-if (!("ggplot2" %in% loadedNamespaces())) { 
-  library(ggplot2) 
-}
-
 # Parameters voor de normale verdeling
 mu <- 100                           # Gemiddelde
 sigma <- 10                         # Standaarddeviatie
@@ -359,7 +355,7 @@ data <- data.frame(
 
 # Plot de normale verdeling
 populatie <- ggplot(data, aes(x = x, y = kansdichtheid)) +
-  geom_line(color = "#e8601d", size = 1) +  # Lijn voor de curve
+  geom_line(color = lijnkleur0, size = 1) +  # Lijn voor de curve
   labs(
     x = expression(italic(X)),                # Label voor de x-as
     y = "Kansdichtheid",                      # Label voor de y-as
@@ -387,11 +383,6 @@ met een verticale lijn.
 #| label: fig-drie-steekproeven-1
 #| code-fold: true
 #| warning: false
-
-# Controleer of ggplot2 geladen is, en laad indien nodig
-if (!("ggplot2" %in% loadedNamespaces())) {
-  library(ggplot2)
-}
 
 set.seed(130)  # Voor reproduceerbaarheid
 
@@ -421,14 +412,14 @@ maak_histogram <- function(data, gemiddelde, y_label = NULL) {
     geom_histogram(
       binwidth = staafbreedte,
       boundary = xmin,
-      fill = "#e8601d",
+      fill = opvulkleur,
       alpha = 0.7,
       color = "black",
       size = 0.5
     ) +
     geom_vline(
       xintercept = gemiddelde,
-      color = "DarkOrchid",
+      color = lijnkleur1,
       linetype = "dashed",
       size = 1
     ) +
@@ -446,7 +437,7 @@ maak_histogram <- function(data, gemiddelde, y_label = NULL) {
       ),
       curvature = -0.4,
       arrow = arrow(length = unit(0.2, "cm")),
-      color = "DarkOrchid",
+      color = lijnkleur1,
       size = 0.7
     ) +
     annotate(
@@ -454,7 +445,7 @@ maak_histogram <- function(data, gemiddelde, y_label = NULL) {
       x = gemiddelde + 1.5 * sigma,
       y = 0.85 * hoogste + 0.06 * hoogste,
       label = expression(bar(italic(X))),
-      color = "DarkOrchid",
+      color = accentkleur2,
       hjust = 0.5,
       size = 4
     ) +
@@ -548,11 +539,6 @@ Ter vergelijking is in @fig-steekproevenverdeling-1 weer de populatie weergegeve
 #| fig-width: 4
 #| out-width: "57%"
 
-# Laad ggplot2 indien nodig
-if (!("ggplot2" %in% loadedNamespaces())) { 
-  library(ggplot2) 
-}
-
 # Parameters instellen
 aantal_herhalingen <- 10^4       # Aantal herhalingen
 steekproefgroottes <- c(10, 40, 100)  # Steekproefgroottes
@@ -585,7 +571,7 @@ steekproef_gemiddelden <- data.frame(
 maak_verdelingsplot <- function(data, label, y_as_label) {
   plot <- ggplot(data, aes(x = waarde)) +
     geom_histogram(
-      binwidth = staafbreedte, fill = "#e8601d", 
+      binwidth = staafbreedte, fill = opvulkleur, 
       color = "black", alpha = 0.7, size = 0.5
     ) +
     xlim(xmin, xmax) +
@@ -1039,11 +1025,6 @@ Om dat te verifiëren plot de code bovenop het histogram ook die $t$-verdeling (
 #| fig.width: 6
 #| fig.height: 3
 
-# Laad ggplot2 indien nodig
-if (!("ggplot2" %in% loadedNamespaces())) { 
-  library(ggplot2) 
-}
-
 # Parameters instellen
 aantal_iteraties <- 10^4   # Aantal herhalingen
 steekproefgrootte <- 4      # Grootte van de steekproef
@@ -1086,7 +1067,7 @@ ggplot(data, aes(x = t_waarden)) +
   geom_histogram(
     aes(y = ..density..), # schaal het histogram, totale oppervlakte 1 
     binwidth = staafbreedte, 
-    fill = "#e8601d", 
+    fill = opvulkleur, 
     color = "black", 
     alpha = 0.5,
     show.legend = FALSE
@@ -1471,13 +1452,12 @@ Wanneer je een BHI wilt uitrekenen voor zo'n variabele
 #| fig.width: 4
 #| fig.height: 3
 #| out.width: "57%"
-library(readr)
 VerdelingPersoonlijkInkomen_CBS_2022 <- read_csv("data/VerdelingPersoonlijkInkomen-CBS-2022.csv", 
     locale = locale(decimal_mark = ","))
 
 ggplot(VerdelingPersoonlijkInkomen_CBS_2022, 
        aes(y = Totaal, x = `persoonlijk inkomen (1000 euro)`)) +
-  geom_line(color = "#e8601d", size = 1) +
+  geom_line(color = lijnkleur0, size = 1) +
   labs(x = "Persoonlijk inkomen (x 1000 euro)", y = "Aantal personen (x 1000)") +
   theme_minimal()
 ```
@@ -1523,7 +1503,7 @@ ggplot(dataVink, aes(aantal_eieren)) +
   geom_histogram(
     binwidth = 1, 
     color = "black", 
-    fill = "#e8601d"
+    fill = opvulkleur
     ) +
   labs(x = "Aantal eieren per nest", y = "Frequentie") +
   theme_minimal()
@@ -1660,7 +1640,7 @@ data_normaal <- rnorm(40)
 
 # QQ-plot
 qqnorm(data_normaal)
-qqline(data_normaal, col = "darkorange")
+qqline(data_normaal, col = lijnkleur0)
 ```
 
 ```{r}
@@ -1676,7 +1656,7 @@ data_gamma <- rgamma(40, shape = 1.4, scale = 1)
 
 # QQ-plot
 qqnorm(data_gamma)
-qqline(data_gamma, col = "darkorange")
+qqline(data_gamma, col = lijnkleur0)
 ```
 
 QQ-plots van steekproeven uit (a) een normale verdeling en (b) een rechts-scheve verdeling.
@@ -1715,10 +1695,6 @@ welke QQ-plot bij welke histogram hoort?
 #| fig.width: 7
 #| out.width: "100%"
 
-library(NHANES)
-library(ggplot2)
-library(gridExtra)
-
 # Selecteer variabelen met verschillende verdelingen
 selected_vars <- c("Weight", "Height", "BMI", "BPSysAve", "SleepHrsNight")
 binwidths <- c(5, 2, 2, 5, 1)  # Specificeer binwidths voor elke variabele
@@ -1732,7 +1708,7 @@ filter_na <- function(data, variable) {
 generate_histogram <- function(var_name, label, binwidth) {
   filtered_data <- filter_na(NHANES, var_name)
   ggplot(filtered_data, aes(x = .data[[var_name]])) +
-    geom_histogram(binwidth = binwidth, fill = "darkorange", color = "black", alpha = 0.7) +
+    geom_histogram(binwidth = binwidth, fill = opvulkleur, color = "black", alpha = 0.7) +
     labs(x = var_name, y = "Frequentie", subtitle = label) +
     theme_minimal()
 }
@@ -1742,7 +1718,7 @@ generate_qqplot <- function(var_name, label) {
   filtered_data <- filter_na(NHANES, var_name)
   ggplot(filtered_data, aes(sample = .data[[var_name]])) +
     stat_qq(distribution = qnorm) +
-    stat_qq_line(distribution = qnorm, color = "darkorange", size = 1) +
+    stat_qq_line(distribution = qnorm, color = lijnkleur0, size = 1) +
     labs(x = "Theoretische kwantielen", y = "Geobserveerde kwantielen", subtitle = label) +
     theme_minimal()
 }
@@ -1834,23 +1810,12 @@ Om dat te illustreren
 #| fig.height: 2.5
 #| out.width: "70%"
 
-# Controleer en laad benodigde pakketten
-if (!("ggplot2" %in% .packages())) {
-  library(ggplot2)
-}
-if (!("NHANES" %in% .packages())) {
-  library(NHANES)
-}
-if (!("patchwork" %in% .packages())) {
-  library(patchwork)
-}
-
 set.seed(125)  # Voor reproduceerbaarheid
 
 # Functie om een histogram te maken
 maak_histogram <- function(
   data, xvariabele, x_label, binbreedte = 5, 
-  x_bereik = c(0, 200), kleur = "#e8601d", alpha = 0.7, 
+  x_bereik = c(0, 200), kleur = opvulkleur, alpha = 0.7, 
   voeg_normaal_toe = FALSE
 ) {
   # Basis histogram
@@ -1879,16 +1844,16 @@ maak_histogram <- function(
         fun = function(x) {
           schaal * dnorm(x, mean = gemiddelde, sd = standaarddev)
         },
-        color = "DarkOrchid", size = 1
+        color = lijnkleur1, size = 1
       )
   }
-  
+
   return(plot)
 }
 
 # Functie om een verticale lijn toe te voegen
 voeg_lijn_toe <- function(plot, x_waarde, 
-    lijnkleur = "DarkOrchid", linetype = "dashed", size = 1) {
+    lijnkleur = lijnkleur1, linetype = "dashed", size = 1) {
   plot +
     geom_vline(
       aes(xintercept = x_waarde), color = lijnkleur,
@@ -1899,7 +1864,7 @@ voeg_lijn_toe <- function(plot, x_waarde,
 # Functie om steekproef-histogram te maken
 maak_steekproef_histogram <- function(data, xvariabele, 
     steekproefgrootte, x_label, binbreedte = 5, 
-    x_bereik = c(0, 200), kleur = "#e8601d", alpha = 0.7) {
+    x_bereik = c(0, 200), kleur = opvulkleur, alpha = 0.7) {
   steekproef <- sample(
     data[[xvariabele]], size = steekproefgrootte, replace = TRUE
   )
@@ -1910,13 +1875,13 @@ maak_steekproef_histogram <- function(data, xvariabele,
     binbreedte, x_bereik, kleur, alpha
   )
   
-  voeg_lijn_toe(plot, steekproefgemiddelde, lijnkleur = "DarkOrchid")
+  voeg_lijn_toe(plot, steekproefgemiddelde, lijnkleur = lijnkleur1)
 }
 
 # Functie om histogram van steekproefgemiddelden te maken
 maak_gemiddelden_histogram <- function(data, xvariabele, 
     steekproefgrootte, n_steekproeven, x_label, 
-    binbreedte = 5, x_bereik = c(0, 200), kleur = "#e8601d", 
+    binbreedte = 5, x_bereik = c(0, 200), kleur = opvulkleur, 
     alpha = 0.7, voeg_normaal_toe = FALSE) {
   steekproefgemiddelden <- replicate(
     n_steekproeven,

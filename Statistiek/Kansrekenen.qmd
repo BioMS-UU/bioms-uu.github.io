@@ -1,4 +1,13 @@
-{{< include _macros.tex >}}
+{{< include ../_macros.tex >}}
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: false
+
+source("_stat_setup.R")
+
+```
 
 # Kansen en kansmodellen {#sec-kans}
 
@@ -275,13 +284,6 @@ Je kunt je de verzameling van alle mogelijke uitkomsten
 #| label: fig-venn
 #| fig.width: 6
 #| fig.height: 4
-
-if (!("ggplot2" %in% .packages())){ 
-  library(ggplot2) 
-  }
-if (!("ggforce" %in% .packages())){ 
-  library(ggforce) 
-  }
 
 kleurKansruimte <- "FloralWhite"
 
@@ -749,7 +751,7 @@ Dat betekent dat in het Venn-diagram
 A2 <- list(
   geom_ellipse(
     aes(x0 = 28, y0 = 32, a = 25,  b = 28,  angle = 0), 
-    fill = kleurA, alpha = 0.5, linewidth = 0.8
+    fill = kleurA, alpha = 0.75, linewidth = 0.8
     ), 
   annotate(
     "text", 
@@ -764,7 +766,7 @@ A2 <- list(
 B2 <- list(
   geom_ellipse(
     aes(x0 = 72, y0 = 68, a = 25,  b = 28,  angle = 0), 
-    fill = kleurB, alpha = 0.5, linewidth = 0.8
+    fill = kleurB, alpha = 0.75, linewidth = 0.8
     ),
   annotate(
     "text", 
@@ -1123,12 +1125,9 @@ e.  Om de daadwerkelijke verdeling van lengtes van G-tracts
     #| fig-width: 5
     #| fig-height: 3
     #| out-width: 70%
-    # Controleer of benodigde packages geladen zijn
-    if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-    if (!("httr" %in% .packages())) { library(httr) }
-    if (!("R.utils" %in% .packages())) { library(R.utils) }
-    if (!("dplyr" %in% .packages())) { library(dplyr) }
-    
+    library(httr)
+    library(R.utils)
+
     # ---- Stap 1: Lees het genoom vanuit het gedownloade FASTA-bestand ----
     
     # Path naar het FASTA-bestand
@@ -1207,16 +1206,16 @@ e.  Om de daadwerkelijke verdeling van lengtes van G-tracts
     
     ggplot(data_g_tracts, aes(x = lengte, y = relatieve_frequentie)) +
       geom_bar(
-        stat = "identity", fill = "darkorange", color = "black",
+        stat = "identity", fill = opvulkleur, color = "black",
         alpha = 1, width = 1
       ) +
       geom_line(
         data = verwachte_frequenties, aes(x = lengte, y = frequentie),
-        color = "DarkOrchid", size = 1.2
+        color = lijnkleur1, size = 1.2
       ) +
       geom_point(
         data = verwachte_frequenties, aes(x = lengte, y = frequentie),
-        color = "DarkOrchid", size = 2
+        color = puntkleur2, size = 2
       ) +
       labs(
         title = "Lengtes van G-tracts op Chromosoom 21",

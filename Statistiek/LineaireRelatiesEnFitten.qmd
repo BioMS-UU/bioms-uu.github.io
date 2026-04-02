@@ -1,16 +1,11 @@
-{{< include _macros.tex >}}
+{{< include ../_macros.tex >}}
 
 ```{r}
 #| eval: true
 #| echo: false
 #| output: false
 
-library(ggplot2)
-
-opvulkleur <- "darkorange"
-lijnkleur1 <- "darkorchid"
-lijnkleur2 <- "red"
-lijnkleur3 <- "blue"
+source("_stat_setup.R")
 
 ```
 
@@ -80,10 +75,6 @@ Op de $y$-as staat de lengte van hun (volwassen) kinderen.
 #| label: fig-galton
 #| out.width: "71.4%"
 
-# Laad benodigde pakketten
-if (!("HistData" %in% .packages())) { library(HistData) }
-if (!("ggplot2"  %in% .packages())) { library(ggplot2) }
-
 # Laad de GaltonFamilies-dataset
 data("GaltonFamilies")
 
@@ -121,7 +112,7 @@ ggplot(
   geom_point(
     alpha = 0.8,
     size  = 1,
-    color = "darkorange"
+    color = puntkleur1
   ) +
 #  geom_abline(
 #    slope     = 1,
@@ -181,11 +172,6 @@ en is er dus geen relatie.)
 #| warning: false
 #| code-fold: true
 
-# Laad vereiste pakketten als ze nog niet geladen zijn
-if (!("MASS" %in% .packages())) { library(MASS) }
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-
-
 # Stel parameters in
 steekproef_grootte <- 100
 gemiddelden <- c(0, 0)
@@ -200,8 +186,8 @@ names(data) <- c("X", "Y")
 
 # Maak de plot
 ggplot(data, aes(x = X, y = Y)) +
-  geom_point(color = "gray50") +
-  geom_smooth(method = "lm", se = FALSE, color = "darkorange", linewidth = 1) +
+  geom_point(color = puntkleur3) +
+  geom_smooth(method = "lm", se = FALSE, color = lijnkleur0, linewidth = 1) +
   labs(x = expression(italic(X)), y = expression(italic(Y))) +
   theme_minimal() + 
   theme(
@@ -245,11 +231,6 @@ Hier zijn een paar eigenschappen:
 #| fig.cap: "Voorbeelden van steekproeven met verschillende correlatiecoëfficiënten."
 #| label: fig-correl-coefs
 
-# Laad benodigde pakketten
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-if (!("MASS" %in% .packages())) { library(MASS) }
-if (!("dplyr" %in% .packages())) { library(dplyr) }
-
 # Definieer parameters
 n <- 200  # Steekproefgrootte
 correlaties <- c(1, 0.75, 0.5, 0.25, 0, -0.33, -0.67, -1)
@@ -274,7 +255,7 @@ correlatie_labels <- datasets %>%
 
 # Maak de ggplot met facet_wrap
 p <- ggplot(datasets, aes(x = X, y = Y)) +
-  geom_point(color = "darkorange", alpha = 0.8, size = 1) +
+  geom_point(color = puntkleur1, alpha = 0.8, size = 1) +
   facet_wrap(~ groep, nrow = 2, 
              labeller = as_labeller(setNames(correlatie_labels$label, 1:8))) +
   coord_fixed(xlim = c(-3, 3), ylim = c(-3, 3)) +
@@ -312,11 +293,6 @@ maar hebben allemaal $r = 1$ of $-1$.
 #| fig.cap: "Bij al deze steekproeven is de correlatiecoëfficiënt 1 of -1. De correlatiecoëfficiënt geeft aan in hoeverre de punten op een rechte lijn vallen, niet hoe steil die lijn is."
 #| label: fig-correl-sd
 
-# Laad benodigde pakketten
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-if (!("MASS" %in% .packages())) { library(MASS) }
-if (!("dplyr" %in% .packages())) { library(dplyr) }
-
 # Definieer parameters
 n <- 50
 correlaties <- c(1, 1, -1, -1)
@@ -343,7 +319,7 @@ datasets <- do.call(
 
 # Maak de ggplot met facet_wrap
 p <- ggplot(datasets, aes(x = X, y = Y)) +
-  geom_point(color = "darkorange", alpha = 0.8, size = 1) +
+  geom_point(color = puntkleur1, alpha = 0.8, size = 1) +
   facet_wrap(~ groep, nrow = 1, labeller = as_labeller(custom_labels)) +
   coord_fixed(xlim = c(-3, 3), ylim = c(-3, 3)) +
 #  theme_minimal() +
@@ -377,11 +353,6 @@ b.  Hieronder zijn 8 puntenwolken gegeven.
 #| warning: false
 #| fig.cap: "Wat zijn de correlatiecoëfficiënten?"
 #| label: fig-correl-coefs-schatten
-
-# Laad benodigde pakketten
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-if (!("MASS" %in% .packages())) { library(MASS) }
-if (!("dplyr" %in% .packages())) { library(dplyr) }
 
 # Parameters
 n <- 200  # Steekproefgrootte
@@ -425,7 +396,7 @@ panel_labels <- setNames(
 
 # Plot
 p <- ggplot(datasets, aes(x = X, y = Y)) +
-  geom_point(color = "darkorange", alpha = 0.8, size = 1) +
+  geom_point(color = puntkleur1, alpha = 0.8, size = 1) +
   facet_wrap(
     ~ groep,
     nrow = 2,
@@ -461,10 +432,6 @@ Het is dan niet nuttig om $r$ uit te rekenen.
 #| warning: false
 #| fig.cap: "Voorbeelden van niet-lineaire relaties. Als een relatie niet lineair is, vertelt $r$ je weinig tot niets. Het heeft dan geen zin om $r$ uit te rekenen."
 #| label: fig-nonlinear
-
-# Laad benodigde pakketten
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-if (!("dplyr" %in% .packages())) { library(dplyr) }
 
 # Definieer parameters
 n <- 100
@@ -502,7 +469,7 @@ datasets <- do.call(
 
 # Maak de ggplot met facet_wrap
 p <- ggplot(datasets, aes(x = X, y = Y)) +
-  geom_point(color = "darkorange", alpha = 0.8, size = 1) +
+  geom_point(color = puntkleur1, alpha = 0.8, size = 1) +
   facet_wrap(~ groep, nrow = 1, labeller = as_labeller(custom_labels)) +
   coord_fixed(xlim = c(-3, 3), ylim = c(-3, 3)) +
 #  theme_minimal() +
@@ -542,9 +509,6 @@ komen we er in @exr-anscombe nog een keer op terug.
 #| message: false
 #| code-fold: true
 
-# Laad vereiste pakketten als ze nog niet geladen zijn
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-
 # Genereer data met constante Y behalve één uitschieter
 set.seed(456)
 n <- 20
@@ -561,7 +525,7 @@ data <- data.frame(X = X, Y = Y)
 
 # Maak de plot
 ggplot(data, aes(x = X, y = Y)) +
-  geom_point(color = "darkorange") +
+  geom_point(color = puntkleur1) +
 #  geom_smooth(method = "lm", se = FALSE,
 #              color = "orange", linewidth = 1) +
   labs(x = expression(italic(X)), y = expression(italic(Y))) +
@@ -611,10 +575,6 @@ kan dan mogelijk wél een correlatie aantonen.
 #| code-fold: true
 #| label: fig-bereik-a
 #| fig-cap: "Dataset met een sterk positieve correlatie ($r = 0{,}79$)."
-
-# Laad benodigde bibliotheken
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-if (!("MASS" %in% .packages())) { library(MASS) }
 
 # Stel parameters in
 set.seed(123)
@@ -692,7 +652,7 @@ plot_a <- ggplot(df, aes(x = x, y = y)) +
   geom_point(
     data = subset(df, kleur == "in_zoom"),
     alpha = 0.8,
-    color = "darkorange"
+    color = puntkleur1
   ) +
   geom_vline(
     xintercept = x_bereik_zoom,
@@ -732,7 +692,7 @@ plot_b <- ggplot(df_zoom, aes(x = x, y = y)) +
   ) +
   geom_point(
     alpha = 0.8,
-    color = "darkorange"
+    color = puntkleur1
   ) +
   annotate(
     "text",
@@ -797,10 +757,6 @@ De covariantie meet de mate waarin de $x$- en $y$-waarden lineair met elkaar sam
 #| fig.cap: "Spreidingsdiagram met vier kwadranten. De covariantie wordt positief beïnvloed door punten in de kwadranten rechtsboven en linksonder, en negatief door punten in de kwadranten linksboven en rechtsonder."
 #| label: fig-annotated-scatter
 
-# Laad benodigde pakketten
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-if (!("MASS" %in% .packages())) { library(MASS) }
-
 # Definieer parameters
 n <- 100  # Steekproefgrootte
 rho <- 0.85  # Correlatiecoëfficiënt
@@ -820,7 +776,7 @@ df$Y <- df$Y - mean_y
 
 # Maak de scatterplot
 p <- ggplot(df, aes(x = X, y = Y)) +
-  geom_point(color = "darkorange", alpha = 0.8, size = 2) +
+  geom_point(color = puntkleur1, alpha = 0.8, size = 2) +
   geom_vline(xintercept = 0, linetype = "dashed") +
   geom_hline(yintercept = 0, linetype = "dashed") +
   annotate("text", x = 2.3, y = 3.5, 
@@ -1024,9 +980,8 @@ Visualisatie van de bivariate normale verdeling met $\rho = 0.5$.
 #| out-width: "71%"
 #| fig-width: 5
 #| fig-height: 5
-# Laad benodigde bibliotheken
-if (!("mnormt" %in% .packages()))   { library(mnormt) }
-if (!("plotly" %in% .packages()))  { library(plotly) }
+library(mnormt)
+library(plotly)
 
 # Definieer parameters
 rho      <- 0.5
@@ -1069,7 +1024,7 @@ plot_ly(
   type = "surface",
   showscale = FALSE,
   surfacecolor = matrix(1, nrow = 100, ncol = 100),
-  colorscale = list(c(0, "darkorange"), c(1, "darkorange")),
+  colorscale = list(c(0, opvulkleur), c(1, opvulkleur)),
   contours = list(
     x = list(show = TRUE, color = "black", highlight = FALSE, start = -3, end = 3, size = 0.5),
     y = list(show = TRUE, color = "black", highlight = FALSE, start = -3, end = 3, size = 0.5),
@@ -1121,9 +1076,7 @@ De bivariate normale verdeling heeft een aantal belangrijke eigenschappen.
 #| echo: false
 #| warning: false
 
-# Laad benodigde bibliotheken
-if (!("mnormt" %in% .packages()))   { library(mnormt) }
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
+library(mnormt)
 
 # Definitie van de functie
 plot_bivariate_normal_contours <- function(rho) {
@@ -1165,7 +1118,7 @@ plot_bivariate_normal_contours <- function(rho) {
     # Maak contourplot
   ggplot(raster, aes(x = x, y = y, z = z)) +
     geom_contour(
-      color = "darkorange",
+      color = lijnkleur0,
       size  = 0.7
     ) +
     annotate(
@@ -1388,11 +1341,6 @@ Bestudeer ook de code voor ieder stap, zodat je het straks ook zelf kunt.
 
 ```{r}
 #| echo: false
-# Laad vereiste pakketten
-if (!("palmerpenguins" %in% .packages())) { library(palmerpenguins) }
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-if (!("dplyr" %in% .packages())) { library(dplyr) }
-
 # Filter enkel de Adelie-pinguïns met volledige data
 adelie <- penguins %>%
   filter(species == "Adelie",
@@ -1447,7 +1395,7 @@ bekijken we de verdelingen van beide variabelen:
 hist(adelie$body_mass_g,
      main = NULL,
      xlab = "Lichaamsgewicht (g)",
-     col = "darkorange", border = "black")
+     col = opvulkleur, border = "black")
 ```
 
 ```{r}
@@ -1459,7 +1407,7 @@ hist(adelie$body_mass_g,
 hist(adelie$flipper_length_mm,
      main = NULL,
      xlab = "Flipperlengte (mm)",
-     col = "darkorange", border = "black")
+     col = opvulkleur, border = "black")
 ```
 
 ```{r}
@@ -1528,9 +1476,6 @@ install.packages("HistData", dependencies = TRUE)
 
 ```{r}
 #| echo: false
-# Laad de benodigde pakketten
-if (!("HistData" %in% .packages())) { library(HistData) }
-
 data("GaltonFamilies")
 ```
 
@@ -1662,7 +1607,6 @@ set.seed(885)
 # Definieer parameters
 helling      <- 2
 intercept    <- 1
-opvulkleur   <- "darkorange"
 
 # Genereer gegevens
 x_waarden    <- runif(10, 0, 4)
@@ -1710,7 +1654,7 @@ ggplot(gegevens, aes(x = x, y = y)) +
   geom_abline(
     intercept = coef(model)[1],
     slope     = coef(model)[2],
-    color     = opvulkleur,
+    color     = lijnkleur0,
     size      = 1
   ) +
   # Labels voor de lijnen
@@ -1980,8 +1924,7 @@ Visualistatie van het statistisch model dat gebruikt wordt bij de toetsen van de
 #| fig-cap: "Visualistatie van het statistisch model dat gebruikt wordt bij de toetsen van de regressiecoëfficiënten. Voor iedere waarde van $X$ is $Y$ normaal verdeeld. Het gemiddelde van die verdeling
 #| hangt lineair van $X$ af."
 
-# Laad benodigde bibliotheken
-if (!("plotly" %in% .packages())) { library(plotly) }
+library(plotly)
 
 # Definieer parameters
 beta_0     <- 0       # Intercept
@@ -2019,7 +1962,7 @@ plot_ly(
   type = "surface",
   showscale = FALSE,
   surfacecolor = matrix(1, nrow = 100, ncol = 100),
-  colorscale = list(c(0, "darkorange"), c(1, "darkorange")),
+  colorscale = list(c(0, opvulkleur), c(1, opvulkleur)),
   contours = list(
     x = list(show = TRUE, color = "black", highlight = FALSE,
              start = -3, end = 3, size = 0.5),
@@ -2060,10 +2003,6 @@ De puntenwolk in @fig-heteroscedastiek(a) past goed bij dit model.
 #| code-fold: true
 #| warning: false
 
-# Laad benodigde pakketten
-if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-if (!("dplyr" %in% .packages())) { library(dplyr) }
-
 # Zet zaad voor reproduceerbaarheid
 set.seed(123)
 
@@ -2096,9 +2035,9 @@ data <- data.frame(
 
 # Plot
 p <- ggplot(data, aes(x = X, y = Y)) +
-  geom_point(color = "grey50", alpha = 0.8, size = 1.2) +
+  geom_point(color = puntkleur3, alpha = 0.8, size = 1.2) +
   geom_smooth(method = "lm", se = FALSE,
-              color = "darkorange", size = 0.8) +
+              color = lijnkleur0, size = 0.8) +
   facet_wrap(~ groep, nrow = 1, scales = "free_y") +
   theme_minimal(base_size = 11) +
   theme(
@@ -2228,7 +2167,7 @@ data <- data.frame(
 )
 
 ggplot( data, aes(x = substraatconcentratie, y = reactiesnelheid)) +
-  geom_point(color = "darkorange") +
+  geom_point(color = puntkleur1) +
   labs(
     x = expression(substraatconcentratie ~ italic(S) ~ (mM)),
     y = expression(reactiesnelheid ~ italic(v) ~ (μM/min))
@@ -2255,7 +2194,7 @@ ggplot( data, aes(x = substraatconcentratie, y = reactiesnelheid)) +
 # Definieer parameters
 km     <- 3
 vmax   <- 10
-kleur  <- "darkorange"
+kleur  <- lijnkleur0
 
 # Substraatconcentraties tot ruim boven Km
 s_waarden <- seq(0, 6*km, length.out = 300)
@@ -2714,14 +2653,6 @@ en voor de gehele dataset (zwarte onderbroken lijn).
 #| fig.height: 4.5
 #| out.width: "60%"
 
-# Laad benodigde bibliotheken
-if (!("palmerpenguins" %in% .packages())) {
-  library(palmerpenguins)
-}
-if (!("ggplot2" %in% .packages())) {
-  library(ggplot2)
-}
-
 # Definieer correcties (in mm)
 korter_snavel <- 3
 korter_flipper <- 0
@@ -2947,7 +2878,7 @@ e.  Om te controleren hoe goed de Michaelis-Menten-curve de data beschrijft,
       meetgegevens$substraatconcentratie,
       meetgegevens$reactiesnelheid,
       pch = 21, 
-      bg = "darkorange", 
+      bg = opvulkleur, 
       cex = 1.5
       )
     

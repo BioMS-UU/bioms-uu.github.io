@@ -1,5 +1,14 @@
 ## Antwoorden @sec-kans
 
+```{r}
+#| eval: true
+#| echo: false
+#| output: false
+
+source("../Statistiek/_stat_setup.R")
+
+```
+
 ### @exr-begrippen-kans
 
 a.  Kansexperiment: Het kruisen van twee heterozygote dieren en het bepalen van het genotype van een nakomeling.
@@ -84,13 +93,6 @@ b.  Venn-diagram:
     #| fig.width: 6
     #| fig.height: 4
     #| fig.label: fig-Venn-ingevuld
-
-    if (!("ggplot2" %in% .packages())){
-      library(ggplot2)
-      }
-    if (!("ggforce" %in% .packages())){
-      library(ggforce)
-      }
 
     kleurKansruimte <- "FloralWhite"
 
@@ -182,13 +184,6 @@ a.  Venn-diagram:
     #| fig.width: 6
     #| fig.height: 4
 
-    if (!("ggplot2" %in% .packages())){
-      library(ggplot2)
-      }
-    if (!("ggforce" %in% .packages())){
-      library(ggforce)
-      }
-
     kleurKansruimte <- "FloralWhite"
 
     kansruimte <- ggplot() +
@@ -206,7 +201,7 @@ a.  Venn-diagram:
         ) +
       theme_void()
 
-    kleurA <- "darkorange"
+    kleurA <- opvulkleur
 
     A <- list(
       geom_ellipse(
@@ -275,8 +270,7 @@ We voeren eerst netjes alle getallen in:
 #| echo: false
 #| output: false
 #| warning: false
-if (!("VennDiagram" %in% .packages())) { library(VennDiagram) }
-if (!("grid" %in% .packages())) { library(grid) }
+library(VennDiagram)
 ```
 
 ```{r}
@@ -302,13 +296,6 @@ a.  Het Venn-diagram ziet er dan als volgt uit:
     #| fig.width: 6
     #| fig.height: 4
     #| fig.label: fig-Venn-ingevuld
-
-    if (!("ggplot2" %in% .packages())){
-      library(ggplot2)
-      }
-    if (!("ggforce" %in% .packages())){
-      library(ggforce)
-      }
 
     kleurKansruimte <- "FloralWhite"
 
@@ -483,10 +470,7 @@ f.  Het plaatje ziet er mooi uit, maar geeft de getallen niet helder weer.
     #| fig-height: 3.2
     #| out-width: "80%"
 
-    # Controleer of de benodigde pakketten zijn geladen
-    if (!("ggplot2" %in% .packages())) { library(ggplot2) }
-    if (!("tidyverse" %in% .packages())) { library(tidyverse) }
-    if (!("vcd" %in% .packages())) { library(vcd) }
+    library(vcd)
 
     # Definieer de bloedgroepverdeling in Nederland (Sanquin-data)
     bloedgroepen <- data.frame(
@@ -507,7 +491,7 @@ f.  Het plaatje ziet er mooi uit, maar geeft de getallen niet helder weer.
 
     # Maak een cirkelgrootte-plot
     circle_plot <- ggplot(bloedgroepen, aes(x = antigeen, y = rhesus)) +
-      geom_point(aes(size = percentage), shape = 21, fill = "red", color = "black") +
+      geom_point(aes(size = percentage), shape = 21, fill = puntkleur4, color = "black") +
       scale_size_area(max_size = 20) +
       labs(title = NULL,
            x = "Antigeen", y = "Rhesus", size = "Percentage") +
@@ -533,7 +517,7 @@ f.  Het plaatje ziet er mooi uit, maar geeft de getallen niet helder weer.
       t(kruistabel_bloedgroep),
            main = NULL,
            xlab = "Antigen", ylab = "Rhesus",
-           col = c("darkorange", "DarkOrchid"), border = "black"
+           col = c(opvulkleur, opvulkleur1), border = "black"
       )
     ```
 :::
@@ -595,13 +579,6 @@ a.  Venn-diagram:
     #| fig.height: 4
     #| fig.label: fig-Venn-ABC
 
-    if (!("ggplot2" %in% .packages())){
-      library(ggplot2)
-      }
-    if (!("ggforce" %in% .packages())){
-      library(ggforce)
-      }
-
     kleurKansruimte <- "FloralWhite"
 
     kansruimte <- ggplot() +
@@ -653,7 +630,7 @@ a.  Venn-diagram:
         )
     )
 
-    kleurC <- "darkorange"
+    kleurC <- opvulkleur
 
     C <- list(
       geom_ellipse(
