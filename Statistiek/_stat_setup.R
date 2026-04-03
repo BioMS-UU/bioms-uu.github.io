@@ -187,3 +187,47 @@ tCurve <- function(df, xlabel = expression(italic(t))) {
     labs(y = "Kansdichtheid", x = xlabel) +
     theme_minimal()
 }
+# ---------------------------------------------------------------------------
+# Histogram-hulpfuncties
+# ---------------------------------------------------------------------------
+
+# Basis histogram: data frame + kolomnaam + labels + breedte + optioneel bereik.
+# Retourneert een ggplot waaraan extra lagen toegevoegd kunnen worden.
+maakHistogram <- function(data, xvar, xlabel, binbreedte, bereik = NULL,
+                           kleur = opvulkleur, alpha = 0.7) {
+  p <- ggplot(data, aes(.data[[xvar]])) +
+    geom_histogram(fill = kleur, alpha = alpha, binwidth = binbreedte,
+                   boundary = if (!is.null(bereik)) bereik[1] else 0,
+                   color = "black", linewidth = 0.5) +
+    labs(x = xlabel, y = "Frequentie") +
+    theme_minimal()
+  if (!is.null(bereik)) p <- p + scale_x_continuous(limits = bereik)
+  p
+}
+
+# Voegt een stippellijn + gebogen pijl + label voor het steekproefgemiddelde toe.
+# data: numerieke vector (de steekproef); gemiddelde: de te markeren waarde.
+gemiddeldeLijn <- function(data, gemiddelde, sigma, binbreedte, bereik) {
+  breaks  <- seq(bereik[1], bereik[2], by = binbreedte)
+  hoogste <- max(hist(data, breaks = breaks, plot = FALSE)$counts)
+  list(
+    geom_vline(xintercept = gemiddelde, color = lijnkleur1,
+               linetype = "dashed", linewidth = 1),
+    geom_curve(aes(x    = gemiddelde + 1.5 * sigma,  y    = 0.85 * hoogste,
+                   xend = gemiddelde + sigma / 20,    yend = 0.70 * hoogste),
+               curvature = -0.4, arrow = arrow(length = unit(0.2, "cm")),
+               color = lijnkleur1, linewidth = 0.7),
+    annotate("text", x = gemiddelde + 1.5 * sigma, y = 0.91 * hoogste,
+             label = expression(bar(italic(X))),
+             color = accentkleur2, hjust = 0.5, size = 4)
+  )
+}
+
+# Voegt een geschaalde normaalcurve toe aan een frequentiehistogram.
+normaalOverlay <- function(data, xvar, binbreedte) {
+  mu <- mean(data[[xvar]], na.rm = TRUE)
+  s  <- sd(data[[xvar]],  na.rm = TRUE)
+  n  <- nrow(data)
+  stat_function(fun = function(x) n * binbreedte * dnorm(x, mean = mu, sd = s),
+                color = lijnkleur1, linewidth = 1)
+}

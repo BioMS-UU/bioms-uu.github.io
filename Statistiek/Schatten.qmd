@@ -377,69 +377,15 @@ steekproeven <- lapply(
 # Bereken steekproefgemiddelden
 gemiddelden <- lapply(steekproeven, mean)
 
-# Functie om een histogram te maken
-maak_histogram <- function(data, gemiddelde, y_label = NULL) {
-  intervallen <- cut(
-    data, 
-    breaks = seq(xmin, xmax, by = staafbreedte), 
-    include.lowest = TRUE
-  )
-  hoogste <- max(table(intervallen))
-  
-  ggplot(data.frame(x = data), aes(x = x)) +
-    geom_histogram(
-      binwidth = staafbreedte,
-      boundary = xmin,
-      fill = opvulkleur,
-      alpha = 0.7,
-      color = "black",
-      linewidth = 0.5
-    ) +
-    geom_vline(
-      xintercept = gemiddelde,
-      color = lijnkleur1,
-      linetype = "dashed",
-      linewidth = 1
-    ) +
-    xlim(xmin, xmax) +
-    labs(
-      x = expression(italic(X)),
-      y = y_label
-    ) +
-    geom_curve(
-      aes(
-        x = gemiddelde + 1.5 * sigma,
-        y = 0.85 * hoogste,
-        xend = gemiddelde + sigma / 20,
-        yend = 0.7 * hoogste
-      ),
-      curvature = -0.4,
-      arrow = arrow(length = unit(0.2, "cm")),
-      color = lijnkleur1,
-      linewidth = 0.7
-    ) +
-    annotate(
-      "text",
-      x = gemiddelde + 1.5 * sigma,
-      y = 0.85 * hoogste + 0.06 * hoogste,
-      label = expression(bar(italic(X))),
-      color = accentkleur2,
-      hjust = 0.5,
-      size = 4
-    ) +
-    theme_minimal() +
-    theme(plot.title = element_blank())
-}
-
 # Maak histogrammen
-histogrammen <- lapply(
-  1:3, 
-  function(i) maak_histogram(
-    steekproeven[[i]], 
-    gemiddelden[[i]], 
-    if (i == 1) "Frequentie" else NULL
-  )
-)
+histogrammen <- lapply(1:3, function(i) {
+  s <- steekproeven[[i]]
+  p <- maakHistogram(data.frame(x = s), "x", expression(italic(X)),
+                     staafbreedte, c(xmin, xmax)) +
+    gemiddeldeLijn(s, gemiddelden[[i]], sigma, staafbreedte, c(xmin, xmax))
+  if (i > 1) p <- p + labs(y = NULL)
+  p
+})
 
 # Toon het eerste histogram
 histogrammen[[1]]
@@ -545,44 +491,15 @@ steekproef_gemiddelden <- data.frame(
   )
 )
 
-# Functie om een histogram te maken
-maak_verdelingsplot <- function(data, label, y_as_label) {
-  plot <- ggplot(data, aes(x = waarde)) +
-    geom_histogram(
-      binwidth = staafbreedte, fill = opvulkleur, 
-      color = "black", alpha = 0.7, linewidth = 0.5
-    ) +
-    xlim(xmin, xmax) +
-    labs(
-      x = expression(bar(italic(X))),  # LaTeX-stijl voor X
-      title = NULL                    # Titel is de groepslabel
-    ) +
-    theme_minimal() +
-    theme(
-      plot.title = element_text(hjust = 0.5, face = "bold"),
-      axis.text.y = if (!y_as_label) element_blank() else element_text(),
-      axis.ticks.y = if (!y_as_label) element_blank() else element_line()
-    )
-  
-  # Voeg y-label toe indien nodig
-  if (y_as_label) {
-    plot <- plot + labs(y = "Frequentie")
-  } else {
-    plot <- plot + labs(y = NULL)
-  }
-  
-  return(plot)
-}
-
 # Subsets van de data voor elke groep
-data_n10 <- subset(steekproef_gemiddelden, groep == "n = 10")
-data_n40 <- subset(steekproef_gemiddelden, groep == "n = 40")
+data_n10  <- subset(steekproef_gemiddelden, groep == "n = 10")
+data_n40  <- subset(steekproef_gemiddelden, groep == "n = 40")
 data_n100 <- subset(steekproef_gemiddelden, groep == "n = 100")
 
 # Maak afzonderlijke histogrammen
-plot_n10 <- maak_verdelingsplot(data_n10, label = "n = 10", y_as_label = TRUE)
-plot_n40 <- maak_verdelingsplot(data_n40, label = "n = 40", y_as_label = TRUE)
-plot_n100 <- maak_verdelingsplot(data_n100, label = "n = 100", y_as_label = TRUE)
+plot_n10  <- maakHistogram(data_n10,  "waarde", expression(bar(italic(X))), staafbreedte, c(xmin, xmax))
+plot_n40  <- maakHistogram(data_n40,  "waarde", expression(bar(italic(X))), staafbreedte, c(xmin, xmax))
+plot_n100 <- maakHistogram(data_n100, "waarde", expression(bar(italic(X))), staafbreedte, c(xmin, xmax))
 
 populatie
 ```
@@ -1682,15 +1599,6 @@ filter_na <- function(data, variable) {
   data[!is.na(data[[variable]]), variable, drop = FALSE]
 }
 
-# Functie om histogrammen te genereren
-generate_histogram <- function(var_name, label, binwidth) {
-  filtered_data <- filter_na(NHANES, var_name)
-  ggplot(filtered_data, aes(x = .data[[var_name]])) +
-    geom_histogram(binwidth = binwidth, fill = opvulkleur, color = "black", alpha = 0.7) +
-    labs(x = var_name, y = "Frequentie", subtitle = label) +
-    theme_minimal()
-}
-
 # Functie om QQ-plots te genereren
 generate_qqplot <- function(var_name, label) {
   filtered_data <- filter_na(NHANES, var_name)
@@ -1703,10 +1611,11 @@ generate_qqplot <- function(var_name, label) {
 
 # Genereer histogrammen en QQ-plots met per variabele gefilterde data
 histograms <- mapply(
-  generate_histogram,
-  selected_vars,
-  paste0(letters[1:5], "."),
-  binwidths,
+  function(var_name, label, binwidth) {
+    maakHistogram(filter_na(NHANES, var_name), var_name, var_name, binwidth) +
+      labs(subtitle = label)
+  },
+  selected_vars, paste0(letters[1:5], "."), binwidths,
   SIMPLIFY = FALSE
 )
 
@@ -1790,131 +1699,50 @@ Om dat te illustreren
 
 set.seed(125)  # Voor reproduceerbaarheid
 
-# Functie om een histogram te maken
-maak_histogram <- function(
-  data, xvariabele, x_label, binbreedte = 5, 
-  x_bereik = c(0, 200), kleur = opvulkleur, alpha = 0.7, 
-  voeg_normaal_toe = FALSE
-) {
-  # Basis histogram
-  plot <- ggplot(data, aes_string(x = xvariabele)) +
-    geom_histogram(
-      fill = kleur, alpha = alpha, binwidth = binbreedte, 
-      boundary = 0, color = "black"
-    ) +
-    labs(x = x_label, y = "Frequentie") +
-    scale_x_continuous(
-      limits = x_bereik,
-      breaks = seq(x_bereik[1], x_bereik[2], by = 50)
-    ) +
-    theme_minimal()
-  
-  # Voeg normale verdeling toe indien gespecificeerd
-  if (voeg_normaal_toe) {
-    # Bereken parameters van de normale verdeling
-    gemiddelde <- mean(data[[xvariabele]], na.rm = TRUE)
-    standaarddev <- sd(data[[xvariabele]], na.rm = TRUE)
-    schaal <- nrow(data) * binbreedte
-    
-    # Voeg normale verdeling toe aan de plot
-    plot <- plot +
-      stat_function(
-        fun = function(x) {
-          schaal * dnorm(x, mean = gemiddelde, sd = standaarddev)
-        },
-        color = lijnkleur1, linewidth = 1
-      )
-  }
-
-  return(plot)
-}
-
-# Functie om een verticale lijn toe te voegen
-voeg_lijn_toe <- function(plot, x_waarde, 
-    lijnkleur = lijnkleur1, linetype = "dashed", linewidth = 1) {
-  plot +
-    geom_vline(
-      aes(xintercept = x_waarde), color = lijnkleur,
-      linetype = linetype, linewidth = linewidth
-    )
-}
-
-# Functie om steekproef-histogram te maken
-maak_steekproef_histogram <- function(data, xvariabele, 
-    steekproefgrootte, x_label, binbreedte = 5, 
-    x_bereik = c(0, 200), kleur = opvulkleur, alpha = 0.7) {
-  steekproef <- sample(
-    data[[xvariabele]], size = steekproefgrootte, replace = TRUE
-  )
-  steekproefgemiddelde <- mean(steekproef)
-  
-  plot <- maak_histogram(
-    data.frame(steekproef), "steekproef", x_label,
-    binbreedte, x_bereik, kleur, alpha
-  )
-  
-  voeg_lijn_toe(plot, steekproefgemiddelde, lijnkleur = lijnkleur1)
-}
-
-# Functie om histogram van steekproefgemiddelden te maken
-maak_gemiddelden_histogram <- function(data, xvariabele, 
-    steekproefgrootte, n_steekproeven, x_label, 
-    binbreedte = 5, x_bereik = c(0, 200), kleur = opvulkleur, 
-    alpha = 0.7, voeg_normaal_toe = FALSE) {
-  steekproefgemiddelden <- replicate(
-    n_steekproeven,
-    mean(
-      sample(
-        data[[xvariabele]], size = steekproefgrootte, replace = FALSE
-      )
-    )
-  )
-  
-  maak_histogram(
-    data.frame(steekproefgemiddelden), "steekproefgemiddelden",
-    x_label, binbreedte, x_bereik, kleur, alpha, voeg_normaal_toe
-  )
-}
-
 # Parameters
 steekproefgrootte <- 3
-n_steekproeven <- 10000
+n_steekproeven    <- 10000
 x_label_boven_midden <- "Lichaamsgewicht (kg)"
-x_label_onder <- "Steekproefgemiddelde Lichaamsgewicht (kg)"
+x_label_onder        <- "Steekproefgemiddelde Lichaamsgewicht (kg)"
 binbreedte <- 5
-x_bereik <- c(0, 200)
+x_bereik   <- c(0, 200)
 
 # Data; filter regels met missende gegevens
-data <- NHANES[ !is.na( NHANES$Weight ), ]
+data <- NHANES[!is.na(NHANES$Weight), ]
 
-# Maak de drie histogrammen
-boven_plot <- maak_histogram(
-  data, "Weight", x_label_boven_midden, binbreedte, x_bereik
-) 
-midden_plot <- maak_steekproef_histogram(
-  data, "Weight", steekproefgrootte, x_label_boven_midden, 
-  binbreedte, x_bereik
-)
-onder_plot <- maak_gemiddelden_histogram(
-  data, "Weight", steekproefgrootte, n_steekproeven, 
-  x_label_onder, binbreedte, x_bereik,
-  voeg_normaal_toe = TRUE
-)
+# Boven: histogram van de populatie
+boven_plot <- maakHistogram(data, "Weight", x_label_boven_midden, binbreedte, x_bereik)
 
-# Parameters
-steekproefgrootte <- 30  # Grootte van de steekproef
-binbreedte_onder <- 2
+# Midden: één steekproef (n = 3) met gemiddeldelijm
+steekproef_n3 <- sample(data$Weight, steekproefgrootte, replace = TRUE)
+midden_plot <- maakHistogram(data.frame(x = steekproef_n3), "x",
+                              x_label_boven_midden, binbreedte, x_bereik) +
+  geom_vline(xintercept = mean(steekproef_n3), color = lijnkleur1,
+             linetype = "dashed", linewidth = 1)
 
-# Maak twee histogrammen
-midden_plot_b <- maak_steekproef_histogram(data, "Weight", 
-    steekproefgrootte, x_label_boven_midden, binbreedte, x_bereik
-)
-onder_plot_b <- maak_gemiddelden_histogram(data, "Weight", 
-    steekproefgrootte, n_steekproeven, x_label_onder, 
-    binbreedte = binbreedte_onder, 
-    x_bereik,
-  voeg_normaal_toe = TRUE
-)
+# Onder: verdeling van steekproefgemiddelden (n = 3) met normaalcurve
+gemiddelden_n3 <- replicate(n_steekproeven,
+  mean(sample(data$Weight, steekproefgrootte, replace = FALSE)))
+gemiddelden_df_n3 <- data.frame(x = gemiddelden_n3)
+onder_plot <- maakHistogram(gemiddelden_df_n3, "x", x_label_onder, binbreedte, x_bereik) +
+  normaalOverlay(gemiddelden_df_n3, "x", binbreedte)
+
+# Herhaling met n = 30
+steekproefgrootte <- 30
+binbreedte_onder  <- 2
+
+steekproef_n30 <- sample(data$Weight, steekproefgrootte, replace = TRUE)
+midden_plot_b <- maakHistogram(data.frame(x = steekproef_n30), "x",
+                                x_label_boven_midden, binbreedte, x_bereik) +
+  geom_vline(xintercept = mean(steekproef_n30), color = lijnkleur1,
+             linetype = "dashed", linewidth = 1)
+
+gemiddelden_n30 <- replicate(n_steekproeven,
+  mean(sample(data$Weight, steekproefgrootte, replace = FALSE)))
+gemiddelden_df_n30 <- data.frame(x = gemiddelden_n30)
+onder_plot_b <- maakHistogram(gemiddelden_df_n30, "x", x_label_onder,
+                               binbreedte_onder, x_bereik) +
+  normaalOverlay(gemiddelden_df_n30, "x", binbreedte_onder)
 
 boven_plot
 ```
