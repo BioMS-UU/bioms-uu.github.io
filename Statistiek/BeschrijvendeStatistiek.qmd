@@ -698,7 +698,7 @@ cumulplot <- ggplot(NHANES, aes(x = Weight)) +
   stat_ecdf(
     geom = "step", 
     color = lijnkleur0, 
-    size = 1, 
+    linewidth = 1, 
     bw = 2
   ) +
   labs(
@@ -719,7 +719,7 @@ cumulplot +
     ), 
     linetype = "dashed", 
     color = lijnkleur1, 
-    size = 1
+    linewidth = 1
   ) +
   # Voeg een verticale stippellijn toe bij 100 kg
   geom_segment(
@@ -729,7 +729,7 @@ cumulplot +
     ), 
     linetype = "dashed", 
     color = lijnkleur1, 
-    size = 1
+    linewidth = 1
   ) +
   # Voeg een punt toe op het kruispunt van de lijnen
   geom_point(
@@ -890,27 +890,27 @@ basis_plot <- ggplot(data, aes(x = waarden)) +
     aes(x = x, xend = xend, y = y, yend = yend),
     arrow = arrow(length = unit(0.3, "cm")), 
     color = lijnkleur3,  
-    size = 1.2
+    linewidth = 1.2
   ) +
   geom_segment(
     data = annotatie_linksonder,
     aes(x = x, xend = x, y = y - 100, yend = yend + 100),
     color = lijnkleur3,  
-    size = 1.2
+    linewidth = 1.2
   ) +
   geom_segment(
     data = annotatie_rechtsboven,
     aes(x = x, xend = xend, y = y, yend = yend),
     arrow = arrow(ends = "both", length = unit(0.3, "cm")), 
     color = lijnkleur1, 
-    size = 1.2
+    linewidth = 1.2
   ) +
   geom_segment(
     data = annotatie_rechtsonder,
     aes(x = x, xend = xend, y = y, yend = yend),
     arrow = arrow(ends = "both", length = unit(0.3, "cm")),
     color = lijnkleur1, 
-    size = 1.2
+    linewidth = 1.2
   ) +
   facet_wrap(
     ~factor(
@@ -1051,7 +1051,7 @@ cumulplot_median <- cumulplot +
     ),
     linetype = "dashed", 
     color = lijnkleur1, 
-    size = 1
+    linewidth = 1
   ) +
   # Verticale lijn bij de mediaan
   geom_segment(
@@ -1061,7 +1061,7 @@ cumulplot_median <- cumulplot +
     ),
     linetype = "dashed", 
     color = lijnkleur1, 
-    size = 1
+    linewidth = 1
   ) +
   # Punt op het kruispunt van mediaan en cumulatieve proportie 0.5
   geom_point(
@@ -1149,7 +1149,7 @@ df <- data.frame(x = x, label = as.character(x))
 ggplot(df, aes(x = x, y = 0)) +
   geom_segment( # dunne as, "gewichtsloos"
     aes(x = min(x), xend = max(x), y = 0, yend = 0),
-    size = 1, 
+    linewidth = 1, 
     color = "SlateGray"
     ) +
   geom_point( # plot de getallen als gevulde cirkels
@@ -1237,7 +1237,7 @@ ggplot(data, aes(x = x, y = y)) +
     ),
     color = "SlateGray",
     linetype = "solid",
-    size = 1
+    linewidth = 1
   ) +
   # Punten
   geom_point(
@@ -1252,7 +1252,7 @@ ggplot(data, aes(x = x, y = y)) +
       y = m, yend = m
     ),
     color = lijnkleur0,
-    size = 1
+    linewidth = 1
   ) +
   # Label bij de gemiddelde lijn
   annotate(
@@ -1376,7 +1376,7 @@ q3 <- quartiles[3]  # Q3 (75e percentiel)
 q4 <- quartiles[4]  # Q4 (100e percentiel)
 
 # Functie om een kleur lichter te maken
-lighten_color <- function(color, percentage) {
+verlichtenKleur <- function(color, percentage) {
   # Zorg ervoor dat het percentage tussen 0 en 1 ligt
   percentage <- max(0, min(percentage, 1))
   
@@ -1396,9 +1396,9 @@ ggplot(data, aes(x = Weight)) +
       y = ifelse(after_stat(x) <= q1 + 5, after_stat(density), NA)
     ),
     color = lijnkleur0,
-    fill = lighten_color(opvulkleur, 0.8),
+    fill = verlichtenKleur(opvulkleur, 0.8),
     bw = 2,
-    size = 1
+    linewidth = 1
   ) +
   # Density-plot voor Q1 tot Q2
   geom_density(
@@ -1410,9 +1410,9 @@ ggplot(data, aes(x = Weight)) +
       )
     ),
     color = lijnkleur0,
-    fill = lighten_color(opvulkleur, 0.6),
+    fill = verlichtenKleur(opvulkleur, 0.6),
     bw = 2,
-    size = 1
+    linewidth = 1
   ) +
   # Density-plot voor Q2 tot Q3
   geom_density(
@@ -1424,9 +1424,9 @@ ggplot(data, aes(x = Weight)) +
       )
     ),
     color = lijnkleur0,
-    fill = lighten_color(opvulkleur, 0.4),
+    fill = verlichtenKleur(opvulkleur, 0.4),
     bw = 2,
-    size = 1
+    linewidth = 1
   ) +
   # Density-plot voor Q3 tot Q4
   geom_density(
@@ -1434,9 +1434,9 @@ ggplot(data, aes(x = Weight)) +
       y = ifelse(after_stat(x) >= q3, after_stat(density), NA)
     ),
     color = lijnkleur0,
-    fill = lighten_color(opvulkleur, 0.2),
+    fill = verlichtenKleur(opvulkleur, 0.2),
     bw = 2,
-    size = 1
+    linewidth = 1
   ) +
   # Voeg aangepaste x-as ticks en labels toe voor de kwartielen
   scale_x_continuous(
@@ -1495,7 +1495,7 @@ ggplot(data, aes(x = Weight)) +
     ),
     arrow = arrow(ends = "both", length = unit(0.3, "cm")),
     color = "black",
-    size = 0.8,
+    linewidth = 0.8,
     lineend = "round"
   ) +
   theme_minimal()
@@ -1535,7 +1535,7 @@ De zwarte pijl geeft weer de IKA aan.
 #| out.width: "71.4%"
 
 cumulplot <- ggplot(NHANES, aes(x = Weight)) +
-  stat_ecdf(geom = "step", color = lijnkleur0, size = 1, bw = 2) +
+  stat_ecdf(geom = "step", color = lijnkleur0, linewidth = 1, bw = 2) +
   labs(
     title = NULL,
     x = "Lichaamsgewicht (kg)",
@@ -1548,42 +1548,42 @@ cumulplot +
       x = min(NHANES$Weight, na.rm = TRUE), xend = quantiles[1], 
       y = 0.25, yend = 0.25
       ), 
-    linetype = "dashed", color = lijnkleur1, size = 1
+    linetype = "dashed", color = lijnkleur1, linewidth = 1
     ) +
   geom_segment(
     aes(
       x = min(NHANES$Weight, na.rm = TRUE), xend = quantiles[2], 
       y = 0.5, yend = 0.5
       ), 
-    linetype = "dashed", color = lijnkleur2, size = 1
+    linetype = "dashed", color = lijnkleur2, linewidth = 1
     ) +
   geom_segment(
     aes(
       x = min(NHANES$Weight, na.rm = TRUE), xend = quantiles[3], 
       y = 0.75, yend = 0.75
       ), 
-    linetype = "dashed", color = lijnkleur1, size = 1
+    linetype = "dashed", color = lijnkleur1, linewidth = 1
     ) +
   geom_segment(
     aes(
       x = quantiles[1], xend = quantiles[1], 
       y = 0, yend = 0.25
       ), 
-    linetype = "dashed", color = lijnkleur1, size = 1
+    linetype = "dashed", color = lijnkleur1, linewidth = 1
     ) +
   geom_segment(
     aes(
       x = quantiles[2], xend = quantiles[2], 
       y = 0, yend = 0.5
       ), 
-    linetype = "dashed", color = lijnkleur2, size = 1
+    linetype = "dashed", color = lijnkleur2, linewidth = 1
     ) +
   geom_segment(
     aes(
       x = quantiles[3], xend = quantiles[3], 
       y = 0, yend = 0.75
       ), 
-    linetype = "dashed", color = lijnkleur1, size = 1
+    linetype = "dashed", color = lijnkleur1, linewidth = 1
     ) +
   geom_point(
     aes(x = quantiles[1], y = 0.25), 
@@ -1611,7 +1611,7 @@ cumulplot +
       y = 0.1, yend = 0.1
       ),
     arrow = arrow(ends = "both", length = unit(0.3, "cm")),
-    color = "black", size = 0.8, lineend = "round"
+    color = "black", linewidth = 0.8, lineend = "round"
     ) +
     # Add custom x-axis ticks and labels for quartiles
   scale_x_continuous(
@@ -1702,7 +1702,7 @@ ggplot(data, aes(x = Weight)) +
   # Volledige ECDF-curve (consistent over de hele dataset)
   stat_ecdf(
     geom = "step",
-    size = 1,
+    linewidth = 1,
     color = lijnkleur0,
     bw = 2
   ) +
@@ -1715,10 +1715,10 @@ ggplot(data, aes(x = Weight)) +
   # Voeg aangepaste kleuren toe voor de kwartielen
   scale_fill_manual(
     values = c(
-      "Q1" = lighten_color(opvulkleur, 0.8),
-      "Q2" = lighten_color(opvulkleur, 0.6),
-      "Q3" = lighten_color(opvulkleur, 0.4),
-      "Q4" = lighten_color(opvulkleur, 0.2)
+      "Q1" = verlichtenKleur(opvulkleur, 0.8),
+      "Q2" = verlichtenKleur(opvulkleur, 0.6),
+      "Q3" = verlichtenKleur(opvulkleur, 0.4),
+      "Q4" = verlichtenKleur(opvulkleur, 0.2)
     )
   ) +
   geom_segment(
@@ -1730,7 +1730,7 @@ ggplot(data, aes(x = Weight)) +
     ),
     linetype = "dashed",
     color = "black",
-    size = 0.8
+    linewidth = 0.8
   ) +
   geom_segment(
     aes(
@@ -1741,7 +1741,7 @@ ggplot(data, aes(x = Weight)) +
     ),
     linetype = "dashed",
     color = "black",
-    size = 0.8
+    linewidth = 0.8
   ) +
   geom_segment(
     aes(
@@ -1752,7 +1752,7 @@ ggplot(data, aes(x = Weight)) +
     ),
     linetype = "dashed",
     color = "black",
-    size = 0.8
+    linewidth = 0.8
   ) +
   geom_point(
     aes(
@@ -1787,7 +1787,7 @@ ggplot(data, aes(x = Weight)) +
     ),
     arrow = arrow(ends = "both", length = unit(0.3, "cm")),
     color = "black",
-    size = 0.8,
+    linewidth = 0.8,
     lineend = "round"
   ) +
   labs(
@@ -1984,7 +1984,7 @@ ggplot(NHANES, aes(x = Pulse)) +
   #  xintercept = mean_pulse, 
   #  linetype = "dashed", 
   #  color = "black", 
-  #  size = 1
+  #  linewidth = 1
   #) +
   
   # Voeg een horizontale stippenlijn toe op de hoogte van de pijl
@@ -1992,7 +1992,7 @@ ggplot(NHANES, aes(x = Pulse)) +
     yintercept = 850, 
     linetype = "dotted", 
     color = "black", 
-    size = 0.8
+    linewidth = 0.8
   ) +
   
   # Voeg een horizontale pijl toe om de standaarddeviatie aan te geven
@@ -2008,7 +2008,7 @@ ggplot(NHANES, aes(x = Pulse)) +
       ends = "both"
     ),
     color = lijnkleur1,
-    size = 1
+    linewidth = 1
   ) +
   
   # Voeg een label toe voor de standaarddeviatie (s_X)
@@ -2141,19 +2141,19 @@ ggplot(gamma_df, aes(x = value)) +
     aes(xintercept = mean_value),
     color = lijnkleur1,
     linetype = "dashed",
-    size = 1.2
+    linewidth = 1.2
   ) +
   geom_vline(
     aes(xintercept = median_value),
     color = lijnkleur4,
     linetype = "dashed",
-    size = 1.2
+    linewidth = 1.2
   ) +
   geom_vline(
     aes(xintercept = mode_value),
     color = lijnkleur3,
     linetype = "dashed",
-    size = 1.2
+    linewidth = 1.2
   ) +
   annotate(
     "text",
@@ -2632,7 +2632,7 @@ een lijn getrokken tussen deze punten.
 #| out.width: "56%"
 
 ggplot(NHANES, aes(x = Weight)) +
-  geom_freqpoly(binwidth = 5, color = lijnkleur0, size = 1) +
+  geom_freqpoly(binwidth = 5, color = lijnkleur0, linewidth = 1) +
   labs(title = "",
        x = "Lichaamsgewicht (kg)",
        y = "Frequentie") +
@@ -2670,7 +2670,7 @@ vioolplot weergegeven voor de variabele lichaamsgewicht.
 #| out.width: "36%"
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
-  geom_violin(fill = "Bisque", color = lijnkleur0) +
+  geom_violin(fill = verlichtenKleur(opvulkleur, 0.5), color = lijnkleur0) +
   labs(title = NULL,
        x = "",
        y = "Lichaamsgewicht (kg)") +
@@ -2715,9 +2715,9 @@ ggplot(data, aes(x = "", y = Weight)) +
   # Boxplot
   geom_boxplot(
     aes(x = 3),
-    fill = "Bisque",
+    fill = verlichtenKleur(opvulkleur, 0.5),
     color = lijnkleur0,
-    size = 0.7,
+    linewidth = 0.7,
     outlier.color = puntkleur4,
     outlier.alpha = 0.3
   ) +
@@ -2725,12 +2725,12 @@ ggplot(data, aes(x = "", y = Weight)) +
     aes(x = 3),
     geom = "errorbar",
     colour = lijnkleur1,
-    size = 0.7,
+    linewidth = 0.7,
     width = 0.15
   ) +
   geom_boxplot(
     aes(x = 3),
-    fill = "Bisque",
+    fill = verlichtenKleur(opvulkleur, 0.5),
     color = lijnkleur0,
     coef = 0,
     outlier.shape = NA
@@ -2781,10 +2781,10 @@ afstand",
   ) +
   annotate(
     "segment",
-    y = kwantielen[2] + 5, 
+    y = kwantielen[2] + 5,
     yend = kwantielen[4] - 5,
     x = 3.46,
-    size = 0.7,
+    linewidth = 0.7,
     color = lijnkleur0
   ) +
   annotate(
@@ -2894,7 +2894,7 @@ jitterplot (zoals in @fig-anatomie-boxplot).
 #| out.width: "40%"
 
 ggplot(NHANES, aes(x = "", y = Weight)) +
-  geom_boxplot(fill = "Bisque", color = lijnkleur0) +
+  geom_boxplot(fill = verlichtenKleur(opvulkleur, 0.5), color = lijnkleur0) +
   labs(title = NULL,
        x = "",
        y = "Lichaamsgewicht (kg)") +
