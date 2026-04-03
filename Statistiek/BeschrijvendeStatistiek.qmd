@@ -286,22 +286,7 @@ laat een voorbeeld zien voor variabele `AgeMonths`
 
 data("NHANES")
 
-ggplot(
-  data = NHANES, 
-  aes(x = AgeMonths)
-  ) +
-  geom_histogram(
-    fill = opvulkleur, 
-    color = "black",
-    binwidth = 36,
-    boundary = 0,
-    closed = "left"
-    ) +
-  labs(title = NULL,
-    x = "Leeftijd (maanden)",
-    y = "Frequentie"
-  ) +
-  theme_minimal()
+maakHistogram(NHANES, "AgeMonths", "Leeftijd (maanden)", 36)
 
 ```
 
@@ -359,11 +344,12 @@ data <- data.frame(
 # Plot de histogrammen per verdelingstype
 ggplot(data, aes(x = x)) +
   geom_histogram(
-    bins = aantal_bins, 
-    fill = opvulkleur, 
+    bins = aantal_bins,
+    fill = opvulkleur,
+    alpha = 0.7,
     color = "black"
     ) +
-  facet_wrap(~groep, nrow = 1, scales = "free_x") + 
+  facet_wrap(~groep, nrow = 1, scales = "free_x") +
   labs(
     x = "Waarde", 
     y = "Frequentie"
@@ -442,21 +428,8 @@ samplesize <- 10^5  # Aantal punten per histogram
 # Genereer steekproef
 data_unif <- runif(samplesize)  # Uniforme verdeling
 
-# Histogram plotten
-ggplot(data.frame(x = data_unif), aes(x)) +
-  geom_histogram(
-    binwidth = 0.05, boundary = 0, fill = opvulkleur, color = "black"
-  ) +
-  labs(
-    title = NULL, # Titel
-    x = "Waarde",      # Label voor de x-as
-    y = "Frequentie"   # Label voor de y-as
-  ) +
-  theme_minimal() +
-  coord_cartesian(
-    xlim = c(-0.5, 1.5),
-    ylim = c(0, 6000)
-  )
+maakHistogram(data.frame(x = data_unif), "x", "Waarde", 0.05, c(-0.5, 1.5)) +
+  coord_cartesian(ylim = c(0, 6000))
 ```
 
 Een verdeling die één piek heeft noemen we **unimodaal**. Een verdeling
@@ -513,17 +486,19 @@ data <- data.frame(
 ggplot(data, aes(x = x)) +
   geom_histogram(
     data = subset(data, groep == "Unimodaal"),
-    binwidth = 1, 
-    fill = opvulkleur, 
+    binwidth = 1,
+    fill = opvulkleur,
+    alpha = 0.7,
     color = "black"
   ) +
   geom_histogram(
     data = subset(data, groep == "Bimodaal"),
-    bins = aantal_bins, 
-    fill = opvulkleur, 
+    bins = aantal_bins,
+    fill = opvulkleur,
+    alpha = 0.7,
     color = "black"
   ) +
-  facet_wrap(~groep, nrow = 1, scales = "free_x") +  
+  facet_wrap(~groep, nrow = 1, scales = "free_x") +
   labs(
     x = "Waarde",  
     y = "Frequentie"
@@ -559,22 +534,7 @@ ziet er als volgt uit:
 #| fig.height: 3
 #| out.width: "64%"
 
-ggplot(
-  data = NHANES, 
-  aes(x = Weight)
-  ) +
-  geom_histogram(
-    fill = opvulkleur, 
-    color = "black", 
-    binwidth = 5,
-    boundary = 0,
-    closed = "left"
-    ) +
-  labs(title = NULL,
-    x = "Lichaamsgewicht (kg)",
-    y = "Frequentie"
-  ) +
-  theme_minimal()
+maakHistogram(NHANES, "Weight", "Lichaamsgewicht (kg)", 5)
 
 ```
 
@@ -637,7 +597,7 @@ data <- data.frame(
 
 # Plot maken
 ggplot(data, aes(x = value, fill = distribution)) +
-  geom_histogram(bins = 40, color = "black", alpha = 1, fill= opvulkleur) +
+  geom_histogram(bins = 40, color = "black", alpha = 0.7, fill= opvulkleur) +
   facet_wrap(~label, scales = "free") +
   theme_minimal() +
   theme(legend.position = "none") +
@@ -880,9 +840,10 @@ annotatie_rechtsonder <- data.frame(
 # plot
 basis_plot <- ggplot(data, aes(x = waarden)) +
   geom_histogram(
-    binwidth = 0.5, 
+    binwidth = 0.5,
     boundary = 0,
-    fill = opvulkleur, 
+    fill = opvulkleur,
+    alpha = 0.7,
     color = "black"
   ) +
   geom_segment(
@@ -1159,11 +1120,12 @@ ggplot(df, aes(x = x, y = 0)) +
     aes(label = label), vjust = -1, size = 5
     ) +   
   annotate( # teken een driehoek onder het zwaartepunt / gemiddelde
-    "polygon", 
+    "polygon",
     x = c(m, m - 0.2, m + 0.2),
-    y = c(0, -0.3, -0.3), 
-    fill = opvulkleur
-    ) + 
+    y = c(0, -0.3, -0.3),
+    fill = opvulkleur,
+    alpha = 0.7
+    ) +
   coord_cartesian(xlim = c(min(x), max(x)), ylim = c(-0.6, 0.5)) +
   annotate(
     "text", 
@@ -1971,72 +1933,15 @@ labels <- ifelse(
   all_breaks
   )
 
-# Maak een histogram met een binbreedte van 6
-ggplot(NHANES, aes(x = Pulse)) +
-  geom_histogram(
-    binwidth = 6, 
-    fill = opvulkleur, 
-    color = "black", 
-  ) +
-  
-  # Voeg een verticale stippellijn toe voor het gemiddelde
-  #geom_vline(
-  #  xintercept = mean_pulse, 
-  #  linetype = "dashed", 
-  #  color = "black", 
-  #  linewidth = 1
-  #) +
-  
-  # Voeg een horizontale stippenlijn toe op de hoogte van de pijl
-  geom_hline(
-    yintercept = 850, 
-    linetype = "dotted", 
-    color = "black", 
-    linewidth = 0.8
-  ) +
-  
-  # Voeg een horizontale pijl toe om de standaarddeviatie aan te geven
-  geom_segment(
-    aes(
-      x = mean_pulse, 
-      xend = mean_pulse + sd_pulse, 
-      y = 850, 
-      yend = 850
-    ),
-    arrow = arrow(
-      length = unit(0.3, "cm"),
-      ends = "both"
-    ),
-    color = lijnkleur1,
-    linewidth = 1
-  ) +
-  
-  # Voeg een label toe voor de standaarddeviatie (s_X)
-  annotate(
-    "text", 
-    x = mean_pulse + sd_pulse / 2.5 -1, 
-    y = 960, 
-    label = expression(italic(s[X])),
-    color = accentkleur2,
-    size = 4.5,
-    parse = TRUE
-  ) +
-  
-  # Pas de x-as aan met automatische ticks en het gemiddelde als extra
-  scale_x_continuous(
-    name = "Hartslag in rust",
-#    breaks = all_breaks, 
-#    labels = labels,
-    minor_breaks = NULL # Schakel minor ticks uit
-  ) +
-  
-  # Pas de labels aan
-  labs(
-    y = "Frequentie"
-  ) +
-  
-  # Gebruik een minimalistisch thema
-  theme_minimal()
+maakHistogram(NHANES, "Pulse", "Hartslag in rust", 6) +
+  scale_x_continuous(minor_breaks = NULL) +
+  geom_hline(yintercept = 850, linetype = "dotted", color = "black", linewidth = 0.8) +
+  geom_segment(aes(x = mean_pulse, xend = mean_pulse + sd_pulse, y = 850, yend = 850),
+               arrow = arrow(length = unit(0.3, "cm"), ends = "both"),
+               color = lijnkleur1, linewidth = 1) +
+  annotate("text", x = mean_pulse + sd_pulse / 2.5 - 1, y = 960,
+           label = expression(italic(s[X])),
+           color = accentkleur2, size = 4.5, parse = TRUE)
 ```
 
 ::: {#exr-poezen .pepexr}
@@ -2129,62 +2034,16 @@ gamma_df <- data.frame(
   value = gamma_sample
 )
 
-# Maak een histogram en voeg verticale lijnen en labels toe
-ggplot(gamma_df, aes(x = value)) +
-  geom_histogram(
-    binwidth = 0.5,
-    boundary = 0,
-    fill = opvulkleur,
-    color = "black",
-  ) +
-  geom_vline(
-    aes(xintercept = mean_value),
-    color = lijnkleur1,
-    linetype = "dashed",
-    linewidth = 1.2
-  ) +
-  geom_vline(
-    aes(xintercept = median_value),
-    color = lijnkleur4,
-    linetype = "dashed",
-    linewidth = 1.2
-  ) +
-  geom_vline(
-    aes(xintercept = mode_value),
-    color = lijnkleur3,
-    linetype = "dashed",
-    linewidth = 1.2
-  ) +
-  annotate(
-    "text",
-    x = 10,
-    y = 630,
-    vjust = 0,
-    label = paste0("Gemiddelde = ", round(mean_value, 1)),
-    color = lijnkleur1
-  ) +
-  annotate(
-    "text",
-    x = 10,
-    y = 530,
-    vjust = 0,
-    label = paste0("Mediaan = ", round(median_value, 1)),
-    color = lijnkleur4
-  ) +
-  annotate(
-    "text",
-    x = 10,
-    y = 430,
-    vjust = 0,
-    label = paste0("Modus = ", round(mode_value, 1)),
-    color = lijnkleur3
-  ) +
-  labs(
-    title = NULL,
-    x = "Waarden",
-    y = "Frequentie"
-  ) +
-  theme_minimal()
+maakHistogram(gamma_df, "value", "Waarden", 0.5) +
+  geom_vline(aes(xintercept = mean_value),   color = lijnkleur1, linetype = "dashed", linewidth = 1.2) +
+  geom_vline(aes(xintercept = median_value), color = lijnkleur4, linetype = "dashed", linewidth = 1.2) +
+  geom_vline(aes(xintercept = mode_value),   color = lijnkleur3, linetype = "dashed", linewidth = 1.2) +
+  annotate("text", x = 10, y = 630, vjust = 0,
+           label = paste0("Gemiddelde = ", round(mean_value, 1)), color = lijnkleur1) +
+  annotate("text", x = 10, y = 530, vjust = 0,
+           label = paste0("Mediaan = ", round(median_value, 1)),  color = lijnkleur4) +
+  annotate("text", x = 10, y = 430, vjust = 0,
+           label = paste0("Modus = ", round(mode_value, 1)),      color = lijnkleur3)
 ```
 
 Daarom gebruiken we de volgende richtlijnen.
@@ -2446,7 +2305,8 @@ ggplot(
   aes(x = HealthGen)
   ) +
   geom_bar(
-    fill = opvulkleur, 
+    fill = opvulkleur,
+    alpha = 0.7,
     color = "black"
     ) +
   labs(

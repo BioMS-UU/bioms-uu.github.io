@@ -20,9 +20,9 @@ library(ggforce)
 library(vcd)
 
 # Kleurpalet
-opvulkleur  <- "#ffac63" # "YellowOrange"
-opvulkleur1 <- "#C58BE2" # "#cc9ae5" # "darkorchid"
-opvulkleur2 <- "#409899"
+opvulkleur  <- "#ff7701" # oranje (verzadigd)
+opvulkleur1 <- "darkorchid" # paars (verzadigd)
+opvulkleur2 <- "#589c48" # groen (verzadigd)
 lijnkleur0  <- "#ff7701"
 lijnkleur1  <- "darkorchid"
 lijnkleur2  <- "#c62a01"
@@ -37,7 +37,7 @@ accentkleur2 <- lijnkleur1   # paarse tekst
 puntkleur1 <- lijnkleur0     # oranje punten
 puntkleur2 <- lijnkleur1     # paarse punten
 puntkleur3 <- "gray50"       # grijze punten
-puntkleur4 <- "red"          # rode punten
+puntkleur4 <- "#c62a01"      # rode punten
 
 # Gearceerd gebied onder een normaalcurve (van a tot b).
 # plotdata: data frame met kolommen x en y; standaard de globale variabele `data`.
@@ -230,4 +230,24 @@ normaalOverlay <- function(data, xvar, binbreedte) {
   n  <- nrow(data)
   stat_function(fun = function(x) n * binbreedte * dnorm(x, mean = mu, sd = s),
                 color = lijnkleur1, linewidth = 1)
+}
+
+# ---------------------------------------------------------------------------
+# Staafdiagram-hulpfuncties
+# ---------------------------------------------------------------------------
+
+# Staafdiagram voor een discrete kansverdeling.
+# x_vals: vector van uitkomsten (numeriek of factor)
+# probs:  vector van kansen (zelfde lengte als x_vals)
+# xlabel: label voor de x-as
+# titel:  optionele grafiektitel (standaard geen)
+# y_lim:  optioneel c(min, max) voor de y-as (standaard automatisch)
+maakKansverdeling <- function(x_vals, probs, xlabel, titel = NULL, y_lim = NULL) {
+  p <- ggplot(data.frame(x = x_vals, y = probs), aes(x = x, y = y)) +
+    geom_bar(stat = "identity", fill = opvulkleur, alpha = 0.7,
+             color = "black", width = 1) +
+    labs(x = xlabel, y = "Kans", title = titel) +
+    theme_minimal()
+  if (!is.null(y_lim)) p <- p + scale_y_continuous(limits = y_lim)
+  p
 }

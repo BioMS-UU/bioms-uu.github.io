@@ -53,33 +53,12 @@ We kunnen de kansen weergeven in een grafiek:
 min_ogen <- 1       # Minimum aantal ogen op een dobbelsteen
 max_ogen <- 6       # Maximum aantal ogen op een dobbelsteen
 kans <- 1 / max_ogen # Gelijke kans voor elke uitkomst
-kleur <- opvulkleur   # Kleur voor de balken in de plot
 
 # Genereer de uitkomsten en bijbehorende kansen
 uitkomsten <- seq(min_ogen, max_ogen)
 kansen <- rep(kans, length(uitkomsten))
 
-# Maak een data frame met uitkomsten en kansen
-kansen_dobbelsteen <- data.frame(
-  uitkomsten = factor(uitkomsten),
-  kansen = kansen
-)
-
-# Maak de plot
-ggplot(kansen_dobbelsteen, aes(x = uitkomsten, y = kansen)) +
-  geom_bar(
-    stat = "identity",     # Balken representeren kanswaarden direct
-    width = 1,             # Volledige breedte van de categorie
-    fill = kleur,          # Kleur voor de balken
-    color = "black"        # Randkleur voor de balken
-  ) +
-  labs(
-    title = "",
-    x = "Totaal aantal ogen",      # Titel voor de x-as
-    y = "Kans"              # Titel voor de y-as
-  ) +
-  ylim(0, 0.2) +            # Zorg dat de y-as tot 0.02 loopt
-  theme_minimal()
+maakKansverdeling(uitkomsten, kansen, "Totaal aantal ogen", y_lim = c(0, 0.2))
 ```
 In dit geval zijn alle kansen gelijk.
 Maar stel je nu voor dat we niet één maar twee dobbelstenen gooien,
@@ -109,37 +88,12 @@ dan kunnen we de kansen uitrekenen en in een grafiek laten zien:
 # Parameters definiëren
 min_som <- 2          # Minimum som bij twee dobbelstenen
 max_som <- 2*max_ogen # Maximum som bij twee dobbelstenen
-kleur <- rep(opvulkleur, 11) # Kleur voor de balken in de plot
 
 # Genereer uitkomsten en bijbehorende kansen
-uitkomsten <- seq(min_som, max_som)                     # Mogelijke uitkomsten
+uitkomsten <- seq(min_som, max_som)                              # Mogelijke uitkomsten
 kansen <- pmin(uitkomsten - 1, 13 - uitkomsten) / max_ogen^2    # Kansen berekenen
 
-# Maak een data frame met uitkomsten en kansen
-kansen_dobbelsteen <- data.frame(
-  uitkomsten = factor(uitkomsten),
-  kansen = kansen
-)
-
-# Maak de plot
-verdelingTweeDobbelstenen <- function(kleur)
-  {
-  ggplot(kansen_dobbelsteen, aes(x = uitkomsten, y = kansen)) +
-  geom_bar(
-    stat = "identity",     # Balken representeren kanswaarden direct
-    width = 1,             # Volledige breedte van de categorie
-    fill = kleur,          # Kleur voor de balken
-    color = "black"        # Randkleur voor de balken
-  ) +
-  labs(
-    title = "",
-    x = "Totaal aantal ogen",      # Titel voor de x-as
-    y = "Kans"              # Titel voor de y-as
-  ) +
-  theme_minimal()           # Minimalistisch thema voor de plot
-}
-
-verdelingTweeDobbelstenen(kleur)
+maakKansverdeling(uitkomsten, kansen, "Totaal aantal ogen")
 
 ```
 
@@ -240,7 +194,10 @@ De kans $\pr{7 < X < 11}$
 kleur <- rep(opvulkleur, 11)
 kleur[7:9] <- opvulkleur1
 
-verdelingTweeDobbelstenen(kleur)
+ggplot(data.frame(x = factor(uitkomsten), y = kansen), aes(x = x, y = y)) +
+  geom_bar(stat = "identity", fill = kleur, alpha = 0.7, color = "black", width = 1) +
+  labs(x = "Totaal aantal ogen", y = "Kans") +
+  theme_minimal()
 
 ```
 
@@ -1786,13 +1743,6 @@ voor als je ze ergens tegenkomt.
 # Definieer x-waarden voor de continue verdelingen
 df_x <- seq(0, 10, length.out = 100)
 
-# Functie om discrete verdelingen te plotten
-make_discrete_plot <- function(x_vals, probs, dist_name) {
-  ggplot(data.frame(x = x_vals, y = probs), aes(x = x, y = y)) +
-    geom_bar(stat = "identity", fill = opvulkleur, color = "black", width = 1) +
-    labs(x = "Waarde", y = "Kans", title = dist_name) +
-    theme_minimal()
-}
 
 # Functie om continue verdelingen te plotten
 make_continuous_plot <- function(x_vals, density_vals, dist_name) {
@@ -1804,10 +1754,10 @@ make_continuous_plot <- function(x_vals, density_vals, dist_name) {
 
 # Maak de grafieken
 plots <- list(
-  make_discrete_plot(0:15, dbinom(0:15, size = 10, prob = 0.5), "Binomiaal"),
-  make_discrete_plot(0:15, dpois(0:15, lambda = 5), "Poisson"),
-  make_discrete_plot(0:15, dgeom(0:15, prob = 0.3), "Geometrisch"),
-  make_discrete_plot(0:20, dnbinom(0:20, size = 5, prob = 0.4), "Negatief binomiaal"),
+  maakKansverdeling(0:15, dbinom(0:15, size = 10, prob = 0.5), "Waarde", titel = "Binomiaal"),
+  maakKansverdeling(0:15, dpois(0:15, lambda = 5),             "Waarde", titel = "Poisson"),
+  maakKansverdeling(0:15, dgeom(0:15, prob = 0.3),             "Waarde", titel = "Geometrisch"),
+  maakKansverdeling(0:20, dnbinom(0:20, size = 5, prob = 0.4), "Waarde", titel = "Negatief binomiaal"),
   make_continuous_plot(df_x, dgamma(df_x, shape = 2, scale = 1.5), "Gamma"),
   make_continuous_plot(df_x, dweibull(df_x, shape = 2, scale = 2), "Weibull"),
   make_continuous_plot(df_x, df(df_x, df1 = 5, df2 = 10), "F"),
