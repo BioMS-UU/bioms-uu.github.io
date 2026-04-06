@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>P-waarde calculator</title>
+<title>Rekenhulp: Bereken de P-waarde</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -202,6 +202,33 @@
     color: #aaa;
     margin-top: 2px;
   }
+
+  /* R code panel */
+  .code-panel {
+    background: #1e1e2e;
+    border-radius: 8px;
+    padding: 12px 14px 10px;
+  }
+  .code-header {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6e6e8e;
+    margin-bottom: 8px;
+  }
+  #rCode {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.82rem;
+    color: #cdd6f4;
+    margin: 0;
+    white-space: pre;
+    line-height: 1.6;
+  }
+  .r-kw  { color: #89b4fa; }
+  .r-val { color: #fab387; }
+  .r-fn  { color: #a6e3a1; }
+  .r-out { color: #94e2d5; }
 </style>
 </head>
 <body>
@@ -214,7 +241,7 @@
           font-family="Arial, Helvetica, sans-serif"
           font-size="35" font-weight="bold" fill="white">BMS</text>
   </svg>
-  <h1><i>P</i>-waarde calculator</h1>
+  <h1><span style="color: darkorange">Rekenhulp:</span> Bereken de <i>P</i>-waarde</h1>
 </div>
 
 <div class="app">
@@ -279,6 +306,11 @@
              oninput="onSliderInput(this.value)">
       <div class="slider-endpoints"><span>−4</span><span>0</span><span>+4</span></div>
     </div>
+
+    <div class="code-panel">
+      <div class="code-header">R-code</div>
+      <pre id="rCode"></pre>
+    </div>
   </div>
 
 </div><!-- /app -->
@@ -288,9 +320,14 @@
 //  State
 // ════════════════════════════════════════════
 let dist  = 'normal';
-let tstat = 1.96;
+let tstat = 1.96;   // test statistic; set directly by slider or input field
 let df    = 10;
 let tail  = 'two';
+
+// KEY LOGIC (inverse of the critical value calculator):
+// The slider sets tstat directly; computePvalue() then derives the P-value from it.
+// No rounding is applied to tstat: any slider position gives a precise P-value.
+// Direction: test statistic → P-value  (compare: crit.calc goes α → critical value).
 
 const N_POINTS = 400;
 const X_MIN = -4, X_MAX = 4;
@@ -304,13 +341,14 @@ function normalPdf(x) {
   return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
 }
 
-// t PDF
+// t PDF — computed in log space to avoid overflow for large df (> ~341
+// the naive formula exp(logGamma(a)) would exceed Number.MAX_VALUE).
 function tPdf(x, df) {
   const a = (df + 1) / 2;
-  const lnB = logGamma(df / 2) + logGamma(0.5) - logGamma(a);
-  return Math.exp(
-    logGamma(a) - lnB - a * Math.log(1 + x * x / df)
-  ) / Math.sqrt(df);
+  const logPdf = logGamma(a) - logGamma(df / 2)
+               - 0.5 * Math.log(df * Math.PI)
+               - a * Math.log(1 + x * x / df);
+  return Math.exp(logPdf);
 }
 
 // Log-Gamma via Lanczos
@@ -384,6 +422,10 @@ function cdfAt(x) {
   return dist === 'normal' ? normalCdf(x) : tCdf(x, df);
 }
 
+// Computes the exact P-value from tstat.
+// Two-sided: uses |tstat| so the sign of the test statistic does not matter.
+// Right-sided: area to the right of tstat.
+// Left-sided: area to the left of tstat.
 function computePvalue() {
   const t = Math.abs(tstat);
   const upper = 1 - cdfAt(t);
@@ -553,10 +595,45 @@ function render() {
   // Color the P-value: red if ≤ 0.05, grey otherwise
   document.getElementById('pvalDisplay').style.color = pval <= 0.05 ? '#c1121f' : '#888';
 
-  // Slider sync
+  updateRCode();
+
+  // Slider sync: clamp to [X_MIN, X_MAX] for display only; tstat itself is unclamped
+  // so values typed outside [-4, 4] in the input field still produce a correct P-value.
   document.getElementById('statSlider').value = Math.max(X_MIN, Math.min(X_MAX, t));
   document.getElementById('sliderVal').textContent = t.toFixed(2);
   document.getElementById('statInput').value = t;
+}
+
+// ════════════════════════════════════════════
+//  R code panel
+// ════════════════════════════════════════════
+function updateRCode() {
+  // tstat is shown at full precision (6 decimal places, trailing zeros stripped)
+  // so the R code is exactly reproducible. The P-value is computed fresh from
+  // tstat — not from any rounded display value — ensuring code and output match.
+  const sym    = dist === 'normal' ? 'Z' : 't';
+  const tFmt   = parseFloat(tstat.toFixed(6)).toString();
+  const dfLine = dist === 't'
+    ? `\n<span class="r-kw">df</span> <- <span class="r-val">${df}</span>`
+    : '';
+
+  const fnExpr = dist === 'normal'
+    ? (tail === 'two'   ? '2 * pnorm(-abs(Z))'
+     : tail === 'right' ? '1 - pnorm(Z)'
+     :                    'pnorm(Z)')
+    : (tail === 'two'   ? '2 * pt(-abs(t), df)'
+     : tail === 'right' ? '1 - pt(t, df)'
+     :                    'pt(t, df)');
+
+  const pval     = computePvalue();
+  const outputVal = pval < 0.0001
+    ? pval.toExponential(4)
+    : pval.toFixed(6);
+
+  document.getElementById('rCode').innerHTML =
+    `<span class="r-kw">${sym}</span> <- <span class="r-val">${tFmt}</span>${dfLine}` +
+    `\n<span class="r-fn">${fnExpr}</span>` +
+    `\n\n<span class="r-out">[1] ${outputVal}</span>`;
 }
 
 // ════════════════════════════════════════════

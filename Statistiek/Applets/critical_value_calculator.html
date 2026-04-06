@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kritiekewaardeberekening</title>
+<title>Rekenhulp: Bereken de kritieke waarde</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -199,6 +199,33 @@
     color: #aaa;
     margin-top: 2px;
   }
+
+  /* R code panel */
+  .code-panel {
+    background: #1e1e2e;
+    border-radius: 8px;
+    padding: 12px 14px 10px;
+  }
+  .code-header {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6e6e8e;
+    margin-bottom: 8px;
+  }
+  #rCode {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.82rem;
+    color: #cdd6f4;
+    margin: 0;
+    white-space: pre;
+    line-height: 1.6;
+  }
+  .r-kw  { color: #89b4fa; }   /* keyword / assignment */
+  .r-val { color: #fab387; }   /* dynamic value (orange) */
+  .r-fn  { color: #a6e3a1; }   /* function name */
+  .r-out { color: #94e2d5; }   /* [1] output */
 </style>
 </head>
 <body>
@@ -211,7 +238,7 @@
           font-family="Arial, Helvetica, sans-serif"
           font-size="35" font-weight="bold" fill="white">BMS</text>
   </svg>
-  <h1>Kritiekewaardeberekening</h1>
+  <h1><span style="color: darkorange">Rekenhulp:</span> Bereken de kritieke waarde</h1>
 </div>
 
 <div class="app">
@@ -278,6 +305,11 @@
         <span>−4</span><span>0</span><span>+4</span>
       </div>
     </div>
+
+    <div class="code-panel">
+      <div class="code-header">R-code</div>
+      <pre id="rCode"></pre>
+    </div>
   </div>
 
 </div><!-- /app -->
@@ -287,10 +319,22 @@
 //  State
 // ════════════════════════════════════════════
 let dist  = 'normal';
-let alpha = 0.05;
+let alpha = 0.05;   // significance level; always kept in sync with crit
 let df    = 10;
 let tail  = 'two';
-let crit  = 1.96;    // current critical value (positive)
+let crit  = 1.96;   // critical value; recomputed via computeCrit() whenever alpha changes
+
+// KEY LOGIC:
+// The slider drives the calculation in this order:
+//   slider position (tInternal)
+//     → exact tail area (alphaInternal)
+//     → round the DISPLAYED quantity to 3 decimal places:
+//         two-sided : round α/2, then set α = 2 × that  (so "α/2 = 0.025" snaps cleanly)
+//         one-sided : round α directly
+//     → recompute crit = computeCrit()  (exact quantile of the rounded α)
+// Effect: near 1.96 the label snaps to α/2 = 0.025, and crit displays as 1.96.
+// The slider knob stays at the raw drag position; the label above it shows the rounded crit.
+// When alpha is set via the input field the direction reverses: alpha → crit directly.
 
 const N_POINTS = 400;
 const X_MIN = -4, X_MAX = 4;
@@ -308,9 +352,13 @@ function normalPdf(x) {
 }
 
 function tPdf(x, df) {
+  // Computed entirely in log space to avoid overflow for large df (> ~341
+  // the naive formula exp(logGamma(a)) would exceed Number.MAX_VALUE).
   const a = (df + 1) / 2;
-  const lnB = logGamma(df / 2) + logGamma(0.5) - logGamma(a);
-  return Math.exp(logGamma(a) - lnB - a * Math.log(1 + x * x / df)) / Math.sqrt(df);
+  const logPdf = logGamma(a) - logGamma(df / 2)
+               - 0.5 * Math.log(df * Math.PI)
+               - a * Math.log(1 + x * x / df);
+  return Math.exp(logPdf);
 }
 
 function logGamma(z) {
@@ -406,14 +454,19 @@ function quantileAt(p) {
   return dist === 'normal' ? normalQuantile(p) : tQuantile(p, df);
 }
 
-// Compute critical value from alpha and tail
+// Inverts the CDF: given alpha, returns the critical value as a quantile.
+// Two-sided: returns positive value |Q(α/2)|; the left mirror is -crit.
+// Right-sided: Q(1 - α), positive.
+// Left-sided: Q(α), negative.
 function computeCrit() {
   if (tail === 'two')   return Math.abs(quantileAt(alpha / 2));
   if (tail === 'right') return quantileAt(1 - alpha);
   return quantileAt(alpha);   // left tail: negative
 }
 
-// Current area of shaded region (should equal alpha)
+// Returns the total shaded tail area for a given critical value position.
+// This is the inverse of computeCrit: shadedArea(computeCrit()) ≈ alpha.
+// Used by onSliderInput to convert a raw slider position into an alpha value.
 function shadedArea(cv) {
   if (tail === 'two')   return 2 * (1 - cdfAt(Math.abs(cv)));
   if (tail === 'right') return 1 - cdfAt(cv);
@@ -435,7 +488,7 @@ function critSymbol() {
 function critHTML(val) {
   const acv  = Math.abs(val);
   const sign = tail === 'left' ? '−' : '';   // Unicode minus for left tail
-  return `${critSymbol()} = ${sign}${acv.toFixed(3)}`;
+  return `${critSymbol()} = ${sign}${acv.toFixed(2)}`;
 }
 
 // ════════════════════════════════════════════
@@ -519,6 +572,10 @@ const alphaLabelPlugin = {
 };
 Chart.register(alphaLabelPlugin);
 
+// syncSlider=true (default): snap slider knob and label to match the current crit.
+//   Use this when alpha changes via the input field, or when df / tail type changes.
+// syncSlider=false: leave the slider knob at its raw drag position.
+//   Use this in onSliderInput so the knob doesn't jump to the rounded crit.
 function render(syncSlider = true) {
   const cv = crit;
   const acv = Math.abs(cv);
@@ -569,17 +626,18 @@ function render(syncSlider = true) {
 
   chart.data.datasets = [...fillDs, ...vlineDs, curveDs];
 
-  // Alpha labels: place inside each shaded region
+  // Alpha labels: placed inside each shaded region.
+  // Use alpha directly (the already-rounded value) rather than recomputing
+  // shadedArea(crit), so the label always matches the sidebar and R code exactly.
   const peakY = pdfAt(0);
   const alphaLabels = [];
-  const areaNow = shadedArea(cv);
-  const labelText = 'α = ' + areaNow.toFixed(3);
+  const labelText = 'α = ' + alpha.toFixed(3);
 
   const MARGIN = 0.8;
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
   if (tail === 'two') {
-    const halfLabel = 'α/2 = ' + (areaNow / 2).toFixed(3);
+    const halfLabel = 'α/2 = ' + (alpha / 2).toFixed(3);
     const xL = clamp((X_MIN + (-acv)) / 2, X_MIN + MARGIN, X_MAX - MARGIN);
     const xR = clamp((acv  +  X_MAX) / 2, X_MIN + MARGIN, X_MAX - MARGIN);
     alphaLabels.push({ xVal: xL, yVal: peakY * 0.38, text: halfLabel });
@@ -598,11 +656,12 @@ function render(syncSlider = true) {
   // Sidebar output
   const tailLabel = tail === 'two' ? 'tweezijdig' : tail === 'right' ? 'rechtszijdig' : 'linkszijdig';
   document.getElementById('critDisplay').innerHTML = critHTML(cv);
-  document.getElementById('critSub').innerHTML = `${tailLabel}, <i>α</i> = ${areaNow.toFixed(3)}`;
+  document.getElementById('critSub').innerHTML = `${tailLabel}, <i>α</i> = ${alpha.toFixed(3)}`;
+  updateRCode();
 
   if (syncSlider) {
     document.getElementById('critSlider').value = tail === 'two' ? acv : crit;
-    document.getElementById('sliderVal').textContent = acv.toFixed(3);
+    document.getElementById('sliderVal').textContent = acv.toFixed(2);
   }
   document.getElementById('sliderLabel').innerHTML = `Toetsingsgrootheid ${critSymbol()}`;
 }
@@ -648,12 +707,56 @@ function onTailChange() {
 }
 
 function onSliderInput(val) {
-  const v = parseFloat(val);
-  crit  = tail === 'two' ? Math.abs(v) : v;
-  alpha = shadedArea(crit);
-  document.getElementById('alphaInput').value = alpha.toFixed(4);
-  document.getElementById('sliderVal').textContent = Math.abs(crit).toFixed(3);
-  render(false);  // don't snap slider back to positive
+  // Step 1: raw slider position → exact tail area.
+  const tInternal     = parseFloat(val);
+  const tForArea      = tail === 'two' ? Math.abs(tInternal) : tInternal;
+  const alphaInternal = shadedArea(tForArea);
+
+  // Step 2: round the quantity that is DISPLAYED in the plot label.
+  //   Two-sided: the label shows α/2, so round that and set α = 2 × rounded value.
+  //              This makes "α/2 = 0.025" snap exactly when near Z = 1.96.
+  //   One-sided: the label shows α, so round α directly.
+  if (tail === 'two') {
+    const halfRounded = Math.round((alphaInternal / 2) * 1000) / 1000;
+    alpha = Math.max(0.002, Math.min(0.998, 2 * halfRounded));
+  } else {
+    alpha = Math.max(0.001, Math.min(0.999, Math.round(alphaInternal * 1000) / 1000));
+  }
+
+  // Step 3: recompute crit as the exact quantile of the rounded alpha.
+  // The slider knob stays at tInternal; the label above it shows Math.abs(crit).
+  crit  = computeCrit();
+  document.getElementById('alphaInput').value = alpha.toFixed(3);
+  document.getElementById('sliderVal').textContent = Math.abs(crit).toFixed(2);
+  render(false);  // syncSlider=false: don't snap knob away from drag position
+}
+
+// ════════════════════════════════════════════
+//  R code panel
+// ════════════════════════════════════════════
+function updateRCode() {
+  // Strip trailing zeros from alpha for clean R code (e.g. 0.0500 → 0.05).
+  const aFmt  = alpha.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+  // Re-parse so the R output is computed from exactly the value shown in the code,
+  // preventing a mismatch between the displayed alpha and the [1] result line.
+  const aDisp = parseFloat(aFmt);
+  const fnName = dist === 'normal' ? 'qnorm' : 'qt';
+  const fnArgs = dist === 'normal' ? 'kwantiel' : `kwantiel, df`;
+  const dfLine = dist === 't' ? `\n<span class="r-kw">df</span> <- <span class="r-val">${df}</span>` : '';
+  const kwExpr = tail === 'two'   ? `1 - alfa / 2`
+               : tail === 'right' ? `1 - alfa`
+               :                    `alfa`;
+  // Compute output from the displayed alpha so code and result are consistent
+  const trueQ = tail === 'two'   ? Math.abs(quantileAt(aDisp / 2))
+              : tail === 'right' ? quantileAt(1 - aDisp)
+              :                    quantileAt(aDisp);
+  const outputVal = trueQ.toFixed(6);
+
+  document.getElementById('rCode').innerHTML =
+    `<span class="r-kw">alfa</span> <- <span class="r-val">${aFmt}</span>${dfLine}` +
+    `\n<span class="r-kw">kwantiel</span> <- ${kwExpr}` +
+    `\n<span class="r-fn">${fnName}</span>(${fnArgs})` +
+    `\n\n<span class="r-out">[1] ${outputVal}</span>`;
 }
 
 // ════════════════════════════════════════════
