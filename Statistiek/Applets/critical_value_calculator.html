@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kritiekewaardeberekening</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #fdf6ee;
+    color: #2d1a00;
+    min-height: 100vh;
+    padding: 16px;
+  }
+
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .logo {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: #2d1a00;
+  }
+
+  .app {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 14px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 1px 4px rgba(200,100,0,.10);
+  }
+
+  .card h2 {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #b86000;
+    margin-bottom: 10px;
+  }
+
+  .btn-dist {
+    width: 100%;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 7px 10px;
+    margin-bottom: 6px;
+    text-align: left;
+    background: #fff0dc;
+    color: #7a3e00;
+    transition: background 0.15s;
+  }
+  .btn-dist.active { background: darkorange; color: #fff; }
+  .btn-dist:hover:not(.active) { background: #ffe0b2; }
+
+  label {
+    font-size: 0.82rem;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  input[type=radio] { accent-color: darkorange; }
+
+  .field-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .field-row label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #7a3e00;
+  }
+
+  input[type=number] {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1.5px solid #f5c87a;
+    font-size: 0.9rem;
+    color: #333;
+    background: #fffaf4;
+  }
+  input[type=number]:focus {
+    outline: none;
+    border-color: darkorange;
+  }
+
+  #df-row.hidden { opacity: 0.3; pointer-events: none; }
+
+  /* Critical value display */
+  .crit-box {
+    background: #fff8f0;
+    border: 2px solid darkorange;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .crit-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #b86000;
+    margin-bottom: 6px;
+  }
+  .crit-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: darkorange;
+    line-height: 1.3;
+  }
+  .crit-sub {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  /* Chart panel */
+  .chart-panel {
+    background: #fff;
+    border-radius: 10px;
+    padding: 16px 16px 8px;
+    box-shadow: 0 1px 4px rgba(200,100,0,.10);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .panel-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: darkorange;
+  }
+
+  .chart-wrap {
+    position: relative;
+    height: 280px;
+  }
+
+  .slider-section {
+    padding: 4px 0 6px;
+  }
+
+  .slider-label {
+    font-size: 0.78rem;
+    color: #888;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  input[type=range] {
+    width: 100%;
+    accent-color: darkorange;
+    cursor: pointer;
+  }
+
+  .slider-endpoints {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: #aaa;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="site-header">
+  <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="BMS logo">
+    <circle cx="50" cy="50" r="50" fill="darkorange"/>
+    <text x="50" y="66" text-anchor="middle"
+          font-family="Arial, Helvetica, sans-serif"
+          font-size="35" font-weight="bold" fill="white">BMS</text>
+  </svg>
+  <h1>Kritiekewaardeberekening</h1>
+</div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="card">
+      <h2>Verdeling</h2>
+      <button class="btn-dist active" onclick="setDist('normal', this)">Standaard normaal (<i>Z</i>)</button>
+      <button class="btn-dist"        onclick="setDist('t', this)"><i>t</i>-verdeling</button>
+    </div>
+
+    <div class="card">
+      <h2>Parameters</h2>
+
+      <div class="field-row">
+        <label>Significantieniveau <i>α</i></label>
+        <input type="number" id="alphaInput" value="0.05" min="0.001" max="0.999" step="0.001"
+               oninput="onAlphaInput(this.value)">
+      </div>
+
+      <div class="field-row" id="df-row">
+        <label>Vrijheidsgraden (<i>df</i>)</label>
+        <input type="number" id="dfInput" value="10" min="1" step="1"
+               oninput="onDfInput(this.value)">
+      </div>
+
+      <div class="field-row">
+        <label>Toets</label>
+        <div style="display:flex; flex-direction:column; gap:5px; margin-top:2px;">
+          <label><input type="radio" name="tail" value="two" checked onchange="onTailChange()"> Tweezijdig</label>
+          <label><input type="radio" name="tail" value="right"         onchange="onTailChange()"> Rechtszijdig</label>
+          <label><input type="radio" name="tail" value="left"          onchange="onTailChange()"> Linkszijdig</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="crit-box">
+      <div class="crit-label">Kritieke waarde</div>
+      <div class="crit-value" id="critDisplay">±1.960</div>
+      <div class="crit-sub"   id="critSub">tweezijdig, <i>α</i> = 0.050</div>
+    </div>
+
+  </div><!-- /sidebar -->
+
+  <!-- CHART PANEL -->
+  <div class="chart-panel">
+    <div class="panel-title" id="chartTitle">Standaard normale verdeling</div>
+
+    <div class="chart-wrap">
+      <canvas id="distChart"></canvas>
+    </div>
+
+    <div class="slider-section">
+      <div class="slider-label">
+        <span id="sliderLabel">Kritieke waarde <i>Z</i>*</span>
+        <span id="sliderVal">1.960</span>
+      </div>
+      <input type="range" id="critSlider"
+             min="-4" max="4" step="0.01" value="1.96"
+             oninput="onSliderInput(this.value)">
+      <div class="slider-endpoints">
+        <span>−4</span><span>0</span><span>+4</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+// ════════════════════════════════════════════
+//  State
+// ════════════════════════════════════════════
+let dist  = 'normal';
+let alpha = 0.05;
+let df    = 10;
+let tail  = 'two';
+let crit  = 1.96;    // current critical value (positive)
+
+const N_POINTS = 400;
+const X_MIN = -4, X_MAX = 4;
+
+const FILL_COLOR = 'rgba(153,50,204,0.35)';   // darkorchid tail shading
+const LINE_COLOR = '#FF8C00';                  // orange curve
+const VLINE_COLOR = 'darkorchid';              // purple vertical lines
+const ALPHA_LABEL_COLOR = 'darkorchid';
+
+// ════════════════════════════════════════════
+//  Math helpers  (shared with P-value applet)
+// ════════════════════════════════════════════
+function normalPdf(x) {
+  return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
+}
+
+function tPdf(x, df) {
+  const a = (df + 1) / 2;
+  const lnB = logGamma(df / 2) + logGamma(0.5) - logGamma(a);
+  return Math.exp(logGamma(a) - lnB - a * Math.log(1 + x * x / df)) / Math.sqrt(df);
+}
+
+function logGamma(z) {
+  const g = 7;
+  const c = [
+    0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+    771.32342877765313, -176.61502916214059, 12.507343278686905,
+    -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7
+  ];
+  if (z < 0.5) return Math.log(Math.PI) - Math.log(Math.sin(Math.PI * z)) - logGamma(1 - z);
+  z -= 1;
+  let x = c[0];
+  for (let i = 1; i < g + 2; i++) x += c[i] / (z + i);
+  const t = z + g + 0.5;
+  return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+}
+
+function incompleteBeta(x, a, b) {
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const lbeta = logGamma(a) + logGamma(b) - logGamma(a + b);
+  const front = Math.exp(Math.log(x) * a + Math.log(1 - x) * b - lbeta) / a;
+  if (x > (a + 1) / (a + b + 2)) return 1 - incompleteBeta(1 - x, b, a);
+  const TINY = 1e-30, MAXIT = 200, EPS = 3e-7;
+  let f = TINY, C = f, D = 0;
+  for (let m = 0; m <= MAXIT; m++) {
+    for (let step = 0; step <= 1; step++) {
+      let d;
+      if (step === 0 && m === 0) { d = 1; }
+      else if (step === 0) { d = m * (b - m) * x / ((a + 2*m - 1) * (a + 2*m)); }
+      else { d = -(a + m) * (a + b + m) * x / ((a + 2*m) * (a + 2*m + 1)); }
+      D = 1 + d * D; if (Math.abs(D) < TINY) D = TINY; D = 1/D;
+      C = 1 + d / C; if (Math.abs(C) < TINY) C = TINY;
+      f *= C * D;
+      if (Math.abs(C * D - 1) < EPS) return front * f;
+    }
+  }
+  return front * f;
+}
+
+function tCdf(t, df) {
+  const x = df / (df + t * t);
+  const p = 0.5 * incompleteBeta(x, df / 2, 0.5);
+  return t >= 0 ? 1 - p : p;
+}
+
+function erfc(x) {
+  const t = 1 / (1 + 0.3275911 * Math.abs(x));
+  const p = t * (0.254829592 + t * (-0.284496736 +
+            t * (1.421413741 + t * (-1.453152027 + t * 1.061405429))));
+  const r = p * Math.exp(-x * x);
+  return x >= 0 ? r : 2 - r;
+}
+function normalCdf(x) { return 0.5 * erfc(-x / Math.SQRT2); }
+
+function pdfAt(x) { return dist === 'normal' ? normalPdf(x) : tPdf(x, df); }
+function cdfAt(x) { return dist === 'normal' ? normalCdf(x) : tCdf(x, df); }
+
+// ── Quantile functions ──
+
+// Normal quantile via rational approximation (Beasley-Springer-Moro)
+function normalQuantile(p) {
+  if (p <= 0) return -Infinity;
+  if (p >= 1) return  Infinity;
+  const a = [2.50662823884, -18.61500062529,  41.39119773534, -25.44106049637];
+  const b = [-8.47351093090, 23.08336743743, -21.06224101826,   3.13082909833];
+  const c = [0.3374754822726147, 0.9761690190917186, 0.1607979714918209,
+             0.0276438810333863, 0.0038405729373609, 0.0003951896511349,
+             0.0000321767881768, 0.0000002888167364, 0.0000003960315187];
+  const y = p - 0.5;
+  if (Math.abs(y) < 0.42) {
+    const r = y * y;
+    return y * (((a[3]*r+a[2])*r+a[1])*r+a[0]) / ((((b[3]*r+b[2])*r+b[1])*r+b[0])*r+1);
+  }
+  const r = p < 0.5 ? Math.log(-Math.log(p)) : Math.log(-Math.log(1-p));
+  let x = c[0]+r*(c[1]+r*(c[2]+r*(c[3]+r*(c[4]+r*(c[5]+r*(c[6]+r*(c[7]+r*c[8])))))));
+  return p < 0.5 ? -x : x;
+}
+
+// t quantile via bisection on tCdf
+function tQuantile(p, df) {
+  if (p <= 0) return -Infinity;
+  if (p >= 1) return  Infinity;
+  let lo = -50, hi = 50;
+  for (let i = 0; i < 60; i++) {
+    const mid = (lo + hi) / 2;
+    tCdf(mid, df) < p ? lo = mid : hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+function quantileAt(p) {
+  return dist === 'normal' ? normalQuantile(p) : tQuantile(p, df);
+}
+
+// Compute critical value from alpha and tail
+function computeCrit() {
+  if (tail === 'two')   return Math.abs(quantileAt(alpha / 2));
+  if (tail === 'right') return quantileAt(1 - alpha);
+  return quantileAt(alpha);   // left tail: negative
+}
+
+// Current area of shaded region (should equal alpha)
+function shadedArea(cv) {
+  if (tail === 'two')   return 2 * (1 - cdfAt(Math.abs(cv)));
+  if (tail === 'right') return 1 - cdfAt(cv);
+  return cdfAt(cv);
+}
+
+// ════════════════════════════════════════════
+//  Notation helpers
+// ════════════════════════════════════════════
+function critSymbol() {
+  const sym   = dist === 'normal' ? '<i>Z</i>' : '<i>t</i>';
+  const dfSub = dist === 't'      ? df  : '';
+  const sub   = tail === 'two'
+    ? '<i>α</i>(2)' + dfSub
+    : '<i>α</i>(1)' + dfSub;
+  return `${sym}<sub>${sub}</sub>`;
+}
+
+function critHTML(val) {
+  const acv  = Math.abs(val);
+  const sign = tail === 'left' ? '−' : '';   // Unicode minus for left tail
+  return `${critSymbol()} = ${sign}${acv.toFixed(3)}`;
+}
+
+// ════════════════════════════════════════════
+//  Chart setup
+// ════════════════════════════════════════════
+const ctx = document.getElementById('distChart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: { datasets: [] },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 0 },
+    parsing: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false },
+    },
+    scales: {
+      x: {
+        type: 'linear', min: X_MIN, max: X_MAX,
+        grid: { color: '#f5e6d0' },
+        ticks: { stepSize: 1, callback: v => Number.isInteger(v) ? v : null },
+      },
+      y: {
+        min: 0,
+        grid: { color: '#f5e6d0' },
+        ticks: { display: false },
+        border: { display: false }
+      }
+    }
+  }
+});
+
+// ════════════════════════════════════════════
+//  Render
+// ════════════════════════════════════════════
+function makeCurvePoints() {
+  const pts = [];
+  for (let i = 0; i <= N_POINTS; i++) {
+    const x = X_MIN + (X_MAX - X_MIN) * i / N_POINTS;
+    pts.push({ x, y: pdfAt(x) });
+  }
+  return pts;
+}
+
+function makeFillPoints(xFrom, xTo) {
+  const pts = [], steps = 200;
+  for (let i = 0; i <= steps; i++) {
+    const x = xFrom + (xTo - xFrom) * i / steps;
+    pts.push({ x, y: pdfAt(x) });
+  }
+  return pts;
+}
+
+function makeVline(xPos) {
+  const peak = pdfAt(0) * 1.05;
+  return [{ x: xPos, y: 0 }, { x: xPos, y: peak }];
+}
+
+// Alpha label as a two-point "invisible" dataset carrying a Chart.js annotation-like
+// trick: we use a single point at the midpoint of the shaded region, placed at half
+// the peak height, and render it via a custom plugin.
+const alphaLabelPlugin = {
+  id: 'alphaLabel',
+  afterDatasetsDraw(chart) {
+    const { ctx, scales: { x, y } } = chart;
+    if (!chart._alphaLabels) return;
+    chart._alphaLabels.forEach(({ xVal, yVal, text }) => {
+      const px = x.getPixelForValue(xVal);
+      const py = y.getPixelForValue(yVal);
+      ctx.save();
+      ctx.font = 'italic 600 13px "Segoe UI", system-ui, sans-serif';
+      ctx.fillStyle = ALPHA_LABEL_COLOR;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(text, px, py);
+      ctx.restore();
+    });
+  }
+};
+Chart.register(alphaLabelPlugin);
+
+function render(syncSlider = true) {
+  const cv = crit;
+  const acv = Math.abs(cv);
+
+  const curveData = makeCurvePoints();
+
+  // Fill regions
+  let fillDatasets = [];
+  if (tail === 'two') {
+    fillDatasets = [
+      { data: makeFillPoints(X_MIN, -acv) },
+      { data: makeFillPoints( acv, X_MAX) },
+    ];
+  } else if (tail === 'right') {
+    fillDatasets = [{ data: makeFillPoints(cv, X_MAX) }];
+  } else {
+    fillDatasets = [{ data: makeFillPoints(X_MIN, cv) }];
+  }
+
+  // Vertical lines
+  let vlineDatasets = [];
+  if (tail === 'two') {
+    vlineDatasets = [makeVline(-acv), makeVline(acv)];
+  } else {
+    vlineDatasets = [makeVline(cv)];
+  }
+
+  const fillDs = fillDatasets.map(f => ({
+    data: f.data, parsing: false, type: 'line',
+    borderWidth: 0, borderColor: 'transparent',
+    backgroundColor: FILL_COLOR,
+    fill: 'origin', pointRadius: 0, tension: 0.3, order: 2,
+  }));
+
+  const vlineDs = vlineDatasets.map(v => ({
+    data: v, parsing: false, type: 'line',
+    borderColor: VLINE_COLOR, borderWidth: 2, borderDash: [4, 3],
+    backgroundColor: 'transparent',
+    fill: false, pointRadius: 0, tension: 0, order: 1,
+  }));
+
+  const curveDs = {
+    data: curveData, parsing: false, type: 'line',
+    borderColor: LINE_COLOR, borderWidth: 2.5,
+    backgroundColor: 'transparent',
+    fill: false, pointRadius: 0, tension: 0.3, order: 0,
+  };
+
+  chart.data.datasets = [...fillDs, ...vlineDs, curveDs];
+
+  // Alpha labels: place inside each shaded region
+  const peakY = pdfAt(0);
+  const alphaLabels = [];
+  const areaNow = shadedArea(cv);
+  const labelText = 'α = ' + areaNow.toFixed(3);
+
+  const MARGIN = 0.8;
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+  if (tail === 'two') {
+    const halfLabel = 'α/2 = ' + (areaNow / 2).toFixed(3);
+    const xL = clamp((X_MIN + (-acv)) / 2, X_MIN + MARGIN, X_MAX - MARGIN);
+    const xR = clamp((acv  +  X_MAX) / 2, X_MIN + MARGIN, X_MAX - MARGIN);
+    alphaLabels.push({ xVal: xL, yVal: peakY * 0.38, text: halfLabel });
+    alphaLabels.push({ xVal: xR, yVal: peakY * 0.38, text: halfLabel });
+  } else if (tail === 'right') {
+    const xM = clamp((cv + X_MAX) / 2, X_MIN + MARGIN, X_MAX - MARGIN);
+    alphaLabels.push({ xVal: xM, yVal: peakY * 0.38, text: labelText });
+  } else {
+    const xM = clamp((X_MIN + cv) / 2, X_MIN + MARGIN, X_MAX - MARGIN);
+    alphaLabels.push({ xVal: xM, yVal: peakY * 0.38, text: labelText });
+  }
+  chart._alphaLabels = alphaLabels;
+
+  chart.update('none');
+
+  // Sidebar output
+  const tailLabel = tail === 'two' ? 'tweezijdig' : tail === 'right' ? 'rechtszijdig' : 'linkszijdig';
+  document.getElementById('critDisplay').innerHTML = critHTML(cv);
+  document.getElementById('critSub').innerHTML = `${tailLabel}, <i>α</i> = ${areaNow.toFixed(3)}`;
+
+  if (syncSlider) {
+    document.getElementById('critSlider').value = tail === 'two' ? acv : crit;
+    document.getElementById('sliderVal').textContent = acv.toFixed(3);
+  }
+  document.getElementById('sliderLabel').innerHTML = `Toetsingsgrootheid ${critSymbol()}`;
+}
+
+// ════════════════════════════════════════════
+//  Controls
+// ════════════════════════════════════════════
+function setDist(name, btn) {
+  dist = name;
+  document.querySelectorAll('.btn-dist').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const isT = name === 't';
+  document.getElementById('df-row').classList.toggle('hidden', !isT);
+  document.getElementById('chartTitle').textContent =
+    isT ? `t-verdeling (df = ${df})` : 'Standaard normale verdeling';
+  crit = computeCrit();
+  render();
+}
+
+function onAlphaInput(val) {
+  const v = parseFloat(val);
+  if (!isNaN(v) && v > 0 && v < 1) {
+    alpha = v;
+    crit  = computeCrit();
+    render();
+  }
+}
+
+function onDfInput(val) {
+  const v = parseInt(val);
+  if (!isNaN(v) && v >= 1) {
+    df = v;
+    document.getElementById('chartTitle').textContent = `t-verdeling (df = ${df})`;
+    crit = computeCrit();
+    render();
+  }
+}
+
+function onTailChange() {
+  tail = document.querySelector('input[name="tail"]:checked').value;
+  crit = computeCrit();
+  render();
+}
+
+function onSliderInput(val) {
+  const v = parseFloat(val);
+  crit  = tail === 'two' ? Math.abs(v) : v;
+  alpha = shadedArea(crit);
+  document.getElementById('alphaInput').value = alpha.toFixed(4);
+  document.getElementById('sliderVal').textContent = Math.abs(crit).toFixed(3);
+  render(false);  // don't snap slider back to positive
+}
+
+// ════════════════════════════════════════════
+//  Init
+// ════════════════════════════════════════════
+document.getElementById('df-row').classList.add('hidden');
+crit = computeCrit();
+render();
+</script>
+</body>
+</html>

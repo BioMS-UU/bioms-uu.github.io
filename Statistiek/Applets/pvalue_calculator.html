@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P-waarde calculator</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #fdf6ee;
+    color: #2d1a00;
+    min-height: 100vh;
+    padding: 16px;
+  }
+
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .logo {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: #2d1a00;
+  }
+
+  .app {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 14px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 1px 4px rgba(200,100,0,.10);
+  }
+
+  .card h2 {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #b86000;
+    margin-bottom: 10px;
+  }
+
+  .btn-dist {
+    width: 100%;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 7px 10px;
+    margin-bottom: 6px;
+    text-align: left;
+    background: #fff0dc;
+    color: #7a3e00;
+    transition: background 0.15s;
+  }
+  .btn-dist.active { background: darkorange; color: #fff; }
+  .btn-dist:hover:not(.active) { background: #ffe0b2; }
+
+  label {
+    font-size: 0.82rem;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  input[type=radio] { accent-color: darkorange; }
+
+  .field-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .field-row label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #7a3e00;
+  }
+
+  input[type=number] {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1.5px solid #f5c87a;
+    font-size: 0.9rem;
+    color: #333;
+    background: #fffaf4;
+  }
+  input[type=number]:focus {
+    outline: none;
+    border-color: darkorange;
+  }
+
+  #df-row { transition: opacity 0.2s; }
+  #df-row.hidden { opacity: 0.3; pointer-events: none; }
+
+  /* P-value display */
+  .pval-box {
+    background: #fff8f0;
+    border: 2px solid darkorange;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .pval-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #b86000;
+    margin-bottom: 6px;
+  }
+  .pval-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #c1121f;
+    line-height: 1.1;
+  }
+  .pval-sub {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  /* ── Chart panel ── */
+  .chart-panel {
+    background: #fff;
+    border-radius: 10px;
+    padding: 16px 16px 8px;
+    box-shadow: 0 1px 4px rgba(200,100,0,.10);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .panel-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: darkorange;
+  }
+
+  .chart-wrap {
+    position: relative;
+    height: 280px;
+  }
+
+  /* Slider sits below the chart */
+  .slider-section {
+    padding: 4px 0 6px;
+  }
+
+  .slider-label {
+    font-size: 0.78rem;
+    color: #888;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  input[type=range] {
+    width: 100%;
+    accent-color: darkorange;
+    cursor: pointer;
+  }
+
+  .slider-endpoints {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: #aaa;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="site-header">
+  <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="BMS logo">
+    <circle cx="50" cy="50" r="50" fill="darkorange"/>
+    <text x="50" y="66" text-anchor="middle"
+          font-family="Arial, Helvetica, sans-serif"
+          font-size="35" font-weight="bold" fill="white">BMS</text>
+  </svg>
+  <h1><i>P</i>-waarde calculator</h1>
+</div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="card">
+      <h2>Verdeling</h2>
+      <button class="btn-dist active" onclick="setDist('normal', this)">Standaard normaal (<i>Z</i>)</button>
+      <button class="btn-dist"        onclick="setDist('t', this)"><i>t</i>-verdeling</button>
+    </div>
+
+    <div class="card">
+      <h2>Parameters</h2>
+
+      <div class="field-row">
+        <label id="stat-label">Toetsingsgrootheid <i>Z</i></label>
+        <input type="number" id="statInput" value="1.96" step="0.01"
+               oninput="onStatInput(this.value)">
+      </div>
+
+      <div class="field-row" id="df-row" class="hidden">
+        <label>Vrijheidsgraden (<i>df</i>)</label>
+        <input type="number" id="dfInput" value="10" min="1" step="1"
+               oninput="onDfInput(this.value)">
+      </div>
+
+      <div class="field-row">
+        <label>Toets</label>
+        <div style="display:flex; flex-direction:column; gap:5px; margin-top:2px;">
+          <label><input type="radio" name="tail" value="two" checked onchange="render()"> Tweezijdig</label>
+          <label><input type="radio" name="tail" value="right"         onchange="render()"> Rechtszijdig</label>
+          <label><input type="radio" name="tail" value="left"          onchange="render()"> Linkszijdig</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="pval-box">
+      <div class="pval-label"><i>p</i>-waarde</div>
+      <div class="pval-value" id="pvalDisplay">0.0500</div>
+      <div class="pval-sub" id="pvalSub">tweezijdig</div>
+    </div>
+
+  </div><!-- /sidebar -->
+
+  <!-- CHART PANEL -->
+  <div class="chart-panel">
+    <div class="panel-title" id="chartTitle">Standaard normale verdeling</div>
+
+    <div class="chart-wrap">
+      <canvas id="distChart"></canvas>
+    </div>
+
+    <div class="slider-section">
+      <div class="slider-label">
+        <span id="sliderLabel">Toetsingsgrootheid <i>Z</i></span>
+        <span id="sliderVal">1.96</span>
+      </div>
+      <input type="range" id="statSlider"
+             min="-4" max="4" step="0.01" value="1.96"
+             oninput="onSliderInput(this.value)">
+      <div class="slider-endpoints"><span>−4</span><span>0</span><span>+4</span></div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+// ════════════════════════════════════════════
+//  State
+// ════════════════════════════════════════════
+let dist  = 'normal';
+let tstat = 1.96;
+let df    = 10;
+let tail  = 'two';
+
+const N_POINTS = 400;
+const X_MIN = -4, X_MAX = 4;
+
+// ════════════════════════════════════════════
+//  Math helpers
+// ════════════════════════════════════════════
+
+// Normal PDF
+function normalPdf(x) {
+  return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
+}
+
+// t PDF
+function tPdf(x, df) {
+  const a = (df + 1) / 2;
+  const lnB = logGamma(df / 2) + logGamma(0.5) - logGamma(a);
+  return Math.exp(
+    logGamma(a) - lnB - a * Math.log(1 + x * x / df)
+  ) / Math.sqrt(df);
+}
+
+// Log-Gamma via Lanczos
+function logGamma(z) {
+  const g = 7;
+  const c = [
+    0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+    771.32342877765313, -176.61502916214059, 12.507343278686905,
+    -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7
+  ];
+  if (z < 0.5) return Math.log(Math.PI) - Math.log(Math.sin(Math.PI * z)) - logGamma(1 - z);
+  z -= 1;
+  let x = c[0];
+  for (let i = 1; i < g + 2; i++) x += c[i] / (z + i);
+  const t = z + g + 0.5;
+  return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+}
+
+// Regularized incomplete beta function I_x(a,b) via continued fraction (Lentz)
+function incompleteBeta(x, a, b) {
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const lbeta = logGamma(a) + logGamma(b) - logGamma(a + b);
+  const front = Math.exp(Math.log(x) * a + Math.log(1 - x) * b - lbeta) / a;
+  // Use symmetry for stability
+  if (x > (a + 1) / (a + b + 2)) return 1 - incompleteBeta(1 - x, b, a);
+  // Lentz continued fraction
+  const TINY = 1e-30, MAXIT = 200, EPS = 3e-7;
+  let f = TINY, C = f, D = 0;
+  for (let m = 0; m <= MAXIT; m++) {
+    for (let step = 0; step <= 1; step++) {
+      let d;
+      if (step === 0 && m === 0) {
+        d = 1;
+      } else if (step === 0) {
+        d = m * (b - m) * x / ((a + 2*m - 1) * (a + 2*m));
+      } else {
+        d = -(a + m) * (a + b + m) * x / ((a + 2*m) * (a + 2*m + 1));
+      }
+      D = 1 + d * D; if (Math.abs(D) < TINY) D = TINY; D = 1/D;
+      C = 1 + d / C; if (Math.abs(C) < TINY) C = TINY;
+      f *= C * D;
+      if (Math.abs(C * D - 1) < EPS) return front * f;
+    }
+  }
+  return front * f;
+}
+
+// CDF for t-distribution
+function tCdf(t, df) {
+  const x = df / (df + t * t);
+  const p = 0.5 * incompleteBeta(x, df / 2, 0.5);
+  return t >= 0 ? 1 - p : p;
+}
+
+// Complementary error function (Abramowitz & Stegun)
+function erfc(x) {
+  const t = 1 / (1 + 0.3275911 * Math.abs(x));
+  const p = t * (0.254829592 + t * (-0.284496736 +
+            t * (1.421413741 + t * (-1.453152027 + t * 1.061405429))));
+  const r = p * Math.exp(-x * x);
+  return x >= 0 ? r : 2 - r;
+}
+function normalCdf(x) { return 0.5 * erfc(-x / Math.SQRT2); }
+
+function pdfAt(x) {
+  return dist === 'normal' ? normalPdf(x) : tPdf(x, df);
+}
+
+function cdfAt(x) {
+  return dist === 'normal' ? normalCdf(x) : tCdf(x, df);
+}
+
+function computePvalue() {
+  const t = Math.abs(tstat);
+  const upper = 1 - cdfAt(t);
+  if (tail === 'two')   return 2 * upper;
+  if (tail === 'right') return 1 - cdfAt(tstat);
+  return cdfAt(tstat);
+}
+
+// ════════════════════════════════════════════
+//  Chart setup
+// ════════════════════════════════════════════
+const FILL_COLOR  = 'rgba(153,50,204,0.35)';   // darkorchid tail shading
+const LINE_COLOR  = '#FF8C00';                 // orange curve
+const VLINE_COLOR = '#c1121f';                 // red vertical lines
+
+const ctx = document.getElementById('distChart').getContext('2d');
+
+// We build datasets dynamically; start with placeholders
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: { datasets: [] },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 80 },
+    parsing: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false },
+    },
+    scales: {
+      x: {
+        type: 'linear',
+        min: X_MIN,
+        max: X_MAX,
+        grid: { color: '#f5e6d0' },
+        ticks: {
+          stepSize: 1,
+          callback: v => Number.isInteger(v) ? v : null,
+        },
+        title: { display: false }
+      },
+      y: {
+        min: 0,
+        grid: { color: '#f5e6d0' },
+        ticks: { display: false },
+        border: { display: false }
+      }
+    }
+  }
+});
+
+// ════════════════════════════════════════════
+//  Render
+// ════════════════════════════════════════════
+function makeCurvePoints() {
+  const pts = [];
+  for (let i = 0; i <= N_POINTS; i++) {
+    const x = X_MIN + (X_MAX - X_MIN) * i / N_POINTS;
+    pts.push({ x, y: pdfAt(x) });
+  }
+  return pts;
+}
+
+function makeFillPoints(xFrom, xTo) {
+  // Dense segment of the curve clipped to [xFrom, xTo]
+  const pts = [];
+  const steps = 200;
+  for (let i = 0; i <= steps; i++) {
+    const x = xFrom + (xTo - xFrom) * i / steps;
+    pts.push({ x, y: pdfAt(x) });
+  }
+  return pts;
+}
+
+function makeVline(xPos) {
+  // Vertical line as two-point dataset
+  const peak = pdfAt(0) * 1.05;
+  return [{ x: xPos, y: 0 }, { x: xPos, y: peak }];
+}
+
+function render() {
+  tail = document.querySelector('input[name="tail"]:checked').value;
+  const t  = tstat;
+  const at = Math.abs(t);
+
+  const curveData = makeCurvePoints();
+
+  // Tail fill regions
+  let fillDatasets = [];
+
+  if (tail === 'two') {
+    fillDatasets = [
+      { data: makeFillPoints(X_MIN, -at), fill: true },
+      { data: makeFillPoints(at,  X_MAX), fill: true },
+    ];
+  } else if (tail === 'right') {
+    fillDatasets = [{ data: makeFillPoints(t, X_MAX), fill: true }];
+  } else {
+    fillDatasets = [{ data: makeFillPoints(X_MIN, t), fill: true }];
+  }
+
+  // Vertical line(s)
+  let vlineDatasets = [];
+  if (tail === 'two') {
+    vlineDatasets = [
+      { data: makeVline(-at), borderDash: [4, 3] },
+      { data: makeVline( at), borderDash: [4, 3] },
+    ];
+  } else {
+    vlineDatasets = [{ data: makeVline(t), borderDash: [4, 3] }];
+  }
+
+  const fillDs = fillDatasets.map(f => ({
+    data: f.data,
+    parsing: false,
+    type: 'line',
+    borderWidth: 0,
+    borderColor: 'transparent',
+    backgroundColor: FILL_COLOR,
+    fill: 'origin',
+    pointRadius: 0,
+    tension: 0.3,
+    order: 2,
+  }));
+
+  const vlineDs = vlineDatasets.map(v => ({
+    data: v.data,
+    parsing: false,
+    type: 'line',
+    borderColor: VLINE_COLOR,
+    borderWidth: 2,
+    borderDash: v.borderDash,
+    backgroundColor: 'transparent',
+    fill: false,
+    pointRadius: 0,
+    tension: 0,
+    order: 1,
+  }));
+
+  const curveDs = {
+    data: curveData,
+    parsing: false,
+    type: 'line',
+    borderColor: LINE_COLOR,
+    borderWidth: 2.5,
+    backgroundColor: 'transparent',
+    fill: false,
+    pointRadius: 0,
+    tension: 0.3,
+    order: 0,
+  };
+
+  chart.data.datasets = [...fillDs, ...vlineDs, curveDs];
+  chart.update('none');
+
+  // P-value display
+  const pval = computePvalue();
+  const fmt = pval < 0.001 ? pval.toExponential(2) :
+              pval < 0.0001 ? '< 0,0001' :
+              pval.toFixed(4).replace('.', ',');
+  document.getElementById('pvalDisplay').textContent = fmt;
+
+  const tailLabel = tail === 'two' ? 'tweezijdig' : tail === 'right' ? 'rechtszijdig' : 'linkszijdig';
+  document.getElementById('pvalSub').textContent = tailLabel;
+
+  // Color the P-value: red if ≤ 0.05, grey otherwise
+  document.getElementById('pvalDisplay').style.color = pval <= 0.05 ? '#c1121f' : '#888';
+
+  // Slider sync
+  document.getElementById('statSlider').value = Math.max(X_MIN, Math.min(X_MAX, t));
+  document.getElementById('sliderVal').textContent = t.toFixed(2);
+  document.getElementById('statInput').value = t;
+}
+
+// ════════════════════════════════════════════
+//  Controls
+// ════════════════════════════════════════════
+function setDist(name, btn) {
+  dist = name;
+  document.querySelectorAll('.btn-dist').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const isT = name === 't';
+  document.getElementById('df-row').classList.toggle('hidden', !isT);
+  document.getElementById('stat-label').innerHTML =
+    isT ? 'Toetsingsgrootheid <i>t</i>' : 'Toetsingsgrootheid <i>Z</i>';
+  document.getElementById('sliderLabel').innerHTML =
+    isT ? 'Toetsingsgrootheid <i>t</i>' : 'Toetsingsgrootheid <i>Z</i>';
+  document.getElementById('chartTitle').textContent =
+    isT ? `t-verdeling (df = ${df})` : 'Standaard normale verdeling';
+
+  render();
+}
+
+function onStatInput(val) {
+  const v = parseFloat(val);
+  if (!isNaN(v)) { tstat = v; render(); }
+}
+
+function onDfInput(val) {
+  const v = parseInt(val);
+  if (!isNaN(v) && v >= 1) {
+    df = v;
+    document.getElementById('chartTitle').textContent = `t-verdeling (df = ${df})`;
+    render();
+  }
+}
+
+function onSliderInput(val) {
+  tstat = parseFloat(val);
+  render();
+}
+
+// ════════════════════════════════════════════
+//  Init
+// ════════════════════════════════════════════
+document.getElementById('df-row').classList.add('hidden');
+render();
+</script>
+</body>
+</html>
