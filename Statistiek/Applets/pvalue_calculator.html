@@ -202,6 +202,33 @@
     color: #aaa;
     margin-top: 2px;
   }
+
+  /* R code panel */
+  .code-panel {
+    background: #1e1e2e;
+    border-radius: 8px;
+    padding: 12px 14px 10px;
+  }
+  .code-header {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6e6e8e;
+    margin-bottom: 8px;
+  }
+  #rCode {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.82rem;
+    color: #cdd6f4;
+    margin: 0;
+    white-space: pre;
+    line-height: 1.6;
+  }
+  .r-kw  { color: #89b4fa; }
+  .r-val { color: #fab387; }
+  .r-fn  { color: #a6e3a1; }
+  .r-out { color: #94e2d5; }
 </style>
 </head>
 <body>
@@ -279,6 +306,11 @@
              oninput="onSliderInput(this.value)">
       <div class="slider-endpoints"><span>−4</span><span>0</span><span>+4</span></div>
     </div>
+
+    <div class="code-panel">
+      <div class="code-header">R-code</div>
+      <pre id="rCode"></pre>
+    </div>
   </div>
 
 </div><!-- /app -->
@@ -307,10 +339,10 @@ function normalPdf(x) {
 // t PDF
 function tPdf(x, df) {
   const a = (df + 1) / 2;
-  const lnB = logGamma(df / 2) + logGamma(0.5) - logGamma(a);
-  return Math.exp(
-    logGamma(a) - lnB - a * Math.log(1 + x * x / df)
-  ) / Math.sqrt(df);
+  const logPdf = logGamma(a) - logGamma(df / 2)
+               - 0.5 * Math.log(df * Math.PI)
+               - a * Math.log(1 + x * x / df);
+  return Math.exp(logPdf);
 }
 
 // Log-Gamma via Lanczos
@@ -553,10 +585,41 @@ function render() {
   // Color the P-value: red if ≤ 0.05, grey otherwise
   document.getElementById('pvalDisplay').style.color = pval <= 0.05 ? '#c1121f' : '#888';
 
+  updateRCode();
+
   // Slider sync
   document.getElementById('statSlider').value = Math.max(X_MIN, Math.min(X_MAX, t));
   document.getElementById('sliderVal').textContent = t.toFixed(2);
   document.getElementById('statInput').value = t;
+}
+
+// ════════════════════════════════════════════
+//  R code panel
+// ════════════════════════════════════════════
+function updateRCode() {
+  const sym    = dist === 'normal' ? 'Z' : 't';
+  const tFmt   = parseFloat(tstat.toFixed(6)).toString();
+  const dfLine = dist === 't'
+    ? `\n<span class="r-kw">df</span> <- <span class="r-val">${df}</span>`
+    : '';
+
+  const fnExpr = dist === 'normal'
+    ? (tail === 'two'   ? '2 * pnorm(-abs(Z))'
+     : tail === 'right' ? '1 - pnorm(Z)'
+     :                    'pnorm(Z)')
+    : (tail === 'two'   ? '2 * pt(-abs(t), df)'
+     : tail === 'right' ? '1 - pt(t, df)'
+     :                    'pt(t, df)');
+
+  const pval     = computePvalue();
+  const outputVal = pval < 0.0001
+    ? pval.toExponential(4)
+    : pval.toFixed(6);
+
+  document.getElementById('rCode').innerHTML =
+    `<span class="r-kw">${sym}</span> <- <span class="r-val">${tFmt}</span>${dfLine}` +
+    `\n<span class="r-fn">${fnExpr}</span>` +
+    `\n\n<span class="r-out">[1] ${outputVal}</span>`;
 }
 
 // ════════════════════════════════════════════
