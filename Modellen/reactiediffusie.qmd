@@ -187,7 +187,7 @@ We hebben nu een beeld gekregen van reactie-diffusiesystemen, maar tot nu toe li
 
 \begin{align}
     \dt{A} &= \frac{k_a A^2}{1 + A^2} - k_i A I - d_a A\\
-    \dt{I} = k_a A - k_i I^2 - d_i I
+    \dt{I} &= k_a A - k_i I^2 - d_i I
 \end{align}
 
 Waarbij $A$ de activator is, $I$ de inhibitor, $k_A$ de activatie-constante, $k_I$ de inhibitie-constante, en $d$ de afbraak van de eiwitten. Omdat zelf-activatie oneindige exponentiële groei kan opleveren, nemen we aan dat de activatie van de activator dichtheidsafhankelijk is. 
@@ -195,9 +195,9 @@ Waarbij $A$ de activator is, $I$ de inhibitor, $k_A$ de activatie-constante, $k_
 Zoals jullie hebben geleerd kunnen we een dergelijk simpel ODE-systeem analyseren met nullcline analyse. Laten we ervoor kiezen om een faseruimte te tekenen met I op de y-as, en A op de x-as. Zodoende willen we dus nullclines vinden waarbij I wordt uitgedrukt als functie van A. Laten we eerst de nullcline(s) voor A bepalen:
 
 \begin{align*}
-\dt{A} &= \frac{k_a A^2}{1+A^2} - k_i A I - d_a A = 0 \
-k_i A I &= A\left(\frac{k_a A}{1+A^2} - d_a\right) \
-I &= \color{blue} \frac{1}{k_i}\left(\frac{k_a A}{1+A^2} - d_a\right) \
+\dt{A} &= \frac{k_a A^2}{1+A^2} - k_i A I - d_a A = 0 \\
+k_i A I &= A\left(\frac{k_a A}{1+A^2} - d_a\right) \\
+I &= \color{blue} \frac{1}{k_i}\left(\frac{k_a A}{1+A^2} - d_a\right) \\
 \end{align*}
 
 A heeft dus één enkele nullcline. Hoewel de vorm nog niet meteen duidelijk is, zien we wel dat het niet een simpele rechte lijn zal vormen. 
@@ -205,9 +205,9 @@ A heeft dus één enkele nullcline. Hoewel de vorm nog niet meteen duidelijk is,
 De nullclines voor I:
 
 \begin{align}
-\dt{I} &= k_a A - k_i I^2 - d_i I = 0 \
-k_i I^2 + d_i I &= k_a A \
-I &= \color{red} \frac{-d_i + \sqrt{d_i^2 + 4 k_i k_a A}}{2k_i} \
+\dt{I} &= k_a A - k_i I^2 - d_i I = 0 \\
+k_i I^2 + d_i I &= k_a A \\
+I &= \color{red} \frac{-d_i + \sqrt{d_i^2 + 4 k_i k_a A}}{2k_i} \\
 \end{align}
 
 I heeft dus ook één nullcline. Natuurlijk kijken we alleen naar de biologisch relevante, positieve wortel: ook een kromme functie. Naar verwachting vinden we dus twee gebogen nullclines in onze faseruimte. Als we de faseruimte tekenen met Grind.R, is dat inderdaad wat we zien (@fig-phaseturing). Aan dit vectorveld kunnen we ook aflezen dat er meerdere evenwichten zijn. 
@@ -222,7 +222,8 @@ Afhankelijk van de initiële conditie, zien we dus dat we wel/niet expressie van
 
 source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
 par(mfrow=c(1,1),mar=c(5, 4, 4, 2)) 
-
+colors[1] <- "blue"
+colors[2] <- "red"
 model <- function(t, state, parms) {
   with(as.list(c(state,parms)), {
     # Activator: autocatalytic production, inhibited by I, linear decay
