@@ -186,33 +186,33 @@ title="Simulation"></iframe>
 We hebben nu een beeld gekregen van reactie-diffusiesystemen, maar tot nu toe lijken ze patronen alleen maar tegen te werken.  Maar reactie-diffusiesystemen kunnen weldegelijk prachtige patronen generen, zo ontdekte Alan Turing in 1952. Turing vroeg zich af of diffusie ook de *oorzaak* kon zijn van bepaalde patronen. Hij stelde zich voor dat in een weefsel twee eiwitten tot expressie komen: *activators* ($A$) en *inhibitors* ($I$). De activator ($A$) verhoogt de expressie van beide eiwitten, en de inhibitor verlaagt deze. Dit scenario kunnen we omschrijven in een simpel systeem van ODEs:
 
 \begin{align}
-    \dt{A} &= k_AA - k_II - dA^2 \\
-    \dt{I} &= k_AA - k_II - dI
+    \dt{A} &= \frac{k_a A^2}{1 + A^2} - k_i A I - d_a A\\
+    \dt{I} = k_a A - k_i I^2 - d_i I
 \end{align}
 
-Waarbij $A$ de activator is, $I$ de inhibitor, $k_A$ de activatie-constante, $k_I$ de inhibitie-constante, en $d$ de afbraak van de eiwitten. Omdat zelf-activatie oneindige exponentiële groei kan opleveren, nemen we aan dat de afbraak van de activator (per molecuul) toeneemt met de dichtheid. Voor de inhibitor nemen we normale (constante) afbraak aan. 
+Waarbij $A$ de activator is, $I$ de inhibitor, $k_A$ de activatie-constante, $k_I$ de inhibitie-constante, en $d$ de afbraak van de eiwitten. Omdat zelf-activatie oneindige exponentiële groei kan opleveren, nemen we aan dat de activatie van de activator dichtheidsafhankelijk is. 
 
-Zoals jullie hebben geleerd kunnen we een dergelijk simpel ODE-systeem analyseren met nullcline analyse. Laten we ervoor kiezen om een faseruimte te tekenen met $I$ op de y-as, en $A$ op de x-as. Zodoende willen we dus nullclines vinden waarbij $I$ wordt uitgedrukt als functie van $A$. Laten we eerste de nullcline(s) voor $A$ bepalen:
+Zoals jullie hebben geleerd kunnen we een dergelijk simpel ODE-systeem analyseren met nullcline analyse. Laten we ervoor kiezen om een faseruimte te tekenen met I op de y-as, en A op de x-as. Zodoende willen we dus nullclines vinden waarbij I wordt uitgedrukt als functie van A. Laten we eerst de nullcline(s) voor A bepalen:
 
 \begin{align*}
-    \dt{A} &= k_AA - k_II - dA^2 = 0 \\
-    k_II &= k_AA - dA^2 = A(k_A-dA) \\
-    I &= \color{blue} \frac{A(k_A-dA)}{k_I} \\
+\dt{A} &= \frac{k_a A^2}{1+A^2} - k_i A I - d_a A = 0 \
+k_i A I &= A\left(\frac{k_a A}{1+A^2} - d_a\right) \
+I &= \color{blue} \frac{1}{k_i}\left(\frac{k_a A}{1+A^2} - d_a\right) \
 \end{align*}
 
-$A$ heeft dus één enkele nullcline: een bergparabool met nullpunten $A=0$ en $A=\frac{k_a}{d}$. De nullcline(s) voor $I$ zijn:
+A heeft dus één enkele nullcline. Hoewel de vorm nog niet meteen duidelijk is, zien we wel dat het niet een simpele rechte lijn zal vormen. 
+
+De nullclines voor I:
 
 \begin{align}
-    \dt{I} &= k_AA - k_II - dI = 0 \\
-    k_II + dI &= k_AA \\
-    I(k_I + d) &= k_AA \\
-    I &= \color{red} \frac{k_AA}{k_I + d} \\ 
+\dt{I} &= k_a A - k_i I^2 - d_i I = 0 \
+k_i I^2 + d_i I &= k_a A \
+I &= \color{red} \frac{-d_i + \sqrt{d_i^2 + 4 k_i k_a A}}{2k_i} \
 \end{align}
 
-$I$ heeft dus ook één nullcline. $A$ verschijnt alleen in de teller van de breuk, dus deze nullcline neemt lineair toe met $A$ (met hellingshoek $\frac{k_A}{k_I - d}$). Naar verwachting vinden we dus een parabool en een lineaire functie in onze faseruimte. Als we de faseruimte tekenen met `Grind.R`, is dat inderdaad wat we zien (@fig-phaseturing). Aan dit vectorveld kunnen we ook aflezen dat er twee evenwichten zijn: een instabiel evenwicht wanneer er geen $A$ en $I$ is, en een stabiel evenwicht bij een bepaalde hoeveelheid $A$ en $I$. Het eerste trajectorie in @fig-phaseturing laat zien dat de eiwitten inderdaad naar het stabiele evenwicht kunnen gaan. Als je echter met veel inhibitors begint, zien we beide concentraties juist hard afnemen. Hoewel het evenwicht bij $(0,0)$ instabiel is, zijn negatieve concentraties niet biologisch relevant, en kunnen we voor de eenvoud aannemen dat deze concentraties naar $0$ gaan. 
+I heeft dus ook één nullcline. Natuurlijk kijken we alleen naar de biologisch relevante, positieve wortel: ook een kromme functie. Naar verwachting vinden we dus twee gebogen nullclines in onze faseruimte. Als we de faseruimte tekenen met Grind.R, is dat inderdaad wat we zien (@fig-phaseturing). Aan dit vectorveld kunnen we ook aflezen dat er meerdere evenwichten zijn. 
 
-Afhankelijk van de initiële conditie, zien we dus dat we wel/niet expressie van de eiwitten zien. Dit wordt ook wel bistabiliteit genoemd. In een systeem met bistabiliteit heeft de geschiedenis van een systeem (waar het systeem voorheen was) invloed op de verdere verloop van het systeem (waar het naar toe gaat). Dergelijke effecten zijn waargenomen voor de genexpressie van bacteriën, en zijn bovendien erg belangrijk voor natuurbehoud. Het kan namelijk erg moeilijk kan zijn om een eenmaal omgeslagen ecosysteem weer terug te krijgen in de "gezonde" toestand. (zie ook @tip-hysterese). 
-
+Afhankelijk van de initiële conditie, zien we dus dat we wel/niet expressie van de eiwitten zien. Dit wordt ook wel bistabiliteit genoemd. In een systeem met bistabiliteit heeft de geschiedenis van een systeem (waar het systeem voorheen was) invloed op de verdere verloop van het systeem (waar het naar toe gaat). Dergelijke effecten zijn waargenomen voor de genexpressie van bacteriën, en zijn bovendien erg belangrijk voor natuurbehoud. Het kan bijvoorbeeld ook erg moeilijk kan zijn om een eenmaal omgeslagen ecosysteem weer terug te krijgen in de "gezonde" toestand. (zie ook @tip-hysterese).
 
 ```{r, results='hide',warning=FALSE,echo=FALSE,message=FALSE,out.width="60%"}
 #| label: 'fig-phaseturing'
@@ -220,31 +220,34 @@ Afhankelijk van de initiële conditie, zien we dus dat we wel/niet expressie van
 #| fig-height: 5
 #| fig-cap: "De uitkomst van het activator-inhibitor systeem hangt af van de initiële conditie"
 
-   source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
+source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
 par(mfrow=c(1,1),mar=c(5, 4, 4, 2)) 
+
 model <- function(t, state, parms) {
   with(as.list(c(state,parms)), {
-    dI <- ka*A - ki*I - d*I
-    dA <- ka*A - ki*I - d*A*A
-    return(list(c(dI,dA)))  
-  }) 
-}  
+    # Activator: autocatalytic production, inhibited by I, linear decay
+    dA <- ka * A^2 / (1 + A^2) - ki * A * I - da * A
+    # Inhibitor: produced by A, linear decay
+    dI <- ka * A - ki*I*I - di * I
+    return(list(c(dA, dI)))
+  })
+}
+p <- c(ka=4, ki=1, da=0.5,  di=1.5)
+s <- c(A=0.5, I=0.5)
 
-#par(mfrow=c(2,1))
-p <- c(ka=1, ki=0.8,d=2.5)
-s <- c(I=0.001,A=0.01)
-plane(ymax=0.16,xmax=0.4,xmin=-0.12,ymin=-0.1,vector=T,portrait=F,grid=5,x=2,y=1,npixels=500)
-newton(state=c(I=0.10,A=0.3),plot=T)
-newton(state=c(I=0.0,A=0.0),plot=T)
-s <- c(I=0.00,A=0.03)
+plane(xmax=1.3, xmin=0, ymin=0, ymax=1.9, vector=TRUE)
+newton(state=c(A=0.0, I=0.0), plot=TRUE)
+newton(state=c(A=1.5, I=1.0), plot=TRUE)
+newton(state=c(A=0.5, I=0.3), plot=TRUE)
+s <- c(A=0.05,I=1.0)
 f <- run(tmax=20,tstep=0.1,timeplot=T,traject=T)
-text(0.15,0.0,"Start trajectorie 1",cex=0.8)
-s <- c(I=0.03,A=0.00)
+text(0.25,1.1,"Start trajectorie 1",cex=0.8)
+s <- c(A=0.5,I=0.5)
 f <- run(tmax=4,tstep=0.1,timeplot=T,traject=T)
-text(-0.05,0.052,"Start\n trajectorie 2",cex=0.8)
+text(0.85,0.5,"Start trajectorie 2",cex=0.8)
+title("Bistabiliteit in een activator-inhibitor systeem")
+
 ```
-
-
 
 :::{.callout-note #tip-hysterese collapse=false}
 ## **Verdieping:** hysterese in ecosystemen
@@ -308,7 +311,6 @@ Vele decennia later is er ook veel gemodelleerd aan "the horse part": hoe krijg 
 Turing patronen zijn ook relevant voor morphologie en ontwikkeling!
 
 :::
-
 
 ## Niet alle repetitieve biologische patronen zijn Turing patronen 
 
