@@ -1,0 +1,493 @@
+## Antwoorden @sec-schatten
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: false
+
+source("../Statistiek/_stat_setup.R")
+
+```
+
+### @exr-interpretatie-bhi
+
+a.  De puntschatter lijkt erop te wijzen dat
+    de systolische bloeddruk door medicijn 1 omlaag gaat
+    met 10 mmHg. Maar het 95%-BHI is breed
+    en bevat zelfs positieve waarden.
+    De schatting is dus erg onzeker en het bewijs zwak.
+
+b.  Nee. Het zou kunnen dat medicijn 1
+    geen effect heeft, maar we kunnen daar op basis van deze gegevens
+    geen betrouwbare conclusies over trekken.
+    Het BHI geeft aan dat we met 95% zekerheid enkel kunnen zeggen
+    dat het ware effect tussen -25 en 5 mmHg in ligt.
+
+c.  Het 95%-BHI voor medicijn 2 loopt van -14 tot -6 mmHg.
+    We zijn dus tenminste 95% zeker dat dit medicijn gemiddeld
+    een negatief effect heeft op de bloeddruk.
+    Dat is een sterke aanwijzing dat het medicijn effect heeft.
+
+d.  Dat kan. Het is altijd mogelijk dat de steekproef
+    toevallig een extreem misleidend beeld geeft
+    (als gevolg van steekproevenvariabiliteit).
+    Maar, daarvoor is wel redelijk wat toeval nodig,
+    want het komt maar één op de twintig keer voor (5%)
+    dat de parameter niet in het 95%-BHI ligt,
+    en het interval ligt ook nog eens op enige afstand van 0 mmHg af.
+
+
+### @exr-50-procent-interval
+
+Dat meestal een 95%-BHI wordt berekend,
+en niet bijvoorbeeld een 50%-BHI,
+is deels een gewoonte.
+Er is niets magisch aan het getal 95.
+
+Maar, een percentage in die buurt
+is geen slechte keuze.
+
+Bij een 50%-BHI kan de parameter net zo goed
+binnen als buiten het interval liggen;
+we kunnen de waarden buiten het interval dus zeker niet uitsluiten.
+Andersom zou een 99,9%-BHI een enorm breed interval zijn.
+Zo'n breed interval zou ook niet zoveel zeggen;
+alleen dat je heel erg zeker bent dat de parameter ergens
+in dat enorme interval ligt.
+("Ik ben 99,9% zeker dat de gemiddelde lengte van
+de Utrechtse student tussen 150cm en 230cm in ligt." Duh!)
+
+Het is voor de interpretatie nuttig als het BHI
+het interval is waarbinnen je de parameter
+redelijkerwijs mag verwachten.
+95% is daarbij een aardig compromis.
+
+
+### @exr-sigma-X-bar
+
+
+a.  Een schets van de verdeling; de zwarte pijl geeft de standaarddeviatie aan:
+
+    ```{r}
+    #| echo: false
+    #| warning: false
+    #| fig.width: 3
+    #| fig.height: 2
+    #| out.width: "43%"
+
+    mu = 110
+    sigma = 9
+
+    x <- seq(mu - 3.5*sigma, mu + 3.5*sigma, length.out = 350)
+    data_Specifiek <- data.frame(x = x, y = dnorm(x, mean = mu, sd = sigma))
+
+    normaalCurve(mu, sigma, "Spanwijdte (cm)", labels = "numeriek") +
+      oppervlak(0, mu - 18, data_Specifiek) +
+      oppervlak(mu + 18, 200, data_Specifiek) +
+      pijlSigma(mu, sigma, label = NULL)
+    ```
+
+b.  Het oppervlak is in de schets hierboven aangegeven.
+    De grenzen liggen precies bij 2 standaarddeviaties van het gemiddelde.
+    De vuistregel zegt dan dat de kans gelijk is aan $1 - 0{,}954 = 0{,}046$.
+
+c.  De verwachtingswaarde van het steekproefgemiddelde is het populatiegemiddelde,
+    dus $110\unit{cm}$.
+
+d.  De standaarddeviatie van het steekproefgemiddelde is
+
+    $\sd{\mean{X}} = \cfrac{\sd{X}}{\sqrt{n}} = \cfrac{9\unit{cm}}{\sqrt{9}} = 3\unit{cm}.$
+
+e.  Een schets van de steekproevenverdeling van het gemiddelde; de zwarte pijl geeft de standaarddeviatie $\sd{\mean{X}}$ aan:
+
+    ```{r}
+    #| echo: false
+    #| warning: false
+    #| fig.width: 3.5
+    #| fig.height: 2.5
+    #| out.width: "50%"
+
+    mu = 110
+    sigma = 3
+
+    x <- seq(mu - 3.5*sigma, mu + 3.5*sigma, length.out = 350)
+    data_Specifiek <- data.frame(x = x, y = dnorm(x, mean = mu, sd = sigma))
+
+    normaalCurve(mu, sigma, "Steekproefgemiddelde van spanwijdte (cm)", labels = "numeriek") +
+      oppervlak(0, mu - 6, data_Specifiek) +
+      oppervlak(mu + 6, 200, data_Specifiek) +
+      pijlSigma(mu, sigma, label = NULL)
+    ```
+
+f.  De situatie is in de schets hierboven ingetekend.
+    De grenzen zijn weer precies twee standaarddeviaties boven en onder het gemiddelde,
+    dus de kans is weer 0,046 (bijna 5%).
+
+
+### @exr-BHI-bekend
+
+a.  $\mean{X} = 115{,}9\unit{cm}$.
+
+b.  $\sd{X} = 9\unit{cm}$ (gegeven).
+
+    $n = 9$.
+
+    $\sigma_{\mean{X}} = \cfrac{\sd{X}}{\sqrt{n}} = 3\unit{cm}$.
+
+    BHI: $\mean{X} \pm 1{,}96 \sigma_{\mean{X}} = (115{,}9 \pm 5{,}9)\unit{cm}$.
+
+c.  Kijk naar de formule:
+
+    $\mean{X} \pm 1{,}96 \sigma_{\mean{X}} = \mean{X} \pm 1{,}96 \cfrac{\sd{X}}{\sqrt{n}}$.
+
+    Als $\sd{\mean{X}}$ twee keer zo groot wordt,
+    wordt het interval twee keer zo breed.
+    Dat wil zeggen: als de spreiding in de populatie groter is,
+    is de onzekerheid in het gemiddelde ook groter.
+
+d.  Kijk weer naar dezelfde formule. Als $n$ twee keer zo groot is,
+    wordt het interval $\sqrt{2}$ keer zo smal.
+    Grotere steekproeven leveren dus grotere precisie op,
+    maar voor een 2 keer zo precieze schatting
+    heb je een 4 keer zo grote steekproef nodig.
+
+e.  De onzekerheid in het gemiddelde
+    hangt dus af van de spreiding in de populatie
+    en de grootte van de steekproef.
+
+### @exr-BHI-onbekend
+
+1.  De steekproefgrootte is $n = 9$.
+2.  Het steekproefgemiddelde is $\mean{X} = 115{,}9\unit{cm}$.
+3.  De standaarddeviatie van de steekproef is $s_X = 6{,}41\unit{cm}$.
+4.  De standaardfout is $\se{\mean{X}} = s_X / \sqrt{n} = 2{,}14\unit{cm}$.
+5.  Het aantal vrijheidsgraden is $\df = n - 1 = 8$.
+6.  De kritieke waarde $\ct{0{,}05}{2}{8}$:
+
+    ```{r}
+    alpha <- 0.05
+    qt(1 - alpha/2, df = 8)
+    ```
+7.  Ondergrens BHI: $\mean{X} - \ct{0{,}05}{2}{8} \se{\mean{X}} = 111{,}0\unit{cm}$.
+8.  Bovengrens BHI: $\mean{X} + \ct{0{,}05}{2}{8} \se{\mean{X}} = 120{,}8\unit{cm}$.
+
+Het BHI is dus $[111{,}0\unit{cm}; 120{,}8\unit{cm}]$, oftewel $(115{,}9 \pm 4{,}9)\unit{cm}$.
+
+In een script:
+
+```{r}
+# gegeven:
+spanwijdte <- c(117, 106, 123, 111, 124, 120, 108 ,115, 119)
+
+# berekening
+n <- length(spanwijdte) # aantal datapunten
+m <- mean(spanwijdte)   # gemiddelde van steekproef
+s_X <- sd(spanwijdte)   # standaarddeviatie steekproef
+SEM <- s_X/sqrt(n)      # standaardfout van het gemiddelde
+df <- n - 1             # aantal vrijheidsgraden
+
+alpha <- 0.05
+t_crit <- qt(1 - alpha/2, df = df) # kritieke waarde t-verdeling
+
+ondergrens <- m - t_crit*SEM # ondergrens BHI
+bovengrens <- m + t_crit*SEM # bovengrens BHI
+
+c(ondergrens, bovengrens)
+```
+
+### @exr-oefenen-BHI-r
+
+Het volgende script voert de hele berekening uit:
+
+```{r}
+spanwijdte <- c(117, 106, 123, 111, 124, 120, 108 ,115, 119)
+t.test(spanwijdte)$conf.int
+```
+
+
+### @exr-bhi-meetwaarden
+
+```{r}
+T_m <- c(60.7, 58.3, 60.0, 62.7, 61.7, 60.5, 57.5, 59.1, 59.3, 55.9)
+t.test(T_m)$conf.int
+```
+
+### @exr-matching-QQs
+
+Als een verdeling rechts-scheef is,
+zijn de kwantielen in de rechterstaart
+hoger dan verwacht op basis van de normale verdeling.
+Dan liggen de punten dus boven de diagonale lijn.
+
+Op de $y$-as kun je bovendien aflezen wat typische waarden zijn
+voor de variabele.
+
+Met die twee hints kun je de puzzel oplossen:
+
+- Histogram **a** hoort bij QQ-plot **i**.
+- Histogram **b** hoort bij QQ-plot **f**.
+- Histogram **c** hoort bij QQ-plot **g**.
+- Histogram **d** hoort bij QQ-plot **j**.
+- Histogram **e** hoort bij QQ-plot **h**.
+
+Merk op dat de QQ-plot van de variabele `SleepHrsNight`
+de vorm heeft van een trappetje.
+Dat laat zien dat het aantal uren slaap blijkbaar
+alleen in hele uren kon worden opgegeven.
+Dat maakt de variabele in feite discreet.
+
+### @exr-tomaten-gewicht
+
+**Formule:**
+$$
+\mu_X = \mean{X} \pm \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}}.
+$$
+
+**Gegeven:**
+
+- $\mean{X}$ is gegeven: $44{,}1\unit{g}$,
+- $s_X = 8{,}6\unit{g}$,
+- $n = 16$.
+
+**Berekening:**
+
+- Reken $\se{\mean{X}}$ uit met de formule:
+
+  $$\se{\mean{X}} = \cfrac{s_X}{\sqrt{n}} = \cfrac{8{,}6\unit{g}}{\sqrt{16}} = 2{,}15\unit{g}.$$
+- Aantal vrijheidsgraden: $\df = n - 1 = 15$.
+- Bereken $t_{0,05(2)(n-1)}$ met R:
+
+  ```{r}
+  alpha <- 0.05
+  qt(1 - alpha/2, df = 15)
+  ```
+
+- Formule invullen:
+
+  $$
+  \mu_X = \mean{X} \pm \ct{0{,}05}{2}{(n-1)}\, \se{\mean{X}} = (44{,}1 \pm 4{,}6)\unit{g}.
+  $$
+
+Volledig in R:
+
+```{r}
+# gegeven
+m <- 44.1 # gemiddelde steekproef
+s_X <- 8.6
+n <- 16
+
+# SEM berekenen
+SEM <- s_X/sqrt(n)
+
+# kritieke t-waarde berekenen
+df = n-1
+alpha <- 0.05
+t_crit <- qt(1 - alpha/2, df = df)
+
+# betrouwbaarheidsinterval berekenen en deze bijvoorbeeld in een vector weergeven:
+c( m - t_crit*SEM, m + t_crit*SEM)
+```
+
+
+### @exr-normale-QQ
+
+a.  Lijkt een normale verdeling bij voorbaat een redelijke optie? Overwegingen:
+
+    - Hartfrequentie is een continue variabele;
+      wat dat betreft is een normale verdeling niet uitgesloten.
+    - Hartfrequentie kan niet negatief worden;
+      in vergelijking met een normale verdeling zal de linkerstaart dus afwijken.
+      Maar de bulk van de verdeling zal vrij ver van 0 afliggen
+      (een frequentie onder de 30 is zeer ongebruikelijk)
+      en dus zal het "afsnijden" van de staart waarschijnlijk
+      geen groot effect hebben.
+      (In een normale verdeling met hetzelfde gemiddelde en dezelfde standaarddeviatie
+      zou de kans op negatieve waarden ook klein zijn.)
+    - Een hartslagfrequentie in rust ligt typisch rond de 70-80/min.
+      Een abnormaal lage frequentie (bijv. bij een extreem sporthart)
+      kan 35/min zijn, maar niet veel lager.
+      Een abnormaal hoge frequentie (bij gezondheidsproblemen)
+      kan zeker oplopen tot 120/min.
+      Ik verwacht dus dat de afwijkingen naar boven groter zijn
+      dan die naar beneden.
+      Vermoedelijk is de verdeling dus wat rechts-scheef.
+      Dat pleit tegen een normaal model.
+    - De populatie waaruit de steekproef afkomstig is
+      bevat ook kinderen.
+      Kinderen hebben een hogere rusthartslag dan volwassenen.
+      Ook dat kan bijdragen aan de rechter-staart.
+
+    Al met al lijkt een normaal model bij voorbaat niet erg gepast.
+
+b.  Code:
+
+    ```{r}
+    library("NHANES")
+    data("NHANES")
+    ```
+
+c.  Code:
+
+    ```{r}
+    hartslagfrequenties <- na.omit(NHANES$Pulse)
+    length(hartslagfrequenties)
+    ```
+
+    Er blijven na verwijderen van `NA`'s dus 8563 waarnemingen over.
+    Dat zou je zorgen over de toepasbaarheid van het Normale Model moeten verzachten:
+    bij zo enorm veel gegevens is het model erg robuust.
+
+d.  We maken een histogram en een boxplot:
+
+    :::{layout="[[4.5,2.5]]"}
+
+    ```{r}
+    #| fig.width: 4.5
+    #| fig.height: 4
+    #| out.width: "100%"
+    hist(hartslagfrequenties, main = NULL)
+    ```
+
+    ```{r}
+    #| fig.width: 2.5
+    #| fig.height: 4
+    #| out.width: "100%"
+    boxplot(hartslagfrequenties)
+    ```
+    :::
+
+    Beide plots bevestigen dat de verdeling iets scheef is.
+    Het histogram ziet er klokvormig uit,
+    maar heeft een dikkere rechterstaart.
+    De boxplot laat dat nog duidelijker zien:
+    de box ziet er symmetrisch uit, maar er zijn veel uitbijters aan de bovenkant.
+
+    Verder zien we geen vreemde zaken, zoals frequenties die bij voorbaat
+    onmogelijk zijn.
+
+e.  Code:
+
+    ```{r}
+    mean(hartslagfrequenties)
+    median(hartslagfrequenties)
+    ```
+
+    Of, handig:
+
+    ```{r}
+    summary(hartslagfrequenties)
+    ```
+
+    De mediaan is iets kleiner dan het gemiddelde.
+    De afstand van Q1 naar de mediaan (8,00)
+    is ook kleiner dan van de mediaan naar Q3 (10,00).
+    Dat is in lijn met de iets rechts-scheve verdeling.
+
+    ```{r}
+    sd(hartslagfrequenties)    # standaarddeviatie
+    IQR(hartslagfrequenties)   # interkwartielafstand
+    ```
+
+    De meeste gegevens liggen in het gebied van 64 (Q1) tot 82 (Q3),
+    in lijn met de verwachting.
+
+f.  Tot slot bestuderen we de Normale QQ-plot:
+
+    ```{r}
+    #| fig.width: 3
+    #| fig.height: 3.3
+    #| out.width: "43%"
+    qqnorm(hartslagfrequenties)
+    qqline(hartslagfrequenties)
+    ```
+
+    Het midden van de verdeling volgt netjes de kwartielen van de normale verdeling,
+    maar in beide staarten
+    zijn de waargenomen waarden groter
+    dan op basis van de normale verdeling verwacht zou worden.
+    (De punten liggen boven de diagonale lijn.)
+    Dat laat zien dat ten opzichte van de normale verdeling
+    de punten in beide staarten een te hoge waarde hebben.
+    De linkerstaart van de verdeling is dus korter, de rechterstaart juist langer
+    dan bij een normale verdeling.
+
+g.  Code:
+
+    ```{r}
+    resultaat.t.test <- t.test(hartslagfrequenties)
+    resultaat.t.test$conf.int
+    ```
+
+h.  Ja! Hoewel de verdeling duidelijk scheef is (zoals verwacht!)
+    is het aantal datapunten zó groot
+    dat een BHI op basis van het Normale Model prima zou moeten werken.
+    We weten de gemiddelde hartslagfrequentie behoorlijk precies:
+    het ligt met 95% zekerheid ergens tussen 73,3 en 73,8 per minuut.
+
+    Er is wel een belangrijke caveat:
+    Er waren behoorlijk veel regels waar `NA` was ingevuld,
+    en die hebben we verwijderd.
+    De vraag is: waarom is bij deze mensen niets ingevuld?
+    Is er iets bijzonders aan de hand met deze groep?
+    Als dat zo is, dan kan er bias in de overige gegevens zijn geslopen.
+
+
+### @exr-bhi-controleren
+
+Code voor onderdelen **a** tot **f**:
+
+```{r}
+#| eval: false
+
+library("NHANES")
+data("NHANES")
+
+# POPULATIEGEGEVENS
+gewichten <- na.omit(NHANES$Weight)     # filter NA's weg
+populatiegemiddelde <- mean(gewichten)  # bereken populatiegemiddelde
+populatiegemiddelde # print populatiegemiddelde
+
+# STEEKPROEF
+# replace = FALSE zorgt ervoor dat we niet twee keer dezelfde persoon
+# in de steekproef kunnen opnemen
+steekproefgrootte <- 30
+
+# !!! code vanaf hier herhalen om meerdere steekproeven te proberen
+steekproef <- sample(
+    gewichten, size = steekproefgrootte, replace = FALSE
+  )
+steekproef # steekproef printen
+
+# BHI UITREKENEN
+resultaten.t.test <- t.test(steekproef)
+bhi <- resultaten.t.test$conf.int
+bhi # bhi printen
+
+# Ligt het populatiegemiddelde binnen het BHI?
+populatiegemiddelde >= bhi[1] && populatiegemiddelde <= bhi[2]
+
+```
+
+Als je deze code meerdere keren runt, trek je steeds een andere steekproef.
+In de meeste gevallen zou het populatiegemiddelde in het interval moeten liggen.
+Om precies te zijn: als de berekening van het BHI voor deze bimodale populatie werkt,
+zou dat in precies 95% van de gevallen zo moeten zijn. Dat test je in **g**.
+
+g.  De code voert $5\cdot 10^4$ steekproeven uit en berekent het percentage
+    van de herhalingen waarbij de populatieparameter in het BHI ligt.
+    Als het goed is, ligt dat percentage erg dicht bij 95%.
+
+    De formule voor het BHI werkt dus bij $n = 30$,
+    ondanks dat de populatie niet normaal verdeeld is.
+
+h.  Pas in de code enkel de steekproefgrootte aan:
+
+    ```{r}
+    steekproefgrootte <- 4  # Grootte van elke steekproef
+    ```
+
+    In alle redelijkheid mogen we nu niet verwachten dat de methode robuust is,
+    want de steekproef is nu wel erg klein.
+    Toch valt de schade mee: het percentage ligt nu rond 95,8%.
+    (Bij $5\cdot 10^4$ herhalingen kun je er een paar tienden naast zitten.)
+    Dat is nog niet eens zo slecht!

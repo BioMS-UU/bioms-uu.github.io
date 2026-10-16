@@ -1,0 +1,686 @@
+## Antwoorden @sec-toetsen-gemiddelden
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: false
+
+source("../Statistiek/_stat_setup.R")
+
+```
+
+### @exr-kippeneieren
+
+```{r}
+#| echo: false
+#| output: false
+gewicht_eieren <- c(51.7, 50.3, 48.4, 51.9)
+mu0 <- 52
+n <- length(gewicht_eieren)
+m <- mean(gewicht_eieren)
+s <- sd(gewicht_eieren)
+sem <- s/sqrt(n)
+t <- (m - mu0)/ sem
+P <- 2*(1 - pt(abs(t), df = n -1))
+```
+
+
+1.  **Kies het kansmodel:** het Normale Model.
+2.  **Formuleer de hypotheses:**\
+    $\HO:\qquad \mu_X = 52\unit{g}$,\
+    $\HA:\qquad \mu_X \neq 52\unit{g}$.
+3.  **Kies de toetsingsgrootheid:**\
+    $t = \cfrac{\mean{X} - 52\unit{g}}{\se{\mean{X}}}$.
+
+    **Verdeling van $t$ onder $\HO$:**\
+    De $t$-verdeling met $\df = n - 1 = 3$.
+4.  **Bereken de toetsingsgrootheid op basis van de steekproef.**\
+    Achtereenvolgens:
+
+    - $\mean{X} = 50{,}6\unit{g}$,
+    - $s_X = 1{,}62\unit{g}$,
+    - $\se{\mean{X}} = 0{,}808\unit{g}$, en dan
+    - $t = -1{,}76$.
+
+    De resultaten hierboven zijn afgerond; maar zorg ervoor dat je
+    altijd met de onafgeronde tussenresultaten doorrekent.
+5.  **Bereken de $P$-waarde:**\ Gebruik R:
+
+    ```{r}
+    P <- 2*pt(-abs(t), df = n - 1)
+    P
+    ```
+
+6.  **Conclusies:** De $P$-waarde is 0,18.
+    Dat is geen opvallend kleine waarde;
+    de waargenomen afwijking van $\mean{X}$ van $\mu_0$
+    verwacht je onder $\HO$ bij bijna 1 op de 5 steekproeven van deze grootte.
+    Deze gegevens geven dus geen aanleiding om de claim van het bedrijf
+    in twijfel te trekken.
+
+    De steekproef was ook wel erg klein; daardoor is de onzekerheid
+    in $\mu_X$ behoorlijk groot.
+    Met een grotere steekproef kunnen we de standaardfout $\se{\mean{X}}$
+    omlaag brengen.
+    Het zou kunnen dat we dan wél een statistisch significante afwijking vinden.
+
+### @exr-uitvoer-t-test
+
+a.  De uitvoer is:
+
+    ```{r}
+    #| echo: FALSE
+    temperaturen <- c(35.7, 35.8, 37.0, 36.5, 37.1, 36.4, 36.1, 36.8, 36.5, 37.1)
+    mu0 <- 37
+    t.test(temperaturen, mu = mu0)
+    ```
+
+b.  Helemaal onderaan staat "mean of x", met waarde 36,5 (in $\degree$C).
+
+c.  Deze drie waarden staan op dezelfde regel:
+
+        t = -3.0877, df = 9, p-value = 0.01298
+
+    Na afronden komen deze resultaten precies overeen met onze eigen berekeningen.
+
+d.  Het BHI loopt van 36,13$\degree$C tot 36,87$\degree$C. Je kunt dit ook schrijven als $\mu_X = (36{,}50\pm 0{,}37)\degree$C.
+
+
+### @exr-uitvoer-t-test-2
+
+```{r}
+#| echo: false
+snavel_Chinstrap <- na.omit(
+  penguins$bill_length_mm[penguins$species == "Chinstrap"]
+  )
+snavel_Gentoo <- na.omit(
+  penguins$bill_length_mm[penguins$species == "Gentoo"]
+  )
+```
+
+De uitvoer is:
+
+```{r}
+#| echo: false
+t.test(snavel_Chinstrap, snavel_Gentoo, var.equal = TRUE)
+```
+
+a.  Lees af: $\df = 189$. Er waren metingen voor
+    68 Chinstrap-pinguins en 123 Gentoo-pinguins.
+    Het juiste aantal is $n_1 + n_2 - 2 = 68 + 123 - 2 = 189$.
+    R heeft dus het juiste aantal vrijheidsgraden gebruikt.
+
+b.  Het interval is $(0,38\unit{mm}; 2,28\unit{mm})$.
+    Dit is het 95%-BHI van het *verschil* in de gemiddelden
+    tussen beide populaties, dus $\mu_1$ - $\mu_2$.
+
+c.  Het getal 0 ligt niet binnen het BHI.
+    Dat vertelt ons dat de $P$-waarde kleiner is dan 0,05.
+
+### @exr-welch
+
+a.  De $P$-waarde van de gewone $t$-toets is 0,0062,
+    die van de test van Welch is met 0,0077 iets groter,
+    zoals verwacht.
+
+    Hoewel er dus een klein verschil te zien is,
+    verschilt de interpretatie nauwelijks:
+    in beide gevallen is het bewijs sterk dat
+    er een verschil is in de gemiddelde snavellengte
+    tussen beide soorten.
+    Het heeft dus geen serieus nadeel om de test van Welch te gebruiken,
+    terwijl die wel robuuster is voor afwijkingen van de
+    standaarddeviaties.
+
+b.  Omdat de test van Welch minder aannames maakt,
+    is er meer onzekerheid in de schatting.
+    Daarom verwachten we een breder BHI.
+    Dat klopt:
+
+    95%-BHI voor de standaard toets: $(0,38\unit{mm}; 2,28\unit{mm})$.
+
+    95%-BHI voor de toets van Welch: $(0,36\unit{mm}; 2,30\unit{mm})$.
+
+
+### @exr-manakin
+
+a.  We willen een hypothese toetsen over het gemiddelde van de populatie;
+    dat is de taak van de $t$-toets voor één steekproef.
+
+b.  $\HO:\qquad \mu_X = 16{,}5,$\
+    $\HA:\qquad \mu_X \neq 16{,}5.$\
+
+c.  We importeren de dataset:
+
+    ```{r}
+    massa_manacus <- read.csv(
+      "https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data/massa_manacus.csv"
+      )
+    ```
+
+    Welke variabelen? Gebruik `str()`:
+
+    ```{r}
+    str(massa_manacus)
+    ```
+
+    Aantal datapunten? Vraag het aantal regels op:
+
+    ```{r}
+    nrow(massa_manacus)
+    ```
+
+    Dit is duidelijk een erg grote dataset.
+
+d.  We zijn geïnteresseerd in de variabele `Weight`.
+
+    **Ligging:**
+
+    ```{r}
+    summary(massa_manacus$Weight)
+    ```
+
+    De mediaan en het gemiddelde zijn bijna gelijk,
+    en ietsje kleiner dan $\mu_0 = 16{,}5$.
+    De vraag is of dat kleine verschil statistisch significant is.
+
+    **Spreiding:**
+
+    ```{r}
+    sd(massa_manacus$Weight)
+    IQR(massa_manacus$Weight)
+    ```
+
+    **Visualiseren:**
+
+    :::{layout="[[1,1]]" width="100%"}
+
+    ```{r}
+    #| out-width: "100%"
+    hist(massa_manacus$Weight)
+    ```
+
+    ```{r}
+    #| out-width: "100%"
+    boxplot(massa_manacus$Weight)
+    ```
+
+    :::
+
+    Beide plots laten een symmetrische, klokvormige verdeling zien,
+    zonder opvallende uitbijters.
+
+e.  We passen het Normale Model toe op de populatie en de steekproef.
+    We nemen dus onder andere aan dat gewicht
+    in de populatie normaal verdeeld is.
+
+f.  Bij voorbaat is het  niet vreemd om lichaamsgewicht te modelleren
+    met een normale verdeling,
+    omdat dat een continue variabele is die vaak een klokvormige verdeling heeft.
+
+    Een probleem zou kunnen zijn dat een lichaamsgewicht niet negatief kan worden,
+    maar zolang de ligging van de verdeling ver genoeg van 0 afligt
+    is het ontbreken van die staart niet zo relevant.
+
+    Er is in deze opgave niet veel informatie gegeven over de manier
+    waarop de steekproef heeft plaatsgevonden.
+    We kunnen dus niet goed beoordelen of de vogels bij benadering
+    aselect geselecteerd zijn.
+    Dat is iets om in gedachten te houden; er kan bias bestaan
+    in deze steekproef.
+
+    **QQ-plot:**
+
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 55%
+
+    qqnorm(massa_manacus$Weight)
+    qqline(massa_manacus$Weight)
+    ```
+
+    De QQ-plot laat zien dat de verdeling grotendeels
+    in lijn is met de kwantielen van de normale verdeling.
+
+    Alles overziend kan de verdeling goed beschreven worden
+    met de normale verdeling.
+    Gezien de grootte van de dataset zouden zelfs veel grotere
+    afwijkingen geen probleem moeten zijn.
+
+g.  De $t$-toets uitvoeren:
+
+    ```{r}
+    t.test(massa_manacus$Weight, mu = 16.5)
+    ```
+
+h.  Het 95%-BHI is $(16{,}14\unit{g}; 16{,}42\unit{g})$.
+    We zijn dus 95% zeker dat het ware gemiddelde
+    in dat interval ligt.
+
+    Omdat $16,5\unit{g}$ niet in het 95%-BHI ligt,
+    kunnen we ook al concluderen dat $P < 0{,}05$.
+
+i.  De $P$-waarde 0,0018. Dat is sterk bewijs tegen de nulhypothese.
+    (Als $\HO$ waar is, krijg je zo'n grote afwijking maar eens in de ~500
+    steekproeven!)
+
+j.  De BHI geeft je een schatting van het lichaamsgewicht van deze vogels,
+    plus je onzekerheid daarin. Je kunt daarmee dus ook inschatten
+    hoe ver de werkelijkheid van $\mu_0 = 16{,}5$g afligt.
+    Met een geschat gemiddelde van
+    $16{,}3$g is het verschil eigenlijk maar klein.
+
+    De $P$-waarde vertelt je precies hoe onwaarschijnlijk het waargenomen
+    steekproefgemiddelde is onder $\HO$,
+    en dus hoe zwaarwegend dit bewijs is tegen $\HO$.
+    Het 95%-BHI vertelt ons dat $P < 0,05$, maar niet hoe groot $P$ precies is.
+
+
+### @exr-manakin-2
+
+a.  We willen de gemiddelden van twee populaties vergelijken;
+    we hebben dus een $t$-toets voor twee onafhankelijke steekproeven nodig
+
+b.  $\HO:\qquad \mu_1 = \mu_2,$
+
+    $\HA:\qquad \mu_1 \neq \mu_2.$
+
+c.  Code:
+
+    ```{r}
+    man <- massa_manacus$Weight[massa_manacus$Sex == "Male"]
+    vrouw <- massa_manacus$Weight[massa_manacus$Sex == "Female"]
+    ```
+
+d.  Code:
+
+    ```{r}
+    length(man)
+    length(vrouw)
+    ```
+
+e.  **Mannetjes:**
+
+    :::{layout="[[1,1]]" out-width="100%"}
+
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 100%
+    boxplot(man)
+    ```
+
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 100%
+    hist(man)
+    ```
+
+    :::
+
+    **Vrouwtjes:**
+
+    :::{layout="[[1,1]]" out-width="100%"}
+
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 100%
+    boxplot(vrouw)
+    ```
+
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 100%
+    hist(vrouw)
+    ```
+
+    :::
+
+    **Ligging:**
+
+    ```{r}
+    summary(man)
+    summary(vrouw)
+    ```
+
+    De mannetjes lijken net iets groter dan de vrouwtjes,
+    al moet de toets uitwijzen of dat statistisch significant is.
+
+    **Spreiding:**
+
+    ```{r}
+    sd(man)
+    IQR(man)
+    ```
+
+    ```{r}
+    sd(vrouw)
+    IQR(vrouw)
+    ```
+
+f.  We nemen aan dat het Normale Model van toepassing is op beide populaties.
+    Bovendien nemen we aan dat de standaarddeviatie van beide populaties gelijk is.
+
+    Bij voorbaat lijkt het, net als in de vorige opgave,
+    niet gek op lichaamsgewicht te modelleren met een normale verdeling.
+    Bij voorbaat zou je ook niet verwachten dat de standaarddeviatie sterk verschilt
+    tussen mannelijke en vrouwelijke vogels.
+    Het is dus niet bij voorbaat gek om het Normale Model te gebruiken.
+
+    Kijkend naar de maten van spreiding hierboven
+    lijken de vrouwtjes een iets grotere spreiding te hebben dan de mannetjes.
+    Maar het verschil is niet groot, en bij dit grote aantal waarnemingen zou dat
+    geen probleem moeten zijn.
+
+    Om de normaliteit van de gegevens te beoordelen,
+    kijken we naar de histogrammen en boxplots hierboven.
+    De verdeling van de vrouwtjes ziet er redelijk symmetrisch uit;
+    die van de mannetjes is een beetje links-scheef.
+
+    Om dat nog iets beter te beoordelen,
+    maken we QQ-plots:
+
+    :::{layout="[[1,1]]" out-width="100%"}
+
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 100%
+    qqnorm(man)
+    qqline(man)
+    ```
+
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 100%
+    qqnorm(vrouw)
+    qqline(vrouw)
+    ```
+
+    :::
+
+    We zien weer dat de verdeling van de mannetjes wat links-scheef is,
+    maar die van de vrouwtjes niet.
+
+    Gezien de grootte van deze steekproeven,
+    is de kleine scheefheid van de mannetjes geen groot probleem.
+
+g.  Code:
+
+    ```{r}
+    t.test(man, vrouw, var.equal = TRUE)
+    ```
+
+h.  Het 95%-BHI van het verschil tussen de twee gemiddelden is $(1{,}36\unit{g}; 2{,}00\unit{g})$. De mannetjes zijn een tikje zwaarder.
+
+i.  De $P$-waarde is kleiner dan $2{,}2\times 10^{-16}$.
+    ($P$-waardes kleiner dan $2,2\times 10^{-16}$ kan R niet precies berekenen.)
+    Dit is natuurlijk een heel erg kleine $P$-waarde;
+    dit is dus heel erg sterk bewijs tegen de nulhypothese.
+
+j.  Het BHI vertelt je dat het verschil op zich niet groot is:
+    maximaal een gram of 2.
+    Dat kun je aan de superkleine $P$-waarde niet aflezen.
+
+    Andersom kan je uit het BHI enkel afleiden
+    dat $P<0{,}05$. Dat het bewijs zo sterk is,
+    kun je daaraan dus niet zien.
+
+
+### @exr-kurk
+
+a.  Er zijn twee steekproeven: afzetting aan de oostkant en afzetting aan de westkant.
+    Maar,
+    deze zijn duidelijk gepaard,
+    want van iedere boom is de afzetting aan beide kanten gemeten.
+    De kurkafzetting zal per boom verschillen; grote bomen zullen misschien
+    aan alle kanten een dikkere kurklaag hebben dan kleine bomen.
+    Daarom willen we de bomen niet onderling vergelijken,
+    maar onderzoeken of er een systematisch verschil is
+    tussen de oost- en west-kant *van dezelfde boom*.
+    We willen dus een $t$-toets voor gepaarde gegevens uitvoeren.
+
+b.  $\HO:\qquad \mu_d = 0,$
+
+    $\HA:\qquad \mu_d \neq 0.$
+
+c.  Code:
+
+    ```{r}
+    kurk <- read.csv(
+      "https://tbb.bio.uu.nl/bvd/bms/slides/3_Statistiek_data//kurk.csv"
+      )
+    ```
+
+d.  Voer uit:
+
+    ```{r}
+    str(kurk)
+    head(kurk)
+    ```
+
+    1. De uitvoer van `str()` laat zien dat er 4 variabelen zijn, en dus 4 kolommen.
+
+    2. De uitvoer `str()` geeft aan dat er 28 obs.(observations) zijn. Er zijn dus ook 28 rijen.
+
+    3. De uitvoer van `str()` laat zien dat elke kolom `int` (integer) als datatype heeft.
+
+       De gegevens zijn, uitgedrukt in mm, gehele getallen, dus het is niet gek dat R ze als integers interpreteert.
+       Maar, eigenlijk is de kurkdikte een continue variabele,
+       dus `numeric` zou beter passen.
+       Het is netjes om de gegevens om te zetten,
+       maar de meeste functies zetten integers
+       vanzelf om naar `numeric` als de berekening daarom vraagt,
+       dus essentieel is het niet.
+
+    ```{r}
+    kurk$WEST <- as.numeric(kurk$WEST)
+    kurk$OOST <- as.numeric(kurk$OOST)
+    ```
+
+e.  Eerst de boxplots:
+
+    :::{layout="[[1,1]]"}
+
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 100%
+    boxplot(kurk$OOST, main = "OOST")
+    ```
+
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 100%
+    boxplot(kurk$WEST, main = "WEST")
+    ```
+
+    :::
+
+    Nu de histogrammen:
+
+    :::{layout="[[1,1]]"}
+
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 100%
+    hist(kurk$OOST, main = "OOST")
+    ```
+
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 100%
+    hist(kurk$WEST, main = "WEST")
+    ```
+
+    :::
+
+    Zowel de boxplot als de histogrammen laten zien
+    dat de verdelingen lichtelijk rechts-scheef zijn.
+
+    Ook valt op dat er flinke variatie is in de afzetting,
+    want die varieert van 20 tot 80 mm.
+
+    Verder zijn er geen vreemde punten of uitbijters.
+
+f.  **Ligging:**
+
+    ```{r}
+    summary(kurk$OOST)
+    summary(kurk$WEST)
+    ```
+
+    De mediaan van `OOST` en `WEST` zijn gelijk;
+    er is wel een klein verschil in gemiddelde.
+
+    **Spreiding:**
+
+    ```{r}
+    sd(kurk$OOST)
+    IQR(kurk$OOST)
+
+    sd(kurk$WEST)
+    IQR(kurk$WEST)
+    ```
+
+    De spreiding van beide variabelen is vergelijkbaar,
+    al lijken de waarden van `WEST` iets meer spreiding te hebben
+    dan die van `OOST`.
+
+g.  Het statistische model veronderstelt dat de de verschillen tussen `OOST` en `WEST`
+    binnen de paren
+    voldoen aan het Normale Model.
+
+    Bij voorbaat zou het goed kunnen dat die verschillen een belvormige verdeling hebben,
+    en als de bomen aselect zijn gekozen,
+    dan zouden deze verschillen ook onafhankelijk moeten zijn.
+    Het normale model kan dus een redelijke keuze zijn.
+
+    Om te bekijken of de gegevens zelf aanleiding geven tot twijfel
+    maken we een histogram en een QQ-plot.
+    Let op! De aanname gaat over de *verschillen*,
+    en dus moeten we eerst de verschillen uitrekenen
+    en dan plotjes maken op basis van die verschillen:
+
+    :::{layout="[[1,1]]"}
+
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 100%
+    verschillen <- kurk$OOST - kurk$WEST
+
+    hist(verschillen)
+    ```
+
+    ```{r}
+    #| fig.width: 3.5
+    #| fig.height: 3.5
+    #| out.width: 100%
+    qqnorm(verschillen)
+    qqline(verschillen)
+    ```
+
+    :::
+
+    Het histogram ziet er niet perfect normaal verdeeld uit.
+    Maar, het aantal waarnemingen is niet erg groot,
+    en dus zijn er per klasse maar weinig waarnemingen in het histogram.
+    Dan ziet het histogram er al snel rommelig uit.
+    De QQ-plot ziet er niet heel verkeerd uit.
+
+    Hoewel we niet goed kunnen beoordelen of de verschillen dus
+    in de populatie normaal verdeeld zijn,
+    zien we ook geen duidelijke afwijkingen.
+    Met die caveats kunnen we het model dus gebruiken.
+
+h.  Code:
+
+    ```{r}
+    t.test(kurk$OOST, kurk$WEST, paired = TRUE)
+    ```
+
+i.  Het 95%-BHI: $(-2{,}94\unit{mm};  4{,}94\unit{mm})$.
+    Het ware gemiddelde verschil tussen `OOST` en `WEST` in de populatie
+    ligt dus met 95% zekerheid in dit interval.
+
+    Omdat 0mm in dit interval ligt,
+    weten we al dat de $P$-waarde groter dan 0,05 moet zijn.
+
+j.  We vinden $P=0{,}61$. Dat is verre van significant.
+    Deze gegevens vormen dus geen bewijs tegen de nulhypothese.
+
+k.  Het 95%-BHI vertelt ons dat het ware gemiddelde verschil
+    tussen `OOST` en `WEST` nog best -2,5mm of 4,9mm kan zijn.
+    We hebben dus geen significant bewijs gevonden voor een verschil,
+    maar kunnen tegelijkertijd niet uitsluiten dat er een klein verschil is.
+
+    Uit de BHI kon worden opgemaakt dat $P>0{,}05$,
+    maar niet hoe groot de $P$-waarde precies is.
+    De exacte $P$-waarde van 0,61 geeft extra informatie,
+    die geeft geen enkele suggestie van een verschil.
+
+### @exr-aapjes-2
+
+Het is moeilijk hiervoor een antwoordmodel te geven,
+want iedere student heeft andere parameters geprobeerd
+en andere resultaten gevonden.
+
+Duidelijk is wel dat je
+de $t$-toets voor twee onafhankelijke steekproeven moet uitvoeren.
+Als de standaarddeviaties van de twee condities die je wilt vergelijken
+sterk verschillen, kun je ook voor de toets van Welch kiezen.
+
+Zoals altijd bekijk je vooraf of het Normale Model van toepassing lijkt!
+Je script zal er dan ongeveer zo uit zien:
+
+```{r}
+#| eval: false
+
+aapjes1 <- c( ) # jouw resultaten hier!
+aapjes2 <- c( ) # jouw resultaten hier!
+
+# resultaten bekijken en vergelijken
+boxplot(aapjes1)
+hist(aapjes1)
+
+boxplot(aapjes2)
+hist(aapjes2)
+
+summary(aapjes1)
+summary(aapjes2)
+
+sd(aapjes1)
+IQR(aapjes1)
+
+sd(aapjes2)
+IQR(aapjes2)
+
+qqnorm(aapjes1)
+qqline(aapjes1)
+
+qqnorm(aapjes2)
+qqline(aapjes2)
+
+t.test(aapjes1, aapjes2, var.equal = TRUE)  # of FALSE voor Welch
+```
+
+Als je twee flink verschillende condities vergelijkt,
+zoals eetsnelheid 0,5 en eetsnelheid 5,
+dan zul je bij $n = 10$ herhalingen per conditie
+waarschijnlijk een statistisch significant verschil vinden.
+Kies je de condities dicht bij elkaar,
+zoals 0,5 en 0,6,
+dan is de kans groot dat je geen significant bewijs vindt
+voor een verschil.
+
+
+

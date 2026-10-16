@@ -1,0 +1,590 @@
+# Antwoorden R {.unnumbered}
+
+## @sec-introductieR
+
+@exr-rekenenmetR
+
+**a. **
+
+```{r}
+#| eval: false
+
+a <- 2
+a^3
+```
+
+**b. **
+
+```{r}
+#| eval: false
+
+b <- 9.5
+b^19
+```
+
+**c.**
+
+Om de laatste afstand te berekenen, gebruiken we de stelling van Pythagoras ($a^2+b^2=c^2$, dus $c=\sqrt{a^2+b^2}$). Om te zorgen dat de berekening **niet** in de environment opgeslagen wordt, moeten we de berekening niet aan een variabele toekennen (we gebruiken dus geen `<-`). We typen dus simpelweg $a+b+c$ om de totaalafstand te laten zien. 
+
+```{r}
+#| eval: false
+
+a <- 3
+b <- 4
+c <- sqrt(a^2+b^2) # stelling van Pythagoras
+a+b+c # geen pijltje betekent dat de uitkomst alleen wordt weergegeven
+```
+**d.**
+
+Omdat we een script hadden gemaakt met variabelen voor $a$, $b$ en $c$, is het nu makkelijk om deze aanpassing te maken ($a$ wordt 5 en $b$ wordt 6). Om de uitkomst in de environment op te slaan gebruiken we `<-` om deze in een variabele op te slaan die `afstand` heet. Het totaalscript is dan: 
+
+```{r}
+#| eval: false
+#| echo: true
+
+a <- 5
+b <- 6
+c <- sqrt(a^2+b^2) # stelling van Pythagoras
+afstand <- a+b+c # sla de uitkomst op in een variabele met <-
+
+print(paste('Je hebt', afstand, 'stappen gelopen'))
+```
+
+@exr-rekenenmetR2
+
+**a.** 
+
+Omdat $a$ van de vorige opgave nog op 5 stond, is de uitkomst 15. Echter hebben we in de vorige opgave geen $d$ gedefinieerd, dus krijg je deze uitkomst: 
+  
+    > d+10
+    Error: object 'd' not found
+
+**b.** 
+
+Om $d$ op 0 te zetten typen we `d <- 0` in de console, en drukken we op enter. De breuk $a \over d$ geeft de volgende uitkomst:
+
+    > a/d
+    [1] Inf
+    
+`Inf` staat voor 'infinity', wat komt doordat we door $0$ delen! 
+
+**c.** 
+
+Eerst voeren we `d <- 0.001` uit. Dan berekenen we de breuken:
+
+    > a/d
+    [1] 5000
+    > a/d^2
+    [1] 5e+06
+
+Eerst delen we door 0.001, waardoor $a$ 1000 keer zo groot wordt. Dan delen we door $0.001^2$, wat '1 miljoenste' is. Hierdoor wordt $a$ een miljoen keer zo groot. Om dergelijk grote getallen weer te geven wordt de wetenschappelijke notatie gebruik (`5e+06`). Het antwoord uit vraag b (delen door 0) kunnen we nu begrijpen. Als we door een steeds kleiner getal delen, wordt de uitkomst groter en groter. Dus als we door 0 delen (een oneindig klein getal!), krijgen we als resultaat oneindig. 
+
+## @sec-Rprogrammeren
+
+@exr-packages
+
+**a.** 
+
+Het resultaat is: 
+
+    Error in rtree(10) : could not find function "rtree" 
+    
+De functie rtree bestaat dus helemaal niet in R!
+
+**b.**
+
+Dit print iets in de console: 
+
+    Phylogenetic tree with 10 tips and 9 internal nodes.
+    
+    Tip labels:
+      t2, t3, t6, t9, t4, t7, ...
+    
+    Rooted; includes branch lengths.
+    
+Kennelijk doet dit package iets met fylogenetische bomen.
+
+**c.**
+
+De boom ziet er elke keer anders uit. De 'r' in de functie zal dus wel voor *random* (willekeurig) staan. 
+
+**d.**
+
+Deze past het aantal soorten in de willekeurige boom aan. 
+
+**e.** 
+
+In de tekst van dit hoofdstuk heb je geleerd dat dit kan met `?rtree`, wat een venster opent in Rstudio met uitleg over je functie. Zo kan je bijvoorbeeld alle tip-levels veranderen:
+
+```{r}
+#| eval: false
+labels <- paste("Soort ",1:5)
+plot(rtree(5,tip.label=labels))
+```
+
+@exr-penguins
+
+**a.** Er zijn drie soorten penguins. Er zijn veel manieren om dit te zien. Ten eerste, als je `View(penguins)` gebruikt, kun je de verschillende soorten zelf tellen in de eerste kolom. Een andere manier is om de species-kolom uit de dataframe te pakken:
+
+```{r}
+#| eval: false
+penguins$species
+```
+
+Deze code print de hele eerste kolom, en vat aan het einde samen hoeveel verschillende 'levels' de data heeft:
+
+    Levels: Adelie Chinstrap Gentoo
+    
+Hier zie je dus ook dat er drie soorten zijn. Een derde manier is om de functie `summary` toe te passen op de kolom, zodat je een tabel te zien krijgt met het aantal soorten, en hoe vaak ze voor komen:
+
+    > summary(penguins$species)
+    Adelie Chinstrap    Gentoo 
+    152        68       124
+    
+**b.** Hieronder staat  hoe je deze functies kan gebruiken. Je kan ook de functie `summary` gebruiken, die geeft in 1 klap een heleboel van deze getallen:
+
+```{r}
+#| eval: false
+min(penguins$flipper_length_mm,na.rm=T) # T is kort voor TRUE
+max(penguins$flipper_length_mm,na.rm=T)
+mean(penguins$flipper_length_mm,na.rm=T)
+
+# Je kan ook summary gebruiken, die geeft van alles:
+summary(penguins$flipper_length_mm) 
+```
+
+**c.**
+
+```{r}
+#| eval: false
+
+x <- summary(penguins$sex) # geeft 3 waarden: female, male, en NA
+fractie <- x[3]/(nrow(penguins)) # aantal NAs gedeeld door aantal rijen
+percentage <- 100*fractie # omzetten naar percentages
+print(percentage)
+```
+
+@exr-bacterienR
+
+**a.** Hiervoor kunnen we dezelfde structuur gebruiken als voor 'biologen' in het hoofdstuk:
+
+```{r}
+#| eval: false
+bacterien <- data.frame(temperatuur=c(20, 25, 30, 35, 40),
+                       groeisnelheid=c(2.0, 2.25, 2.65, 2.35, 2.2))
+```
+
+Alternatief kun je eerst twee vectoren definieren, als je dat overzichtelijker vindt:
+
+```{r}
+#| eval: false
+temperatuur <- c(20, 25, 30, 35, 40)
+groeisnelheid <- c(2.0, 2.25, 2.65, 2.35, 2.2)
+bacterien <- data.frame(temperatuur,groeisnelheid)
+```
+
+**b.** Hoewel je dit zelf ook nog wel kan lezen, zijn biologische datasets hier vaak te groot voor. Zoals de tip zegt, geeft `which.max()` de index met de hoogste waarde terug. Deze index kun je dan gebruiken om de corresponderende temperatuur te vinden:
+
+```{r}
+#| eval: false
+# Vind de index van de maximale groeisnelheid
+maxgroei_index <- which.max(bacterien$groeisnelheid) #  geeft index-waarde '3'
+# Toon de corresponderende temperatuur
+bacterien$temperatuur[maxgroei_index] # geeft '30', namelijk de temperatuur op positie 3
+```
+
+**c.** Om dit te doen moeten we de kolom 'groeisnelheid' tot de macht 10 verheffen:
+
+```{r}
+#| eval: false
+totaalgroei <- bacterien$groeisnelheid^10
+bacterien$totaalgroei <- totaalgroei
+```
+
+**d.** 
+
+```{r}
+#| eval: false
+bacterien$totaalgroei[1] == 1024 # TRUE, het is dus goed gegaan
+```
+
+**e.**
+
+```{r}
+#| eval: false
+plot(bacterien$temperatuur, bacterien$groeisnelheid, 
+     type = "b", col='seagreen', lwd=2,
+     xlab = "Temperatuur (Celcius)", ylab = "Groeisnelheid (per uur)",
+     main = "Groeisnelheid vs Temperatuur")
+```
+
+@exr-vislengtes
+
+**a.** In R geeft `lengtes>=15` een vector van `TRUE` en `FALSE` terug. Deze kun
+je meteen doorgeven aan `sum`, en deze geeft dan het totaal aantal:
+
+```{r}
+#| eval: false
+lengtes <- c(12, 18, 7, 21, 15, 16, 14, 10, 20, 17)
+grootgenoeg <- sum(lengtes>=15) # groot genoeg
+print(paste("Aantal vissen groter of gelijk aan 15 cm:", grootgenoeg))
+```
+
+**b.** Vergelijkbaar met de vorige vraag, maar we moeten nog het percentage uitrekenen. 
+
+```{r}
+#| eval: false
+lengtes <- c(12, 18, 7, 21, 15, 16, 14, 10, 20, 17)
+totaal_vissen <- length(lengtes)  # Totaal aantal vissen
+vissen_te_klein <- sum(lengtes < 15)  # Aantal vissen kleiner dan 15 cm
+percentage_te_klein <- (vissen_te_klein / totaal_vissen) * 100
+print(paste("Percentage vissen kleiner dan 15 cm:", percentage_te_klein, "%"))
+```
+
+**c.** Indexing doen we met vierkante haken, maar in dit geval gebruiken we niet de 
+specifieke posities (1,2,5), maar de conditie (TRUE, FALSE, FALSE, etc.):
+
+```{r}
+#| eval: false
+lengtes_vissen_vrijlaten <- lengtes[lengtes >= 15]
+print(lengtes_vissen_vrijlaten)
+```
+
+**d.** Om dit te doen 'loopen' we over de vector van lengtes, en testen of elke
+vis aan de voorwaarde voldoet:
+
+```{r}
+#| eval: false
+for (l in lengtes) {
+  if (l >= 15) {
+    print(paste("Vis van", l, "cm is groot genoeg om vrij te laten."))
+  } else {
+    print(paste("Vis van", l, "cm is te klein."))
+  }
+}
+```
+
+## [Extra R oefeningen en oefentoets](../Programmeren/intro_R_questions.qmd)
+
+@exr-R-2
+
+**a.**
+
+```{r}
+#| eval: false
+#| echo: true
+
+# waarden instellen
+a <- 2.5
+b <- 11
+c <- 0.01
+
+# bereken de uitkomst
+uitkomst <- a/b+a*(c+a)
+
+a <- 5
+```
+
+**b.**
+Bij het berekenen van uitkomst worden de parameters a, b, en c  
+gebruikt om iets te berekenen. Dit komt neer op pasta, groente 
+en pesto combineren in een gerecht. Dat je daarna de pesto aanpast
+verandert niet je gerecht: die was al klaar.
+
+@exr-R-rekenen
+
+Na het maken van deze vraag, zou je script er ongeveer zo uit kunnen zien:
+
+**a.**
+
+```{r}
+x <- 14
+x <- x + 2.3
+```
+
+**b.**
+
+```{r}
+x <- 14
+
+for(i in 1:100){
+  x <- x + 2.3
+}
+```
+
+**c.**
+
+```{r}
+x <- 14
+n <- 50
+
+for(i in 1:n){
+  x <- x + 2.3
+}
+```
+
+**d.**
+
+```{r}
+x <- 14
+n <- 50
+
+for(i in 1:n){
+  x <- x + 2.3
+  x <- x / 1.5
+}
+print(x)
+```
+
+Aan het einde van de loop is `x` gelijk aan `4.6`.
+
+**e** 
+
+```{r}
+x <- 14
+n <- 100
+
+for(i in 1:n){
+  x <- x + 2.3
+  x <- x / 1.5
+}
+print(x)
+```
+
+Aan het einde van deze loop is `x` ook gelijk aan `4.6`! 
+
+**f.** Als we de waarde van `x` elke stap printen, zien we daarom **d** en **e** hetzelfde antwoord geven:
+
+```{r}
+x <- 14
+n <- 100
+
+for(i in 1:n){
+  x <- x + 2.3
+  x <- x / 1.5
+  cat('In stap', i, 'is de waarde van x', x, '\n')
+}
+```
+
+De waarde van `x` in deze berekening geconvergeerd in 41 stappen al naar 4.6. Daarom is na zowel 50 als na 100 stappen het antwoord `4.6`. Echter zijn dit wel afrondingen, want als je het aantaal decimalen in R op 20 zet met `options(digits=20)`, dan zie je dat de waarden eigenlijk `4.6000000147422879238` en `4.6000000000000005329` zijn. 
+
+
+@exr-R-3
+
+**a.**
+Vijf kolommen. Dit is geen CSV (comma-separated-values) bestand, 
+want de kolommen zijn gescheiden door spaties, niet komma's.
+
+**b.**
+
+```{r}
+#| eval: false
+#| echo: true
+nrow(covid) # 52, dus dat klopt
+ncol(covid) # 1, dit is fout! Alle data wordt als 1 kolom ingelezen.
+``` 
+
+**c.**
+
+```{r}
+#| eval: false
+#| echo: true
+ncol(covid) # 5, precies goed!
+nrow(covid) # 53, dat is 1 te veel... 
+View(covid) # Aha... de kolomnamen worden als "eerste rij" ingelezen...
+```
+
+**d.**
+
+```{r}
+#| eval: false
+#| echo: true
+mean(covid$positieve_testen) # gemiddeld 1563.5 positieve testen per week
+```
+
+**e.**
+
+```{r}
+#| eval: false
+#| echo: true
+
+head(covid,n=12)
+```
+
+**f.**
+
+```{r}
+#| eval: false
+#| echo: true
+
+# Lees het bestand covid.txt op de website in met 'read.table'
+covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/data/covid.txt",header=T)
+str(covid) 
+# 52 rijen (observaties) en 
+# 5 kolommen (variables), 
+# allemaal van type 'int' (integer: gehele getallen)
+
+# deze zelfde informatie kan je ook op andere manieren verkrijgen
+nrow(covid) # 52
+ncol(covid) # 5
+typeof(covid$week) # integer (geheel getal)
+```
+
+**g.**
+
+```{r}
+#| eval: false
+#| echo: true
+
+# Lees het bestand covid.txt op de website in met 'read.table'
+covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/data/covid.txt",header=T)
+covid_subset <- covid[14:19,] # selecteer rij 14:19
+
+x <- covid_subset$datapunt # alle x-punten in een vector
+y <- covid_subset$positieve_testen # alle y-punten in een vector
+
+plot(x,y, type='b',lwd=2, log="y",
+     xlab="Datapunt", ylab="Aantal positieve testen (log-schaal)",
+     col="darkblue", main="Aantal positieve Covid-19 testen in Utrecht") 
+
+```
+
+**h.**
+
+```{r}
+#| eval: false
+#| echo: true
+
+covid <- read.table("http://tbb.bio.uu.nl/bvd/bms/data/covid.txt",header=T)
+x <- covid$datapunt # alle x-punten in een vector
+y <- covid$positieve_testen # alle y-punten in een vector
+
+plot(x,y, type='b',lwd=2, log="y",
+     xlab="Datapunt", ylab="Aantal positieve testen (log-schaal)",
+     col="darkblue", main="Aantal positieve Covid-19 testen in Utrecht\nDikkere punten geven pieken weer") 
+
+
+covid_subset <- covid[covid$positieve_testen > 1000,]
+x <- covid_subset$datapunt # alle x-punten in een vector
+y <- covid_subset$positieve_testen # alle y-punten in een vector
+
+points(x,y, lwd=5, log="y", col="darkblue") 
+```
+
+@exr-R-4
+
+**a.**
+
+```{r}
+#| eval: false
+#| echo: true
+
+for(i in 1:12){
+  dobbelsteen <- sample(1:6,1) # getal van 1 t/m 6 (dobbelsteen worp)
+  if(dobbelsteen>=4) cat(paste("Worp nummer",i,"is",dobbelsteen,"\n"))
+}
+```
+
+**b.**
+
+```{r}
+#| eval: false
+#| echo: true
+
+aantal_keren_hoera <- 0
+for(e in 1:100){
+  aantal_keren_6 <- 0
+  for(i in 1:12){
+    dobbelsteen <- sample(1:6,1) # getal van 1 t/m 6 (dobbelsteen worp)
+    if(dobbelsteen ==6) aantal_keren_6 <- aantal_keren_6 + 1
+  }
+  if(aantal_keren_6==1) {
+    cat("Hoera!\n")
+    aantal_keren_hoera <- aantal_keren_hoera + 1
+  }
+  else{
+    cat("Niet hoera :(\n")
+  }
+}
+cat("Er is in totaal", aantal_keren_hoera, "keer 'Hoera!' geprint\n")
+```
+
+## Oefentoetsje R
+
+
+@exr-R-1
+
+**a.**
+Een matrix is een tabel met allemaal dezelfde type waarden, terwijl een dataframe voor elke kolom een ander type data kan bevatten.
+
+**b.**
+Hoewel er een nummer staat, is `x` van het type 'character' omdat het tussen aanhalingstekens staat. 
+
+**c.**
+De tweede waarde van de vector x is 1.5.
+
+```{r}
+#| echo: true
+#| eval: false
+x <- seq(1,10,by=0.5)
+x[2]
+```
+
+**d.**
+De vector x bevat nu alle gehele getallen van 10 tot en met 1. De eerste waarde van deze vector is 10.
+
+```{r}
+#| echo: true
+#| eval: false
+x <- 10:1
+x[1] 
+```
+
+**e.**
+x[1] weet je niet, want runif geeft willekeurig getallen. Je weet wél dat het getal tussen 0 en 1 zal liggen. x[11] bestaat niet, want er zijn maar 10 getallen gegenereerd R geeft in dit geval 'NA' (not available).
+
+**f.**
+Om voor ieder persoon de score "per minuut" te berekenen, moeten we de score door het aantal minuten delen ("per" kun je eigenlijk altijd lezen als "gedeeld door"). Dit kunnen we doen door met het dollar-teken de kolommen te pakken, en deze door elkaar te delen. Deze nieuwe vector (hieronder 'spm') kan je dan ook als nieuwe kolom aan de dataframe toevoegen:
+
+```{r}
+#| echo: true
+#| eval: false
+spm <- df$score/df$minuten
+df$score_per_minuut <- spm
+```
+
+**g.**
+dieren[2,3:4] geeft rij 2, kolom 3 en 4 terug. 
+Let op: de eerste regel zijn de kolomnamen, dus de 2e rij is niet Joey, maar Roos! Daarom geeft dieren[2,3:4] de waarden "wit" en "energiek".
+
+**h.**
+De waarde begint op 1, en dan loopt de for-loop over de waarden 1, 2 en 3. Deze waarden worden steeds aan a toegevoegd. Dus er wordt eerst 1, dan 2, en dan nog een keer 3 bij a opgeteld. Aan het einde is a dus 1+1+2+3 = 7.
+
+**i.**
+
+a -> C
+
+b -> B
+
+c -> E
+
+d -> A
+
+e -> D
+
+f -> F
+
+
+**j.** Optie d geeft geen serie van 1 t/m 10, maar een vector met daarin alleen 1 en 10.
+
+**k.**
+Optie b. In R gebruik je vierkante haken om te 'indexeren'. Omdat het een vector is heb je geen komma's nodig om onderscheid te maken tussen rijen en kolommen. 
+
+**l.**
+Optie b. Drie is niet groter dan vijf, dus zal R 'FALSE' teruggeven. 
+
+**m.** 
+Optie d. Vanaf de tweede waarde (20) zijn alle getallen groter dan óf gelijk aan 20. Let op: hier worden deze waarden (nog) niet geselecteerd!
+
+**n.**
+Optie h. Vanaf de tweede waarde (20) zijn alle getallen groter dan óf gelijk aan 20. Anders dan de vorige vraag, selecteren we hier deze opties, en krijgen we 20, 30, 40 terug. 

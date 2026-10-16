@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<!-- saved from url=(0065)file:///Users/bwremjoe/Downloads/linearisatie_visualisatie_6.html -->
+<html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linearisatie rond een evenwicht</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #fff; font-family: system-ui, -apple-system, sans-serif; color: #333; display: flex; flex-direction: column; align-items: center; padding: 8px 8px 4px; }
+h2 { font-size: 17px; font-weight: 700; color: #222; margin-bottom: 1px; }
+.sub { font-size: 11px; color: #888; font-family: monospace; text-align: center; line-height: 1.5; margin-bottom: 6px; }
+.sub .b { color: #2a53f7; } .sub .o { color: #e67e22; }
+.cw { width: 100%; max-width: 660px; aspect-ratio: 5/3.5; border-radius: 3px; border: 1px solid #ccc; overflow: hidden; }
+canvas { width: 100%; height: 100%; display: block; }
+.steps { display: flex; gap: 3px; margin-top: 5px; width: 100%; max-width: 660px; }
+.sb { flex: 1; padding: 5px 2px; background: #fafafa; border: 1px solid #ddd; border-radius: 3px; color: #777; font-size: 10px; cursor: pointer; line-height: 1.1; text-align: center; transition: all .12s; }
+.sb.a { background: #f0f4ff; border: 2px solid #2a53f7; color: #2a53f7; font-weight: 700; }
+.sb .n { font-size: 12px; font-weight: 700; } .sb .l { font-size: 9px; margin-top: 1px; }
+.info { width: 100%; max-width: 660px; margin-top: 4px; padding: 8px 10px; background: #fafbfc; border-radius: 3px; border: 1px solid #e0e0e0; min-height: 36px; }
+.info .dt { font-size: 10px; font-weight: 700; color: #2a53f7; text-transform: uppercase; letter-spacing: .03em; }
+.info .dd { font-size: 11.5px; line-height: 1.4; margin-top: 2px; color: #555; }
+.info .en { font-size: 11px; color: #666; margin: 6px 0; line-height: 1.5; }
+.jp .gn { font-size: 10px; font-family: monospace; color: #777; margin-bottom: 6px; line-height: 1.6; text-align: center; }
+.gm { display: inline-grid; grid-template-columns: 1fr 1fr; padding: 1px 12px; border-left: 2px solid #333; border-right: 2px solid #333; margin: 2px auto; }
+.gm div { padding: 2px 8px; font-size: 11px; color: #555; font-family: monospace; }
+.jc-w { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+.jm-l { font-size: 10px; color: #888; margin-bottom: 3px; font-family: monospace; text-align: center; }
+.jm { display: inline-grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 1px 10px; border-left: 2.5px solid #333; border-right: 2.5px solid #333; }
+.jc { padding: 3px 6px; text-align: center; }
+.jc .v { font-family: monospace; font-size: 12px; font-weight: 700; }
+.jc .s { font-size: 7px; color: #999; margin-top: 0; font-family: monospace; line-height: 1.1; }
+.ji { font-size: 11px; line-height: 2; font-family: monospace; }
+.ji .lb { color: #888; }
+.sw { width: 100%; max-width: 660px; margin-top: 4px; }
+.st { background: #fafafa; border: 1px solid #ddd; border-radius: 3px; padding: 5px 10px; font-size: 11px; color: #444; cursor: pointer; width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center; }
+.st.o { border-radius: 3px 3px 0 0; }
+.st .ar { font-size: 12px; transition: .2s; } .st.o .ar { transform: rotate(180deg); }
+.sl { padding: 6px 10px; background: #f8f9fb; border: 1px solid #ddd; border-top: none; border-radius: 0 0 3px 3px; display: none; }
+.sl.o { display: block; }
+.sr { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+.sr label { width: 14px; font-weight: 700; font-size: 12px; color: #444; text-align: right; font-style: italic; }
+.sr input[type=range] { flex: 1; accent-color: #2a53f7; height: 3px; }
+.sr .v { width: 32px; font-size: 11px; font-family: monospace; color: #444; text-align: right; }
+.sr .i { font-size: 9px; color: #999; min-width: 70px; }
+.sf { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; align-items: center; }
+.sf button { background: #fff; border: 1px solid #ccc; border-radius: 2px; padding: 2px 8px; font-size: 10px; color: #666; cursor: pointer; }
+.sf .ei { font-size: 10px; font-family: monospace; color: #888; }
+.sf .ee { font-size: 10px; color: #c0392b; }
+</style>
+</head>
+<body>
+
+<h2>Linearisatie rond een evenwicht</h2>
+<div class="sub">
+  <span class="b">dR/dt</span> = b(1−R/K)R − dR − aRN/(h+R) &nbsp;|&nbsp;
+  <span class="o">dN/dt</span> = caRN/(h+R) − δN
+</div>
+
+<div class="cw"><canvas id="cv" width="1316" height="920"></canvas></div>
+<div class="steps" id="steps"><button class="sb a"><div class="n">1</div><div class="l">Faseruimte</div></button><button class="sb"><div class="n">2</div><div class="l">Inzoomen</div></button><button class="sb"><div class="n">3</div><div class="l">Lokaal lineair</div></button><button class="sb"><div class="n">4</div><div class="l">Afgeleiden</div></button><button class="sb"><div class="n">5</div><div class="l">Jacobiaan</div></button></div>
+<div class="info" id="info"><div class="dt">Stap 1: Faseruimte</div><div class="dd">Het fasevlak met de prooi-nullcline (blauw, krom door de Hill-functie) en predator-nullcline (oranje, verticaal).</div></div>
+
+<div class="sw">
+  <button class="st o" id="sliderToggle" onclick="toggleSliders()">
+    <span style="font-weight:600">Parameters</span>
+    <span class="ar">▾</span>
+  </button>
+  <div class="sl o" id="slidersDiv"><div class="sr"><label>b</label><input type="range" min="0.2" max="4" step="0.05" value="3" id="sl_b" oninput="onSlider(&#39;b&#39;,this.value)"><span class="v" id="sv_b">3.00</span><span class="i">geboorte prooi</span></div><div class="sr"><label>K</label><input type="range" min="0.3" max="5" step="0.05" value="1.5" id="sl_K" oninput="onSlider(&#39;K&#39;,this.value)"><span class="v" id="sv_K">1.50</span><span class="i">draagvlak</span></div><div class="sr"><label>d</label><input type="range" min="0" max="1" step="0.01" value="0.44" id="sl_d" oninput="onSlider(&#39;d&#39;,this.value)"><span class="v" id="sv_d">0.44</span><span class="i">sterfte prooi</span></div><div class="sr"><label>a</label><input type="range" min="0.1" max="3" step="0.05" value="1.2" id="sl_a" oninput="onSlider(&#39;a&#39;,this.value)"><span class="v" id="sv_a">1.20</span><span class="i">predatiesnelheid</span></div><div class="sr"><label>h</label><input type="range" min="0.01" max="2" step="0.01" value="0.3" id="sl_h" oninput="onSlider(&#39;h&#39;,this.value)"><span class="v" id="sv_h">0.30</span><span class="i">halfwaarde (Hill)</span></div><div class="sr"><label>c</label><input type="range" min="0.1" max="2" step="0.05" value="0.8" id="sl_c" oninput="onSlider(&#39;c&#39;,this.value)"><span class="v" id="sv_c">0.80</span><span class="i">conversie-eff.</span></div><div class="sr"><label>δ</label><input type="range" min="0.05" max="2" step="0.05" value="0.7" id="sl_delta" oninput="onSlider(&#39;delta&#39;,this.value)"><span class="v" id="sv_delta">0.70</span><span class="i">sterfte predator</span></div><div class="sf"><button onclick="resetParams()">Reset</button><span id="eqInfo" class="ei">R*=0.808, N*=0.872</span></div></div>
+</div>
+
+<script>
+const BLUE="#2a53f7",ORANGE="#e67e22";
+const DEFAULT_P={b:3.0,K:1.5,d:0.44,a:1.2,h:0.3,c:0.8,delta:0.70};
+const SYM={j11:"b−2b·R*/K−d−a·N·h/(h+R*)²",j12:"−a·R*/(h+R*)",j21:"c·a·N*·h/(h+R*)²",j22:"c·a·R*/(h+R*)−δ"};
+const STEPS=[
+  {t:"Faseruimte",z:0,d:"Dit is de fase-ruimte van het Lotka-Volterra model met verzadigbare predator. <br><br> Volg de knoppen hierboven stapsgewijs om te zien hoe er wisdkundig bepaald wordt wat voor type evenwicht er is. <br><br> Het fasevlak met de prooi-nullcline (blauw, krom door de Hill-functie) en predator-nullcline (oranje, verticaal)."},
+  {t:"Inzoomen",z:0,d:"We markeren een klein gebied rond het snijpunt van de nullclines."},
+  {t:"Lokaal lineair",z:1,d:"Ingezoomd is de kromme nullcline nauwelijks te onderscheiden van een rechte lijn (stippellijn). Dichtbij het evenwicht gedraagt elk systeem zich lineair."},
+  {t:"Afgeleiden",z:1,d:"De vier partiële afgeleiden bij (R*, N*) geven aan hoe elke veranderingssnelheid reageert op verstoringen. R* en N* zijn de dichtheden waarbij dR/dt = 0 én dN/dt = 0."},
+  {t:"Jacobiaan",z:1,d:"De Jacobi-matrix bij het evenwicht. Trace en determinant classificeren het type. Pas parameters aan!"},
+];
+const SLIDERS=[
+  {k:"b",l:"b",mn:0.2,mx:4.0,s:0.05,d:"geboorte prooi"},
+  {k:"K",l:"K",mn:0.3,mx:5.0,s:0.05,d:"draagvlak"},
+  {k:"d",l:"d",mn:0.0,mx:1.0,s:0.01,d:"sterfte prooi"},
+  {k:"a",l:"a",mn:0.1,mx:3.0,s:0.05,d:"predatiesnelheid"},
+  {k:"h",l:"h",mn:0.01,mx:2.0,s:0.01,d:"halfwaarde (Hill)"},
+  {k:"c",l:"c",mn:0.1,mx:2.0,s:0.05,d:"conversie-eff."},
+  {k:"delta",l:"δ",mn:0.05,mx:2.0,s:0.05,d:"sterfte predator"},
+];
+
+let par={...DEFAULT_P},step=0,animZoom=0,rafId=null;
+
+function f_R(R,N,p){return p.b*(1-R/p.K)*R-p.d*R-p.a*R*N/(p.h+R);}
+function f_N(R,N,p){return p.c*p.a*R*N/(p.h+R)-p.delta*N;}
+function preyNC(R,p){return((p.h+R)/p.a)*(p.b*(1-R/p.K)-p.d);}
+function predNC_R(p){const d=p.c*p.a-p.delta;return d<=0?-1:p.delta*p.h/d;}
+function findEq(p){const R=predNC_R(p);if(R<=0)return null;const N=preyNC(R,p);return N<=0?null:{R,N};}
+function jacobAt(R,N,p){const h=p.h+R;return{j11:p.b-2*p.b*R/p.K-p.d-p.a*N*p.h/(h*h),j12:-p.a*R/h,j21:p.c*p.a*N*p.h/(h*h),j22:p.c*p.a*R/h-p.delta};}
+function classify(t,d){if(d<0)return{l:"Zadelpunt",c:"#c0392b"};if(Math.abs(t)<.003&&d>0)return{l:"Centrum",c:"#8e44ad"};const disc=t*t-4*d;if(t<0)return disc<0?{l:"Stabiele spiraal",c:"#27ae60"}:{l:"Stabiel punt",c:"#27ae60"};return disc<0?{l:"Instabiele spiraal",c:"#c0392b"}:{l:"Instabiel punt",c:"#c0392b"};}
+function bestTick(r){const raw=r/5,m=Math.pow(10,Math.floor(Math.log10(raw))),n=raw/m;return m*(n<1.5?1:n<3.5?2:n<7.5?5:10);}
+
+function draw(ctx,W,H,zoom,cs,p){
+  const dpr=window.devicePixelRatio||1;
+  ctx.save();ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,W,H);ctx.fillStyle="#fff";ctx.fillRect(0,0,W,H);
+  const eq=findEq(p),hasEq=!!eq;
+  const full={rMin:-0.08,rMax:1.8,nMin:-0.08,nMax:1.4},bh=0.025;
+  const zr=hasEq?{rMin:eq.R-bh,rMax:eq.R+bh,nMin:eq.N-bh,nMax:eq.N+bh}:full;
+  const lr=(a,b,t)=>a+t*(b-a),z=zoom;
+  const vw={rMin:lr(full.rMin,zr.rMin,z),rMax:lr(full.rMax,zr.rMax,z),nMin:lr(full.nMin,zr.nMin,z),nMax:lr(full.nMax,zr.nMax,z)};
+  const pad={l:50,r:14,t:14,b:38},pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+  const toX=r=>pad.l+(r-vw.rMin)/(vw.rMax-vw.rMin)*pw;
+  const toY=n=>pad.t+ph-(n-vw.nMin)/(vw.nMax-vw.nMin)*ph;
+
+  // grid
+  ctx.strokeStyle="#eaeaea";ctx.lineWidth=0.8;
+  const rt=bestTick(vw.rMax-vw.rMin),nt=bestTick(vw.nMax-vw.nMin);
+  ctx.beginPath();
+  for(let r=Math.ceil(vw.rMin/rt)*rt;r<=vw.rMax;r+=rt){ctx.moveTo(toX(r),pad.t);ctx.lineTo(toX(r),pad.t+ph);}
+  for(let n=Math.ceil(vw.nMin/nt)*nt;n<=vw.nMax;n+=nt){ctx.moveTo(pad.l,toY(n));ctx.lineTo(pad.l+pw,toY(n));}
+  ctx.stroke();
+
+  // axes
+  ctx.strokeStyle="#999";ctx.lineWidth=1.2;ctx.beginPath();
+  if(vw.rMin<=0&&vw.rMax>=0){ctx.moveTo(toX(0),pad.t);ctx.lineTo(toX(0),pad.t+ph);}
+  if(vw.nMin<=0&&vw.nMax>=0){ctx.moveTo(pad.l,toY(0));ctx.lineTo(pad.l+pw,toY(0));}
+  ctx.stroke();
+
+  // tick labels
+  const dec=s=>s<0.05?3:s<0.15?2:s<1.5?1:0;
+  ctx.fillStyle="#666";ctx.font="10px sans-serif";
+  ctx.textAlign="center";
+  for(let r=Math.ceil(vw.rMin/rt)*rt;r<=vw.rMax;r+=rt){if(Math.abs(r)<1e-9)continue;ctx.fillText(r.toFixed(dec(rt)),toX(r),pad.t+ph+14);}
+  ctx.textAlign="right";
+  for(let n=Math.ceil(vw.nMin/nt)*nt;n<=vw.nMax;n+=nt){if(Math.abs(n)<1e-9)continue;ctx.fillText(n.toFixed(dec(nt)),pad.l-5,toY(n)+3);}
+
+  // axis titles
+  ctx.fillStyle="#444";ctx.font="italic 11px sans-serif";ctx.textAlign="center";
+  ctx.fillText("R (prooi)",pad.l+pw/2,H-3);
+  ctx.save();ctx.translate(11,pad.t+ph/2);ctx.rotate(-Math.PI/2);
+  ctx.fillText("N (predator)",0,0);ctx.restore();
+
+  // vector field
+  const na=z<0.3?15:z<0.7?13:11;
+  const dr=(vw.rMax-vw.rMin)/(na+1),dn=(vw.nMax-vw.nMin)/(na+1);
+  for(let i=1;i<=na;i++)for(let j=1;j<=na;j++){
+    const r=vw.rMin+i*dr,n=vw.nMin+j*dn;
+    if(r<0||n<0)continue;
+    const dr_=f_R(r,n,p),dn_=f_N(r,n,p);
+    const mag=Math.sqrt(dr_*dr_+dn_*dn_);if(mag<1e-12)continue;
+    const sc=Math.min(0.38*dr,0.08*Math.min(dr,dn)*(1+Math.log(1+mag)));
+    const ur=dr_/mag*sc,un=dn_/mag*sc;
+    const x0=toX(r),y0=toY(n),x1=toX(r+ur),y1=toY(n+un);
+    ctx.strokeStyle="rgba(120,130,140,0.4)";
+    ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();
+    const ang=Math.atan2(y1-y0,x1-x0);
+    ctx.beginPath();
+    ctx.moveTo(x1,y1);ctx.lineTo(x1-4*Math.cos(ang-0.4),y1-4*Math.sin(ang-0.4));
+    ctx.moveTo(x1,y1);ctx.lineTo(x1-4*Math.cos(ang+0.4),y1-4*Math.sin(ang+0.4));
+    ctx.stroke();
+  }
+
+  // prey nullcline
+  ctx.strokeStyle=BLUE;ctx.lineWidth=2.5;ctx.setLineDash([]);
+  ctx.beginPath();let st=false;
+  for(let r=Math.max(0.001,vw.rMin);r<=vw.rMax+0.01;r+=0.002){
+    const n=preyNC(r,p);
+    if(n<vw.nMin-0.3||n>vw.nMax+0.3){st=false;continue;}
+    if(!st){ctx.moveTo(toX(r),toY(n));st=true;}else ctx.lineTo(toX(r),toY(n));
+  }
+  ctx.stroke();
+
+  // predator nullcline
+  const rPred=predNC_R(p);
+  if(rPred>0&&rPred>=vw.rMin-0.2&&rPred<=vw.rMax+0.2){
+    ctx.strokeStyle=ORANGE;ctx.lineWidth=2.5;ctx.beginPath();
+    ctx.moveTo(toX(rPred),toY(Math.max(0,vw.nMin)));
+    ctx.lineTo(toX(rPred),toY(vw.nMax));ctx.stroke();
+  }
+
+  // nullcline labels
+  if(z<0.5){
+    ctx.font="bold 11px sans-serif";ctx.textAlign="left";
+    ctx.fillStyle=BLUE;
+    const lR=Math.min(p.K*0.6,vw.rMax*0.55),lN=preyNC(lR,p);
+    if(lN>vw.nMin&&lN<vw.nMax)ctx.fillText("dR/dt = 0",toX(lR)+5,toY(lN)-7);
+    ctx.fillStyle=ORANGE;
+    if(rPred>vw.rMin&&rPred<vw.rMax)ctx.fillText("dN/dt = 0",toX(rPred)+5,toY(vw.nMax*0.8));
+  }
+
+  // linearised tangent (step>=2)
+  if(cs>=2&&hasEq){
+    const eps=0.0001,slope=(preyNC(eq.R+eps,p)-preyNC(eq.R-eps,p))/(2*eps);
+    const hs=(vw.rMax-vw.rMin)*0.48;
+    ctx.setLineDash([5,4]);ctx.strokeStyle=BLUE;
+    ctx.globalAlpha=0.4+0.5*z;ctx.lineWidth=1.8;
+    ctx.beginPath();ctx.moveTo(toX(eq.R-hs),toY(eq.N+slope*(-hs)));
+    ctx.lineTo(toX(eq.R+hs),toY(eq.N+slope*hs));ctx.stroke();
+    ctx.globalAlpha=1;ctx.setLineDash([]);
+    if(z>0.7){
+      const lbl="lineaire benadering";ctx.font="italic 11px sans-serif";
+      const tw=ctx.measureText(lbl).width,lx=pad.l+pw-tw-6,ly=pad.t+14;
+      ctx.fillStyle="rgba(255,255,255,0.85)";ctx.fillRect(lx-3,ly-11,tw+6,14);
+      ctx.fillStyle="#000";ctx.globalAlpha=0.8;ctx.textAlign="left";
+      ctx.fillText(lbl,lx,ly);ctx.globalAlpha=1;
+    }
+  }
+
+  // zoom box
+  if(cs>=1&&z<0.92&&hasEq){
+    ctx.strokeStyle="#000";ctx.lineWidth=2;ctx.setLineDash([6,4]);
+    const sb=0.07;
+    ctx.strokeRect(toX(eq.R-sb),toY(eq.N+sb),toX(eq.R+sb)-toX(eq.R-sb),toY(eq.N-sb)-toY(eq.N+sb));
+    ctx.setLineDash([]);
+  }
+
+  // derivative arrows (step>=3)
+  if(cs>=3&&hasEq&&z>0.2){
+    const al=(vw.rMax-vw.rMin)*0.30;
+    drawArr(ctx,toX,toY,eq.R,eq.N,al,true,1,BLUE,1,"∂(dR/dt)/∂R","above","right");
+    drawArr(ctx,toX,toY,eq.R,eq.N,al,true,1,BLUE,1,"∂(dR/dt)/∂N","below","right");
+    drawArr(ctx,toX,toY,eq.R,eq.N,al,false,1,ORANGE,1,"∂(dN/dt)/∂R","left");
+    drawArr(ctx,toX,toY,eq.R,eq.N,al,false,1,ORANGE,1,"∂(dN/dt)/∂N","right");
+  }
+
+  // equilibrium label
+  if(hasEq&&z<0.35){
+    ctx.fillStyle="#555";ctx.font="bold 10px sans-serif";ctx.textAlign="left";
+    ctx.fillText(`(R*, N*) = (${eq.R.toFixed(2)}, ${eq.N.toFixed(2)})`,toX(eq.R)+5,toY(eq.N)-5);
+  }
+  if(!hasEq){
+    ctx.fillStyle="#999";ctx.font="italic 12px sans-serif";ctx.textAlign="center";
+    ctx.fillText("Geen geldig coëxistentie-evenwicht",pad.l+pw/2,pad.t+ph/2);
+  }
+  ctx.restore();
+}
+
+function drawArr(ctx,toX,toY,r,n,len,horiz,val,col,op,label,pos,labelSide){
+  const x0=toX(r),y0=toY(n);
+  ctx.globalAlpha=op;
+  const dir=val>=0?1:-1;
+  const x1=horiz?toX(r+dir*len):x0;
+  const y1=horiz?y0:toY(n+dir*len);
+  ctx.strokeStyle=col;ctx.lineWidth=3.5;
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();
+  const ang=Math.atan2(y1-y0,x1-x0);
+  ctx.beginPath();
+  ctx.moveTo(x1,y1);ctx.lineTo(x1-9*Math.cos(ang-0.35),y1-9*Math.sin(ang-0.35));
+  ctx.moveTo(x1,y1);ctx.lineTo(x1-9*Math.cos(ang+0.35),y1-9*Math.sin(ang+0.35));
+  ctx.stroke();
+  ctx.fillStyle=col;ctx.font="bold 9px monospace";
+  if(horiz){
+    const side=labelSide||(dir>0?"right":"left");
+    const lx=side==="right"?Math.max(x0,x1)+4:Math.min(x0,x1)-4;
+    ctx.textAlign=side==="right"?"left":"right";
+    ctx.fillText(label,lx,pos==="above"?y0-7:y0+13);
+  } else {
+    ctx.textAlign=pos==="left"?"right":"left";
+    ctx.fillText(label,pos==="left"?x1-5:x1+5,y1+(dir>0?-3:11));
+  }
+  ctx.globalAlpha=1;
+}
+
+// --- UI ---
+function buildStepButtons(){
+  const d=document.getElementById("steps");d.innerHTML="";
+  STEPS.forEach((s,i)=>{
+    const b=document.createElement("button");
+    b.className="sb"+(i===step?" a":"");
+    b.innerHTML=`<div class="n">${i+1}</div><div class="l">${s.t}</div>`;
+    b.onclick=()=>{step=i;updateUI();};d.appendChild(b);
+  });
+}
+function updateInfo(){
+  const el=document.getElementById("info"),eq=findEq(par),s=STEPS[step];
+  let html=`<div class="dt">Stap ${step+1}: ${s.t}</div><div class="dd">${s.d}</div>`;
+  if(step>=4&&eq){
+    const J=jacobAt(eq.R,eq.N,par),tr=J.j11+J.j22,det=J.j11*J.j22-J.j12*J.j21,cls=classify(tr,det);
+    html+=`
+    <div class="en">
+      Het evenwicht (<span style="color:${BLUE}">R*</span>, <span style="color:${ORANGE}">N*</span>) is het punt waar dR/dt = 0 én dN/dt = 0.
+      Hier: <span style="font-family:monospace;color:${BLUE}">R*=${eq.R.toFixed(3)}</span>,
+      <span style="font-family:monospace;color:${ORANGE}">N*=${eq.N.toFixed(3)}</span>.
+    </div>
+    <div class="gn">
+      Algemene Jacobiaan voor variabelen X en Y:
+      <div class="gm">
+        <div>∂(dX/dt)/∂X</div><div>∂(dX/dt)/∂Y</div>
+        <div>∂(dY/dt)/∂X</div><div>∂(dY/dt)/∂Y</div>
+      </div>
+    </div>
+    <div class="jc-w">
+      <div>
+        <div class="jm-l">Ingevuld bij (R*, N*):</div>
+        <div class="jm">
+          ${jc(BLUE,J.j11,SYM.j11)}${jc(BLUE,J.j12,SYM.j12)}
+          ${jc(ORANGE,J.j21,SYM.j21)}${jc(ORANGE,J.j22,SYM.j22)}
+        </div>
+      </div>
+      <div class="ji">
+        <div><span class="lb">trace = j₁₁+j₂₂ = </span><span style="color:${tr<0?"#27ae60":"#c0392b"};font-weight:700">${tr.toFixed(3)}</span></div>
+        <div><span class="lb">det = j₁₁·j₂₂−j₁₂·j₂₁ = </span><span style="color:${det>0?"#27ae60":"#c0392b"};font-weight:700">${det.toFixed(3)}</span></div>
+        <div style="color:${cls.c};font-weight:700;font-size:13px;margin-top:1px">→ ${cls.l}</div>
+      </div>
+    </div>`;
+  }
+  el.innerHTML=html;
+}
+function jc(c,v,s){return `<div class="jc"><div class="v" style="color:${c}">${v.toFixed(3)}</div><div class="s">${s}</div></div>`;}
+
+function buildSliders(){
+  const d=document.getElementById("slidersDiv");let h="";
+  SLIDERS.forEach(s=>{
+    h+=`<div class="sr"><label>${s.l}</label><input type="range" min="${s.mn}" max="${s.mx}" step="${s.s}" value="${par[s.k]}" id="sl_${s.k}" oninput="onSlider('${s.k}',this.value)"><span class="v" id="sv_${s.k}">${par[s.k].toFixed(2)}</span><span class="i">${s.d}</span></div>`;
+  });
+  h+=`<div class="sf"><button onclick="resetParams()">Reset</button><span id="eqInfo"></span></div>`;
+  d.innerHTML=h;updateEqInfo();
+}
+function onSlider(k,v){par[k]=parseFloat(v);document.getElementById("sv_"+k).textContent=par[k].toFixed(2);updateEqInfo();updateInfo();render();}
+function resetParams(){par={...DEFAULT_P};SLIDERS.forEach(s=>{document.getElementById("sl_"+s.k).value=par[s.k];document.getElementById("sv_"+s.k).textContent=par[s.k].toFixed(2);});updateEqInfo();updateInfo();render();}
+function updateEqInfo(){const eq=findEq(par),el=document.getElementById("eqInfo");if(eq){el.className="ei";el.textContent=`R*=${eq.R.toFixed(3)}, N*=${eq.N.toFixed(3)}`;}else{el.className="ee";el.textContent="Geen geldig evenwicht";}}
+function toggleSliders(){document.getElementById("sliderToggle").classList.toggle("o");document.getElementById("slidersDiv").classList.toggle("o");}
+function updateUI(){buildStepButtons();updateInfo();}
+
+const canvas=document.getElementById("cv");
+function render(){const dpr=window.devicePixelRatio||1,rc=canvas.getBoundingClientRect();canvas.width=rc.width*dpr;canvas.height=rc.height*dpr;draw(canvas.getContext("2d"),rc.width,rc.height,animZoom,step,par);}
+function tick(){const t=STEPS[step].z,d=t-animZoom;if(Math.abs(d)>0.002)animZoom+=d*0.055;else animZoom=t;render();rafId=requestAnimationFrame(tick);}
+
+buildStepButtons();updateInfo();buildSliders();rafId=requestAnimationFrame(tick);
+window.addEventListener("resize",render);
+</script>
+
+
+</body></html>
