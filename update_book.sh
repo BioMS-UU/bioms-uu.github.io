@@ -40,7 +40,7 @@ quarto render --to live-html
 
 # --- mirror into docs/, don't delete-and-recreate every file
 # --checksum compares content, not timestamps, so unchanged pages stay unchanged
-rsync -a --delete --checksum --exclude='.gitignore' --exclude='.nojekyll' _book/ docs/
+rsync -a --delete --checksum --exclude='.gitignore' --exclude='.nojekyll' --exclude='/docs/' _book/ docs/
 touch docs/.nojekyll
 
 # --- pin the one line Quarto randomises on every single render
