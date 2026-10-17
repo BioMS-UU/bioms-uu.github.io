@@ -241,8 +241,19 @@
     if (status && ready) status.textContent = ready + " (" + count + " hoofdstukken geselecteerd)";
   }
 
+  // cursusjaar: "auto" in _quarto.yml -> the current academic year, which
+  // starts on 1 September (October 2026 and January 2027 are both 2026-2027).
+  function fillCourseYear() {
+    var el = document.querySelector(".cover-year");
+    if (!el || el.textContent.trim() !== "auto") return;
+    var now = new Date();
+    var start = now.getMonth() >= 8 ? now.getFullYear() : now.getFullYear() - 1;
+    el.textContent = start + "-" + (start + 1);
+  }
+
   function buildPrintBook(book) {
     document.body.classList.add("print-page");
+    fillCourseYear();
     buildOptions(book);
     var status = document.getElementById("print-status");
     var buttons = document.querySelectorAll(".print-choices button");
