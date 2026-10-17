@@ -1,0 +1,279 @@
+/* ===========================================================================
+   PRINT
+   Everything about getting the book onto paper lives here, for every page:
+   a single chapter printed with Cmd/Ctrl+P, and the whole book on the
+   "Print boek" page (print.qmd), which can lay out in one or two columns.
+   Ported from the Quarto 4 UU template (quarto4uu, uu.scss).
+
+   Quarto's own CSS already hides the sidebar, the right-hand TOC and the
+   prev/next links when printing. Everything below is about what is left.
+
+   Online-only material comes in pairs in the chapters:
+       ::: {.print-only}   screenshot / text for paper   :::
+       ::: {.screen-only}  the live iframe / widget       :::
+   An iframe WITHOUT such a pair gets a generated .print-fallback box with
+   its address (print.js), so nothing silently disappears from the paper.
+   =========================================================================== */
+
+/* On screen: the live version. (Here rather than in the two themes, so it
+   holds in light and dark mode alike.) */
+.print-only  { display: none; }
+.screen-only { display: block; }
+
+/* On screen the cover and the generated stand-ins do not exist. */
+.cover-page, .cover-verso, .print-fallback, .print-tab-title { display: none; }
+
+/* The print page: buttons, preview image, progress line. */
+.print-choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 1.4rem 0 0.6rem;
+}
+.print-choices button {
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid #e8601d;
+  border-radius: 4px;
+  background: transparent;
+  color: #e8601d;
+  cursor: pointer;
+}
+.print-choices button:hover:not(:disabled) { background: #e8601d22; }
+.print-choices button:disabled { opacity: 0.45; cursor: progress; }
+#print-status { text-align: center; font-size: 0.9rem; opacity: 0.75; margin-bottom: 1.5rem; }
+.print-preview { max-width: 520px; margin: 0 auto 1.8rem; text-align: center; }
+.print-preview img { width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; }
+
+/* On screen the assembled book on the print page is a preview of the paper
+   version: it shows the print stand-ins, not the (uninitialised) widgets. */
+#print-book .screen-only { display: none !important; }
+#print-book .print-tab-title { display: block; font-weight: 600; }
+#print-book .print-only, #print-book .print-fallback {
+  display: block;
+  border: 1px dashed #999;
+  padding: 0.8em 1em;
+  margin-bottom: 1em;
+  font-size: 0.85em;
+}
+#print-book .print-chapter { border-top: 3px solid #e8601d; margin-top: 3rem; padding-top: 1rem; }
+.print-part {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #e8601d;
+  margin-bottom: 0.4rem;
+}
+
+@media print {
+  /* -- The sheet ----------------------------------------------------------
+     Mirrored margins, so a bound or stapled copy keeps a wider inner edge.
+     :right is odd pages (bound on their left), :left is even pages. */
+  @page { margin: 18mm 20mm 22mm 20mm; }
+  @page :right { margin-left: 24mm; margin-right: 18mm; }
+  @page :left  { margin-left: 18mm; margin-right: 24mm; }
+
+  body { line-height: 1.35; font-size: 0.9em; }
+
+  /* -- Screen furniture Quarto leaves behind ------------------------------ */
+  #quarto-search, .sidebar-search, #quarto-header,
+  #quarto-search-results, #quarto-search-options, .aa-DetachedOverlay,
+  #quarto-back-to-top, .quarto-btn-toggle, .quarto-color-scheme-toggle,
+  .code-copy-button, .footer, .nav-footer, #print-status, .print-choices {
+    display: none !important;
+  }
+
+  /* -- Online-only material ---------------------------------------------- */
+  .screen-only { display: none !important; }
+  .print-only, .print-fallback {
+    display: block !important;
+    border: 1px dashed #999;
+    padding: 0.8em 1em;
+    margin-bottom: 1em;
+    font-size: 0.85em;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  /* An iframe prints as an empty rectangle, a video as a black one. */
+  iframe, video, .quarto-video, .html-widget, .datatables { display: none !important; }
+  .print-fallback-url { word-break: break-all; font-family: monospace; font-size: 0.9em; }
+
+  /* Folded code ("Code ▸") is hidden on screen until clicked; on paper the
+     fold would be a stray word, so it goes altogether. */
+  details.code-fold { display: none !important; }
+
+  /* A collapsed callout ("Antwoord voor ...") is useless on paper with only
+     its title showing: print it open, without the toggle arrow. */
+  .callout .callout-collapse.collapse { display: block !important; height: auto !important; }
+  .callout .callout-toggle { display: none !important; }
+
+  /* A tabset prints every tab, each under its own tab name. */
+  .panel-tabset .nav-tabs { display: none !important; }
+  .panel-tabset .tab-content > .tab-pane {
+    display: block !important;
+    opacity: 1 !important;
+    margin-bottom: 1em;
+  }
+  .print-tab-title {
+    display: block !important;
+    font-weight: 600;
+    margin: 0.6em 0 0.3em;
+  }
+
+  /* The webR/pyodide loading chrome, if it is still on screen. */
+  #exercise-loading-indicator, .exercise-loading-indicator,
+  #exercise-loading-status, .exercise-loading-status,
+  .spinner-grow, .spinner-border { display: none !important; }
+
+  /* Exercise boxes: drop the icon, use the full width. */
+  .Rexr, .Rexw, .Rexe, .Rex, .exercise, .pepexr, .mixedexr {
+    background-image: none !important;
+  }
+
+  /* -- Cover --------------------------------------------------------------- */
+  .cover-page {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 86vh;
+    break-after: page;
+    page-break-after: always;
+  }
+  /* The white back of the cover, so the book opens on page 3. */
+  .cover-verso {
+    display: block !important;
+    height: 1px;
+    break-after: page;
+    page-break-after: always;
+  }
+  .cover-logo img, img.cover-logo { width: 130px !important; margin-bottom: 2.5rem; }
+  .cover-title {
+    display: block;
+    font-size: 2.4em;
+    font-weight: 700;
+    line-height: 1.15;
+    padding-bottom: 0.4em;
+    border-bottom: 5px solid #e8601d;
+  }
+  .cover-subtitle { display: block; font-size: 1.15em; margin-top: 1.2em; color: #444; }
+  .cover-author   { display: block; margin-top: 3.5rem; font-size: 0.95em; }
+  .cover-date     { display: block; margin-top: 0.6rem; font-size: 0.85em; color: #555; }
+
+  /* -- Page flow ----------------------------------------------------------
+     Quarto lays pages out with CSS grid, and Chrome will not fragment inside
+     a grid container, so every page break below would be silently ignored.
+     On paper the margin columns are hidden anyway: back to block flow. */
+  body .page-columns, .page-columns, .quarto-container {
+    display: block !important;
+    grid-template-columns: none !important;
+  }
+
+  /* On the print page every chapter starts on a fresh sheet. */
+  .print-chapter { break-before: page; page-break-before: always; }
+  #print-book > .print-chapter:first-child { break-before: auto; page-break-before: avoid; }
+  /* The print page's own title and intro are screen furniture. */
+  .print-page #title-block-header, .print-page .print-intro { display: none !important; }
+  .print-part { font-size: 0.8em; }
+
+  h1, h2, h3, h4, h5, h6 {
+    text-align: left !important;
+    hyphens: auto;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  figure, table, pre, .callout, blockquote, .quarto-figure {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  figure img, .quarto-figure img { max-width: 100% !important; height: auto !important; }
+  figcaption, .figure-caption, .caption {
+    font-size: 0.85em;
+    line-height: 1.25;
+    color: #555;
+    text-align: left;
+  }
+  table { font-size: 0.85em; }
+
+  .callout-title, .callout-title-container { font-size: 0.9em !important; text-align: left !important; }
+  /* Quarto draws callout icons as background images, which browsers drop
+     unless "Background graphics" is ticked. Print just the icons regardless. */
+  .callout .callout-icon-container, .callout .callout-icon, .callout .callout-icon::before {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Side-by-side panels ({layout-ncol}). Quarto only lays these out in a row
+     above 992px wide; an A4 page is ~660px, so restate the row here. */
+  .quarto-layout-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .quarto-layout-cell { position: relative; margin-right: 20px; }
+  .quarto-layout-cell:last-child { margin-right: 0; }
+  .quarto-layout-cell img { max-width: 100%; }
+  .quarto-layout-cell figure { display: block; margin: 0.2em; }
+
+  /* -- Two-column variant (button on the print page) ----------------------
+     Columnise each chapter, not main: inside one big column flow Chrome
+     turns the chapter page breaks into mere column breaks. Pressing
+     Cmd/Ctrl+P without a button gives the one-column layout. */
+  .print-2col .print-chapter {
+    column-count: 2;
+    column-gap: 1.5em;
+    font-size: 0.92em;
+    line-height: 1.4;
+  }
+  .print-2col .print-chapter > .print-part,
+  .print-2col .print-chapter .print-chapter-header { column-span: all; }
+  /* No room for two panels inside half a page: stack them. */
+  .print-2col .quarto-layout-row { display: block !important; }
+  .print-2col .quarto-layout-cell { margin-right: 0; width: 100% !important; }
+  .print-2col pre, .print-2col table { font-size: 0.85em; }
+  .print-2col pre code { white-space: pre-wrap; word-break: break-word; }
+  .print-2col .print-only img { max-width: 100% !important; }
+
+  /* -- Links --------------------------------------------------------------
+     A page cannot be clicked: no colour, and only external links in running
+     prose spell out their address. Links within the book never do. */
+  a { color: inherit !important; text-decoration: none; }
+  p a, li a, td a { text-decoration: underline; text-underline-offset: 2px; }
+  p a[href^="http"]::after, li a[href^="http"]::after, td a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.75em;
+    color: #555;
+    word-break: break-all;
+  }
+  a:not([href^="http"])::after, a.lightbox::after, a[href^="#"]::after, a[data-internal]::after,
+  h1 a::after, h2 a::after, h3 a::after, h4 a::after, h5 a::after,
+  .cover-page a::after, #TOC a::after, nav a::after,
+  .footnote-ref::after, a.quarto-xref::after, figcaption a::after {
+    content: none !important;
+  }
+
+  /* -- Footnotes ----------------------------------------------------------
+     Give the end-of-chapter notes a heading, named after their chapter
+     (print.js), since on paper they can land pages away from their text. */
+  .footnotes-end-of-document::before {
+    content: "Voetnoten";
+    display: block;
+    font-size: 1.2em;
+    font-weight: 700;
+    margin-top: 1.6rem;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.2em;
+    border-bottom: 2px solid #e8601d;
+  }
+  .footnotes-end-of-document[data-for]::before { content: "Voetnoten — " attr(data-for); }
+  .footnotes-end-of-document > hr { display: none; }
+  .footnotes-end-of-document > ol { margin-top: 0; padding-left: 2.4em; }
+  .footnote-back { display: none !important; }
+
+  /* Drafting markers never reach paper. */
+  #todo, .todo-box { display: none !important; }
+}
