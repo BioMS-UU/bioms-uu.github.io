@@ -393,7 +393,8 @@ Aan het einde van deze `for`-loop kunnen we kijken wat de waarde van p is door i
 
 Zoals we eerder hadden besproken, staat de `[1]` voor het feit dat dit de eerste en enige waarde is die in de variable `p` is opgeslagen. We hebben nu dus alleen de **laatste** waarde bewaard. Wellicht willen we echter graag bijhouden hoeveel paracetamol er in elke stap aanwezig was, zodat we dat na onze loop kunnen plotten. Om dit te doen, kunnen we de `i` als index gebruiken om een vector te vullen:
 
-```{r}
+```{webr}
+#| autorun: true
 p <- 400 # hoeveelheid paracetamol
 d <- 0.7 # afname (d van decay)
 # Herhaal iets 10 keer, waarbij 'i' steeds met 1 toeneemt
@@ -403,10 +404,22 @@ for(i in 1:10){
 plot(p, type='o')
 ```
 
+::: {.print-only .print-plot}
+```{r}
+#| echo: false
+p <- 400 # hoeveelheid paracetamol
+d <- 0.7 # afname (d van decay)
+# Herhaal iets 10 keer, waarbij 'i' steeds met 1 toeneemt
+for(i in 1:10){
+  p[i+1] <- p[i]*d
+}
+plot(p, type='o')
+```
+:::
+
 Omdat dit voorbeeld om simpele exponentiele afname gaat, hadden we de bovenstaande berekening ook "in één keer" kunnen uitrekenen door $p \cdot d^{10}$ uit te rekenen. Laten we dat even controleren:
 
-```{r}
-#| eval: false
+```{webr}
 p <- 400 # hoeveelheid paracetamol
 d <- 0.7 # afname (d van decay)
 p*d^10 # 11.299 mg, dat klopt dus!
@@ -414,9 +427,8 @@ p*d^10 # 11.299 mg, dat klopt dus!
 
 Dit antwoord komt inderdaad overeen met onze berekening met de `for`-loop. Hoewel deze loop dus misschien wat onnodig lijkt, hebben we niet altijd zo'n simpele formule beschikbaar. Bovendien willen we wellicht iets veel specifiekers simuleren, bijvoorbeeld dat de persoon gedurende een periode van 100 uur elke 10 uur opnieuw paracetamol inneemt:
 
-```{r}
-#| eval: true
-
+```{webr}
+#| autorun: true
 p <- 400 # hoeveelheid paracetamol
 d <- 0.7 # afname (d van decay)
 
@@ -429,11 +441,26 @@ for(i in 1:100){
 plot(p, type='o')
 ```
 
+::: {.print-only .print-plot}
+```{r}
+#| echo: false
+p <- 400 # hoeveelheid paracetamol
+d <- 0.7 # afname (d van decay)
+
+for(i in 1:100){
+  if(i%%10==0){ # is i precies deelbaar door 10?
+    p[i] <- p[i] + 400
+  } 
+  p[i+1] <- p[i]*d
+}
+plot(p, type='o')
+```
+:::
+
 Of dat de persoon met 10% kans elk uur een paracetamol inneemt:
 
-```{r}
-#| eval: true
-
+```{webr}
+#| autorun: true
 p <- 400 # hoeveelheid paracetamol
 d <- 0.7 # afname (d van decay)
 
@@ -446,13 +473,28 @@ for(i in 1:100){
 plot(p, type='o')
 ```
 
+::: {.print-only .print-plot}
+```{r}
+#| echo: false
+p <- 400 # hoeveelheid paracetamol
+d <- 0.7 # afname (d van decay)
+
+for(i in 1:100){
+  if(runif(1)<0.1){ # is willekeurig getal (tussen 0 en 1) kleiner dan 0.1?
+    p[i] <- p[i] + 400
+  } 
+  p[i+1] <- p[i]*d
+}
+plot(p, type='o')
+```
+:::
+
 ## Grafieken plotten met R
 
 Om de bovenstaande plot van de paracetamol afname iets vollediger en mooier te maken, kunnen we meer argumenten aan de plotfunctie toevoegen:
 
-```{r}
-#| eval: true
-
+```{webr}
+#| autorun: true
 p <- 400 # hoeveelheid paracetamol
 d <- 0.7 # afname (d van decay)
 
@@ -465,6 +507,23 @@ for(i in 1:100){
 plot(p, type='l', lwd=2, col="purple", xlab="Tijd (uren)", ylab="Paracetamol in bloed")
 legend(70, max(p), legend=c("Paracetamol"), col=c("purple"),lty=1,lwd=2)
 ```
+
+::: {.print-only .print-plot}
+```{r}
+#| echo: false
+p <- 400 # hoeveelheid paracetamol
+d <- 0.7 # afname (d van decay)
+
+for(i in 1:100){
+  if(runif(1)<0.1){ # is willekeurig getal (tussen 0 en 1) kleiner dan 0.1?
+    p[i] <- p[i] + 400
+  } 
+  p[i+1] <- p[i]*d
+}
+plot(p, type='l', lwd=2, col="purple", xlab="Tijd (uren)", ylab="Paracetamol in bloed")
+legend(70, max(p), legend=c("Paracetamol"), col=c("purple"),lty=1,lwd=2)
+```
+:::
 
 Er zijn binnen R nog veel meer manieren om data te plotten, zoals bijvoorbeeld de `boxplot` die je bij het onderdeel statistiek zeker nog tegen zal komen. Daarnaast zijn er in R veel packages beschikbaar die kunnen helpen bij het maken van mooie grafieken, zoals [ggplot](https://ggplot2.tidyverse.org/), maar daar gaan we in deze cursus niet dieper op in.
 
