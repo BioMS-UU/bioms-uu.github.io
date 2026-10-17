@@ -11,11 +11,35 @@
 //   - every chapter in the sidebar is fetched as rendered HTML and appended in
 //     sidebar order, so the page can never fall behind the chapters and needs
 //     no list to maintain. Add a chapter to _quarto.yml and it is in here.
-//   - SKIP below lists pages that should not go on paper.
+//   - the reader picks which sections go on paper (GROUPS below); every
+//     chapter is loaded once, and the tick boxes only show or hide them.
+//   - NEVER lists pages that are not offered for paper at all.
 (function () {
   "use strict";
 
-  var SKIP = ["print.html", "slides.html"];
+  var NEVER = ["print.html", "slides.html", "spiekbriefjes.html"];
+
+  // The tick boxes on the print page, in this order. A chapter belongs to the
+  // first group whose `files` (file name, regex) or `parts` (sidebar part
+  // name) matches it. A chapter that matches no group is always printed
+  // (e.g. the dankwoord). `on` is the default.
+  var GROUPS = [
+    { key: "info",       label: "Cursusinformatie",                parts: ["Cursusinformatie"],     on: true },
+    { key: "modellen",   label: "Biologische modellen",            parts: ["Biologische modellen"], on: true },
+    { key: "statistiek", label: "Statistiek",                      parts: ["Statistiek"],           on: true },
+    { key: "basis",      label: "Basisprincipes van R en Basiswiskunde",
+                                                                   parts: ["Basisprincipes van R", "Basiswiskunde"], on: false },
+    { key: "extra",      label: "Antwoorden en verdieping",        files: /^(antwoorden_.*|verdieping)\.html$/, on: false }
+  ];
+
+  function groupOf(ch) {
+    for (var i = 0; i < GROUPS.length; i++) {
+      var g = GROUPS[i];
+      if (g.files && g.files.test(ch.file)) return g.key;
+      if (g.parts && g.parts.indexOf(ch.part) !== -1) return g.key;
+    }
+    return "";
+  }
 
   function chapterLabel(scope) {
     var num = scope.querySelector("h1 .chapter-number");
@@ -114,11 +138,13 @@
       url.hash = "";
       if (!/\.html$/.test(url.pathname) && !/\/$/.test(url.pathname)) return;
       var file = url.pathname.split("/").pop() || "index.html";
-      if (SKIP.indexOf(file) !== -1 || seen[url.href]) return;
+      if (NEVER.indexOf(file) !== -1 || seen[url.href]) return;
       seen[url.href] = true;
       var section = a.closest(".sidebar-item-section");
       var partEl = section && section.querySelector(":scope > .sidebar-item-container .menu-text");
-      out.push({ url: url.href, part: partEl ? partEl.textContent.trim() : "" });
+      var ch = { url: url.href, file: file, part: partEl ? partEl.textContent.trim() : "" };
+      ch.group = groupOf(ch);
+      out.push(ch);
     });
     return out;
   }
@@ -176,8 +202,48 @@
     });
   }
 
+  // -- choosing sections ------------------------------------------------------
+  var ready = "";
+
+  function buildOptions(book) {
+    var box = document.getElementById("print-options");
+    if (!box) return;
+    var params = new URLSearchParams(location.search);
+    var preset = params.get("parts");  // print.html?parts=info,modellen,basis
+    GROUPS.forEach(function (g) {
+      var label = document.createElement("label");
+      var input = document.createElement("input");
+      input.type = "checkbox";
+      input.value = g.key;
+      input.checked = preset ? preset.split(",").indexOf(g.key) !== -1 : g.on;
+      input.addEventListener("change", function () { applySelection(book); });
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(" " + g.label));
+      box.appendChild(label);
+    });
+  }
+
+  // Hide the chapters of unticked groups, re-mark the first chapter that is
+  // left (no page break before it), and report what is selected.
+  function applySelection(book) {
+    var on = {};
+    document.querySelectorAll("#print-options input").forEach(function (i) { on[i.value] = i.checked; });
+    var first = true;
+    var count = 0;
+    book.querySelectorAll(":scope > .print-chapter").forEach(function (el) {
+      var g = el.getAttribute("data-group");
+      var show = !g || on[g] !== false;
+      el.classList.toggle("print-excluded", !show);
+      el.classList.toggle("print-first", show && first);
+      if (show) { first = false; count++; }
+    });
+    var status = document.getElementById("print-status");
+    if (status && ready) status.textContent = ready + " (" + count + " hoofdstukken geselecteerd)";
+  }
+
   function buildPrintBook(book) {
     document.body.classList.add("print-page");
+    buildOptions(book);
     var status = document.getElementById("print-status");
     var buttons = document.querySelectorAll(".print-choices button");
     var chapters = sidebarChapters();
@@ -206,13 +272,16 @@
           el.insertBefore(p, el.firstChild);
         }
         lastPart = part;
+        el.setAttribute("data-group", chapters[i].group);
         book.appendChild(el);
       });
       say("Formules worden gezet…");
       return mathTypeset(book).then(function () { return imagesLoaded(book); });
     }).then(function () {
       var missing = chapters.length - book.querySelectorAll(".print-chapter").length;
-      say(missing ? "Klaar, maar " + missing + " hoofdstuk(ken) konden niet geladen worden." : "Klaar om te printen.");
+      ready = missing ? "Klaar, maar " + missing + " hoofdstuk(ken) konden niet geladen worden." : "Klaar om te printen.";
+      say(ready);
+      applySelection(book);
       buttons.forEach(function (b) { b.disabled = false; });
     });
   }

@@ -42,6 +42,21 @@
 }
 .print-choices button:hover:not(:disabled) { background: #e8601d22; }
 .print-choices button:disabled { opacity: 0.45; cursor: progress; }
+/* The section tick boxes on the print page. */
+#print-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 30rem;
+  margin: 1rem auto 0.4rem;
+  padding: 0.8rem 1.1rem;
+  border: 1px solid #e8601d55;
+  border-radius: 4px;
+}
+#print-options label { cursor: pointer; }
+#print-options input { accent-color: #e8601d; margin-right: 0.3rem; }
+/* Unticked sections are gone, on screen and on paper. */
+#print-book > .print-chapter.print-excluded { display: none !important; }
 #print-status { text-align: center; font-size: 0.9rem; opacity: 0.75; margin-bottom: 1.5rem; }
 .print-preview { max-width: 520px; margin: 0 auto 1.8rem; text-align: center; }
 .print-preview img { width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; }
@@ -80,7 +95,7 @@
   #quarto-search, .sidebar-search, #quarto-header,
   #quarto-search-results, #quarto-search-options, .aa-DetachedOverlay,
   #quarto-back-to-top, .quarto-btn-toggle, .quarto-color-scheme-toggle,
-  .code-copy-button, .footer, .nav-footer, #print-status, .print-choices {
+  .code-copy-button, .footer, .nav-footer, #print-status, .print-choices, #print-options {
     display: none !important;
   }
 
@@ -173,7 +188,7 @@
 
   /* On the print page every chapter starts on a fresh sheet. */
   .print-chapter { break-before: page; page-break-before: always; }
-  #print-book > .print-chapter:first-child { break-before: auto; page-break-before: avoid; }
+  #print-book > .print-chapter.print-first { break-before: auto; page-break-before: avoid; }
   /* The print page's own title and intro are screen furniture. */
   .print-page #title-block-header, .print-page .print-intro { display: none !important; }
   .print-part { font-size: 0.8em; }
