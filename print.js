@@ -17,7 +17,7 @@
 (function () {
   "use strict";
 
-  var NEVER = ["print.html", "slides.html", "spiekbriefjes.html"];
+  var NEVER = ["print.html", "slides.html", "planning.html", "spiekbriefjes.html"];
 
   // The tick boxes on the print page, in this order. A chapter belongs to the
   // first group whose `files` (file name, regex) or `parts` (sidebar part
