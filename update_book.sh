@@ -34,8 +34,9 @@ git pull --no-edit || {
   exit 1
 }
 
-# --- render the website only (the PDF has its own route); stop if it fails
-quarto render --to html
+# --- render the website only (live-html = html + webR; the PDF has its own
+#     route); stop if it fails
+quarto render --to live-html
 
 # --- mirror into docs/, don't delete-and-recreate every file
 # --checksum compares content, not timestamps, so unchanged pages stay unchanged

@@ -1,4 +1,11 @@
+{{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
+
 # Programmeren in R {#sec-Rprogrammeren}
+
+::: {.callout-tip}
+## Interactieve voorbeelden
+Veel voorbeelden in dit hoofdstuk kun je direct op de website uitvoeren met **Run Code**. Verander gerust wat en kijk wat er gebeurt! Grijze codeblokken zonder knoppen kopieer je naar Rstudio, en de opgaven maak je altijd in Rstudio (zie ook @sec-introductieR).
+:::
 
 ## Typen variabelen {#sec-type-variabelen-R}
 
@@ -14,8 +21,7 @@ We hebben in het eerste onderdeel al een beetje kennis gemaakt met variabelen, d
 
 In R kun je berekeningen uitvoeren, maar je kan natuurlijk geen appels met peren vergelijken. Bekijk bijvoorbeeld de volgende code:
 
-```{r}
-#| eval: false
+```{webr}
 appels <- 3
 peren <- "groen"
 appels + peren
@@ -31,8 +37,7 @@ Het is erg prettig dat R deze foutmelding geeft. Hoewel dit een overduidelijk on
 
 We moeten dus wel dezelfde type dingen bij elkaar optellen. Echter kan je natuurlijk ook niet alles bij elkaar optellen. Als we bijvoorbeeld zowel appels als peren een kleur geven (rood en groen), krijgen we dezelfde error:
 
-```{r}
-#| eval: false
+```{webr}
 appels <- "rood"
 peren <- "groen"
 appels + peren
@@ -46,8 +51,7 @@ Je kunt woorden namelijk helemaal niet optellen. Wel zou je natuurlijk de totale
 
 Vaak is het handig om in een script te controleren of aan een bepaalde voorwaarde wordt voldaan. Hiervoor kun je `if`, `else`, en `else if` gebruiken. Ook kunnen we met `print()` een resultaat weergeven in de console^[In dit geval betekent printen dus niet iets met printers te maken, maar slaat het alleen op 'tekst weergeven op je scherm'.]. Als we deze dingen combineren, krijgen we:
 
-```{r}
-#| eval: false
+```{webr}
 leeftijd_student <- sample(16:19,1) # genereer willekeurige leeftijd tussen 16 en 19
 if(leeftijd_student >= 18){
   print("Student is volwassen")
@@ -72,8 +76,7 @@ Daarnaast kun je eventueel meerdere condities combineren:
 
 Als laatste kun je nog veel meer combinaties controleren door `if` en `else` in elkaars *scope* terug te laten komen (dit wordt ook wel het "nesten" van condities genoemd). Zo kunnen we binnen het ene `if` statement weer andere condities controleren. Als we bijvoorbeeld twee dobbelsteenworpen simuleren, kunnen we precies controleren welke dobbelsteen hoger is dan 4:
 
-```{r}
-#| eval: false
+```{webr}
 d1 <- sample(1:6,1) # dobbelsteen 1
 d2 <- sample(1:6,1) # dobbelsteen 2
 
@@ -106,8 +109,7 @@ Het is vaak heel handig om je variabelen in lijsten of tabellen op te slaan. Der
 
 Om een vector te maken, kunnen we deze handmatig intypen:
 
-```{r}
-#| eval: false
+```{webr}
 mijnvector <- c(1,2,0.1,-5)
 mijnvector[1] # geeft het eerste getal
 mijnvector[2] # geeft het tweede getal, etc
@@ -115,8 +117,7 @@ mijnvector[2] # geeft het tweede getal, etc
 
 Maar handmatig getallen invoeren is niet altijd handig. Gelukkig kun je met R een boel lijstjes op een snellere manier automatisch genereren:
 
-```{r}
-#| eval: false
+```{webr}
 
 1:4                # 1, 2, 3, 4
 5:2                # 5, 4, 3, 2
@@ -131,8 +132,7 @@ De laatste vijf regels van het bovenstaande script zijn voorbeelden van "functie
 
 Je kan met vectoren ook rekenen. Zo kan je bijvoorbeeld twee vectoren bij elkaar optellen, of één en hetzelfde getal bij alle elementen van een vector optellen:
 
-```{r}
-#| eval: false
+```{webr}
 # Rekenen met vectoren
 x <- 1:3           # 1, 2, 3
 x + 10             # 11 12 13
@@ -157,8 +157,7 @@ Let ook op het subtiele verschil tussen de regels `x + y / 100` en `(x + y) / 10
 
 Als laatste is het belangrijk om te weten dat spaties in R meestal niets betekenen (dit geldt voor de meeste programmeertalen). Zodoende is `x<-x+10` hetzelfde als `x <- x + 10`, en `rep(2,1)` hetzelfde als `rep(2, 1)`. Een paar uitzonderingen is dat spaties in het pijltje om variabele toe te kennen niet kunnen (`x < - 1` werkt niet). Ook doen spaties in *character strings* er wel toe, want daar telt spatie als een karakter. Zodoende zijn `"appels"`, `" appels"` en `"appels "` niet hetzelfde:
 
-```{r}
-#| eval: false
+```{webr}
 
 "appels" == "appels"  # TRUE
 "appels" == "appels " # FALSE
@@ -171,8 +170,7 @@ De bovenstaande situatie lijkt misschien een beetje vreemd, maar komt vaak voor 
 
 Matrices in R kun je maken door de functie `matrix` aan te roepen, die je waarden van de matrix en het aantal rijen als argumenten geeft:
 
-```{r}
-#| eval: false
+```{webr}
 matrix(c(1, 2, 3, 4,5, 6, 7, 8, 9), nrow=3)
 matrix(c(1, 2, 3, 4,5, 6, 7, 8, 9), nrow=3, byrow=T)
 ```
@@ -250,8 +248,7 @@ datatable(covid_data, options = list(searching=F, pageLength = 8))
 
 Nu je weet hoe je tabellen in kan lezen, is het belangrijk om te leren over "indexing". Indexing is het selecteren van specifieke waarden uit een vector, matrix, of dataframe. Dit doe je door de positie (index) van deze elementen tussen vierkante haakjes aan te geven:
 
-```{r}
-#| eval: false
+```{webr}
 jaartallen <- 2009:2024         # Jaren dat ik biologie "studeer"
 jaartallen[6:9]                 # 2014 2015 2016 2017
 
@@ -356,8 +353,7 @@ Dit geeft extra uitleg over deze functie in het "Help" venster (rechtsonderin @f
 
 Je kan ook zelf functies maken. Dit is handig als je meerdere keren dezelfde specifieke berekening wil uitvoeren. Je moet hiervoor aangeven wat de argumenten zijn, welke berekening op basis van deze argumenten wordt uitgevoerd, en wat er door de functie wordt teruggegeven (de return-waarde). Hier is een voorbeeld:
 
-```{r}
-#| eval: false
+```{webr}
 # Definitie van de functie
 som_kwadraten <- function(a, b) {
   resultaat <- a^2 + b^2
@@ -378,8 +374,7 @@ Hoewel functies het makkelijker maken om dezelfde berekening meerdere keren uit 
 
 Laten we bijvoorbeeld de exponentiële afname van paracetamol in het bloed beschrijven met een simpele "simulatie". Iemand neemt 400 milligram paracetamol in, wat ieder uur (ongeveer) met 70% afneemt:
 
-```{r}
-#| eval: false
+```{webr}
 p <- 400 # hoeveelheid paracetamol
 d <- 0.7 # afname (d van decay)
 # Herhaal iets 10 keer, waarbij 'i' steeds met 1 toeneemt

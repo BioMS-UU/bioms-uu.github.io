@@ -65,7 +65,10 @@
    version: it shows the print stand-ins, not the (uninitialised) widgets. */
 #print-book .screen-only { display: none !important; }
 #print-book .print-tab-title { display: block; font-weight: 600; }
-#print-book .print-only, #print-book .print-fallback {
+/* webR cells cannot run on the print page; their paper version shows. */
+#print-book .exercise-cell { display: none !important; }
+#print-book .webr-print { display: block; }
+#print-book .print-only:not(.webr-print), #print-book .print-fallback {
   display: block;
   border: 1px dashed #999;
   padding: 0.8em 1em;
@@ -110,6 +113,9 @@
     break-inside: avoid;
     page-break-inside: avoid;
   }
+  /* A webR cell prints as a plain code block (print.js), not as an editor. */
+  .exercise-cell { display: none !important; }
+  .print-only.webr-print { border: none; padding: 0; font-size: inherit; }
   /* An iframe prints as an empty rectangle, a video as a black one. */
   iframe, video, .quarto-video, .html-widget, .datatables { display: none !important; }
   .print-fallback-url { word-break: break-all; font-family: monospace; font-size: 0.9em; }

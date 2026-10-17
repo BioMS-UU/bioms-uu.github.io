@@ -55,7 +55,33 @@
   }
 
   // -- stand-ins for paper ---------------------------------------------------
+  // A {webr} cell is rendered as an empty box plus its code, base64-encoded
+  // JSON, in <script type="webr-N-contents">; the editor is built in the
+  // browser. On paper it becomes an ordinary code block.
+  function webrToPaper(root) {
+    root.querySelectorAll('script[type^="webr-"][type$="-contents"]').forEach(function (sc) {
+      var cell = sc.parentNode && sc.parentNode.querySelector(".exercise-cell");
+      if (!cell || (cell.nextElementSibling && cell.nextElementSibling.classList.contains("webr-print"))) return;
+      var code;
+      try {
+        var bytes = Uint8Array.from(atob(sc.textContent.trim()), function (c) { return c.charCodeAt(0); });
+        code = JSON.parse(new TextDecoder().decode(bytes)).code;
+      } catch (e) { return; }
+      var box = document.createElement("div");
+      box.className = "print-only webr-print";
+      var pre = document.createElement("pre");
+      pre.className = "sourceCode r";
+      var c = document.createElement("code");
+      c.className = "sourceCode r";
+      c.textContent = code;
+      pre.appendChild(c);
+      box.appendChild(pre);
+      cell.insertAdjacentElement("afterend", box);
+    });
+  }
+
   function prepareForPaper(root) {
+    webrToPaper(root);
     // Quarto rewrites links to full addresses at load time, so CSS alone cannot
     // tell a link within the book from an external one. Mark ours: on paper
     // only external addresses are spelled out.
@@ -156,7 +182,7 @@
     }).then(function (html) {
       var doc = new DOMParser().parseFromString(html, "text/html");
       var main = doc.querySelector("main#quarto-document-content") || doc.querySelector("main");
-      main.querySelectorAll("script, nav.page-navigation, .quarto-title-meta").forEach(function (n) { n.remove(); });
+      main.querySelectorAll("nav.page-navigation, .quarto-title-meta").forEach(function (n) { n.remove(); });
       // The live versions are never shown on this page; leaving them in would
       // load every simulation and video in the book in the background.
       main.querySelectorAll(".screen-only").forEach(function (n) { n.remove(); });
@@ -164,6 +190,7 @@
       // Stand-ins first, then drop the embeds, all before the chapter joins
       // this page (an iframe starts loading the moment it is inserted).
       prepareForPaper(main);
+      main.querySelectorAll("script").forEach(function (n) { n.remove(); });
       main.querySelectorAll("iframe, video").forEach(function (n) { (n.closest(".quarto-video") || n).remove(); });
       var header = main.querySelector("#title-block-header");
       if (header) { header.removeAttribute("id"); header.classList.add("print-chapter-header"); }
