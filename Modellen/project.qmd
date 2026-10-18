@@ -56,13 +56,13 @@ run(legend=TRUE, main="Tijdreeksen van S en I", tmax=500, tstep=0.1)
 
 a. Schrijf de ODEs uit het Grind-model op in standaard wiskundige notatie. Geef met accolades kort aan wat elke term betekent.
 
-b. Leg uit waar alle parameters ($b$, $d$, $g$, $\beta$ en $p$) voor staan. Waarom staat $b$ niet vermenigvuldigd met een populatiegrootte, en $d$ wel (met $S$ of $I$)?
+b. Leg uit waar alle parameters ($b$, $d$, $g$, $\beta$ en $p$) voor staan. Gegeven bovenstaande uitleg, waarom wordt $b$ niet vermenigvuldigd met de populatiegrootte, en $d$ wel?
 
-c. Bepaal in welke eenheden de parameter $g$ wordt uitgedrukt. Wat betekent $1/g$?
+c. Bepaal in welke eenheden de parameter $g$ wordt uitgedrukt. 
 
 d. Bereken het aantal vatbare individuen in evenwicht als er geen ziekte is ($I = 0$). Noem dit $\bar{S}$. Hoe hangt $\bar{S}$ af van $p$?
 
-e. Bereken de nullclines van dit systeem.
+e. Bereken de nullclines van dit systeem. Schrijf je berekening uit (maak een foto van je schrift of typ dit in je verslag)
 
 f. Schets met pen en papier de nullclines in een faseruimte (x-as: $S$, y-as: $I$) voor twee kwalitatief verschillende scenario's. Geef met pijltjes aan in welke richting de populaties veranderen, en geef de evenwichten aan. Wat betekent elk scenario voor een ziekte die binnenkomt in een populatie zonder ziekte (dus bij $S = \bar{S}$, $I \approx 0$)? Je mag een foto van je schets in je verslag zetten.
 
@@ -74,32 +74,18 @@ i. De minimale vaccinatiegraad uit vraag h noemen we $p_c$. Controleer met Grind
 
    *Tip: zet bij een andere $p$ ook de beginwaarde op $S = 1000(1-p)$, en laat de simulatie lang genoeg lopen (bijvoorbeeld `tmax=2000`).*
 
-Hieronder kun je met hetzelfde model spelen: verander de vaccinatiegraad $p$ en de transmissiesnelheid $\beta$, en kijk wat er met de nullclines en de tijdreeks gebeurt.
-
-:::{.print-only}
-<center>*Interactieve faseruimte, beschikbaar op de website:*</center>
-![](figuren/mazelen_faseruimte_print.png){fig-align=center}
-:::
-
-:::{.screen-only}
-```{=html}
-<iframe class="applet" width="100%" height="700" style="border:0"
-src="Applets/mazelen_faseruimte.html" title="Interactieve faseruimte"></iframe>
-```
-:::
-
 ## Deel B: mazelen in vier Utrechtse wijken
 
-Stel: de vaccinatiegraad in Utrecht is de afgelopen jaren gedaald, en de mazelen dreigt terug te komen. De GGD wil weten hoeveel kinderen er gevaccineerd moeten worden om een uitbraak te voorkomen. Volgens het ODE-model uit deel A is het antwoord $p_c \approx 0{,}93$. Maar dat model neemt aan dat iedereen iedereen kan besmetten, alsof de hele stad continu door elkaar loopt. Zo gaat het in het echt natuurlijk niet. Je komt vooral mensen in je eigen buurt tegen, en soms fiets je naar een andere wijk. In deel B onderzoek je met een individu-gebaseerd model (IBM) of dat de voorspelling verandert.
+Stel: de vaccinatiegraad in Utrecht is de afgelopen jaren gedaald, en de mazelen dreigt terug te komen. De GGD wil weten hoeveel kinderen er gevaccineerd moeten worden om een uitbraak te voorkomen. Volgens het ODE-model uit deel A is het antwoord $p_c \approx 0{,}93$. Maar dat model neemt aan dat iedereen iedereen kan besmetten, alsof de hele stad continu door elkaar loopt. Zo gaat het in het echt natuurlijk niet. Je komt vooral mensen in je eigen buurt tegen, en soms fiets je naar een andere wijk. In deel B onderzoek je met een individual-based model (IBM) of dat de voorspelling verandert.
 
-In de simulatie hieronder wonen 6000 mensen in vier wijken van Utrecht: Overvecht, Leidsche Rijn, de Uithof en Zuid (1500 per wijk). Elk poppetje is één persoon:
+In de simulatie hieronder wonen 6000 mensen in vier wijken van een soort mini-Utrecht: Overvecht, Leidsche Rijn, de Uithof en Zuid (1500 per wijk). Elk poppetje is één persoon:
 
-- Een vatbaar persoon kan besmet raken door geïnfecteerden die vlak bij hem staan. Hoe meer zieken in de buurt, hoe groter de kans. Met de schuifregelaar **besmettingsstraal** maak je de afstand waarover iemand besmet kan worden tot 3 keer zo groot. De besmettingskans per contact wordt dan kleiner, zodat een zieke in een goed gemengde populatie nog steeds evenveel mensen besmet. Het ODE-model en de stippellijn veranderen dus niet.
-- Binnen hun wijk lopen mensen een beetje rond. Met de schuifregelaar **rondlopen** bepaal je hoe ver ze per tijdstap lopen. Met **perfect mengen** wordt iedereen elke tijdstap op een willekeurige plek in zijn eigen wijk gezet.
-- Af en toe stapt iemand op de fiets naar een andere wijk (hij wordt dan even een fietsje). Met de schuifregelaar **fietsen** bepaal je hoe vaak dat gebeurt. Fietsers besmetten onderweg niemand. Een fietstocht duurt in het echt maar even. In de simulatie duurt hij langer zodat je de fietsers kunt volgen, maar tijdens de tocht staat hun klok stil: ze worden niet beter, gaan niet dood en tellen niet mee voor besmettingen. Wie aankomt, stapt af op een willekeurige plek in de nieuwe wijk.
-- Geïnfecteerden herstellen met een vaste kans per tijdstap en blijven daarna lang genoeg immuun (in de simulatie worden ze niet opnieuw vatbaar).
-- Iedereen sterft met een vaste kans per tijdstap en wordt dan vervangen door een baby op een willekeurige plek in dezelfde wijk. Een fractie $p$ van de baby's wordt gevaccineerd.
-- Heel af en toe raakt iemand besmet van buiten de stad. Met de knop **Infecteer een wijk** breng je zelf 10 zieken binnen in een willekeurige wijk.
+- Een vatbaar persoon kan besmet raken door geïnfecteerden die vlak bij staan. Hoe meer zieken in de buurt, hoe groter de kans. Met de schuifregelaar **besmettingsstraal** maak je de afstand waarover iemand besmet kan worden tot 3 keer zo groot. Maar: we nemen aan dat de besmettingskans per contact dan kleiner wordt, zodat een zieke nog steeds evenveel mensen besmet.
+- Binnen hun wijk lopen mensen een beetje rond. Met de schuifregelaar **rondlopen** bepaal je hoe veel ze per tijdstap lopen. Met **perfect mengen** wordt iedereen elke tijdstap op een willekeurige plek in zijn eigen wijk gezet.
+- Af en toe stapt iemand op de fiets naar een andere wijk. Met de schuifregelaar **fietsen** bepaal je hoe vaak dat gebeurt. Wie aankomt, stapt af op een willekeurige plek in de nieuwe wijk, en gaat daar rondlopen.
+- Geïnfecteerden herstellen met een vaste kans per tijdstap en blijven daarna lang immuun. Echter, anders dan in de ODE houden we herstelde mensen hier wél bij: ze verdwijnen niet uit het model, maar blijven gewoon in hun wijk rondlopen (blauw op de kaart). Ze worden niet meer ziek en besmetten niemand, maar ze nemen wel ruimte in tussen de andere mensen.
+- Iedereen sterft met een vaste kans per tijdstap. Elk sterfgeval wordt meteen vervangen door een baby op een willekeurige plek in dezelfde wijk, zodat er in elke wijk altijd 1500 mensen wonen. Een fractie $p$ van de baby's wordt gevaccineerd; de rest is vatbaar. Zo komen er, net als in de ODE, steeds nieuwe vatbaren bij.
+- Heel af en toe raakt iemand besmet van buiten de stad. Zo kunnen we zien of een constante dreiging van een ziekte zich zal verspreiden of niet. Met de knop **Infecteer een wijk** breng je zelf 10 zieken binnen in een willekeurige wijk. 
 
 De ziekte in de simulatie is precies dezelfde als in deel A: dezelfde herstelsnelheid $g = 0{,}1$, dezelfde sterfte $d = 0{,}01$ (een leven duurt gemiddeld 100 tijdstappen) en dezelfde besmettelijkheid. Volgens het ODE-model kan de ziekte dus ook hier niet uitbreken als meer dan 93% van de baby's gevaccineerd wordt. Alleen de manier waarop mensen elkaar ontmoeten is anders. Als de simulatie iets anders laat zien dan het ODE-model, komt dat dus door de structuur van het model, niet door de ziekte. De stippellijn in de grafiek is het aantal geïnfecteerden dat het ODE-model in evenwicht voorspelt.
 
