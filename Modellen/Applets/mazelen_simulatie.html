@@ -203,7 +203,7 @@ footer { padding-top: 40px; font: 0.82rem var(--f-display); color: var(--muted);
 <div class="wrap">
   <style>
 /* embedded in the course book: no page chrome, just the lab */
-.sim-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.sim-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 12px; }
 /* chart and counters right under the buttons; the sliders below them */
 #simLab .panel > .controls { order: 1; }
 #simLab .panel > .note { order: 2; }
@@ -657,9 +657,20 @@ function makeRng(seed) {
 (function () {
   var fe; try { fe = window.frameElement; } catch (e) {}
   if (!fe) return;
-  function fit() { fe.style.height = document.documentElement.scrollHeight + "px"; }
+  // no scrollbars inside the frame; measure the real (fractional) height and
+  // add a few pixels, so rounding never leaves a sliver to scroll
+  document.documentElement.style.overflow = "hidden";
+  fe.setAttribute("scrolling", "no");
+  function fit() {
+    // measure the lab itself, not the document (whose height follows the frame)
+    var lab = document.querySelector(".lab");
+    if (!lab) return;
+    fe.style.height = Math.ceil(lab.getBoundingClientRect().bottom + window.scrollY) + 16 + "px";
+  }
+  fit();
   window.addEventListener("load", fit);
   window.addEventListener("resize", fit);
+  if (document.fonts) document.fonts.ready.then(fit);
   if (window.ResizeObserver) new ResizeObserver(fit).observe(document.body);
 })();
 </script>
