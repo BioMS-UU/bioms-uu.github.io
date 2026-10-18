@@ -1,99 +1,136 @@
 {{< include ../_macros.tex >}}
 
-# Mini-project {#sec-evolutie .unnumbered}
+# Mini-project: mazelen in Utrecht {#sec-evolutie .unnumbered}
 
-## Belangrijke informatie over je verslag
+Mazelen is een van de meest besmettelijke ziektes die we kennen. Hoeveel mensen moet je vaccineren om een uitbraak te voorkomen? In dit project leid je dat eerst af met een ODE-model. Daarna kijk je met een simulatie van vier Utrechtse wijken of het antwoord verandert als mensen niet perfect door elkaar lopen, maar vooral hun buren tegenkomen en af en toe naar een andere wijk fietsen.
 
-Hieronder staat waar je verslag van het mini-project (de samenwerkingsopdracht) aan moet voldoen:
+## Eisen aan je verslag
 
-- Je verslag moet puntsgewijs (a=..., b=..., etc.) antwoord geven op de gestelde vragen. 
-- Gebruik **volzinnen** in het beantwoorden van de vragen, waaruit blijkt op welke vraag je antwoord geeft. Zo volgt het vanzelf een logisch verhaal.
-- Je verslag moet een korte conclusie bevatten waarin je de belangrijkste inzichten uit dit project samenvat (dit is de laatste subvraag).
-- Bij je verslag, **moet** je ook het samenwerkingsstartformulier inleveren. Zonder dit formulier kun je **geen** voldoende krijgen. 
+- Beantwoord de vragen puntsgewijs (a = …, b = …, enz.), in **volzinnen**.
+- Sluit af met een korte conclusie (de laatste subvraag).
+- Lever het samenwerkingsstartformulier mee in. Zonder dit formulier kun je **geen** voldoende krijgen.
 
-## Efficiënte konijnen
+## Deel A: het ODE-model
 
-We bestuderen in een ecosysteem de hoeveelheid gras ($G$) en konijnen ($R$).
-We nemen aan dat gras logistisch groeit, en wordt opgegeten door konijnen. Konijnen gebruiken een fractie $c$ van het gegeten gras om nieuwe konijnen-biomassa te maken. Hoewel de waarden van deze parameter (en de andere parameters) niet in het veld gemeten is, kunnen we met een model wel onderzoeken wat er gebeurt als deze parameter verandert. Zo kunnen we biologische inzichten vergaren.
+We kijken naar mazelen in een populatie en houden twee groepen mensen bij:
 
-Hieronder staat het model beschreven in grind.
+- $S$: het aantal **vatbare** mensen. Ze zijn nooit ziek geweest en niet gevaccineerd, dus ze kunnen nog besmet raken.
+- $I$: het aantal **geïnfecteerde** mensen. Ze zijn ziek en kunnen anderen besmetten.
 
-```{r results='hide'}
+Elke tijdseenheid worden er $b$ baby's geboren. Dat is een vast aantal, dat niet afhangt van hoeveel mensen er op dat moment vatbaar of ziek zijn. Een fractie $p$ van de baby's wordt gevaccineerd; de rest, $b(1-p)$, is vatbaar en komt in $S$. Vatbaren raken besmet door contact met geïnfecteerden, en geïnfecteerden herstellen met snelheid $g$. Iedereen sterft met snelheid $d$.
+
+We nemen aan dat gevaccineerde en herstelde mensen lang genoeg immuun blijven: zo lang dat we ze binnen de tijdschaal van het model niet opnieuw vatbaar hoeven te laten worden. Ze worden dus niet meer ziek en besmetten niemand. Ze bestaan wel, maar ze hebben geen enkele invloed op hoe de ziekte zich verspreidt. Daarom houden we ze in dit model niet bij: zodra iemand gevaccineerd wordt of herstelt, verdwijnt hij uit de vergelijkingen.
+
+![Schema van het model. Pijlen naar beneden zijn sterfte. Alles buiten het omkaderde deel houden we niet bij.](figuren/mazelen_schema.png){#fig-mazelen-schema width="95%" fig-align="center"}
+
+Hieronder staat het model in Grind.
+
+```{r}
 #| eval: false
 source("https://tbb.bio.uu.nl/rdb/grindR/grind.R")
 
 # Grind model
 model <- function(t, state, parms) {
   with(as.list(c(state,parms)), {
-    dG <- b*G*(1 - G/K) - d*G - a*G*R/(G+h)
-    dR <- c*a*G*R/(G+h) - delta*R
-    return(list(c(dG, dR)))
+    dS <- b*(1-p) - beta*S*I - d*S
+    dI <- beta*S*I - g*I - d*I
+    return(list(c(dS, dI)))
   })
 }
 
 # Parameters (p-vector) en beginwaarden (s-vector)
-p <- c(  
-  b = 1,       # groeisnelheid gras
-  d = 0.2,     # natuurlijke sterfte/afbraak gras 
-  K = 10,      # draagkracht gras 
-  a = 10,      # graas-snelheid 
-  c = 0.024,   # conversie-efficiëntie 
-  delta = 0.2, # sterfte konijnen 
-  h = 2        # halfverzadiging 
+p <- c(
+  b    = 10,       # aantal geboortes per tijdseenheid
+  d    = 0.01,     # sterfte per individu per tijdseenheid
+  g    = 0.1,      # herstelsnelheid
+  beta = 0.00165,  # transmissiesnelheid
+  p    = 0         # fractie van de baby's die gevaccineerd wordt
 )
 
-s <- c(G = 1, R = 1)  # beginwaarden (gras, konijnen)
+s <- c(S = 1000, I = 1)  # beginwaarden
 
-colors[1] <- "darkseagreen"
-colors[2] <- "brown"
 par(mfrow=c(1,2))
-
-plane(xmax=15, ymax=0.3, main="Faseruimte (x-as: G, y-as: R)")
-run(legend=TRUE, main="Tijdreeksen van G en R", xlab="Tijd", tmax=200, tstep=0.25)
+plane(xmax=1000, ymax=800, main="Faseruimte (x-as: S, y-as: I)")
+run(legend=TRUE, main="Tijdreeksen van S en I", tmax=500, tstep=0.1)
 ```
 
-a. Schrijf de ODEs uit het bovenstaande Grind-model op in standaard wiskundige notatie (dus niet in R-code). Geef hierbij met accolades (zoals in @eq-vossen-konijnen) kort aan wat elke term in de ODEs betekent.
+a. Schrijf de ODEs uit het Grind-model op in standaard wiskundige notatie. Geef met accolades kort aan wat elke term betekent.
 
-b. Leg uit waar alle parameters ($b$, $K$, $d$, $a$, $h$, $c$, en $\delta$) voor staan.  
+b. Leg uit waar alle parameters ($b$, $d$, $g$, $\beta$ en $p$) voor staan. Waarom staat $b$ niet vermenigvuldigd met een populatiegrootte, en $d$ wel (met $S$ of $I$)?
 
-c. Bepaal in welke eenheden de parameter $a$ wordt uitgedrukt (let op: hill-functies hebben geen eenheden, en kun je daarom meteen wegstrepen). 
+c. Bepaal in welke eenheden de parameter $g$ wordt uitgedrukt. Wat betekent $1/g$?
 
-d. Welke waarde van $c$ verwacht je intuïtief dat het gunstigst is voor de konijnenpopulatie?
+d. Bereken het aantal vatbare individuen in evenwicht als er geen ziekte is ($I = 0$). Noem dit $\bar{S}$. Hoe hangt $\bar{S}$ af van $p$?
 
-e. Bereken de nullclines van dit systeem. 
+e. Bereken de nullclines van dit systeem.
 
-f. Waar liggen de nullclines voor de konijnen als $ca=\delta$? Leg je antwoord uit in biologische begrippen.
+f. Schets met pen en papier de nullclines in een faseruimte (x-as: $S$, y-as: $I$) voor twee kwalitatief verschillende scenario's. Geef met pijltjes aan in welke richting de populaties veranderen, en geef de evenwichten aan. Wat betekent elk scenario voor een ziekte die binnenkomt in een populatie zonder ziekte (dus bij $S = \bar{S}$, $I \approx 0$)? Je mag een foto van je schets in je verslag zetten.
 
-g. Schets met pen en papier^[je mag gewoon een foto hiervan in je verslag zetten] de nullclines in een faseruimte (x-as: gras, y-as: konijnen). Varieer hierbij de waarde van $c$ zodat er drie kwalitatief verschillende scenario's ontstaan (laag, midden, hoog). Geef aan of licht tekstueel toe waarom de nullclines deze vorm / ligging hebben.
+g. Hoe kun je met vaccinatie zorgen dat je in het scenario terechtkomt waarin de ziekte niet kan invaderen? Kijk daarvoor wat er met de nullclines gebeurt als de vaccinatiegraad $p$ groter wordt.
 
-h. Gebruik de eerder gegeven grind code (met de gegeven parameters) om te onderzoeken bij welke waarden van $c$ de scenario's uit g optreden. Tussen welke waarden van $c$ ontstaan er stabiele populaties?
+h. Hoe laag moet het aantal vatbaren zijn zodat een binnenkomende ziekte *niet* kan invaderen? Schrijf deze voorwaarde op door de plek van de verticale $I$-nullcline te vergelijken met $\bar{S}$, het punt waar de $S$-nullcline de $S$-as snijdt. Los je voorwaarde op voor $p$, en reken met de parameters uit de Grind-code uit hoeveel je minstens moet vaccineren.
 
-i. Stel ook eens zeer hoge waarden in voor $c$ (bijvoorbeeld 0.5 of 0.8). Wat gebeurt er in deze gevallen? (hint: het kan zijn dat je de tijdstapgroote $tstep$ een stuk kleiner in moet stellen). Leg je antwoord uit in biologische termen.
+i. De minimale vaccinatiegraad uit vraag h noemen we $p_c$. Controleer met Grind of je $p_c$ klopt: laat de ODEs lopen met een vaccinatiegraad net onder en net boven $p_c$. Laat met plaatjes zien wat er gebeurt.
 
-j. Heroverweeg je antwoord op d in het licht van je bevindingen in h en i.
+   *Tip: zet bij een andere $p$ ook de beginwaarde op $S = 1000(1-p)$, en laat de simulatie lang genoeg lopen (bijvoorbeeld `tmax=2000`).*
 
-Nu we het effect van $c$ in het wiskundige model begrijpen, gaan we een simulatie bekijken waarbij de konijnen zich fysiek in een (ruimtelijk) grasveld bevinden (zie link en cartoon hieronder).
+Hieronder kun je met hetzelfde model spelen: verander de vaccinatiegraad $p$ en de transmissiesnelheid $\beta$, en kijk wat er met de nullclines en de tijdreeks gebeurt.
 
-![Online simulatie van konijnen die gras eten: [https://tbb.bio.uu.nl/bvd/simulations/konijnen/](https://tbb.bio.uu.nl/bvd/simulations/konijnen/)](figuren/miniproject_2.png){fig-align="center"}
+:::{.print-only}
+<center>*Interactieve faseruimte, beschikbaar op de website:*</center>
+![](figuren/mazelen_faseruimte_print.png){fig-align=center}
+:::
 
-In deze versimpelde simulatie bewegen de konijnen zich over een rasterwereld:
+:::{.screen-only}
+```{=html}
+<iframe class="applet" width="100%" height="700" style="border:0"
+src="Applets/mazelen_faseruimte.html" title="Interactieve faseruimte"></iframe>
+```
+:::
 
-*	Groene vakjes stellen gras voor.
-*	Lichtbruine vakjes stellen kale grond voor (geen gras).
-*	Gras kan lokaal weer aangroeien op kale vakjes met een constante snelheid, waardoor de graspopulatie zichzelf kan onderhouden.
-*	In tegenstelling tot het ODE-model heeft gras hier geen natuurlijke sterfte.
+## Deel B: mazelen in vier Utrechtse wijken
 
-Konijnen bewegen willekeurig rond. Alle konijnen eten al het gras binnen een bepaalde straal onmiddellijk op (je weet hoe ze zijn, gekke knijnen). Een vaste fractie (c) van elk opgegeten grasvakje wordt omgezet in nieuwe biomassa. Wanneer deze 1 bereikt, plant het konijn zich voort en verschijnt er een nieuw konijn vlakbij het huidige konijn. Dan moet het konijn opnieuw gras gaan eten om weer nieuwe konijnen te kunnen maken.
+Stel: de vaccinatiegraad in Utrecht is de afgelopen jaren gedaald, en de mazelen dreigt terug te komen. De GGD wil weten hoeveel kinderen er gevaccineerd moeten worden om een uitbraak te voorkomen. Volgens het ODE-model uit deel A is het antwoord $p_c \approx 0{,}93$. Maar dat model neemt aan dat iedereen iedereen kan besmetten, alsof de hele stad continu door elkaar loopt. Zo gaat het in het echt natuurlijk niet. Je komt vooral mensen in je eigen buurt tegen, en soms fiets je naar een andere wijk. In deel B onderzoek je met een individu-gebaseerd model (IBM) of dat de voorspelling verandert.
 
-Konijnen sterven met een constante kans per tijdseenheid. Deze sterftekans hangt *niet* af van de hoeveelheid gras, net zoals in het ODE-model.
+In de simulatie hieronder wonen 6000 mensen in vier wijken van Utrecht: Overvecht, Leidsche Rijn, de Uithof en Zuid (1500 per wijk). Elk poppetje is één persoon:
 
-De grafiek in de simulatie toont alleen de laatste 500 tijdstappen, zodat de dynamiek duidelijker zichtbaar is.
+- Een vatbaar persoon kan besmet raken door geïnfecteerden die vlak bij hem staan. Hoe meer zieken in de buurt, hoe groter de kans. Met de schuifregelaar **besmettingsstraal** maak je de afstand waarover iemand besmet kan worden tot 3 keer zo groot. De besmettingskans per contact wordt dan kleiner, zodat een zieke in een goed gemengde populatie nog steeds evenveel mensen besmet. Het ODE-model en de stippellijn veranderen dus niet.
+- Binnen hun wijk lopen mensen een beetje rond. Met de schuifregelaar **rondlopen** bepaal je hoe ver ze per tijdstap lopen. Met **perfect mengen** wordt iedereen elke tijdstap op een willekeurige plek in zijn eigen wijk gezet.
+- Af en toe stapt iemand op de fiets naar een andere wijk (hij wordt dan even een fietsje). Met de schuifregelaar **fietsen** bepaal je hoe vaak dat gebeurt. Fietsers besmetten onderweg niemand. Een fietstocht duurt in het echt maar even. In de simulatie duurt hij langer zodat je de fietsers kunt volgen, maar tijdens de tocht staat hun klok stil: ze worden niet beter, gaan niet dood en tellen niet mee voor besmettingen. Wie aankomt, stapt af op een willekeurige plek in de nieuwe wijk.
+- Geïnfecteerden herstellen met een vaste kans per tijdstap en blijven daarna lang genoeg immuun (in de simulatie worden ze niet opnieuw vatbaar).
+- Iedereen sterft met een vaste kans per tijdstap en wordt dan vervangen door een baby op een willekeurige plek in dezelfde wijk. Een fractie $p$ van de baby's wordt gevaccineerd.
+- Heel af en toe raakt iemand besmet van buiten de stad. Met de knop **Infecteer een wijk** breng je zelf 10 zieken binnen in een willekeurige wijk.
 
-k. Gebruik de simulatie om te bestuderen wat het effect is van de $c$ parameter in dit nieuwe model. Zie je iets wat in het ODE model niet gebeurde?
+De ziekte in de simulatie is precies dezelfde als in deel A: dezelfde herstelsnelheid $g = 0{,}1$, dezelfde sterfte $d = 0{,}01$ (een leven duurt gemiddeld 100 tijdstappen) en dezelfde besmettelijkheid. Volgens het ODE-model kan de ziekte dus ook hier niet uitbreken als meer dan 93% van de baby's gevaccineerd wordt. Alleen de manier waarop mensen elkaar ontmoeten is anders. Als de simulatie iets anders laat zien dan het ODE-model, komt dat dus door de structuur van het model, niet door de ziekte. De stippellijn in de grafiek is het aantal geïnfecteerden dat het ODE-model in evenwicht voorspelt.
 
-l. De simulatie heeft een vinkje om de konijnen en het gras elke tijdstap te "mengen" (door ze op willekeurige plekken te zetten). Zet deze knop aan en bestudeer nogmaals wat het effect is van de $c$ parameter. 
+:::{.print-only}
+<center>*Simulatie van vier Utrechtse wijken, beschikbaar op de website:*</center>
+![](figuren/mazelen_simulatie_print.png){fig-align=center width="80%"}
+:::
 
-m. Bekijk ook de volgende simulatie: [https://tbb.bio.uu.nl/bvd/simulations/konijnen_competition/](https://tbb.bio.uu.nl/bvd/simulations/konijnen_competition/) van bruine konijnen, en witte konijnen met een conversie-efficiëntie die 50% hoger is. Omschrijf in je eigen woorden wat je ziet. 
+:::{.screen-only}
+```{=html}
+<iframe class="applet" width="100%" height="1180" style="border:0"
+src="Applets/mazelen_simulatie.html" title="Simulatie van vier Utrechtse wijken"></iframe>
+```
+:::
 
-n. Schrijf een korte conclusie over dit project (~200 woorden). 
+j. Zet **perfect mengen** aan. Bekijk het gemiddelde aantal geïnfecteerden bij $p = 0$, $0{,}5$, $0{,}7$, $0{,}8$, $0{,}85$ en $0{,}9$, en vergelijk dit met de stippellijn van het ODE-model. Bij welke $p$ verdwijnt de ziekte? Klopt dat met $p_c \approx 0{,}93$? Doe elke instelling een paar keer.
 
+k. Zet perfect mengen weer uit en klik op **Opnieuw** (rondlopen 1, fietsen 0, straal 1×, $p = 0$). Er komt een uitbraak, maar daarna smeult de ziekte met gemiddeld zo'n 70 zieken, ver onder de stippellijn (509). De parameters zijn hetzelfde als bij perfect mengen. Waarom haalt de simulatie het verwachte aantal infecties dan niet?
+
+   *Hint: zet de snelheid laag en volg een groepje zieken. Wie staan er om een zieke heen, een paar tijdstappen nadat hij ziek is geworden?*
+
+l. Varieer hoeveel mensen rondlopen: 0, 1, 2 en 4 (fietsen 0, $p = 0$). Hoe verandert het gemiddelde aantal zieken? Leg uit met je antwoord op de vorige vraag.
+
+m. Zet rondlopen weer op 1. Vergelijk fietsen op 0 met fietsen op 1. Wat zie je? Waarom maakt fietsen zo veel uit?
+
+   *Hint: waar komt een fietser terecht als hij aankomt in een andere wijk?*
+
+n. Zet fietsen weer op 0 en rondlopen op 1. Maak de besmettingsstraal stap voor stap groter: 1×, 1,5×, 2× en 3×. Wat gebeurt er met het aantal zieken? Een zieke besmet volgens het ODE-model nog steeds evenveel mensen. Waarom maakt de straal dan toch zo veel uit?
+
+o. Zet de straal weer op 1× en fietsen op 0,5. Zoek voor rondlopen 2 en voor rondlopen 4 bij welke vaccinatiegraad de ziekte verdwijnt. Vergelijk dit met perfect mengen (vraag j) en met het ODE-model. Wat doet de hoeveelheid menging met de $p_c$ die je in de simulatie vindt?
+
+p. Is de $p_c$ uit het ODE-model te hoog, te laag, of precies goed? Zou je bij het vaststellen van een vaccinatiedoel liever de ODE of de simulatie gebruiken? Bedenk ook hoe mensen in het echt mengen (school, werk, het openbaar vervoer).
+
+q. Schrijf een korte conclusie over dit project (~200 woorden).

@@ -1,0 +1,662 @@
+<!doctype html><html><head><title>Mazelen in vier Utrechtse wijken</title><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Mazelen in Utrecht</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  svg: { fontCache: 'global' },
+  options: { enableMenu: false }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js" async></script>
+<style>
+/* Layout: one reading column (~68ch) for the questions; the two interactive labs break out wider. */
+:root {
+  --paper: #f6f7f8;
+  --sheet: #ffffff;
+  --ink: #17212c;
+  --muted: #586572;
+  --rule: #d8dde2;
+  --accent: #b42a1f;      /* measles red: infected, and the one accent */
+  --vax: #7d95ad;         /* vaccinated */
+  --sus: #ece3c9;         /* susceptible */
+  --rec: #b9c8a6;         /* recovered */
+  --ans: #eef2f5;         /* answer panel */
+  --code: #eef0f2;
+  --c-s: #ffffff;
+  --c-r: #4a9be6;
+  --c-v: #102d5c;
+  --district: #aab5bf;
+  --road: #dde2e6;
+  --f-display: "Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Literata", Georgia, "Times New Roman", serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #11161c; --sheet: #182029; --ink: #e4e9ee; --muted: #9aa7b4; --rule: #2c3640;
+    --accent: #f0705f; --vax: #5f7d9b; --sus: #4d4734; --rec: #4f6142; --ans: #1d2731; --code: #1d252e; --c-s: #f4f6f8; --c-r: #5aa8f0; --c-v: #1c3d78; --district: #6b7884; --road: #29323b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #11161c; --sheet: #182029; --ink: #e4e9ee; --muted: #9aa7b4; --rule: #2c3640;
+  --accent: #f0705f; --vax: #5f7d9b; --sus: #4d4734; --rec: #4f6142; --ans: #1d2731; --code: #1d252e; --c-s: #f4f6f8; --c-r: #5aa8f0; --c-v: #1c3d78; --district: #6b7884; --road: #29323b;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--f-body); font-size: 17px; line-height: 1.65;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+.wrap { max-width: 720px; margin: 0 auto; }
+.wide { max-width: 1080px; margin: 0 auto; }
+h1, h2, h3, .ui, summary, button, label, .eyebrow { font-family: var(--f-display); }
+h1 { font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+h2 { font-size: 1.55rem; font-weight: 700; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+h3 { font-size: 1.05rem; font-weight: 700; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+.eyebrow { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+
+header.top { padding-block: 40px 28px; display: grid; gap: 14px; }
+header.top .lede { font-size: 1.12rem; color: var(--ink); max-width: 62ch; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+.stack { display: grid; gap: 18px; }
+section.part { padding-block: 36px 8px; border-top: 1px solid var(--rule); display: grid; gap: 18px; }
+
+.req { font-size: 0.95rem; color: var(--muted); }
+.req ul { margin: 6px 0 0; padding-left: 1.2em; }
+
+/* Questions */
+ol.q { list-style: none; counter-reset: q; padding: 0; margin: 0; display: grid; gap: 22px; }
+ol.q > li { counter-increment: q; display: grid; grid-template-columns: 2.1em 1fr; column-gap: 8px; }
+ol.q > li::before {
+  content: counter(q, lower-alpha); font-family: var(--f-display); font-weight: 800;
+  color: var(--accent); font-size: 1.05rem; line-height: 1.65;
+}
+ol.q > li > .body { min-width: 0; display: grid; gap: 10px; }
+ol.q.cont { counter-reset: q 9; }
+
+ol.steps { margin: 0; padding-left: 1.4em; display: grid; gap: 6px; list-style: lower-roman; }
+ol.steps li { padding-left: 4px; }
+ol.steps li::marker { font-family: var(--f-display); font-weight: 700; color: var(--muted); }
+details.ans { border-radius: 6px; background: transparent; }
+details.ans > summary {
+  list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted);
+  padding: 4px 10px; border: 1px solid var(--rule); border-radius: 999px; user-select: none;
+}
+details.ans > summary::-webkit-details-marker { display: none; }
+details.ans > summary::before { content: "+"; font-weight: 800; }
+details.ans[open] > summary::before { content: "–"; }
+details.ans > summary:hover { color: var(--ink); border-color: var(--muted); }
+details.ans > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+details.ans .inner {
+  margin-top: 10px; background: var(--ans); padding: 14px 18px; border-radius: 6px;
+  display: grid; gap: 10px; font-size: 0.97rem; overflow-x: auto;
+}
+.hint { font-size: 0.93rem; color: var(--muted); font-style: italic; }
+
+/* Code */
+.codebox { position: relative; background: var(--code); border-radius: 6px; overflow: hidden; }
+.codebox pre { margin: 0; padding: 16px 18px; overflow-x: auto; font-family: var(--f-mono); font-size: 0.82rem; line-height: 1.55; }
+.copy {
+  position: absolute; top: 8px; right: 8px; font-size: 0.75rem; padding: 4px 10px;
+}
+button, .btn {
+  font: 600 0.85rem var(--f-display); color: var(--ink); background: var(--sheet);
+  border: 1px solid var(--rule); border-radius: 6px; padding: 7px 14px; cursor: pointer;
+}
+button:hover { border-color: var(--muted); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* Labs */
+.lab {
+  background: var(--sheet); border: 1px solid var(--rule); border-radius: 10px;
+  padding: 20px; display: grid; gap: 18px; margin-block: 8px;
+}
+.lab-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; align-items: baseline; }
+.lab-head p { font-size: 0.92rem; color: var(--muted); max-width: 60ch; }
+.lab-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
+.lab-grid.sim { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+@media (max-width: 760px) { .lab-grid, .lab-grid.sim { grid-template-columns: minmax(0, 1fr); } }
+.panel { min-width: 0; display: grid; gap: 8px; align-content: start; }
+.panel canvas { width: 100%; display: block; border-radius: 6px; }
+.panel .cap { font: 600 0.78rem var(--f-display); color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+#city { aspect-ratio: 680 / 700; max-width: 100%; }
+
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px 22px; }
+.ctl { display: grid; gap: 4px; }
+.ctl .row { display: flex; justify-content: space-between; gap: 8px; font: 600 0.85rem var(--f-display); }
+.ctl .row output { font-family: var(--f-mono); font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink); }
+.ctl .sub { font-size: 0.78rem; color: var(--muted); font-family: var(--f-display); }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+.check { display: flex; gap: 8px; align-items: center; font: 600 0.85rem var(--f-display); }
+
+.readout { display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.readout div { background: var(--sheet); padding: 8px 12px; display: grid; gap: 2px; }
+.readout .k { font: 600 0.7rem var(--f-display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.readout .v { font-family: var(--f-mono); font-size: 1rem; font-variant-numeric: tabular-nums; }
+.readout .v.hot { color: var(--accent); font-weight: 600; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font: 0.8rem var(--f-display); color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25); }
+.sw.line, .sw.dash { box-shadow: none; }
+.sw.line { height: 3px; border-radius: 0; }
+.sw.dash { height: 0; border-top: 2px dashed; background: none !important; }
+
+.presets { display: flex; flex-wrap: wrap; gap: 8px; }
+.presets button { font-weight: 600; }
+.presets button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
+.note { font-size: 0.92rem; color: var(--muted); border-left: 2px solid var(--rule); padding-left: 14px; }
+mjx-container { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+mjx-container[display="true"] { margin: 0.4em 0 !important; }
+/* Flow diagram */
+figure.flow { margin: 0; display: grid; gap: 6px; }
+.flow-scroll { overflow-x: auto; background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; padding: 12px; }
+.flow svg { display: block; width: 100%; min-width: 560px; height: auto; font-family: var(--f-display); }
+figure.flow figcaption { font: 0.82rem var(--f-display); color: var(--muted); }
+.box-plain { fill: var(--sheet); stroke: var(--ink); stroke-width: 1.5; }
+.box-s { fill: var(--sus); stroke: var(--ink); stroke-width: 1.5; }
+.box-i { fill: var(--sheet); stroke: var(--accent); stroke-width: 2; }
+.box-out { fill: var(--sheet); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.boundary { fill: none; stroke: var(--accent); stroke-width: 1.2; stroke-dasharray: 2 4; }
+.a { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.f-ink { fill: var(--ink); }
+.t-head { font-size: 15px; font-weight: 700; fill: var(--ink); }
+.t-head.muted { fill: var(--muted); }
+.t-sub { font-size: 12px; fill: var(--muted); }
+.t-sub.accent { fill: var(--accent); font-weight: 600; }
+.t-lab { font-size: 13px; font-weight: 600; fill: var(--ink); font-family: var(--f-mono); }
+.t-note { font-size: 12px; fill: var(--muted); font-style: italic; }
+figure.sketch { margin: 0; display: grid; gap: 6px; }
+figure.sketch .flow-scroll { padding: 8px; }
+figure.sketch svg { display: block; width: 100%; max-width: 520px; height: auto; font-family: var(--f-display); }
+figure.sketch figcaption { font: 0.8rem var(--f-display); color: var(--muted); }
+.sketch .ax { stroke: var(--muted); stroke-width: 1; }
+.sketch .tk { font-size: 11px; fill: var(--muted); }
+.sketch .lb { font-size: 13px; font-weight: 700; fill: var(--ink); }
+.sketch .lb.s { fill: var(--vax); }
+.sketch .lb.i { fill: var(--accent); }
+.sketch .nc-s { fill: none; stroke: var(--vax); stroke-width: 2.5; }
+.sketch .nc-i { stroke: var(--accent); stroke-width: 2.5; }
+.sketch .eq-fill { fill: var(--ink); stroke: var(--ink); stroke-width: 1.5; }
+.sketch .eq-open { fill: var(--sheet); stroke: var(--ink); stroke-width: 1.5; }
+.lab { position: relative; }
+.toast { position: absolute; top: 72px; right: 20px; left: auto; z-index: 3; margin: 0; max-width: min(46ch, calc(100% - 40px)); box-shadow: 0 6px 20px rgb(0 0 0 / 0.18); background: var(--ink); color: var(--paper); font: 0.88rem var(--f-display); padding: 10px 14px; border-radius: 8px; }
+.toast strong { font-weight: 700; }
+footer { padding-top: 40px; font: 0.82rem var(--f-display); color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <style>
+/* embedded in the course book: no page chrome, just the lab */
+body { padding: 8px !important; }
+.lab { margin: 0 !important; }
+</style>
+<script>
+// Follow the book's light/dark mode (the book and this applet share an origin);
+// ?theme=light or ?theme=dark forces one (used for the print screenshots).
+(function () {
+  var forced = new URLSearchParams(location.search).get("theme");
+  function apply() {
+    var t = forced;
+    try { if (!t && parent !== window) t = parent.document.body.classList.contains("quarto-dark") ? "dark" : "light"; } catch (e) {}
+    if (t) document.documentElement.setAttribute("data-theme", t);
+  }
+  apply();
+  try { new MutationObserver(apply).observe(parent.document.body, { attributes: true, attributeFilter: ["class"] }); } catch (e) {}
+})();
+</script>
+<div class="lab" id="simLab">
+    <div class="lab-head">
+      <h3 class="ui">Simulatie</h3>
+      <div class="toolbar">
+        <button type="button" id="simPlay" class="primary">Start</button>
+        <button type="button" id="simStep">Stap</button>
+        <button type="button" id="simReset">Opnieuw</button>
+        <button type="button" id="simSeed">Infecteer een wijk</button>
+      </div>
+    </div>
+    <p class="toast" id="simToast" role="status" aria-live="polite" hidden></p>
+    <div class="lab-grid sim">
+      <div class="panel">
+        <canvas id="city" height="520"></canvas>
+        <div class="legend">
+          <span><i class="sw" style="background:var(--c-s)"></i>vatbaar</span>
+          <span><i class="sw" style="background:var(--accent)"></i>geïnfecteerd</span>
+          <span><i class="sw" style="background:var(--c-r)"></i>hersteld</span>
+          <span><i class="sw" style="background:var(--c-v)"></i>gevaccineerd</span>
+        </div>
+      </div>
+      <div class="panel" style="gap:16px">
+        <div class="controls">
+          <div class="ctl">
+            <div class="row"><label for="simP">Vaccinatiegraad p</label><output id="simPv"></output></div>
+            <input type="range" id="simP" min="0" max="0.95" step="0.05" value="0">
+            <span class="sub">Begint de simulatie opnieuw</span>
+          </div>
+          <div class="ctl">
+            <div class="row"><label for="simWalk">Rondlopen</label><output id="simWalkv"></output></div>
+            <input type="range" id="simWalk" min="0" max="30" step="1" value="1">
+            <span class="sub">Afstand per tijdstap binnen de wijk</span>
+          </div>
+          <div class="ctl">
+            <div class="row"><label for="simCyc">Fietsen</label><output id="simCycv"></output></div>
+            <input type="range" id="simCyc" min="0" max="2" step="0.1" value="0">
+            <span class="sub">Kans per persoon per tijdstap</span>
+          </div>
+          <div class="ctl">
+            <div class="row"><label for="simRad">Besmettingsstraal</label><output id="simRadv"></output></div>
+            <input type="range" id="simRad" min="1" max="3" step="0.1" value="1">
+            <span class="sub">Hoe ver een zieke iemand kan besmetten</span>
+          </div>
+          <div class="ctl">
+            <div class="row"><label for="simSpeed">Snelheid</label><output id="simSpeedv"></output></div>
+            <input type="range" id="simSpeed" min="0" max="100" step="1" value="50">
+            <span class="sub">Tijdstappen per beeld</span>
+          </div>
+          <label class="check"><input type="checkbox" id="simMix"> Perfect mengen binnen de wijk</label>
+        </div>
+        <div class="panel">
+          <span class="cap">Aantal geïnfecteerden (laatste 1500 tijdstappen)</span>
+          <canvas id="simTs" height="200"></canvas>
+          <div class="legend">
+            <span><i class="sw line" style="background:var(--accent)"></i>simulatie</span>
+          </div>
+        </div>
+        <div class="readout">
+          <div><span class="k">Tijd</span><span class="v" id="sT"></span></div>
+          <div><span class="k">Ziek</span><span class="v hot" id="sI"></span></div>
+          <div><span class="k">Gem. ziek</span><span class="v" id="sMean"></span></div>
+          <div><span class="k">Fietsers</span><span class="v" id="sB"></span></div>
+        </div>
+        <p class="note">"Gem. ziek" is het gemiddelde over de laatste 1000 tijdstappen. Na het opnieuw starten komt eerst een grote uitbraak, met daarna een paar golven. Wacht zo'n 1500 tijdstappen voordat je het gemiddelde afleest. Het aantal zieken per wijk staat op de kaart.</p>
+      </div>
+    </div>
+  </div>
+<script>
+
+// ---------- helpers ----------
+const $ = (id) => document.getElementById(id);
+function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function fmt(x, n) { return x.toLocaleString('nl-NL', { minimumFractionDigits: n, maximumFractionDigits: n }); }
+function niceStep(range, target) {
+  const raw = range / target, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const f = raw / mag;
+  return (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * mag;
+}
+function setupCanvas(c) {
+  const dpr = window.devicePixelRatio || 1;
+  // remember the CSS height once: c.height is overwritten below with the device-pixel height
+  if (!c._cssH) c._cssH = parseInt(c.getAttribute('height'), 10);
+  const w = c.clientWidth, h = c._cssH;
+  c.style.height = h + 'px';
+  if (c.width !== Math.round(w * dpr) || c._h !== h) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); c._h = h; }
+  const ctx = c.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, w, h };
+}
+function drawAxes(ctx, box, xmax, ymax, xlabel, ylabel) {
+  const { l, t, r, b } = box;
+  ctx.strokeStyle = css('--rule'); ctx.fillStyle = css('--muted');
+  ctx.lineWidth = 1; ctx.font = '11px "Public Sans", sans-serif';
+  const xs = niceStep(xmax, 5), ys = niceStep(ymax, 5);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let v = 0; v <= xmax + 1e-9; v += xs) {
+    const x = l + (r - l) * v / xmax;
+    ctx.beginPath(); ctx.moveTo(x, t); ctx.lineTo(x, b); ctx.stroke();
+    ctx.fillText(fmt(v, xs < 1 ? 1 : 0), x, b + 5);
+  }
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (let v = 0; v <= ymax + 1e-9; v += ys) {
+    const y = b - (b - t) * v / ymax;
+    ctx.beginPath(); ctx.moveTo(l, y); ctx.lineTo(r, y); ctx.stroke();
+    ctx.fillText(fmt(v, ys < 1 ? 1 : 0), l - 6, y);
+  }
+  ctx.fillStyle = css('--ink'); ctx.font = '600 12px "Public Sans", sans-serif';
+  ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+  ctx.fillText(xlabel, r, b + 34);
+  ctx.save(); ctx.translate(l - 38, t); ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(ylabel, 0, 0); ctx.restore();
+}
+
+
+// ---------- IBM: vier Utrechtse wijken ----------
+function makeRng(seed) {
+  let s = seed >>> 0 || 1;
+  return function () { s ^= s << 13; s >>>= 0; s ^= s >>> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; };
+}
+(function () {
+  const rng = makeRng(Date.now() % 2147483647);
+  const MAP = 680, MAPH = 700, SIDE = 200, NPER = 1500, NDIST = 4, N = NPER * NDIST;
+  const GAMMA = 0.1, D = 0.01, R0 = 15, IMP = 0.01, BIKE = 15; // same disease as part A
+  const R_BASE = 5.48, CELL = R_BASE, GN = Math.ceil(SIDE / CELL);
+  const DIST = [
+    { name: 'Overvecht',     x: 240, y: 40 },
+    { name: 'Leidsche Rijn', x: 20,  y: 260 },
+    { name: 'Uithof',        x: 460, y: 260 },
+    { name: 'Zuid',          x: 240, y: 480 },
+  ];
+  // infection radius (adjustable). Beta per contact is rescaled so that, when well mixed,
+  // one sick person still infects R0 people on average: the ODE prediction does not change.
+  let R_INF = R_BASE, BETA = 0, REACH = 1;
+  function setRadius(mult) {
+    R_INF = R_BASE * mult; REACH = Math.ceil(R_INF / CELL);
+    const nb = NPER * Math.PI * R_INF * R_INF / (SIDE * SIDE);
+    BETA = R0 * (GAMMA + D) / nb;
+  }
+  setRadius(1);
+
+  const m = {
+    x: new Float32Array(N), y: new Float32Array(N), dist: new Uint8Array(N),
+    st: new Uint8Array(N), nst: new Uint8Array(N), bike: new Uint8Array(N),
+    tx: new Float32Array(N), ty: new Float32Array(N), to: new Uint8Array(N),
+    t: 0, nI: 0, nB: 0, distI: [0, 0, 0, 0], hist: [], running: false, ymax: 0,
+    p: 0.5, walk: 10, cyc: 0.005, mix: false,
+  };
+  const pIn = $('simP'), wIn = $('simWalk'), cIn = $('simCyc'), spIn = $('simSpeed'), mixIn = $('simMix'), radIn = $('simRad');
+
+  function placeIn(i, k) {
+    m.x[i] = DIST[k].x + 2 + rng() * (SIDE - 4); m.y[i] = DIST[k].y + 2 + rng() * (SIDE - 4); m.dist[i] = k;
+  }
+  function count() {
+    let I = 0, B = 0; const di = [0, 0, 0, 0];
+    for (let i = 0; i < N; i++) {
+      if (m.st[i] === 1) { I++; if (!m.bike[i]) di[m.dist[i]]++; }
+      if (m.bike[i]) B++;
+    }
+    m.nI = I; m.nB = B; m.distI = di;
+  }
+  function reset() {
+    m.p = +pIn.value;
+    for (let i = 0; i < N; i++) { placeIn(i, Math.floor(i / NPER)); m.bike[i] = 0; m.st[i] = rng() < m.p ? 3 : 0; }
+    let k = 0, tries = 0;
+    while (k < 5 && tries++ < 1e5) { const j = Math.floor(rng() * N); if (m.st[j] === 0) { m.st[j] = 1; k++; } }
+    m.t = 0; m.hist = []; m.ymax = 0; count(); render();
+  }
+
+  const heads = new Int32Array(NDIST * GN * GN), nextIdx = new Int32Array(N);
+  function cellOf(i) {
+    const k = m.dist[i];
+    const cx = Math.min(GN - 1, Math.max(0, Math.floor((m.x[i] - DIST[k].x) / CELL)));
+    const cy = Math.min(GN - 1, Math.max(0, Math.floor((m.y[i] - DIST[k].y) / CELL)));
+    return [k, cx, cy];
+  }
+  function step() {
+    // where are the infected walkers? (spatial hash per district)
+    heads.fill(-1);
+    for (let i = 0; i < N; i++) {
+      if (m.st[i] !== 1 || m.bike[i]) continue;
+      const [k, cx, cy] = cellOf(i), h = (k * GN + cy) * GN + cx;
+      nextIdx[i] = heads[h]; heads[h] = i;
+    }
+    const r2 = R_INF * R_INF;
+    for (let i = 0; i < N; i++) {
+      const s = m.st[i];
+      if (m.bike[i]) { m.nst[i] = s; continue; } // the clock stops during a bike trip
+      if (rng() < D) { // death: replaced by a baby somewhere in the same district
+        placeIn(i, m.bike[i] ? m.to[i] : m.dist[i]); m.bike[i] = 0;
+        m.nst[i] = rng() < m.p ? 3 : 0; continue;
+      }
+      if (s === 0 && !m.bike[i]) {
+        const [k, cx, cy] = cellOf(i);
+        let c = 0;
+        for (let yy = Math.max(0, cy - REACH); yy <= Math.min(GN - 1, cy + REACH); yy++)
+          for (let xx = Math.max(0, cx - REACH); xx <= Math.min(GN - 1, cx + REACH); xx++)
+            for (let j = heads[(k * GN + yy) * GN + xx]; j !== -1; j = nextIdx[j]) {
+              const dx = m.x[j] - m.x[i], dy = m.y[j] - m.y[i];
+              if (dx * dx + dy * dy < r2) c++;
+            }
+        m.nst[i] = (c > 0 && rng() < 1 - Math.exp(-BETA * c)) ? 1 : 0;
+      } else if (s === 1) m.nst[i] = rng() < GAMMA ? 2 : 1;
+      else m.nst[i] = s;
+    }
+    const tmp = m.st; m.st = m.nst; m.nst = tmp;
+    if (rng() < IMP) { const j = Math.floor(rng() * N); if (m.st[j] === 0 && !m.bike[j]) m.st[j] = 1; }
+    // movement
+    for (let i = 0; i < N; i++) {
+      if (m.bike[i]) {
+        const dx = m.tx[i] - m.x[i], dy = m.ty[i] - m.y[i], dd = Math.hypot(dx, dy);
+        if (dd <= BIKE) { m.x[i] = m.tx[i]; m.y[i] = m.ty[i]; m.bike[i] = 0; m.dist[i] = m.to[i]; }
+        else { m.x[i] += dx / dd * BIKE; m.y[i] += dy / dd * BIKE; }
+        continue;
+      }
+      if (rng() < m.cyc) {
+        let k = Math.floor(rng() * 3); if (k >= m.dist[i]) k++;
+        m.to[i] = k; m.bike[i] = 1;
+        m.tx[i] = DIST[k].x + 2 + rng() * (SIDE - 4); m.ty[i] = DIST[k].y + 2 + rng() * (SIDE - 4);
+        continue;
+      }
+      if (m.mix) { placeIn(i, m.dist[i]); continue; }
+      if (m.walk > 0) {
+        const k = m.dist[i], lo = 2, hi = SIDE - 2;
+        let nx = m.x[i] - DIST[k].x + (rng() * 2 - 1) * m.walk, ny = m.y[i] - DIST[k].y + (rng() * 2 - 1) * m.walk;
+        if (nx < lo) nx = 2 * lo - nx; if (nx > hi) nx = 2 * hi - nx;
+        if (ny < lo) ny = 2 * lo - ny; if (ny > hi) ny = 2 * hi - ny;
+        m.x[i] = DIST[k].x + Math.min(hi, Math.max(lo, nx)); m.y[i] = DIST[k].y + Math.min(hi, Math.max(lo, ny));
+      }
+    }
+    m.t++; count();
+    m.hist.push(m.nI); if (m.hist.length > 1500) m.hist.shift();
+  }
+
+  // ---------- drawing ----------
+  const city = $('city');
+  function odeIstar() { return Math.max(0, N * D / (GAMMA + D) * (1 - m.p - 1 / R0)); }
+  function drawCity() {
+    const dpr = window.devicePixelRatio || 1, w = city.clientWidth;
+    if (!w) return;
+    const hgt = w * MAPH / MAP;
+    if (city.width !== Math.round(w * dpr)) { city.width = Math.round(w * dpr); city.height = Math.round(hgt * dpr); }
+    const ctx = city.getContext('2d'), sc = w / MAP;
+    ctx.setTransform(dpr * sc, 0, 0, dpr * sc, 0, 0);
+    ctx.clearRect(0, 0, MAP, MAPH);
+    const col = { s: css('--c-s'), i: css('--accent'), r: css('--c-r'), v: css('--c-v') };
+    const C = [col.s, col.i, col.r, col.v];
+    // bike paths between district centres
+    ctx.strokeStyle = css('--road'); ctx.lineWidth = 6; ctx.lineCap = 'round';
+    for (let a = 0; a < NDIST; a++) for (let b = a + 1; b < NDIST; b++) {
+      ctx.beginPath();
+      ctx.moveTo(DIST[a].x + SIDE / 2, DIST[a].y + SIDE / 2); ctx.lineTo(DIST[b].x + SIDE / 2, DIST[b].y + SIDE / 2); ctx.stroke();
+    }
+    // districts
+    for (let k = 0; k < NDIST; k++) {
+      const q = DIST[k];
+      ctx.fillStyle = css('--district'); ctx.strokeStyle = css('--rule'); ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.roundRect(q.x, q.y, SIDE, SIDE, 14); ctx.fill(); ctx.stroke();
+    }
+    // people: walkers first (infected last so they sit on top), then cyclists
+    // red glow behind infected people so they stand out
+    ctx.fillStyle = col.i; ctx.globalAlpha = 0.28;
+    ctx.beginPath();
+    for (let i = 0; i < N; i++) {
+      if (m.st[i] !== 1) continue;
+      ctx.moveTo(m.x[i] + 4.5, m.y[i] - 0.5); ctx.arc(m.x[i], m.y[i] - 0.5, 4.5, 0, 6.2832);
+    }
+    ctx.fill(); ctx.globalAlpha = 1;
+    // draw each colour as one batched path: much faster with thousands of people
+    for (const pass of [0, 2, 3, 1]) {
+      ctx.fillStyle = C[pass];
+      ctx.beginPath();
+      for (let i = 0; i < N; i++) {
+        if (m.bike[i] || m.st[i] !== pass) continue;
+        const x = m.x[i], y = m.y[i];
+        ctx.moveTo(x + 0.95, y - 1.75); ctx.arc(x, y - 1.75, 0.95, 0, 6.2832);
+        ctx.rect(x - 1.05, y - 0.6, 2.1, 2.4);
+      }
+      ctx.fill();
+    }
+    function bikePath(filter) {
+      ctx.beginPath();
+      for (let i = 0; i < N; i++) {
+        if (!m.bike[i] || !filter(i)) continue;
+        const x = m.x[i], y = m.y[i], k = 0.7; // small bike
+        ctx.moveTo(x - 0.6 * k, y + 1.2 * k); ctx.arc(x - 2.5 * k, y + 1.2 * k, 1.7 * k, 0, 6.2832);
+        ctx.moveTo(x + 4.2 * k, y + 1.2 * k); ctx.arc(x + 2.5 * k, y + 1.2 * k, 1.7 * k, 0, 6.2832);
+        ctx.moveTo(x - 2.5 * k, y + 1.2 * k); ctx.lineTo(x - 0.4 * k, y - 1.2 * k); ctx.lineTo(x + 2.5 * k, y + 1.2 * k);
+        ctx.moveTo(x - 0.4 * k, y - 1.2 * k); ctx.lineTo(x + 1.6 * k, y - 1.2 * k);
+      }
+    }
+    // dark outline first, so white (susceptible) cyclists show up on the white background
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.globalAlpha = 0.45;
+    bikePath(() => true); ctx.strokeStyle = css('--muted'); ctx.lineWidth = 1.4; ctx.stroke();
+    ctx.globalAlpha = 0.8; ctx.lineWidth = 0.7;
+    for (let st = 0; st < 4; st++) { bikePath(i => m.st[i] === st); ctx.strokeStyle = C[st]; ctx.stroke(); }
+    ctx.globalAlpha = 1;
+    // labels
+    for (let k = 0; k < NDIST; k++) {
+      const q = DIST[k];
+      // a halo in the card colour keeps labels readable when cyclists ride past
+      ctx.lineJoin = 'round'; ctx.lineWidth = 4; ctx.strokeStyle = css('--sheet');
+      ctx.font = '700 14px "Public Sans", sans-serif'; ctx.textBaseline = 'bottom'; ctx.textAlign = 'left';
+      ctx.strokeText(q.name, q.x + 2, q.y - 5);
+      ctx.fillStyle = css('--ink'); ctx.fillText(q.name, q.x + 2, q.y - 5);
+      ctx.textAlign = 'right'; ctx.font = '600 13px "JetBrains Mono", monospace';
+      ctx.strokeText(m.distI[k] + ' ziek', q.x + SIDE - 2, q.y - 5);
+      ctx.fillStyle = css('--accent'); ctx.fillText(m.distI[k] + ' ziek', q.x + SIDE - 2, q.y - 5);
+    }
+  }
+  function drawAxesT(ctx, box, t0, span, ymax) {
+    const { l, t, r, b } = box;
+    ctx.strokeStyle = css('--rule'); ctx.fillStyle = css('--muted'); ctx.lineWidth = 1;
+    ctx.font = '11px "Public Sans", sans-serif';
+    const xs = 250, ys = niceStep(ymax, 4);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = Math.ceil(t0 / xs) * xs; v <= t0 + span; v += xs) {
+      const x = l + (r - l) * (v - t0) / span;
+      ctx.beginPath(); ctx.moveTo(x, t); ctx.lineTo(x, b); ctx.stroke();
+      if (x < r - 18) ctx.fillText(v.toLocaleString('nl-NL'), x, b + 5);
+    }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = 0; v <= ymax; v += ys) {
+      const y = b - (b - t) * v / ymax;
+      ctx.beginPath(); ctx.moveTo(l, y); ctx.lineTo(r, y); ctx.stroke();
+      ctx.fillText(fmt(v, 0), l - 6, y);
+    }
+    ctx.fillStyle = css('--ink'); ctx.font = '600 12px "Public Sans", sans-serif';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('tijdstap', r, b + 34);
+  }
+  function render() {
+    drawCity();
+    $('sT').textContent = m.t.toLocaleString('nl-NL');
+    $('sI').textContent = m.nI.toLocaleString('nl-NL');
+    const last = m.hist.slice(-1000);
+    $('sMean').textContent = last.length ? fmt(last.reduce((a, b) => a + b, 0) / last.length, 1) : '–';
+    $('sB').textContent = m.nB.toLocaleString('nl-NL');
+    const { ctx, w, h } = setupCanvas($('simTs'));
+    ctx.clearRect(0, 0, w, h);
+    const ode = odeIstar();
+    let target = Math.max(ode * 1.3, 20); for (const v of m.hist) target = Math.max(target, v);
+    target *= 1.08;
+    if (!m.ymax || target > m.ymax) m.ymax = target; else m.ymax += (target - m.ymax) * 0.04;
+    const mx = m.ymax, box = { l: 52, t: 8, r: w - 12, b: h - 40 };
+    const t0 = Math.max(0, m.t - 1500), span = 1500;
+    drawAxesT(ctx, box, t0, span, mx);
+    const X = (t) => box.l + (box.r - box.l) * (t - t0) / span, Y = (v) => box.b - (box.b - box.t) * v / mx;
+    ctx.save(); ctx.beginPath(); ctx.rect(box.l, box.t, box.r - box.l, box.b - box.t); ctx.clip();
+    if (ode > 0) {
+      ctx.setLineDash([5, 4]); ctx.strokeStyle = css('--muted'); ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(box.l, Y(ode)); ctx.lineTo(box.r, Y(ode)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.font = '600 11px "Public Sans", sans-serif'; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+      ctx.lineJoin = 'round'; ctx.lineWidth = 4; ctx.strokeStyle = css('--sheet');
+      const lab = 'verwachte aantal infecties op basis van ODE';
+      ctx.strokeText(lab, box.r - 4, Y(ode) - 3);
+      ctx.fillStyle = css('--muted'); ctx.fillText(lab, box.r - 4, Y(ode) - 3);
+    }
+    ctx.strokeStyle = css('--accent'); ctx.lineWidth = 1.5; ctx.beginPath();
+    const startT = m.t - m.hist.length + 1;
+    m.hist.forEach((v, k) => { const x = X(startT + k), y = Y(v); k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+    ctx.stroke(); ctx.restore();
+  }
+  function labels() {
+    $('simPv').textContent = fmt(+pIn.value, 2);
+    $('simWalkv').textContent = mixIn.checked ? '–' : wIn.value;
+    $('simCycv').textContent = fmt(+cIn.value, 1) + '%';
+    $('simRadv').textContent = fmt(+radIn.value, 1) + '×';
+    const v = speed(); $('simSpeedv').textContent = fmt(v, v < 1 ? 2 : 1);
+    wIn.disabled = mixIn.checked;
+  }
+  // one animation loop at a time, ~30 frames per second on every screen
+  let rafId = null, lastFrame = 0, acc = 0;
+  // speed slider is logarithmic: 0.1 to 10 time steps per frame
+  function speed() { return Math.pow(10, -1 + 2 * (+spIn.value) / 100); }
+  function loop(now) {
+    rafId = null;
+    if (!m.running) return;
+    if (now - lastFrame >= 33) {
+      lastFrame = now;
+      acc += speed();
+      let n = 0;
+      while (acc >= 1) { step(); acc -= 1; n++; }
+      if (n) render();
+    }
+    rafId = requestAnimationFrame(loop);
+  }
+  function setRunning(r) {
+    m.running = r; $('simPlay').textContent = r ? 'Pauze' : 'Start';
+    if (r && rafId === null) rafId = requestAnimationFrame(loop);
+  }
+  $('simPlay').addEventListener('click', () => setRunning(!m.running));
+  $('simStep').addEventListener('click', () => { step(); render(); });
+  $('simReset').addEventListener('click', () => reset());
+  // infect 10 susceptible walkers in a random district (never the Uithof)
+  const toast = $('simToast'); let toastTimer = null;
+  const QUIPS = [
+    'Dit mag natuurlijk alleen omdat het een simulatie is.',
+    'Niet thuis proberen. Dit is een simulatie.',
+    'Gelukkig is het maar een simulatie.',
+  ];
+  $('simSeed').addEventListener('click', () => {
+    const options = [0, 1, 3], k = options[Math.floor(rng() * options.length)];
+    const pool = [];
+    for (let i = 0; i < N; i++) if (m.dist[i] === k && !m.bike[i] && m.st[i] === 0) pool.push(i);
+    let n = 0;
+    for (; n < 10 && pool.length; n++) m.st[pool.splice(Math.floor(rng() * pool.length), 1)[0]] = 1;
+    count(); render();
+    toast.innerHTML = '<strong>' + n + ' zieken losgelaten in ' + DIST[k].name + '.</strong> ' + QUIPS[Math.floor(rng() * QUIPS.length)];
+    toast.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { toast.hidden = true; }, 4000);
+  });
+  pIn.addEventListener('input', labels);
+  pIn.addEventListener('change', reset);
+  wIn.addEventListener('input', () => { m.walk = +wIn.value; labels(); });
+  cIn.addEventListener('input', () => { m.cyc = +cIn.value / 100; labels(); });
+  mixIn.addEventListener('change', () => { m.mix = mixIn.checked; labels(); });
+  radIn.addEventListener('input', () => { setRadius(+radIn.value); labels(); });
+  spIn.addEventListener('input', labels);
+  window.addEventListener('resize', render);
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
+  new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  m.walk = +wIn.value; m.cyc = +cIn.value / 100; m.mix = mixIn.checked; setRadius(+radIn.value);
+  labels(); reset();
+  document.fonts && document.fonts.ready.then(() => { render(); window._drawOde && window._drawOde(); });
+})();
+</script>
+<script>
+// In the book this applet sits in an iframe: make that iframe exactly as tall
+// as the applet, also when the layout changes (e.g. on a phone).
+(function () {
+  var fe; try { fe = window.frameElement; } catch (e) {}
+  if (!fe) return;
+  function fit() { fe.style.height = document.documentElement.scrollHeight + "px"; }
+  window.addEventListener("load", fit);
+  window.addEventListener("resize", fit);
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(document.body);
+})();
+</script>
+</body></html>
