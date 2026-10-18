@@ -1,0 +1,436 @@
+<!doctype html><html><head><title>Mazelen: interactieve faseruimte</title><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Mazelen in Utrecht</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Public+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  svg: { fontCache: 'global' },
+  options: { enableMenu: false }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js" async></script>
+<style>
+/* Layout: one reading column (~68ch) for the questions; the two interactive labs break out wider. */
+:root {
+  --paper: #f6f7f8;
+  --sheet: #ffffff;
+  --ink: #17212c;
+  --muted: #586572;
+  --rule: #d8dde2;
+  --accent: #b42a1f;      /* measles red: infected, and the one accent */
+  --vax: #7d95ad;         /* vaccinated */
+  --sus: #ece3c9;         /* susceptible */
+  --rec: #b9c8a6;         /* recovered */
+  --ans: #eef2f5;         /* answer panel */
+  --code: #eef0f2;
+  --c-s: #ffffff;
+  --c-r: #4a9be6;
+  --c-v: #102d5c;
+  --district: #aab5bf;
+  --road: #dde2e6;
+  --f-display: "Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Literata", Georgia, "Times New Roman", serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #11161c; --sheet: #182029; --ink: #e4e9ee; --muted: #9aa7b4; --rule: #2c3640;
+    --accent: #f0705f; --vax: #5f7d9b; --sus: #4d4734; --rec: #4f6142; --ans: #1d2731; --code: #1d252e; --c-s: #f4f6f8; --c-r: #5aa8f0; --c-v: #1c3d78; --district: #6b7884; --road: #29323b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #11161c; --sheet: #182029; --ink: #e4e9ee; --muted: #9aa7b4; --rule: #2c3640;
+  --accent: #f0705f; --vax: #5f7d9b; --sus: #4d4734; --rec: #4f6142; --ans: #1d2731; --code: #1d252e; --c-s: #f4f6f8; --c-r: #5aa8f0; --c-v: #1c3d78; --district: #6b7884; --road: #29323b;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--f-body); font-size: 17px; line-height: 1.65;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+.wrap { max-width: 720px; margin: 0 auto; }
+.wide { max-width: 1080px; margin: 0 auto; }
+h1, h2, h3, .ui, summary, button, label, .eyebrow { font-family: var(--f-display); }
+h1 { font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+h2 { font-size: 1.55rem; font-weight: 700; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+h3 { font-size: 1.05rem; font-weight: 700; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+.eyebrow { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+
+header.top { padding-block: 40px 28px; display: grid; gap: 14px; }
+header.top .lede { font-size: 1.12rem; color: var(--ink); max-width: 62ch; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+.stack { display: grid; gap: 18px; }
+section.part { padding-block: 36px 8px; border-top: 1px solid var(--rule); display: grid; gap: 18px; }
+
+.req { font-size: 0.95rem; color: var(--muted); }
+.req ul { margin: 6px 0 0; padding-left: 1.2em; }
+
+/* Questions */
+ol.q { list-style: none; counter-reset: q; padding: 0; margin: 0; display: grid; gap: 22px; }
+ol.q > li { counter-increment: q; display: grid; grid-template-columns: 2.1em 1fr; column-gap: 8px; }
+ol.q > li::before {
+  content: counter(q, lower-alpha); font-family: var(--f-display); font-weight: 800;
+  color: var(--accent); font-size: 1.05rem; line-height: 1.65;
+}
+ol.q > li > .body { min-width: 0; display: grid; gap: 10px; }
+ol.q.cont { counter-reset: q 9; }
+
+ol.steps { margin: 0; padding-left: 1.4em; display: grid; gap: 6px; list-style: lower-roman; }
+ol.steps li { padding-left: 4px; }
+ol.steps li::marker { font-family: var(--f-display); font-weight: 700; color: var(--muted); }
+details.ans { border-radius: 6px; background: transparent; }
+details.ans > summary {
+  list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted);
+  padding: 4px 10px; border: 1px solid var(--rule); border-radius: 999px; user-select: none;
+}
+details.ans > summary::-webkit-details-marker { display: none; }
+details.ans > summary::before { content: "+"; font-weight: 800; }
+details.ans[open] > summary::before { content: "–"; }
+details.ans > summary:hover { color: var(--ink); border-color: var(--muted); }
+details.ans > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+details.ans .inner {
+  margin-top: 10px; background: var(--ans); padding: 14px 18px; border-radius: 6px;
+  display: grid; gap: 10px; font-size: 0.97rem; overflow-x: auto;
+}
+.hint { font-size: 0.93rem; color: var(--muted); font-style: italic; }
+
+/* Code */
+.codebox { position: relative; background: var(--code); border-radius: 6px; overflow: hidden; }
+.codebox pre { margin: 0; padding: 16px 18px; overflow-x: auto; font-family: var(--f-mono); font-size: 0.82rem; line-height: 1.55; }
+.copy {
+  position: absolute; top: 8px; right: 8px; font-size: 0.75rem; padding: 4px 10px;
+}
+button, .btn {
+  font: 600 0.85rem var(--f-display); color: var(--ink); background: var(--sheet);
+  border: 1px solid var(--rule); border-radius: 6px; padding: 7px 14px; cursor: pointer;
+}
+button:hover { border-color: var(--muted); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* Labs */
+.lab {
+  background: var(--sheet); border: 1px solid var(--rule); border-radius: 10px;
+  padding: 20px; display: grid; gap: 18px; margin-block: 8px;
+}
+.lab-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; align-items: baseline; }
+.lab-head p { font-size: 0.92rem; color: var(--muted); max-width: 60ch; }
+.lab-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
+.lab-grid.sim { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+@media (max-width: 760px) { .lab-grid, .lab-grid.sim { grid-template-columns: minmax(0, 1fr); } }
+.panel { min-width: 0; display: grid; gap: 8px; align-content: start; }
+.panel canvas { width: 100%; display: block; border-radius: 6px; }
+.panel .cap { font: 600 0.78rem var(--f-display); color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+#city { aspect-ratio: 680 / 700; max-width: 100%; }
+
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px 22px; }
+.ctl { display: grid; gap: 4px; }
+.ctl .row { display: flex; justify-content: space-between; gap: 8px; font: 600 0.85rem var(--f-display); }
+.ctl .row output { font-family: var(--f-mono); font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink); }
+.ctl .sub { font-size: 0.78rem; color: var(--muted); font-family: var(--f-display); }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+.check { display: flex; gap: 8px; align-items: center; font: 600 0.85rem var(--f-display); }
+
+.readout { display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.readout div { background: var(--sheet); padding: 8px 12px; display: grid; gap: 2px; }
+.readout .k { font: 600 0.7rem var(--f-display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.readout .v { font-family: var(--f-mono); font-size: 1rem; font-variant-numeric: tabular-nums; }
+.readout .v.hot { color: var(--accent); font-weight: 600; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font: 0.8rem var(--f-display); color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25); }
+.sw.line, .sw.dash { box-shadow: none; }
+.sw.line { height: 3px; border-radius: 0; }
+.sw.dash { height: 0; border-top: 2px dashed; background: none !important; }
+
+.presets { display: flex; flex-wrap: wrap; gap: 8px; }
+.presets button { font-weight: 600; }
+.presets button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
+.note { font-size: 0.92rem; color: var(--muted); border-left: 2px solid var(--rule); padding-left: 14px; }
+mjx-container { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+mjx-container[display="true"] { margin: 0.4em 0 !important; }
+/* Flow diagram */
+figure.flow { margin: 0; display: grid; gap: 6px; }
+.flow-scroll { overflow-x: auto; background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; padding: 12px; }
+.flow svg { display: block; width: 100%; min-width: 560px; height: auto; font-family: var(--f-display); }
+figure.flow figcaption { font: 0.82rem var(--f-display); color: var(--muted); }
+.box-plain { fill: var(--sheet); stroke: var(--ink); stroke-width: 1.5; }
+.box-s { fill: var(--sus); stroke: var(--ink); stroke-width: 1.5; }
+.box-i { fill: var(--sheet); stroke: var(--accent); stroke-width: 2; }
+.box-out { fill: var(--sheet); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.boundary { fill: none; stroke: var(--accent); stroke-width: 1.2; stroke-dasharray: 2 4; }
+.a { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.f-ink { fill: var(--ink); }
+.t-head { font-size: 15px; font-weight: 700; fill: var(--ink); }
+.t-head.muted { fill: var(--muted); }
+.t-sub { font-size: 12px; fill: var(--muted); }
+.t-sub.accent { fill: var(--accent); font-weight: 600; }
+.t-lab { font-size: 13px; font-weight: 600; fill: var(--ink); font-family: var(--f-mono); }
+.t-note { font-size: 12px; fill: var(--muted); font-style: italic; }
+figure.sketch { margin: 0; display: grid; gap: 6px; }
+figure.sketch .flow-scroll { padding: 8px; }
+figure.sketch svg { display: block; width: 100%; max-width: 520px; height: auto; font-family: var(--f-display); }
+figure.sketch figcaption { font: 0.8rem var(--f-display); color: var(--muted); }
+.sketch .ax { stroke: var(--muted); stroke-width: 1; }
+.sketch .tk { font-size: 11px; fill: var(--muted); }
+.sketch .lb { font-size: 13px; font-weight: 700; fill: var(--ink); }
+.sketch .lb.s { fill: var(--vax); }
+.sketch .lb.i { fill: var(--accent); }
+.sketch .nc-s { fill: none; stroke: var(--vax); stroke-width: 2.5; }
+.sketch .nc-i { stroke: var(--accent); stroke-width: 2.5; }
+.sketch .eq-fill { fill: var(--ink); stroke: var(--ink); stroke-width: 1.5; }
+.sketch .eq-open { fill: var(--sheet); stroke: var(--ink); stroke-width: 1.5; }
+.lab { position: relative; }
+.toast { position: absolute; top: 72px; right: 20px; left: auto; z-index: 3; margin: 0; max-width: min(46ch, calc(100% - 40px)); box-shadow: 0 6px 20px rgb(0 0 0 / 0.18); background: var(--ink); color: var(--paper); font: 0.88rem var(--f-display); padding: 10px 14px; border-radius: 8px; }
+.toast strong { font-weight: 700; }
+footer { padding-top: 40px; font: 0.82rem var(--f-display); color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <style>
+/* embedded in the course book: no page chrome, just the lab */
+body { padding: 8px !important; }
+.lab { margin: 0 !important; }
+</style>
+<script>
+// Follow the book's light/dark mode (the book and this applet share an origin);
+// ?theme=light or ?theme=dark forces one (used for the print screenshots).
+(function () {
+  var forced = new URLSearchParams(location.search).get("theme");
+  function apply() {
+    var t = forced;
+    try { if (!t && parent !== window) t = parent.document.body.classList.contains("quarto-dark") ? "dark" : "light"; } catch (e) {}
+    if (t) document.documentElement.setAttribute("data-theme", t);
+  }
+  apply();
+  try { new MutationObserver(apply).observe(parent.document.body, { attributes: true, attributeFilter: ["class"] }); } catch (e) {}
+})();
+</script>
+<div class="lab" id="odeLab">
+    <div class="lab-head">
+      <h3 class="ui">Interactieve faseruimte</h3>
+      <p>Hetzelfde model als de Grind-code (\(b = 10\), \(d = 0{,}01\), \(g = 0{,}1\)). De beginwaarde is \(S = \bar{S}\), \(I = 1\).</p>
+    </div>
+    <div class="controls">
+      <div class="ctl">
+        <div class="row"><label for="odeP">Vaccinatiegraad \(p\)</label><output id="odePv"></output></div>
+        <input type="range" id="odeP" min="0" max="1" step="0.01" value="0">
+      </div>
+      <div class="ctl">
+        <div class="row"><label for="odeR0">Transmissiesnelheid \(\beta\)</label><output id="odeR0v"></output></div>
+        <input type="range" id="odeR0" min="0.0003" max="0.0025" step="0.00005" value="0.00165">
+        <span class="sub">De andere parameters blijven gelijk.</span>
+      </div>
+      <label class="check"><input type="checkbox" id="odeZoom"> Inzoomen op het evenwicht</label>
+    </div>
+    <div class="lab-grid">
+      <div class="panel">
+        <span class="cap">Faseruimte</span>
+        <canvas id="phase" height="340"></canvas>
+        <div class="legend">
+          <span><i class="sw line" style="background:var(--vax)"></i>\(dS/dt = 0\)</span>
+          <span><i class="sw line" style="background:var(--accent)"></i>\(dI/dt = 0\)</span>
+          <span><i class="sw line" style="background:var(--ink)"></i>traject</span>
+        </div>
+      </div>
+      <div class="panel">
+        <span class="cap">Tijdreeks van I</span>
+        <canvas id="odeTs" height="340"></canvas>
+        <div class="legend">
+          <span><i class="sw line" style="background:var(--accent)"></i>\(I(t)\)</span>
+          <span><i class="sw dash" style="border-color:var(--muted)"></i>\(I^*\)</span>
+        </div>
+      </div>
+    </div>
+    <div class="readout">
+      <div><span class="k">(g+d)/β</span><span class="v" id="roR"></span></div>
+      <div><span class="k">p<sub>c</sub></span><span class="v" id="roPc"></span></div>
+      <div><span class="k">S̄ (geen ziekte)</span><span class="v" id="roS0"></span></div>
+      <div><span class="k">S*</span><span class="v" id="roSs"></span></div>
+      <div><span class="k">I*</span><span class="v" id="roIs"></span></div>
+    </div>
+  </div>
+<script>
+
+// ---------- helpers ----------
+const $ = (id) => document.getElementById(id);
+function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function fmt(x, n) { return x.toLocaleString('nl-NL', { minimumFractionDigits: n, maximumFractionDigits: n }); }
+function niceStep(range, target) {
+  const raw = range / target, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const f = raw / mag;
+  return (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * mag;
+}
+function setupCanvas(c) {
+  const dpr = window.devicePixelRatio || 1;
+  // remember the CSS height once: c.height is overwritten below with the device-pixel height
+  if (!c._cssH) c._cssH = parseInt(c.getAttribute('height'), 10);
+  const w = c.clientWidth, h = c._cssH;
+  c.style.height = h + 'px';
+  if (c.width !== Math.round(w * dpr) || c._h !== h) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); c._h = h; }
+  const ctx = c.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, w, h };
+}
+function drawAxes(ctx, box, xmax, ymax, xlabel, ylabel) {
+  const { l, t, r, b } = box;
+  ctx.strokeStyle = css('--rule'); ctx.fillStyle = css('--muted');
+  ctx.lineWidth = 1; ctx.font = '11px "Public Sans", sans-serif';
+  const xs = niceStep(xmax, 5), ys = niceStep(ymax, 5);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let v = 0; v <= xmax + 1e-9; v += xs) {
+    const x = l + (r - l) * v / xmax;
+    ctx.beginPath(); ctx.moveTo(x, t); ctx.lineTo(x, b); ctx.stroke();
+    ctx.fillText(fmt(v, xs < 1 ? 1 : 0), x, b + 5);
+  }
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (let v = 0; v <= ymax + 1e-9; v += ys) {
+    const y = b - (b - t) * v / ymax;
+    ctx.beginPath(); ctx.moveTo(l, y); ctx.lineTo(r, y); ctx.stroke();
+    ctx.fillText(fmt(v, ys < 1 ? 1 : 0), l - 6, y);
+  }
+  ctx.fillStyle = css('--ink'); ctx.font = '600 12px "Public Sans", sans-serif';
+  ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+  ctx.fillText(xlabel, r, b + 34);
+  ctx.save(); ctx.translate(l - 38, t); ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(ylabel, 0, 0); ctx.restore();
+}
+
+
+// ---------- ODE lab ----------
+(function () {
+  const b = 10, d = 0.01, g = 0.1;
+  const pIn = $('odeP'), rIn = $('odeR0'), zIn = $('odeZoom');
+  function solve(p, beta) {
+    let S = b * (1 - p) / d, I = 1;
+    const dt = 0.05, T = 600, pts = [[0, S, I]];
+    const f = (S, I) => [b * (1 - p) - beta * S * I - d * S, beta * S * I - (d + g) * I];
+    for (let k = 1; k <= T / dt; k++) {
+      const k1 = f(S, I), k2 = f(S + dt / 2 * k1[0], I + dt / 2 * k1[1]);
+      const k3 = f(S + dt / 2 * k2[0], I + dt / 2 * k2[1]), k4 = f(S + dt * k3[0], I + dt * k3[1]);
+      S += dt / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]);
+      I += dt / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
+      if (k % 4 === 0) pts.push([k * dt, S, I]);
+    }
+    return pts;
+  }
+  function draw() {
+    const p = +pIn.value, beta = +rIn.value, zoom = zIn.checked;
+    const S0 = b * (1 - p) / d, Ss = (d + g) / beta;
+    const Is = Math.max(0, b * (1 - p) / (d + g) - d / beta);
+    const endemic = S0 > Ss;
+    $('odePv').textContent = fmt(p, 2); $('odeR0v').textContent = beta.toLocaleString('nl-NL', { minimumFractionDigits: 5, maximumFractionDigits: 5 });
+    $('roR').textContent = fmt(Ss, 1);
+    $('roPc').textContent = fmt(Math.max(0, 1 - d * (g + d) / (beta * b)), 3);
+    $('roS0').textContent = fmt(S0, 1);
+    $('roSs').textContent = endemic ? fmt(Ss, 1) : '–';
+    $('roIs').textContent = endemic ? fmt(Is, 2) : '0';
+    const pts = solve(p, beta);
+    let maxI = 0; for (const q of pts) maxI = Math.max(maxI, q[2]);
+
+    // phase plane
+    const { ctx, w, h } = setupCanvas($('phase'));
+    ctx.clearRect(0, 0, w, h);
+    let xmax, ymax;
+    if (zoom) {
+      xmax = Math.min(1050, Math.max(3 * Ss, 1.4 * S0, 50));
+      ymax = Math.max(endemic ? 3 * Is : 0, 10);
+    } else {
+      xmax = 1050; ymax = Math.max(maxI * 1.1, 10);
+    }
+    const box = { l: 52, t: 10, r: w - 12, b: h - 40 };
+    const X = (s) => box.l + (box.r - box.l) * s / xmax, Y = (i) => box.b - (box.b - box.t) * i / ymax;
+    drawAxes(ctx, box, xmax, ymax, 'S', 'I');
+    ctx.save(); ctx.beginPath(); ctx.rect(box.l, box.t, box.r - box.l, box.b - box.t); ctx.clip();
+    // S nullcline
+    ctx.strokeStyle = css('--vax'); ctx.lineWidth = 2.5; ctx.beginPath();
+    let started = false;
+    for (let k = 1; k <= 600; k++) {
+      const s = xmax * k / 600; const i = (b * (1 - p) - d * s) / (beta * s);
+      if (i < 0) break;
+      if (!started) { ctx.moveTo(X(s), Y(Math.min(i, ymax * 2))); started = true; } else ctx.lineTo(X(s), Y(Math.min(i, ymax * 2)));
+    }
+    ctx.stroke();
+    // I nullclines
+    ctx.strokeStyle = css('--accent'); ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(X(Ss), Y(0)); ctx.lineTo(X(Ss), Y(ymax)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(X(0), Y(0) - 1); ctx.lineTo(X(xmax), Y(0) - 1); ctx.stroke();
+    // trajectory
+    ctx.strokeStyle = css('--ink'); ctx.lineWidth = 1.4; ctx.beginPath();
+    pts.forEach((q, k) => k ? ctx.lineTo(X(q[1]), Y(q[2])) : ctx.moveTo(X(q[1]), Y(q[2])));
+    ctx.stroke();
+    ctx.restore();
+    // equilibria
+    function dot(s, i, filled) {
+      if (s > xmax || i > ymax) return;
+      ctx.beginPath(); ctx.arc(X(s), Y(i), 5, 0, Math.PI * 2);
+      ctx.fillStyle = filled ? css('--ink') : css('--sheet'); ctx.fill();
+      ctx.strokeStyle = css('--ink'); ctx.lineWidth = 1.5; ctx.stroke();
+    }
+    dot(S0, 0, !endemic);
+    if (endemic) dot(Ss, Is, true);
+
+    // time series
+    const ts = setupCanvas($('odeTs'));
+    const c2 = ts.ctx; c2.clearRect(0, 0, ts.w, ts.h);
+    const tmax = 600;
+    const ymax2 = zoom ? Math.max(endemic ? 3 * Is : 0, 10) : Math.max(maxI * 1.1, 10);
+    const box2 = { l: 52, t: 10, r: ts.w - 12, b: ts.h - 40 };
+    drawAxes(c2, box2, tmax, ymax2, 'tijd', 'I');
+    const X2 = (t) => box2.l + (box2.r - box2.l) * t / tmax, Y2 = (i) => box2.b - (box2.b - box2.t) * i / ymax2;
+    c2.save(); c2.beginPath(); c2.rect(box2.l, box2.t, box2.r - box2.l, box2.b - box2.t); c2.clip();
+    if (endemic) {
+      c2.setLineDash([5, 4]); c2.strokeStyle = css('--muted'); c2.lineWidth = 1.5;
+      c2.beginPath(); c2.moveTo(X2(0), Y2(Is)); c2.lineTo(X2(tmax), Y2(Is)); c2.stroke(); c2.setLineDash([]);
+    }
+    c2.strokeStyle = css('--accent'); c2.lineWidth = 1.8; c2.beginPath();
+    pts.forEach((q, k) => k ? c2.lineTo(X2(q[0]), Y2(q[2])) : c2.moveTo(X2(q[0]), Y2(q[2])));
+    c2.stroke(); c2.restore();
+  }
+  [pIn, rIn, zIn].forEach(el => el.addEventListener('input', draw));
+  window.addEventListener('resize', draw);
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw);
+  new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  draw();
+  window._drawOde = draw;
+})();
+
+</script>
+<script>
+// In the book this applet sits in an iframe: make that iframe exactly as tall
+// as the applet, also when the layout changes (e.g. on a phone).
+(function () {
+  var fe; try { fe = window.frameElement; } catch (e) {}
+  if (!fe) return;
+  // no scrollbars inside the frame; measure the real (fractional) height and
+  // add a few pixels, so rounding never leaves a sliver to scroll
+  document.documentElement.style.overflow = "hidden";
+  fe.setAttribute("scrolling", "no");
+  function fit() {
+    // measure the lab itself, not the document (whose height follows the frame)
+    var lab = document.querySelector(".lab");
+    if (!lab) return;
+    fe.style.height = Math.ceil(lab.getBoundingClientRect().bottom + window.scrollY) + 16 + "px";
+  }
+  fit();
+  window.addEventListener("load", fit);
+  window.addEventListener("resize", fit);
+  if (document.fonts) document.fonts.ready.then(fit);
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(document.body);
+})();
+</script>
+</body></html>
