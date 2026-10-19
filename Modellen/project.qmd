@@ -6,7 +6,7 @@ Mazelen is een van de meest besmettelijke ziektes die we kennen. Hoeveel mensen 
 
 ## Eisen aan je verslag
 
-- Beantwoord de vragen puntsgewijs (a = …, b = …, enz.), in **volzinnen**.
+- Beantwoord de vragen puntsgewijs (a = …, b = …, enz.), in **volzinnen**. Let op dat je alle subvragen beantwoord, anders loop je punten mis.
 - Sluit af met een korte conclusie (de laatste subvraag).
 - Lever het samenwerkingsstartformulier mee in. Zonder dit formulier kun je **geen** voldoende krijgen.
 
@@ -38,20 +38,23 @@ model <- function(t, state, parms) {
   })
 }
 
+colors[1] <- "blue"
+colors[2] <- "red"
+
 # Parameters (p-vector) en beginwaarden (s-vector)
 p <- c(
   b    = 10,       # aantal geboortes per tijdseenheid
   d    = 0.01,     # sterfte per individu per tijdseenheid
   g    = 0.1,      # herstelsnelheid
   beta = 0.00165,  # transmissiesnelheid
-  p    = 0         # fractie van de baby's die gevaccineerd wordt
+  p    = 0.0         # fractie van de baby's die gevaccineerd wordt
 )
 
 s <- c(S = 1000, I = 1)  # beginwaarden
 
 par(mfrow=c(1,2))
-plane(xmax=1000, ymax=800, main="Faseruimte (x-as: S, y-as: I)")
-run(legend=TRUE, main="Tijdreeksen van S en I", tmax=500, tstep=0.1)
+plane(xmax=1000, ymax=200, main="Faseruimte (x-as: S, y-as: I)")
+run(legend=TRUE, main="Tijdreeksen van S en I", tmax=500, tstep=0.1, ymax=200)
 ```
 
 a. Schrijf de ODEs uit het Grind-model op in standaard wiskundige notatie. Geef met accolades kort aan wat elke term betekent.
@@ -62,9 +65,9 @@ c. Bepaal in welke eenheden de parameter $g$ wordt uitgedrukt.
 
 d. Bereken het aantal vatbare individuen in evenwicht als er geen ziekte is ($I = 0$). Noem dit $\bar{S}$. Hoe hangt $\bar{S}$ af van $p$?
 
-e. Bereken de nullclines van dit systeem. Schrijf je berekening uit (maak een foto van je schrift of typ dit in je verslag)
+e. Bereken de nullclines van dit systeem. Schrijf je berekening uit. *Je mag je antwoord laten controlleren door een student-assistent*. Voor je verslag mag je, in plaats van alle formules uittypen, ook een foto van je schrift maken.
 
-f. Schets met pen en papier de nullclines in een faseruimte (x-as: $S$, y-as: $I$) voor twee kwalitatief verschillende scenario's. Geef met pijltjes aan in welke richting de populaties veranderen, en geef de evenwichten aan. Wat betekent elk scenario voor een ziekte die binnenkomt in een populatie zonder ziekte (dus bij $S = \bar{S}$, $I \approx 0$)? Je mag een foto van je schets in je verslag zetten.
+f. Schets met pen en papier de nullclines in een faseruimte (x-as: $S$, y-as: $I$) voor twee kwalitatief verschillende scenario's. Geef, zoals jullie geleerd hebben, met pijltjes aan in welke richting de populaties veranderen, en geef de evenwichten aan. Als laatste: geef in de schets aan wat elk scenario betekent voor een ziekte die binnenkort in een populatie vatbare individuen. Voeg een foto van jullie schets toe aan het verslag. *Ook deze schetsen mag je laten controlleren bij een student-assistent, of je kunt het controlleren met `Grind`*
 
 g. Hoe kun je met vaccinatie zorgen dat je in het scenario terechtkomt waarin de ziekte niet kan invaderen? Kijk daarvoor wat er met de nullclines gebeurt als de vaccinatiegraad $p$ groter wordt.
 
@@ -72,7 +75,7 @@ h. Hoe laag moet het aantal vatbaren zijn zodat een binnenkomende ziekte *niet* 
 
 i. De minimale vaccinatiegraad uit vraag h noemen we $p_c$. Controleer met Grind of je $p_c$ klopt: laat de ODEs lopen met een vaccinatiegraad net onder en net boven $p_c$. Laat met plaatjes zien wat er gebeurt.
 
-   *Tip: zet bij een andere $p$ ook de beginwaarde op $S = 1000(1-p)$, en laat de simulatie lang genoeg lopen (bijvoorbeeld `tmax=2000`).*
+*Tip: zet bij een andere $p$ ook de beginwaarde op $S = 1000(1-p)$, en laat de simulatie lang genoeg lopen (bijvoorbeeld `tmax=2000`).*
 
 ## Deel B: mazelen in vier Utrechtse wijken
 
@@ -101,12 +104,14 @@ src="Applets/mazelen_simulatie.html" title="Simulatie van vier Utrechtse wijken"
 ```
 :::
 
-j. Zet **perfect mengen** aan. Bekijk het gemiddelde aantal geïnfecteerden bij $p = 0$, $0{,}5$, $0{,}7$, $0{,}8$, $0{,}85$ en $0{,}9$, en vergelijk dit met de stippellijn van het ODE-model. Bij welke $p$ verdwijnt de ziekte? Klopt dat met $p_c \approx 0{,}93$? Doe elke instelling een paar keer.
+j. Kijk goed naar de simulatie. Zoals je ziet is er af en toe spontaan een uitbraak. Waarom infecteert dit meestal slechts 1 wijk? Leg uit hoe jullie dit testen met de knoppen van de simulatie.
 
-k. Ga weer terug naar de standaardinstellingen (refresh de pagina). Maak de besmettingsstraal stap voor stap groter: 1×, 1,5×, 2× en 3×. Wat gebeurt er met het aantal zieken? Een zieke besmet volgens het ODE-model nog steeds evenveel mensen. Waarom maakt de straal dan toch zo veel uit?
+k. Zet **perfect mengen** aan (en zet eventuele eerdere opties uit vraag j weer terug!). Bekijk het gemiddelde aantal geïnfecteerden bij $p = 0$, $0{,}5$, $0{,}7$, $0{,}8$, $0{,}85$ en $0{,}9$, en vergelijk dit met de stippellijn van het ODE-model. Bij welke $p$ verdwijnt de ziekte? Klopt dat met $p_c \approx 0{,}93$? Doe elke instelling een paar keer.
 
-l. Welk model zou je gebruiken als je een conservatief advies wil geven aan de GGD?
+l. Ga weer terug naar de standaardinstellingen (refresh de pagina). Maak de besmettingsstraal stap voor stap groter: 1×, 1,5×, 2× en 3×. Wat gebeurt er met het aantal zieken? Een zieke besmet volgens het ODE-model nog steeds evenveel mensen. Waarom maakt de straal dan toch zo veel uit?
 
-m. Welk model zou je gebruiken als je wil testen hoe goed bepaalde beleidsbeslissingen werken?
+m. Welk model zou je gebruiken als je een conservatief advies wil geven aan de GGD? (d.w.z. als je het zeker voor het onzekere wilt nemen?)
 
-n. Schrijf een korte conclusie over dit project (~200 woorden).
+n. Welk model zou je gebruiken als je wil testen hoe goed bepaalde beleidsbeslissingen werken? (denk aan het effect van een avondklok of een lockdown)
+
+o. Schrijf een korte conclusie over dit project (~200 woorden).
