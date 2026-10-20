@@ -40,7 +40,7 @@ const STYLE=`
   --bg: var(--bs-body-bg, #16191b);
   --fg: var(--bs-body-color, #e6e9e7);
   --line: var(--bs-border-color, #30383c);
-  --accent:#F08A3E; --accent-soft:#F08A3E2B; --accent2:#56B4E9; --blue:#56B4E9; --warn:#aab2b8;
+  --accent:#F08A3E; --accent-soft:#F08A3E2B; --accent2:#56B4E9; --blue:#56B4E9; --warn:#c3cad0; --muted: color-mix(in srgb, var(--fg) 82%, var(--bg)); --axis: color-mix(in srgb, var(--fg) 62%, var(--bg));
 }
 .app{color:var(--fg)}
 .ovb{display:inline-block;border-top:1.5px solid currentColor;line-height:1.05;padding-top:1px}

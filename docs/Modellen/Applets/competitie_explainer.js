@@ -40,7 +40,7 @@ const STYLE=`
   --bg: var(--bs-body-bg, #16191b);
   --fg: var(--bs-body-color, #e6e9e7);
   --line: var(--bs-border-color, #30383c);
-  --accent:#F08A3E; --accent-soft:#F08A3E2B; --accent2:#56B4E9; --blue:#56B4E9; --warn:#aab2b8;
+  --accent:#F08A3E; --accent-soft:#F08A3E2B; --accent2:#56B4E9; --blue:#56B4E9; --warn:#c3cad0; --muted: color-mix(in srgb, var(--fg) 82%, var(--bg)); --axis: color-mix(in srgb, var(--fg) 62%, var(--bg));
 }
 .app{color:var(--fg)}
 .ovb{display:inline-block;border-top:1.5px solid currentColor;line-height:1.05;padding-top:1px}
@@ -501,8 +501,10 @@ const OUT={
     t:'<b>De nullclines vallen samen.</b> Elk punt op die lijn is een evenwicht en waar je eindigt hangt af van de beginsituatie. Dit is een niet-generiek geval: de kleinste verandering van een parameter maakt er coexistentie of exclusie van.'}};
 function outcome(P){ const E=equilibria(P), s1=E[1].type==='stabiel', s2=E[2].type==='stabiel';
   return s1&&s2?'bist':s1?'w1':s2?'w2':(E[3]&&E[3].type==='stabiel')?'coex':'neut'; }
-function traject(P,x0,y0,T,dt=0.02){ const pts=[[0,x0,y0]]; let x=x0,y=y0; const n=Math.round(T/dt);
-  for(let k=1;k<=n;k++){ const [f,g]=dN(P,x,y); x=Math.max(0,x+dt*f); y=Math.max(0,y+dt*g); if(k%3===0) pts.push([k*dt,x,y]); } return pts; }
+/* Runge-Kutta (4e orde) met een kleine stap: zo snijdt de getekende trajectorie een nullcline precies verticaal of horizontaal */
+function traject(P,x0,y0,T,dt=0.01){ const pts=[[0,x0,y0]]; let x=x0,y=y0; const n=Math.round(T/dt);
+  for(let k=1;k<=n;k++){ const [a1,b1]=dN(P,x,y), [a2,b2]=dN(P,x+dt/2*a1,y+dt/2*b1), [a3,b3]=dN(P,x+dt/2*a2,y+dt/2*b2), [a4,b4]=dN(P,x+dt*a3,y+dt*b3);
+    x=Math.max(0,x+dt/6*(a1+2*a2+2*a3+a4)); y=Math.max(0,y+dt/6*(b1+2*b2+2*b3+b4)); pts.push([k*dt,x,y]); } return pts; }
 const mkTraj=(P,x0,y0,T=30)=>({pts:traject(P,x0,y0,T),x0,y0,T,prog:0});
 const nl=v=>fmt(v,2).replace('.',',');
 const eqList=P=>equilibria(P).map(e=>`(${nl(e.x)}, ${nl(e.y)}): <b>${e.type}</b>`).join(' · ');

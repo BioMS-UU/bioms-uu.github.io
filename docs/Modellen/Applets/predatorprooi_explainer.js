@@ -40,7 +40,7 @@ const STYLE=`
   --bg: var(--bs-body-bg, #16191b);
   --fg: var(--bs-body-color, #e6e9e7);
   --line: var(--bs-border-color, #30383c);
-  --accent:#F08A3E; --accent-soft:#F08A3E2B; --accent2:#56B4E9; --blue:#56B4E9; --warn:#aab2b8;
+  --accent:#F08A3E; --accent-soft:#F08A3E2B; --accent2:#56B4E9; --blue:#56B4E9; --warn:#c3cad0; --muted: color-mix(in srgb, var(--fg) 82%, var(--bg)); --axis: color-mix(in srgb, var(--fg) 62%, var(--bg));
 }
 .app{color:var(--fg)}
 .ovb{display:inline-block;border-top:1.5px solid currentColor;line-height:1.05;padding-top:1px}
@@ -503,8 +503,8 @@ function domain(P){ return {xmax:niceCeil(P.K*1.1), ymax:niceCeil(Math.max(10,(P
 /* één trajectorie, geïntegreerd met Euler (stap 0,01) */
 function newTraj(R,N,t=0){ return {R,N,t,hist:[[t,R,N]]}; }
 function stepTraj(tr,P,dtModel){ const n=Math.max(1,Math.ceil(dtModel/0.01)), h=dtModel/n;
-  for(let i=0;i<n;i++){ const [f,g]=deriv(tr.R,tr.N,P); tr.R=Math.max(0,tr.R+f*h); tr.N=Math.max(0,tr.N+g*h); }
-  tr.t+=dtModel; tr.hist.push([tr.t,tr.R,tr.N]); }
+  for(let i=0;i<n;i++){ const R=tr.R, N=tr.N, [a1,b1]=deriv(R,N,P), [a2,b2]=deriv(R+h/2*a1,N+h/2*b1,P), [a3,b3]=deriv(R+h/2*a2,N+h/2*b2,P), [a4,b4]=deriv(R+h*a3,N+h*b3,P);
+    tr.R=Math.max(0,R+h/6*(a1+2*a2+2*a3+a4)); tr.N=Math.max(0,N+h/6*(b1+2*b2+2*b3+b4)); tr.t+=h; if(i%2===1||i===n-1) tr.hist.push([tr.t,tr.R,tr.N]); } }
 function arrow(ctx,x0,y0,x1,y1,color,lw=2){ const dx=x1-x0, dy=y1-y0, L=Math.hypot(dx,dy); if(L<1) return; const ux=dx/L, uy=dy/L, hs=Math.min(7,L*0.5);
   ctx.save(); ctx.strokeStyle=color; ctx.fillStyle=color; ctx.lineWidth=lw; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1-ux*hs*0.6,y1-uy*hs*0.6); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x1-ux*hs-uy*hs*0.55,y1-uy*hs+ux*hs*0.55); ctx.lineTo(x1-ux*hs+uy*hs*0.55,y1-uy*hs-ux*hs*0.55); ctx.closePath(); ctx.fill(); ctx.restore(); }
