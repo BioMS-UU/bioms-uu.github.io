@@ -251,7 +251,7 @@ const HTML=`
     <div class="card ov"><span class="num">Opg.</span><h4>Opgaven</h4>
       <p>Het "werkelijke" vectorveld en waarom trajectories zichzelf nooit snijden, evenwichten benoemen en trajectories schetsen, cheaters en cooperators in een ODE, en als verdieping parameter fitting op de <i>Paramecium</i>-data van Gause.</p></div>
     <div class="card ov"><span class="num">✓</span><h4>Test jezelf</h4>
-      <p>Tien korte vragen over competitie, nullclines, evenwichten en invasies. Bij een fout antwoord mag je het opnieuw proberen.</p>
+      <p>Tien korte vragen over competitie, coexistentie, exclusie en invasies. Bij een fout antwoord mag je het opnieuw proberen.</p>
       <button class="b primary" data-go="quiz">Start de quiz →</button></div>
   </div>
 
@@ -368,8 +368,8 @@ function frame(c,o){
   ctx.moveTo(p.l,p.t); ctx.lineTo(p.l,p.t+ph); ctx.lineTo(p.l+pw,p.t+ph); ctx.stroke();
   if(o.ymin<0&&o.ymax>0){ ctx.beginPath(); ctx.moveTo(p.l,Y(0)); ctx.lineTo(p.l+pw,Y(0)); ctx.stroke(); }
   ctx.fillStyle=col('muted'); ctx.textAlign='center'; ctx.textBaseline='bottom';
-  if(o.xlab) drawMath(ctx,o.xlab,p.l+pw/2,h-2);
-  if(o.ylab){ ctx.save(); ctx.translate(12,p.t+ph/2); ctx.rotate(-Math.PI/2); ctx.textBaseline='middle'; drawMath(ctx,o.ylab,0,0); ctx.restore(); }
+  if(o.xlab){ if(o.xlabCol){ ctx.fillStyle=o.xlabCol; ctx.font='600 '+FONT; } drawMath(ctx,o.xlab,p.l+pw/2,h-2); ctx.fillStyle=col('muted'); ctx.font=FONT; }
+  if(o.ylab){ ctx.save(); ctx.translate(12,p.t+ph/2); ctx.rotate(-Math.PI/2); ctx.textBaseline='middle'; if(o.ylabCol){ ctx.fillStyle=o.ylabCol; ctx.font='600 '+FONT; } drawMath(ctx,o.ylab,0,0); ctx.restore(); }
   ctx.save(); ctx.beginPath(); ctx.rect(p.l,p.t,pw,ph); ctx.clip();
   return {ctx,w,h,X,Y,p,pw,ph,o,
     inv:(px,py)=>[o.xmin+(px-p.l)/pw*(o.xmax-o.xmin), o.ymin+(p.t+ph-py)/ph*(o.ymax-o.ymin)],
@@ -512,7 +512,7 @@ function arrow(ctx,x1,y1,x2,y2,color,lw=1.2,hs=4){ ctx.strokeStyle=color; ctx.fi
   const a=Math.atan2(y2-y1,x2-x1); ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-hs*Math.cos(a-0.5),y2-hs*Math.sin(a-0.5)); ctx.lineTo(x2-hs*Math.cos(a+0.5),y2-hs*Math.sin(a+0.5)); ctx.closePath(); ctx.fill(); }
 /* o: ncl 0|1|2 (nullclines van hoeveel soorten), labels 0|1|2 (snijpunten met de assen), field 'none'|'corner'|'regions'|'full', eq, trajs */
 function drawPhase(c,P,o){
-  const [xm,ym]=extent(P), f=frame(c,{xmin:0,xmax:xm,ymin:0,ymax:ym,nx:5,ny:5,xlab:'N₁ (soort 1)',ylab:'N₂ (soort 2)',pad:{l:46,b:34,r:14,t:14}});
+  const [xm,ym]=extent(P), f=frame(c,{xmin:0,xmax:xm,ymin:0,ymax:ym,nx:5,ny:5,xlab:'N₁ (soort 1)',ylab:'N₂ (soort 2)',xlabCol:col('n1'),ylabCol:col('n2'),pad:{l:46,b:34,r:14,t:14}});
   const {ctx,X,Y}=f, n1=col('n1'), n2=col('n2');
   const line=(x0,y0,x1,y1,cl,w,dx=0,dy=0)=>{ ctx.strokeStyle=cl; ctx.lineWidth=w; ctx.beginPath(); ctx.moveTo(X(x0)+dx,Y(y0)+dy); ctx.lineTo(X(x1)+dx,Y(y1)+dy); ctx.stroke(); };
   ctx.font='600 11px '+FONT.slice(5); ctx.textAlign='left';
@@ -626,55 +626,55 @@ function phSVG(P,o){ o=o||{}; const W=300,H=200,l=38,r=12,t=14,b=28;
     ${ln(0,0,0,ym,'currentColor',1)}${ln(0,0,xm,0,'currentColor',1)}
     <line x1="${+X(0)+2}" y1="${Y(0)}" x2="${+X(0)+2}" y2="${Y(ym)}" style="stroke:var(--n1);stroke-width:2.5"/><line x1="${X(0)}" y1="${+Y(0)-2}" x2="${X(xm)}" y2="${+Y(0)-2}" style="stroke:var(--n2);stroke-width:2.5"/>
     ${ln(0,1/P.c12,1/P.c11,0,'var(--n1)',2.5)}${ln(0,1/P.c22,1/P.c21,0,'var(--n2)',2.5)}
-    ${tx('<tspan font-style="italic">N</tspan>₁',W-r,H-8,'end')}${tx('<tspan font-style="italic">N</tspan>₂',l-6,t+10,'end')}
+    ${tx('<tspan font-style="italic">N</tspan>₁',W-r,H-8,'end','fill:var(--n1);font-weight:600')}${tx('<tspan font-style="italic">N</tspan>₂',l-6,t+10,'end','fill:var(--n2);font-weight:600')}
     ${tx('0',l-6,+Y(0)+4,'end')}`;
   if(o.corner){ const px=+X(0.9*xm), py=+Y(0.9*ym);
     s+=`<circle cx="${px}" cy="${py}" r="2.5" style="fill:currentColor"/><path d="M${px} ${py}h-16 M${px-16} ${py}l5 -4 M${px-16} ${py}l5 4" style="stroke:var(--n1);stroke-width:2.2;fill:none"/><path d="M${px} ${py}v16 M${px} ${py+16}l-4 -5 M${px} ${py+16}l4 -5" style="stroke:var(--n2);stroke-width:2.2;fill:none"/>`; }
   return s+'</svg>';
 }
 const quiz=(()=>{
-  const G1=phSVG({c11:2,c22:2,c12:1,c21:3}), G2=phSVG({c11:1,c22:1,c12:2,c21:2},{corner:true});
+  const G1=phSVG({c11:2,c22:2,c12:1,c21:3});
   const BASE=[
     {q:'Wat is het verschil tussen <b>intraspecifieke</b> en <b>interspecifieke</b> competitie?',
      o:['Intra: binnen een soort; inter: tussen twee soorten','Intra: tussen twee soorten; inter: binnen een soort','Intra: om voedsel; inter: om ruimte of nestplekken','Intra: in het model; inter: in het echte experiment'], a:0,
      h:'Denk aan de Intratuin: "in de tuin".',
      e:'Intra = binnen (tussen soortgenoten), inter = tussen (verschillende soorten). Hoe meer de niches van twee soorten overlappen, hoe sterker de interspecifieke competitie.'},
+    {q:'Twee vogelsoorten eten vrijwel precies dezelfde zaadjes: hun <b>niches overlappen</b> sterk. Wat betekent dat voor het model?',
+     o:['Sterke interspecifieke competitie: grote c<sub>12</sub> en c<sub>21</sub>','Sterke intraspecifieke competitie: grote c<sub>11</sub> en c<sub>22</sub>','Een hogere groeisnelheid r voor allebei de soorten','Een lager draagvermogen K voor allebei de soorten'], a:0,
+     h:'Niche-overlap gaat over de competitie tússen de soorten.',
+     e:'Hoe meer de niches overlappen, hoe meer de soorten om hetzelfde voedsel strijden en hoe groter de interspecifieke competitiecoëfficiënten. Binnen een soort is de overlap per definitie 100%, dus intraspecifieke competitie om voedsel is meestal het sterkst. Toxines, territoria en verjagen kunnen de interspecifieke competitie toch de overhand geven.'},
     {q:`In <span class="eqn">${EQ1}</span>: wat beschrijft c<sub>12</sub>?`,
      o:['De competitie die soort 1 ondervindt van soort 2','De competitie die soort 2 ondervindt van soort 1','De intraspecifieke competitie van soort 1','De groeisnelheid van soort 2 bij lage dichtheden'], a:0,
      h:'Kijk in welke vergelijking c<sub>12</sub> staat, en welke variabele erachter staat.',
      e:`c<sub>12</sub> staat in de vergelijking van ${N1} en vermenigvuldigt ${N2}: het effect van soort 2 op soort 1 (interspecifiek). c<sub>11</sub> en c<sub>22</sub> schalen de intraspecifieke competitie, c<sub>21</sub> het effect van soort 1 op soort 2.`},
-    {q:`Hoeveel nullclines heeft ${N1} in het competitiemodel, en welke?`,
-     o:[`Twee: ${N1} = 0 en ${N2} = (1 − c<sub>11</sub>${N1})/c<sub>12</sub>`,`Eén: ${N2} = (1 − c<sub>11</sub>${N1})/c<sub>12</sub>; ${N1} = 0 telt niet mee`,`Twee: ${N1} = 0 en ${N2} = 0, de beide assen van de faseruimte`,'Drie: één per parameter in de vergelijking (r, c<sub>11</sub> en c<sub>12</sub>)'], a:0,
-     h:`Los ${D}${N1}/${D}t = r${N1}(1 − c<sub>11</sub>${N1} − c<sub>12</sub>${N2}) = 0 op: een product is nul als een van de factoren nul is.`,
-     e:`r${N1}(…) = 0 als ${N1} = 0 (de y-as) óf als 1 − c<sub>11</sub>${N1} − c<sub>12</sub>${N2} = 0, dus ${N2} = (1 − c<sub>11</sub>${N1})/c<sub>12</sub>. Beide zijn nullclines van ${N1} (blauw), ook al is de tweede uitgedrukt als ${N2} = f(${N1}).`},
-    {q:`Waar snijdt de nullcline ${N2} = (1 − c<sub>11</sub>${N1})/c<sub>12</sub> de x-as (de ${N1}-as)?`,
-     o:[`Bij ${N1} = 1/c<sub>11</sub>`,`Bij ${N1} = 1/c<sub>12</sub>`,`Bij ${N1} = c<sub>11</sub>`,`Bij ${N1} = 1`], a:0,
-     h:`Op de x-as geldt ${N2} = 0. Wanneer is de teller van de breuk nul?`,
-     e:`Een breuk is nul als de teller nul is: 1 − c<sub>11</sub>${N1} = 0, dus ${N1} = 1/c<sub>11</sub>. De y-as snijdt deze nullcline bij ${N2} = 1/c<sub>12</sub> (vul ${N1} = 0 in).`},
-    {q:`Je steekt in de faseruimte een <span class="c1">blauwe</span> ${N1}-nullcline over. Wat verandert er aan het vectorveld?`,
-     o:['Het horizontale pijltje klapt om, het verticale niet','Het verticale pijltje klapt om, het horizontale niet','Beide pijltjes klappen om: het horizontale én het verticale','Niets: alleen bij een evenwicht verandert de richting'], a:0,
-     h:`${N1} staat op de x-as, en op de ${N1}-nullcline is ${D}${N1}/${D}t = 0.`,
-     e:`Op een ${N1}-nullcline wisselt ${D}${N1}/${D}t van teken, en ${N1} staat op de x-as: het horizontale pijltje klapt om. Over een oranje ${N2}-nullcline klapt juist het verticale pijltje om.`},
     {q:'Onder welke voorwaarde leven de twee soorten stabiel samen (coexistentie)?',
      o:['Als intraspecifieke competitie sterker is dan interspecifieke','Als interspecifieke competitie sterker is dan intraspecifieke','Als beide soorten precies dezelfde groeisnelheid r hebben','Als de nullclines elkaar nergens in de faseruimte snijden'], a:0,
      h:'Elke soort moet zichzelf meer remmen dan de ander.',
      e:'Remt elke soort zichzelf meer dan de ander (c<sub>12</sub> &lt; c<sub>22</sub> en c<sub>21</sub> &lt; c<sub>11</sub>), dan wijzen alle pijlen naar het snijpunt van de nullclines: een stabiel evenwicht (attractor) met beide soorten. Sterke interspecifieke competitie geeft juist een zadelpunt.'},
+    {q:'Twee bacteriesoorten maken allebei een <b>toxine</b> dat de andere soort remt. Wat voorspelt het competitiemodel?',
+     o:['Competitieve exclusie: de soort die in de meerderheid begint, wint','Coexistentie: de twee toxines houden elkaar precies in evenwicht','Beide soorten sterven uit, omdat ze elkaar blijven vergiftigen','De soort met de hoogste groeisnelheid r wint, hoe je ook begint'], a:0,
+     h:'Toxines tegen de ander: is dat intra- of interspecifieke competitie, en wat voor evenwicht hoort daarbij?',
+     e:'Toxines maken de interspecifieke competitie sterker dan de intraspecifieke. Het evenwicht met beide soorten is dan een zadelpunt: geen coexistentie, maar competitieve exclusie, waarbij de beginsituatie bepaalt wie overblijft (founder control).'},
     {q:`Hieronder staan de nullclines van het competitiemodel (<span class="c1">blauw</span>: ${N1}, <span class="c2">oranje</span>: ${N2}). Wat is de uitkomst?`+G1,
      o:['Soort 1 wint altijd: competitieve exclusie','Soort 2 wint altijd: competitieve exclusie','Coexistentie met beide soorten in evenwicht','Wie er het eerst is, wint: founder control'], a:0,
      h:'De nullclines snijden niet. Tussen de lijnen: welke soort groeit nog, en welke neemt al af?',
      e:`De blauwe ${N1}-nullcline ligt helemaal buiten de oranje. Tussen de lijnen is ${D}${N1}/${D}t &gt; 0 maar ${D}${N2}/${D}t &lt; 0: soort 1 groeit nog terwijl soort 2 al krimpt. Er is geen evenwicht met beide soorten; het systeem eindigt in (1/c<sub>11</sub>, 0).`},
-    {q:'En in deze faseruimte? De nullclines snijden elkaar en rechtsboven is het vectorveld al gegeven. Welk type evenwicht is het snijpunt?'+G2,
-     o:['Een zadelpunt: wie er het meest is, wint (founder control)','Een stabiel punt: beide soorten blijven samen bestaan','Een instabiel punt: beide soorten sterven op den duur uit','Een stabiele spiraal: de populaties draaien naar het snijpunt toe'], a:0,
-     h:'Klap de pijltjes om bij elke nullcline. Vergelijk ook de snijpunten met de assen: ligt de nullcline van elke soort op zijn eigen as buiten die van de ander?',
-     e:`Op de ${N1}-as ligt het blauwe snijpunt (1/c<sub>11</sub>) voorbij het oranje (1/c<sub>21</sub>), en op de ${N2}-as ligt het oranje (1/c<sub>22</sub>) voorbij het blauwe (1/c<sub>12</sub>): interspecifieke competitie is sterker. Maak je het vectorveld af, dan wijzen de pijlen in de ene richting naar het snijpunt en in de andere ervan af: een zadelpunt. De evenwichten met één soort zijn stabiel, en de soort die aanvankelijk in de meerderheid is wint.`},
+    {q:'Het hoofdstuk vergelijkt een evenwicht met een balletje in een landschap. Wat is een <b>zadelpunt</b> in dat beeld?',
+     o:['Een zadel: het balletje rolt er vanaf, en waarheen hangt af van waar het begon','Een kuil: het balletje rolt er altijd naartoe, waar het ook begint','Een heuveltop: het balletje rolt er naar alle kanten tegelijk vanaf','Een vlakte: het balletje blijft overal liggen waar je het neerlegt'], a:0,
+     h:'Op een zadel kun je er aan twee kanten afrollen, maar aan twee andere kanten niet.',
+     e:'Een attractor (coexistentie) is een kuil: je komt er altijd uit. Een zadelpunt is een zadel: in de ene richting rol je ernaartoe, in de andere ervan af. Een minimaal verschil in de beginsituatie bepaalt aan welke kant je eindigt: founder control.'},
     {q:'Twee runs van een ODE-model starten met exact dezelfde begincondities. Kunnen de trajectories verschillende kanten op gaan?',
      o:['Nee: het vectorveld geeft in elk punt één unieke richting','Ja: welke kant het opgaat, hangt van het toeval af','Ja, maar alleen als ze precies op een zadelpunt starten','Nee, behalve als de populaties heel klein zijn'], a:0,
      h:'Wat geeft het vectorveld in elk punt van de faseruimte?',
      e:'Een ODE is deterministisch: in elk punt ligt de richting van verandering vast. Daarom kunnen trajectories elkaar, en zichzelf, ook nooit snijden. In een echt experiment, met toeval en kleine verschillen in de begincondities, kan dat wél anders uitpakken.'},
+    {q:'Wat test je met een <b>invasie-experiment</b> in het competitiemodel?',
+     o:['Of een zeldzame mutant kan groeien in een gevestigde populatie','Of een soort sneller groeit dan zijn concurrent zonder competitie','Of de twee soorten precies dezelfde niche hebben','Hoe lang een populatie erover doet om K te bereiken'], a:0,
+     h:'Begin met heel veel van de ene soort en heel weinig van de andere.',
+     e:'Je zet een zeldzame mutant (of invasieve soort) in een gevestigde populatie en kijkt wat er gebeurt. Drie uitkomsten: de mutant groeit niet, de mutant groeit en bereikt een stabiel evenwicht met de gevestigde populatie, of de mutant vervangt de gevestigde populatie.'},
     {q:'Een zeldzame mutant verschijnt in een gevestigde populatie. In de faseruimte is het evenwicht met beide typen een <b>zadelpunt</b>. Wat voorspelt het model?',
-     o:['De mutant verdwijnt; andersom zou de gevestigde soort ook niet kunnen invaderen','De mutant groeit en bereikt een stabiel evenwicht met de gevestigde populatie','De mutant vervangt de gevestigde populatie, want een zadelpunt is instabiel','Beide populaties sterven uit, omdat een zadelpunt geen attractor is'], a:0,
+     o:['De mutant verdwijnt; andersom kan de gevestigde soort ook niet invaderen in de mutant','De mutant groeit en bereikt uiteindelijk een stabiel evenwicht met de gevestigde populatie','De mutant vervangt de gevestigde populatie volledig, want een zadelpunt is instabiel','Beide populaties sterven uiteindelijk uit, omdat een zadelpunt geen attractor is'], a:0,
      h:'Een zadelpunt betekent founder control: wie er het eerst is, wint.',
-     e:'Bij een zadelpunt wint de soort die er al in grote aantallen is. Een zeldzame mutant verdwijnt, maar andersom zou de gevestigde soort ook niet kunnen invaderen. Founder control speelt dus ook een rol in evolutionaire vragen.'},
+     e:'Bij een zadelpunt wint de soort die er al in grote aantallen is. Een zeldzame mutant verdwijnt, maar andersom zou de gevestigde soort ook niet kunnen invaderen in een populatie van mutanten. Founder control speelt dus ook een rol in evolutionaire vragen.'},
   ];
   const box=$('#qz-box'), prog=$('#qz-prog'), cnt=$('#qz-count'), sc=$('#qz-score'), next=$('#qz-next');
   let Q=[], i=0, score=0, S=[]; const KEY='bioms-quiz-'+qhash(BASE);

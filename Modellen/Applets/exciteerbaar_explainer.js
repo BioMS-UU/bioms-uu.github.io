@@ -495,6 +495,7 @@ function makeTissue(Wd,H){
     const carve=(x0,x1,y0,y1)=>{ for(let y=y0;y<=y1;y++) for(let x=x0;x<=x1;x++) if(x>=0&&y>=0&&x<Wd&&y<H) block[y*Wd+x]=0; };
     const cell=(i,j)=>carve(i*P+1,i*P+P-2,j*P+1,j*P+P-2);
     cell(0,Math.floor(my/2)); carve(0,0,Math.floor(my/2)*P+1,Math.floor(my/2)*P+P-2);   // ingang aan de linkerkant
+    carve(1,P-2,0,0);                                                                   // uitgang linksboven (in de bovenrand)
     while(st.length){ const [i,j]=st[st.length-1]; const nb=[[i+1,j],[i-1,j],[i,j+1],[i,j-1]].filter(([a,b])=>a>=0&&b>=0&&a<mx&&b<my&&!seen[b*mx+a]);
       if(!nb.length){ st.pop(); continue; } const [a,b]=nb[Math.floor(rnd()*nb.length)]; seen[b*mx+a]=1; cell(a,b);
       carve(Math.min(i,a)*P+1,Math.max(i,a)*P+P-2,Math.min(j,b)*P+1,Math.max(j,b)*P+P-2); st.push([a,b]); } };
@@ -622,7 +623,7 @@ const golven=(()=>{
     vrij:'<b>18.4.</b> Links start een golf (V = 1 in de linkerkolom) die naar rechts loopt. Daarachter volgt een bredere blauwe band van W: refractair weefsel, waardoor de golf niet terug kan. <b>Klik vóór de golf:</b> een nieuwe golf loopt twee kanten op en dooft samen met de oude uit (annihilatie). <b>Klik vlak achter de golf:</b> de prikkel dooft meteen uit.',
     blok:'<b>18.5.</b> Littekenweefsel (grijs) geleidt niet: W staat er altijd op 1. De golf krult om de blokkade heen en trekt zichzelf daarna weer recht, omdat weefsel vooraan in de golf minder activatie krijgt van de buren. Voor een hart is dit litteken nog geen ramp.',
     tijdelijk:'<b>18.5.</b> Dezelfde blokkade, maar na 160 stappen verdwijnt hij. De gebroken golf heeft een los uiteinde dat om zichzelf heen krult: een <b>spiraal</b> die zichzelf in stand houdt. Op het hart: een hartritmestoornis. Probeer de spiraal weg te wissen met de muis (V = 0): vaak maak je er alleen meer bij. <b>Clear!</b> prikkelt alles tegelijk; daarna is alles refractair en is de spiraal weg (zie de opgave Clear!).',
-    doolhof:'<b>Doolhof.</b> Exciteerbaar weefsel in een doolhof van littekenweefsel. De golf vindt vanzelf élke gang: hij loopt alleen weefsel in dat nog niet refractair is, dus hij komt nooit terug en dooft in doodlopende gangen uit. Zo "lost" een exciteerbaar medium een doolhof op: de golf die het eerst ergens aankomt, heeft de kortste route genomen. Elke 600 stappen start bij de ingang links een nieuwe golf. Klik in een gang om zelf een golf te starten.'};
+    doolhof:'<b>Doolhof.</b> Exciteerbaar weefsel in een doolhof van littekenweefsel. De golf vindt vanzelf élke gang: hij loopt alleen weefsel in dat nog niet refractair is, dus hij komt nooit terug en dooft in doodlopende gangen uit. Zo "lost" een exciteerbaar medium een doolhof op: de golf die het eerst ergens aankomt, heeft de kortste route genomen. De ingang zit halverwege links, de uitgang linksboven; elke 600 stappen start bij de ingang een nieuwe golf. Klik in een gang om zelf een golf te starten.'};
   function start(p){ if(p) preset=p; T.reset(); T.leftWave(); acc=0;
     if(preset==='doolhof') T.maze(); else if(preset!=='vrij') T.rect(...BLK,true);
     segP.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.p===preset));

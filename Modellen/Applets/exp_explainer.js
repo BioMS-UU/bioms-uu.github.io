@@ -207,7 +207,10 @@ pre.code em{font-style:normal;color:var(--accent);font-weight:600}
 .guess button.wrong{border-color:var(--warn);opacity:.6}
 .callout.intro{margin:0 0 14px}
 .callout.intro p{margin:.3rem 0}
-.subst{display:block;text-align:center;margin:8px 0 2px;min-height:1.5em;font-size:1.05em}
+.mem{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--mono);font-size:.85rem;margin:4px 0 8px}
+.mem span.undef{color:var(--muted)}
+.mem span.hot{color:var(--accent)}
+.mem b{font-weight:700}
 `;
 const HTML=`
 <nav class="tabs" role="tablist">
@@ -256,7 +259,7 @@ const HTML=`
     <div class="card ov"><span class="num">Opg.</span><h4>Miniatuur Australië</h4>
       <p>Konijnen in hokjes, met een geboorte- en sterftekans. Door het toeval is de groei nooit perfect, maar wel <i>bij benadering</i> exponentieel. Een draagvermogen ontstaat vanzelf als de grashokjes op raken. Meer hierover in hoofdstuk 13.</p></div>
     <div class="card ov"><span class="num">✓</span><h4>Test jezelf</h4>
-      <p>Elf korte vragen over exponentiële groei, log-schalen en draagvermogen. Bij een fout antwoord mag je het opnieuw proberen.</p>
+      <p>Negen korte vragen over exponentiële groei, log-schalen en draagvermogen. Bij een fout antwoord mag je het opnieuw proberen.</p>
       <button class="b primary" data-go="quiz">Start de quiz →</button></div>
   </div>
 
@@ -297,28 +300,32 @@ const HTML=`
 </section>
 
 <section class="panel" id="tab-stappen" hidden>
-  <h2>Stap voor stap door de for-loop</h2>
-  <p>De differentievergelijking N(t+1) = r·N(t) zegt hoe je uit het huidige aantal het volgende berekent. In <span class="nomath">R</span> voert een for-loop die regel steeds opnieuw uit en bewaart elke waarde in de vector N. Druk op <b>Volgende stap</b> om de loop één keer te doorlopen.</p>
+  <h2>Stap voor stap door het script</h2>
+  <p>Dit is het script uit het hoofdstuk, voor 10 tijdstappen. Druk op <b>Volgende regel</b> om het regel voor regel uit te voeren, precies zoals <span class="nomath">R</span> dat doet. Rechts zie je wat er daarbij in het geheugen van de computer gebeurt. De grafiek verschijnt pas als de regel met <span class="mono nomath">plot()</span> aan de beurt is.</p>
   <div class="grid2">
     <div>
-      <pre class="code" id="st-code"><span class="ln" data-l="0">N &lt;- <em id="st-c-n0">24</em>          <i># initiële conditie (N[1] is tijdstap 0)</i></span><span class="ln" data-l="1">r &lt;- <em id="st-c-r">2</em></span><span class="ln" data-l="2">for (t in 1:20) {</span><span class="ln" data-l="3">  N[t+1] &lt;- r * N[t]   <i># volgende = r × huidige</i></span><span class="ln" data-l="4">}</span><span class="ln" data-l="5">plot(N, type='l'<em id="st-c-log"></em>)</span></pre>
-      <div class="controls">
-        <div class="ctl"><label><span class="lbl">beginaantal N[1]</span> <span id="st-n0-v"></span></label><input type="range" id="st-n0" min="1" max="100" step="1" value="24"></div>
-        <div class="ctl"><label><span class="lbl">groeifactor r</span> <span id="st-r-v"></span></label><input type="range" id="st-r" min="0.5" max="3" step="0.05" value="2"></div>
-      </div>
+      <pre class="code" id="st-code"><span class="ln" data-l="0">N &lt;- <em id="st-c-n0">24</em>          <i># initiële conditie</i></span><span class="ln" data-l="1">r &lt;- <em id="st-c-r">2</em></span><span class="ln" data-l="2">for (t in 1:10) {</span><span class="ln" data-l="3">  N[t+1] &lt;- r * N[t]   <i># volgende = r × huidige</i></span><span class="ln" data-l="4">}</span><span class="ln" data-l="5">plot(N, type='l'<em id="st-c-log"></em>)</span></pre>
       <div class="btns">
-        <button class="b primary" id="st-step">Volgende stap →</button>
+        <button class="b primary" id="st-step">Volgende regel →</button>
         <button class="b" id="st-play">▶ Afspelen</button>
+        <button class="b" id="st-skip">⏭ Rest van de loop</button>
         <button class="b" id="st-reset">↺ Opnieuw</button>
-        <label class="chk"><input type="checkbox" id="st-log"> <span class="mono nomath">log="y"</span></label>
       </div>
+      <div class="controls">
+        <div class="ctl"><label><span class="lbl">beginaantal (regel 1)</span> <span id="st-n0-v"></span></label><input type="range" id="st-n0" min="1" max="100" step="1" value="24"></div>
+        <div class="ctl"><label><span class="lbl">groeifactor r (regel 2)</span> <span id="st-r-v"></span></label><input type="range" id="st-r" min="0.5" max="3" step="0.05" value="2"></div>
+      </div>
+      <div class="btns"><label class="chk"><input type="checkbox" id="st-log"> <span class="mono nomath">log="y"</span> in de plot-regel</label></div>
     </div>
-    <div class="card"><div class="ptitle">plot(N)</div><canvas id="st-plot" class="plot"></canvas>
-      <div class="muted" style="font-size:.82rem;margin-top:4px">Op de x-as staat de index in de vector. Index 1 is tijdstap 0.</div></div>
+    <div>
+      <div class="card"><div class="ptitle">In het geheugen van de computer</div>
+        <div class="mem" id="st-mem"></div>
+        <div class="vec" id="st-vec"></div></div>
+      <div class="callout" id="st-text" style="margin-top:10px"></div>
+    </div>
   </div>
-  <div class="formula subst" id="st-sub"></div>
-  <div class="vec" id="st-vec"></div>
-  <div class="callout" id="st-text"></div>
+  <div class="card" id="st-plotwrap" hidden><div class="ptitle">De grafiek van plot(N)</div><canvas id="st-plot" class="plot-wide"></canvas>
+    <div class="muted" style="font-size:.82rem;margin-top:4px">Op de x-as staat de index in de vector. Index 1 is tijdstap 0, dus na 10 stappen staat het aantal in N[11].</div></div>
 </section>
 
 <section class="panel" id="tab-quiz" hidden>
@@ -601,45 +608,60 @@ const raden=(()=>{
 })();
 
 /* =========================================================
-   STAP VOOR STAP: de for-loop
+   STAP VOOR STAP: het script regel voor regel uitvoeren
    ========================================================= */
 const stap=(()=>{
-  const T=20;
+  const T=10;
   const sN0=$('#st-n0'), sR=$('#st-r'), vN0=$('#st-n0-v'), vR=$('#st-r-v'), cb=$('#st-log'), code=$('#st-code'),
-        vec=$('#st-vec'), sub=$('#st-sub'), txt=$('#st-text'), pc=$('#st-plot'), bStep=$('#st-step'), bPlay=$('#st-play'), bReset=$('#st-reset');
-  let N0=24, r=2, N=[], t=0, playing=false, acc=0;
-  const full=()=>{ const a=[N0]; for(let k=0;k<T;k++) a.push(r*a[k]); return a; };
-  function hl(l){ code.querySelectorAll('.ln').forEach(s=>s.classList.toggle('on',+s.dataset.l===l)); }
+        mem=$('#st-mem'), vec=$('#st-vec'), txt=$('#st-text'), pc_=$('#st-plot'), pw=$('#st-plotwrap'),
+        bStep=$('#st-step'), bPlay=$('#st-play'), bSkip=$('#st-skip'), bReset=$('#st-reset');
+  let N0=24, rv=2;                       // de waarden op de sliders (regel 1 en 2 van het script)
+  let N=null, r=null, t=null, rd=-1, wr=-1, plotted=false, trace=[], pc=0, playing=false, acc=0, msg='';
+  const hl=l=>code.querySelectorAll('.ln').forEach(s=>s.classList.toggle('on',+s.dataset.l===l));
   function setPlay(p){ playing=p; bPlay.textContent=p?'⏸ Pauze':'▶ Afspelen'; }
-  function reset(){ N0=+sN0.value; r=+sR.value; vN0.textContent=N0; vR.textContent=r.toFixed(2);
-    $('#st-c-n0').textContent=N0; $('#st-c-r').textContent=r; N=[N0]; t=0; acc=0; setPlay(false); hl(0);
-    sub.innerHTML=`N[1] = ${N0} <span class="muted">(de initiële conditie, tijdstap 0)</span>`; render(); }
-  function step(){ if(t>=T) return; const v=r*N[t]; N.push(v); t++; hl(3);
-    sub.innerHTML=`N[${t+1}] &lt;- ${r} × N[${t}] = ${r} × ${fmt(N[t-1])} = <b>${fmt(v)}</b>`;
-    if(t>=T){ hl(5); setPlay(false); } render(); }
-  function render(){
-    bStep.disabled=t>=T; bPlay.disabled=t>=T;
-    vec.innerHTML=Array.from({length:T+1},(_,i)=>{ const has=i<N.length, cls=(has?'':'empty')+(t>0&&i===t-1?' rd':'')+(t>0&&i===t?' wr':'');
-      return `<span class="cell ${cls}"><b>N[${i+1}]</b><span>${has?fmt(N[i]):'?'}</span></span>`; }).join('');
-    const p=pct(r);
-    txt.innerHTML=(r>1?`r = ${r}: elke stap wordt het aantal × ${r}, oftewel ${p}. Dat percentage is elke stap hetzelfde, dus de groei is <b>exponentieel</b>. Vink <span class="mono nomath">log="y"</span> aan en je ziet een rechte lijn.`
-      :r===1?`r = 1: elke stap × 1, er verandert niets.`
-      :`r = ${r}: elke stap × ${r}, oftewel ${p}. Een constant percentage, dus <b>exponentiële afname</b>. Op de log-schaal een dalende rechte lijn.`)
-      +` Let op: N[1] is tijdstap 0, dus na ${T} stappen staat het aantal in N[${T+1}].`;
+  function rtext(){ const p=pct(rv);
+    return rv>1?` Elke stap wordt het aantal × ${rv}, oftewel ${p}: een constant percentage, dus <b>exponentiële groei</b>. Vink <span class="mono nomath">log="y"</span> aan en je ziet een rechte lijn.`
+      :rv===1?` Met r = 1 verandert er niets: elke stap × 1.`
+      :` Elke stap wordt het aantal × ${rv}, oftewel ${p}: een constant percentage, dus <b>exponentiële afname</b>. Op de log-schaal een dalende rechte lijn.`; }
+  /* de uitvoering als lijst van stappen: welke regel, wat er intern gebeurt, en de uitleg daarbij */
+  function build(){ trace=[];
+    trace.push({l:0, run:()=>{ N=[N0]; }, m:()=>`<span class="nomath">R</span> maakt in het geheugen een vector <b>N</b> met één getal erin: N[1] = ${N0}. Let op: dit is tijdstap 0.`});
+    trace.push({l:1, run:()=>{ r=rv; }, m:()=>`De parameter <b>r</b> krijgt de waarde ${rv}. Die staat nu ook in het geheugen.`});
+    for(let k=1;k<=T;k++){
+      trace.push({l:2, run:()=>{ t=k; rd=-1; wr=-1; }, m:()=>k===1?`De for-loop begint. <b>t</b> krijgt de eerste waarde uit 1:${T}, dus t = 1. Alles tussen { en } wordt nu één keer uitgevoerd.`
+        :`Terug bij de for-regel: <b>t</b> wordt ${k}. Dat zit nog in 1:${T}, dus de regel tussen { en } wordt opnieuw uitgevoerd.`});
+      trace.push({l:3, run:()=>{ const v=r*N[k-1]; N.push(v); rd=k-1; wr=k; }, m:()=>`<span class="nomath">R</span> rekent de rechterkant uit: r × N[t] = ${r} × N[${k}] = ${r} × ${fmt(N[k-1])} = <b>${fmt(N[k])}</b>. Dat getal komt op plek N[t+1] = N[${k+1}]: de vector wordt één getal langer.`});
+    }
+    trace.push({l:2, run:()=>{ rd=-1; wr=-1; }, m:()=>`Terug bij de for-regel: 1:${T} is op, t = ${T} was de laatste. De loop stopt en <span class="nomath">R</span> gaat verder ná de }.`});
+    trace.push({l:5, run:()=>{ plotted=true; }, m:()=>`plot(N, type='l') tekent de vector N: de index op de x-as, de waarde op de y-as. Pas nu verschijnt de grafiek.`+rtext()+` Klaar: het script is helemaal uitgevoerd.`});
   }
-  function plot(){ const all=full(), lg=cb.checked; $('#st-c-log').textContent=lg?", log='y'":'';
-    const o=lg?{...logRange(all),ylog:true}:{ymin:0,ymax:niceCeil(Math.max(...all)*1.05)};
-    const f=frame(pc,{xmin:0,xmax:T+1,...o,xlab:'index in N',ylab:lg?'N (log-schaal)':'N',pad:{l:66}});
+  function reset(){ N0=+sN0.value; rv=+sR.value; vN0.textContent=N0; vR.textContent=rv.toFixed(2);
+    $('#st-c-n0').textContent=N0; $('#st-c-r').textContent=rv;
+    N=null; r=null; t=null; rd=-1; wr=-1; plotted=false; pc=0; acc=0; setPlay(false); build(); hl(-1);
+    msg='Nog niets uitgevoerd. Het geheugen is leeg. Druk op <b>Volgende regel</b>.'; render(); }
+  function step(){ if(pc>=trace.length) return; const st=trace[pc]; st.run(); hl(st.l); msg=st.m(); pc++;
+    if(pc>=trace.length) setPlay(false); render(); }
+  function render(){
+    const done=pc>=trace.length; bStep.disabled=done; bPlay.disabled=done; bSkip.disabled=done||pc<2||plotted;
+    const item=(k,v,hot)=>`<span class="${v==null?'undef':''}${hot?' hot':''}"><b>${k}</b>${v==null?': nog niet gedefinieerd':' = '+v}</span>`;
+    const cur=pc>0?trace[pc-1].l:-1;
+    mem.innerHTML=item('r',r,cur===1)+item('t',t,cur===2)+(N?`<span><b>N</b>: vector met ${N.length} getal${N.length===1?'':'len'}</span>`:item('N',null,false));
+    vec.innerHTML=N?N.map((v,i)=>`<span class="cell${i===rd?' rd':''}${i===wr?' wr':''}"><b>N[${i+1}]</b><span>${fmt(v)}</span></span>`).join(''):'';
+    txt.innerHTML=msg; pw.hidden=!plotted; postHeight();
+  }
+  function plot(){ const lg=cb.checked;
+    const o=lg?{...logRange(N),ylog:true}:{ymin:0,ymax:niceCeil(Math.max(...N)*1.05)};
+    const f=frame(pc_,{xmin:0,xmax:T+1,...o,xlab:'index in N',ylab:lg?'N (log-schaal)':'N',pad:{l:66}});
     const pts=N.map((v,i)=>[i+1,lg?Math.log10(v):v]);
-    poly(f,pts,col('accent'),2.4); dots(f,pts,col('accent'),3.2);
-    if(t>0){ const [x,y]=pts[t]; disc(f.ctx,f.X(x),f.Y(y),6,null,col('accent'),2); }
-    f.ctx.restore(); }
+    poly(f,pts,col('accent'),2.4); dots(f,pts,col('accent'),3.2); f.ctx.restore(); }
   bStep.onclick=()=>{ setPlay(false); step(); };
-  bPlay.onclick=()=>{ if(t>=T) return; setPlay(!playing); acc=0; };
+  bPlay.onclick=()=>{ if(pc>=trace.length) return; setPlay(!playing); acc=0; };
+  bSkip.onclick=()=>{ setPlay(false); while(pc<trace.length&&trace[pc].l!==5) step(); };
   bReset.onclick=reset;
-  sN0.oninput=reset; sR.oninput=reset; cb.onchange=()=>{};
+  sN0.oninput=reset; sR.oninput=reset;
+  cb.onchange=()=>{ $('#st-c-log').textContent=cb.checked?", log='y'":''; };
   reset();
-  return {frame:dt=>{ if(playing){ acc+=dt; if(acc>=0.45){ acc=0; step(); } } plot(); }};
+  return {frame:dt=>{ if(playing){ acc+=dt; if(acc>=0.6){ acc=0; step(); } } if(plotted) plot(); }};
 })();
 
 /* =========================================================
@@ -695,18 +717,10 @@ const quiz=(()=>{
      o:['r > 1','r > 0','r > 2','Altijd'], a:0,
      h:'Wat gebeurt er als je elke stap met 0,9 vermenigvuldigt?',
      e:'Bij r > 1 wordt het aantal elke stap groter. Bij r = 1 blijft het gelijk, en bij r < 1 (zoals 0,9) neemt het exponentieel af. Let op: dit is een differentievergelijking. In het volgende hoofdstuk, bij ODEs, ligt de grens bij r > 0.'},
-    {q:'Wat betekent <b>dichtheidsafhankelijkheid</b> (<i>density dependence</i>)?',
-     o:['De groei per individu hangt af van de populatiegrootte','De populatie groeit altijd even snel, ongeacht de dichtheid','Het aantal individuen per vierkante meter is constant','Grote populaties groeien altijd sneller dan kleine'], a:0,
-     h:'Denk aan konijnen die het gras op eten.',
-     e:'Hoe meer individuen, hoe minder voedsel of ruimte per individu, en hoe minder groei. Dat negatieve dichtheidseffect zorgt voor een draagvermogen.'},
     {q:'Een populatie is <b>groter</b> dan het draagvermogen. Wat gebeurt er?',
      o:['Ze neemt af richting het draagvermogen','Ze groeit gewoon exponentieel verder','Ze blijft precies zo groot als ze nu is','Ze verdubbelt eerst en stort dan helemaal in'], a:0,
      h:'Veel konijnen, weinig eten: wat betekent dat voor geboorte en sterfte?',
      e:'Boven het draagvermogen is de sterfte groter dan de geboorte, dus de populatie krimpt. Onder het draagvermogen groeit ze. Het draagvermogen is dus een evenwicht.'},
-    {q:'<span class="mono nomath">N &lt;- 24; for (t in 1:10) N[t+1] &lt;- 2*N[t]</span>. Waar staat het aantal konijnen na <b>10 tijdstappen</b>?',
-     o:['In N[11]','In N[10]','In N[0]','In N[1]'], a:0,
-     h:'Welke tijdstap zit er in N[1]?',
-     e:'N[1] is de initiële conditie, tijdstap 0. Na 10 stappen zit je dus bij N[11]. In R begint een vector bij 1, niet bij 0.'},
   ];
   const box=$('#qz-box'), prog=$('#qz-prog'), cnt=$('#qz-count'), sc=$('#qz-score'), next=$('#qz-next');
   let Q=[], i=0, score=0, S=[]; const KEY='bioms-quiz-'+qhash(BASE);

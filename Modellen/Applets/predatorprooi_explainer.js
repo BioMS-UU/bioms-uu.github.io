@@ -483,9 +483,9 @@ function renderQuestion(it,num,onSolved,st,onChange){
 /* =========================================================
    HET MODEL: Lotka-Volterra met dichtheidsafhankelijke geboorte (vgl. 14.1)
    dR/dt = b(1 − R/K)R − dR − aRN,  dN/dt = caRN − δN
-   De standaardwaarden geven de nullclines uit het hoofdstuk: N = 80 − R en R = 40.
+   De standaardwaarden geven de nullclines N = 40 − R/2 en R = 20, met het evenwicht (20, 30): een duidelijke inspiralende slingering.
    ========================================================= */
-const P0={b:1,d:0.2,K:100,a:0.01,c:0.5,dl:0.2};
+const P0={b:1,d:0.2,K:100,a:0.02,c:0.5,dl:0.2};
 const PARS=[{k:'b',l:'geboorte konijnen b',min:0.3,max:2,step:0.05},{k:'d',l:'sterfte konijnen d',min:0,max:0.8,step:0.05},{k:'K',l:'draagvermogen K',min:40,max:200,step:5},
   {k:'a',l:'predatie a',min:0.002,max:0.03,step:0.001},{k:'c',l:'conversie c',min:0.1,max:1,step:0.05},{k:'dl',l:'sterfte vossen δ',min:0.05,max:1,step:0.05}];
 function deriv(R,N,P){ return [P.b*(1-R/P.K)*R-P.d*R-P.a*R*N, P.c*P.a*R*N-P.dl*N]; }
@@ -558,7 +558,7 @@ const hero=(()=>{
    ========================================================= */
 const fase=(()=>{
   const pc=$('#fs-phase'), tc=$('#fs-time'), ctl=$('#fs-ctl'), seg=$('#fs-preset'), txt=$('#fs-text'), TEND=80;
-  const PRESETS=[{n:'Standaard',p:{}},{n:'Hogere sterfte vossen (δ × 2,5)',p:{dl:0.5}},{n:'Hogere geboorte konijnen (b × 1,3)',p:{b:1.3}}];
+  const PRESETS=[{n:'Standaard',p:{}},{n:'Hogere sterfte vossen (δ × 4,5)',p:{dl:0.9}},{n:'Hogere geboorte konijnen (b × 1,3)',p:{b:1.3}}];
   let P={...P0}, trajs=[], joint=false, lastF=null, sliders=[];
   sliders=PARS.map(d=>{ const w=document.createElement('div'); w.className='ctl';
     w.innerHTML=`<label><span class="lbl">${d.l}</span> <span class="val"></span></label><input type="range" min="${d.min}" max="${d.max}" step="${d.step}" value="${P0[d.k]}">`;
@@ -598,10 +598,10 @@ const stap=(()=>{
     {t:'1. Het assenstelsel',o:{},x:'Zet de prooi R op de x-as en de predator N op de y-as. Elk punt in dit vlak is één <b>toestand</b>: een combinatie van konijnen en vossen. We gaan uitzoeken welke kant het systeem vanuit elk punt op beweegt.'},
     {t:'2. Weinig konijnen, weinig vossen',o:{arrows:LOW,big:true},x:'Bij lage dichtheden zijn de termen met R² (dichtheidseffect) en RN (predatie) verwaarloosbaar klein. Er blijft over: dR/dt ≈ bR − dR &gt; 0 (want b &gt; d) en dN/dt ≈ −δN &lt; 0. Dus linksonder: <span class="prey">konijnen nemen toe →</span>, <span class="pred">vossen nemen af ↓</span>.'},
     {t:'3. Veel konijnen, weinig vossen',o:{arrows:HIGH,big:true},x:'Met veel konijnen gaat de geboorte per konijn omlaag en worden er meer konijnen opgegeten: dR/dt wordt negatief. De vossen hebben juist voordeel bij veel prooi: dN/dt wordt positief. Rechtsonder dus <span class="prey">←</span> en <span class="pred">↑</span>. Ergens tussen beide punten zijn de pijltjes omgeklapt.'},
-    {t:'4. Predator-nullclines',o:{arrows:HIGH.concat(LOW),big:true,nullN:true},x:'Waar klapt het oranje pijltje om? Daar waar dN/dt = 0: <i class="mi">caRN</i> − δN = N(<i class="mi">caR</i> − δ) = 0. Dat geeft <b>N = 0</b> (de x-as) en <b>R = δ/(ca)</b> (een verticale lijn, hier bij R = 40). Op deze <span class="pred">nullclines</span> verandert het aantal vossen niet.'},
-    {t:'5. Prooi-nullclines',o:{arrows:HIGH.concat(LOW),big:true,nullN:true,nullR:true},x:'Hetzelfde voor dR/dt = 0: R(b(1 − R/K) − d − aN) = 0. Dus <b>R = 0</b> (de y-as) en <b>N = (b(1 − R/K) − d)/a</b>: een schuine lijn die daalt met R (hier N = 80 − R). Op deze <span class="prey">nullclines</span> verandert het aantal konijnen niet.'},
-    {t:'6. Het vectorveld',o:{arrows:ALL,big:true,nullN:true,nullR:true},x:'Als je een nullcline passeert, passeer je de 0 en klapt het pijltje van <i>die</i> variabele om. Zo vul je alle sectoren in: rechts van R = 40 wijzen de oranje pijlen omhoog, erboven de blauwe lijn wijzen de blauwe pijlen naar links. Samen vormen de pijltjes het <b>vectorveld</b>.'},
-    {t:'7. Evenwichten en stabiliteit',o:{arrows:ALL,big:true,nullN:true,nullR:true,eq:true},x:'Waar een prooi-nullcline een predator-nullcline snijdt, veranderen <b>beide</b> populaties niet: een evenwicht. (0, 0) en (80, 0) zijn <b>instabiel</b> (○): een paar konijnen erbij groeien uit, een paar vossen erbij bij (80, 0) groeien ook. Alleen (40, 40) is <b>stabiel</b> (●): na elke kleine verstoring keert het systeem terug.'},
+    {t:'4. Predator-nullclines',o:{arrows:HIGH.concat(LOW),big:true,nullN:true},x:'Waar klapt het oranje pijltje om? Daar waar dN/dt = 0: <i class="mi">caRN</i> − δN = N(<i class="mi">caR</i> − δ) = 0. Dat geeft <b>N = 0</b> (de x-as) en <b>R = δ/(ca)</b> (een verticale lijn, hier bij R = 20). Op deze <span class="pred">nullclines</span> verandert het aantal vossen niet.'},
+    {t:'5. Prooi-nullclines',o:{arrows:HIGH.concat(LOW),big:true,nullN:true,nullR:true},x:'Hetzelfde voor dR/dt = 0: R(b(1 − R/K) − d − aN) = 0. Dus <b>R = 0</b> (de y-as) en <b>N = (b(1 − R/K) − d)/a</b>: een schuine lijn die daalt met R (hier N = 40 − R/2). Op deze <span class="prey">nullclines</span> verandert het aantal konijnen niet.'},
+    {t:'6. Het vectorveld',o:{arrows:ALL,big:true,nullN:true,nullR:true},x:'Als je een nullcline passeert, passeer je de 0 en klapt het pijltje van <i>die</i> variabele om. Zo vul je alle sectoren in: rechts van R = 20 wijzen de oranje pijlen omhoog, erboven de blauwe lijn wijzen de blauwe pijlen naar links. Samen vormen de pijltjes het <b>vectorveld</b>.'},
+    {t:'7. Evenwichten en stabiliteit',o:{arrows:ALL,big:true,nullN:true,nullR:true,eq:true},x:'Waar een prooi-nullcline een predator-nullcline snijdt, veranderen <b>beide</b> populaties niet: een evenwicht. (0, 0) en (80, 0) zijn <b>instabiel</b> (○): een paar konijnen erbij groeien uit, een paar vossen erbij bij (80, 0) groeien ook. Alleen (20, 30) is <b>stabiel</b> (●): na elke kleine verstoring keert het systeem terug.'},
     {t:'8. Een trajectorie aflezen',o:{arrows:'grid',nullN:true,nullR:true,eq:true,traj:true},x:'Volg de pijltjes vanuit een begintoestand en je tekent een <b>trajectorie</b>: een specifieke oplossing, zonder dat je de ODEs hoeft op te lossen. Vanuit (10, 5) spiraliseert het systeem naar het stabiele evenwicht. Speel verder op het tabblad <b>Faseruimte</b>.'}];
   let i=0, tr=null;
   function show(){ const S=STEPS[i]; title.textContent=S.t; txt.innerHTML=S.x; tr=S.o.traj?newTraj(10,5):null;
