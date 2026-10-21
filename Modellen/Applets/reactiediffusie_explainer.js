@@ -345,7 +345,14 @@ function detectDark(){
   for(let el=host.parentElement; el; el=el.parentElement){ const m=(getComputedStyle(el).backgroundColor.match(/[\d.]+/g)||[]).map(Number);
     if(m.length>=3&&(m.length<4||m[3]>0.5)) return (0.299*m[0]+0.587*m[1]+0.114*m[2])<128; }
   return matchMedia('(prefers-color-scheme: dark)').matches; }
-function applyTheme(){ if(detectDark()) host.setAttribute('data-dark',''); else host.removeAttribute('data-dark'); cssCache=null; }
+/* Quarto wisselt van thema via body.quarto-dark en een andere stylesheet, zonder data-bs-theme op <html>; de --bs-body-*
+   variabelen blijven dan die van het lichte thema. Daarom lezen we de echte tekst- en achtergrondkleur van de pagina. */
+function applyTheme(){ const dark=detectDark(); if(dark) host.setAttribute('data-dark',''); else host.removeAttribute('data-dark');
+  const cs=getComputedStyle(document.body), opaque=c=>c&&c!=='transparent'&&!/rgba\([^)]*,\s*0\s*\)$/.test(c);
+  host.style.setProperty('--fg',opaque(cs.color)?cs.color:(dark?'#e6e9e7':'#1d2327'));
+  host.style.setProperty('--bg',opaque(cs.backgroundColor)?cs.backgroundColor:(dark?'#16191b':'#ffffff'));
+  host.style.setProperty('--line',dark?'color-mix(in srgb, var(--fg) 20%, var(--bg))':'color-mix(in srgb, var(--fg) 14%, var(--bg))');
+  cssCache=null; }
 applyTheme();
 new MutationObserver(applyTheme).observe(document.body,{attributes:true,attributeFilter:['class','data-bs-theme','style']});
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);
